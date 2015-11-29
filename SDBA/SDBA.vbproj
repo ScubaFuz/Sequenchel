@@ -1,0 +1,283 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{03D663F2-7098-4085-9B75-31A322B4CC26}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>SDBA</RootNamespace>
+    <AssemblyName>SDBA</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <MyType>Windows</MyType>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DocumentationFile>SDBA.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DocumentationFile>SDBA.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionExplicit>On</OptionExplicit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionCompare>Binary</OptionCompare>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionStrict>Off</OptionStrict>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionInfer>On</OptionInfer>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+  </ItemGroup>
+  <ItemGroup>
+    <Import Include="Microsoft.VisualBasic" />
+    <Import Include="System" />
+    <Import Include="System.Collections" />
+    <Import Include="System.Collections.Generic" />
+    <Import Include="System.Data" />
+    <Import Include="System.Diagnostics" />
+    <Import Include="System.Linq" />
+    <Import Include="System.Xml.Linq" />
+    <Import Include="System.Threading.Tasks" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DBRef.vb" />
+    <Compile Include="My Project\AssemblyInfo.vb" />
+    <Compile Include="My Project\Application.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Application.myapp</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Resources.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Settings.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="My Project\Resources.resx">
+      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="My Project\Application.myapp">
+      <Generator>MyApplicationCodeGenerator</Generator>
+      <LastGenOutput>Application.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="My Project\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <CustomToolNamespace>My</CustomToolNamespace>
+      <LastGenOutput>Settings.Designer.vb</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Database\05_Logins\" />
+    <Folder Include="Database\07_Reports\" />
+    <Folder Include="Database\Test Scripts\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Database\01 Create Database.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Database\01_Tables\01 dbo.tbl_Configuration.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Database\01_Tables\01 dbo.tbl_Logging.sql" />
+    <EmbeddedResource Include="Database\01_Tables\01 dbo.tbl_Reports.sql" />
+    <EmbeddedResource Include="Database\01_Tables\02 dbo.tbl_ReportArguments.sql" />
+    <EmbeddedResource Include="Database\01_Tables\02 dbo.tbl_ReportFields.sql" />
+    <EmbeddedResource Include="Database\03_Functions\dbo.udf_DateFormat.sql" />
+    <EmbeddedResource Include="Database\03_Functions\dbo.udf_EmailDomain.sql" />
+    <EmbeddedResource Include="Database\03_Functions\dbo.udf_EmailPrefix.sql" />
+    <EmbeddedResource Include="Database\03_Functions\dbo.udf_ValidEmail.sql" />
+    <EmbeddedResource Include="Database\04_StoredProcedures\01 dbo.usp_BackupHandle.sql" />
+    <EmbeddedResource Include="Database\04_StoredProcedures\01 dbo.usp_ConfigHandle.sql" />
+    <EmbeddedResource Include="Database\04_StoredProcedures\01 dbo.usp_LoggingHandle.sql" />
+    <EmbeddedResource Include="Database\04_StoredProcedures\01 dbo.usp_ReportArgumentHandle.sql" />
+    <EmbeddedResource Include="Database\04_StoredProcedures\01 dbo.usp_ReportFieldHandle.sql" />
+    <EmbeddedResource Include="Database\04_StoredProcedures\01 dbo.usp_ReportFieldsGet.sql" />
+    <EmbeddedResource Include="Database\04_StoredProcedures\01 dbo.usp_ReportHandle.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Database\01_Tables\01 dbo.tbl_AccErrors.sql" />
+    <EmbeddedResource Include="Database\01_Tables\01 dbo.tbl_AccOwners.sql" />
+    <EmbeddedResource Include="Database\01_Tables\01 dbo.tbl_Backups.sql" />
+    <EmbeddedResource Include="Database\01_Tables\01 dbo.tbl_Databases.sql" />
+    <EmbeddedResource Include="Database\01_Tables\01 dbo.tbl_DataSpaces.sql" />
+    <EmbeddedResource Include="Database\01_Tables\01 dbo.tbl_DiskSpaces.sql" />
+    <EmbeddedResource Include="Database\01_Tables\01 dbo.tbl_ErrorLogsAll.sql" />
+    <EmbeddedResource Include="Database\01_Tables\01 dbo.tbl_IndexList.sql" />
+    <EmbeddedResource Include="Database\01_Tables\01 dbo.tbl_Servers.sql" />
+    <EmbeddedResource Include="Database\02_Views\dbo.vw_DiskUseDaysLeft.sql" />
+    <EmbeddedResource Include="Database\02_Views\dbo.vw_RecentErrors.sql" />
+    <EmbeddedResource Include="Database\03_Functions\dbo.udf_CsvToInt.sql" />
+    <EmbeddedResource Include="Database\03_Functions\dbo.udf_CsvToVarchar.sql" />
+    <EmbeddedResource Include="Database\03_Functions\dbo.udf_FloorDate.sql" />
+    <EmbeddedResource Include="Database\09_DbaStoredProcedures\01 dbo.usp_ConstraintState.sql" />
+    <EmbeddedResource Include="Database\09_DbaStoredProcedures\01 dbo.usp_Manage_Jobs.sql" />
+    <EmbeddedResource Include="Database\09_DbaStoredProcedures\01 dbo.usp_TriggerState.sql" />
+    <EmbeddedResource Include="Database\09_DbaStoredProcedures\01 dbo.usp_TruncateTable.sql" />
+    <EmbeddedResource Include="Database\09_DbaStoredProcedures\02 dbo.usp_Disable_all_const_in_db.sql" />
+    <EmbeddedResource Include="Database\09_DbaStoredProcedures\02 dbo.usp_Disable_all_Triggers_in_db.sql" />
+    <EmbeddedResource Include="Database\09_DbaStoredProcedures\02 dbo.usp_Enable_all_const_in_db.sql" />
+    <EmbeddedResource Include="Database\09_DbaStoredProcedures\02 dbo.usp_Enable_all_Triggers_in_db.sql" />
+    <EmbeddedResource Include="Database\09_DbaStoredProcedures\02 dbo.usp_Truncate_all_Tables_in_db.sql" />
+    <EmbeddedResource Include="Database\04_StoredProcedures\03 dbo.usp_CycleErrorlogs.sql" />
+    <EmbeddedResource Include="Database\04_StoredProcedures\03 dbo.usp_DefragIndexes.sql" />
+    <EmbeddedResource Include="Database\04_StoredProcedures\02 dbo.usp_Enum_Servers.sql" />
+    <EmbeddedResource Include="Database\04_StoredProcedures\02 dbo.usp_Monitor_Errorlogs.sql" />
+    <EmbeddedResource Include="Database\09_DbaStoredProcedures\03 dbo.usp_Disable_all_BusinessRules.sql" />
+    <EmbeddedResource Include="Database\09_DbaStoredProcedures\03 dbo.usp_Enable_all_BusinessRules.sql" />
+    <EmbeddedResource Include="Database\04_StoredProcedures\03 dbo.usp_Report_Backups.sql" />
+    <EmbeddedResource Include="Database\04_StoredProcedures\02 dbo.usp_Report_Databases.sql" />
+    <EmbeddedResource Include="Database\04_StoredProcedures\02 dbo.usp_Report_DataSpaces.sql" />
+    <EmbeddedResource Include="Database\04_StoredProcedures\03 dbo.usp_Report_DiskSpaces.sql" />
+    <EmbeddedResource Include="Database\04_StoredProcedures\03 dbo.usp_Report_Errorlogs.sql" />
+    <EmbeddedResource Include="Database\04_StoredProcedures\03 dbo.usp_Report_Object_Owner.sql" />
+    <EmbeddedResource Include="Database\04_StoredProcedures\03 dbo.usp_Report_Servers_old.sql" />
+    <EmbeddedResource Include="Database\04_StoredProcedures\01 dbo.usp_Test_LinkedServer.sql" />
+    <EmbeddedResource Include="Database\09_DbaStoredProcedures\04 dbo.usp_InitDB.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Database\01_Tables\01 dbo.tbl_Logins.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Database\04_StoredProcedures\02 dbo.usp_Report_Logins.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Database\01_Tables\01 dbo.tbl_Arguments.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Database\01 Use Sequenchel.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Database\02_Views\dbo.vw_Servers.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Templates\Sequenchel.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Database\04_StoredProcedures\01 dbo.usp_ScheduleCreate.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Database\10_Queries\Exec_Report_Servers.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Database\10_Queries\Exec_Report_Databases.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Database\10_Queries\Exec_Report_DataSpaces.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Database\10_Queries\Exec_Report_DiskSpaces.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Database\10_Queries\Exec_Report_Backups.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Database\10_Queries\Exec_Report_Logins.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Database\10_Queries\Exec_Report_Object_Owners.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Database\10_Queries\Exec_Report_Errorlogs.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Database\10_Queries\Exec_CycleErrorlogs.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Database\10_Queries\Exec_DefragIndexes.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Database\03_Functions\dbo.udf_CorrectCommand.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Database\08_Updates\3110.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Database\06_Data\AcceptableErrors.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Database\06_Data\AcceptableOwners.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Database\01_Tables\01 dbo.tbl_ObjectOwners.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Database\08_Updates\3130.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Templates\TrackManager.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Database\08_Updates\3200.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Database\02_Views\dbo.vw_ObjectOwners.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Database\02_Views\dbo.vw_DataSpaces.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Database\08_Updates\3300.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Database\08_Updates\33015.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Database\04_StoredProcedures\02 dbo.usp_Report_Jobs.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Database\01_Tables\01 dbo.tbl_Jobs.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Database\10_Queries\Exec_Report_Jobs.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Database\04_StoredProcedures\03 dbo.usp_Report_Servers.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Database\08_Updates\3400.sql" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,3787 @@
+<?xml version="1.0"?>
+<Sequenchel>
+  <Tables>
+    <Table Default="False">
+      <Name>dbo.tbl_Appointment</Name>
+      <Alias>dbo.tbl_Appointment</Alias>
+      <Visible>True</Visible>
+      <Search>True</Search>
+      <Update>True</Update>
+      <Insert>False</Insert>
+      <Delete>False</Delete>
+      <Fields>
+        <Field>
+          <FldName>PK_AppointmentId</FldName>
+          <FldAlias>PK_AppointmentId</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>True</Identity>
+          <PrimaryKey>True</PrimaryKey>
+          <FldWidth>40</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="1" Width="40">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>AppDate</FldName>
+          <FldAlias>AppointmentDate</FldAlias>
+          <DataType>DATETIME</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>50</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="2" Width="50">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>AppType</FldName>
+          <FldAlias>AppType</FldAlias>
+          <DataType>CHAR</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>50</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="3" Width="50">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>FK_ClientId</FldName>
+          <FldAlias>FK_ClientId</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>40</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="4" Width="40">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+          <Relations>
+            <Relation RelatedField="ClientName">dbo.tbl_Clients.PK_ClientID</Relation>
+          </Relations>
+        </Field>
+        <Field>
+          <FldName>FK_TrackId</FldName>
+          <FldAlias>FK_TrackId</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>40</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="5" Width="40">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+          <Relations>
+            <Relation RelatedField="TrackName">dbo.tbl_Tracks.PK_TrackID</Relation>
+          </Relations>
+        </Field>
+        <Field>
+          <FldName>TrackIndex</FldName>
+          <FldAlias>TrackIndex</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>40</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="6" Width="40">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>FK_LessonTypeId</FldName>
+          <FldAlias>FK_LessonTypeId</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>40</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="7" Width="40">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+          <Relations>
+            <Relation RelatedField="LessonTypeName">dbo.tbl_LessonTypes.PK_LessonTypeID</Relation>
+          </Relations>
+        </Field>
+        <Field>
+          <FldName>FK_LevelId</FldName>
+          <FldAlias>FK_LevelId</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>40</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="8" Width="40">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+          <Relations>
+            <Relation RelatedField="LevelName">dbo.tbl_Levels.PK_LevelID</Relation>
+          </Relations>
+        </Field>
+        <Field>
+          <FldName>LessonCount</FldName>
+          <FldAlias>LessonCount</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>40</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="9" Width="40">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>ExtraCount</FldName>
+          <FldAlias>ExtraCount</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>40</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="10" Width="40">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>FK_LoginId</FldName>
+          <FldAlias>FK_LoginId</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>40</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="0" Width="40">False</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+          <Relations>
+            <Relation RelatedField="LoginName">dbo.tbl_Logins.PK_LoginID</Relation>
+          </Relations>
+        </Field>
+        <Field>
+          <FldName>Active</FldName>
+          <FldAlias>Active</FldAlias>
+          <DataType>BIT</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>15</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="0" Width="15">False</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>True</FldUpdate>
+        </Field>
+      </Fields>
+    </Table>
+    <Table Default="False">
+      <Name>dbo.tbl_Arguments</Name>
+      <Alias>dbo.tbl_Arguments</Alias>
+      <Visible>True</Visible>
+      <Search>True</Search>
+      <Update>True</Update>
+      <Insert>False</Insert>
+      <Delete>False</Delete>
+      <Fields>
+        <Field>
+          <FldName>PK_ArgumentId</FldName>
+          <FldAlias>PK_ArgumentId</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>True</Identity>
+          <PrimaryKey>True</PrimaryKey>
+          <FldWidth>40</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="1" Width="40">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>ArgumentName</FldName>
+          <FldAlias>ArgumentName</FldAlias>
+          <DataType>CHAR</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>150</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="2" Width="150">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+      </Fields>
+    </Table>
+    <Table Default="False">
+      <Name>dbo.tbl_ClientLevels</Name>
+      <Alias>dbo.tbl_ClientLevels</Alias>
+      <Visible>True</Visible>
+      <Search>True</Search>
+      <Update>True</Update>
+      <Insert>False</Insert>
+      <Delete>False</Delete>
+      <Fields>
+        <Field>
+          <FldName>PK_ClientLevelID</FldName>
+          <FldAlias>PK_ClientLevelID</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>True</Identity>
+          <PrimaryKey>True</PrimaryKey>
+          <FldWidth>40</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="1" Width="40">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>FK_ClientID</FldName>
+          <FldAlias>FK_ClientID</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>40</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="2" Width="40">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+          <Relations>
+            <Relation RelatedField="ClientName">dbo.tbl_Clients.PK_ClientID</Relation>
+          </Relations>
+        </Field>
+        <Field>
+          <FldName>FK_LessonTypeID</FldName>
+          <FldAlias>FK_LessonTypeID</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>40</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="3" Width="40">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+          <Relations>
+            <Relation RelatedField="LessonTypeName">dbo.tbl_LessonTypes.PK_LessonTypeID</Relation>
+          </Relations>
+        </Field>
+        <Field>
+          <FldName>FK_LevelID</FldName>
+          <FldAlias>FK_LevelID</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>40</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="4" Width="40">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+          <Relations>
+            <Relation RelatedField="LevelName">dbo.tbl_Levels.PK_LevelID</Relation>
+          </Relations>
+        </Field>
+        <Field>
+          <FldName>LessonCount</FldName>
+          <FldAlias>LessonCount</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>40</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="5" Width="40">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>ExtraCount</FldName>
+          <FldAlias>ExtraCount</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>40</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="6" Width="40">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>PrimaryType</FldName>
+          <FldAlias>PrimaryType</FldAlias>
+          <DataType>BIT</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>15</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="7" Width="15">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>LastAction</FldName>
+          <FldAlias>LastAction</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>40</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="8" Width="40">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>Active</FldName>
+          <FldAlias>Active</FldAlias>
+          <DataType>BIT</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>15</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="9" Width="15">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>True</FldUpdate>
+        </Field>
+      </Fields>
+    </Table>
+    <Table Default="True">
+      <Name>dbo.tbl_Clients</Name>
+      <Alias>dbo.tbl_Clients</Alias>
+      <Visible>True</Visible>
+      <Search>True</Search>
+      <Update>True</Update>
+      <Insert>False</Insert>
+      <Delete>False</Delete>
+      <Fields>
+        <Field>
+          <FldName>PK_ClientID</FldName>
+          <FldAlias>PK_ClientID</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>True</Identity>
+          <PrimaryKey>True</PrimaryKey>
+          <FldWidth>40</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="1" Width="40">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>FirstName</FldName>
+          <FldAlias>FirstName</FldAlias>
+          <DataType>CHAR</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>150</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="2" Width="150">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>MiddleName</FldName>
+          <FldAlias>MiddleName</FldAlias>
+          <DataType>CHAR</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>150</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="3" Width="150">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>FamilyName</FldName>
+          <FldAlias>FamilyName</FldAlias>
+          <DataType>CHAR</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>150</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="4" Width="150">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>ClientName</FldName>
+          <FldAlias>ClientName</FldAlias>
+          <DataType>CHAR</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>200</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="5" Width="200">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>FK_GroupID</FldName>
+          <FldAlias>FK_GroupID</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>80</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="6" Width="80">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+          <Relations>
+            <Relation RelatedField="GroupName">dbo.tbl_Groups.PK_GroupID</Relation>
+          </Relations>
+        </Field>
+        <Field>
+          <FldName>PrimaryContact</FldName>
+          <FldAlias>PrimaryContact</FldAlias>
+          <DataType>BIT</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>15</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="7" Width="15">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>Street</FldName>
+          <FldAlias>Street</FldAlias>
+          <DataType>CHAR</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>150</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="8" Width="150">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>HouseNumber</FldName>
+          <FldAlias>HouseNumber</FldAlias>
+          <DataType>CHAR</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>150</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="9" Width="150">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>PostalCode</FldName>
+          <FldAlias>PostalCode</FldAlias>
+          <DataType>CHAR</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>150</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="10" Width="150">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>City</FldName>
+          <FldAlias>City</FldAlias>
+          <DataType>CHAR</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>150</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="0" Width="150">False</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>Country</FldName>
+          <FldAlias>Country</FldAlias>
+          <DataType>CHAR</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>150</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="0" Width="150">False</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>TelePhone</FldName>
+          <FldAlias>TelePhone</FldAlias>
+          <DataType>CHAR</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>150</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="0" Width="150">False</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>Fax</FldName>
+          <FldAlias>Fax</FldAlias>
+          <DataType>CHAR</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>150</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="0" Width="150">False</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>Mobile</FldName>
+          <FldAlias>Mobile</FldAlias>
+          <DataType>CHAR</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>150</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="0" Width="150">False</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>Email</FldName>
+          <FldAlias>Email</FldAlias>
+          <DataType>CHAR</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>150</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="0" Width="150">False</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>MailingList</FldName>
+          <FldAlias>MailingList</FldAlias>
+          <DataType>BIT</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>15</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="0" Width="15">False</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>FK_PrContactID</FldName>
+          <FldAlias>FK_PrContactID</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>40</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="0" Width="40">False</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+          <Relations>
+            <Relation RelatedField="PrContactName">dbo.tbl_PrContacts.PK_PrContactID</Relation>
+          </Relations>
+        </Field>
+        <Field>
+          <FldName>DayOfBirth</FldName>
+          <FldAlias>DayOfBirth</FldAlias>
+          <DataType>DATETIME</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>50</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="0" Width="50">False</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>BankAccount</FldName>
+          <FldAlias>BankAccount</FldAlias>
+          <DataType>CHAR</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>150</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="0" Width="150">False</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>CreditCard</FldName>
+          <FldAlias>CreditCard</FldAlias>
+          <DataType>CHAR</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>150</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="0" Width="150">False</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>CreditCardCcv</FldName>
+          <FldAlias>CreditCardCcv</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>40</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="0" Width="40">False</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>CreditCardExpire</FldName>
+          <FldAlias>CreditCardExpire</FldAlias>
+          <DataType>CHAR</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>50</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="0" Width="50">False</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>Remarks</FldName>
+          <FldAlias>Remarks</FldAlias>
+          <DataType>CHAR</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>50</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="0" Width="50">False</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>CustomField1</FldName>
+          <FldAlias>CustomField1</FldAlias>
+          <DataType>BIT</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>15</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="0" Width="15">False</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>CustomField2</FldName>
+          <FldAlias>CustomField2</FldAlias>
+          <DataType>BIT</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>15</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="0" Width="15">False</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>CustomField3</FldName>
+          <FldAlias>CustomField3</FldAlias>
+          <DataType>CHAR</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>200</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="0" Width="200">False</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>CustomField4</FldName>
+          <FldAlias>CustomField4</FldAlias>
+          <DataType>CHAR</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>200</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="0" Width="200">False</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>Active</FldName>
+          <FldAlias>Active</FldAlias>
+          <DataType>BIT</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>15</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="0" Width="15">False</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>True</FldUpdate>
+        </Field>
+      </Fields>
+    </Table>
+    <Table Default="False">
+      <Name>dbo.tbl_Config</Name>
+      <Alias>dbo.tbl_Config</Alias>
+      <Visible>True</Visible>
+      <Search>True</Search>
+      <Update>True</Update>
+      <Insert>False</Insert>
+      <Delete>False</Delete>
+      <Fields>
+        <Field>
+          <FldName>PK_ConfigId</FldName>
+          <FldAlias>PK_ConfigId</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>True</Identity>
+          <PrimaryKey>True</PrimaryKey>
+          <FldWidth>40</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="1" Width="40">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>Category</FldName>
+          <FldAlias>Category</FldAlias>
+          <DataType>CHAR</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>150</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="2" Width="150">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>ConfigName</FldName>
+          <FldAlias>ConfigName</FldAlias>
+          <DataType>CHAR</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>150</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="3" Width="150">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>ConfigValue</FldName>
+          <FldAlias>ConfigValue</FldAlias>
+          <DataType>CHAR</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>200</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="4" Width="200">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>True</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>DateStart</FldName>
+          <FldAlias>DateStart</FldAlias>
+          <DataType>DATETIME</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>50</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="5" Width="50">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>DateStop</FldName>
+          <FldAlias>DateStop</FldAlias>
+          <DataType>DATETIME</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>50</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="Now()">True</DefaultButton>
+          <FldList Order="6" Width="50">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>DateChange</FldName>
+          <FldAlias>DateChange</FldAlias>
+          <DataType>DATETIME</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>50</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="Now()">True</DefaultButton>
+          <FldList Order="7" Width="50">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>Remarks</FldName>
+          <FldAlias>Remarks</FldAlias>
+          <DataType>CHAR</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>200</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="8" Width="200">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>Active</FldName>
+          <FldAlias>Active</FldAlias>
+          <DataType>BIT</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>15</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="9" Width="15">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>True</FldUpdate>
+        </Field>
+      </Fields>
+    </Table>
+    <Table Default="False">
+      <Name>dbo.tbl_Groups</Name>
+      <Alias>dbo.tbl_Groups</Alias>
+      <Visible>True</Visible>
+      <Search>True</Search>
+      <Update>True</Update>
+      <Insert>False</Insert>
+      <Delete>False</Delete>
+      <Fields>
+        <Field>
+          <FldName>PK_GroupID</FldName>
+          <FldAlias>PK_GroupID</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>True</PrimaryKey>
+          <FldWidth>80</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="1" Width="80">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>GroupName</FldName>
+          <FldAlias>GroupName</FldAlias>
+          <DataType>CHAR</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>150</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="2" Width="150">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>Active</FldName>
+          <FldAlias>Active</FldAlias>
+          <DataType>BIT</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>15</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="3" Width="15">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>True</FldUpdate>
+        </Field>
+      </Fields>
+    </Table>
+    <Table Default="False">
+      <Name>dbo.tbl_Invoice</Name>
+      <Alias>dbo.tbl_Invoice</Alias>
+      <Visible>True</Visible>
+      <Search>True</Search>
+      <Update>True</Update>
+      <Insert>False</Insert>
+      <Delete>False</Delete>
+      <Fields>
+        <Field>
+          <FldName>PK_InvoiceID</FldName>
+          <FldAlias>PK_InvoiceID</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>True</Identity>
+          <PrimaryKey>True</PrimaryKey>
+          <FldWidth>40</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="1" Width="40">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>InvoiceName</FldName>
+          <FldAlias>InvoiceName</FldAlias>
+          <DataType>CHAR</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>50</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="2" Width="50">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>InvoiceNumber</FldName>
+          <FldAlias>InvoiceNumber</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>40</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="3" Width="40">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>InvoiceDate</FldName>
+          <FldAlias>InvoiceDate</FldAlias>
+          <DataType>DATETIME</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>50</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="4" Width="50">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>FK_ClientID</FldName>
+          <FldAlias>FK_ClientID</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>40</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="5" Width="40">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+          <Relations>
+            <Relation RelatedField="ClientName">dbo.tbl_Clients.PK_ClientID</Relation>
+          </Relations>
+        </Field>
+        <Field>
+          <FldName>FK_LoginID</FldName>
+          <FldAlias>FK_LoginID</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>40</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="6" Width="40">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+          <Relations>
+            <Relation RelatedField="LoginName">dbo.tbl_Logins.PK_LoginID</Relation>
+          </Relations>
+        </Field>
+        <Field>
+          <FldName>Payed</FldName>
+          <FldAlias>Payed</FldAlias>
+          <DataType>BIT</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>15</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="7" Width="15">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>Active</FldName>
+          <FldAlias>Active</FldAlias>
+          <DataType>BIT</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>15</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="8" Width="15">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>True</FldUpdate>
+        </Field>
+      </Fields>
+    </Table>
+    <Table Default="False">
+      <Name>dbo.tbl_InvoiceLine</Name>
+      <Alias>dbo.tbl_InvoiceLine</Alias>
+      <Visible>True</Visible>
+      <Search>True</Search>
+      <Update>True</Update>
+      <Insert>False</Insert>
+      <Delete>False</Delete>
+      <Fields>
+        <Field>
+          <FldName>PK_InvoiceLineID</FldName>
+          <FldAlias>PK_InvoiceLineID</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>True</Identity>
+          <PrimaryKey>True</PrimaryKey>
+          <FldWidth>40</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="1" Width="40">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>FK_InvoiceID</FldName>
+          <FldAlias>FK_InvoiceID</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>40</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="2" Width="40">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+          <Relations>
+            <Relation RelatedField="InvoiceNumber">dbo.tbl_Invoice.PK_InvoiceID</Relation>
+          </Relations>
+        </Field>
+        <Field>
+          <FldName>FK_ClientID</FldName>
+          <FldAlias>FK_ClientID</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>40</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="3" Width="40">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+          <Relations>
+            <Relation>dbo.tbl_Clients.PK_ClientID</Relation>
+          </Relations>
+        </Field>
+        <Field>
+          <FldName>FK_LoginID</FldName>
+          <FldAlias>FK_LoginID</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>40</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="4" Width="40">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+          <Relations>
+            <Relation RelatedField="LoginName">dbo.tbl_Logins.PK_LoginID</Relation>
+          </Relations>
+        </Field>
+        <Field>
+          <FldName>Description</FldName>
+          <FldAlias>Description</FldAlias>
+          <DataType>CHAR</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>200</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="5" Width="200">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>Count</FldName>
+          <FldAlias>Count</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>40</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="6" Width="40">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>Amount</FldName>
+          <FldAlias>Amount</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>90</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="7" Width="90">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>FK_Tax</FldName>
+          <FldAlias>FK_Tax</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>40</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="8" Width="40">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+          <Relations>
+            <Relation RelatedField="TaxValue">dbo.tbl_Tax.PK_Tax</Relation>
+          </Relations>
+        </Field>
+        <Field>
+          <FldName>Active</FldName>
+          <FldAlias>Active</FldAlias>
+          <DataType>BIT</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>15</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="9" Width="15">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>True</FldUpdate>
+        </Field>
+      </Fields>
+    </Table>
+    <Table Default="False">
+      <Name>dbo.tbl_InvoicePayment</Name>
+      <Alias>dbo.tbl_InvoicePayment</Alias>
+      <Visible>True</Visible>
+      <Search>True</Search>
+      <Update>True</Update>
+      <Insert>False</Insert>
+      <Delete>False</Delete>
+      <Fields>
+        <Field>
+          <FldName>PK_InvoicePaymentID</FldName>
+          <FldAlias>PK_InvoicePaymentID</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>True</Identity>
+          <PrimaryKey>True</PrimaryKey>
+          <FldWidth>40</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="1" Width="40">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>PayDate</FldName>
+          <FldAlias>PayDate</FldAlias>
+          <DataType>DATETIME</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>50</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="2" Width="50">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>FK_InvoiceID</FldName>
+          <FldAlias>FK_InvoiceID</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>40</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="3" Width="40">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+          <Relations>
+            <Relation RelatedField="InvoiceNumber">dbo.tbl_Invoice.PK_InvoiceID</Relation>
+          </Relations>
+        </Field>
+        <Field>
+          <FldName>FK_ClientID</FldName>
+          <FldAlias>FK_ClientID</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>40</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="4" Width="40">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+          <Relations>
+            <Relation RelatedField="ClientName">dbo.tbl_Clients.PK_ClientID</Relation>
+          </Relations>
+        </Field>
+        <Field>
+          <FldName>FK_LoginID</FldName>
+          <FldAlias>FK_LoginID</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>40</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="5" Width="40">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+          <Relations>
+            <Relation RelatedField="LoginName">dbo.tbl_Logins.PK_LoginID</Relation>
+          </Relations>
+        </Field>
+        <Field>
+          <FldName>Amount</FldName>
+          <FldAlias>Amount</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>90</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="6" Width="90">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>FK_PaymentMethodID</FldName>
+          <FldAlias>FK_PaymentMethodID</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>40</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="7" Width="40">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+          <Relations>
+            <Relation RelatedField="PaymentMethodName">dbo.tbl_PaymentMethods.PK_PaymentMethodID</Relation>
+          </Relations>
+        </Field>
+        <Field>
+          <FldName>Active</FldName>
+          <FldAlias>Active</FldAlias>
+          <DataType>BIT</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>15</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="8" Width="15">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>True</FldUpdate>
+        </Field>
+      </Fields>
+    </Table>
+    <Table Default="False">
+      <Name>dbo.tbl_Language</Name>
+      <Alias>dbo.tbl_Language</Alias>
+      <Visible>True</Visible>
+      <Search>True</Search>
+      <Update>False</Update>
+      <Insert>False</Insert>
+      <Delete>False</Delete>
+      <Fields>
+        <Field>
+          <FldName>PK_LanguageId</FldName>
+          <FldAlias>PK_LanguageId</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>True</Identity>
+          <PrimaryKey>True</PrimaryKey>
+          <FldWidth>40</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="1" Width="40">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>Language</FldName>
+          <FldAlias>Language</FldAlias>
+          <DataType>CHAR</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>150</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="2" Width="150">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>LanguageForm</FldName>
+          <FldAlias>LanguageForm</FldAlias>
+          <DataType>CHAR</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>150</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="3" Width="150">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>LanguageItem</FldName>
+          <FldAlias>LanguageItem</FldAlias>
+          <DataType>CHAR</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>150</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="4" Width="150">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>LanguageText</FldName>
+          <FldAlias>LanguageText</FldAlias>
+          <DataType>CHAR</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>200</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="5" Width="200">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>LanguageType</FldName>
+          <FldAlias>LanguageType</FldAlias>
+          <DataType>CHAR</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>150</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="6" Width="150">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+      </Fields>
+    </Table>
+    <Table Default="False">
+      <Name>dbo.tbl_LessonTypes</Name>
+      <Alias>dbo.tbl_LessonTypes</Alias>
+      <Visible>True</Visible>
+      <Search>True</Search>
+      <Update>True</Update>
+      <Insert>False</Insert>
+      <Delete>False</Delete>
+      <Fields>
+        <Field>
+          <FldName>PK_LessonTypeID</FldName>
+          <FldAlias>PK_LessonTypeID</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>True</Identity>
+          <PrimaryKey>True</PrimaryKey>
+          <FldWidth>40</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="1" Width="40">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>LessonTypeName</FldName>
+          <FldAlias>LessonTypeName</FldAlias>
+          <DataType>CHAR</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>150</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="2" Width="150">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>Color</FldName>
+          <FldAlias>Color</FldAlias>
+          <DataType>CHAR</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>150</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="3" Width="150">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>Active</FldName>
+          <FldAlias>Active</FldAlias>
+          <DataType>BIT</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>15</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="4" Width="15">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>True</FldUpdate>
+        </Field>
+      </Fields>
+    </Table>
+    <Table Default="False">
+      <Name>dbo.tbl_Levels</Name>
+      <Alias>dbo.tbl_Levels</Alias>
+      <Visible>True</Visible>
+      <Search>True</Search>
+      <Update>True</Update>
+      <Insert>False</Insert>
+      <Delete>False</Delete>
+      <Fields>
+        <Field>
+          <FldName>PK_LevelID</FldName>
+          <FldAlias>PK_LevelID</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>True</Identity>
+          <PrimaryKey>True</PrimaryKey>
+          <FldWidth>40</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="1" Width="40">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>LevelName</FldName>
+          <FldAlias>LevelName</FldAlias>
+          <DataType>CHAR</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>150</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="2" Width="150">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>Color</FldName>
+          <FldAlias>Color</FldAlias>
+          <DataType>CHAR</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>150</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="3" Width="150">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>LevelCount</FldName>
+          <FldAlias>LevelCount</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>40</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="4" Width="40">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>Active</FldName>
+          <FldAlias>Active</FldAlias>
+          <DataType>BIT</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>15</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="5" Width="15">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>True</FldUpdate>
+        </Field>
+      </Fields>
+    </Table>
+    <Table Default="False">
+      <Name>dbo.tbl_Logging</Name>
+      <Alias>dbo.tbl_Logging</Alias>
+      <Visible>True</Visible>
+      <Search>True</Search>
+      <Update>False</Update>
+      <Insert>False</Insert>
+      <Delete>False</Delete>
+      <Fields>
+        <Field>
+          <FldName>LogDate</FldName>
+          <FldAlias>LogDate</FldAlias>
+          <DataType>DATETIME</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>True</PrimaryKey>
+          <FldWidth>50</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="1" Width="50">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>Logtext</FldName>
+          <FldAlias>Logtext</FldAlias>
+          <DataType>CHAR</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>200</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="2" Width="200">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>ClientPC</FldName>
+          <FldAlias>ClientPC</FldAlias>
+          <DataType>CHAR</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>150</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="3" Width="150">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+      </Fields>
+    </Table>
+    <Table Default="False">
+      <Name>dbo.tbl_Logins</Name>
+      <Alias>dbo.tbl_Logins</Alias>
+      <Visible>True</Visible>
+      <Search>True</Search>
+      <Update>True</Update>
+      <Insert>False</Insert>
+      <Delete>False</Delete>
+      <Fields>
+        <Field>
+          <FldName>PK_LoginID</FldName>
+          <FldAlias>PK_LoginID</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>True</Identity>
+          <PrimaryKey>True</PrimaryKey>
+          <FldWidth>40</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="1" Width="40">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>LoginName</FldName>
+          <FldAlias>LoginName</FldAlias>
+          <DataType>CHAR</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>150</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="2" Width="150">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>LoginPassword</FldName>
+          <FldAlias>LoginPassword</FldAlias>
+          <DataType>CHAR</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>200</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="3" Width="200">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>DateStart</FldName>
+          <FldAlias>DateStart</FldAlias>
+          <DataType>DATETIME</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>50</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="Now()">True</DefaultButton>
+          <FldList Order="4" Width="50">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>True</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>DateStop</FldName>
+          <FldAlias>DateStop</FldAlias>
+          <DataType>DATETIME</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>50</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="Now()">True</DefaultButton>
+          <FldList Order="5" Width="50">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>True</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>Enabled</FldName>
+          <FldAlias>Enabled</FldAlias>
+          <DataType>BIT</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>15</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="6" Width="15">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>True</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>Security_Add</FldName>
+          <FldAlias>Security_Add</FldAlias>
+          <DataType>BIT</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>15</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="7" Width="15">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>Security_Change</FldName>
+          <FldAlias>Security_Change</FldAlias>
+          <DataType>BIT</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>15</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="8" Width="15">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>Security_Delete</FldName>
+          <FldAlias>Security_Delete</FldAlias>
+          <DataType>BIT</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>15</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="9" Width="15">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>Finance_Add</FldName>
+          <FldAlias>Finance_Add</FldAlias>
+          <DataType>BIT</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>15</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="10" Width="15">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>Finance_Change</FldName>
+          <FldAlias>Finance_Change</FldAlias>
+          <DataType>BIT</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>15</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="0" Width="15">False</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>Finance_Delete</FldName>
+          <FldAlias>Finance_Delete</FldAlias>
+          <DataType>BIT</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>15</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="0" Width="15">False</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>Settings_Add</FldName>
+          <FldAlias>Settings_Add</FldAlias>
+          <DataType>BIT</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>15</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="0" Width="15">False</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>Settings_Change</FldName>
+          <FldAlias>Settings_Change</FldAlias>
+          <DataType>BIT</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>15</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="0" Width="15">False</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>Settings_Delete</FldName>
+          <FldAlias>Settings_Delete</FldAlias>
+          <DataType>BIT</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>15</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="0" Width="15">False</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>Groups_Delete</FldName>
+          <FldAlias>Groups_Delete</FldAlias>
+          <DataType>BIT</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>15</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="0" Width="15">False</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>Clients_Delete</FldName>
+          <FldAlias>Clients_Delete</FldAlias>
+          <DataType>BIT</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>15</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="0" Width="15">False</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>Active</FldName>
+          <FldAlias>Active</FldAlias>
+          <DataType>BIT</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>15</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="0" Width="15">False</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>True</FldUpdate>
+        </Field>
+      </Fields>
+    </Table>
+    <Table Default="False">
+      <Name>dbo.tbl_Memo</Name>
+      <Alias>dbo.tbl_Memo</Alias>
+      <Visible>True</Visible>
+      <Search>True</Search>
+      <Update>False</Update>
+      <Insert>False</Insert>
+      <Delete>False</Delete>
+      <Fields>
+        <Field>
+          <FldName>PK_MemoId</FldName>
+          <FldAlias>PK_MemoId</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>True</Identity>
+          <PrimaryKey>True</PrimaryKey>
+          <FldWidth>40</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="1" Width="40">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>Type</FldName>
+          <FldAlias>Type</FldAlias>
+          <DataType>CHAR</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>50</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="2" Width="50">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>FK_GroupId</FldName>
+          <FldAlias>FK_GroupId</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>80</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="3" Width="80">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>MemoDate</FldName>
+          <FldAlias>MemoDate</FldAlias>
+          <DataType>CHAR</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>50</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="4" Width="50">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>MemoText</FldName>
+          <FldAlias>MemoText</FldAlias>
+          <DataType>CHAR</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>50</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="5" Width="50">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+      </Fields>
+    </Table>
+    <Table Default="False">
+      <Name>dbo.tbl_PaymentMethods</Name>
+      <Alias>dbo.tbl_PaymentMethods</Alias>
+      <Visible>True</Visible>
+      <Search>True</Search>
+      <Update>True</Update>
+      <Insert>False</Insert>
+      <Delete>False</Delete>
+      <Fields>
+        <Field>
+          <FldName>PK_PaymentMethodID</FldName>
+          <FldAlias>PK_PaymentMethodID</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>True</Identity>
+          <PrimaryKey>True</PrimaryKey>
+          <FldWidth>40</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="1" Width="40">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>PaymentMethodName</FldName>
+          <FldAlias>PaymentMethodName</FldAlias>
+          <DataType>CHAR</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>150</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="2" Width="150">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>Active</FldName>
+          <FldAlias>Active</FldAlias>
+          <DataType>BIT</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>15</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="3" Width="15">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>True</FldUpdate>
+        </Field>
+      </Fields>
+    </Table>
+    <Table Default="False">
+      <Name>dbo.tbl_PrContacts</Name>
+      <Alias>dbo.tbl_PrContacts</Alias>
+      <Visible>True</Visible>
+      <Search>True</Search>
+      <Update>True</Update>
+      <Insert>False</Insert>
+      <Delete>False</Delete>
+      <Fields>
+        <Field>
+          <FldName>PK_PrContactID</FldName>
+          <FldAlias>PK_PrContactID</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>True</Identity>
+          <PrimaryKey>True</PrimaryKey>
+          <FldWidth>40</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="1" Width="40">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>PrContactName</FldName>
+          <FldAlias>PrContactName</FldAlias>
+          <DataType>CHAR</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>200</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="2" Width="200">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>Active</FldName>
+          <FldAlias>Active</FldAlias>
+          <DataType>BIT</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>15</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="3" Width="15">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>True</FldUpdate>
+        </Field>
+      </Fields>
+    </Table>
+    <Table Default="False">
+      <Name>dbo.tbl_Products</Name>
+      <Alias>dbo.tbl_Products</Alias>
+      <Visible>True</Visible>
+      <Search>True</Search>
+      <Update>True</Update>
+      <Insert>False</Insert>
+      <Delete>False</Delete>
+      <Fields>
+        <Field>
+          <FldName>PK_ProductID</FldName>
+          <FldAlias>PK_ProductID</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>True</Identity>
+          <PrimaryKey>True</PrimaryKey>
+          <FldWidth>40</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="1" Width="40">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>ProductText</FldName>
+          <FldAlias>ProductText</FldAlias>
+          <DataType>CHAR</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>200</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="2" Width="200">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>ProductCount</FldName>
+          <FldAlias>ProductCount</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>40</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="3" Width="40">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>ProductAmount</FldName>
+          <FldAlias>ProductAmount</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>90</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="4" Width="90">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>Tax</FldName>
+          <FldAlias>Tax</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>40</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="5" Width="40">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>Sort</FldName>
+          <FldAlias>Sort</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>10</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="6" Width="10">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>Active</FldName>
+          <FldAlias>Active</FldAlias>
+          <DataType>BIT</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>15</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="7" Width="15">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>True</FldUpdate>
+        </Field>
+      </Fields>
+    </Table>
+    <Table Default="False">
+      <Name>dbo.tbl_ReportArguments</Name>
+      <Alias>dbo.tbl_ReportArguments</Alias>
+      <Visible>True</Visible>
+      <Search>True</Search>
+      <Update>True</Update>
+      <Insert>False</Insert>
+      <Delete>False</Delete>
+      <Fields>
+        <Field>
+          <FldName>PK_ReportArgumentId</FldName>
+          <FldAlias>PK_ReportArgumentId</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>True</Identity>
+          <PrimaryKey>True</PrimaryKey>
+          <FldWidth>40</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="1" Width="40">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>FK_ReportId</FldName>
+          <FldAlias>FK_ReportId</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>40</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="2" Width="40">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+          <Relations>
+            <Relation>dbo.tbl_Reports.PK_ReportId</Relation>
+          </Relations>
+        </Field>
+        <Field>
+          <FldName>FK_ArgumentId</FldName>
+          <FldAlias>FK_ArgumentId</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>40</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="3" Width="40">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+          <Relations>
+            <Relation>dbo.tbl_Arguments.PK_ArgumentId</Relation>
+          </Relations>
+        </Field>
+        <Field>
+          <FldName>IsOptional</FldName>
+          <FldAlias>IsOptional</FldAlias>
+          <DataType>BIT</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>15</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="4" Width="15">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>IsSelected</FldName>
+          <FldAlias>IsSelected</FldAlias>
+          <DataType>BIT</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>15</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="5" Width="15">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+      </Fields>
+    </Table>
+    <Table Default="False">
+      <Name>dbo.tbl_ReportFields</Name>
+      <Alias>dbo.tbl_ReportFields</Alias>
+      <Visible>True</Visible>
+      <Search>True</Search>
+      <Update>True</Update>
+      <Insert>False</Insert>
+      <Delete>False</Delete>
+      <Fields>
+        <Field>
+          <FldName>PK_ReportFieldId</FldName>
+          <FldAlias>PK_ReportFieldId</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>True</Identity>
+          <PrimaryKey>True</PrimaryKey>
+          <FldWidth>40</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="1" Width="40">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>FK_ReportId</FldName>
+          <FldAlias>FK_ReportId</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>40</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="2" Width="40">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+          <Relations>
+            <Relation>dbo.tbl_Reports.PK_ReportId</Relation>
+          </Relations>
+        </Field>
+        <Field>
+          <FldName>FieldName</FldName>
+          <FldAlias>FieldName</FldAlias>
+          <DataType>CHAR</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>150</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="3" Width="150">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>FieldAlias</FldName>
+          <FldAlias>FieldAlias</FldAlias>
+          <DataType>CHAR</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>150</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="4" Width="150">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>FieldWidth</FldName>
+          <FldAlias>FieldWidth</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>40</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="5" Width="40">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>FieldShow</FldName>
+          <FldAlias>FieldShow</FldAlias>
+          <DataType>BIT</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>15</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="6" Width="15">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>FieldType</FldName>
+          <FldAlias>FieldType</FldAlias>
+          <DataType>CHAR</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>150</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="7" Width="150">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>FieldDefault</FldName>
+          <FldAlias>FieldDefault</FldAlias>
+          <DataType>CHAR</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>150</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="8" Width="150">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>FieldOrder</FldName>
+          <FldAlias>FieldOrder</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>40</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="9" Width="40">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+      </Fields>
+    </Table>
+    <Table Default="False">
+      <Name>dbo.tbl_Reports</Name>
+      <Alias>dbo.tbl_Reports</Alias>
+      <Visible>True</Visible>
+      <Search>True</Search>
+      <Update>True</Update>
+      <Insert>False</Insert>
+      <Delete>False</Delete>
+      <Fields>
+        <Field>
+          <FldName>PK_ReportId</FldName>
+          <FldAlias>PK_ReportId</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>True</Identity>
+          <PrimaryKey>True</PrimaryKey>
+          <FldWidth>40</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="1" Width="40">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>ReportName</FldName>
+          <FldAlias>ReportName</FldAlias>
+          <DataType>CHAR</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>150</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="2" Width="150">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>ReportType</FldName>
+          <FldAlias>ReportType</FldAlias>
+          <DataType>CHAR</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>50</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="3" Width="50">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>PrimaryMenu</FldName>
+          <FldAlias>PrimaryMenu</FldAlias>
+          <DataType>CHAR</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>150</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="4" Width="150">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>SecondaryMenu</FldName>
+          <FldAlias>SecondaryMenu</FldAlias>
+          <DataType>CHAR</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>150</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="5" Width="150">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>ProcedureName</FldName>
+          <FldAlias>ProcedureName</FldAlias>
+          <DataType>CHAR</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>200</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="6" Width="200">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>Visible</FldName>
+          <FldAlias>Visible</FldAlias>
+          <DataType>BIT</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>15</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="7" Width="15">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>Active</FldName>
+          <FldAlias>Active</FldAlias>
+          <DataType>BIT</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>15</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="8" Width="15">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+      </Fields>
+    </Table>
+    <Table Default="False">
+      <Name>dbo.tbl_Tax</Name>
+      <Alias>dbo.tbl_Tax</Alias>
+      <Visible>True</Visible>
+      <Search>True</Search>
+      <Update>True</Update>
+      <Insert>False</Insert>
+      <Delete>False</Delete>
+      <Fields>
+        <Field>
+          <FldName>PK_Tax</FldName>
+          <FldAlias>PK_Tax</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>True</Identity>
+          <PrimaryKey>True</PrimaryKey>
+          <FldWidth>40</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="1" Width="40">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>TaxValue</FldName>
+          <FldAlias>TaxValue</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>40</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="2" Width="40">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>TaxDescription</FldName>
+          <FldAlias>TaxDescription</FldAlias>
+          <DataType>CHAR</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>200</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="3" Width="200">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>Active</FldName>
+          <FldAlias>Active</FldAlias>
+          <DataType>BIT</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>15</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="4" Width="15">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+      </Fields>
+    </Table>
+    <Table Default="False">
+      <Name>dbo.tbl_Tracks</Name>
+      <Alias>dbo.tbl_Tracks</Alias>
+      <Visible>True</Visible>
+      <Search>True</Search>
+      <Update>True</Update>
+      <Insert>False</Insert>
+      <Delete>False</Delete>
+      <Fields>
+        <Field>
+          <FldName>PK_TrackID</FldName>
+          <FldAlias>PK_TrackID</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>True</Identity>
+          <PrimaryKey>True</PrimaryKey>
+          <FldWidth>40</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="1" Width="40">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>TrackName</FldName>
+          <FldAlias>TrackName</FldAlias>
+          <DataType>CHAR</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>150</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="2" Width="150">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>TrackOffset</FldName>
+          <FldAlias>TrackOffset</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>40</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="3" Width="40">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>Active</FldName>
+          <FldAlias>Active</FldAlias>
+          <DataType>BIT</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>15</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="4" Width="15">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>True</FldUpdate>
+        </Field>
+      </Fields>
+    </Table>
+  </Tables>
+</Sequenchel>
