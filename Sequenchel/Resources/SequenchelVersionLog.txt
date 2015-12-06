@@ -5,6 +5,7 @@ New: The query engine is now able to build a HAVING clause.
 New: Added Scheduled Job monitoring.
 New: Added Minimum and Maximum Server memory to the Server Monitoring
 New: Related fields can now be used to lookup identifiers.
+New: Replaced lookup fields with enhanced search options.
 Enhanced: Report buttons Add/Update/Delete now autosave any changes. OK and Apply buttons have been removed.
 Enhanced: Configuration buttons Add/Update/Delete now autosave any changes. OK and Apply buttons have been removed.
 Enhanced: Filters without filter mode will default to "AND"
