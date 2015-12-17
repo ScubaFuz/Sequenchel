@@ -3,7 +3,6 @@
 Public Class frmReports
 
     Private Sub frmReports_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        lblTitle.Text = "Sequenchel  version : " & GetVersion("R")
         lblLicense.Text = "Licensed to: " & strLicenseName
         lblLicense.Left = Me.Width - lblLicense.Width - (CurVar.BuildMargin * 3)
         DebugSettings()

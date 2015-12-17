@@ -838,8 +838,27 @@ Module Common
 
     Friend Sub ExportXML(dtsInput As DataSet, strFileName As String)
         Try
-            Dim strXMl As String = dtsInput.GetXml()
-            dhdText.CreateFile(strXMl, strFileName)
+            Dim xmlDocExport As New XmlDocument
+            xmlDocExport.LoadXml(dtsInput.GetXml())
+            Dim xmlDec As XmlDeclaration = xmlDocExport.CreateXmlDeclaration("1.0", "utf-8", "yes")
+            xmlDocExport.InsertBefore(xmlDec, xmlDocExport.DocumentElement)
+            'xmlDocExport.Save(strFileName)
+
+            Using sw As New System.IO.StringWriter()
+                ' Make the XmlTextWriter to format the XML.
+                Using xml_writer As New XmlTextWriter(sw)
+                    xml_writer.Formatting = Formatting.Indented
+                    'dtsInput.WriteXml(xml_writer)
+                    xmlDocExport.WriteTo(xml_writer)
+                    xml_writer.Flush()
+
+                    'Write the XML to disk
+                    dhdText.CreateFile(sw.ToString(), strFileName)
+                End Using
+            End Using
+
+            'Dim strXMl As String = dtsInput.GetXml()
+            'dhdText.CreateFile(strXMl, strFileName)
         Catch ex As Exception
             WriteLog(ex.Message, 1)
         End Try

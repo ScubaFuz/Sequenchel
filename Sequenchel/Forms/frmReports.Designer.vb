@@ -25,7 +25,6 @@ Partial Class frmReports
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmReports))
         Me.lblLicense = New System.Windows.Forms.Label()
-        Me.lblTitle = New System.Windows.Forms.Label()
         Me.tabReports = New System.Windows.Forms.TabControl()
         Me.tpgReportDefinition = New System.Windows.Forms.TabPage()
         Me.sptReports = New System.Windows.Forms.SplitContainer()
@@ -33,8 +32,6 @@ Partial Class frmReports
         Me.colAvTableName = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.colAvFieldAlias = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.lblAvailableFields = New System.Windows.Forms.Label()
-        Me.btnReportFieldAdd = New System.Windows.Forms.Button()
-        Me.btnReportFieldRemove = New System.Windows.Forms.Button()
         Me.sptReport = New System.Windows.Forms.SplitContainer()
         Me.lvwSelectedFields = New System.Windows.Forms.ListView()
         Me.colSeltableName = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
@@ -49,6 +46,8 @@ Partial Class frmReports
         Me.lblReportFilter = New System.Windows.Forms.Label()
         Me.lblReportShow = New System.Windows.Forms.Label()
         Me.lblReportSelectedFields = New System.Windows.Forms.Label()
+        Me.btnReportFieldRemove = New System.Windows.Forms.Button()
+        Me.btnReportFieldAdd = New System.Windows.Forms.Button()
         Me.btnReportFieldDown = New System.Windows.Forms.Button()
         Me.btnReportFieldUp = New System.Windows.Forms.Button()
         Me.pnlSelectedFieldsMain = New System.Windows.Forms.Panel()
@@ -112,10 +111,10 @@ Partial Class frmReports
         Me.btnSaveQuery = New System.Windows.Forms.Button()
         Me.btnExecuteQuery = New System.Windows.Forms.Button()
         Me.rtbQuery = New System.Windows.Forms.RichTextBox()
-        Me.dgvReport = New Sequenchel.usrDataGridView()
         Me.btnTest = New System.Windows.Forms.Button()
         Me.btnClose = New System.Windows.Forms.Button()
         Me.tmrElapsedTime = New System.Windows.Forms.Timer(Me.components)
+        Me.dgvReport = New Sequenchel.usrDataGridView()
         Me.tabReports.SuspendLayout()
         Me.tpgReportDefinition.SuspendLayout()
         CType(Me.sptReports, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -145,16 +144,6 @@ Partial Class frmReports
         Me.lblLicense.Size = New System.Drawing.Size(375, 24)
         Me.lblLicense.TabIndex = 168
         Me.lblLicense.Text = "Licensed to: Thicor Services Demo License"
-        '
-        'lblTitle
-        '
-        Me.lblTitle.AutoSize = True
-        Me.lblTitle.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblTitle.Location = New System.Drawing.Point(312, 2)
-        Me.lblTitle.Name = "lblTitle"
-        Me.lblTitle.Size = New System.Drawing.Size(113, 24)
-        Me.lblTitle.TabIndex = 167
-        Me.lblTitle.Text = "Sequenchel"
         '
         'tabReports
         '
@@ -252,26 +241,6 @@ Partial Class frmReports
         Me.lblAvailableFields.Size = New System.Drawing.Size(80, 13)
         Me.lblAvailableFields.TabIndex = 167
         Me.lblAvailableFields.Text = "Available Fields"
-        '
-        'btnReportFieldAdd
-        '
-        Me.btnReportFieldAdd.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnReportFieldAdd.Image = Global.Sequenchel.My.Resources.Resources.button_right
-        Me.btnReportFieldAdd.Location = New System.Drawing.Point(3, 113)
-        Me.btnReportFieldAdd.Name = "btnReportFieldAdd"
-        Me.btnReportFieldAdd.Size = New System.Drawing.Size(30, 23)
-        Me.btnReportFieldAdd.TabIndex = 1
-        Me.btnReportFieldAdd.UseVisualStyleBackColor = True
-        '
-        'btnReportFieldRemove
-        '
-        Me.btnReportFieldRemove.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnReportFieldRemove.Image = Global.Sequenchel.My.Resources.Resources.button_leftt
-        Me.btnReportFieldRemove.Location = New System.Drawing.Point(3, 142)
-        Me.btnReportFieldRemove.Name = "btnReportFieldRemove"
-        Me.btnReportFieldRemove.Size = New System.Drawing.Size(30, 23)
-        Me.btnReportFieldRemove.TabIndex = 2
-        Me.btnReportFieldRemove.UseVisualStyleBackColor = True
         '
         'sptReport
         '
@@ -426,6 +395,26 @@ Partial Class frmReports
         Me.lblReportSelectedFields.Size = New System.Drawing.Size(79, 13)
         Me.lblReportSelectedFields.TabIndex = 117
         Me.lblReportSelectedFields.Text = "Selected Fields"
+        '
+        'btnReportFieldRemove
+        '
+        Me.btnReportFieldRemove.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnReportFieldRemove.Image = Global.Sequenchel.My.Resources.Resources.button_leftt
+        Me.btnReportFieldRemove.Location = New System.Drawing.Point(3, 142)
+        Me.btnReportFieldRemove.Name = "btnReportFieldRemove"
+        Me.btnReportFieldRemove.Size = New System.Drawing.Size(30, 23)
+        Me.btnReportFieldRemove.TabIndex = 2
+        Me.btnReportFieldRemove.UseVisualStyleBackColor = True
+        '
+        'btnReportFieldAdd
+        '
+        Me.btnReportFieldAdd.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnReportFieldAdd.Image = Global.Sequenchel.My.Resources.Resources.button_right
+        Me.btnReportFieldAdd.Location = New System.Drawing.Point(3, 113)
+        Me.btnReportFieldAdd.Name = "btnReportFieldAdd"
+        Me.btnReportFieldAdd.Size = New System.Drawing.Size(30, 23)
+        Me.btnReportFieldAdd.TabIndex = 1
+        Me.btnReportFieldAdd.UseVisualStyleBackColor = True
         '
         'btnReportFieldDown
         '
@@ -1029,21 +1018,6 @@ Partial Class frmReports
         Me.rtbQuery.TabIndex = 0
         Me.rtbQuery.Text = ""
         '
-        'dgvReport
-        '
-        Me.dgvReport.AllowUserToOrderColumns = True
-        Me.dgvReport.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.dgvReport.BackgroundColor = System.Drawing.SystemColors.Control
-        Me.dgvReport.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
-        Me.dgvReport.BackImage = CType(resources.GetObject("dgvReport.BackImage"), System.Drawing.Image)
-        Me.dgvReport.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvReport.Location = New System.Drawing.Point(6, 6)
-        Me.dgvReport.Name = "dgvReport"
-        Me.dgvReport.Size = New System.Drawing.Size(1243, 563)
-        Me.dgvReport.TabIndex = 0
-        '
         'btnTest
         '
         Me.btnTest.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
@@ -1070,6 +1044,21 @@ Partial Class frmReports
         '
         Me.tmrElapsedTime.Interval = 1000
         '
+        'dgvReport
+        '
+        Me.dgvReport.AllowUserToOrderColumns = True
+        Me.dgvReport.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.dgvReport.BackgroundColor = System.Drawing.SystemColors.Control
+        Me.dgvReport.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
+        Me.dgvReport.BackImage = CType(resources.GetObject("dgvReport.BackImage"), System.Drawing.Image)
+        Me.dgvReport.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dgvReport.Location = New System.Drawing.Point(6, 6)
+        Me.dgvReport.Name = "dgvReport"
+        Me.dgvReport.Size = New System.Drawing.Size(1243, 563)
+        Me.dgvReport.TabIndex = 0
+        '
         'frmReports
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1078,7 +1067,6 @@ Partial Class frmReports
         Me.Controls.Add(Me.btnClose)
         Me.Controls.Add(Me.btnTest)
         Me.Controls.Add(Me.lblLicense)
-        Me.Controls.Add(Me.lblTitle)
         Me.Controls.Add(Me.tabReports)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.MinimumSize = New System.Drawing.Size(900, 600)
@@ -1115,7 +1103,6 @@ Partial Class frmReports
 
     End Sub
     Friend WithEvents lblLicense As System.Windows.Forms.Label
-    Friend WithEvents lblTitle As System.Windows.Forms.Label
     Friend WithEvents tabReports As System.Windows.Forms.TabControl
     Friend WithEvents tpgReportDefinition As System.Windows.Forms.TabPage
     Friend WithEvents txtTop As System.Windows.Forms.TextBox
