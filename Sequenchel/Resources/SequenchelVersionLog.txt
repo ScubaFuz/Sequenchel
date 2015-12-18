@@ -14,6 +14,7 @@ Fixed: Reports with "AND NOT" or "" as first filter mode no longer fail.
 Fixed: Creating a scheduled job would point to a connection database instead of the main database.
 Fixed: Main buttons now stay on the right side when screen size grows.
 Fixed: Export to XML needs a declaration for opening the file in Excel.
+Fixed: XML retrieval now gets whole XML instead of first 200 characters.
 
 Version 3.3.0
 New: Added the option to select multiple fields at once to add to or remove from Reporting.

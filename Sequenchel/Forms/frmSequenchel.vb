@@ -872,7 +872,6 @@ Public Class frmSequenchel
         strQuery &= " WHERE 1=1 "
 
         If blnRefine = True Then
-
             For intField As Integer = 0 To tblTable.Count - 1
                 If tblTable.Item(intField).BackColor = clrMarked Then
                     Dim strWhere As String = Nothing

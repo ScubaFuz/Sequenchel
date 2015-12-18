@@ -1492,8 +1492,10 @@ Module Common
         Select Case strFieldType.ToUpper
             Case "IMAGE"
                 strOutput = "(CONVERT([varchar](" & strFieldWidth & "), " & strFQDN & "))"
-            Case "BINARY", "XML", "GEO", "TEXT", "GUID", "TIME", "TIMESTAMP"
+            Case "BINARY", "GEO", "TEXT", "GUID", "TIME", "TIMESTAMP"
                 strOutput = "(CONVERT([nvarchar](" & strFieldWidth & "), " & strFQDN & "))"
+            Case "XML"
+                strOutput = "(CONVERT([nvarchar](max), " & strFQDN & "))"
             Case "DATETIME"
                 strOutput = "(CONVERT([nvarchar](" & strFieldWidth & "), " & strFQDN & ", " & CurVar.DateTimeStyle & "))"
             Case Else
