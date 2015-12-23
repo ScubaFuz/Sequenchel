@@ -1402,6 +1402,10 @@ Module Common
             If strInput.Substring(0, 2) = "f:" Then
                 Return "(" & strInput.Replace("f:", "") & ")"
             End If
+            If strInput.Substring(0, 2) = "v:" Then
+                strInput = strInput.Replace("v:", "")
+                strInput = ProcessDefaultValue(strInput)
+            End If
         End If
         If strCompare = "IS" Or strCompare = "IS NOT" Then
             Return strInput
@@ -1479,6 +1483,15 @@ Module Common
                     strFieldType = "INTEGER"
                 Case "MIN", "MAX"
                     strFQDN = strShowMode & "(" & strFQDN & ")"
+                Case "YEAR", "MONTH", "DAY", "HOUR", "MINUTE", "SECOND"
+                    strFQDN = "DATEPART(" & strShowMode & "," & strFQDN & ")"
+                    strFieldType = "INTEGER"
+                Case "DATE"
+                    strFQDN = "CAST(" & strFQDN & " AS DATE)"
+                    strFieldType = "DATETIME"
+                Case "TIME"
+                    strFQDN = "CAST(" & strFQDN & " AS TIME)"
+                    strFieldType = "TIME"
                 Case Else
                     'Do Nothing
             End Select
@@ -1492,14 +1505,18 @@ Module Common
         Select Case strFieldType.ToUpper
             Case "IMAGE"
                 strOutput = "(CONVERT([varchar](" & strFieldWidth & "), " & strFQDN & "))"
-            Case "BINARY", "GEO", "TEXT", "GUID", "TIME", "TIMESTAMP"
+            Case "BINARY", "GEO", "TEXT", "GUID"
                 strOutput = "(CONVERT([nvarchar](" & strFieldWidth & "), " & strFQDN & "))"
+            Case "TIME", "TIMESTAMP"
+                Dim intFieldWidth As Integer = 8
+                If IsNumeric(strFieldWidth) = 1 And strFieldWidth < intFieldWidth Then intFieldWidth = strFieldWidth
+                strOutput = "(CONVERT([nvarchar](" & intFieldWidth & "), " & strFQDN & "))"
             Case "XML"
                 strOutput = "(CONVERT([nvarchar](max), " & strFQDN & "))"
             Case "DATETIME"
                 strOutput = "(CONVERT([nvarchar](" & strFieldWidth & "), " & strFQDN & ", " & CurVar.DateTimeStyle & "))"
             Case Else
-                'CHAR: no need to convert char values to char.
+                'CHAR: no need to convert char or int values to char.
                 strOutput = strFQDN
         End Select
 

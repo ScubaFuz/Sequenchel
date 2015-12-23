@@ -422,6 +422,14 @@ Public Class frmReports
                 cbxTarget.Items.Add("MAX")
                 cbxTarget.Items.Add("AVG")
                 cbxTarget.Items.Add("COUNT")
+                cbxTarget.Items.Add("DATE")
+                cbxTarget.Items.Add("YEAR")
+                cbxTarget.Items.Add("MONTH")
+                cbxTarget.Items.Add("DAY")
+                cbxTarget.Items.Add("TIME")
+                cbxTarget.Items.Add("HOUR")
+                cbxTarget.Items.Add("MINUTE")
+                cbxTarget.Items.Add("SECOND")
             Case "Sort"
                 cbxTarget.Items.Clear()
                 cbxTarget.Items.Add("")
@@ -935,11 +943,14 @@ Public Class frmReports
                         strShowMode = GetCtrText(pnlReportShowMode, strFieldName)
 
                         strQuery &= ", " & FormatFieldXML(strFieldName, strShowMode, True, True)
-                        If strShowMode = Nothing Then
-                            strQueryGroup &= ", " & strFieldName
-                        Else
-                            blnGroup = True
-                        End If
+                        Select Case strShowMode
+                            Case Nothing
+                                strQueryGroup &= ", " & strFieldName
+                            Case "DATE", "YEAR", "MONTH", "DAY", "TIME", "HOUR", "MINUTE", "SECOND"
+                                strQueryGroup &= ", " & strFieldName
+                            Case Else
+                                blnGroup = True
+                        End Select
                     End If
                 End If
             Next
