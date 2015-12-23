@@ -111,10 +111,12 @@ Partial Class frmReports
         Me.btnSaveQuery = New System.Windows.Forms.Button()
         Me.btnExecuteQuery = New System.Windows.Forms.Button()
         Me.rtbQuery = New System.Windows.Forms.RichTextBox()
+        Me.dgvReport = New Sequenchel.usrDataGridView()
         Me.btnTest = New System.Windows.Forms.Button()
         Me.btnClose = New System.Windows.Forms.Button()
         Me.tmrElapsedTime = New System.Windows.Forms.Timer(Me.components)
-        Me.dgvReport = New Sequenchel.usrDataGridView()
+        Me.btnReportExport = New System.Windows.Forms.Button()
+        Me.btnReportImport = New System.Windows.Forms.Button()
         Me.tabReports.SuspendLayout()
         Me.tpgReportDefinition.SuspendLayout()
         CType(Me.sptReports, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -160,6 +162,8 @@ Partial Class frmReports
         '
         'tpgReportDefinition
         '
+        Me.tpgReportDefinition.Controls.Add(Me.btnReportExport)
+        Me.tpgReportDefinition.Controls.Add(Me.btnReportImport)
         Me.tpgReportDefinition.Controls.Add(Me.sptReports)
         Me.tpgReportDefinition.Controls.Add(Me.btnRevertChanges)
         Me.tpgReportDefinition.Controls.Add(Me.btnQueryShow)
@@ -738,7 +742,7 @@ Partial Class frmReports
         'txtTop
         '
         Me.txtTop.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.txtTop.Location = New System.Drawing.Point(741, 703)
+        Me.txtTop.Location = New System.Drawing.Point(822, 704)
         Me.txtTop.Name = "txtTop"
         Me.txtTop.Size = New System.Drawing.Size(39, 20)
         Me.txtTop.TabIndex = 8
@@ -750,7 +754,7 @@ Partial Class frmReports
         Me.chkTop.AutoSize = True
         Me.chkTop.Checked = True
         Me.chkTop.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.chkTop.Location = New System.Drawing.Point(665, 705)
+        Me.chkTop.Location = New System.Drawing.Point(746, 706)
         Me.chkTop.Name = "chkTop"
         Me.chkTop.Size = New System.Drawing.Size(70, 17)
         Me.chkTop.TabIndex = 7
@@ -761,7 +765,7 @@ Partial Class frmReports
         '
         Me.chkDistinct.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.chkDistinct.AutoSize = True
-        Me.chkDistinct.Location = New System.Drawing.Point(665, 682)
+        Me.chkDistinct.Location = New System.Drawing.Point(746, 680)
         Me.chkDistinct.Name = "chkDistinct"
         Me.chkDistinct.Size = New System.Drawing.Size(98, 17)
         Me.chkDistinct.TabIndex = 6
@@ -1018,6 +1022,21 @@ Partial Class frmReports
         Me.rtbQuery.TabIndex = 0
         Me.rtbQuery.Text = ""
         '
+        'dgvReport
+        '
+        Me.dgvReport.AllowUserToOrderColumns = True
+        Me.dgvReport.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.dgvReport.BackgroundColor = System.Drawing.SystemColors.Control
+        Me.dgvReport.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
+        Me.dgvReport.BackImage = CType(resources.GetObject("dgvReport.BackImage"), System.Drawing.Image)
+        Me.dgvReport.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dgvReport.Location = New System.Drawing.Point(6, 6)
+        Me.dgvReport.Name = "dgvReport"
+        Me.dgvReport.Size = New System.Drawing.Size(1243, 563)
+        Me.dgvReport.TabIndex = 0
+        '
         'btnTest
         '
         Me.btnTest.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
@@ -1044,20 +1063,23 @@ Partial Class frmReports
         '
         Me.tmrElapsedTime.Interval = 1000
         '
-        'dgvReport
+        'btnReportExport
         '
-        Me.dgvReport.AllowUserToOrderColumns = True
-        Me.dgvReport.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.dgvReport.BackgroundColor = System.Drawing.SystemColors.Control
-        Me.dgvReport.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
-        Me.dgvReport.BackImage = CType(resources.GetObject("dgvReport.BackImage"), System.Drawing.Image)
-        Me.dgvReport.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvReport.Location = New System.Drawing.Point(6, 6)
-        Me.dgvReport.Name = "dgvReport"
-        Me.dgvReport.Size = New System.Drawing.Size(1243, 563)
-        Me.dgvReport.TabIndex = 0
+        Me.btnReportExport.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.btnReportExport.Location = New System.Drawing.Point(9, 677)
+        Me.btnReportExport.Name = "btnReportExport"
+        Me.btnReportExport.Size = New System.Drawing.Size(164, 20)
+        Me.btnReportExport.TabIndex = 194
+        Me.btnReportExport.Text = "Export Report Definition"
+        '
+        'btnReportImport
+        '
+        Me.btnReportImport.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.btnReportImport.Location = New System.Drawing.Point(9, 703)
+        Me.btnReportImport.Name = "btnReportImport"
+        Me.btnReportImport.Size = New System.Drawing.Size(164, 20)
+        Me.btnReportImport.TabIndex = 195
+        Me.btnReportImport.Text = "Import Report Definition"
         '
         'frmReports
         '
@@ -1193,4 +1215,6 @@ Partial Class frmReports
     Friend WithEvents lblElapsedTime As System.Windows.Forms.Label
     Friend WithEvents tmrElapsedTime As System.Windows.Forms.Timer
     Friend WithEvents dgvReport As Sequenchel.usrDataGridView
+    Friend WithEvents btnReportExport As System.Windows.Forms.Button
+    Friend WithEvents btnReportImport As System.Windows.Forms.Button
 End Class

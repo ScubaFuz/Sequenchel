@@ -98,6 +98,7 @@ Partial Class frmConfiguration
         Me.colTablesFile = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.tpgTables = New System.Windows.Forms.TabPage()
         Me.pnlFieldSettings = New System.Windows.Forms.Panel()
+        Me.chkRelatedField = New System.Windows.Forms.CheckBox()
         Me.lblFieldName = New System.Windows.Forms.Label()
         Me.lblIdentity = New System.Windows.Forms.Label()
         Me.txtFieldName = New System.Windows.Forms.TextBox()
@@ -189,7 +190,6 @@ Partial Class frmConfiguration
         Me.lblStatus = New System.Windows.Forms.Label()
         Me.btnClose = New System.Windows.Forms.Button()
         Me.btnCancel = New System.Windows.Forms.Button()
-        Me.chkRelatedField = New System.Windows.Forms.CheckBox()
         Me.tabConfiguration.SuspendLayout()
         Me.tpgConnections.SuspendLayout()
         Me.tpgTableSets.SuspendLayout()
@@ -1039,6 +1039,15 @@ Partial Class frmConfiguration
         Me.pnlFieldSettings.Size = New System.Drawing.Size(318, 453)
         Me.pnlFieldSettings.TabIndex = 162
         '
+        'chkRelatedField
+        '
+        Me.chkRelatedField.AutoSize = True
+        Me.chkRelatedField.Location = New System.Drawing.Point(107, 142)
+        Me.chkRelatedField.Name = "chkRelatedField"
+        Me.chkRelatedField.Size = New System.Drawing.Size(15, 14)
+        Me.chkRelatedField.TabIndex = 162
+        Me.chkRelatedField.UseVisualStyleBackColor = True
+        '
         'lblFieldName
         '
         Me.lblFieldName.Location = New System.Drawing.Point(3, 10)
@@ -1848,7 +1857,7 @@ Partial Class frmConfiguration
         'btnTest
         '
         Me.btnTest.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnTest.Location = New System.Drawing.Point(469, -8)
+        Me.btnTest.Location = New System.Drawing.Point(367, 803)
         Me.btnTest.Name = "btnTest"
         Me.btnTest.Size = New System.Drawing.Size(135, 23)
         Me.btnTest.TabIndex = 7
@@ -1889,15 +1898,6 @@ Partial Class frmConfiguration
         Me.btnCancel.Text = "Cancel"
         Me.btnCancel.UseVisualStyleBackColor = True
         Me.btnCancel.Visible = False
-        '
-        'chkRelatedField
-        '
-        Me.chkRelatedField.AutoSize = True
-        Me.chkRelatedField.Location = New System.Drawing.Point(107, 142)
-        Me.chkRelatedField.Name = "chkRelatedField"
-        Me.chkRelatedField.Size = New System.Drawing.Size(15, 14)
-        Me.chkRelatedField.TabIndex = 162
-        Me.chkRelatedField.UseVisualStyleBackColor = True
         '
         'frmConfiguration
         '

@@ -815,7 +815,7 @@ Public Class frmReports
             Exit Sub
         End If
         ReportDelete()
-        ReportAdd()
+        ReportAdd(xmlReports)
         If Not cbxReportName.Items.Contains(cbxReportName.Text) Then cbxReportName.Items.Add(cbxReportName.Text)
 
         dhdText.SaveXmlFile(xmlReports, CurVar.ReportSetFile)
@@ -836,13 +836,15 @@ Public Class frmReports
     End Sub
 
     Private Sub cbxReportName_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbxReportName.SelectedIndexChanged
-        ReportFieldsDispose(False)
-        ReportLoad()
+        If cbxReportName.SelectedIndex >= 0 Then
+            ReportFieldsDispose(False)
+            ReportLoad(xmlReports, cbxReportName.Text)
+        End If
     End Sub
 
     Private Sub btnRevertChanges_Click(sender As Object, e As EventArgs) Handles btnRevertChanges.Click
         ReportFieldsDispose(False)
-        ReportLoad()
+        ReportLoad(xmlReports, cbxReportName.Text)
     End Sub
 
     Private Sub btnExportToFile_Click(sender As Object, e As EventArgs) Handles btnExportToFile.Click
@@ -875,48 +877,44 @@ Public Class frmReports
         Next
     End Sub
 
-    Private Sub ReportLoad()
-        If cbxReportName.SelectedIndex >= 0 Then
+    Private Sub ReportLoad(xmlReports As XmlDocument, strReportName As String)
+        Dim xNode As XmlNode = dhdText.FindXmlNode(xmlReports, "Report", "ReportName", strReportName)
+        Dim strTable As String = "", strField As String = "", intRelationNumber As Integer = 0
 
-            Dim strSelection As String = cbxReportName.Text
-            Dim xNode As XmlNode = dhdText.FindXmlNode(xmlReports, "Report", "ReportName", strSelection)
-            Dim strTable As String = "", strField As String = "", intRelationNumber As Integer = 0
+        If Not xNode Is Nothing Then
+            chkTop.Checked = xNode.Item("UseTop").InnerText
+            txtTop.Text = xNode.Item("UseTopNumber").InnerText
+            chkDistinct.Checked = xNode.Item("UseDistinct").InnerText
+            For Each xCNode As XmlNode In dhdText.FindXmlChildNodes(xNode, "Tables/Table/Fields/Field")
+                strTable = xCNode.ParentNode.ParentNode.Item("TableName").InnerText
+                If strTable.IndexOf(".") = -1 Then strTable = "dbo." & strTable
+                strField = xCNode.Item("FieldName").InnerText
+                lvwAvailableFields.Items(strTable & "." & strField).Selected = True
+                btnReportFieldAdd_Click(Nothing, Nothing)
+                SetCtrText(pnlReportDisplay, strTable & "." & strField, xCNode.Item("FieldShow").InnerText)
+                SetCtrText(pnlReportShowMode, strTable & "." & strField, xCNode.Item("FieldShowMode").InnerText)
+                SetCtrText(pnlReportSort, strTable & "." & strField, xCNode.Item("FieldSort").InnerText)
+                SetCtrText(pnlReportSortOrder, strTable & "." & strField, xCNode.Item("FieldSortOrder").InnerText)
 
-            If Not xNode Is Nothing Then
-                chkTop.Checked = xNode.Item("UseTop").InnerText
-                txtTop.Text = xNode.Item("UseTopNumber").InnerText
-                chkDistinct.Checked = xNode.Item("UseDistinct").InnerText
-                For Each xCNode As XmlNode In dhdText.FindXmlChildNodes(xNode, "Tables/Table/Fields/Field")
-                    strTable = xCNode.ParentNode.ParentNode.Item("TableName").InnerText
-                    If strTable.IndexOf(".") = -1 Then strTable = "dbo." & strTable
-                    strField = xCNode.Item("FieldName").InnerText
-                    lvwAvailableFields.Items(strTable & "." & strField).Selected = True
-                    btnReportFieldAdd_Click(Nothing, Nothing)
-                    SetCtrText(pnlReportDisplay, strTable & "." & strField, xCNode.Item("FieldShow").InnerText)
-                    SetCtrText(pnlReportShowMode, strTable & "." & strField, xCNode.Item("FieldShowMode").InnerText)
-                    SetCtrText(pnlReportSort, strTable & "." & strField, xCNode.Item("FieldSort").InnerText)
-                    SetCtrText(pnlReportSortOrder, strTable & "." & strField, xCNode.Item("FieldSortOrder").InnerText)
-
-                    For Each xFnode In dhdText.FindXmlChildNodes(xCNode, "Filters/Filter")
-                        SetCtrText(pnlReportFilter, strTable & "." & strField, xFnode.Item("FilterEnabled").InnerText, xFnode.Item("FilterNumber").InnerText)
-                        SetCtrText(pnlReportFilterMode, strTable & "." & strField, xFnode.Item("FilterMode").InnerText, xFnode.Item("FilterNumber").InnerText)
-                        SetCtrText(pnlReportFilterType, strTable & "." & strField, xFnode.Item("FilterType").InnerText, xFnode.Item("FilterNumber").InnerText)
-                        SetCtrText(pnlReportFilterText, strTable & "." & strField, xFnode.Item("FilterText").InnerText, xFnode.Item("FilterNumber").InnerText)
-                    Next
+                For Each xFnode In dhdText.FindXmlChildNodes(xCNode, "Filters/Filter")
+                    SetCtrText(pnlReportFilter, strTable & "." & strField, xFnode.Item("FilterEnabled").InnerText, xFnode.Item("FilterNumber").InnerText)
+                    SetCtrText(pnlReportFilterMode, strTable & "." & strField, xFnode.Item("FilterMode").InnerText, xFnode.Item("FilterNumber").InnerText)
+                    SetCtrText(pnlReportFilterType, strTable & "." & strField, xFnode.Item("FilterType").InnerText, xFnode.Item("FilterNumber").InnerText)
+                    SetCtrText(pnlReportFilterText, strTable & "." & strField, xFnode.Item("FilterText").InnerText, xFnode.Item("FilterNumber").InnerText)
                 Next
+            Next
 
-                For Each xRNode As XmlNode In dhdText.FindXmlChildNodes(xNode, "Tables/Table/Relations/Relation")
-                    strTable = xRNode.ParentNode.ParentNode.Item("TableName").InnerText
-                    intRelationNumber = xRNode.Item("RelationNumber").InnerText
-                    'lstAvailableFields.SelectedItem = strTable & "." & strField
-                    'btnReportFieldAdd_Click(Nothing, Nothing)
-                    SetCtrText(pnlRelationsUse, strTable, xRNode.Item("RelationEnabled").InnerText, intRelationNumber)
-                    SetCtrText(pnlRelationsField, strTable, xRNode.Item("RelationSource").InnerText, intRelationNumber)
-                    SetCtrText(pnlRelationsRelation, strTable, xRNode.Item("RelationTarget").InnerText, intRelationNumber)
-                    SetCtrText(pnlRelationsJoinType, strTable, xRNode.Item("RelationJoinType").InnerText, intRelationNumber)
+            For Each xRNode As XmlNode In dhdText.FindXmlChildNodes(xNode, "Tables/Table/Relations/Relation")
+                strTable = xRNode.ParentNode.ParentNode.Item("TableName").InnerText
+                intRelationNumber = xRNode.Item("RelationNumber").InnerText
+                'lstAvailableFields.SelectedItem = strTable & "." & strField
+                'btnReportFieldAdd_Click(Nothing, Nothing)
+                SetCtrText(pnlRelationsUse, strTable, xRNode.Item("RelationEnabled").InnerText, intRelationNumber)
+                SetCtrText(pnlRelationsField, strTable, xRNode.Item("RelationSource").InnerText, intRelationNumber)
+                SetCtrText(pnlRelationsRelation, strTable, xRNode.Item("RelationTarget").InnerText, intRelationNumber)
+                SetCtrText(pnlRelationsJoinType, strTable, xRNode.Item("RelationJoinType").InnerText, intRelationNumber)
 
-                Next
-            End If
+            Next
         End If
     End Sub
 
@@ -1006,6 +1004,7 @@ Public Class frmReports
                         strFromRelation = GetCtrText(pnlRelationsRelation, strTableName, intControlNumber)
                         strFromType = GetCtrText(pnlRelationsJoinType, strTableName, intControlNumber)
                         strTargetTable = strFromRelation.Substring(0, strFromRelation.LastIndexOf("."))
+                        strTargetTable = strTargetTable.Substring(strTargetTable.LastIndexOf("(") + 1, strTargetTable.Length - (strTargetTable.LastIndexOf("(") + 1))
                         If strFromClause.Contains(strTargetTable) = True And strFromClause.Contains(strTableName) = False Then
                             strFromClause &= Environment.NewLine & strFromType & " JOIN " & strTableName & " ON " & strTableName & "." & strFromSource & " = " & strFromRelation
                         ElseIf strFromClause.Contains(strTargetTable) = True And strFromClause.Contains(strTableName) = True Then
@@ -1244,21 +1243,17 @@ Public Class frmReports
 
     End Sub
 
-    Private Sub FieldWidthGet(strTabelName As String, strFieldName As String)
-
-    End Sub
-
-    Private Sub ReportAdd()
+    Private Sub ReportAdd(xmlDocReport As XmlDocument)
         Dim strTable As String = ""
         Dim strField As String = ""
         Dim intControlNumber As Integer = 0
 
-        Dim root As XmlElement = xmlReports.DocumentElement
+        Dim root As XmlElement = xmlDocReport.DocumentElement
         If root Is Nothing Then
-            xmlReports = dhdText.CreateRootDocument(xmlReports, "Sequenchel", "Reports", True)
+            xmlDocReport = dhdText.CreateRootDocument(xmlDocReport, "Sequenchel", "Reports", True)
         End If
 
-        Dim NewReportNode As XmlNode = dhdText.CreateAppendElement(xmlReports.Item("Sequenchel").Item("Reports"), "Report")
+        Dim NewReportNode As XmlNode = dhdText.CreateAppendElement(xmlDocReport.Item("Sequenchel").Item("Reports"), "Report")
         dhdText.CreateAppendElement(NewReportNode, "ReportName", cbxReportName.Text)
         dhdText.CreateAppendElement(NewReportNode, "UseTop", chkTop.Checked.ToString)
         dhdText.CreateAppendElement(NewReportNode, "UseTopNumber", txtTop.Text)
@@ -1354,4 +1349,58 @@ Public Class frmReports
         lblElapsedTime.Text = tmsElapsedTime.ToString
     End Sub
 
+    Private Sub btnReportExport_Click(sender As Object, e As EventArgs) Handles btnReportExport.Click
+        Dim xmlExport As New XmlDocument
+        Dim xmlDec As XmlDeclaration = xmlExport.CreateXmlDeclaration("1.0", "utf-8", "yes")
+        xmlExport.InsertBefore(xmlDec, xmlExport.DocumentElement)
+        ReportAdd(xmlExport)
+
+        Dim sfdFile As New SaveFileDialog
+        sfdFile.FileName = cbxReportName.Text
+        sfdFile.Filter = "XML File (*.xml)|*.xml"
+        sfdFile.FilterIndex = 1
+        sfdFile.RestoreDirectory = True
+        sfdFile.OverwritePrompt = False
+
+        If (sfdFile.ShowDialog() <> DialogResult.OK) Then
+            Return
+        End If
+
+        Dim strTargetFile As String = sfdFile.FileName
+
+        Try
+            Using sw As New System.IO.StringWriter()
+                ' Make the XmlTextWriter to format the XML.
+                Using xml_writer As New XmlTextWriter(sw)
+                    xml_writer.Formatting = Formatting.Indented
+                    'dtsInput.WriteXml(xml_writer)
+                    xmlExport.WriteTo(xml_writer)
+                    xml_writer.Flush()
+
+                    'Write the XML to disk
+                    dhdText.CreateFile(sw.ToString(), strTargetFile)
+                End Using
+            End Using
+
+        Catch ex As Exception
+            WriteLog(ex.Message, 1)
+        End Try
+    End Sub
+
+    Private Sub btnReportImport_Click(sender As Object, e As EventArgs) Handles btnReportImport.Click
+        Dim xmlImport As New XmlDocument
+        Dim strReportName As String
+        Dim loadFile1 As New OpenFileDialog
+
+        loadFile1.DefaultExt = "*.xml"
+        loadFile1.Filter = "Report Files|*.xml"
+
+        If (loadFile1.ShowDialog() = System.Windows.Forms.DialogResult.OK) And (loadFile1.FileName.Length) > 0 Then
+            xmlImport.Load(loadFile1.FileName)
+        End If
+        Dim xNode As XmlNode = dhdText.FindXmlNode(xmlImport, "ReportName")
+        strReportName = xNode.InnerText
+        ReportLoad(xmlImport, strReportName)
+        cbxReportName.Text = strReportName
+    End Sub
 End Class

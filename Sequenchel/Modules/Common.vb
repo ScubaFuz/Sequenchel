@@ -1659,12 +1659,13 @@ Module Common
         End If
     End Function
 
-    Friend Function FormatFileDate(ByVal dtmInput As Date) As String
+    Friend Function FormatFileDate(ByVal dtmInput As Date, Optional strFormatStyle As String = Nothing) As String
         If dtmInput = Nothing Then
             FormatFileDate = ""
         Else
+            If strFormatStyle = Nothing Then strFormatStyle = CurVar.DateTimeStyle
             FormatFileDate = dtmInput.ToString("yyyy-MM-dd")
-            Select Case CurVar.DateTimeStyle
+            Select Case strFormatStyle
                 Case 120
                     FormatFileDate = dtmInput.ToString("yyyy-MM-dd")
                 Case 100
@@ -1707,15 +1708,15 @@ Module Common
                             Try
                                 Dim dt As DateTime = DateTime.Now
                                 dt = dt.AddHours(strValue.Substring(intFirstBracket + 1, intLastBracket - (intFirstBracket + 1)))
-                                strReturn = dt
+                                strReturn = dt.ToString("yyyy-MM-dd HH:mm:ss")
                             Catch ex As Exception
-                                strReturn = Now
+                                strReturn = Now.ToString("yyyy-MM-dd HH:mm:ss")
                             End Try
                         Else
-                            strReturn = Now
+                            strReturn = Now.ToString("yyyy-MM-dd HH:mm:ss")
                         End If
                     Else
-                        strReturn = Now
+                        strReturn = Now.ToString("yyyy-MM-dd HH:mm:ss")
                     End If
                 Case "date("
                     If intLastBracket - intFirstBracket > 1 Then
@@ -1723,31 +1724,31 @@ Module Common
                             Try
                                 Dim dt As DateTime = Date.Today
                                 dt = dt.AddDays(strValue.Substring(intFirstBracket + 1, intLastBracket - (intFirstBracket + 1)))
-                                strReturn = dt
+                                strReturn = FormatFileDate(dt, 120)
                             Catch ex As Exception
-                                strReturn = Date.Today
+                                strReturn = FormatFileDate(Date.Today, 120)
                             End Try
                         Else
-                            strReturn = Date.Today
+                            strReturn = FormatFileDate(Date.Today, 120)
                         End If
                     Else
-                        strReturn = Date.Today
+                        strReturn = FormatFileDate(Date.Today, 120)
                     End If
                 Case "time("
                     If intLastBracket - intFirstBracket > 1 Then
                         If IsNumeric(strValue.Substring(intFirstBracket + 1, intLastBracket - (intFirstBracket + 1))) Then
                             Try
-                                strReturn = TimeOfDay.AddMinutes(strValue.Substring(intFirstBracket + 1, intLastBracket - (intFirstBracket + 1)))
+                                strReturn = TimeOfDay.AddMinutes(strValue.Substring(intFirstBracket + 1, intLastBracket - (intFirstBracket + 1))).ToString("HH:mm:ss")
                             Catch ex As Exception
-                                strReturn = TimeOfDay
+                                strReturn = TimeOfDay.ToString("HH:mm:ss")
                             End Try
                         Else
-                            strReturn = TimeOfDay
+                            strReturn = TimeOfDay.ToString("HH:mm:ss")
                         End If
                     Else
-                        strReturn = TimeOfDay
+                        strReturn = TimeOfDay.ToString("HH:mm:ss")
                     End If
-                    strReturn = TimeOfDay
+                    strReturn = TimeOfDay.ToString("HH:mm:ss")
                 Case "pi("
                     strReturn = "3.1415926535897932384626433832795"
                 Case Else
