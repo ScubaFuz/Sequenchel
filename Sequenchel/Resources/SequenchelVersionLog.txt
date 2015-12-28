@@ -1,4 +1,10 @@
 Version 3.4.0
+New: Option to convert output to text only when exporting.
+New: Option to export or import Report Definition.
+New: Added select options for Date/Time SQL functions.
+Enhanced: In Reports the join to a related table can contain a query when using parentheses.
+
+Version 3.4.0
 New: Added Export to Excel option.
 New: Added the option to automatically add the current date to the name of the export file.
 New: The query engine is now able to build a HAVING clause.

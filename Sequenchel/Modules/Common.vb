@@ -804,10 +804,10 @@ Module Common
 
         Dim sfdFile As New SaveFileDialog
         sfdFile.FileName = strFileName
-        sfdFile.Filter = "XML File (*.xml)|*.xml|Excel 2007 file (*.xlsx)|*.xlsx"
+        sfdFile.Filter = "XML File (*.xml)|*.xml|XML Text File(*.xml)|*.xml|Excel 2007 file (*.xlsx)|*.xlsx|Excel 2007 Text file(*.xlsx)|*.xlsx"
         sfdFile.FilterIndex = 1
         sfdFile.RestoreDirectory = True
-        sfdFile.OverwritePrompt = False
+        sfdFile.OverwritePrompt = True
 
         If (sfdFile.ShowDialog() <> DialogResult.OK) Then
             Return
@@ -815,14 +815,19 @@ Module Common
 
         Dim strTargetFile As String = sfdFile.FileName
         Dim strExtension As String = sfdFile.FileName.Substring(sfdFile.FileName.LastIndexOf(".") + 1, sfdFile.FileName.Length - (sfdFile.FileName.LastIndexOf(".") + 1))
-
-        Select Case strExtension
-            Case "xml"
+        MessageBox.Show(sfdFile.FilterIndex)
+        'dtsInput = ReplaceNulls(dtsInput)
+        Select Case sfdFile.FilterIndex
+            Case 1
                 'MessageBox.Show("xml file detected")
                 ExportXML(dtsInput, strTargetFile)
-            Case "xlsx"
+            Case 2
+                ExportXML(ReplaceNulls(dtsInput), strTargetFile)
+            Case 3
                 'MessageBox.Show("excel file detected")
                 ExportExcel(dtsInput, strTargetFile)
+            Case 4
+                ExportExcel(ReplaceNulls(dtsInput), strTargetFile)
             Case Else
                 Return
                 'unknown filetype, do nothing
@@ -1832,6 +1837,39 @@ Module Common
             s.Append(b.ToString("x2").ToLower())
         Next
         Return s.ToString()
+    End Function
+
+    Friend Function ReplaceNulls(dtsInput As DataSet) As DataSet
+        Dim dtsOutput As New DataSet
+        Dim row As DataRow
+        Dim col As DataColumn
+        '....
+        For Each Table In dtsInput.Tables
+            Dim newTable As DataTable = Table.clone
+            For Each colOrg In newTable.Columns
+                colOrg.DataType = System.Type.GetType("System.String")
+            Next
+            For Each rowOrg In Table.rows
+                newTable.ImportRow(rowOrg)
+            Next
+            dtsOutput.Tables.Add(newTable)
+
+            For Each row In newTable.Rows
+                For Each col In newTable.Columns
+                    If row.IsNull(col) Then
+                        Select Case Type.GetTypeCode(col.DataType)
+                            Case TypeCode.Int32
+                                row.Item(col) = 0
+                            Case TypeCode.String
+                                row.Item(col) = ""
+                            Case Else
+                                row.Item(col) = ""
+                        End Select
+                    End If
+                Next
+            Next
+        Next
+        Return dtsOutput
     End Function
 
     'Friend Function ComboFieldMultiColumnCreate(cbxInput As ComboField, dtsInput As DataSet)

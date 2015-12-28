@@ -143,7 +143,7 @@ Public Class frmReports
         'Add extra searchcriteria
         Dim strFieldName As String = Nothing
         strFieldName = sender.Tag
-        FieldCheckFilterAdd(strFieldName)
+        FieldCheckFilterAdd(strFieldName, Nothing)
     End Sub
 
     Private Sub lblShowRelation_DoubleClick(sender As Object, e As EventArgs)
@@ -292,9 +292,13 @@ Public Class frmReports
     End Sub
 
     Private Sub FieldAdd(strFieldName As String, strFieldAlias As String, strTableAlias As String)
+        Dim xNode As XmlNode = dhdText.FindXmlNode(xmlTables, "Table", "Name", strFieldName.Substring(0, strFieldName.LastIndexOf(".")))
+        Dim xCNode As XmlNode = dhdText.FindXmlChildNode(xNode, "Fields/Field", "FldName", strFieldName.Substring(strFieldName.LastIndexOf(".") + 1, strFieldName.Length - (strFieldName.LastIndexOf(".") + 1)))
+        Dim strFieldType As String = xCNode.Item("DataType").InnerText
+
         FieldLabelAdd(strFieldName, strFieldAlias, strTableAlias)
-        FieldCheckShowAdd(strFieldName)
-        FieldCheckFilterAdd(strFieldName)
+        FieldCheckShowAdd(strFieldName, strFieldType)
+        FieldCheckFilterAdd(strFieldName, strFieldType)
         PanelFieldWidthSet()
     End Sub
 
@@ -331,7 +335,7 @@ Public Class frmReports
 
     End Sub
 
-    Private Sub FieldCheckShowAdd(strFieldName As String)
+    Private Sub FieldCheckShowAdd(strFieldName As String, strFieldType As String)
         Dim chkNewShow As New CheckField
         chkNewShow.Name = pnlReportDisplay.Name & "1" & strFieldName
         chkNewShow.Tag = strFieldName
@@ -342,19 +346,21 @@ Public Class frmReports
 
         Dim cbxNewShowMode As New ComboField
         cbxNewShowMode.Name = pnlReportShowMode.Name & "1" & strFieldName
+        cbxNewShowMode.FieldDataType = strFieldType
         cbxNewShowMode.Tag = strFieldName
         cbxNewShowMode.Width = 50
         pnlReportShowMode.Controls.Add(cbxNewShowMode)
         cbxNewShowMode.Top = ((lvwSelectedFields.Items.Count - 1) * CurVar.FieldHeight) + ((lvwSelectedFields.Items.Count - 1) * CurVar.BuildMargin)
         cbxNewShowMode.Left = CurVar.BuildMargin
+        'Dim strDataType As String = 
         ComboBoxFill(cbxNewShowMode, "ShowMode")
     End Sub
 
-    Private Sub FieldCheckFilterAdd(strFieldName As String, Optional intCount As Integer = 0)
+    Private Sub FieldCheckFilterAdd(strFieldName As String, strFieldType As String, Optional intCount As Integer = 0)
 
-        Dim xNode As XmlNode = dhdText.FindXmlNode(xmlTables, "Table", "Name", strFieldName.Substring(0, strFieldName.LastIndexOf(".")))
-        Dim xCNode As XmlNode = dhdText.FindXmlChildNode(xNode, "Fields/Field", "FldName", strFieldName.Substring(strFieldName.LastIndexOf(".") + 1, strFieldName.Length - (strFieldName.LastIndexOf(".") + 1)))
-        Dim strFieldType As String = xCNode.Item("DataType").InnerText
+        'Dim xNode As XmlNode = dhdText.FindXmlNode(xmlTables, "Table", "Name", strFieldName.Substring(0, strFieldName.LastIndexOf(".")))
+        'Dim xCNode As XmlNode = dhdText.FindXmlChildNode(xNode, "Fields/Field", "FldName", strFieldName.Substring(strFieldName.LastIndexOf(".") + 1, strFieldName.Length - (strFieldName.LastIndexOf(".") + 1)))
+        'Dim strFieldType As String = xCNode.Item("DataType").InnerText
 
         If intCount = 0 Then
             intCount += 1
@@ -422,14 +428,18 @@ Public Class frmReports
                 cbxTarget.Items.Add("MAX")
                 cbxTarget.Items.Add("AVG")
                 cbxTarget.Items.Add("COUNT")
-                cbxTarget.Items.Add("DATE")
-                cbxTarget.Items.Add("YEAR")
-                cbxTarget.Items.Add("MONTH")
-                cbxTarget.Items.Add("DAY")
-                cbxTarget.Items.Add("TIME")
-                cbxTarget.Items.Add("HOUR")
-                cbxTarget.Items.Add("MINUTE")
-                cbxTarget.Items.Add("SECOND")
+                If cbxTarget.FieldDataType = "DATETIME" Then
+                    cbxTarget.Items.Add("DATE")
+                    cbxTarget.Items.Add("YEAR")
+                    cbxTarget.Items.Add("MONTH")
+                    cbxTarget.Items.Add("DAY")
+                End If
+                If cbxTarget.FieldDataType = "DATETIME" Or cbxTarget.FieldDataType = "TIME" Or cbxTarget.FieldDataType = "TIMESTAMP" Then
+                    cbxTarget.Items.Add("TIME")
+                    cbxTarget.Items.Add("HOUR")
+                    cbxTarget.Items.Add("MINUTE")
+                    cbxTarget.Items.Add("SECOND")
+                End If
             Case "Sort"
                 cbxTarget.Items.Clear()
                 cbxTarget.Items.Add("")
