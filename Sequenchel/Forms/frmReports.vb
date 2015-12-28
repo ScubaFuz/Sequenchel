@@ -1,10 +1,15 @@
 ﻿Imports System.Xml
 
 Public Class frmReports
+    Private mousePath As System.Drawing.Drawing2D.GraphicsPath
+    Private fontSize As Integer = 20
 
     Private Sub frmReports_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         lblLicense.Text = "Licensed to: " & strLicenseName
         lblLicense.Left = Me.Width - lblLicense.Width - (CurVar.BuildMargin * 3)
+
+        mousePath = New System.Drawing.Drawing2D.GraphicsPath()
+
         DebugSettings()
         SecuritySet()
         'ReportFieldsDispose(True)
@@ -137,6 +142,11 @@ Public Class frmReports
                 End If
             End If
         End If
+    End Sub
+
+    Private Sub lblShowField_Click(sender As Object, e As EventArgs)
+        pnlSelectedFieldsMain.Focus()
+        pnlSelectedFieldsMain.Invalidate()
     End Sub
 
     Private Sub lblShowField_DoubleClick(sender As Object, e As EventArgs)
@@ -308,6 +318,7 @@ Public Class frmReports
         lblNew.Tag = strFieldName
         lblNew.Text = strTableAlias & "." & strFieldAlias
         pnlReportLabel.Controls.Add(lblNew)
+        AddHandler lblNew.Click, AddressOf Me.lblShowField_Click
         AddHandler lblNew.DoubleClick, AddressOf Me.lblShowField_DoubleClick
         lblNew.AutoSize = True
         lblNew.Top = ((lvwSelectedFields.Items.Count - 1) * CurVar.FieldHeight) + ((lvwSelectedFields.Items.Count) * CurVar.BuildMargin)
@@ -850,6 +861,9 @@ Public Class frmReports
             ReportFieldsDispose(False)
             ReportLoad(xmlReports, cbxReportName.Text)
         End If
+        pnlSelectedFieldsMain.Focus()
+        pnlSelectedFieldsMain.Invalidate()
+
     End Sub
 
     Private Sub btnRevertChanges_Click(sender As Object, e As EventArgs) Handles btnRevertChanges.Click
@@ -1413,4 +1427,24 @@ Public Class frmReports
         ReportLoad(xmlImport, strReportName)
         cbxReportName.Text = strReportName
     End Sub
+
+    Private Sub pnlSelectedFieldsMain_MouseDown(sender As Object, e As System.Windows.Forms.MouseEventArgs) Handles pnlSelectedFieldsMain.MouseDown
+        pnlSelectedFieldsMain.Focus()
+        pnlSelectedFieldsMain.Invalidate()
+    End Sub
+
+    Private Sub pnlSelectedFieldsMain_MouseWheel(sender As Object, e As MouseEventArgs) Handles pnlSelectedFieldsMain.MouseWheel
+
+        Dim numberOfTextLinesToMove As Integer = CInt(e.Delta * SystemInformation.MouseWheelScrollLines / 120)
+        Dim numberOfPixelsToMove As Integer = numberOfTextLinesToMove * fontSize
+
+        If numberOfPixelsToMove <> 0 Then
+            Dim translateMatrix As New System.Drawing.Drawing2D.Matrix()
+            translateMatrix.Translate(0, numberOfPixelsToMove)
+            mousePath.Transform(translateMatrix)
+        End If
+
+        pnlSelectedFieldsMain.Invalidate()
+    End Sub
+
 End Class

@@ -27,6 +27,8 @@ Partial Class frmReports
         Me.lblLicense = New System.Windows.Forms.Label()
         Me.tabReports = New System.Windows.Forms.TabControl()
         Me.tpgReportDefinition = New System.Windows.Forms.TabPage()
+        Me.btnReportExport = New System.Windows.Forms.Button()
+        Me.btnReportImport = New System.Windows.Forms.Button()
         Me.sptReports = New System.Windows.Forms.SplitContainer()
         Me.lvwAvailableFields = New System.Windows.Forms.ListView()
         Me.colAvTableName = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
@@ -115,8 +117,6 @@ Partial Class frmReports
         Me.btnTest = New System.Windows.Forms.Button()
         Me.btnClose = New System.Windows.Forms.Button()
         Me.tmrElapsedTime = New System.Windows.Forms.Timer(Me.components)
-        Me.btnReportExport = New System.Windows.Forms.Button()
-        Me.btnReportImport = New System.Windows.Forms.Button()
         Me.tabReports.SuspendLayout()
         Me.tpgReportDefinition.SuspendLayout()
         CType(Me.sptReports, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -192,6 +192,24 @@ Partial Class frmReports
         Me.tpgReportDefinition.TabIndex = 0
         Me.tpgReportDefinition.Text = "Report Definition"
         Me.tpgReportDefinition.UseVisualStyleBackColor = True
+        '
+        'btnReportExport
+        '
+        Me.btnReportExport.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.btnReportExport.Location = New System.Drawing.Point(9, 677)
+        Me.btnReportExport.Name = "btnReportExport"
+        Me.btnReportExport.Size = New System.Drawing.Size(164, 20)
+        Me.btnReportExport.TabIndex = 194
+        Me.btnReportExport.Text = "Export Report Definition"
+        '
+        'btnReportImport
+        '
+        Me.btnReportImport.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.btnReportImport.Location = New System.Drawing.Point(9, 703)
+        Me.btnReportImport.Name = "btnReportImport"
+        Me.btnReportImport.Size = New System.Drawing.Size(164, 20)
+        Me.btnReportImport.TabIndex = 195
+        Me.btnReportImport.Text = "Import Report Definition"
         '
         'sptReports
         '
@@ -1062,24 +1080,6 @@ Partial Class frmReports
         'tmrElapsedTime
         '
         Me.tmrElapsedTime.Interval = 1000
-        '
-        'btnReportExport
-        '
-        Me.btnReportExport.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.btnReportExport.Location = New System.Drawing.Point(9, 677)
-        Me.btnReportExport.Name = "btnReportExport"
-        Me.btnReportExport.Size = New System.Drawing.Size(164, 20)
-        Me.btnReportExport.TabIndex = 194
-        Me.btnReportExport.Text = "Export Report Definition"
-        '
-        'btnReportImport
-        '
-        Me.btnReportImport.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.btnReportImport.Location = New System.Drawing.Point(9, 703)
-        Me.btnReportImport.Name = "btnReportImport"
-        Me.btnReportImport.Size = New System.Drawing.Size(164, 20)
-        Me.btnReportImport.TabIndex = 195
-        Me.btnReportImport.Text = "Import Report Definition"
         '
         'frmReports
         '
