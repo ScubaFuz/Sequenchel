@@ -1,10 +1,10 @@
-Version 3.4.0
+Version 3.5.0
 New: Option to export or import Report Definition.
 New: Added select options for Date/Time SQL functions.
-New: option to add NOW(), DATE() and TIME() as filteroptions to a report.
-Enhanced: Option to convert output to text only when exporting to better deal with NULL values.
-Enhanced: In Reports the join to a related table can contain a query when using parentheses.
-Fixed: In Reports the mousewheel now scrolls the report definition and not the report selection.
+New: option to add Now(), Date(), Time(), MonthStart(), MonthEnd(), WeekStart() and WeekEnd() as filteroptions to a report.
+New: Option to convert output to text only when exporting to better deal with NULL values.
+New: In Reports the join to a related table can contain a query when using parentheses.
+Enhanced: In Reports the mousewheel now scrolls the report definition and not the report selection.
 
 Version 3.4.0
 New: Added Export to Excel option.

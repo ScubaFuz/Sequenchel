@@ -815,8 +815,6 @@ Module Common
 
         Dim strTargetFile As String = sfdFile.FileName
         Dim strExtension As String = sfdFile.FileName.Substring(sfdFile.FileName.LastIndexOf(".") + 1, sfdFile.FileName.Length - (sfdFile.FileName.LastIndexOf(".") + 1))
-        MessageBox.Show(sfdFile.FilterIndex)
-        'dtsInput = ReplaceNulls(dtsInput)
         Select Case sfdFile.FilterIndex
             Case 1
                 'MessageBox.Show("xml file detected")
@@ -1754,6 +1752,80 @@ Module Common
                         strReturn = TimeOfDay.ToString("HH:mm:ss")
                     End If
                     strReturn = TimeOfDay.ToString("HH:mm:ss")
+                Case "monthstart("
+                    Dim dt As DateTime = Date.Today.AddDays(-Date.Today.Day + 1)
+                    If intLastBracket - intFirstBracket > 1 Then
+                        If IsNumeric(strValue.Substring(intFirstBracket + 1, intLastBracket - (intFirstBracket + 1))) Then
+                            Try
+                                dt = dt.AddMonths(strValue.Substring(intFirstBracket + 1, intLastBracket - (intFirstBracket + 1)))
+                                strReturn = FormatFileDate(dt, 120)
+                            Catch ex As Exception
+                                strReturn = FormatFileDate(dt, 120)
+                            End Try
+                        Else
+                            strReturn = FormatFileDate(dt, 120)
+                        End If
+                    Else
+                        strReturn = FormatFileDate(dt, 120)
+                    End If
+                Case "monthend("
+                    Dim IntAddMonths As Integer = 1
+
+                    If intLastBracket - intFirstBracket > 1 Then
+                        If IsNumeric(strValue.Substring(intFirstBracket + 1, intLastBracket - (intFirstBracket + 1))) Then
+                            Try
+                                IntAddMonths += (strValue.Substring(intFirstBracket + 1, intLastBracket - (intFirstBracket + 1)))
+                            Catch ex As Exception
+                                IntAddMonths = 1
+                            End Try
+                        End If
+                    End If
+                    Dim dt As DateTime = Date.Today.AddMonths(IntAddMonths).AddDays(-Date.Today.Day)
+                    strReturn = FormatFileDate(dt, 120)
+                Case "weekstart("
+                    Dim IntAddWeeks As Integer = 0
+
+                    If intLastBracket - intFirstBracket > 1 Then
+                        If IsNumeric(strValue.Substring(intFirstBracket + 1, intLastBracket - (intFirstBracket + 1))) Then
+                            Try
+                                IntAddWeeks += (strValue.Substring(intFirstBracket + 1, intLastBracket - (intFirstBracket + 1)))
+                            Catch ex As Exception
+                                IntAddWeeks = 0
+                            End Try
+                        End If
+                    End If
+
+                    Dim dt As DateTime = Date.Today
+                    Dim dayIndex As Integer = dt.DayOfWeek
+                    If dayIndex < DayOfWeek.Monday Then
+                        dayIndex += 7 'Monday is first day of week, no day of week should have a smaller index
+                    End If
+                    Dim dayDiff As Integer = dayIndex - DayOfWeek.Monday
+                    dt = dt.AddDays(-dayDiff).AddDays(IntAddWeeks * 7)
+
+                    strReturn = FormatFileDate(dt, 120)
+                Case "weekend("
+                    Dim IntAddWeeks As Integer = 0
+
+                    If intLastBracket - intFirstBracket > 1 Then
+                        If IsNumeric(strValue.Substring(intFirstBracket + 1, intLastBracket - (intFirstBracket + 1))) Then
+                            Try
+                                IntAddWeeks += (strValue.Substring(intFirstBracket + 1, intLastBracket - (intFirstBracket + 1)))
+                            Catch ex As Exception
+                                IntAddWeeks = 0
+                            End Try
+                        End If
+                    End If
+
+                    Dim dt As DateTime = Date.Today
+                    Dim dayIndex As Integer = dt.DayOfWeek
+                    If dayIndex < DayOfWeek.Monday Then
+                        dayIndex += 7 'Monday is first day of week, no day of week should have a smaller index
+                    End If
+                    Dim dayDiff As Integer = dayIndex - DayOfWeek.Monday
+                    dt = dt.AddDays(-dayDiff).AddDays(6).AddDays(IntAddWeeks * 7)
+
+                    strReturn = FormatFileDate(dt, 120)
                 Case "pi("
                     strReturn = "3.1415926535897932384626433832795"
                 Case Else
