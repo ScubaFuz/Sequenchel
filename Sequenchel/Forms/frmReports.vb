@@ -153,7 +153,12 @@ Public Class frmReports
         'Add extra searchcriteria
         Dim strFieldName As String = Nothing
         strFieldName = sender.Tag
-        FieldCheckFilterAdd(strFieldName, Nothing)
+
+        Dim xNode As XmlNode = dhdText.FindXmlNode(xmlTables, "Table", "Name", strFieldName.Substring(0, strFieldName.LastIndexOf(".")))
+        Dim xCNode As XmlNode = dhdText.FindXmlChildNode(xNode, "Fields/Field", "FldName", strFieldName.Substring(strFieldName.LastIndexOf(".") + 1, strFieldName.Length - (strFieldName.LastIndexOf(".") + 1)))
+        Dim strFieldType As String = xCNode.Item("DataType").InnerText
+
+        FieldCheckFilterAdd(strFieldName, strFieldType, Nothing)
     End Sub
 
     Private Sub lblShowRelation_DoubleClick(sender As Object, e As EventArgs)
