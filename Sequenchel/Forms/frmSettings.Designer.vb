@@ -188,6 +188,34 @@ Partial Class frmSettings
         Me.lblLowerLimit = New System.Windows.Forms.Label()
         Me.txtLowerLimit = New System.Windows.Forms.TextBox()
         Me.btnMonitorDataSpacesSave = New System.Windows.Forms.Button()
+        Me.tpgFtp = New System.Windows.Forms.TabPage()
+        Me.btnCreateDownloadProcedure = New System.Windows.Forms.Button()
+        Me.lblFtpStatus = New System.Windows.Forms.Label()
+        Me.rtbFtpCmdshell = New System.Windows.Forms.RichTextBox()
+        Me.chkCmdshell = New System.Windows.Forms.CheckBox()
+        Me.lblCmdshell = New System.Windows.Forms.Label()
+        Me.rtbFtpDefaultValues = New System.Windows.Forms.RichTextBox()
+        Me.cbxFtpMode = New System.Windows.Forms.ComboBox()
+        Me.chkEncryptProcedure = New System.Windows.Forms.CheckBox()
+        Me.lblEncryptProcedure = New System.Windows.Forms.Label()
+        Me.btnCreateUploadProcedure = New System.Windows.Forms.Button()
+        Me.chkRemoveFiles = New System.Windows.Forms.CheckBox()
+        Me.lblRemoveFiles = New System.Windows.Forms.Label()
+        Me.lblFtpMode = New System.Windows.Forms.Label()
+        Me.lblTargetFiles = New System.Windows.Forms.Label()
+        Me.txtTargetFiles = New System.Windows.Forms.TextBox()
+        Me.lblFtpServer = New System.Windows.Forms.Label()
+        Me.txtFtpServer = New System.Windows.Forms.TextBox()
+        Me.lblFtpUserName = New System.Windows.Forms.Label()
+        Me.txtFtpUserName = New System.Windows.Forms.TextBox()
+        Me.lblFtpPassword = New System.Windows.Forms.Label()
+        Me.txtFtpPassword = New System.Windows.Forms.TextBox()
+        Me.lblFtpLocation = New System.Windows.Forms.Label()
+        Me.txtFtpLocation = New System.Windows.Forms.TextBox()
+        Me.lblDownloadDestination = New System.Windows.Forms.Label()
+        Me.txtDownloadDestination = New System.Windows.Forms.TextBox()
+        Me.lblUploadSource = New System.Windows.Forms.Label()
+        Me.txtUploadSource = New System.Windows.Forms.TextBox()
         Me.btnClose = New System.Windows.Forms.Button()
         Me.ttpDefaultLogLocation = New System.Windows.Forms.ToolTip(Me.components)
         Me.tabSettings.SuspendLayout()
@@ -200,6 +228,7 @@ Partial Class frmSettings
         Me.tpgScheduler.SuspendLayout()
         CType(Me.nudTimeSpan, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.tpgMonitorDataspaces.SuspendLayout()
+        Me.tpgFtp.SuspendLayout()
         Me.SuspendLayout()
         '
         'tabSettings
@@ -210,6 +239,7 @@ Partial Class frmSettings
         Me.tabSettings.Controls.Add(Me.tpgDatabase)
         Me.tabSettings.Controls.Add(Me.tpgScheduler)
         Me.tabSettings.Controls.Add(Me.tpgMonitorDataspaces)
+        Me.tabSettings.Controls.Add(Me.tpgFtp)
         Me.tabSettings.Location = New System.Drawing.Point(12, 11)
         Me.tabSettings.Multiline = True
         Me.tabSettings.Name = "tabSettings"
@@ -1871,6 +1901,282 @@ Partial Class frmSettings
         Me.btnMonitorDataSpacesSave.Text = "Save Monitor Settings"
         Me.btnMonitorDataSpacesSave.UseVisualStyleBackColor = True
         '
+        'tpgFtp
+        '
+        Me.tpgFtp.Controls.Add(Me.btnCreateDownloadProcedure)
+        Me.tpgFtp.Controls.Add(Me.lblFtpStatus)
+        Me.tpgFtp.Controls.Add(Me.rtbFtpCmdshell)
+        Me.tpgFtp.Controls.Add(Me.chkCmdshell)
+        Me.tpgFtp.Controls.Add(Me.lblCmdshell)
+        Me.tpgFtp.Controls.Add(Me.rtbFtpDefaultValues)
+        Me.tpgFtp.Controls.Add(Me.cbxFtpMode)
+        Me.tpgFtp.Controls.Add(Me.chkEncryptProcedure)
+        Me.tpgFtp.Controls.Add(Me.lblEncryptProcedure)
+        Me.tpgFtp.Controls.Add(Me.btnCreateUploadProcedure)
+        Me.tpgFtp.Controls.Add(Me.chkRemoveFiles)
+        Me.tpgFtp.Controls.Add(Me.lblRemoveFiles)
+        Me.tpgFtp.Controls.Add(Me.lblFtpMode)
+        Me.tpgFtp.Controls.Add(Me.lblTargetFiles)
+        Me.tpgFtp.Controls.Add(Me.txtTargetFiles)
+        Me.tpgFtp.Controls.Add(Me.lblFtpServer)
+        Me.tpgFtp.Controls.Add(Me.txtFtpServer)
+        Me.tpgFtp.Controls.Add(Me.lblFtpUserName)
+        Me.tpgFtp.Controls.Add(Me.txtFtpUserName)
+        Me.tpgFtp.Controls.Add(Me.lblFtpPassword)
+        Me.tpgFtp.Controls.Add(Me.txtFtpPassword)
+        Me.tpgFtp.Controls.Add(Me.lblFtpLocation)
+        Me.tpgFtp.Controls.Add(Me.txtFtpLocation)
+        Me.tpgFtp.Controls.Add(Me.lblDownloadDestination)
+        Me.tpgFtp.Controls.Add(Me.txtDownloadDestination)
+        Me.tpgFtp.Controls.Add(Me.lblUploadSource)
+        Me.tpgFtp.Controls.Add(Me.txtUploadSource)
+        Me.tpgFtp.Location = New System.Drawing.Point(4, 22)
+        Me.tpgFtp.Name = "tpgFtp"
+        Me.tpgFtp.Size = New System.Drawing.Size(603, 368)
+        Me.tpgFtp.TabIndex = 14
+        Me.tpgFtp.Text = "FTP"
+        Me.tpgFtp.UseVisualStyleBackColor = True
+        '
+        'btnCreateDownloadProcedure
+        '
+        Me.btnCreateDownloadProcedure.Location = New System.Drawing.Point(416, 95)
+        Me.btnCreateDownloadProcedure.Name = "btnCreateDownloadProcedure"
+        Me.btnCreateDownloadProcedure.Size = New System.Drawing.Size(154, 23)
+        Me.btnCreateDownloadProcedure.TabIndex = 108
+        Me.btnCreateDownloadProcedure.Text = "Create Download Procedure"
+        Me.btnCreateDownloadProcedure.UseVisualStyleBackColor = True
+        '
+        'lblFtpStatus
+        '
+        Me.lblFtpStatus.Location = New System.Drawing.Point(415, 137)
+        Me.lblFtpStatus.Name = "lblFtpStatus"
+        Me.lblFtpStatus.Size = New System.Drawing.Size(157, 28)
+        Me.lblFtpStatus.TabIndex = 107
+        '
+        'rtbFtpCmdshell
+        '
+        Me.rtbFtpCmdshell.BackColor = System.Drawing.SystemColors.Control
+        Me.rtbFtpCmdshell.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.rtbFtpCmdshell.Location = New System.Drawing.Point(27, 331)
+        Me.rtbFtpCmdshell.Name = "rtbFtpCmdshell"
+        Me.rtbFtpCmdshell.Size = New System.Drawing.Size(543, 33)
+        Me.rtbFtpCmdshell.TabIndex = 106
+        Me.rtbFtpCmdshell.Text = resources.GetString("rtbFtpCmdshell.Text")
+        '
+        'chkCmdshell
+        '
+        Me.chkCmdshell.AutoSize = True
+        Me.chkCmdshell.Checked = True
+        Me.chkCmdshell.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.chkCmdshell.Location = New System.Drawing.Point(342, 309)
+        Me.chkCmdshell.Name = "chkCmdshell"
+        Me.chkCmdshell.Size = New System.Drawing.Size(15, 14)
+        Me.chkCmdshell.TabIndex = 10
+        Me.chkCmdshell.UseVisualStyleBackColor = True
+        '
+        'lblCmdshell
+        '
+        Me.lblCmdshell.AutoSize = True
+        Me.lblCmdshell.Location = New System.Drawing.Point(26, 309)
+        Me.lblCmdshell.Name = "lblCmdshell"
+        Me.lblCmdshell.Size = New System.Drawing.Size(198, 13)
+        Me.lblCmdshell.TabIndex = 104
+        Me.lblCmdshell.Text = "Automatically Enable / Disable  cmdshell"
+        '
+        'rtbFtpDefaultValues
+        '
+        Me.rtbFtpDefaultValues.BackColor = System.Drawing.SystemColors.Control
+        Me.rtbFtpDefaultValues.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.rtbFtpDefaultValues.Location = New System.Drawing.Point(27, 19)
+        Me.rtbFtpDefaultValues.Name = "rtbFtpDefaultValues"
+        Me.rtbFtpDefaultValues.Size = New System.Drawing.Size(543, 33)
+        Me.rtbFtpDefaultValues.TabIndex = 103
+        Me.rtbFtpDefaultValues.Text = resources.GetString("rtbFtpDefaultValues.Text")
+        '
+        'cbxFtpMode
+        '
+        Me.cbxFtpMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cbxFtpMode.FormattingEnabled = True
+        Me.cbxFtpMode.Items.AddRange(New Object() {"ascii", "binary"})
+        Me.cbxFtpMode.Location = New System.Drawing.Point(167, 240)
+        Me.cbxFtpMode.Name = "cbxFtpMode"
+        Me.cbxFtpMode.Size = New System.Drawing.Size(190, 21)
+        Me.cbxFtpMode.TabIndex = 7
+        '
+        'chkEncryptProcedure
+        '
+        Me.chkEncryptProcedure.AutoSize = True
+        Me.chkEncryptProcedure.Checked = True
+        Me.chkEncryptProcedure.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.chkEncryptProcedure.Location = New System.Drawing.Point(342, 289)
+        Me.chkEncryptProcedure.Name = "chkEncryptProcedure"
+        Me.chkEncryptProcedure.Size = New System.Drawing.Size(15, 14)
+        Me.chkEncryptProcedure.TabIndex = 9
+        Me.chkEncryptProcedure.UseVisualStyleBackColor = True
+        '
+        'lblEncryptProcedure
+        '
+        Me.lblEncryptProcedure.AutoSize = True
+        Me.lblEncryptProcedure.Location = New System.Drawing.Point(26, 289)
+        Me.lblEncryptProcedure.Name = "lblEncryptProcedure"
+        Me.lblEncryptProcedure.Size = New System.Drawing.Size(192, 13)
+        Me.lblEncryptProcedure.TabIndex = 100
+        Me.lblEncryptProcedure.Text = "Excrypt Procedure to Protect Password"
+        '
+        'btnCreateUploadProcedure
+        '
+        Me.btnCreateUploadProcedure.Location = New System.Drawing.Point(416, 66)
+        Me.btnCreateUploadProcedure.Name = "btnCreateUploadProcedure"
+        Me.btnCreateUploadProcedure.Size = New System.Drawing.Size(154, 23)
+        Me.btnCreateUploadProcedure.TabIndex = 11
+        Me.btnCreateUploadProcedure.Text = "Create Upload Procedure"
+        Me.btnCreateUploadProcedure.UseVisualStyleBackColor = True
+        '
+        'chkRemoveFiles
+        '
+        Me.chkRemoveFiles.AutoSize = True
+        Me.chkRemoveFiles.Location = New System.Drawing.Point(342, 269)
+        Me.chkRemoveFiles.Name = "chkRemoveFiles"
+        Me.chkRemoveFiles.Size = New System.Drawing.Size(15, 14)
+        Me.chkRemoveFiles.TabIndex = 8
+        Me.chkRemoveFiles.UseVisualStyleBackColor = True
+        '
+        'lblRemoveFiles
+        '
+        Me.lblRemoveFiles.AutoSize = True
+        Me.lblRemoveFiles.Location = New System.Drawing.Point(26, 269)
+        Me.lblRemoveFiles.Name = "lblRemoveFiles"
+        Me.lblRemoveFiles.Size = New System.Drawing.Size(214, 13)
+        Me.lblRemoveFiles.TabIndex = 86
+        Me.lblRemoveFiles.Text = "Remove Files from FTP Site After Download"
+        '
+        'lblFtpMode
+        '
+        Me.lblFtpMode.AutoSize = True
+        Me.lblFtpMode.Location = New System.Drawing.Point(26, 243)
+        Me.lblFtpMode.Name = "lblFtpMode"
+        Me.lblFtpMode.Size = New System.Drawing.Size(57, 13)
+        Me.lblFtpMode.TabIndex = 84
+        Me.lblFtpMode.Text = "FTP Mode"
+        '
+        'lblTargetFiles
+        '
+        Me.lblTargetFiles.AutoSize = True
+        Me.lblTargetFiles.Location = New System.Drawing.Point(26, 217)
+        Me.lblTargetFiles.Name = "lblTargetFiles"
+        Me.lblTargetFiles.Size = New System.Drawing.Size(136, 13)
+        Me.lblTargetFiles.TabIndex = 82
+        Me.lblTargetFiles.Text = "Target File(s) Name / Mask"
+        '
+        'txtTargetFiles
+        '
+        Me.txtTargetFiles.Location = New System.Drawing.Point(167, 214)
+        Me.txtTargetFiles.Name = "txtTargetFiles"
+        Me.txtTargetFiles.Size = New System.Drawing.Size(190, 20)
+        Me.txtTargetFiles.TabIndex = 6
+        Me.txtTargetFiles.Tag = "<FileName.txt / File*.txt / *.*>"
+        '
+        'lblFtpServer
+        '
+        Me.lblFtpServer.AutoSize = True
+        Me.lblFtpServer.Location = New System.Drawing.Point(26, 61)
+        Me.lblFtpServer.Name = "lblFtpServer"
+        Me.lblFtpServer.Size = New System.Drawing.Size(61, 13)
+        Me.lblFtpServer.TabIndex = 80
+        Me.lblFtpServer.Text = "FTP Server"
+        '
+        'txtFtpServer
+        '
+        Me.txtFtpServer.Location = New System.Drawing.Point(167, 58)
+        Me.txtFtpServer.Name = "txtFtpServer"
+        Me.txtFtpServer.Size = New System.Drawing.Size(190, 20)
+        Me.txtFtpServer.TabIndex = 0
+        Me.txtFtpServer.Tag = "<Server Name or IP Address>"
+        '
+        'lblFtpUserName
+        '
+        Me.lblFtpUserName.AutoSize = True
+        Me.lblFtpUserName.Location = New System.Drawing.Point(26, 87)
+        Me.lblFtpUserName.Name = "lblFtpUserName"
+        Me.lblFtpUserName.Size = New System.Drawing.Size(83, 13)
+        Me.lblFtpUserName.TabIndex = 78
+        Me.lblFtpUserName.Text = "FTP User Name"
+        '
+        'txtFtpUserName
+        '
+        Me.txtFtpUserName.Location = New System.Drawing.Point(167, 84)
+        Me.txtFtpUserName.Name = "txtFtpUserName"
+        Me.txtFtpUserName.Size = New System.Drawing.Size(190, 20)
+        Me.txtFtpUserName.TabIndex = 1
+        '
+        'lblFtpPassword
+        '
+        Me.lblFtpPassword.AutoSize = True
+        Me.lblFtpPassword.Location = New System.Drawing.Point(26, 113)
+        Me.lblFtpPassword.Name = "lblFtpPassword"
+        Me.lblFtpPassword.Size = New System.Drawing.Size(76, 13)
+        Me.lblFtpPassword.TabIndex = 76
+        Me.lblFtpPassword.Text = "FTP Password"
+        '
+        'txtFtpPassword
+        '
+        Me.txtFtpPassword.Location = New System.Drawing.Point(167, 110)
+        Me.txtFtpPassword.Name = "txtFtpPassword"
+        Me.txtFtpPassword.PasswordChar = Global.Microsoft.VisualBasic.ChrW(42)
+        Me.txtFtpPassword.Size = New System.Drawing.Size(190, 20)
+        Me.txtFtpPassword.TabIndex = 2
+        '
+        'lblFtpLocation
+        '
+        Me.lblFtpLocation.AutoSize = True
+        Me.lblFtpLocation.Location = New System.Drawing.Point(26, 165)
+        Me.lblFtpLocation.Name = "lblFtpLocation"
+        Me.lblFtpLocation.Size = New System.Drawing.Size(104, 13)
+        Me.lblFtpLocation.TabIndex = 74
+        Me.lblFtpLocation.Text = "FTP Location / Path"
+        '
+        'txtFtpLocation
+        '
+        Me.txtFtpLocation.Location = New System.Drawing.Point(167, 162)
+        Me.txtFtpLocation.Name = "txtFtpLocation"
+        Me.txtFtpLocation.Size = New System.Drawing.Size(190, 20)
+        Me.txtFtpLocation.TabIndex = 4
+        Me.txtFtpLocation.Tag = "<Path on FTP Server>"
+        '
+        'lblDownloadDestination
+        '
+        Me.lblDownloadDestination.AutoSize = True
+        Me.lblDownloadDestination.Location = New System.Drawing.Point(26, 191)
+        Me.lblDownloadDestination.Name = "lblDownloadDestination"
+        Me.lblDownloadDestination.Size = New System.Drawing.Size(136, 13)
+        Me.lblDownloadDestination.TabIndex = 72
+        Me.lblDownloadDestination.Text = "Download Destination Path"
+        '
+        'txtDownloadDestination
+        '
+        Me.txtDownloadDestination.Location = New System.Drawing.Point(167, 188)
+        Me.txtDownloadDestination.Name = "txtDownloadDestination"
+        Me.txtDownloadDestination.Size = New System.Drawing.Size(190, 20)
+        Me.txtDownloadDestination.TabIndex = 5
+        Me.txtDownloadDestination.Tag = "<Local Destination Path>"
+        '
+        'lblUploadSource
+        '
+        Me.lblUploadSource.AutoSize = True
+        Me.lblUploadSource.Location = New System.Drawing.Point(26, 139)
+        Me.lblUploadSource.Name = "lblUploadSource"
+        Me.lblUploadSource.Size = New System.Drawing.Size(103, 13)
+        Me.lblUploadSource.TabIndex = 70
+        Me.lblUploadSource.Text = "Upload Source Path"
+        '
+        'txtUploadSource
+        '
+        Me.txtUploadSource.Location = New System.Drawing.Point(167, 136)
+        Me.txtUploadSource.Name = "txtUploadSource"
+        Me.txtUploadSource.Size = New System.Drawing.Size(190, 20)
+        Me.txtUploadSource.TabIndex = 3
+        Me.txtUploadSource.Tag = "<Local Source Path>"
+        '
         'btnClose
         '
         Me.btnClose.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
@@ -1885,7 +2191,7 @@ Partial Class frmSettings
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(637, 442)
+        Me.ClientSize = New System.Drawing.Size(637, 443)
         Me.Controls.Add(Me.btnClose)
         Me.Controls.Add(Me.tabSettings)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog
@@ -1915,6 +2221,8 @@ Partial Class frmSettings
         CType(Me.nudTimeSpan, System.ComponentModel.ISupportInitialize).EndInit()
         Me.tpgMonitorDataspaces.ResumeLayout(False)
         Me.tpgMonitorDataspaces.PerformLayout()
+        Me.tpgFtp.ResumeLayout(False)
+        Me.tpgFtp.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub
@@ -2084,4 +2392,32 @@ Partial Class frmSettings
     Friend WithEvents lblLimitLookupLists As System.Windows.Forms.Label
     Friend WithEvents txtLimitLookupLists As System.Windows.Forms.TextBox
     Friend WithEvents chkLimitLookupLists As System.Windows.Forms.CheckBox
+    Friend WithEvents tpgFtp As System.Windows.Forms.TabPage
+    Friend WithEvents lblFtpServer As System.Windows.Forms.Label
+    Friend WithEvents txtFtpServer As System.Windows.Forms.TextBox
+    Friend WithEvents lblFtpUserName As System.Windows.Forms.Label
+    Friend WithEvents txtFtpUserName As System.Windows.Forms.TextBox
+    Friend WithEvents lblFtpPassword As System.Windows.Forms.Label
+    Friend WithEvents txtFtpPassword As System.Windows.Forms.TextBox
+    Friend WithEvents lblFtpLocation As System.Windows.Forms.Label
+    Friend WithEvents txtFtpLocation As System.Windows.Forms.TextBox
+    Friend WithEvents lblDownloadDestination As System.Windows.Forms.Label
+    Friend WithEvents txtDownloadDestination As System.Windows.Forms.TextBox
+    Friend WithEvents lblUploadSource As System.Windows.Forms.Label
+    Friend WithEvents txtUploadSource As System.Windows.Forms.TextBox
+    Friend WithEvents chkEncryptProcedure As System.Windows.Forms.CheckBox
+    Friend WithEvents lblEncryptProcedure As System.Windows.Forms.Label
+    Friend WithEvents btnCreateUploadProcedure As System.Windows.Forms.Button
+    Friend WithEvents chkRemoveFiles As System.Windows.Forms.CheckBox
+    Friend WithEvents lblRemoveFiles As System.Windows.Forms.Label
+    Friend WithEvents lblFtpMode As System.Windows.Forms.Label
+    Friend WithEvents lblTargetFiles As System.Windows.Forms.Label
+    Friend WithEvents txtTargetFiles As System.Windows.Forms.TextBox
+    Friend WithEvents cbxFtpMode As System.Windows.Forms.ComboBox
+    Friend WithEvents rtbFtpDefaultValues As System.Windows.Forms.RichTextBox
+    Friend WithEvents rtbFtpCmdshell As System.Windows.Forms.RichTextBox
+    Friend WithEvents chkCmdshell As System.Windows.Forms.CheckBox
+    Friend WithEvents lblCmdshell As System.Windows.Forms.Label
+    Friend WithEvents lblFtpStatus As System.Windows.Forms.Label
+    Friend WithEvents btnCreateDownloadProcedure As System.Windows.Forms.Button
 End Class

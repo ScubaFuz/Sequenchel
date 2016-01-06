@@ -24,6 +24,7 @@
         DateFormatsLoad()
         txtErrorlogPath.Text = dhdText.LogLocation
         ResetColors()
+        SetFtpDefaults()
     End Sub
 
     Private Sub btnClose_Click(sender As Object, e As EventArgs) Handles btnClose.Click
@@ -1201,6 +1202,133 @@
         SaveConfigSetting("MonitorDataspaces", "MediumGrowth", CurVar.MediumGrowth)
         SaveConfigSetting("MonitorDataspaces", "LargeGrowth", CurVar.LargeGrowth)
 
+    End Sub
+
+#End Region
+
+#Region "FTP"
+
+    Private Sub txtFtpServer_GotFocus(sender As Object, e As EventArgs) Handles txtFtpServer.GotFocus
+        RemoveDefaultText(sender)
+    End Sub
+
+    Private Sub txtFtpServer_LostFocus(sender As Object, e As EventArgs) Handles txtFtpServer.LostFocus
+        SetDefaultText(sender)
+    End Sub
+
+    Private Sub txtUploadSource_GotFocus(sender As Object, e As EventArgs) Handles txtUploadSource.GotFocus
+        RemoveDefaultText(sender)
+    End Sub
+
+    Private Sub txtUploadSource_LostFocus(sender As Object, e As EventArgs) Handles txtUploadSource.LostFocus
+        SetDefaultText(sender)
+    End Sub
+
+    Private Sub txtFtpLocation_GotFocus(sender As Object, e As EventArgs) Handles txtFtpLocation.GotFocus
+        RemoveDefaultText(sender)
+    End Sub
+
+    Private Sub txtFtpLocation_LostFocus(sender As Object, e As EventArgs) Handles txtFtpLocation.LostFocus
+        SetDefaultText(sender)
+    End Sub
+
+    Private Sub txtDownloadDestination_GotFocus(sender As Object, e As EventArgs) Handles txtDownloadDestination.GotFocus
+        RemoveDefaultText(sender)
+    End Sub
+
+    Private Sub txtDownloadDestination_LostFocus(sender As Object, e As EventArgs) Handles txtDownloadDestination.LostFocus
+        SetDefaultText(sender)
+    End Sub
+
+    Private Sub txtTargetFiles_GotFocus(sender As Object, e As EventArgs) Handles txtTargetFiles.GotFocus
+        RemoveDefaultText(sender)
+    End Sub
+
+    Private Sub txtTargetFiles_LostFocus(sender As Object, e As EventArgs) Handles txtTargetFiles.LostFocus
+        SetDefaultText(sender)
+    End Sub
+
+    Private Sub SetDefaultText(objTextBox As TextBox)
+        If objTextBox.Text = "" Then
+            objTextBox.Text = objTextBox.Tag
+            objTextBox.ForeColor = Color.Gray
+        End If
+    End Sub
+
+    Private Sub RemoveDefaultText(objTextBox As TextBox)
+        If objTextBox.Text = objTextBox.Tag Then
+            objTextBox.Text = ""
+            objTextBox.ForeColor = SystemColors.WindowText
+        End If
+    End Sub
+
+    Private Sub SetFtpDefaults()
+        SetDefaultText(txtFtpServer)
+        SetDefaultText(txtUploadSource)
+        SetDefaultText(txtFtpLocation)
+        SetDefaultText(txtDownloadDestination)
+        SetDefaultText(txtTargetFiles)
+        cbxFtpMode.SelectedIndex = 1
+    End Sub
+
+    Private Sub btnCreateUploadProcedure_Click(sender As Object, e As EventArgs) Handles btnCreateUploadProcedure.Click
+        Dim MydbRef As New SDBA.DBRef
+        Dim strSQL As String
+
+        strSQL = MydbRef.GetScript("01 dbo.usp_PutFTPfiles.sql")
+        If Not strSQL = "-1" Then
+            If chkEncryptProcedure.Checked = False Then strSQL = strSQL.Replace("WITH ENCRYPTION", "")
+            If txtFtpServer.Text <> txtFtpServer.Tag Then strSQL = strSQL.Replace("<FtpServer>", txtFtpServer.Text)
+            If txtFtpUserName.Text.Length > 0 Then strSQL = strSQL.Replace("<FtpUser>", txtFtpUserName.Text)
+            If txtFtpPassword.Text.Length > 0 Then strSQL = strSQL.Replace("<FtpPassword>", txtFtpPassword.Text)
+            If txtUploadSource.Text <> txtUploadSource.Tag Then strSQL = strSQL.Replace("<SourcePath>", txtUploadSource.Text)
+            If txtFtpLocation.Text <> txtFtpLocation.Tag Then strSQL = strSQL.Replace("<DestPath>", txtFtpLocation.Text)
+            If txtTargetFiles.Text <> txtTargetFiles.Tag Then strSQL = strSQL.Replace("<SourceFiles>", txtTargetFiles.Text)
+            If cbxFtpMode.SelectedIndex <> -1 Then strSQL = strSQL.Replace("<FtpMode>", cbxFtpMode.SelectedItem)
+            If chkCmdshell.Checked = True Then
+                strSQL = strSQL.Replace("--exec sp_configure", "exec sp_configure")
+                strSQL = strSQL.Replace("--reconfigure", "reconfigure")
+            End If
+            Try
+                QueryDb(dhdDatabase, strSQL, False, 10)
+                lblFtpStatus.Text = "Procedure PutFTPfiles was created succesfully"
+            Catch ex As Exception
+                MessageBox.Show("There was an error creating the procedure" & Environment.NewLine & ex.Message)
+            End Try
+        Else
+            If DebugMode Then MessageBox.Show("The script: 01 dbo.usp_PutFTPfiles.sql returned: " & strSQL)
+        End If
+
+    End Sub
+
+    Private Sub btnCreateDownloadProcedure_Click(sender As Object, e As EventArgs) Handles btnCreateDownloadProcedure.Click
+        Dim MydbRef As New SDBA.DBRef
+        Dim strSQL As String
+
+        strSQL = MydbRef.GetScript("01 dbo.usp_GetFTPfiles.sql")
+        If Not strSQL = "-1" Then
+            If chkEncryptProcedure.Checked = False Then strSQL = strSQL.Replace("WITH ENCRYPTION", "")
+            If txtFtpServer.Text <> txtFtpServer.Tag Then strSQL = strSQL.Replace("<FtpServer>", txtFtpServer.Text)
+            If txtFtpUserName.Text.Length > 0 Then strSQL = strSQL.Replace("<FtpUser>", txtFtpUserName.Text)
+            If txtFtpPassword.Text.Length > 0 Then strSQL = strSQL.Replace("<FtpPassword>", txtFtpPassword.Text)
+            If txtFtpLocation.Text <> txtFtpLocation.Tag Then strSQL = strSQL.Replace("<SourcePath>", txtFtpLocation.Text)
+            If txtDownloadDestination.Text <> txtDownloadDestination.Tag Then strSQL = strSQL.Replace("<DestPath>", txtDownloadDestination.Text)
+            If txtTargetFiles.Text <> txtTargetFiles.Tag Then strSQL = strSQL.Replace("<SourceFiles>", txtTargetFiles.Text)
+            If cbxFtpMode.SelectedIndex <> -1 Then strSQL = strSQL.Replace("<FtpMode>", cbxFtpMode.SelectedItem)
+            If chkRemoveFiles.Checked = True Then strSQL = strSQL.Replace("@Remove bit = 0", "@Remove bit = 1")
+            If chkCmdshell.Checked = True Then
+                strSQL = strSQL.Replace("--exec sp_configure", "exec sp_configure")
+                strSQL = strSQL.Replace("--reconfigure", "reconfigure")
+            End If
+            Try
+                QueryDb(dhdDatabase, strSQL, False, 10)
+                lblFtpStatus.Text = "Procedure GetFTPfiles was created succesfully"
+            Catch ex As Exception
+                MessageBox.Show("There was an error creating the procedure" & Environment.NewLine & ex.Message)
+            End Try
+        Else
+            If DebugMode Then MessageBox.Show("The script: 01 dbo.usp_GetFTPfiles.sql returned: " & strSQL)
+        End If
     End Sub
 
 #End Region

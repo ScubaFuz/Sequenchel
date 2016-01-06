@@ -4,6 +4,7 @@ New: Added select options for Date/Time SQL functions.
 New: option to add Now(), Date(), Time(), MonthStart(), MonthEnd(), WeekStart() and WeekEnd() as filteroptions to a report.
 New: Option to convert output to text only when exporting to better deal with NULL values.
 New: In Reports the join to a related table can contain a query when using parentheses.
+New: Sequenchel now provides Stored Procedures for FTP upload and download.
 Enhanced: In Reports the mousewheel now scrolls the report definition and not the report selection.
 Enhanced: Reports are sorted alfabetically.
 Fixed: Adding and removing relations (Configuration) now works as intended.
