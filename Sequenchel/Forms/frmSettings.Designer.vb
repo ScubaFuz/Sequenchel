@@ -2046,9 +2046,9 @@ Partial Class frmSettings
         Me.lblRemoveFiles.AutoSize = True
         Me.lblRemoveFiles.Location = New System.Drawing.Point(26, 269)
         Me.lblRemoveFiles.Name = "lblRemoveFiles"
-        Me.lblRemoveFiles.Size = New System.Drawing.Size(214, 13)
+        Me.lblRemoveFiles.Size = New System.Drawing.Size(264, 13)
         Me.lblRemoveFiles.TabIndex = 86
-        Me.lblRemoveFiles.Text = "Remove Files from FTP Site After Download"
+        Me.lblRemoveFiles.Text = "Remove Source Files from FTP Server After Download"
         '
         'lblFtpMode
         '
