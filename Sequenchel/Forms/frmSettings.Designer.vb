@@ -218,6 +218,7 @@ Partial Class frmSettings
         Me.txtUploadSource = New System.Windows.Forms.TextBox()
         Me.btnClose = New System.Windows.Forms.Button()
         Me.ttpDefaultLogLocation = New System.Windows.Forms.ToolTip(Me.components)
+        Me.chkAllowDataImport = New System.Windows.Forms.CheckBox()
         Me.tabSettings.SuspendLayout()
         Me.tpgGeneral.SuspendLayout()
         Me.grpSecurity.SuspendLayout()
@@ -281,7 +282,7 @@ Partial Class frmSettings
         'lblLimitLookupLists
         '
         Me.lblLimitLookupLists.AutoSize = True
-        Me.lblLimitLookupLists.Location = New System.Drawing.Point(198, 270)
+        Me.lblLimitLookupLists.Location = New System.Drawing.Point(198, 288)
         Me.lblLimitLookupLists.Name = "lblLimitLookupLists"
         Me.lblLimitLookupLists.Size = New System.Drawing.Size(31, 13)
         Me.lblLimitLookupLists.TabIndex = 115
@@ -289,7 +290,7 @@ Partial Class frmSettings
         '
         'txtLimitLookupLists
         '
-        Me.txtLimitLookupLists.Location = New System.Drawing.Point(151, 267)
+        Me.txtLimitLookupLists.Location = New System.Drawing.Point(151, 285)
         Me.txtLimitLookupLists.Name = "txtLimitLookupLists"
         Me.txtLimitLookupLists.Size = New System.Drawing.Size(41, 20)
         Me.txtLimitLookupLists.TabIndex = 114
@@ -297,7 +298,7 @@ Partial Class frmSettings
         'chkLimitLookupLists
         '
         Me.chkLimitLookupLists.AutoSize = True
-        Me.chkLimitLookupLists.Location = New System.Drawing.Point(36, 269)
+        Me.chkLimitLookupLists.Location = New System.Drawing.Point(36, 287)
         Me.chkLimitLookupLists.Name = "chkLimitLookupLists"
         Me.chkLimitLookupLists.Size = New System.Drawing.Size(121, 17)
         Me.chkLimitLookupLists.TabIndex = 113
@@ -353,6 +354,7 @@ Partial Class frmSettings
         '
         'grpSecurity
         '
+        Me.grpSecurity.Controls.Add(Me.chkAllowDataImport)
         Me.grpSecurity.Controls.Add(Me.chkAllowQueryEdit)
         Me.grpSecurity.Controls.Add(Me.lblUsageText)
         Me.grpSecurity.Controls.Add(Me.chkAllowSettingsChange)
@@ -366,7 +368,7 @@ Partial Class frmSettings
         Me.grpSecurity.Controls.Add(Me.chkAllowInsert)
         Me.grpSecurity.Location = New System.Drawing.Point(30, 132)
         Me.grpSecurity.Name = "grpSecurity"
-        Me.grpSecurity.Size = New System.Drawing.Size(532, 131)
+        Me.grpSecurity.Size = New System.Drawing.Size(532, 147)
         Me.grpSecurity.TabIndex = 108
         Me.grpSecurity.TabStop = False
         Me.grpSecurity.Text = "Security"
@@ -384,7 +386,7 @@ Partial Class frmSettings
         'lblUsageText
         '
         Me.lblUsageText.AutoSize = True
-        Me.lblUsageText.Location = New System.Drawing.Point(153, 101)
+        Me.lblUsageText.Location = New System.Drawing.Point(153, 126)
         Me.lblUsageText.Name = "lblUsageText"
         Me.lblUsageText.Size = New System.Drawing.Size(277, 13)
         Me.lblUsageText.TabIndex = 107
@@ -393,7 +395,7 @@ Partial Class frmSettings
         'chkAllowSettingsChange
         '
         Me.chkAllowSettingsChange.AutoSize = True
-        Me.chkAllowSettingsChange.Location = New System.Drawing.Point(175, 47)
+        Me.chkAllowSettingsChange.Location = New System.Drawing.Point(175, 70)
         Me.chkAllowSettingsChange.Name = "chkAllowSettingsChange"
         Me.chkAllowSettingsChange.Size = New System.Drawing.Size(132, 17)
         Me.chkAllowSettingsChange.TabIndex = 53
@@ -403,7 +405,7 @@ Partial Class frmSettings
         'lblUsage
         '
         Me.lblUsage.AutoSize = True
-        Me.lblUsage.Location = New System.Drawing.Point(3, 101)
+        Me.lblUsage.Location = New System.Drawing.Point(3, 126)
         Me.lblUsage.Name = "lblUsage"
         Me.lblUsage.Size = New System.Drawing.Size(38, 13)
         Me.lblUsage.TabIndex = 106
@@ -421,7 +423,7 @@ Partial Class frmSettings
         '
         'txtOverridePassword
         '
-        Me.txtOverridePassword.Location = New System.Drawing.Point(150, 73)
+        Me.txtOverridePassword.Location = New System.Drawing.Point(150, 98)
         Me.txtOverridePassword.Name = "txtOverridePassword"
         Me.txtOverridePassword.PasswordChar = Global.Microsoft.VisualBasic.ChrW(42)
         Me.txtOverridePassword.Size = New System.Drawing.Size(179, 20)
@@ -440,7 +442,7 @@ Partial Class frmSettings
         'lblOverridePassword
         '
         Me.lblOverridePassword.AutoSize = True
-        Me.lblOverridePassword.Location = New System.Drawing.Point(3, 76)
+        Me.lblOverridePassword.Location = New System.Drawing.Point(3, 101)
         Me.lblOverridePassword.Name = "lblOverridePassword"
         Me.lblOverridePassword.Size = New System.Drawing.Size(96, 13)
         Me.lblOverridePassword.TabIndex = 104
@@ -2187,11 +2189,21 @@ Partial Class frmSettings
         Me.btnClose.Text = "Close"
         Me.btnClose.UseVisualStyleBackColor = True
         '
+        'chkAllowDataImport
+        '
+        Me.chkAllowDataImport.AutoSize = True
+        Me.chkAllowDataImport.Location = New System.Drawing.Point(175, 47)
+        Me.chkAllowDataImport.Name = "chkAllowDataImport"
+        Me.chkAllowDataImport.Size = New System.Drawing.Size(109, 17)
+        Me.chkAllowDataImport.TabIndex = 108
+        Me.chkAllowDataImport.Text = "Allow Data Import"
+        Me.chkAllowDataImport.UseVisualStyleBackColor = True
+        '
         'frmSettings
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(637, 443)
+        Me.ClientSize = New System.Drawing.Size(637, 442)
         Me.Controls.Add(Me.btnClose)
         Me.Controls.Add(Me.tabSettings)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog
@@ -2420,4 +2432,5 @@ Partial Class frmSettings
     Friend WithEvents lblCmdshell As System.Windows.Forms.Label
     Friend WithEvents lblFtpStatus As System.Windows.Forms.Label
     Friend WithEvents btnCreateDownloadProcedure As System.Windows.Forms.Button
+    Friend WithEvents chkAllowDataImport As System.Windows.Forms.CheckBox
 End Class

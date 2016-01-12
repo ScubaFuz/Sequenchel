@@ -3,6 +3,7 @@ Imports System.Collections.Generic
 Imports DocumentFormat.OpenXml.Packaging
 Imports DocumentFormat.OpenXml.Spreadsheet
 Imports DocumentFormat.OpenXml
+Imports Microsoft.Office.Interop
 
 Public Class CreateExcelFile
     Public Shared Function CreateExcelDocument(Of T)(ByVal list As List(Of T), ByVal xlsxFilePath As String) As Boolean
@@ -274,4 +275,18 @@ Public Class CreateExcelFile
         Return firstChar + secondChar
     End Function
 
+    Private Function getExcelSheetsName(ByVal Excelfilename As String) As ArrayList
+        Dim objExcel As Excel.Application
+        Dim objWorkBook As Excel.Workbook
+        Dim objWorkSheet As Excel.Worksheet
+        Dim SheetList As New ArrayList
+        objExcel = CreateObject("Excel.Application")
+        objWorkBook = objExcel.Workbooks.Open(Excelfilename)
+        For Each objWorkSheet In objWorkBook.Worksheets
+            SheetList.Add(objWorkSheet.Name)
+            ' ListBox1.Items.Add(objWorkSheets.Name)
+        Next
+
+        Return SheetList
+    End Function
 End Class

@@ -125,6 +125,7 @@
     Private _AllowInsert As Boolean = True
     Private _AllowDelete As Boolean = True
     Private _AllowLinkedServers As Boolean = True
+    Private _AllowDataImport As Boolean = False
     Private _AllowSettingsChange As Boolean = True
 
     Public Property Encryption() As Boolean
@@ -205,6 +206,15 @@
         End Get
         Set(ByVal Value As Boolean)
             _AllowLinkedServers = Value
+        End Set
+    End Property
+
+    Public Property AllowDataImport() As Boolean
+        Get
+            Return _AllowDataImport
+        End Get
+        Set(ByVal Value As Boolean)
+            _AllowDataImport = Value
         End Set
     End Property
 

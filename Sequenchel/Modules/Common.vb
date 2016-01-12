@@ -366,6 +366,7 @@ Module Common
                 If dhdText.CheckElement(xmlSDBASettings, "AllowInsert") Then CurVar.AllowInsert = xmlSDBASettings.Item("Sequenchel").Item("Settings").Item("AllowInsert").InnerText
                 If dhdText.CheckElement(xmlSDBASettings, "AllowDelete") Then CurVar.AllowDelete = xmlSDBASettings.Item("Sequenchel").Item("Settings").Item("AllowDelete").InnerText
                 If dhdText.CheckElement(xmlSDBASettings, "AllowLinkedServersChange") Then CurVar.AllowLinkedServers = xmlSDBASettings.Item("Sequenchel").Item("Settings").Item("AllowLinkedServersChange").InnerText
+                If dhdText.CheckElement(xmlSDBASettings, "AllowDataImport") Then CurVar.AllowDataImport = xmlSDBASettings.Item("Sequenchel").Item("Settings").Item("AllowDataImport").InnerText
                 If dhdText.CheckElement(xmlSDBASettings, "AllowSettingsChange") Then CurVar.AllowSettingsChange = xmlSDBASettings.Item("Sequenchel").Item("Settings").Item("AllowSettingsChange").InnerText
                 If dhdText.CheckElement(xmlSDBASettings, "OverridePassword") Then
                     If xmlSDBASettings.Item("Sequenchel").Item("Settings").Item("OverridePassword").InnerText.Length > 0 Then
@@ -401,6 +402,7 @@ Module Common
         strXmlText &= "		<AllowInsert>" & CurVar.AllowInsert & "</AllowInsert>" & Environment.NewLine
         strXmlText &= "		<AllowDelete>" & CurVar.AllowDelete & "</AllowDelete>" & Environment.NewLine
         strXmlText &= "		<AllowLinkedServersChange>" & CurVar.AllowLinkedServers & "</AllowLinkedServersChange>" & Environment.NewLine
+        strXmlText &= "		<AllowDataImport>" & CurVar.AllowDataImport & "</AllowDataImport>" & Environment.NewLine
         strXmlText &= "		<AllowSettingsChange>" & CurVar.AllowSettingsChange & "</AllowSettingsChange>" & Environment.NewLine
         strXmlText &= "		<OverridePassword>" & CurVar.OverridePassword & "</OverridePassword>" & Environment.NewLine
         strXmlText &= "	</Settings>" & Environment.NewLine
@@ -1513,7 +1515,14 @@ Module Common
             Case "TIME", "TIMESTAMP"
                 Dim intFieldWidth As Integer = 8
                 If IsNumeric(strFieldWidth) = 1 And strFieldWidth < intFieldWidth Then intFieldWidth = strFieldWidth
-                strOutput = "(CONVERT([nvarchar](" & intFieldWidth & "), " & strFQDN & "))"
+                Select Case CurVar.DateTimeStyle
+                    Case 101, 100
+                        strOutput = "(CONVERT([nvarchar](7), " & strFQDN & ", 100))"
+                    Case 105, 102
+                        strOutput = "(CONVERT([nvarchar](8), " & strFQDN & ", 120))"
+                    Case Else
+                        strOutput = "(CONVERT([nvarchar](13), " & strFQDN & ", " & CurVar.DateTimeStyle & "))"
+                End Select
             Case "XML"
                 strOutput = "(CONVERT([nvarchar](max), " & strFQDN & "))"
             Case "DATETIME"
@@ -1965,5 +1974,7 @@ Module Common
     '    cbxInput.DrawMode = DrawMode.OwnerDrawFixed
     '    Return cbxInput
     'End Function
+
+
 
 End Module

@@ -175,6 +175,14 @@
         End If
     End Sub
 
+    Private Sub chkAllowDataImport_CheckedChanged(sender As Object, e As EventArgs) Handles chkAllowDataImport.CheckedChanged
+        If chkAllowDataImport.Checked = chkAllowDataImport.Tag Then
+            chkAllowDataImport.BackColor = clrControl
+        Else
+            chkAllowDataImport.BackColor = clrMarked
+        End If
+    End Sub
+
     Private Sub chkAllowSettingsChange_CheckedChanged(sender As Object, e As EventArgs) Handles chkAllowSettingsChange.CheckedChanged
         If chkAllowSettingsChange.Checked = chkAllowSettingsChange.Tag Then
             chkAllowSettingsChange.BackColor = clrControl
@@ -260,6 +268,12 @@
             CurVar.AllowLinkedServers = chkAllowLinkedServers.Checked
             chkAllowLinkedServers.Tag = CurVar.AllowLinkedServers
             chkAllowLinkedServers.BackColor = clrOriginal
+            blnSettingsChanged = True
+        End If
+        If chkAllowDataImport.BackColor = clrMarked Then
+            CurVar.AllowDataImport = chkAllowDataImport.Checked
+            chkAllowDataImport.Tag = CurVar.AllowDataImport
+            chkAllowDataImport.BackColor = clrOriginal
             blnSettingsChanged = True
         End If
         If chkAllowSettingsChange.BackColor = clrMarked Then

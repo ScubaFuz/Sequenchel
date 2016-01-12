@@ -87,6 +87,7 @@ Public Class frmSequenchel
     End Sub
 
     Private Sub SecuritySet()
+        If CurVar.AllowDataImport = False And CurVar.SecurityOverride = False Then mnuMainToolsImport.Enabled = False
         If CurVar.AllowConfiguration = False And CurVar.SecurityOverride = False Then mnuMainToolsConfiguration.Enabled = False
         If CurVar.AllowLinkedServers = False And CurVar.SecurityOverride = False Then mnuMainToolsLinkedServers.Enabled = False
         If CurVar.AllowSettingsChange = False And CurVar.SecurityOverride = False Then mnuMainToolsSettings.Enabled = False
@@ -113,6 +114,10 @@ Public Class frmSequenchel
 
     Private Sub mnuMainToolsReports_Click(sender As Object, e As EventArgs) Handles mnuMainToolsReports.Click
         ShowReportsForm()
+    End Sub
+
+    Private Sub mnuMainToolsImport_Click(sender As Object, e As EventArgs) Handles mnuMainToolsImport.Click
+        ShowImportForm()
     End Sub
 
     Private Sub mnuMainToolsLinkedServers_Click(sender As Object, e As EventArgs) Handles mnuMainToolsLinkedServers.Click
@@ -144,6 +149,11 @@ Public Class frmSequenchel
     Private Sub ShowReportsForm()
         Dim frmReportsForm As New frmReports
         frmReportsForm.Show()
+    End Sub
+
+    Private Sub ShowImportForm()
+        Dim frmImportForm As New frmImport
+        frmImportForm.Show()
     End Sub
 
     Private Sub ShowLinkedServerForm()

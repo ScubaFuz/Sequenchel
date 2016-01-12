@@ -41,6 +41,7 @@ Partial Class frmSequenchel
         Me.mnuMainFileExit = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuMainTools = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuMainToolsReports = New System.Windows.Forms.ToolStripMenuItem()
+        Me.mnuMainToolsImport = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuMainToolsLinkedServers = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuMainToolsConfiguration = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuMainToolsSettings = New System.Windows.Forms.ToolStripMenuItem()
@@ -230,7 +231,7 @@ Partial Class frmSequenchel
         '
         'mnuMainTools
         '
-        Me.mnuMainTools.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuMainToolsReports, Me.mnuMainToolsLinkedServers, Me.mnuMainToolsConfiguration, Me.mnuMainToolsSettings})
+        Me.mnuMainTools.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuMainToolsReports, Me.mnuMainToolsImport, Me.mnuMainToolsLinkedServers, Me.mnuMainToolsConfiguration, Me.mnuMainToolsSettings})
         Me.mnuMainTools.Name = "mnuMainTools"
         Me.mnuMainTools.Size = New System.Drawing.Size(47, 20)
         Me.mnuMainTools.Text = "Tools"
@@ -238,25 +239,31 @@ Partial Class frmSequenchel
         'mnuMainToolsReports
         '
         Me.mnuMainToolsReports.Name = "mnuMainToolsReports"
-        Me.mnuMainToolsReports.Size = New System.Drawing.Size(149, 22)
+        Me.mnuMainToolsReports.Size = New System.Drawing.Size(152, 22)
         Me.mnuMainToolsReports.Text = "Reports"
+        '
+        'mnuMainToolsImport
+        '
+        Me.mnuMainToolsImport.Name = "mnuMainToolsImport"
+        Me.mnuMainToolsImport.Size = New System.Drawing.Size(152, 22)
+        Me.mnuMainToolsImport.Text = "Import"
         '
         'mnuMainToolsLinkedServers
         '
         Me.mnuMainToolsLinkedServers.Name = "mnuMainToolsLinkedServers"
-        Me.mnuMainToolsLinkedServers.Size = New System.Drawing.Size(149, 22)
+        Me.mnuMainToolsLinkedServers.Size = New System.Drawing.Size(152, 22)
         Me.mnuMainToolsLinkedServers.Text = "Linked Servers"
         '
         'mnuMainToolsConfiguration
         '
         Me.mnuMainToolsConfiguration.Name = "mnuMainToolsConfiguration"
-        Me.mnuMainToolsConfiguration.Size = New System.Drawing.Size(149, 22)
+        Me.mnuMainToolsConfiguration.Size = New System.Drawing.Size(152, 22)
         Me.mnuMainToolsConfiguration.Text = "Configuration"
         '
         'mnuMainToolsSettings
         '
         Me.mnuMainToolsSettings.Name = "mnuMainToolsSettings"
-        Me.mnuMainToolsSettings.Size = New System.Drawing.Size(149, 22)
+        Me.mnuMainToolsSettings.Size = New System.Drawing.Size(152, 22)
         Me.mnuMainToolsSettings.Text = "Settings"
         '
         'mnuMainHelp
@@ -657,5 +664,6 @@ Partial Class frmSequenchel
     Friend WithEvents pnlListCount As System.Windows.Forms.Panel
     Friend WithEvents TableLayoutPanel1 As System.Windows.Forms.TableLayoutPanel
     Friend WithEvents mnuMainHelpManual As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents mnuMainToolsImport As System.Windows.Forms.ToolStripMenuItem
 
 End Class
