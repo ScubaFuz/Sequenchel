@@ -1880,10 +1880,14 @@ Module Common
     Friend Function DatasetCheck(dtsInput As DataSet, Optional intTable As Integer = 0) As Boolean
         Dim blnOK As Boolean = True
 
-        If dtsInput Is Nothing Then Return False
-        If dtsInput.Tables.Count = 0 Then Return False
-        If dtsInput.Tables.Count < intTable + 1 Then Return False
-        If dtsInput.Tables(intTable).Rows.Count = 0 Then Return False
+        Try
+            If dtsInput Is Nothing Then Return False
+            If dtsInput.Tables.Count = 0 Then Return False
+            If dtsInput.Tables.Count < intTable + 1 Then Return False
+            If dtsInput.Tables(intTable).Rows.Count = 0 Then Return False
+        Catch ex As Exception
+            Return False
+        End Try
 
         Return blnOK
     End Function

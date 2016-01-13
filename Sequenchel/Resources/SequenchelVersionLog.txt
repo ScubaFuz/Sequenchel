@@ -1,5 +1,8 @@
 Version 3.5.1
-New Added an Import option for transferring data from a file into a database table.
+New: Added an Import option for transferring data from a file into a database table.
+New: Doubleclick on the upper left corner in a report will resize all columns fo fit the data.
+New: Added a description field to the report definition.
+Enhanced: Replaced Report display procedure making it faster.
 Fixed: Time formatting is now linked to chosen date format.
 
 Version 3.5.0

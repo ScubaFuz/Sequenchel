@@ -277,6 +277,7 @@ Public Class frmReports
     End Sub
 
     Private Sub ReportFieldsDispose(Optional blnAll As Boolean = True)
+        txtDescription.Text = ""
         chkDistinct.Checked = False
         chkTop.Checked = True
         txtTop.Text = 1000
@@ -911,6 +912,7 @@ Public Class frmReports
         Dim strTable As String = "", strField As String = "", intRelationNumber As Integer = 0
 
         If Not xNode Is Nothing Then
+            If dhdText.CheckNodeElement(xNode, "Description") Then txtDescription.Text = xNode.Item("Description").InnerText
             chkTop.Checked = xNode.Item("UseTop").InnerText
             txtTop.Text = xNode.Item("UseTopNumber").InnerText
             chkDistinct.Checked = xNode.Item("UseDistinct").InnerText
@@ -1243,31 +1245,19 @@ Public Class frmReports
         lblErrorMessage.Text = strErrorMessage
         If DatasetCheck(dtsData) = False Then Exit Sub
 
-        If DataSet2DataGridView(dtsData, 0, dgvReport, True) = False Then
-            MessageBox.Show("There was an error loading the report")
-        End If
-        'For Each colColumn As DataColumn In dtsData.Tables(0).Columns
-        '    dgvReport.Columns.Add(colColumn.ColumnName, colColumn.ColumnName)
-        '    'dgvReport.Columns.Add(fldField.FieldName, fldField.FieldAlias)
-        '    'dgvReport.Columns.Item(dgvReport.Columns.Count - 1).Width = fldField.FieldListWidth
+        'If DataSet2DataGridView(dtsData, 0, dgvReport, True) = False Then
+        '    MessageBox.Show("There was an error loading the report")
+        'End If
+        Try
+            dgvReport.DataSource = dtsData.Tables(0)
+            lblListCountNumber.Text = dtsData.Tables(0).Rows.Count.ToString
+            'DataGridViewColumnSize(dgvReport)
+            lblErrorMessage.Text = "Command completed succesfully"
+        Catch ex As Exception
+            MessageBox.Show("There was an error loading the report" & Environment.NewLine & ex.Message)
+        End Try
 
-        'Next
-
-        'For intRowCount1 As Integer = 0 To dtsData.Tables(0).Rows.Count - 1
-        '    Dim dgvRow As New DataGridViewRow
-        '    dgvRow.CreateCells(dgvReport)
-        '    For Each dgvColumn As DataGridViewTextBoxColumn In dgvReport.Columns
-        '        If dtsData.Tables.Item(0).Rows(intRowCount1).Item(dgvColumn.Name).GetType().ToString = "System.DBNull" Then
-        '            dgvRow.Cells.Item(dgvReport.Columns.Item(dgvColumn.Name).Index).Style.BackColor = clrEmpty
-        '            dgvRow.Cells.Item(dgvReport.Columns.Item(dgvColumn.Name).Index).Value = ""
-        '        Else
-        '            dgvRow.Cells.Item(dgvReport.Columns.Item(dgvColumn.Name).Index).Value = dtsData.Tables.Item(0).Rows(intRowCount1).Item(dgvColumn.Name)
-        '        End If
-        '    Next
-        '    dgvReport.Rows.Add(dgvRow)
-        'Next
-        lblListCountNumber.Text = dtsData.Tables(0).Rows.Count.ToString
-        If strErrorMessage = "" Then lblErrorMessage.Text = "Command completed succesfully"
+        'If strErrorMessage = "" Then lblErrorMessage.Text = "Command completed succesfully"
         dgvReport.ClearSelection()
 
     End Sub
@@ -1284,6 +1274,7 @@ Public Class frmReports
 
         Dim NewReportNode As XmlNode = dhdText.CreateAppendElement(xmlDocReport.Item("Sequenchel").Item("Reports"), "Report")
         dhdText.CreateAppendElement(NewReportNode, "ReportName", cbxReportName.Text)
+        dhdText.CreateAppendElement(NewReportNode, "Description", txtDescription.Text)
         dhdText.CreateAppendElement(NewReportNode, "UseTop", chkTop.Checked.ToString)
         dhdText.CreateAppendElement(NewReportNode, "UseTopNumber", txtTop.Text)
         dhdText.CreateAppendElement(NewReportNode, "UseDistinct", chkDistinct.Checked.ToString)
@@ -1452,4 +1443,13 @@ Public Class frmReports
         pnlSelectedFieldsMain.Invalidate()
     End Sub
 
+    Private Sub dgvReport_DoubleClick(sender As Object, e As MouseEventArgs) Handles dgvReport.DoubleClick
+        Dim args As MouseEventArgs = e
+        Dim dgv As DataGridView = sender
+        Dim hit As DataGridView.HitTestInfo = dgv.HitTest(args.X, args.Y)
+        If (hit.Type = DataGridViewHitTestType.TopLeftHeader) Then
+            DataGridViewColumnSize(sender)
+        End If
+
+    End Sub
 End Class
