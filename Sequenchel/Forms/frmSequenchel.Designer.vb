@@ -231,9 +231,9 @@ Partial Class frmSequenchel
         '
         'mnuMainTools
         '
-        Me.mnuMainTools.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuMainToolsReports, Me.mnuMainToolsImport, Me.mnuMainToolsLinkedServers, Me.mnuMainToolsConfiguration, Me.mnuMainToolsSettings})
+        Me.mnuMainTools.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuMainToolsReports, Me.mnuMainToolsConfiguration, Me.mnuMainToolsImport, Me.mnuMainToolsLinkedServers, Me.mnuMainToolsSettings})
         Me.mnuMainTools.Name = "mnuMainTools"
-        Me.mnuMainTools.Size = New System.Drawing.Size(47, 20)
+        Me.mnuMainTools.Size = New System.Drawing.Size(48, 20)
         Me.mnuMainTools.Text = "Tools"
         '
         'mnuMainToolsReports

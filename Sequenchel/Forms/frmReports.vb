@@ -6,7 +6,7 @@ Public Class frmReports
 
     Private Sub frmReports_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         lblLicense.Text = "Licensed to: " & strLicenseName
-        lblLicense.Left = Me.Width - lblLicense.Width - (CurVar.BuildMargin * 3)
+        lblLicense.Left = Me.Width - lblLicense.Width - (CurVar.BuildMargin * 5)
 
         mousePath = New System.Drawing.Drawing2D.GraphicsPath()
 
@@ -365,7 +365,7 @@ Public Class frmReports
         cbxNewShowMode.Name = pnlReportShowMode.Name & "1" & strFieldName
         cbxNewShowMode.FieldDataType = strFieldType
         cbxNewShowMode.Tag = strFieldName
-        cbxNewShowMode.Width = 50
+        cbxNewShowMode.Width = 75
         pnlReportShowMode.Controls.Add(cbxNewShowMode)
         cbxNewShowMode.Top = ((lvwSelectedFields.Items.Count - 1) * CurVar.FieldHeight) + ((lvwSelectedFields.Items.Count - 1) * CurVar.BuildMargin)
         cbxNewShowMode.Left = CurVar.BuildMargin
@@ -405,7 +405,7 @@ Public Class frmReports
         Dim cbxNewFilterMode As New ComboField
         cbxNewFilterMode.Name = pnlReportFilterMode.Name & intCount.ToString & strFieldName
         cbxNewFilterMode.Tag = strFieldName
-        cbxNewFilterMode.Width = 50
+        cbxNewFilterMode.Width = 75
         pnlReportFilterMode.Controls.Add(cbxNewFilterMode)
         'cbxNewFilterMode.Top = ((lstSelectedFields.Items.Count - 1) * CurVar.FieldHeight) + ((lstSelectedFields.Items.Count - 1) * CurVar.BuildMargin)
         cbxNewFilterMode.Top = ((lvwSelectedFields.Items.Count - 1) * CurVar.FieldHeight) + ((lvwSelectedFields.Items.Count - 1) * CurVar.BuildMargin)
@@ -415,7 +415,7 @@ Public Class frmReports
         Dim cbxNewFilterType As New ComboField
         cbxNewFilterType.Name = pnlReportFilterType.Name & intCount.ToString & strFieldName
         cbxNewFilterType.Tag = strFieldName
-        cbxNewFilterType.Width = 50
+        cbxNewFilterType.Width = 75
         pnlReportFilterType.Controls.Add(cbxNewFilterType)
         'cbxNewFilterType.Top = ((lstSelectedFields.Items.Count - 1) * CurVar.FieldHeight) + ((lstSelectedFields.Items.Count - 1) * CurVar.BuildMargin)
         cbxNewFilterType.Top = ((lvwSelectedFields.Items.Count - 1) * CurVar.FieldHeight) + ((lvwSelectedFields.Items.Count - 1) * CurVar.BuildMargin)
@@ -505,28 +505,28 @@ Public Class frmReports
     Private Sub PanelFieldWidthSet()
         pnlReportLabel.Width = CurStatus.ReportLabelWidth + CurVar.BuildMargin
         pnlReportDisplay.Left = pnlReportLabel.Left + pnlReportLabel.Width
-        lblReportShow.Left = pnlReportDisplay.Left
+        lblReportShow.Left = pnlReportDisplay.Left + CurVar.BuildMargin
 
         pnlReportShowMode.Left = pnlReportDisplay.Left + pnlReportDisplay.Width
-        lblReportShowMode.Left = pnlReportShowMode.Left
+        lblReportShowMode.Left = pnlReportShowMode.Left + CurVar.BuildMargin
 
         pnlReportSort.Left = pnlReportShowMode.Left + pnlReportShowMode.Width
-        lblReportSort.Left = pnlReportSort.Left
+        lblReportSort.Left = pnlReportSort.Left + CurVar.BuildMargin
 
         pnlReportSortOrder.Left = pnlReportSort.Left + pnlReportSort.Width
-        lblReportSortOrder.Left = pnlReportSortOrder.Left
+        lblReportSortOrder.Left = pnlReportSortOrder.Left + CurVar.BuildMargin
 
         pnlReportFilter.Left = pnlReportSortOrder.Left + pnlReportSortOrder.Width
-        lblReportFilter.Left = pnlReportFilter.Left
+        lblReportFilter.Left = pnlReportFilter.Left + CurVar.BuildMargin
 
         pnlReportFilterMode.Left = pnlReportFilter.Left + pnlReportFilter.Width
-        lblReportFilterMode.Left = pnlReportFilterMode.Left
+        lblReportFilterMode.Left = pnlReportFilterMode.Left + CurVar.BuildMargin
 
         pnlReportFilterType.Left = pnlReportFilterMode.Left + pnlReportFilterMode.Width
-        lblReportFilterType.Left = pnlReportFilterType.Left
+        lblReportFilterType.Left = pnlReportFilterType.Left + CurVar.BuildMargin
 
         pnlReportFilterText.Left = pnlReportFilterType.Left + pnlReportFilterType.Width
-        lblReportFilterText.Left = pnlReportFilterText.Left
+        lblReportFilterText.Left = pnlReportFilterText.Left + CurVar.BuildMargin
         If pnlReportFilterText.Left + pnlReportFilterText.Width + (CurVar.BuildMargin * 2) > pnlSelectedFields.Width Then pnlSelectedFields.Width = pnlReportFilterText.Left + pnlReportFilterText.Width + (CurVar.BuildMargin * 2)
     End Sub
 
@@ -1072,6 +1072,8 @@ Public Class frmReports
                         strWhereClause = GetCtrText(pnlReportFilterText, strFieldName, intControlNumber)
                         'If IsNumeric(strWhereClause) = False Then strWhereClause = "'" & strWhereClause & "'"
                         strWhereClause = SetDelimiters(strWhereClause, ctrWhere.FieldDataType, strWhereType)
+
+                        If strWhereType = "LIKE" And strWhereClause.Contains("*") Then strWhereClause = strWhereClause.Replace("*", "%")
                         If strWhereType <> Nothing And strWhereClause <> Nothing Then
                             If strWhereMode = Nothing Then
                                 strQueryWhere &= " " & strFieldName & " " & strWhereType & " " & strWhereClause
@@ -1451,5 +1453,14 @@ Public Class frmReports
             DataGridViewColumnSize(sender)
         End If
 
+    End Sub
+
+    Private Sub tpgReportDefinition_Resize(sender As Object, e As EventArgs) Handles tpgReportDefinition.Resize
+        If tpgReportDefinition.Width < 1200 Then
+            pnlReportName.Anchor = AnchorStyles.Top Or AnchorStyles.Left
+            pnlReportName.Left = cbxTable.Left + cbxTable.Width + CurVar.BuildMargin
+        Else
+            pnlReportName.Anchor = AnchorStyles.Top Or AnchorStyles.Right
+        End If
     End Sub
 End Class

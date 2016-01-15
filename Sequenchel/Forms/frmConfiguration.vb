@@ -14,7 +14,8 @@ Public Class frmConfiguration
         TableSetsLoad()
         TablesLoad()
         txtDefaultPath.Text = CurVar.DefaultConfigFilePath
-        txtTableSetName.Text = "Primary"
+        txtTableSetName.Text = CurVar.TableSetName
+
     End Sub
 
     Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
@@ -473,7 +474,7 @@ Public Class frmConfiguration
     End Sub
 
     Private Sub btnDefaultTableSet_Click(sender As Object, e As EventArgs) Handles btnDefaultTableSet.Click
-        txtTableSetName.Text = "Primary"
+        txtTableSetName.Text = CurVar.TableSetName
         If chkDefaultValues.Checked = True Then
             AutoFillDefaults()
         End If

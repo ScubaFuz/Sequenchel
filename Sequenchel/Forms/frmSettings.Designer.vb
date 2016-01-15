@@ -35,6 +35,7 @@ Partial Class frmSettings
         Me.btnConnectionsFileSystem = New System.Windows.Forms.Button()
         Me.btnSettingsFileSystem = New System.Windows.Forms.Button()
         Me.grpSecurity = New System.Windows.Forms.GroupBox()
+        Me.chkAllowDataImport = New System.Windows.Forms.CheckBox()
         Me.chkAllowQueryEdit = New System.Windows.Forms.CheckBox()
         Me.lblUsageText = New System.Windows.Forms.Label()
         Me.chkAllowSettingsChange = New System.Windows.Forms.CheckBox()
@@ -46,8 +47,8 @@ Partial Class frmSettings
         Me.chkAllowUpdate = New System.Windows.Forms.CheckBox()
         Me.chkAllowDelete = New System.Windows.Forms.CheckBox()
         Me.chkAllowInsert = New System.Windows.Forms.CheckBox()
-        Me.btnDefaultConfigFile = New System.Windows.Forms.Button()
-        Me.btnDefaultSettingsFile = New System.Windows.Forms.Button()
+        Me.btnConnectionsFileDefault = New System.Windows.Forms.Button()
+        Me.btnSettingsFileDefault = New System.Windows.Forms.Button()
         Me.btnDefaultConfigFilePath = New System.Windows.Forms.Button()
         Me.btnConfigFilePath = New System.Windows.Forms.Button()
         Me.Label2 = New System.Windows.Forms.Label()
@@ -218,7 +219,6 @@ Partial Class frmSettings
         Me.txtUploadSource = New System.Windows.Forms.TextBox()
         Me.btnClose = New System.Windows.Forms.Button()
         Me.ttpDefaultLogLocation = New System.Windows.Forms.ToolTip(Me.components)
-        Me.chkAllowDataImport = New System.Windows.Forms.CheckBox()
         Me.tabSettings.SuspendLayout()
         Me.tpgGeneral.SuspendLayout()
         Me.grpSecurity.SuspendLayout()
@@ -259,8 +259,8 @@ Partial Class frmSettings
         Me.tpgGeneral.Controls.Add(Me.btnConnectionsFileSystem)
         Me.tpgGeneral.Controls.Add(Me.btnSettingsFileSystem)
         Me.tpgGeneral.Controls.Add(Me.grpSecurity)
-        Me.tpgGeneral.Controls.Add(Me.btnDefaultConfigFile)
-        Me.tpgGeneral.Controls.Add(Me.btnDefaultSettingsFile)
+        Me.tpgGeneral.Controls.Add(Me.btnConnectionsFileDefault)
+        Me.tpgGeneral.Controls.Add(Me.btnSettingsFileDefault)
         Me.tpgGeneral.Controls.Add(Me.btnDefaultConfigFilePath)
         Me.tpgGeneral.Controls.Add(Me.btnConfigFilePath)
         Me.tpgGeneral.Controls.Add(Me.Label2)
@@ -373,6 +373,16 @@ Partial Class frmSettings
         Me.grpSecurity.TabStop = False
         Me.grpSecurity.Text = "Security"
         '
+        'chkAllowDataImport
+        '
+        Me.chkAllowDataImport.AutoSize = True
+        Me.chkAllowDataImport.Location = New System.Drawing.Point(175, 47)
+        Me.chkAllowDataImport.Name = "chkAllowDataImport"
+        Me.chkAllowDataImport.Size = New System.Drawing.Size(109, 17)
+        Me.chkAllowDataImport.TabIndex = 108
+        Me.chkAllowDataImport.Text = "Allow Data Import"
+        Me.chkAllowDataImport.UseVisualStyleBackColor = True
+        '
         'chkAllowQueryEdit
         '
         Me.chkAllowQueryEdit.AutoSize = True
@@ -478,25 +488,25 @@ Partial Class frmSettings
         Me.chkAllowInsert.Text = "Allow Insert"
         Me.chkAllowInsert.UseVisualStyleBackColor = True
         '
-        'btnDefaultConfigFile
+        'btnConnectionsFileDefault
         '
-        Me.btnDefaultConfigFile.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnDefaultConfigFile.Image = Global.Sequenchel.My.Resources.Resources.TSfavicon
-        Me.btnDefaultConfigFile.Location = New System.Drawing.Point(151, 103)
-        Me.btnDefaultConfigFile.Name = "btnDefaultConfigFile"
-        Me.btnDefaultConfigFile.Size = New System.Drawing.Size(23, 23)
-        Me.btnDefaultConfigFile.TabIndex = 103
-        Me.ttpDefaultLogLocation.SetToolTip(Me.btnDefaultConfigFile, "Default Connections File Name and Path")
+        Me.btnConnectionsFileDefault.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnConnectionsFileDefault.Image = Global.Sequenchel.My.Resources.Resources.TSfavicon
+        Me.btnConnectionsFileDefault.Location = New System.Drawing.Point(151, 103)
+        Me.btnConnectionsFileDefault.Name = "btnConnectionsFileDefault"
+        Me.btnConnectionsFileDefault.Size = New System.Drawing.Size(23, 23)
+        Me.btnConnectionsFileDefault.TabIndex = 103
+        Me.ttpDefaultLogLocation.SetToolTip(Me.btnConnectionsFileDefault, "Default Connections File Name and Path")
         '
-        'btnDefaultSettingsFile
+        'btnSettingsFileDefault
         '
-        Me.btnDefaultSettingsFile.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnDefaultSettingsFile.Image = Global.Sequenchel.My.Resources.Resources.TSfavicon
-        Me.btnDefaultSettingsFile.Location = New System.Drawing.Point(151, 77)
-        Me.btnDefaultSettingsFile.Name = "btnDefaultSettingsFile"
-        Me.btnDefaultSettingsFile.Size = New System.Drawing.Size(23, 23)
-        Me.btnDefaultSettingsFile.TabIndex = 102
-        Me.ttpDefaultLogLocation.SetToolTip(Me.btnDefaultSettingsFile, "Default Settings File Name and Path")
+        Me.btnSettingsFileDefault.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnSettingsFileDefault.Image = Global.Sequenchel.My.Resources.Resources.TSfavicon
+        Me.btnSettingsFileDefault.Location = New System.Drawing.Point(151, 77)
+        Me.btnSettingsFileDefault.Name = "btnSettingsFileDefault"
+        Me.btnSettingsFileDefault.Size = New System.Drawing.Size(23, 23)
+        Me.btnSettingsFileDefault.TabIndex = 102
+        Me.ttpDefaultLogLocation.SetToolTip(Me.btnSettingsFileDefault, "Default Settings File Name and Path")
         '
         'btnDefaultConfigFilePath
         '
@@ -2189,21 +2199,11 @@ Partial Class frmSettings
         Me.btnClose.Text = "Close"
         Me.btnClose.UseVisualStyleBackColor = True
         '
-        'chkAllowDataImport
-        '
-        Me.chkAllowDataImport.AutoSize = True
-        Me.chkAllowDataImport.Location = New System.Drawing.Point(175, 47)
-        Me.chkAllowDataImport.Name = "chkAllowDataImport"
-        Me.chkAllowDataImport.Size = New System.Drawing.Size(109, 17)
-        Me.chkAllowDataImport.TabIndex = 108
-        Me.chkAllowDataImport.Text = "Allow Data Import"
-        Me.chkAllowDataImport.UseVisualStyleBackColor = True
-        '
         'frmSettings
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(637, 442)
+        Me.ClientSize = New System.Drawing.Size(637, 443)
         Me.Controls.Add(Me.btnClose)
         Me.Controls.Add(Me.tabSettings)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog
@@ -2378,8 +2378,8 @@ Partial Class frmSettings
     Friend WithEvents Label2 As System.Windows.Forms.Label
     Friend WithEvents txtDefaultConfigFilePath As System.Windows.Forms.TextBox
     Friend WithEvents btnDefaultConfigFilePath As System.Windows.Forms.Button
-    Friend WithEvents btnDefaultConfigFile As System.Windows.Forms.Button
-    Friend WithEvents btnDefaultSettingsFile As System.Windows.Forms.Button
+    Friend WithEvents btnConnectionsFileDefault As System.Windows.Forms.Button
+    Friend WithEvents btnSettingsFileDefault As System.Windows.Forms.Button
     Friend WithEvents btnLogLocationDefault As System.Windows.Forms.Button
     Friend WithEvents ttpDefaultLogLocation As System.Windows.Forms.ToolTip
     Friend WithEvents btnLogLocationSystem As System.Windows.Forms.Button

@@ -97,8 +97,7 @@ Public Class frmSequenchel
     End Sub
 
     Private Sub btnTest_Click(sender As Object, e As EventArgs) Handles btnTest.Click
-        Dim intSqlVersion As Integer = GetSqlVersion(dhdConnection)
-        MessageBox.Show(intSqlVersion)
+        'MessageBox.Show(FormatFieldWhere2("SearchField", "dbo.TableName", "15", "CHAR", "Pirates AND Pearl NOT Dead OR Caribbean"))
     End Sub
 
 #Region "Navigation"
@@ -892,7 +891,7 @@ Public Class frmSequenchel
                         Case Else
                             strValue = tblTable.Item(intField).Text
                     End Select
-                    strQuery &= " AND " & FormatFieldWhere(tblTable.Item(intField).FieldName, tblTable.TableName, tblTable.Item(intField).Width, tblTable.Item(intField).FieldDataType, strValue)
+                    strQuery &= " AND " & FormatFieldWhere1(tblTable.Item(intField).FieldName, tblTable.TableName, tblTable.Item(intField).Width, tblTable.Item(intField).FieldDataType, strValue)
                 End If
             Next
         End If

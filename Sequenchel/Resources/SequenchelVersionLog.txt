@@ -2,7 +2,9 @@ Version 3.5.1
 New: Added an Import option for transferring data from a file into a database table.
 New: Doubleclick on the upper left corner in a report will resize all columns fo fit the data.
 New: Added a description field to the report definition.
+New: Search in tables using space (AND/fuzzy) or comma (OR/precise) to separate multiple search terms.
 Enhanced: Replaced Report display procedure making it faster.
+Enhanced: In reporting, when using a fuzzy search (LIKE) you can now also use * instead of %.
 Fixed: Time formatting is now linked to chosen date format.
 
 Version 3.5.0

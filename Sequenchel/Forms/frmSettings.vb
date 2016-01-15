@@ -66,30 +66,30 @@
     End Sub
 
     Private Sub btnDefaultConfigFilePath_Click(sender As Object, e As EventArgs) Handles btnDefaultConfigFilePath.Click
-        txtDefaultConfigFilePath.Text = Application.StartupPath
+        txtDefaultConfigFilePath.Text = CurVar.DefaultConfigFilePath
     End Sub
 
     Private Sub btnSettingsFileSystem_Click(sender As Object, e As EventArgs) Handles btnSettingsFileSystem.Click
-        txtSettingsFile.Text = Application.StartupPath & "\" & "SequenchelSettings.xml"
+        txtSettingsFile.Text = Application.StartupPath & "\" & CurVar.MainSettingsFile
     End Sub
 
-    Private Sub btnDefaultSettingsFile_Click(sender As Object, e As EventArgs) Handles btnDefaultSettingsFile.Click
+    Private Sub btnSettingsFileDefault_Click(sender As Object, e As EventArgs) Handles btnSettingsFileDefault.Click
         If txtDefaultConfigFilePath.Text.Length > 0 Then
-            txtSettingsFile.Text = txtDefaultConfigFilePath.Text & "\" & "SequenchelSettings.xml"
+            txtSettingsFile.Text = txtDefaultConfigFilePath.Text & "\" & CurVar.MainSettingsFile
         Else
-            txtSettingsFile.Text = "SequenchelSettings.xml"
+            txtSettingsFile.Text = CurVar.MainSettingsFile
         End If
     End Sub
 
     Private Sub btnConnectionsFileSystem_Click(sender As Object, e As EventArgs) Handles btnConnectionsFileSystem.Click
-        txtConnectionsFile.Text = Application.StartupPath & "\" & "SDBAConnections.xml"
+        txtConnectionsFile.Text = CurVar.ConnectionsFile
     End Sub
 
-    Private Sub btnDefaultConfigFile_Click(sender As Object, e As EventArgs) Handles btnDefaultConfigFile.Click
+    Private Sub btnConnectionsFileDefault_Click(sender As Object, e As EventArgs) Handles btnConnectionsFileDefault.Click
         If txtDefaultConfigFilePath.Text.Length > 0 Then
-            txtConnectionsFile.Text = txtDefaultConfigFilePath.Text & "\" & "SDBAConnections.xml"
+            txtConnectionsFile.Text = txtDefaultConfigFilePath.Text & "\" & CurVar.ConnectionsFileName
         Else
-            txtConnectionsFile.Text = "SDBAConnections.xml"
+            txtConnectionsFile.Text = CurVar.ConnectionsFileName
         End If
     End Sub
 
