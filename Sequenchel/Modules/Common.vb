@@ -1789,129 +1789,103 @@ Module Common
         Dim strReturn As String = strValue
         Dim intFirstBracket As Integer = strValue.IndexOf("(")
         Dim intLastBracket As Integer = strValue.LastIndexOf(")")
+        Dim strInput As String = ""
+
         If intFirstBracket > 0 And intLastBracket > 0 Then
+
+            If intLastBracket - intFirstBracket > 1 Then
+                strInput = strValue.Substring(intFirstBracket + 1, intLastBracket - (intFirstBracket + 1))
+            End If
+
             Select Case strValue.Substring(0, strValue.IndexOf("(") + 1).ToLower
                 Case "now("
-                    If intLastBracket - intFirstBracket > 1 Then
-                        If IsNumeric(strValue.Substring(intFirstBracket + 1, intLastBracket - (intFirstBracket + 1))) Then
-                            Try
-                                Dim dt As DateTime = DateTime.Now
-                                dt = dt.AddHours(strValue.Substring(intFirstBracket + 1, intLastBracket - (intFirstBracket + 1)))
-                                strReturn = dt.ToString("yyyy-MM-dd HH:mm:ss")
-                            Catch ex As Exception
-                                strReturn = Now.ToString("yyyy-MM-dd HH:mm:ss")
-                            End Try
-                        Else
-                            strReturn = Now.ToString("yyyy-MM-dd HH:mm:ss")
-                        End If
-                    Else
-                        strReturn = Now.ToString("yyyy-MM-dd HH:mm:ss")
-                    End If
+                    Dim dtmOutput As DateTime = DateTime.Now
+                    Try
+                        dtmOutput = AlterDate(dtmOutput, strInput, "HOUR")
+                    Catch ex As Exception
+                    End Try
+                    strReturn = dtmOutput.ToString("yyyy-MM-dd HH:mm:ss")
                 Case "date("
-                    If intLastBracket - intFirstBracket > 1 Then
-                        If IsNumeric(strValue.Substring(intFirstBracket + 1, intLastBracket - (intFirstBracket + 1))) Then
-                            Try
-                                Dim dt As DateTime = Date.Today
-                                dt = dt.AddDays(strValue.Substring(intFirstBracket + 1, intLastBracket - (intFirstBracket + 1)))
-                                strReturn = FormatFileDate(dt, 120)
-                            Catch ex As Exception
-                                strReturn = FormatFileDate(Date.Today, 120)
-                            End Try
-                        Else
-                            strReturn = FormatFileDate(Date.Today, 120)
-                        End If
-                    Else
-                        strReturn = FormatFileDate(Date.Today, 120)
-                    End If
+                    Dim dtmOutput As DateTime = Date.Today
+                    Try
+                        dtmOutput = AlterDate(dtmOutput, strInput, "DAY")
+                    Catch ex As Exception
+                    End Try
+                    strReturn = FormatFileDate(dtmOutput, 120)
                 Case "time("
-                    If intLastBracket - intFirstBracket > 1 Then
-                        If IsNumeric(strValue.Substring(intFirstBracket + 1, intLastBracket - (intFirstBracket + 1))) Then
-                            Try
-                                strReturn = TimeOfDay.AddMinutes(strValue.Substring(intFirstBracket + 1, intLastBracket - (intFirstBracket + 1))).ToString("HH:mm:ss")
-                            Catch ex As Exception
-                                strReturn = TimeOfDay.ToString("HH:mm:ss")
-                            End Try
-                        Else
-                            strReturn = TimeOfDay.ToString("HH:mm:ss")
-                        End If
-                    Else
+                    Dim dtmOutput As DateTime = DateTime.Now
+                    Try
+                        dtmOutput = AlterDate(dtmOutput, strInput, "MINUTE")
+                        strReturn = dtmOutput.ToString("HH:mm:ss")
+                    Catch ex As Exception
                         strReturn = TimeOfDay.ToString("HH:mm:ss")
-                    End If
-                    strReturn = TimeOfDay.ToString("HH:mm:ss")
+                    End Try
+                Case "yearstart("
+                    Dim dtmOutput As New DateTime(DateTime.Now.Year, 1, 1)
+                    Try
+                        dtmOutput = AlterDate(dtmOutput, strInput, "YEAR")
+                    Catch ex As Exception
+                        strReturn = FormatFileDate(dtmOutput, 120)
+                    End Try
+                    strReturn = FormatFileDate(dtmOutput, 120)
+                Case "yearend("
+                    Dim dtmOutput As New DateTime(DateTime.Now.Year, 1, 1)
+                    dtmOutput = dtmOutput.AddYears(1).AddDays(-1)
+                    Try
+                        dtmOutput = AlterDate(dtmOutput, strInput, "YEAR")
+                    Catch ex As Exception
+                        strReturn = FormatFileDate(dtmOutput, 120)
+                    End Try
+                    strReturn = FormatFileDate(dtmOutput, 120)
                 Case "monthstart("
-                    Dim dt As DateTime = Date.Today.AddDays(-Date.Today.Day + 1)
-                    If intLastBracket - intFirstBracket > 1 Then
-                        If IsNumeric(strValue.Substring(intFirstBracket + 1, intLastBracket - (intFirstBracket + 1))) Then
-                            Try
-                                dt = dt.AddMonths(strValue.Substring(intFirstBracket + 1, intLastBracket - (intFirstBracket + 1)))
-                                strReturn = FormatFileDate(dt, 120)
-                            Catch ex As Exception
-                                strReturn = FormatFileDate(dt, 120)
-                            End Try
-                        Else
-                            strReturn = FormatFileDate(dt, 120)
-                        End If
-                    Else
-                        strReturn = FormatFileDate(dt, 120)
-                    End If
+                    Dim dtmOutput As DateTime = Date.Today.AddDays(-Date.Today.Day + 1)
+                    Try
+                        dtmOutput = AlterDate(dtmOutput, strInput, "MONTH")
+                    Catch ex As Exception
+                        strReturn = FormatFileDate(dtmOutput, 120)
+                    End Try
+                    strReturn = FormatFileDate(dtmOutput, 120)
                 Case "monthend("
+                    Dim dtmOutput As DateTime = Date.Today.AddMonths(1).AddDays(-Date.Today.Day)
                     Dim IntAddMonths As Integer = 1
 
-                    If intLastBracket - intFirstBracket > 1 Then
-                        If IsNumeric(strValue.Substring(intFirstBracket + 1, intLastBracket - (intFirstBracket + 1))) Then
-                            Try
-                                IntAddMonths += (strValue.Substring(intFirstBracket + 1, intLastBracket - (intFirstBracket + 1)))
-                            Catch ex As Exception
-                                IntAddMonths = 1
-                            End Try
-                        End If
-                    End If
-                    Dim dt As DateTime = Date.Today.AddMonths(IntAddMonths).AddDays(-Date.Today.Day)
-                    strReturn = FormatFileDate(dt, 120)
+                    Try
+                        dtmOutput = AlterDate(dtmOutput, strInput, "MONTH")
+                        dtmOutput = dtmOutput.AddMonths(1).AddDays(-dtmOutput.Day)
+                    Catch ex As Exception
+                        strReturn = FormatFileDate(dtmOutput, 120)
+                    End Try
+                    strReturn = FormatFileDate(dtmOutput, 120)
+
                 Case "weekstart("
                     Dim IntAddWeeks As Integer = 0
-
-                    If intLastBracket - intFirstBracket > 1 Then
-                        If IsNumeric(strValue.Substring(intFirstBracket + 1, intLastBracket - (intFirstBracket + 1))) Then
-                            Try
-                                IntAddWeeks += (strValue.Substring(intFirstBracket + 1, intLastBracket - (intFirstBracket + 1)))
-                            Catch ex As Exception
-                                IntAddWeeks = 0
-                            End Try
-                        End If
-                    End If
-
-                    Dim dt As DateTime = Date.Today
-                    Dim dayIndex As Integer = dt.DayOfWeek
+                    Dim dtmOutput As DateTime = Date.Today
+                    Dim dayIndex As Integer = dtmOutput.DayOfWeek
                     If dayIndex < DayOfWeek.Monday Then
                         dayIndex += 7 'Monday is first day of week, no day of week should have a smaller index
                     End If
                     Dim dayDiff As Integer = dayIndex - DayOfWeek.Monday
-                    dt = dt.AddDays(-dayDiff).AddDays(IntAddWeeks * 7)
-
-                    strReturn = FormatFileDate(dt, 120)
+                    dtmOutput = dtmOutput.AddDays(-dayDiff)
+                    Try
+                        dtmOutput = AlterDate(dtmOutput, strInput, "WEEK")
+                    Catch ex As Exception
+                    End Try
+                    strReturn = FormatFileDate(dtmOutput, 120)
                 Case "weekend("
                     Dim IntAddWeeks As Integer = 0
-
-                    If intLastBracket - intFirstBracket > 1 Then
-                        If IsNumeric(strValue.Substring(intFirstBracket + 1, intLastBracket - (intFirstBracket + 1))) Then
-                            Try
-                                IntAddWeeks += (strValue.Substring(intFirstBracket + 1, intLastBracket - (intFirstBracket + 1)))
-                            Catch ex As Exception
-                                IntAddWeeks = 0
-                            End Try
-                        End If
-                    End If
-
-                    Dim dt As DateTime = Date.Today
-                    Dim dayIndex As Integer = dt.DayOfWeek
+                    Dim dtmOutput As DateTime = Date.Today
+                    Dim dayIndex As Integer = dtmOutput.DayOfWeek
                     If dayIndex < DayOfWeek.Monday Then
                         dayIndex += 7 'Monday is first day of week, no day of week should have a smaller index
                     End If
                     Dim dayDiff As Integer = dayIndex - DayOfWeek.Monday
-                    dt = dt.AddDays(-dayDiff).AddDays(6).AddDays(IntAddWeeks * 7)
+                    dtmOutput = dtmOutput.AddDays(-dayDiff).AddDays(6)
 
-                    strReturn = FormatFileDate(dt, 120)
+                    Try
+                        dtmOutput = AlterDate(dtmOutput, strInput, "WEEK")
+                    Catch ex As Exception
+                    End Try
+                    strReturn = FormatFileDate(dtmOutput, 120)
                 Case "pi("
                     strReturn = "3.1415926535897932384626433832795"
                 Case Else
@@ -1919,6 +1893,63 @@ Module Common
             End Select
         End If
         Return strReturn
+    End Function
+
+    Private Function AlterDate(dtmInput As DateTime, strInput As String, strDefault As String) As DateTime
+        Dim intComma As Integer = 0
+        Dim strStep As String = ""
+        Dim intStep As Integer = 0
+
+        strInput = strInput.Trim(",")
+
+        If strInput.Contains(",") Then
+            Try
+                intComma = strInput.IndexOf(",")
+            Catch ex As Exception
+                WriteLog("An error occured processing the date enhancer" & strInput & ": " & ex.Message, 1)
+            End Try
+        End If
+
+        If intComma > 0 Then
+            Try
+                strStep = strInput.Substring(0, intComma)
+                intStep = strInput.Substring(intComma + 1, strInput.Length - (intComma + 1))
+            Catch ex As Exception
+                WriteLog("Unable to get the identifiers for the date enhancer" & strInput & ": " & ex.Message, 1)
+            End Try
+        End If
+
+        If IsNumeric(strInput) Then
+            intStep = strInput
+            strStep = strDefault
+        End If
+
+        Try
+            If intStep <> 0 Then
+                Select Case strStep.ToUpper
+                    Case "MILLISECOND"
+                        dtmInput = dtmInput.AddMilliseconds(intStep)
+                    Case "SECOND"
+                        dtmInput = dtmInput.AddSeconds(intStep)
+                    Case "MINUTE"
+                        dtmInput = dtmInput.AddMinutes(intStep)
+                    Case "HOUR"
+                        dtmInput = dtmInput.AddHours(intStep)
+                    Case "DAY"
+                        dtmInput = dtmInput.AddDays(intStep)
+                    Case "WEEK"
+                        dtmInput = dtmInput.AddDays(intStep * 7)
+                    Case "MONTH"
+                        dtmInput = dtmInput.AddMonths(intStep)
+                    Case "YEAR"
+                        dtmInput = dtmInput.AddYears(intStep)
+                End Select
+            End If
+        Catch ex As Exception
+            WriteLog("An error occured applying the date enhancer" & strInput & ": " & ex.Message, 1)
+        End Try
+
+        Return dtmInput
     End Function
 
 #End Region

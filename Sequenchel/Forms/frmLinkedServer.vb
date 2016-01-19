@@ -153,70 +153,72 @@
         If objData.Tables(0).Rows.Count = 0 Then Exit Sub
         lvwLinkedServers.Items.Clear()
         For intRowCount1 As Integer = 0 To objData.Tables(0).Rows.Count - 1
-            'If objData.Tables.Item(0).Rows(intRowCount1).Item(0).GetType().ToString = "System.DBNull" Then
-            'MessageBox.Show("Cell Must be empty")
-            'Else
-            If IsDBNull(objData.Tables.Item(0).Rows(intRowCount1).Item("data_source")) = False Then
-                strDataSource = objData.Tables.Item(0).Rows(intRowCount1).Item("data_source")
-            Else
-                strDataSource = ""
-            End If
-            intDomain = strDataSource.IndexOf(".")
-            intInstance = strDataSource.IndexOf("\")
-            intPort = strDataSource.IndexOf(",")
-            If intPort = -1 And intInstance > 0 Then
-                intInstanceLength = strDataSource.Length - intInstance
-            ElseIf intPort > 0 And intInstance > 0 Then
-                intInstanceLength = intPort - intInstance
-            End If
-            If intDomain > 0 Then
-                If intInstance > 0 Then
-                    intDomainLength = intInstance - intDomain
-                ElseIf intPort > 0 Then
-                    intDomainLength = intPort - intDomain
+            Try
+                If IsDBNull(objData.Tables.Item(0).Rows(intRowCount1).Item("data_source")) = False Then
+                    strDataSource = objData.Tables.Item(0).Rows(intRowCount1).Item("data_source")
                 Else
-                    intDomainLength = strDataSource.Length - intDomain
+                    strDataSource = ""
                 End If
-            End If
-            Dim lsvItem As New ListViewItem
-
-            lsvItem.Tag = objData.Tables.Item(0).Rows(intRowCount1).Item("server_id")
-            'Add the Server name
-            If strDataSource.Length > 0 Then
+                intDomain = strDataSource.IndexOf(".")
+                intInstance = strDataSource.IndexOf("\")
+                intPort = strDataSource.IndexOf(",")
+                If intPort = -1 And intInstance > 0 Then
+                    intInstanceLength = strDataSource.Length - intInstance
+                ElseIf intPort > 0 And intInstance > 0 Then
+                    intInstanceLength = intPort - intInstance
+                End If
                 If intDomain > 0 Then
-                    lsvItem.Text = strDataSource.Substring(0, intDomain)
-                ElseIf intInstance > 0 Then
-                    lsvItem.Text = strDataSource.Substring(0, intInstance)
-                ElseIf intPort > 0 Then
-                    lsvItem.Text = strDataSource.Substring(0, intPort)
-                Else
-                    lsvItem.Text = strDataSource
+                    If intInstance > 0 Then
+                        intDomainLength = intInstance - intDomain
+                    ElseIf intPort > 0 Then
+                        intDomainLength = intPort - intDomain
+                    Else
+                        intDomainLength = strDataSource.Length - intDomain
+                    End If
                 End If
-            Else
-                lsvItem.Text = objData.Tables.Item(0).Rows(intRowCount1).Item("name")
-            End If
+                Dim lsvItem As New ListViewItem
 
-            'Add Instance Name
-            If intInstance > 0 Then
-                lsvItem.SubItems.Add(strDataSource.Substring(intInstance + 1, intInstanceLength - 1))
-            Else
-                lsvItem.SubItems.Add("")
-            End If
-            'Add Domain Name
-            If intDomain > 0 Then
-                lsvItem.SubItems.Add(strDataSource.Substring(intDomain + 1, intDomainLength - 1))
-            Else
-                lsvItem.SubItems.Add("")
-            End If
-            'Add port number
-            If intPort > 0 Then
-                lsvItem.SubItems.Add(strDataSource.Substring(intPort + 1, strDataSource.Length - intPort - 1))
-            Else
-                lsvItem.SubItems.Add("")
-            End If
-            lvwLinkedServers.Items.Add(lsvItem)
+                lsvItem.Tag = objData.Tables.Item(0).Rows(intRowCount1).Item("server_id")
+                'Add the Server name
+                If strDataSource.Length > 0 Then
+                    If intDomain > 0 Then
+                        lsvItem.Text = strDataSource.Substring(0, intDomain)
+                    ElseIf intInstance > 0 Then
+                        lsvItem.Text = strDataSource.Substring(0, intInstance)
+                    ElseIf intPort > 0 Then
+                        lsvItem.Text = strDataSource.Substring(0, intPort)
+                    Else
+                        lsvItem.Text = strDataSource
+                    End If
+                Else
+                    lsvItem.Text = objData.Tables.Item(0).Rows(intRowCount1).Item("name")
+                End If
 
-            'End If
+                'Add Instance Name
+                If intInstance > 0 Then
+                    lsvItem.SubItems.Add(strDataSource.Substring(intInstance + 1, intInstanceLength - 1))
+                Else
+                    lsvItem.SubItems.Add("")
+                End If
+                'Add Domain Name
+                If intDomain > 0 Then
+                    lsvItem.SubItems.Add(strDataSource.Substring(intDomain + 1, intDomainLength - 1))
+                Else
+                    lsvItem.SubItems.Add("")
+                End If
+                'Add port number
+                If intPort > 0 Then
+                    lsvItem.SubItems.Add(strDataSource.Substring(intPort + 1, strDataSource.Length - intPort - 1))
+                Else
+                    lsvItem.SubItems.Add("")
+                End If
+                lvwLinkedServers.Items.Add(lsvItem)
+
+                'End If
+            Catch ex As Exception
+                WriteLog("There was a problem processing the Linked Server with datasource:" & Environment.NewLine & strDataSource & Environment.NewLine & Environment.NewLine & ex.Message, 1)
+                MessageBox.Show("There was a problem processing the Linked Server with datasource:" & Environment.NewLine & strDataSource & Environment.NewLine & Environment.NewLine & ex.Message)
+            End Try
         Next
 
     End Sub
