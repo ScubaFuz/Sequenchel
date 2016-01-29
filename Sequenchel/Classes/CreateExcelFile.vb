@@ -201,19 +201,48 @@ Public Class CreateExcelFile
             newExcelRow.RowIndex = rowIndex         '  add a row at the top of spreadsheet
             sheetData.Append(newExcelRow)
 
+            'For colInx As Integer = 0 To numberOfColumns - 1
+            '    cellValue = dr.ItemArray(colInx).ToString()
+
+            '    ' Create cell with data
+            '    If (IsNumericColumn(colInx)) Then
+            '        '  For numeric cells, make sure our input data IS a number, then write it out to the Excel file.
+            '        '  If this numeric value is NULL, then don't write anything to the Excel file.
+            '        cellNumericValue = 0
+            '        If (Double.TryParse(cellValue, cellNumericValue)) Then
+            '            cellValue = cellNumericValue.ToString()
+            '            AppendNumericCell(excelColumnNames(colInx) + rowIndex.ToString(), cellValue, newExcelRow)
+            '        Else
+            '            cellValue = ""
+            '            AppendNumericCell(excelColumnNames(colInx) + rowIndex.ToString(), cellValue, newExcelRow)
+            '        End If
+            '    Else
+            '        '  For text cells, just write the input data straight out to the Excel file.
+            '        AppendTextCell(excelColumnNames(colInx) + rowIndex.ToString(), cellValue, newExcelRow)
+            '    End If
+            'Next
+
             For colInx As Integer = 0 To numberOfColumns - 1
-                cellValue = dr.ItemArray(colInx).ToString()
+                cellValue = ""
 
                 ' Create cell with data
                 If (IsNumericColumn(colInx)) Then
                     '  For numeric cells, make sure our input data IS a number, then write it out to the Excel file.
                     '  If this numeric value is NULL, then don't write anything to the Excel file.
                     cellNumericValue = 0
+                    cellValue = dr.ItemArray(colInx).ToString()
                     If (Double.TryParse(cellValue, cellNumericValue)) Then
                         cellValue = cellNumericValue.ToString()
-                        AppendNumericCell(excelColumnNames(colInx) + rowIndex.ToString(), cellValue, newExcelRow)
+                    Else
+                        cellValue = ""
                     End If
+                    AppendNumericCell(excelColumnNames(colInx) + rowIndex.ToString(), cellValue, newExcelRow)
                 Else
+                    If IsDBNull(dr.ItemArray(colInx)) Then
+                        cellValue = ""
+                    Else
+                        cellValue = dr.ItemArray(colInx).ToString()
+                    End If
                     '  For text cells, just write the input data straight out to the Excel file.
                     AppendTextCell(excelColumnNames(colInx) + rowIndex.ToString(), cellValue, newExcelRow)
                 End If
@@ -240,7 +269,11 @@ Public Class CreateExcelFile
         cell.DataType = CellValues.String
 
         Dim cellValue As New CellValue
-        cellValue.Text = cellStringValue
+        Try
+            cellValue.Text = cellStringValue
+        Catch ex As Exception
+
+        End Try
 
         cell.Append(cellValue)
 
@@ -254,7 +287,11 @@ Public Class CreateExcelFile
         cell.DataType = CellValues.Number
 
         Dim cellValue As New CellValue
-        cellValue.Text = cellStringValue
+        Try
+            cellValue.Text = cellStringValue
+        Catch ex As Exception
+
+        End Try
 
         cell.Append(cellValue)
 
@@ -276,9 +313,9 @@ Public Class CreateExcelFile
     End Function
 
     Private Function getExcelSheetsName(ByVal Excelfilename As String) As ArrayList
-        Dim objExcel As Excel.Application
-        Dim objWorkBook As Excel.Workbook
-        Dim objWorkSheet As Excel.Worksheet
+        Dim objExcel As Microsoft.Office.Interop.Excel.Application
+        Dim objWorkBook As Microsoft.Office.Interop.Excel.Workbook
+        Dim objWorkSheet As Microsoft.Office.Interop.Excel.Worksheet
         Dim SheetList As New ArrayList
         objExcel = CreateObject("Excel.Application")
         objWorkBook = objExcel.Workbooks.Open(Excelfilename)

@@ -625,6 +625,7 @@ Partial Class frmConfiguration
         Me.lvwConnections.Location = New System.Drawing.Point(25, 36)
         Me.lvwConnections.Name = "lvwConnections"
         Me.lvwConnections.Size = New System.Drawing.Size(392, 214)
+        Me.lvwConnections.Sorting = System.Windows.Forms.SortOrder.Ascending
         Me.lvwConnections.TabIndex = 0
         Me.lvwConnections.UseCompatibleStateImageBehavior = False
         Me.lvwConnections.View = System.Windows.Forms.View.Details
@@ -930,6 +931,7 @@ Partial Class frmConfiguration
         Me.lvwTableSets.Location = New System.Drawing.Point(25, 36)
         Me.lvwTableSets.Name = "lvwTableSets"
         Me.lvwTableSets.Size = New System.Drawing.Size(392, 214)
+        Me.lvwTableSets.Sorting = System.Windows.Forms.SortOrder.Ascending
         Me.lvwTableSets.TabIndex = 0
         Me.lvwTableSets.UseCompatibleStateImageBehavior = False
         Me.lvwTableSets.View = System.Windows.Forms.View.Details
@@ -1711,6 +1713,7 @@ Partial Class frmConfiguration
         Me.lvwTables.Location = New System.Drawing.Point(25, 36)
         Me.lvwTables.Name = "lvwTables"
         Me.lvwTables.Size = New System.Drawing.Size(392, 214)
+        Me.lvwTables.Sorting = System.Windows.Forms.SortOrder.Ascending
         Me.lvwTables.TabIndex = 0
         Me.lvwTables.UseCompatibleStateImageBehavior = False
         Me.lvwTables.View = System.Windows.Forms.View.Details

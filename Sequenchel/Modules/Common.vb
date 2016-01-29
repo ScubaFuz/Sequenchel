@@ -806,7 +806,7 @@ Module Common
 
         Dim sfdFile As New SaveFileDialog
         sfdFile.FileName = strFileName
-        sfdFile.Filter = "XML File (*.xml)|*.xml|XML Text File(*.xml)|*.xml|Excel 2007 file (*.xlsx)|*.xlsx|Excel 2007 Text file(*.xlsx)|*.xlsx"
+        sfdFile.Filter = "XML File (*.xml)|*.xml|Excel 2007 file (*.xlsx)|*.xlsx|Excel 2007 Text file(*.xlsx)|*.xlsx"
         sfdFile.FilterIndex = 1
         sfdFile.RestoreDirectory = True
         sfdFile.OverwritePrompt = True
@@ -815,23 +815,22 @@ Module Common
             Return
         End If
 
+        CursorControl("Wait")
         Dim strTargetFile As String = sfdFile.FileName
         Dim strExtension As String = sfdFile.FileName.Substring(sfdFile.FileName.LastIndexOf(".") + 1, sfdFile.FileName.Length - (sfdFile.FileName.LastIndexOf(".") + 1))
         Select Case sfdFile.FilterIndex
             Case 1
-                'MessageBox.Show("xml file detected")
-                ExportXML(dtsInput, strTargetFile)
-            Case 2
                 ExportXML(ReplaceNulls(dtsInput), strTargetFile)
-            Case 3
-                'MessageBox.Show("excel file detected")
+            Case 2
                 ExportExcel(dtsInput, strTargetFile)
-            Case 4
+                'Excel.CreateWorkbook(dtsInput, strTargetFile, True)
+            Case 3
                 ExportExcel(ReplaceNulls(dtsInput), strTargetFile)
             Case Else
                 Return
                 'unknown filetype, do nothing
         End Select
+        CursorControl()
 
         If blnShowFile = True Then
             Dim p As New Process

@@ -8,7 +8,9 @@ New: Option to add (YEAR,x), (MONTH,x), (DAY,x), (HOUR,x), (MINUTE,x), (SECOND,x
 Enhanced: Replaced Report display procedure making it faster.
 Enhanced: In reporting, when using a fuzzy search (LIKE) you can now also use * instead of %.
 Enhanced: Linked Server name check before loading to prevent crash in case of badly formatted datasource.
+Enhanced: Export to Excel and XMl now includes NULL values correctly.
 Fixed: Time formatting is now linked to chosen date format.
+Fixed: Loading a report while the referenced table is not present gives a warning instead of an error.
 
 Version 3.5.0
 New: Option to export or import Report Definition.
