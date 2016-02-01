@@ -136,7 +136,7 @@ Module Common
         dhdText.InputFile = "SequenchelDBA.xml"
         dhdText.LogFileName = "Sequenchel.Log"
         dhdText.LogLevel = 5
-        dhdText.LogLocation = CurVar.DefaultConfigFilePath & "\LOG"
+        dhdText.LogLocation = Application.StartupPath & "\LOG"
         dhdText.OutputFile = Environment.SpecialFolder.MyDocuments
 
         dhdDatabase.LoginMethod = "WINDOWS"
@@ -822,8 +822,8 @@ Module Common
             Case 1
                 ExportXML(ReplaceNulls(dtsInput), strTargetFile)
             Case 2
-                ExportExcel(dtsInput, strTargetFile)
-                'Excel.CreateWorkbook(dtsInput, strTargetFile, True)
+                'ExportExcel(dtsInput, strTargetFile)
+                Excel.CreateExcelDocument(dtsInput, strTargetFile)
             Case 3
                 ExportExcel(ReplaceNulls(dtsInput), strTargetFile)
             Case Else
@@ -1673,14 +1673,14 @@ Module Common
                 dhdDatabase.WriteLog(strLogtext, intLogLevel, dhdText.LogLevel)
             Else
                 dhdText.WriteLog(strLogtext, intLogLevel)
-                'If DevMode Then MessageBox.Show(dhdText.LogFileName & Environment.NewLine & dhdText.LogLocation & Environment.NewLine & dhdText.LogLevel)
+                If DevMode Then MessageBox.Show(dhdText.LogFileName & Environment.NewLine & dhdText.LogLocation & Environment.NewLine & dhdText.LogLevel)
             End If
         Catch ex As Exception
             Dim strMyDir As String
             strMyDir = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
 
-            If dhdText.CheckDir(strMyDir & "\Sequenchel") = False Then dhdText.CreateDir(strMyDir & "\Sequenchel")
-            If dhdText.CheckDir(strMyDir & "\Sequenchel\LOG") = False Then dhdText.CreateDir(strMyDir & "\Sequenchel\LOG")
+            If dhdText.CheckDir(strMyDir & "\Sequenchel", True) = False Then dhdText.CreateDir(strMyDir & "\Sequenchel")
+            If dhdText.CheckDir(strMyDir & "\Sequenchel\LOG", True) = False Then dhdText.CreateDir(strMyDir & "\Sequenchel\LOG")
             dhdText.LogFileName = "Sequenchel.Log"
             dhdText.LogLocation = strMyDir & "\Sequenchel\LOG"
             MessageBox.Show("there was an error writing to the logfile: " & Environment.NewLine & ex.Message)

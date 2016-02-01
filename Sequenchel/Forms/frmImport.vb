@@ -56,61 +56,84 @@ Public Class frmImport
     Private Sub ImportFile()
         Dim Ext As String = txtCurrentFile.Text.Substring(txtCurrentFile.Text.LastIndexOf(".") + 1)
         Dim strFilePath As String = txtCurrentFile.Text
-        Dim dteExcel As New DataTable
+        Dim dstOutput As New DataSet
 
-        If Ext = "xls" Then
-            'ImportExcel2003(strFilePath)
-            ReadExcelFile(dteExcel, strFilePath)
-        ElseIf Ext = "xlsx" Then
-            ImportExcel(strFilePath)
-        End If
+        Try
+            If Ext = "xls" Then
+                'ImportExcel2003(strFilePath)
+                dstOutput = ReadExcelFile(strFilePath)
+            ElseIf Ext = "xlsx" Then
+                dstOutput = ImportExcel(strFilePath)
+            End If
+
+            If dstOutput.Tables.Count > 0 Then
+                If chkScreen.Checked Then
+                    dgvImport.DataSource = dstOutput.Tables(0)
+                End If
+                If chkDatabase.Checked Then
+                    SaveToDatabase(dstOutput)
+                End If
+            End If
+        Catch ex As Exception
+            MessageBox.Show("there was an error importing the file" & Environment.NewLine & ex.Message)
+        End Try
     End Sub
 
     Private Sub ExportFile()
         If chkDatabase.Checked = True Then
-            SaveToDatabase()
+            Dim dtsOutput As New DataSet
+            dtsOutput.Tables.Add(dgvImport.DataSource)
+            SaveToDatabase(dtsOutput)
         End If
     End Sub
 
-    Protected Sub ImportExcel(strFilePath As String)
+    Protected Function ImportExcel(strFilePath As String) As DataSet
+        Dim dstOutput As New DataSet
 
         'Open the Excel file in Read Mode using OpenXml.
         Using doc As SpreadsheetDocument = SpreadsheetDocument.Open(strFilePath, False)
             'Read the first Sheet from Excel file.
-            Dim sheet As Sheet = doc.WorkbookPart.Workbook.Sheets.GetFirstChild(Of Sheet)()
+            For Each excelSheet As Sheet In doc.WorkbookPart.Workbook.Sheets
 
-            'Get the Worksheet instance.
-            Dim worksheet As Worksheet = TryCast(doc.WorkbookPart.GetPartById(sheet.Id.Value), WorksheetPart).Worksheet
+                Dim sheet As Sheet = doc.WorkbookPart.Workbook.Sheets.GetFirstChild(Of Sheet)()
 
-            'Fetch all the rows present in the Worksheet.
-            Dim rows As IEnumerable(Of Row) = worksheet.GetFirstChild(Of SheetData)().Descendants(Of Row)()
+                'Get the Worksheet instance.
+                Dim worksheet As Worksheet = TryCast(doc.WorkbookPart.GetPartById(sheet.Id.Value), WorksheetPart).Worksheet
 
-            'Create a new DataTable.
-            Dim dt As New DataTable()
+                'Fetch all the rows present in the Worksheet.
+                Dim rows As IEnumerable(Of Row) = worksheet.GetFirstChild(Of SheetData)().Descendants(Of Row)()
 
-            'Loop through the Worksheet rows.
-            For Each row As Row In rows
-                'Use the first row to add columns to DataTable.
-                If row.RowIndex.Value = 1 Then
-                    For Each cell As Cell In row.Descendants(Of Cell)()
-                        dt.Columns.Add(GetValue(doc, cell))
-                    Next
-                Else
-                    'Add rows to DataTable.
-                    dt.Rows.Add()
-                    Dim i As Integer = 0
-                    For Each cell As Cell In row.Descendants(Of Cell)()
-                        dt.Rows(dt.Rows.Count - 1)(i) = GetValue(doc, cell)
-                        i += 1
-                    Next
-                End If
+                'Create a new DataTable.
+                Dim dt As New DataTable()
+
+                'Loop through the Worksheet rows.
+                For Each row As Row In rows
+                    'Use the first row to add columns to DataTable.
+                    If row.RowIndex.Value = 1 Then
+                        For Each cell As Cell In row.Descendants(Of Cell)()
+                            dt.Columns.Add(GetValue(doc, cell))
+                        Next
+                    Else
+                        'Add rows to DataTable.
+                        dt.Rows.Add()
+                        Dim i As Integer = 0
+                        For Each cell As Cell In row.Descendants(Of Cell)()
+                            dt.Rows(dt.Rows.Count - 1)(i) = GetValue(doc, cell)
+                            i += 1
+                        Next
+                    End If
+                Next
+                dstOutput.Tables.Add(dt)
             Next
-            dgvImport.DataSource = dt
-            'dgvImport.DataBind()
-        End Using
-    End Sub
 
-    Private Sub ImportExcel2003(ByVal StrFilePath As String)
+        End Using
+
+        Return dstOutput
+    End Function
+
+    Private Function ImportExcel2003(ByVal StrFilePath As String) As DataSet
+        Dim dstOutput As New DataSet
+
         Dim objExcel As New Microsoft.Office.Interop.Excel.Application
         'Dim objWorkbook As New Microsoft.Office.Interop.Excel.Workbook
 
@@ -145,20 +168,21 @@ Public Class frmImport
                     Next
                 End If
             Next
-
-            dgvImport.DataSource = dt
-
+            dstOutput.Tables.Add(dt)
+            Return dstOutput
         Catch ex As Exception
             MessageBox.Show("An error has occured importing the data" & Environment.NewLine & ex.Message)
+            Return Nothing
         End Try
-    End Sub
+    End Function
 
-    Private Sub ReadExcelFile(ByRef objdt As DataTable, ByVal StrFilePath As String)
+    Private Function ReadExcelFile(ByVal StrFilePath As String) As DataSet
         Dim ExcelCon As New OleDbConnection
         Dim ExcelAdp As OleDbDataAdapter
         Dim ExcelComm As OleDbCommand
         'Dim Col1 As DataColumn
         Dim StrSql As String
+        Dim dstOutput As New DataSet
 
         Try
             ExcelCon.ConnectionString = "Provider=Microsoft.Jet.OLEDB.4.0;" & _
@@ -180,21 +204,22 @@ Public Class frmImport
                 StrSql = "Select * From [" & sheet & "]"
                 ExcelComm = New OleDbCommand(StrSql, ExcelCon)
                 ExcelAdp = New OleDbDataAdapter(ExcelComm)
-                objdt = New DataTable()
+                Dim objdt = New DataTable()
                 ExcelAdp.Fill(objdt)
-                Exit For
+                dstOutput.Tables.Add(objdt)
             Next
 
-            dgvImport.DataSource = objdt
             ExcelCon.Close()
+            Return dstOutput
         Catch ex As Exception
             MessageBox.Show("An error has occured importing the data" & Environment.NewLine & ex.Message)
+            Return Nothing
         Finally
             ExcelCon = Nothing
             ExcelAdp = Nothing
             ExcelComm = Nothing
         End Try
-    End Sub
+    End Function
 
     Private Function GetValue(doc As SpreadsheetDocument, cell As Cell) As String
         Dim value As String = Nothing
@@ -207,7 +232,7 @@ Public Class frmImport
         Return value
     End Function
 
-    Private Sub SaveToDatabase()
+    Private Sub SaveToDatabase(dtsInput As DataSet)
         Dim dhdDB As New DataHandler.db
         Dim intRecordsAffected As Integer = 0
 
@@ -224,7 +249,10 @@ Public Class frmImport
         dhdDB.Password = txtPassword.Text
 
         Try
-            intRecordsAffected = dhdDB.UploadSqlData(dgvImport.DataSource)
+            For Each Table In dtsInput.Tables
+                intRecordsAffected += dhdDB.UploadSqlData(Table)
+            Next
+            'intRecordsAffected = dhdDB.UploadSqlData(dgvImport.DataSource)
             lblStatusText.Text = intRecordsAffected & " rows uploaded"
         Catch ex As Exception
             MessageBox.Show("Import failed. Check if the columns match and try again" & Environment.NewLine & ex.Message)
