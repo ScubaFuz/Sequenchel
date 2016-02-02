@@ -921,6 +921,7 @@ Partial Class frmReports
         Me.cbxTable.Location = New System.Drawing.Point(507, 27)
         Me.cbxTable.Name = "cbxTable"
         Me.cbxTable.Size = New System.Drawing.Size(200, 21)
+        Me.cbxTable.Sorted = True
         Me.cbxTable.TabIndex = 2
         '
         'lblTableSet
@@ -938,6 +939,7 @@ Partial Class frmReports
         Me.cbxTableSet.Location = New System.Drawing.Point(274, 27)
         Me.cbxTableSet.Name = "cbxTableSet"
         Me.cbxTableSet.Size = New System.Drawing.Size(200, 21)
+        Me.cbxTableSet.Sorted = True
         Me.cbxTableSet.TabIndex = 1
         '
         'lblConnection
@@ -955,6 +957,7 @@ Partial Class frmReports
         Me.cbxConnection.Location = New System.Drawing.Point(41, 27)
         Me.cbxConnection.Name = "cbxConnection"
         Me.cbxConnection.Size = New System.Drawing.Size(200, 21)
+        Me.cbxConnection.Sorted = True
         Me.cbxConnection.TabIndex = 0
         '
         'tpgReportResult
