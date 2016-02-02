@@ -11,6 +11,7 @@ Enhanced: Linked Server name check before loading to prevent crash in case of ba
 Enhanced: Export to Excel and XMl now includes NULL values correctly.
 Fixed: Time formatting is now linked to chosen date format.
 Fixed: Loading a report while the referenced table is not present gives a warning instead of an error.
+Fixed: Importing a report definition with an exisintg name no longer gives an error.
 
 Version 3.5.0
 New: Option to export or import Report Definition.
