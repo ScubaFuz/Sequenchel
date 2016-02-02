@@ -1747,13 +1747,6 @@ Module Common
         End If
     End Function
 
-    Friend Function FormatDateTime(ByVal dtmInput As Date) As String
-        If dtmInput = Nothing Then
-            FormatDateTime = ""
-        Else
-            FormatDateTime = dtmInput.ToString("yyyyMMdd_HHmm")
-        End If
-    End Function
     Friend Function FormatFileDate(ByVal dtmInput As Date, Optional strFormatStyle As String = Nothing) As String
         If dtmInput = Nothing Then
             FormatFileDate = ""

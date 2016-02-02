@@ -1426,11 +1426,7 @@ Public Class frmReports
         End If
         Dim xNode As XmlNode = dhdText.FindXmlNode(xmlImport, "ReportName")
         strReportName = xNode.InnerText
-        ReportFieldsDispose(False)
         ReportLoad(xmlImport, strReportName)
-        If cbxReportName.Items.Contains(strReportName) Then
-            strReportName &= "_" & FormatDateTime(Now())
-        End If
         cbxReportName.Text = strReportName
     End Sub
 
