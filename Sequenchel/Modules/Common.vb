@@ -1754,6 +1754,7 @@ Module Common
             FormatDateTime = dtmInput.ToString("yyyyMMdd_HHmm")
         End If
     End Function
+
     Friend Function FormatFileDate(ByVal dtmInput As Date, Optional strFormatStyle As String = Nothing) As String
         If dtmInput = Nothing Then
             FormatFileDate = ""
