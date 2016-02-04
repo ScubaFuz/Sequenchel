@@ -80,9 +80,24 @@ Public Class frmImport
     End Sub
 
     Private Sub ExportFile()
+        Dim dtsOutput As New DataSet
+        dtsOutput.Tables.Add(dgvImport.DataSource)
+
+        If chkFile.Checked = True Then
+            Try
+                Dim strExtension As String = txtFileName.Text.Substring(txtFileName.Text.LastIndexOf(".") + 1, txtFileName.Text.Length - (txtFileName.Text.LastIndexOf(".") + 1))
+                If strExtension.ToLower = "xml" Then
+                    Dim xmlDoc As New StreamWriter(txtFileName.Text, False)
+                    dtsOutput.WriteXml(xmlDoc)
+                    xmlDoc.Close()
+                Else
+                    MessageBox.Show("Only files with XML extension are allowed at this time.")
+                End If
+            Catch ex As Exception
+                MessageBox.Show("There was an error writng to " & txtFileName.Text & Environment.NewLine & ex.Message)
+            End Try
+        End If
         If chkDatabase.Checked = True Then
-            Dim dtsOutput As New DataSet
-            dtsOutput.Tables.Add(dgvImport.DataSource)
             SaveToDatabase(dtsOutput)
         End If
     End Sub
@@ -255,7 +270,7 @@ Public Class frmImport
             'intRecordsAffected = dhdDB.UploadSqlData(dgvImport.DataSource)
             lblStatusText.Text = intRecordsAffected & " rows uploaded"
         Catch ex As Exception
-            MessageBox.Show("Import failed. Check if the columns match and try again" & Environment.NewLine & ex.Message)
+            MessageBox.Show("Export to database failed. Check if the columns match and try again" & Environment.NewLine & ex.Message)
         End Try
     End Sub
 

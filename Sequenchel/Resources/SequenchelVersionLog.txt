@@ -5,6 +5,7 @@ New: Added a description field to the report definition.
 New: Search in tables using space (AND/fuzzy) or comma (OR/precise) to separate multiple search terms.
 New: Option to add YearStart(), YearEnd() as filteroptions to a report.
 New: Option to add (YEAR,x), (MONTH,x), (DAY,x), (HOUR,x), (MINUTE,x), (SECOND,x), (MILLISECOND,x) to datetime filters in reports.
+New: Imported file can be exported as XML.
 Enhanced: Replaced Report display procedure making it faster.
 Enhanced: In reporting, when using a fuzzy search (LIKE) you can now also use * instead of %.
 Enhanced: Linked Server name check before loading to prevent crash in case of badly formatted datasource.

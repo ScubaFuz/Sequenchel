@@ -217,7 +217,6 @@ Partial Class frmImport
         'chkFile
         '
         Me.chkFile.AutoSize = True
-        Me.chkFile.Enabled = False
         Me.chkFile.Location = New System.Drawing.Point(29, 88)
         Me.chkFile.Margin = New System.Windows.Forms.Padding(2)
         Me.chkFile.Name = "chkFile"

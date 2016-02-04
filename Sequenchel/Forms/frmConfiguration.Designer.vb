@@ -620,7 +620,7 @@ Partial Class frmConfiguration
         '
         Me.lvwConnections.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lvwConnections.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.colConnectionName, Me.colDataLocation, Me.colDataBaseName})
+        Me.lvwConnections.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.colConnectionName, Me.colDataBaseName, Me.colDataLocation})
         Me.lvwConnections.FullRowSelect = True
         Me.lvwConnections.Location = New System.Drawing.Point(25, 36)
         Me.lvwConnections.Name = "lvwConnections"
@@ -638,12 +638,12 @@ Partial Class frmConfiguration
         'colDataLocation
         '
         Me.colDataLocation.Text = "Data location"
-        Me.colDataLocation.Width = 180
+        Me.colDataLocation.Width = 145
         '
         'colDataBaseName
         '
         Me.colDataBaseName.Text = "Database"
-        Me.colDataBaseName.Width = 105
+        Me.colDataBaseName.Width = 140
         '
         'tpgTableSets
         '
