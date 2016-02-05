@@ -702,7 +702,13 @@ Public Class frmSequenchel
         End If
         SearchDelete(True)
         SearchAdd()
-        dhdText.SaveXmlFile(xmlSearch, CurVar.SearchFile)
+        If dhdText.CheckDir(CurVar.SearchFile.Substring(0, CurVar.SearchFile.LastIndexOf("\")), False) = False Then
+            If MessageBox.Show("The folder " & CurVar.SearchFile.Substring(0, CurVar.SearchFile.LastIndexOf("\")) & " does not exist." & Environment.NewLine & "do you wish to create it?", "Folder does not exist", MessageBoxButtons.YesNo, MessageBoxIcon.Hand, MessageBoxDefaultButton.Button1) = Windows.Forms.DialogResult.No Then
+                lblStatusText.Text = "File Save Aborted"
+                Exit Sub
+            End If
+        End If
+        dhdText.SaveXmlFile(xmlSearch, CurVar.SearchFile, True)
         cbxSearch.Items.Add(cbxSearch.Text)
         lblStatusText.Text = "Search saved"
         'SearchListLoad(tblTable.TableName)
@@ -715,7 +721,13 @@ Public Class frmSequenchel
             Exit Sub
         End If
         SearchDelete(False)
-        dhdText.SaveXmlFile(xmlSearch, CurVar.SearchFile)
+        If dhdText.CheckDir(CurVar.SearchFile.Substring(0, CurVar.SearchFile.LastIndexOf("\")), False) = False Then
+            If MessageBox.Show("The folder " & CurVar.SearchFile.Substring(0, CurVar.SearchFile.LastIndexOf("\")) & " does not exist." & Environment.NewLine & "do you wish to create it?", "Folder does not exist", MessageBoxButtons.YesNo, MessageBoxIcon.Hand, MessageBoxDefaultButton.Button1) = Windows.Forms.DialogResult.No Then
+                lblStatusText.Text = "File Save Aborted"
+                Exit Sub
+            End If
+        End If
+        dhdText.SaveXmlFile(xmlSearch, CurVar.SearchFile, True)
         SearchListLoad(tblTable.TableName)
         btnClear_Click(Nothing, Nothing)
         cbxSearch.SelectedIndex = -1

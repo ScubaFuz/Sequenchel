@@ -33,6 +33,7 @@ Module Common
     Friend arrLabels As New LabelArray
     Friend dtsTable As New DataSet
     Friend dtsReport As New DataSet
+    Friend dstImport As New DataSet
 
     Friend strMessages As New Messages
     Friend CurVar As New Variables

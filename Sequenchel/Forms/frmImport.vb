@@ -56,23 +56,23 @@ Public Class frmImport
     Private Sub ImportFile()
         Dim Ext As String = txtCurrentFile.Text.Substring(txtCurrentFile.Text.LastIndexOf(".") + 1)
         Dim strFilePath As String = txtCurrentFile.Text
-        Dim dstOutput As New DataSet
+        For Each dtTable As DataTable In dstImport.Tables
+            dstImport.Tables.Remove(dtTable)
+        Next
 
         Try
             If Ext = "xls" Then
                 'ImportExcel2003(strFilePath)
-                dstOutput = ReadExcelFile(strFilePath)
+                dstImport = ReadExcelFile(strFilePath)
             ElseIf Ext = "xlsx" Then
-                dstOutput = ImportExcel(strFilePath)
+                dstImport = ImportExcel(strFilePath)
             End If
 
-            If dstOutput.Tables.Count > 0 Then
+            If dstImport.Tables.Count > 0 Then
                 If chkScreen.Checked Then
-                    dgvImport.DataSource = dstOutput.Tables(0)
+                    dgvImport.DataSource = dstImport.Tables(0)
                 End If
-                If chkDatabase.Checked Then
-                    SaveToDatabase(dstOutput)
-                End If
+                ExportFile()
             End If
         Catch ex As Exception
             MessageBox.Show("there was an error importing the file" & Environment.NewLine & ex.Message)
@@ -80,15 +80,12 @@ Public Class frmImport
     End Sub
 
     Private Sub ExportFile()
-        Dim dtsOutput As New DataSet
-        dtsOutput.Tables.Add(dgvImport.DataSource)
-
         If chkFile.Checked = True Then
             Try
                 Dim strExtension As String = txtFileName.Text.Substring(txtFileName.Text.LastIndexOf(".") + 1, txtFileName.Text.Length - (txtFileName.Text.LastIndexOf(".") + 1))
                 If strExtension.ToLower = "xml" Then
                     Dim xmlDoc As New StreamWriter(txtFileName.Text, False)
-                    dtsOutput.WriteXml(xmlDoc)
+                    dstImport.WriteXml(xmlDoc)
                     xmlDoc.Close()
                 Else
                     MessageBox.Show("Only files with XML extension are allowed at this time.")
@@ -98,7 +95,7 @@ Public Class frmImport
             End Try
         End If
         If chkDatabase.Checked = True Then
-            SaveToDatabase(dtsOutput)
+            SaveToDatabase(dstImport)
         End If
     End Sub
 
