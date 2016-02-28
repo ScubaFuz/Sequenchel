@@ -9,9 +9,9 @@ New: Imported file can be exported as XML.
 Enhanced: Replaced Report display procedure making it faster.
 Enhanced: In reporting, when using a fuzzy search (LIKE) you can now also use * instead of %.
 Enhanced: Linked Server name check before loading to prevent crash in case of badly formatted datasource.
-Enhanced: Export to Excel and XMl now includes NULL values correctly.
+Enhanced: Export to Excel and XML now includes NULL values correctly.
 Fixed: Time formatting is now linked to chosen date format.
-Fixed: Loading a report while the referenced table is not present gives a warning instead of an error.
+Fixed: Loading a report while the referenced table or field is not present gives a warning instead of an error.
 Fixed: Importing a report definition with an existing name no longer gives an error.
 fixed: If a path for saving files does not exist it is now created automatically.
 
@@ -19,14 +19,14 @@ Version 3.5.0
 New: Option to export or import Report Definition.
 New: Added select options for Date/Time SQL functions.
 New: Option to add Now(), Date(), Time(), MonthStart(), MonthEnd(), WeekStart() and WeekEnd() as filteroptions to a report.
-New: Option to convert output to text only when exporting to better deal with NULL values.
+New: Option to convert all output to text when exporting to to Excel.
 New: In Reports the join to a related table can contain a query when using parentheses.
 New: Sequenchel now provides Stored Procedures for FTP upload and download.
 Enhanced: In Reports the mousewheel now scrolls the report definition and not the report selection.
 Enhanced: Reports are sorted alfabetically.
 Fixed: Adding and removing relations (Configuration) now works as intended.
 Fixed: DataType of additional filters is now preserved.
-Fixed: DataHandler XMl search methods could give wrong XML node.
+Fixed: DataHandler XML search methods could give wrong XML node.
 
 Version 3.4.0
 New: Added Export to Excel option.
@@ -107,7 +107,7 @@ New: Added WindowsVersion to Server Monitoring
 Enhanced: Improved Linked Server handling for Linked Server names with domain names included.
 Enhanced: Moved the LastErrorLogged update from reporting to monitoring to enable reporting the last batch more than once.
 Fixed: Updated the template for Sequenchel tables to reflect the changes made to recent versions.
-Fixed: Loading an incomplete Xml file in the configuration window no longer crashes Sequenchel.
+Fixed: Loading an incomplete XML file in the configuration window no longer crashes Sequenchel.
 Fixed: Parameter names for SQL files % growth were incorrect (procedure monitor DataSpaces).
 Fixed: Reports Display Mode didn't automatically add parentheses for MAX; MIN; etc.
 Fixed: Export to XML sometimes crashed over NULL values.
@@ -142,10 +142,10 @@ Fixed: unable to update a field (table configuration) with empty numeric values.
 Version 3.0.3
 New: Added autodetection for relations when importing tables.
 New: Added the option to import all tables of a database at once.
-New: Added an interface for options to affect the Dataspace report.
-Enhanced: Improved the storage method for relation to enable relation-autodetect.
+New: Added an interface with options to tune the Dataspace report.
+Enhanced: Improved the storage method for relations to enable relation-autodetect.
 Enhanced: Added options to the procedure "Monitor Dataspaces" to enable more control of what should be reported.
-Enhanced: Renamed a lot op buttons so the name better reflects the function.
+Enhanced: Renamed a lot of buttons so the name better reflects the function.
 Fixed: Schemas didn't work well in Reports.
 Fixed: Backups failed when using US date notation ( / ).
 Fixed: Buttons on the main screen do no longer disappear when the window gets too small.
@@ -156,10 +156,10 @@ Enhanced: Sequenchel can now handle multiple joins to or from the same table as 
 Enhanced: Added the ability to work with schemas in case a table name or view name exists more than once.
 
 Version 3.0.1
-New: Added "IN", "NOT IN", "NOT LIKE", "IS", "NOT IS" in Reports.
+New: Added "IN", "NOT IN", "NOT LIKE", "IS", "IS NOT" in Reports.
 New: Possibility to enter NULL in a report. "IS NULL" is treated differently from "= NULL".
 New: Added feedback from queries if there is an error.
-Enhanced: Improved query buildig in Reports with automatic placements of delimiters (quotes). The user does not need to enter delimiters.
+Enhanced: Improved query building in Reports with automatic placements of delimiters (quotes). The user does not need to enter delimiters.
 Fixed: Report fields list showed everything twice.
 
 Version 3.0.0
@@ -174,7 +174,7 @@ Fixed: When multiple fields with the same name exist (across tables), the correc
 
 Version 2.7
 Added License information and security
-Improved adding new items to selected table with option to duplicate and edit existing item
+Improved adding new items to selected table with option to duplicate and edit an existing item
 Added possibility to select text in disabled (text)fields
 Improved scrolling with large column sets
 Added Splash screen
@@ -214,4 +214,4 @@ Version 1
 Initial release 
 DBA Database
 Database procedures for monitoring SQL Server
-Interface for viewing contents of 1 table (Server table)
+Interface for viewing contents of 1 table (Static; Server table only)
