@@ -87,6 +87,7 @@ Public Class frmSequenchel
     End Sub
 
     Private Sub SecuritySet()
+        If CurVar.AllowDataImport = False And CurVar.SecurityOverride = False Then mnuMainToolsImport.Enabled = False
         If CurVar.AllowConfiguration = False And CurVar.SecurityOverride = False Then mnuMainToolsConfiguration.Enabled = False
         If CurVar.AllowLinkedServers = False And CurVar.SecurityOverride = False Then mnuMainToolsLinkedServers.Enabled = False
         If CurVar.AllowSettingsChange = False And CurVar.SecurityOverride = False Then mnuMainToolsSettings.Enabled = False
@@ -96,8 +97,7 @@ Public Class frmSequenchel
     End Sub
 
     Private Sub btnTest_Click(sender As Object, e As EventArgs) Handles btnTest.Click
-        Dim intSqlVersion As Integer = GetSqlVersion(dhdConnection)
-        MessageBox.Show(intSqlVersion)
+        'MessageBox.Show(FormatFieldWhere2("SearchField", "dbo.TableName", "15", "CHAR", "Pirates AND Pearl NOT Dead OR Caribbean"))
     End Sub
 
 #Region "Navigation"
@@ -113,6 +113,10 @@ Public Class frmSequenchel
 
     Private Sub mnuMainToolsReports_Click(sender As Object, e As EventArgs) Handles mnuMainToolsReports.Click
         ShowReportsForm()
+    End Sub
+
+    Private Sub mnuMainToolsImport_Click(sender As Object, e As EventArgs) Handles mnuMainToolsImport.Click
+        ShowImportForm()
     End Sub
 
     Private Sub mnuMainToolsLinkedServers_Click(sender As Object, e As EventArgs) Handles mnuMainToolsLinkedServers.Click
@@ -144,6 +148,11 @@ Public Class frmSequenchel
     Private Sub ShowReportsForm()
         Dim frmReportsForm As New frmReports
         frmReportsForm.Show()
+    End Sub
+
+    Private Sub ShowImportForm()
+        Dim frmImportForm As New frmImport
+        frmImportForm.Show()
     End Sub
 
     Private Sub ShowLinkedServerForm()
@@ -693,7 +702,13 @@ Public Class frmSequenchel
         End If
         SearchDelete(True)
         SearchAdd()
-        dhdText.SaveXmlFile(xmlSearch, CurVar.SearchFile)
+        If dhdText.CheckDir(CurVar.SearchFile.Substring(0, CurVar.SearchFile.LastIndexOf("\")), False) = False Then
+            If MessageBox.Show("The folder " & CurVar.SearchFile.Substring(0, CurVar.SearchFile.LastIndexOf("\")) & " does not exist." & Environment.NewLine & "do you wish to create it?", "Folder does not exist", MessageBoxButtons.YesNo, MessageBoxIcon.Hand, MessageBoxDefaultButton.Button1) = Windows.Forms.DialogResult.No Then
+                lblStatusText.Text = "File Save Aborted"
+                Exit Sub
+            End If
+        End If
+        dhdText.SaveXmlFile(xmlSearch, CurVar.SearchFile, True)
         cbxSearch.Items.Add(cbxSearch.Text)
         lblStatusText.Text = "Search saved"
         'SearchListLoad(tblTable.TableName)
@@ -706,7 +721,13 @@ Public Class frmSequenchel
             Exit Sub
         End If
         SearchDelete(False)
-        dhdText.SaveXmlFile(xmlSearch, CurVar.SearchFile)
+        If dhdText.CheckDir(CurVar.SearchFile.Substring(0, CurVar.SearchFile.LastIndexOf("\")), False) = False Then
+            If MessageBox.Show("The folder " & CurVar.SearchFile.Substring(0, CurVar.SearchFile.LastIndexOf("\")) & " does not exist." & Environment.NewLine & "do you wish to create it?", "Folder does not exist", MessageBoxButtons.YesNo, MessageBoxIcon.Hand, MessageBoxDefaultButton.Button1) = Windows.Forms.DialogResult.No Then
+                lblStatusText.Text = "File Save Aborted"
+                Exit Sub
+            End If
+        End If
+        dhdText.SaveXmlFile(xmlSearch, CurVar.SearchFile, True)
         SearchListLoad(tblTable.TableName)
         btnClear_Click(Nothing, Nothing)
         cbxSearch.SelectedIndex = -1
@@ -882,7 +903,7 @@ Public Class frmSequenchel
                         Case Else
                             strValue = tblTable.Item(intField).Text
                     End Select
-                    strQuery &= " AND " & FormatFieldWhere(tblTable.Item(intField).FieldName, tblTable.TableName, tblTable.Item(intField).Width, tblTable.Item(intField).FieldDataType, strValue)
+                    strQuery &= " AND " & FormatFieldWhere1(tblTable.Item(intField).FieldName, tblTable.TableName, tblTable.Item(intField).Width, tblTable.Item(intField).FieldDataType, strValue)
                 End If
             Next
         End If

@@ -125,6 +125,7 @@
     Private _AllowInsert As Boolean = True
     Private _AllowDelete As Boolean = True
     Private _AllowLinkedServers As Boolean = True
+    Private _AllowDataImport As Boolean = False
     Private _AllowSettingsChange As Boolean = True
 
     Public Property Encryption() As Boolean
@@ -208,6 +209,15 @@
         End Set
     End Property
 
+    Public Property AllowDataImport() As Boolean
+        Get
+            Return _AllowDataImport
+        End Get
+        Set(ByVal Value As Boolean)
+            _AllowDataImport = Value
+        End Set
+    End Property
+
     Public Property AllowSettingsChange() As Boolean
         Get
             Return _AllowSettingsChange
@@ -220,7 +230,7 @@
 #End Region
 
 #Region "XML"
-    Private _DefaultConfigFilePath As String = Application.StartupPath
+    Private _DefaultConfigFilePath As String = Application.StartupPath & "\Config"
     Private _GeneralSettings As String = _DefaultConfigFilePath & "\" & "SequenchelSettings.xml"
     Private _ConnectionsFile As String = _DefaultConfigFilePath & "\" & "SDBAConnections.xml"
     Private _ConnectionDefault As String = ""
@@ -403,6 +413,31 @@
         Set(ByVal Value As Integer)
             _UpperLimit = Value
         End Set
+    End Property
+
+#End Region
+
+#Region "Defaults"
+    Private ReadOnly _MainSettingsFile As String = "SequenchelSettings.xml"
+    Private ReadOnly _ConnectionsFileName As String = "SDBAConnections.xml"
+    Private ReadOnly _TableSetName As String = "General"
+
+    Public ReadOnly Property MainSettingsFile() As String
+        Get
+            Return _MainSettingsFile
+        End Get
+    End Property
+
+    Public ReadOnly Property ConnectionsFileName() As String
+        Get
+            Return _ConnectionsFileName
+        End Get
+    End Property
+
+    Public ReadOnly Property TableSetName() As String
+        Get
+            Return _TableSetName
+        End Get
     End Property
 
 #End Region

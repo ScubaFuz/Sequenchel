@@ -33,6 +33,7 @@ Module Common
     Friend arrLabels As New LabelArray
     Friend dtsTable As New DataSet
     Friend dtsReport As New DataSet
+    Friend dstImport As New DataSet
 
     Friend strMessages As New Messages
     Friend CurVar As New Variables
@@ -136,7 +137,7 @@ Module Common
         dhdText.InputFile = "SequenchelDBA.xml"
         dhdText.LogFileName = "Sequenchel.Log"
         dhdText.LogLevel = 5
-        dhdText.LogLocation = CurVar.DefaultConfigFilePath & "\LOG"
+        dhdText.LogLocation = Application.StartupPath & "\LOG"
         dhdText.OutputFile = Environment.SpecialFolder.MyDocuments
 
         dhdDatabase.LoginMethod = "WINDOWS"
@@ -366,6 +367,7 @@ Module Common
                 If dhdText.CheckElement(xmlSDBASettings, "AllowInsert") Then CurVar.AllowInsert = xmlSDBASettings.Item("Sequenchel").Item("Settings").Item("AllowInsert").InnerText
                 If dhdText.CheckElement(xmlSDBASettings, "AllowDelete") Then CurVar.AllowDelete = xmlSDBASettings.Item("Sequenchel").Item("Settings").Item("AllowDelete").InnerText
                 If dhdText.CheckElement(xmlSDBASettings, "AllowLinkedServersChange") Then CurVar.AllowLinkedServers = xmlSDBASettings.Item("Sequenchel").Item("Settings").Item("AllowLinkedServersChange").InnerText
+                If dhdText.CheckElement(xmlSDBASettings, "AllowDataImport") Then CurVar.AllowDataImport = xmlSDBASettings.Item("Sequenchel").Item("Settings").Item("AllowDataImport").InnerText
                 If dhdText.CheckElement(xmlSDBASettings, "AllowSettingsChange") Then CurVar.AllowSettingsChange = xmlSDBASettings.Item("Sequenchel").Item("Settings").Item("AllowSettingsChange").InnerText
                 If dhdText.CheckElement(xmlSDBASettings, "OverridePassword") Then
                     If xmlSDBASettings.Item("Sequenchel").Item("Settings").Item("OverridePassword").InnerText.Length > 0 Then
@@ -401,6 +403,7 @@ Module Common
         strXmlText &= "		<AllowInsert>" & CurVar.AllowInsert & "</AllowInsert>" & Environment.NewLine
         strXmlText &= "		<AllowDelete>" & CurVar.AllowDelete & "</AllowDelete>" & Environment.NewLine
         strXmlText &= "		<AllowLinkedServersChange>" & CurVar.AllowLinkedServers & "</AllowLinkedServersChange>" & Environment.NewLine
+        strXmlText &= "		<AllowDataImport>" & CurVar.AllowDataImport & "</AllowDataImport>" & Environment.NewLine
         strXmlText &= "		<AllowSettingsChange>" & CurVar.AllowSettingsChange & "</AllowSettingsChange>" & Environment.NewLine
         strXmlText &= "		<OverridePassword>" & CurVar.OverridePassword & "</OverridePassword>" & Environment.NewLine
         strXmlText &= "	</Settings>" & Environment.NewLine
@@ -804,29 +807,31 @@ Module Common
 
         Dim sfdFile As New SaveFileDialog
         sfdFile.FileName = strFileName
-        sfdFile.Filter = "XML File (*.xml)|*.xml|Excel 2007 file (*.xlsx)|*.xlsx"
+        sfdFile.Filter = "XML File (*.xml)|*.xml|Excel 2007 file (*.xlsx)|*.xlsx|Excel 2007 Text file(*.xlsx)|*.xlsx"
         sfdFile.FilterIndex = 1
         sfdFile.RestoreDirectory = True
-        sfdFile.OverwritePrompt = False
+        sfdFile.OverwritePrompt = True
 
         If (sfdFile.ShowDialog() <> DialogResult.OK) Then
             Return
         End If
 
+        CursorControl("Wait")
         Dim strTargetFile As String = sfdFile.FileName
         Dim strExtension As String = sfdFile.FileName.Substring(sfdFile.FileName.LastIndexOf(".") + 1, sfdFile.FileName.Length - (sfdFile.FileName.LastIndexOf(".") + 1))
-
-        Select Case strExtension
-            Case "xml"
-                'MessageBox.Show("xml file detected")
-                ExportXML(dtsInput, strTargetFile)
-            Case "xlsx"
-                'MessageBox.Show("excel file detected")
-                ExportExcel(dtsInput, strTargetFile)
+        Select Case sfdFile.FilterIndex
+            Case 1
+                ExportXML(ReplaceNulls(dtsInput), strTargetFile)
+            Case 2
+                'ExportExcel(dtsInput, strTargetFile)
+                Excel.CreateExcelDocument(dtsInput, strTargetFile)
+            Case 3
+                ExportExcel(ReplaceNulls(dtsInput), strTargetFile)
             Case Else
                 Return
                 'unknown filetype, do nothing
         End Select
+        CursorControl()
 
         If blnShowFile = True Then
             Dim p As New Process
@@ -1402,6 +1407,10 @@ Module Common
             If strInput.Substring(0, 2) = "f:" Then
                 Return "(" & strInput.Replace("f:", "") & ")"
             End If
+            If strInput.Substring(0, 2) = "v:" Then
+                strInput = strInput.Replace("v:", "")
+                strInput = ProcessDefaultValue(strInput)
+            End If
         End If
         If strCompare = "IS" Or strCompare = "IS NOT" Then
             Return strInput
@@ -1479,6 +1488,15 @@ Module Common
                     strFieldType = "INTEGER"
                 Case "MIN", "MAX"
                     strFQDN = strShowMode & "(" & strFQDN & ")"
+                Case "YEAR", "MONTH", "DAY", "HOUR", "MINUTE", "SECOND"
+                    strFQDN = "DATEPART(" & strShowMode & "," & strFQDN & ")"
+                    strFieldType = "INTEGER"
+                Case "DATE"
+                    strFQDN = "CAST(" & strFQDN & " AS DATE)"
+                    strFieldType = "DATETIME"
+                Case "TIME"
+                    strFQDN = "CAST(" & strFQDN & " AS TIME)"
+                    strFieldType = "TIME"
                 Case Else
                     'Do Nothing
             End Select
@@ -1492,14 +1510,25 @@ Module Common
         Select Case strFieldType.ToUpper
             Case "IMAGE"
                 strOutput = "(CONVERT([varchar](" & strFieldWidth & "), " & strFQDN & "))"
-            Case "BINARY", "GEO", "TEXT", "GUID", "TIME", "TIMESTAMP"
+            Case "BINARY", "GEO", "TEXT", "GUID"
                 strOutput = "(CONVERT([nvarchar](" & strFieldWidth & "), " & strFQDN & "))"
+            Case "TIME", "TIMESTAMP"
+                Dim intFieldWidth As Integer = 8
+                If IsNumeric(strFieldWidth) = 1 And strFieldWidth < intFieldWidth Then intFieldWidth = strFieldWidth
+                Select Case CurVar.DateTimeStyle
+                    Case 101, 100
+                        strOutput = "(CONVERT([nvarchar](7), " & strFQDN & ", 100))"
+                    Case 105, 102
+                        strOutput = "(CONVERT([nvarchar](8), " & strFQDN & ", 120))"
+                    Case Else
+                        strOutput = "(CONVERT([nvarchar](13), " & strFQDN & ", " & CurVar.DateTimeStyle & "))"
+                End Select
             Case "XML"
                 strOutput = "(CONVERT([nvarchar](max), " & strFQDN & "))"
             Case "DATETIME"
                 strOutput = "(CONVERT([nvarchar](" & strFieldWidth & "), " & strFQDN & ", " & CurVar.DateTimeStyle & "))"
             Case Else
-                'CHAR: no need to convert char values to char.
+                'CHAR: no need to convert char or int values to char.
                 strOutput = strFQDN
         End Select
 
@@ -1560,6 +1589,83 @@ Module Common
         Return strOutput
     End Function
 
+    Friend Function FormatFieldWhere1(strFieldName As String, strTableName As String, strFieldWidth As String, strFieldType As String, strFieldValue As String) As String
+        Dim strOutput As String = ""
+        Dim strTableField As String = " [" & strTableName.Replace(".", "].[") & "].[" & strFieldName & "]"
+
+        If strFieldValue = "NULL" Or strFieldValue = "" Then
+            Select Case strFieldType.ToUpper
+                Case "CHAR", "BINARY", "XML", "GEO", "TEXT", "GUID", "TIME", "TIMESTAMP"
+                    strOutput = " (COALESCE(" & strTableField & ",'') = '') " & Environment.NewLine
+                Case "INTEGER", "DATETIME", "BIT"
+                    strOutput = " (COALESCE(" & strTableField & ",0) = 0) " & Environment.NewLine
+                Case "IMAGE"
+                    'do nothing. cannot search on an image data type.
+                Case Else
+                    'try the default CHAR action
+                    strOutput = " (COALESCE(" & strTableField & ",'') = '') " & Environment.NewLine
+            End Select
+            Return strOutput
+        Else
+            If strFieldValue.Contains(",") Then
+                strFieldValue = strFieldValue.Trim(",")
+                If strFieldValue.Length = 0 Then Return strOutput
+                Select Case strFieldType.ToUpper
+                    Case "CHAR", "BINARY", "XML", "GEO", "TEXT", "GUID", "TIME", "TIMESTAMP"
+                        strOutput = " (" & strTableField & " IN ('" & Replace(strFieldValue, ",", "','") & "'))" & Environment.NewLine
+                    Case "INTEGER", "BIT"
+                        strOutput = " (" & strTableField & " IN (" & strFieldValue & "))" & Environment.NewLine
+                    Case "DATETIME"
+                        strOutput = " ((CONVERT([nvarchar](" & strFieldWidth & "), " & strTableField & ", " & CurVar.DateTimeStyle & ")) IN ('" & strFieldValue.Replace(",", "','") & "'))" & Environment.NewLine
+                    Case "IMAGE"
+                        'do nothing. cannot search on an image data type.
+                    Case Else
+                        'try the default CHAR action
+                        strOutput = " (" & strTableField & " IN ('" & Replace(strFieldValue, ",", "','") & "'))" & Environment.NewLine
+                End Select
+                Return strOutput
+            Else
+                If strFieldValue.Trim().Contains(" ") Then
+                    Dim strArgs As String() = strFieldValue.Trim().Split(New String() {" "}, StringSplitOptions.RemoveEmptyEntries)
+                    For Each strArg As String In strArgs
+                        If strArg IsNot Nothing AndAlso strArg.Trim().Length > 0 Then
+                            strOutput &= " AND (" & strTableField & " LIKE ('%" & strArg.Trim() & "%'))" & Environment.NewLine
+                        End If
+                    Next
+                    Dim strTest As String = strOutput.Substring(0, 4)
+                    If strOutput.Substring(0, 4) = " AND" Then
+                        'if the value starts with AND, remove it.
+                        strOutput = strOutput.Remove(0, 4)
+                    End If
+                    Return strOutput
+                Else
+
+                    Select Case strFieldType.ToUpper
+                        Case "CHAR"
+                            strOutput = " (" & strTableField & " LIKE '%" & strFieldValue & "%')"
+                        Case "INTEGER"
+                            strOutput = " (" & strTableField & " LIKE '%" & strFieldValue & "%')"
+                        Case "DATETIME"
+                            strOutput = " (CONVERT([nvarchar](" & strFieldWidth & "), " & strTableField & ", " & CurVar.DateTimeStyle & ")) LIKE '%" & strFieldValue & "%')"
+                        Case "BINARY", "XML", "GEO", "TEXT", "GUID", "TIME", "TIMESTAMP"
+                            strOutput = " (CONVERT([nvarchar](" & strFieldWidth & "), " & strTableField & ")) LIKE '%" & strFieldValue & "%')"
+                        Case "BIT"
+                            strOutput = " (COALESCE(" & strTableField & ",0) = " & strFieldValue & ") "
+                        Case "IMAGE"
+                            'do nothing. cannot search on an image data type.
+                        Case Else
+                            'try the default CHAR action
+                            strOutput = " (" & strTableField & " LIKE '%" & strFieldValue & "%')"
+                    End Select
+                    Return strOutput
+
+                End If
+            End If
+        End If
+
+        Return strOutput
+    End Function
+
 #End Region
 
     Friend Sub WriteLog(ByVal strLogtext As String, ByVal intLogLevel As Integer)
@@ -1568,14 +1674,14 @@ Module Common
                 dhdDatabase.WriteLog(strLogtext, intLogLevel, dhdText.LogLevel)
             Else
                 dhdText.WriteLog(strLogtext, intLogLevel)
-                'If DevMode Then MessageBox.Show(dhdText.LogFileName & Environment.NewLine & dhdText.LogLocation & Environment.NewLine & dhdText.LogLevel)
+                If DevMode Then MessageBox.Show(dhdText.LogFileName & Environment.NewLine & dhdText.LogLocation & Environment.NewLine & dhdText.LogLevel)
             End If
         Catch ex As Exception
             Dim strMyDir As String
             strMyDir = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
 
-            If dhdText.CheckDir(strMyDir & "\Sequenchel") = False Then dhdText.CreateDir(strMyDir & "\Sequenchel")
-            If dhdText.CheckDir(strMyDir & "\Sequenchel\LOG") = False Then dhdText.CreateDir(strMyDir & "\Sequenchel\LOG")
+            If dhdText.CheckDir(strMyDir & "\Sequenchel", True) = False Then dhdText.CreateDir(strMyDir & "\Sequenchel")
+            If dhdText.CheckDir(strMyDir & "\Sequenchel\LOG", True) = False Then dhdText.CreateDir(strMyDir & "\Sequenchel\LOG")
             dhdText.LogFileName = "Sequenchel.Log"
             dhdText.LogLocation = strMyDir & "\Sequenchel\LOG"
             MessageBox.Show("there was an error writing to the logfile: " & Environment.NewLine & ex.Message)
@@ -1642,12 +1748,21 @@ Module Common
         End If
     End Function
 
-    Friend Function FormatFileDate(ByVal dtmInput As Date) As String
+    Friend Function FormatDateTime(ByVal dtmInput As Date) As String
+        If dtmInput = Nothing Then
+            FormatDateTime = ""
+        Else
+            FormatDateTime = dtmInput.ToString("yyyyMMdd_HHmm")
+        End If
+    End Function
+
+    Friend Function FormatFileDate(ByVal dtmInput As Date, Optional strFormatStyle As String = Nothing) As String
         If dtmInput = Nothing Then
             FormatFileDate = ""
         Else
+            If strFormatStyle = Nothing Then strFormatStyle = CurVar.DateTimeStyle
             FormatFileDate = dtmInput.ToString("yyyy-MM-dd")
-            Select Case CurVar.DateTimeStyle
+            Select Case strFormatStyle
                 Case 120
                     FormatFileDate = dtmInput.ToString("yyyy-MM-dd")
                 Case 100
@@ -1682,55 +1797,103 @@ Module Common
         Dim strReturn As String = strValue
         Dim intFirstBracket As Integer = strValue.IndexOf("(")
         Dim intLastBracket As Integer = strValue.LastIndexOf(")")
+        Dim strInput As String = ""
+
         If intFirstBracket > 0 And intLastBracket > 0 Then
+
+            If intLastBracket - intFirstBracket > 1 Then
+                strInput = strValue.Substring(intFirstBracket + 1, intLastBracket - (intFirstBracket + 1))
+            End If
+
             Select Case strValue.Substring(0, strValue.IndexOf("(") + 1).ToLower
                 Case "now("
-                    If intLastBracket - intFirstBracket > 1 Then
-                        If IsNumeric(strValue.Substring(intFirstBracket + 1, intLastBracket - (intFirstBracket + 1))) Then
-                            Try
-                                Dim dt As DateTime = DateTime.Now
-                                dt = dt.AddHours(strValue.Substring(intFirstBracket + 1, intLastBracket - (intFirstBracket + 1)))
-                                strReturn = dt
-                            Catch ex As Exception
-                                strReturn = Now
-                            End Try
-                        Else
-                            strReturn = Now
-                        End If
-                    Else
-                        strReturn = Now
-                    End If
+                    Dim dtmOutput As DateTime = DateTime.Now
+                    Try
+                        dtmOutput = AlterDate(dtmOutput, strInput, "HOUR")
+                    Catch ex As Exception
+                    End Try
+                    strReturn = dtmOutput.ToString("yyyy-MM-dd HH:mm:ss")
                 Case "date("
-                    If intLastBracket - intFirstBracket > 1 Then
-                        If IsNumeric(strValue.Substring(intFirstBracket + 1, intLastBracket - (intFirstBracket + 1))) Then
-                            Try
-                                Dim dt As DateTime = Date.Today
-                                dt = dt.AddDays(strValue.Substring(intFirstBracket + 1, intLastBracket - (intFirstBracket + 1)))
-                                strReturn = dt
-                            Catch ex As Exception
-                                strReturn = Date.Today
-                            End Try
-                        Else
-                            strReturn = Date.Today
-                        End If
-                    Else
-                        strReturn = Date.Today
-                    End If
+                    Dim dtmOutput As DateTime = Date.Today
+                    Try
+                        dtmOutput = AlterDate(dtmOutput, strInput, "DAY")
+                    Catch ex As Exception
+                    End Try
+                    strReturn = FormatFileDate(dtmOutput, 120)
                 Case "time("
-                    If intLastBracket - intFirstBracket > 1 Then
-                        If IsNumeric(strValue.Substring(intFirstBracket + 1, intLastBracket - (intFirstBracket + 1))) Then
-                            Try
-                                strReturn = TimeOfDay.AddMinutes(strValue.Substring(intFirstBracket + 1, intLastBracket - (intFirstBracket + 1)))
-                            Catch ex As Exception
-                                strReturn = TimeOfDay
-                            End Try
-                        Else
-                            strReturn = TimeOfDay
-                        End If
-                    Else
-                        strReturn = TimeOfDay
+                    Dim dtmOutput As DateTime = DateTime.Now
+                    Try
+                        dtmOutput = AlterDate(dtmOutput, strInput, "MINUTE")
+                        strReturn = dtmOutput.ToString("HH:mm:ss")
+                    Catch ex As Exception
+                        strReturn = TimeOfDay.ToString("HH:mm:ss")
+                    End Try
+                Case "yearstart("
+                    Dim dtmOutput As New DateTime(DateTime.Now.Year, 1, 1)
+                    Try
+                        dtmOutput = AlterDate(dtmOutput, strInput, "YEAR")
+                    Catch ex As Exception
+                        strReturn = FormatFileDate(dtmOutput, 120)
+                    End Try
+                    strReturn = FormatFileDate(dtmOutput, 120)
+                Case "yearend("
+                    Dim dtmOutput As New DateTime(DateTime.Now.Year, 1, 1)
+                    dtmOutput = dtmOutput.AddYears(1).AddDays(-1)
+                    Try
+                        dtmOutput = AlterDate(dtmOutput, strInput, "YEAR")
+                    Catch ex As Exception
+                        strReturn = FormatFileDate(dtmOutput, 120)
+                    End Try
+                    strReturn = FormatFileDate(dtmOutput, 120)
+                Case "monthstart("
+                    Dim dtmOutput As DateTime = Date.Today.AddDays(-Date.Today.Day + 1)
+                    Try
+                        dtmOutput = AlterDate(dtmOutput, strInput, "MONTH")
+                    Catch ex As Exception
+                        strReturn = FormatFileDate(dtmOutput, 120)
+                    End Try
+                    strReturn = FormatFileDate(dtmOutput, 120)
+                Case "monthend("
+                    Dim dtmOutput As DateTime = Date.Today.AddMonths(1).AddDays(-Date.Today.Day)
+                    Dim IntAddMonths As Integer = 1
+
+                    Try
+                        dtmOutput = AlterDate(dtmOutput, strInput, "MONTH")
+                        dtmOutput = dtmOutput.AddMonths(1).AddDays(-dtmOutput.Day)
+                    Catch ex As Exception
+                        strReturn = FormatFileDate(dtmOutput, 120)
+                    End Try
+                    strReturn = FormatFileDate(dtmOutput, 120)
+
+                Case "weekstart("
+                    Dim IntAddWeeks As Integer = 0
+                    Dim dtmOutput As DateTime = Date.Today
+                    Dim dayIndex As Integer = dtmOutput.DayOfWeek
+                    If dayIndex < DayOfWeek.Monday Then
+                        dayIndex += 7 'Monday is first day of week, no day of week should have a smaller index
                     End If
-                    strReturn = TimeOfDay
+                    Dim dayDiff As Integer = dayIndex - DayOfWeek.Monday
+                    dtmOutput = dtmOutput.AddDays(-dayDiff)
+                    Try
+                        dtmOutput = AlterDate(dtmOutput, strInput, "WEEK")
+                    Catch ex As Exception
+                    End Try
+                    strReturn = FormatFileDate(dtmOutput, 120)
+                Case "weekend("
+                    Dim IntAddWeeks As Integer = 0
+                    Dim dtmOutput As DateTime = Date.Today
+                    Dim dayIndex As Integer = dtmOutput.DayOfWeek
+                    If dayIndex < DayOfWeek.Monday Then
+                        dayIndex += 7 'Monday is first day of week, no day of week should have a smaller index
+                    End If
+                    Dim dayDiff As Integer = dayIndex - DayOfWeek.Monday
+                    dtmOutput = dtmOutput.AddDays(-dayDiff).AddDays(6)
+
+                    Try
+                        dtmOutput = AlterDate(dtmOutput, strInput, "WEEK")
+                    Catch ex As Exception
+                    End Try
+                    strReturn = FormatFileDate(dtmOutput, 120)
                 Case "pi("
                     strReturn = "3.1415926535897932384626433832795"
                 Case Else
@@ -1738,6 +1901,63 @@ Module Common
             End Select
         End If
         Return strReturn
+    End Function
+
+    Private Function AlterDate(dtmInput As DateTime, strInput As String, strDefault As String) As DateTime
+        Dim intComma As Integer = 0
+        Dim strStep As String = ""
+        Dim intStep As Integer = 0
+
+        strInput = strInput.Trim(",")
+
+        If strInput.Contains(",") Then
+            Try
+                intComma = strInput.IndexOf(",")
+            Catch ex As Exception
+                WriteLog("An error occured processing the date enhancer" & strInput & ": " & ex.Message, 1)
+            End Try
+        End If
+
+        If intComma > 0 Then
+            Try
+                strStep = strInput.Substring(0, intComma)
+                intStep = strInput.Substring(intComma + 1, strInput.Length - (intComma + 1))
+            Catch ex As Exception
+                WriteLog("Unable to get the identifiers for the date enhancer" & strInput & ": " & ex.Message, 1)
+            End Try
+        End If
+
+        If IsNumeric(strInput) Then
+            intStep = strInput
+            strStep = strDefault
+        End If
+
+        Try
+            If intStep <> 0 Then
+                Select Case strStep.ToUpper
+                    Case "MILLISECOND"
+                        dtmInput = dtmInput.AddMilliseconds(intStep)
+                    Case "SECOND"
+                        dtmInput = dtmInput.AddSeconds(intStep)
+                    Case "MINUTE"
+                        dtmInput = dtmInput.AddMinutes(intStep)
+                    Case "HOUR"
+                        dtmInput = dtmInput.AddHours(intStep)
+                    Case "DAY"
+                        dtmInput = dtmInput.AddDays(intStep)
+                    Case "WEEK"
+                        dtmInput = dtmInput.AddDays(intStep * 7)
+                    Case "MONTH"
+                        dtmInput = dtmInput.AddMonths(intStep)
+                    Case "YEAR"
+                        dtmInput = dtmInput.AddYears(intStep)
+                End Select
+            End If
+        Catch ex As Exception
+            WriteLog("An error occured applying the date enhancer" & strInput & ": " & ex.Message, 1)
+        End Try
+
+        Return dtmInput
     End Function
 
 #End Region
@@ -1776,10 +1996,14 @@ Module Common
     Friend Function DatasetCheck(dtsInput As DataSet, Optional intTable As Integer = 0) As Boolean
         Dim blnOK As Boolean = True
 
-        If dtsInput Is Nothing Then Return False
-        If dtsInput.Tables.Count = 0 Then Return False
-        If dtsInput.Tables.Count < intTable + 1 Then Return False
-        If dtsInput.Tables(intTable).Rows.Count = 0 Then Return False
+        Try
+            If dtsInput Is Nothing Then Return False
+            If dtsInput.Tables.Count = 0 Then Return False
+            If dtsInput.Tables.Count < intTable + 1 Then Return False
+            If dtsInput.Tables(intTable).Rows.Count = 0 Then Return False
+        Catch ex As Exception
+            Return False
+        End Try
 
         Return blnOK
     End Function
@@ -1816,6 +2040,39 @@ Module Common
         Return s.ToString()
     End Function
 
+    Friend Function ReplaceNulls(dtsInput As DataSet) As DataSet
+        Dim dtsOutput As New DataSet
+        Dim row As DataRow
+        Dim col As DataColumn
+        '....
+        For Each Table In dtsInput.Tables
+            Dim newTable As DataTable = Table.clone
+            For Each colOrg In newTable.Columns
+                colOrg.DataType = System.Type.GetType("System.String")
+            Next
+            For Each rowOrg In Table.rows
+                newTable.ImportRow(rowOrg)
+            Next
+            dtsOutput.Tables.Add(newTable)
+
+            For Each row In newTable.Rows
+                For Each col In newTable.Columns
+                    If row.IsNull(col) Then
+                        Select Case Type.GetTypeCode(col.DataType)
+                            Case TypeCode.Int32
+                                row.Item(col) = 0
+                            Case TypeCode.String
+                                row.Item(col) = ""
+                            Case Else
+                                row.Item(col) = ""
+                        End Select
+                    End If
+                Next
+            Next
+        Next
+        Return dtsOutput
+    End Function
+
     'Friend Function ComboFieldMultiColumnCreate(cbxInput As ComboField, dtsInput As DataSet)
     '    'Dim strName As String = "dt" & cbxInput.Name
     '    Dim dtFormats As DataTable = New DataTable()
@@ -1837,5 +2094,7 @@ Module Common
     '    cbxInput.DrawMode = DrawMode.OwnerDrawFixed
     '    Return cbxInput
     'End Function
+
+
 
 End Module

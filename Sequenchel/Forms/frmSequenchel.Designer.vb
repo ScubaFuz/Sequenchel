@@ -41,8 +41,9 @@ Partial Class frmSequenchel
         Me.mnuMainFileExit = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuMainTools = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuMainToolsReports = New System.Windows.Forms.ToolStripMenuItem()
-        Me.mnuMainToolsLinkedServers = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuMainToolsConfiguration = New System.Windows.Forms.ToolStripMenuItem()
+        Me.mnuMainToolsImport = New System.Windows.Forms.ToolStripMenuItem()
+        Me.mnuMainToolsLinkedServers = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuMainToolsSettings = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuMainHelp = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuMainHelpManual = New System.Windows.Forms.ToolStripMenuItem()
@@ -134,6 +135,7 @@ Partial Class frmSequenchel
         Me.cbxConnection.Location = New System.Drawing.Point(53, 60)
         Me.cbxConnection.Name = "cbxConnection"
         Me.cbxConnection.Size = New System.Drawing.Size(200, 21)
+        Me.cbxConnection.Sorted = True
         Me.cbxConnection.TabIndex = 91
         '
         'lblConnection
@@ -160,6 +162,7 @@ Partial Class frmSequenchel
         Me.cbxTableSet.Location = New System.Drawing.Point(286, 60)
         Me.cbxTableSet.Name = "cbxTableSet"
         Me.cbxTableSet.Size = New System.Drawing.Size(200, 21)
+        Me.cbxTableSet.Sorted = True
         Me.cbxTableSet.TabIndex = 93
         '
         'lblTable
@@ -177,6 +180,7 @@ Partial Class frmSequenchel
         Me.cbxTable.Location = New System.Drawing.Point(519, 60)
         Me.cbxTable.Name = "cbxTable"
         Me.cbxTable.Size = New System.Drawing.Size(200, 21)
+        Me.cbxTable.Sorted = True
         Me.cbxTable.TabIndex = 95
         '
         'btnConnectionsReload
@@ -230,7 +234,7 @@ Partial Class frmSequenchel
         '
         'mnuMainTools
         '
-        Me.mnuMainTools.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuMainToolsReports, Me.mnuMainToolsLinkedServers, Me.mnuMainToolsConfiguration, Me.mnuMainToolsSettings})
+        Me.mnuMainTools.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuMainToolsReports, Me.mnuMainToolsConfiguration, Me.mnuMainToolsImport, Me.mnuMainToolsLinkedServers, Me.mnuMainToolsSettings})
         Me.mnuMainTools.Name = "mnuMainTools"
         Me.mnuMainTools.Size = New System.Drawing.Size(47, 20)
         Me.mnuMainTools.Text = "Tools"
@@ -241,17 +245,23 @@ Partial Class frmSequenchel
         Me.mnuMainToolsReports.Size = New System.Drawing.Size(149, 22)
         Me.mnuMainToolsReports.Text = "Reports"
         '
-        'mnuMainToolsLinkedServers
-        '
-        Me.mnuMainToolsLinkedServers.Name = "mnuMainToolsLinkedServers"
-        Me.mnuMainToolsLinkedServers.Size = New System.Drawing.Size(149, 22)
-        Me.mnuMainToolsLinkedServers.Text = "Linked Servers"
-        '
         'mnuMainToolsConfiguration
         '
         Me.mnuMainToolsConfiguration.Name = "mnuMainToolsConfiguration"
         Me.mnuMainToolsConfiguration.Size = New System.Drawing.Size(149, 22)
         Me.mnuMainToolsConfiguration.Text = "Configuration"
+        '
+        'mnuMainToolsImport
+        '
+        Me.mnuMainToolsImport.Name = "mnuMainToolsImport"
+        Me.mnuMainToolsImport.Size = New System.Drawing.Size(149, 22)
+        Me.mnuMainToolsImport.Text = "Import"
+        '
+        'mnuMainToolsLinkedServers
+        '
+        Me.mnuMainToolsLinkedServers.Name = "mnuMainToolsLinkedServers"
+        Me.mnuMainToolsLinkedServers.Size = New System.Drawing.Size(149, 22)
+        Me.mnuMainToolsLinkedServers.Text = "Linked Servers"
         '
         'mnuMainToolsSettings
         '
@@ -657,5 +667,6 @@ Partial Class frmSequenchel
     Friend WithEvents pnlListCount As System.Windows.Forms.Panel
     Friend WithEvents TableLayoutPanel1 As System.Windows.Forms.TableLayoutPanel
     Friend WithEvents mnuMainHelpManual As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents mnuMainToolsImport As System.Windows.Forms.ToolStripMenuItem
 
 End Class

@@ -14,7 +14,8 @@ Public Class frmConfiguration
         TableSetsLoad()
         TablesLoad()
         txtDefaultPath.Text = CurVar.DefaultConfigFilePath
-        txtTableSetName.Text = "Primary"
+        txtTableSetName.Text = CurVar.TableSetName
+
     End Sub
 
     Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
@@ -42,17 +43,17 @@ Public Class frmConfiguration
     Private Sub ConfigurationSave()
         If CurStatus.ConnectionChanged = True Then
             CurStatus.ConnectionReload = True
-            dhdText.SaveXmlFile(xmlConnections, CurVar.ConnectionsFile)
+            dhdText.SaveXmlFile(xmlConnections, CurVar.ConnectionsFile, True)
             CurStatus.ConnectionChanged = False
         End If
         If CurStatus.TableSetChanged = True Then
             CurStatus.TableSetReload = True
-            dhdText.SaveXmlFile(xmlTableSets, CurVar.TableSetsFile)
+            dhdText.SaveXmlFile(xmlTableSets, CurVar.TableSetsFile, True)
             CurStatus.TableSetChanged = False
         End If
         If CurStatus.TableChanged = True Then
             CurStatus.TableReload = True
-            dhdText.SaveXmlFile(xmlTables, CurVar.TablesFile)
+            dhdText.SaveXmlFile(xmlTables, CurVar.TablesFile, True)
             CurStatus.TableChanged = False
         End If
     End Sub
@@ -473,7 +474,7 @@ Public Class frmConfiguration
     End Sub
 
     Private Sub btnDefaultTableSet_Click(sender As Object, e As EventArgs) Handles btnDefaultTableSet.Click
-        txtTableSetName.Text = "Primary"
+        txtTableSetName.Text = CurVar.TableSetName
         If chkDefaultValues.Checked = True Then
             AutoFillDefaults()
         End If
@@ -1430,19 +1431,28 @@ Public Class frmConfiguration
 #Region "Relations"
 
     Private Sub btnRelationRemove_Click(sender As Object, e As EventArgs) Handles btnRelationRemove.Click
-        Dim strSelection As String = txtFieldName.Tag
+        If cbxRelations.Text.Length < 1 Then Exit Sub
+        Dim strFieldName As String = txtFieldName.Tag
+        Dim strSelection As String = cbxRelations.Text
         Dim xPNode As XmlNode = dhdText.FindXmlNode(xmlTables, "Table", "Name", CurStatus.Table)
-        Dim xNode As XmlNode = dhdText.FindXmlChildNode(xPNode, "Fields/Field", "FldName", strSelection)
+        Dim xNode As XmlNode = dhdText.FindXmlChildNode(xPNode, "Fields/Field", "FldName", strFieldName)
         Dim xCNode As XmlNode = dhdText.FindXmlChildNode(xNode, "Relations")
-        Dim xRNode As XmlNode = dhdText.FindXmlChildNode(xCNode, "Relation", "Relation", cbxRelations.Text)
+        Dim xRNode As XmlNode = dhdText.FindXmlChildNode(xCNode, "Relation", "Relation", strSelection)
 
         If Not xRNode Is Nothing Then
             If MessageBox.Show("This will permanently remove the Item: " & strSelection & Environment.NewLine & strMessages.strContinue, strMessages.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Exit Sub
             xRNode.ParentNode.RemoveChild(xRNode)
+
+            tvwTable.Nodes.Clear()
+            DisplayXmlNode(xPNode, tvwTable.Nodes)
+            tvwTable.Nodes(0).Expand()
+            tvwTable.SelectedNode = tvwTable.Nodes.Find("Fields", True)(0)
+            tvwTable.SelectedNode.Expand()
+
             CurStatus.TableChanged = True
             ConfigurationSave()
-            If cbxRelations.Items.Contains(cbxRelations.Text) Then cbxRelations.Items.Remove(cbxRelations.Text)
-            cbxRelations.Text = ""
+            'If cbxRelations.Items.Contains(cbxRelations.Text) Then cbxRelations.Items.Remove(cbxRelations.Text)
+            'cbxRelations.Text = ""
         End If
 
     End Sub
@@ -1461,12 +1471,19 @@ Public Class frmConfiguration
         End If
         Dim xCNode As XmlNode = dhdText.FindXmlChildNode(xNode, "Relations")
         If xCNode Is Nothing Then xCNode = dhdText.CreateAppendElement(xNode, "Relations", Nothing, False)
-        Dim xRNode As XmlNode = dhdText.CreateAppendElement(xCNode, "Relation", strRelation, True)
+        Dim xRNode As XmlNode = dhdText.CreateAppendElement(xCNode, "Relation", strRelation, False)
         If strRelatedField.Length > 0 Then
             dhdText.CreateAppendAttribute(xRNode, "RelatedField", strRelatedField, True)
             dhdText.CreateAppendAttribute(xRNode, "RelatedFieldList", blnRelatedFieldList, True)
         End If
         lblStatus.Text = "Updating Relation completed succesfully"
+
+        tvwTable.Nodes.Clear()
+        DisplayXmlNode(xPNode, tvwTable.Nodes)
+        tvwTable.Nodes(0).Expand()
+        tvwTable.SelectedNode = tvwTable.Nodes.Find("Fields", True)(0)
+        tvwTable.SelectedNode.Expand()
+
         CurStatus.TableChanged = True
         ConfigurationSave()
     End Sub
@@ -1474,7 +1491,8 @@ Public Class frmConfiguration
     Private Sub btnRelationAdd_Click(sender As Object, e As EventArgs) Handles btnRelationAdd.Click
         If cbxRelations.Text.Length = 0 Then Exit Sub
         RelationAdd(CurStatus.Table, txtFieldName.Tag, cbxRelations.Text, txtRelatedField.Text, chkRelatedField.Checked)
-        If Not cbxRelations.Items.Contains(cbxRelations.Text) Then cbxRelations.Items.Add(cbxRelations.Text)
+
+        'If Not cbxRelations.Items.Contains(cbxRelations.Text) Then cbxRelations.Items.Add(cbxRelations.Text)
     End Sub
 
 #End Region

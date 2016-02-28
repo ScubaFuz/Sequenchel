@@ -98,6 +98,7 @@ Partial Class frmConfiguration
         Me.colTablesFile = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.tpgTables = New System.Windows.Forms.TabPage()
         Me.pnlFieldSettings = New System.Windows.Forms.Panel()
+        Me.chkRelatedField = New System.Windows.Forms.CheckBox()
         Me.lblFieldName = New System.Windows.Forms.Label()
         Me.lblIdentity = New System.Windows.Forms.Label()
         Me.txtFieldName = New System.Windows.Forms.TextBox()
@@ -189,7 +190,6 @@ Partial Class frmConfiguration
         Me.lblStatus = New System.Windows.Forms.Label()
         Me.btnClose = New System.Windows.Forms.Button()
         Me.btnCancel = New System.Windows.Forms.Button()
-        Me.chkRelatedField = New System.Windows.Forms.CheckBox()
         Me.tabConfiguration.SuspendLayout()
         Me.tpgConnections.SuspendLayout()
         Me.tpgTableSets.SuspendLayout()
@@ -620,11 +620,12 @@ Partial Class frmConfiguration
         '
         Me.lvwConnections.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lvwConnections.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.colConnectionName, Me.colDataLocation, Me.colDataBaseName})
+        Me.lvwConnections.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.colConnectionName, Me.colDataBaseName, Me.colDataLocation})
         Me.lvwConnections.FullRowSelect = True
         Me.lvwConnections.Location = New System.Drawing.Point(25, 36)
         Me.lvwConnections.Name = "lvwConnections"
         Me.lvwConnections.Size = New System.Drawing.Size(392, 214)
+        Me.lvwConnections.Sorting = System.Windows.Forms.SortOrder.Ascending
         Me.lvwConnections.TabIndex = 0
         Me.lvwConnections.UseCompatibleStateImageBehavior = False
         Me.lvwConnections.View = System.Windows.Forms.View.Details
@@ -637,12 +638,12 @@ Partial Class frmConfiguration
         'colDataLocation
         '
         Me.colDataLocation.Text = "Data location"
-        Me.colDataLocation.Width = 180
+        Me.colDataLocation.Width = 145
         '
         'colDataBaseName
         '
         Me.colDataBaseName.Text = "Database"
-        Me.colDataBaseName.Width = 105
+        Me.colDataBaseName.Width = 140
         '
         'tpgTableSets
         '
@@ -930,6 +931,7 @@ Partial Class frmConfiguration
         Me.lvwTableSets.Location = New System.Drawing.Point(25, 36)
         Me.lvwTableSets.Name = "lvwTableSets"
         Me.lvwTableSets.Size = New System.Drawing.Size(392, 214)
+        Me.lvwTableSets.Sorting = System.Windows.Forms.SortOrder.Ascending
         Me.lvwTableSets.TabIndex = 0
         Me.lvwTableSets.UseCompatibleStateImageBehavior = False
         Me.lvwTableSets.View = System.Windows.Forms.View.Details
@@ -1038,6 +1040,15 @@ Partial Class frmConfiguration
         Me.pnlFieldSettings.Name = "pnlFieldSettings"
         Me.pnlFieldSettings.Size = New System.Drawing.Size(318, 453)
         Me.pnlFieldSettings.TabIndex = 162
+        '
+        'chkRelatedField
+        '
+        Me.chkRelatedField.AutoSize = True
+        Me.chkRelatedField.Location = New System.Drawing.Point(107, 142)
+        Me.chkRelatedField.Name = "chkRelatedField"
+        Me.chkRelatedField.Size = New System.Drawing.Size(15, 14)
+        Me.chkRelatedField.TabIndex = 162
+        Me.chkRelatedField.UseVisualStyleBackColor = True
         '
         'lblFieldName
         '
@@ -1702,6 +1713,7 @@ Partial Class frmConfiguration
         Me.lvwTables.Location = New System.Drawing.Point(25, 36)
         Me.lvwTables.Name = "lvwTables"
         Me.lvwTables.Size = New System.Drawing.Size(392, 214)
+        Me.lvwTables.Sorting = System.Windows.Forms.SortOrder.Ascending
         Me.lvwTables.TabIndex = 0
         Me.lvwTables.UseCompatibleStateImageBehavior = False
         Me.lvwTables.View = System.Windows.Forms.View.Details
@@ -1848,7 +1860,7 @@ Partial Class frmConfiguration
         'btnTest
         '
         Me.btnTest.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnTest.Location = New System.Drawing.Point(469, -8)
+        Me.btnTest.Location = New System.Drawing.Point(367, 803)
         Me.btnTest.Name = "btnTest"
         Me.btnTest.Size = New System.Drawing.Size(135, 23)
         Me.btnTest.TabIndex = 7
@@ -1889,15 +1901,6 @@ Partial Class frmConfiguration
         Me.btnCancel.Text = "Cancel"
         Me.btnCancel.UseVisualStyleBackColor = True
         Me.btnCancel.Visible = False
-        '
-        'chkRelatedField
-        '
-        Me.chkRelatedField.AutoSize = True
-        Me.chkRelatedField.Location = New System.Drawing.Point(107, 142)
-        Me.chkRelatedField.Name = "chkRelatedField"
-        Me.chkRelatedField.Size = New System.Drawing.Size(15, 14)
-        Me.chkRelatedField.TabIndex = 162
-        Me.chkRelatedField.UseVisualStyleBackColor = True
         '
         'frmConfiguration
         '
