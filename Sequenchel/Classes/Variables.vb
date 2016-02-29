@@ -125,7 +125,7 @@
     Private _AllowInsert As Boolean = True
     Private _AllowDelete As Boolean = True
     Private _AllowLinkedServers As Boolean = True
-    Private _AllowDataImport As Boolean = False
+    Private _AllowDataImport As Boolean = True
     Private _AllowSettingsChange As Boolean = True
 
     Public Property Encryption() As Boolean

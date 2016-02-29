@@ -1,3 +1,6 @@
+Version 3.6.0
+Enhanced: Added SQL Server 2016 to the list of Server Monitoring.
+
 Version 3.5.1
 New: Added an Import option for transferring data from a file into a database table.
 New: Doubleclick on the upper left corner in a report will resize all columns fo fit the data.
