@@ -52,6 +52,8 @@
         chkAllowDelete.Checked = CurVar.AllowDelete
         chkAllowLinkedServers.Tag = CurVar.AllowLinkedServers
         chkAllowLinkedServers.Checked = CurVar.AllowLinkedServers
+        chkAllowDataImport.Tag = CurVar.AllowDataImport
+        chkAllowDataImport.Checked = CurVar.AllowDataImport
         chkAllowSettingsChange.Tag = CurVar.AllowSettingsChange
         chkAllowSettingsChange.Checked = CurVar.AllowSettingsChange
 

@@ -1,6 +1,3 @@
-Version 3.6.0
-Enhanced: Added SQL Server 2016 to the list of Server Monitoring.
-
 Version 3.5.1
 New: Added an Import option for transferring data from a file into a database table.
 New: Doubleclick on the upper left corner in a report will resize all columns fo fit the data.
@@ -9,10 +6,12 @@ New: Search in tables using space (AND/fuzzy) or comma (OR/precise) to separate 
 New: Option to add YearStart(), YearEnd() as filteroptions to a report.
 New: Option to add (YEAR,x), (MONTH,x), (DAY,x), (HOUR,x), (MINUTE,x), (SECOND,x), (MILLISECOND,x) to datetime filters in reports.
 New: Imported file can be exported as XML.
+New: Added a "Show all fields" option in Reports.
 Enhanced: Replaced Report display procedure making it faster.
 Enhanced: In reporting, when using a fuzzy search (LIKE) you can now also use * instead of %.
 Enhanced: Linked Server name check before loading to prevent crash in case of badly formatted datasource.
 Enhanced: Export to Excel and XML now includes NULL values correctly.
+Enhanced: Added SQL Server 2016 to the list of Server Monitoring.
 Fixed: Time formatting is now linked to chosen date format.
 Fixed: Loading a report while the referenced table or field is not present gives a warning instead of an error.
 Fixed: Importing a report definition with an existing name no longer gives an error.

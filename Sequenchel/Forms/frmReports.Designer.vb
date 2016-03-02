@@ -53,7 +53,6 @@ Partial Class frmReports
         Me.lblReportFilterText = New System.Windows.Forms.Label()
         Me.lblReportFilterType = New System.Windows.Forms.Label()
         Me.lblReportFilter = New System.Windows.Forms.Label()
-        Me.lblReportShow = New System.Windows.Forms.Label()
         Me.lblReportSelectedFields = New System.Windows.Forms.Label()
         Me.btnReportFieldRemove = New System.Windows.Forms.Button()
         Me.btnReportFieldAdd = New System.Windows.Forms.Button()
@@ -120,6 +119,7 @@ Partial Class frmReports
         Me.btnTest = New System.Windows.Forms.Button()
         Me.btnClose = New System.Windows.Forms.Button()
         Me.tmrElapsedTime = New System.Windows.Forms.Timer(Me.components)
+        Me.chkReportShow = New System.Windows.Forms.CheckBox()
         Me.tabReports.SuspendLayout()
         Me.tpgReportDefinition.SuspendLayout()
         Me.pnlReportName.SuspendLayout()
@@ -392,6 +392,7 @@ Partial Class frmReports
         '
         Me.pnlReportHeaders.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.pnlReportHeaders.Controls.Add(Me.chkReportShow)
         Me.pnlReportHeaders.Controls.Add(Me.lblReportSortOrder)
         Me.pnlReportHeaders.Controls.Add(Me.lblReportSort)
         Me.pnlReportHeaders.Controls.Add(Me.lblReportShowMode)
@@ -399,7 +400,6 @@ Partial Class frmReports
         Me.pnlReportHeaders.Controls.Add(Me.lblReportFilterText)
         Me.pnlReportHeaders.Controls.Add(Me.lblReportFilterType)
         Me.pnlReportHeaders.Controls.Add(Me.lblReportFilter)
-        Me.pnlReportHeaders.Controls.Add(Me.lblReportShow)
         Me.pnlReportHeaders.Controls.Add(Me.lblReportSelectedFields)
         Me.pnlReportHeaders.Location = New System.Drawing.Point(245, -3)
         Me.pnlReportHeaders.Name = "pnlReportHeaders"
@@ -468,15 +468,6 @@ Partial Class frmReports
         Me.lblReportFilter.Size = New System.Drawing.Size(29, 13)
         Me.lblReportFilter.TabIndex = 119
         Me.lblReportFilter.Text = "Filter"
-        '
-        'lblReportShow
-        '
-        Me.lblReportShow.AutoSize = True
-        Me.lblReportShow.Location = New System.Drawing.Point(173, 8)
-        Me.lblReportShow.Name = "lblReportShow"
-        Me.lblReportShow.Size = New System.Drawing.Size(34, 13)
-        Me.lblReportShow.TabIndex = 118
-        Me.lblReportShow.Text = "Show"
         '
         'lblReportSelectedFields
         '
@@ -1120,6 +1111,16 @@ Partial Class frmReports
         '
         Me.tmrElapsedTime.Interval = 1000
         '
+        'chkReportShow
+        '
+        Me.chkReportShow.AutoSize = True
+        Me.chkReportShow.Location = New System.Drawing.Point(155, 6)
+        Me.chkReportShow.Name = "chkReportShow"
+        Me.chkReportShow.Size = New System.Drawing.Size(53, 17)
+        Me.chkReportShow.TabIndex = 126
+        Me.chkReportShow.Text = "Show"
+        Me.chkReportShow.UseVisualStyleBackColor = True
+        '
         'frmReports
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1198,7 +1199,6 @@ Partial Class frmReports
     Friend WithEvents lblReportFilterText As System.Windows.Forms.Label
     Friend WithEvents lblReportFilterType As System.Windows.Forms.Label
     Friend WithEvents lblReportFilter As System.Windows.Forms.Label
-    Friend WithEvents lblReportShow As System.Windows.Forms.Label
     Friend WithEvents lblReportSelectedFields As System.Windows.Forms.Label
     Friend WithEvents btnReportFieldDown As System.Windows.Forms.Button
     Friend WithEvents btnReportFieldUp As System.Windows.Forms.Button
@@ -1261,4 +1261,5 @@ Partial Class frmReports
     Friend WithEvents lblDescription As System.Windows.Forms.Label
     Friend WithEvents txtDescription As System.Windows.Forms.TextBox
     Friend WithEvents pnlReportName As System.Windows.Forms.Panel
+    Friend WithEvents chkReportShow As System.Windows.Forms.CheckBox
 End Class

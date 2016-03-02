@@ -505,7 +505,7 @@ Public Class frmReports
     Private Sub PanelFieldWidthSet()
         pnlReportLabel.Width = CurStatus.ReportLabelWidth + CurVar.BuildMargin
         pnlReportDisplay.Left = pnlReportLabel.Left + pnlReportLabel.Width
-        lblReportShow.Left = pnlReportDisplay.Left + CurVar.BuildMargin
+        chkReportShow.Left = pnlReportDisplay.Left + CurVar.BuildMargin - 20
 
         pnlReportShowMode.Left = pnlReportDisplay.Left + pnlReportDisplay.Width
         lblReportShowMode.Left = pnlReportShowMode.Left + CurVar.BuildMargin
@@ -1262,11 +1262,11 @@ Public Class frmReports
         lblErrorMessage.Text = strErrorMessage
         If DatasetCheck(dtsData) = False Then Exit Sub
 
-        'If DataSet2DataGridView(dtsData, 0, dgvReport, True) = False Then
-        '    MessageBox.Show("There was an error loading the report")
-        'End If
         Try
-            dgvReport.DataSource = dtsData.Tables(0)
+            If DataSet2DataGridView(dtsData, 0, dgvReport, True) = False Then
+                MessageBox.Show("There was an error loading the report")
+            End If
+            'dgvReport.DataSource = dtsData.Tables(0)
             lblListCountNumber.Text = dtsData.Tables(0).Rows.Count.ToString
             'DataGridViewColumnSize(dgvReport)
             lblErrorMessage.Text = "Command completed succesfully"
@@ -1481,5 +1481,11 @@ Public Class frmReports
         Else
             pnlReportName.Anchor = AnchorStyles.Top Or AnchorStyles.Right
         End If
+    End Sub
+
+    Private Sub chkShow_CheckedChanged(sender As Object, e As EventArgs) Handles chkReportShow.CheckedChanged
+        For Each chkBox As CheckBox In pnlReportDisplay.Controls
+            chkBox.Checked = chkReportShow.Checked
+        Next
     End Sub
 End Class
