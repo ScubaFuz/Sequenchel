@@ -1304,7 +1304,7 @@ Public Class frmReports
             For intFieldCount As Integer = 0 To lvwSelectedFields.Items.Count - 1
                 strField = lvwSelectedFields.Items.Item(intFieldCount).Name
                 If strField.Length > strTable.Length Then
-                    If strField.Substring(0, strTable.Length) = strTable Then
+                    If strField.Substring(0, strField.LastIndexOf(".")) = strTable Then
                         Dim strFieldName As String = strField.Substring(strField.LastIndexOf(".") + 1, strField.Length - strField.LastIndexOf(".") - 1)
                         Dim NewFieldNode As XmlNode = dhdText.CreateAppendElement(NewFieldsNode, "Field")
                         dhdText.CreateAppendElement(NewFieldNode, "FieldName", strFieldName)
