@@ -56,9 +56,11 @@ Public Class frmImport
     Private Sub ImportFile()
         Dim Ext As String = txtCurrentFile.Text.Substring(txtCurrentFile.Text.LastIndexOf(".") + 1)
         Dim strFilePath As String = txtCurrentFile.Text
-        For Each dtTable As DataTable In dstImport.Tables
-            dstImport.Tables.Remove(dtTable)
-        Next
+        If dstImport.Tables.Count > 0 Then
+            For i = dstImport.Tables.Count To 1
+                dstImport.Tables.Remove(dstImport.Tables(i - 1).TableName)
+            Next
+        End If
 
         Try
             If Ext = "xls" Then
