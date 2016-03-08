@@ -1240,11 +1240,13 @@ Module Common
         'Application.DoEvents()
 
         Dim dtsData As DataSet = QueryDb(dhdConnect, strQuery, True)
-        If dtsData Is Nothing Then
-            Return Nothing
-        End If
-        If dtsData.Tables.Count = 0 Then Return Nothing
-        If dtsData.Tables(0).Rows.Count = 0 Then Return Nothing
+        If DatasetCheck(dtsData) = False Then Return Nothing
+
+        'If dtsData Is Nothing Then
+        '    Return Nothing
+        'End If
+        'If dtsData.Tables.Count = 0 Then Return Nothing
+        'If dtsData.Tables(0).Rows.Count = 0 Then Return Nothing
 
         Dim ReturnValue As New List(Of String)
         For intRowCount = 0 To dtsData.Tables(0).Rows.Count - 1
@@ -1704,7 +1706,7 @@ Module Common
                 dhdDatabase.WriteLog(strLogtext, intLogLevel, dhdText.LogLevel)
             Else
                 dhdText.WriteLog(strLogtext, intLogLevel)
-                If DevMode Then MessageBox.Show(dhdText.LogFileName & Environment.NewLine & dhdText.LogLocation & Environment.NewLine & dhdText.LogLevel)
+                'If DevMode Then MessageBox.Show(dhdText.LogFileName & Environment.NewLine & dhdText.LogLocation & Environment.NewLine & dhdText.LogLevel)
             End If
         Catch ex As Exception
             Dim strMyDir As String

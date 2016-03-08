@@ -116,22 +116,22 @@
 
         Dim strSQL As String = ""
         strSQL &= ";WITH ColSource As ("
-        strSQL &= "SELECT scm.name AS SchemaName "
+        strSQL &= " SELECT scm.name AS SchemaName "
         strSQL &= "	,col.name As colName"
         strSQL &= "	,typ.name as DataType"
         strSQL &= "	,col.[object_id]"
         strSQL &= "	,col.is_identity"
         strSQL &= "	,case when pky.PrimaryKeyColumn is null then 0 else 1 end as pk"
         strSQL &= "	,200 As srcValue"
-        strSQL &= "FROM sys.columns col"
-        strSQL &= "INNER JOIN sys.types typ"
+        strSQL &= " FROM sys.columns col"
+        strSQL &= " INNER JOIN sys.types typ"
         strSQL &= "	ON col.system_type_id = typ.system_type_id"
         strSQL &= "	AND col.user_type_id = typ.user_type_id"
-        strSQL &= "INNER JOIN sys.objects obj"
+        strSQL &= " INNER JOIN sys.objects obj"
         strSQL &= "	ON col.[object_id] = obj.[object_id]"
-        strSQL &= "INNER JOIN sys.schemas scm"
+        strSQL &= " INNER JOIN sys.schemas scm"
         strSQL &= "	ON obj.[schema_id] = scm.[schema_id]"
-        strSQL &= "LEFT OUTER JOIN (SELECT KU.TABLE_SCHEMA as SchemaName"
+        strSQL &= " LEFT OUTER JOIN (SELECT KU.TABLE_SCHEMA as SchemaName"
         strSQL &= "					, KU.TABLE_NAME as TableName"
         strSQL &= "					,KU.COLUMN_NAME as PrimaryKeyColumn"
         strSQL &= "				FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS AS TC"
@@ -141,26 +141,26 @@
         strSQL &= "				WHERE KU.TABLE_SCHEMA = '" & strSourceSchema & "'"
         strSQL &= "					AND KU.TABLE_NAME = '" & strSourceTable & "') pky"
         strSQL &= "	ON col.name = pky.PrimaryKeyColumn"
-        strSQL &= "WHERE obj.name = @'" & strSourceTable & "'"
+        strSQL &= " WHERE obj.name = '" & strSourceTable & "'"
         strSQL &= "	AND scm.name = '" & strSourceSchema & "'"
         strSQL &= "),"
-        strSQL &= "ColTarget as ("
-        strSQL &= "SELECT scm.name AS SchemaName "
+        strSQL &= " ColTarget as ("
+        strSQL &= " SELECT scm.name AS SchemaName "
         strSQL &= "	,col.name As colName"
         strSQL &= "	,typ.name as DataType"
         strSQL &= "	,col.[object_id]"
         strSQL &= "	,col.is_identity"
         strSQL &= "	,case when pky.PrimaryKeyColumn is null then 0 else 1 end as pk"
         strSQL &= "	,100 As tgtValue"
-        strSQL &= "FROM sys.columns col"
-        strSQL &= "INNER JOIN sys.types typ"
+        strSQL &= " FROM sys.columns col"
+        strSQL &= " INNER JOIN sys.types typ"
         strSQL &= "	ON col.system_type_id = typ.system_type_id"
         strSQL &= "	AND col.user_type_id = typ.user_type_id"
-        strSQL &= "INNER JOIN sys.objects obj"
+        strSQL &= " INNER JOIN sys.objects obj"
         strSQL &= "	ON col.[object_id] = obj.[object_id]"
-        strSQL &= "INNER JOIN sys.schemas scm"
+        strSQL &= " INNER JOIN sys.schemas scm"
         strSQL &= "	ON obj.[schema_id] = scm.[schema_id]"
-        strSQL &= "LEFT OUTER JOIN (SELECT KU.TABLE_SCHEMA as SchemaName"
+        strSQL &= " LEFT OUTER JOIN (SELECT KU.TABLE_SCHEMA as SchemaName"
         strSQL &= "					, KU.TABLE_NAME as TableName"
         strSQL &= "					,KU.COLUMN_NAME as PrimaryKeyColumn"
         strSQL &= "				FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS AS TC"
@@ -170,10 +170,10 @@
         strSQL &= "				WHERE KU.TABLE_SCHEMA = '" & strTargetSchema & "'"
         strSQL &= "					AND KU.TABLE_NAME = '" & strTargetTable & "') pky"
         strSQL &= "	ON col.name = pky.PrimaryKeyColumn"
-        strSQL &= "WHERE obj.name = '" & strTargetTable & "'"
+        strSQL &= " WHERE obj.name = '" & strTargetTable & "'"
         strSQL &= "	AND scm.name = '" & strTargetSchema & "'"
         strSQL &= ")"
-        strSQL &= "SELECT src.SchemaName AS srcSchemaName "
+        strSQL &= " SELECT src.SchemaName AS srcSchemaName "
         strSQL &= "	,src.colName AS srcColName"
         strSQL &= "	,src.DataType AS srcDataType"
         strSQL &= "	,tgt.SchemaName AS tgtSchemaName "
@@ -186,11 +186,11 @@
         strSQL &= "	,src.srcValue + tgt.tgtValue AS OrderValue"
         strSQL &= "	,src.srcValue "
         strSQL &= "	,tgt.tgtValue"
-        strSQL &= "FROM ColSource src"
-        strSQL &= "FULL OUTER JOIN ColTarget tgt"
+        strSQL &= " FROM ColSource src"
+        strSQL &= " FULL OUTER JOIN ColTarget tgt"
         strSQL &= "	ON src.colName = tgt.colName"
         strSQL &= "	AND src.DataType = tgt.DataType"
-        strSQL &= "ORDER BY OrderValue desc"
+        strSQL &= " ORDER BY OrderValue desc"
         strSQL &= "	,src.pk desc"
         strSQL &= "	,src.is_identity desc"
         strSQL &= "	,src.srcValue desc"
@@ -203,49 +203,161 @@
         Dim dtsTables As New DataSet
         dtsTables = QueryDb(dhdConnection, strSQL, True, 5)
         If DatasetCheck(dtsTables) = False Then Exit Sub
-
+        PanelsClear()
         For intRowCount1 As Integer = 0 To dtsTables.Tables(0).Rows.Count - 1
             If dtsTables.Tables.Item(0).Rows(intRowCount1).Item("tgtSchemaName").GetType().ToString = "System.DBNull" Then
                 'create source row only
-                FieldSourceAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("srcSchemaName") & dtsTables.Tables(0).Rows(intRowCount1).Item("srcTableName"), False)
+                SourceFieldAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("srcColName"), False)
+                SourceDataTypeAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("srcColName"), dtsTables.Tables(0).Rows(intRowCount1).Item("srcDataType"), False)
+                SourcePkAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("srcColName"), dtsTables.Tables(0).Rows(intRowCount1).Item("srcPK"), dtsTables.Tables(0).Rows(intRowCount1).Item("srcIdentity"), False)
             ElseIf dtsTables.Tables.Item(0).Rows(intRowCount1).Item("srcSchemaName").GetType().ToString = "System.DBNull" Then
                 'create target row only
-                FieldTargetAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("tgtSchemaName") & dtsTables.Tables(0).Rows(intRowCount1).Item("tgtTableName"), False)
+                TargetFieldAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("tgtColName"), False)
+                TargetDataTypeAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("tgtColName"), dtsTables.Tables(0).Rows(intRowCount1).Item("tgtDataType"), False)
+                TargetPkAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("tgtColName"), dtsTables.Tables(0).Rows(intRowCount1).Item("tgtPK"), dtsTables.Tables(0).Rows(intRowCount1).Item("tgtIdentity"), False)
             Else
                 'create CC row
-                FieldSourceAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("srcSchemaName") & dtsTables.Tables(0).Rows(intRowCount1).Item("srcTableName"), True)
-                FieldTargetAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("tgtSchemaName") & dtsTables.Tables(0).Rows(intRowCount1).Item("tgtTableName"), True)
+                SourceFieldAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("srcColName"), True)
+                TargetFieldAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("tgtColName"), True)
+                SourceDataTypeAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("srcColName"), dtsTables.Tables(0).Rows(intRowCount1).Item("srcDataType"), True)
+                TargetDataTypeAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("tgtColName"), dtsTables.Tables(0).Rows(intRowCount1).Item("tgtDataType"), True)
+                SourcePkAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("srcColName"), dtsTables.Tables(0).Rows(intRowCount1).Item("srcPK"), dtsTables.Tables(0).Rows(intRowCount1).Item("srcIdentity"), True)
+                TargetPkAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("tgtColName"), dtsTables.Tables(0).Rows(intRowCount1).Item("tgtPK"), dtsTables.Tables(0).Rows(intRowCount1).Item("tgtIdentity"), True)
+                CompareColumnAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("srcColName"), True)
             End If
 
         Next
 
+        CheckPrimaryKey(pnlSourcePrimaryKey)
+        CheckPrimaryKey(pnlTargetPrimaryKey)
 
+        Dim intPercent As Integer = pnlCompareColumn.Controls.Count / dtsTables.Tables(0).Rows.Count * 200
+        If intPercent < 50 Then
+            lblStatus.Text = "Matching columns is " & intPercent & " percent. Are you sure you have the correct tables selected?"
+        Else
+            lblStatus.Text = ""
+        End If
     End Sub
 
-    Private Sub FieldSourceAdd(strFieldName As String, blnEnableCC As Boolean)
+    Private Sub PanelsClear()
+        pnlSourceTable.Controls.Clear()
+        pnlSourceTable.Height = 50
+        pnlTargetTable.Controls.Clear()
+        pnlTargetTable.Height = 50
+
+        pnlSourceDataType.Controls.Clear()
+        pnlSourceDataType.Height = 50
+        pnlTargetDataType.Controls.Clear()
+        pnlTargetDataType.Height = 50
+
+        pnlSourcePrimaryKey.Controls.Clear()
+        pnlSourcePrimaryKey.Height = 50
+        pnlTargetPrimaryKey.Controls.Clear()
+        pnlTargetPrimaryKey.Height = 50
+
+        pnlCompareColumn.Controls.Clear()
+        pnlCompareColumn.Height = 50
+    End Sub
+
+    Private Sub SourceFieldAdd(strFieldName As String, blnEnableCC As Boolean)
         Dim txtNew As New TextField
-        txtNew.Name = pnlSourceTable.Name & "1" & strFieldName
+        txtNew.Name = pnlSourceTable.Name & strFieldName
         txtNew.Text = strFieldName
         txtNew.Tag = strFieldName
         txtNew.Enabled = blnEnableCC
         txtNew.Width = 166
         pnlSourceTable.Controls.Add(txtNew)
         txtNew.Top = ((pnlSourceTable.Controls.Count - 1) * CurVar.FieldHeight)
+        If pnlSourceTable.Height < txtNew.Top + txtNew.Height Then pnlSourceTable.Height = txtNew.Top + txtNew.Height
         txtNew.Left = CurVar.BuildMargin
-
     End Sub
 
-    Private Sub FieldTargetAdd(strFieldName As String, blnEnableCC As Boolean)
+    Private Sub SourceDataTypeAdd(strFieldName As String, strDataType As String, blnEnableCC As Boolean)
         Dim txtNew As New TextField
-        txtNew.Name = pnlTargetTable.Name & "1" & strFieldName
+        txtNew.Name = pnlSourceDataType.Name & strFieldName
+        txtNew.Text = strDataType
+        txtNew.Tag = strDataType
+        txtNew.Enabled = blnEnableCC
+        txtNew.Width = 117
+        pnlSourceDataType.Controls.Add(txtNew)
+        txtNew.Top = ((pnlSourceTable.Controls.Count - 1) * CurVar.FieldHeight)
+        pnlSourceDataType.Height = pnlSourceTable.Height
+        txtNew.Left = CurVar.BuildMargin
+    End Sub
+
+    Private Sub SourcePkAdd(strFieldName As String, blnFieldPK As Boolean, blnFieldIdentity As Boolean, blnEnableCC As Boolean)
+        Dim chkNew As New CheckBox
+        chkNew.Name = pnlSourcePrimaryKey.Name & strFieldName
+        chkNew.Checked = blnFieldPK
+        chkNew.Tag = blnFieldIdentity
+        chkNew.Enabled = blnEnableCC
+        pnlSourcePrimaryKey.Controls.Add(chkNew)
+        chkNew.Top = ((pnlSourceTable.Controls.Count - 1) * CurVar.FieldHeight)
+        pnlSourcePrimaryKey.Height = pnlSourceTable.Height
+        chkNew.Left = CurVar.BuildMargin
+    End Sub
+
+    Private Sub TargetFieldAdd(strFieldName As String, blnEnableCC As Boolean)
+        Dim txtNew As New TextField
+        txtNew.Name = pnlTargetTable.Name & strFieldName
         txtNew.Text = strFieldName
         txtNew.Tag = strFieldName
         txtNew.Enabled = blnEnableCC
         txtNew.Width = 166
         pnlTargetTable.Controls.Add(txtNew)
         txtNew.Top = ((pnlTargetTable.Controls.Count - 1) * CurVar.FieldHeight)
+        If pnlTargetTable.Height < txtNew.Top + txtNew.Height Then pnlTargetTable.Height = txtNew.Top + txtNew.Height
         txtNew.Left = CurVar.BuildMargin
 
+    End Sub
+
+    Private Sub TargetDataTypeAdd(strFieldName As String, strDataType As String, blnEnableCC As Boolean)
+        Dim txtNew As New TextField
+        txtNew.Name = pnlTargetDataType.Name & strFieldName
+        txtNew.Text = strDataType
+        txtNew.Tag = strDataType
+        txtNew.Enabled = blnEnableCC
+        txtNew.Width = 117
+        pnlTargetDataType.Controls.Add(txtNew)
+        txtNew.Top = ((pnlTargetDataType.Controls.Count - 1) * CurVar.FieldHeight)
+        pnlTargetDataType.Height = pnlTargetTable.Height
+        txtNew.Left = CurVar.BuildMargin
+    End Sub
+
+    Private Sub TargetPkAdd(strFieldName As String, blnFieldPK As Boolean, blnFieldIdentity As Boolean, blnEnableCC As Boolean)
+        Dim chkNew As New CheckBox
+        chkNew.Name = pnlTargetPrimaryKey.Name & strFieldName
+        chkNew.Checked = blnFieldPK
+        chkNew.Tag = blnFieldIdentity
+        chkNew.Enabled = blnEnableCC
+        pnlTargetPrimaryKey.Controls.Add(chkNew)
+        chkNew.Top = ((pnlTargetTable.Controls.Count - 1) * CurVar.FieldHeight)
+        pnlTargetPrimaryKey.Height = pnlTargetTable.Height
+        chkNew.Left = CurVar.BuildMargin
+    End Sub
+
+    Private Sub CompareColumnAdd(strFieldName As String, blnEnableCC As Boolean)
+        Dim chkNew As New CheckBox
+        chkNew.Name = pnlCompareColumn.Name & strFieldName
+        chkNew.Checked = blnEnableCC
+        chkNew.Tag = blnEnableCC
+        chkNew.Enabled = blnEnableCC
+        pnlCompareColumn.Controls.Add(chkNew)
+        chkNew.Top = ((pnlSourceTable.Controls.Count - 1) * CurVar.FieldHeight)
+        pnlCompareColumn.Height = pnlSourceTable.Height
+        chkNew.Left = CurVar.BuildMargin
+    End Sub
+
+    Private Sub CheckPrimaryKey(pnlInput As Panel)
+        Dim blnChecked As Boolean = False
+        For Each Control In pnlInput.Controls
+            If Control.checked = True Then blnChecked = True
+        Next
+        If blnChecked = False Then
+            For Each Control In pnlInput.Controls
+                Control.checked = Control.tag
+            Next
+        End If
     End Sub
 
 End Class
