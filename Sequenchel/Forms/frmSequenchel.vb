@@ -119,6 +119,10 @@ Public Class frmSequenchel
         ShowImportForm()
     End Sub
 
+    Private Sub mnuToolsSmartUpdate_Click(sender As Object, e As EventArgs) Handles mnuToolsSmartUpdate.Click
+        ShowSmartUpdateForm()
+    End Sub
+
     Private Sub mnuMainToolsLinkedServers_Click(sender As Object, e As EventArgs) Handles mnuMainToolsLinkedServers.Click
         ShowLinkedServerForm()
     End Sub
@@ -153,6 +157,11 @@ Public Class frmSequenchel
     Private Sub ShowImportForm()
         Dim frmImportForm As New frmImport
         frmImportForm.Show()
+    End Sub
+
+    Private Sub ShowSmartUpdateForm()
+        Dim frmSmartUpdateForm As New frmSmartUpdate
+        frmSmartUpdateForm.Show()
     End Sub
 
     Private Sub ShowLinkedServerForm()

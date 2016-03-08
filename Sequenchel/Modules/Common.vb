@@ -1072,6 +1072,34 @@ Module Common
         Return blnDatabaseOnLine
     End Function
 
+    Friend Function CheckSqlVersion(dhdConnect As DataHandler.db) As Boolean
+        Try
+            Dim intSqlVersion As Integer = GetSqlVersion(dhdConnect)
+            Select Case intSqlVersion
+                Case 0
+                    MessageBox.Show("SQL Server not found or not accessible" & Environment.NewLine & "Please check your settings")
+                    WriteLog("SQL Server not found or not accessible" & Environment.NewLine & "Please check your settings", 1)
+                    Return False
+                Case 7, 8
+                    MessageBox.Show("SQL Server 2000 or older is not supported")
+                    WriteLog("SQL Server 2000 or older is not supported", 1)
+                    Return False
+                Case 9, 10, 11, 12, 13, 14
+                    WriteLog("SQL Version " & intSqlVersion & " detected.", 3)
+                    'Just do it
+                    Return True
+                Case Else
+                    MessageBox.Show("SQL Server version is not recognised" & Environment.NewLine & "Version detected = " & intSqlVersion)
+                    WriteLog("SQL Server version is not recognised" & Environment.NewLine & "Version detected = " & intSqlVersion, 1)
+                    Return False
+            End Select
+        Catch ex As Exception
+            MessageBox.Show("SQL Server not found or not accessible" & Environment.NewLine & "Please check your settings")
+            WriteLog("SQL Server not found or not accessible" & Environment.NewLine & "Please check your settings", 1)
+            Return False
+        End Try
+    End Function
+
     Friend Function GetSqlVersion(dhdConnect As DataHandler.db) As Integer
         Dim strDatabase As String = dhdConnect.DatabaseName
         dhdConnect.DatabaseName = "master"
@@ -1193,17 +1221,19 @@ Module Common
         End Try
     End Sub
 
-    Friend Function LoadTablesList(ByVal dhdConnect As DataHandler.db) As List(Of String)
+    Friend Function LoadTablesList(ByVal dhdConnect As DataHandler.db, Optional blnCrawlViews As Boolean = True) As List(Of String)
         strQuery = "SELECT "
         strQuery &= " sch.[name] + '.' + "
         strQuery &= " tbl.[name] AS TableName FROM sys.tables tbl"
         strQuery &= " INNER JOIN sys.schemas sch"
         strQuery &= " ON tbl.[schema_id] = sch.[schema_id]"
-        strQuery &= " UNION SELECT "
-        strQuery &= " sch.[name] + '.' + "
-        strQuery &= " vw.[name] AS TableName FROM sys.views vw"
-        strQuery &= " INNER JOIN sys.schemas sch"
-        strQuery &= " ON vw.[schema_id] = sch.[schema_id]"
+        If blnCrawlViews = True Then
+            strQuery &= " UNION SELECT "
+            strQuery &= " sch.[name] + '.' + "
+            strQuery &= " vw.[name] AS TableName FROM sys.views vw"
+            strQuery &= " INNER JOIN sys.schemas sch"
+            strQuery &= " ON vw.[schema_id] = sch.[schema_id]"
+        End If
         strQuery &= " ORDER BY TableName"
 
         CursorControl("Wait")

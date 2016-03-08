@@ -41,8 +41,9 @@ Partial Class frmSequenchel
         Me.mnuMainFileExit = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuMainTools = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuMainToolsReports = New System.Windows.Forms.ToolStripMenuItem()
-        Me.mnuMainToolsConfiguration = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuMainToolsImport = New System.Windows.Forms.ToolStripMenuItem()
+        Me.mnuToolsSmartUpdate = New System.Windows.Forms.ToolStripMenuItem()
+        Me.mnuMainToolsConfiguration = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuMainToolsLinkedServers = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuMainToolsSettings = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuMainHelp = New System.Windows.Forms.ToolStripMenuItem()
@@ -50,7 +51,6 @@ Partial Class frmSequenchel
         Me.mnuMainHelpAbout = New System.Windows.Forms.ToolStripMenuItem()
         Me.lblLicense = New System.Windows.Forms.Label()
         Me.sptTable1 = New System.Windows.Forms.SplitContainer()
-        Me.dgvTable1 = New Sequenchel.usrDataGridView()
         Me.sptFields1 = New System.Windows.Forms.SplitContainer()
         Me.lblListCount = New System.Windows.Forms.Label()
         Me.lblListCountNumber = New System.Windows.Forms.Label()
@@ -73,17 +73,18 @@ Partial Class frmSequenchel
         Me.lblMultipleRows = New System.Windows.Forms.Label()
         Me.pnlListCount = New System.Windows.Forms.Panel()
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
+        Me.dgvTable1 = New Sequenchel.usrDataGridView()
         Me.mnuMain.SuspendLayout()
         CType(Me.sptTable1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.sptTable1.Panel1.SuspendLayout()
         Me.sptTable1.Panel2.SuspendLayout()
         Me.sptTable1.SuspendLayout()
-        CType(Me.dgvTable1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.sptFields1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.sptFields1.SuspendLayout()
         Me.pnlFooterControls.SuspendLayout()
         Me.pnlListCount.SuspendLayout()
         Me.TableLayoutPanel1.SuspendLayout()
+        CType(Me.dgvTable1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'btnTest
@@ -106,6 +107,7 @@ Partial Class frmSequenchel
         Me.btnClose.TabIndex = 5
         Me.btnClose.Text = "Close"
         Me.btnClose.UseVisualStyleBackColor = True
+        Me.btnClose.Visible = False
         '
         'lblStatusText
         '
@@ -234,40 +236,46 @@ Partial Class frmSequenchel
         '
         'mnuMainTools
         '
-        Me.mnuMainTools.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuMainToolsReports, Me.mnuMainToolsConfiguration, Me.mnuMainToolsImport, Me.mnuMainToolsLinkedServers, Me.mnuMainToolsSettings})
+        Me.mnuMainTools.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuMainToolsReports, Me.mnuMainToolsImport, Me.mnuToolsSmartUpdate, Me.mnuMainToolsConfiguration, Me.mnuMainToolsLinkedServers, Me.mnuMainToolsSettings})
         Me.mnuMainTools.Name = "mnuMainTools"
-        Me.mnuMainTools.Size = New System.Drawing.Size(47, 20)
+        Me.mnuMainTools.Size = New System.Drawing.Size(48, 20)
         Me.mnuMainTools.Text = "Tools"
         '
         'mnuMainToolsReports
         '
         Me.mnuMainToolsReports.Name = "mnuMainToolsReports"
-        Me.mnuMainToolsReports.Size = New System.Drawing.Size(149, 22)
-        Me.mnuMainToolsReports.Text = "Reports"
-        '
-        'mnuMainToolsConfiguration
-        '
-        Me.mnuMainToolsConfiguration.Name = "mnuMainToolsConfiguration"
-        Me.mnuMainToolsConfiguration.Size = New System.Drawing.Size(149, 22)
-        Me.mnuMainToolsConfiguration.Text = "Configuration"
+        Me.mnuMainToolsReports.Size = New System.Drawing.Size(152, 22)
+        Me.mnuMainToolsReports.Text = "&Reports"
         '
         'mnuMainToolsImport
         '
         Me.mnuMainToolsImport.Name = "mnuMainToolsImport"
-        Me.mnuMainToolsImport.Size = New System.Drawing.Size(149, 22)
-        Me.mnuMainToolsImport.Text = "Import"
+        Me.mnuMainToolsImport.Size = New System.Drawing.Size(152, 22)
+        Me.mnuMainToolsImport.Text = "&Import"
+        '
+        'mnuToolsSmartUpdate
+        '
+        Me.mnuToolsSmartUpdate.Name = "mnuToolsSmartUpdate"
+        Me.mnuToolsSmartUpdate.Size = New System.Drawing.Size(152, 22)
+        Me.mnuToolsSmartUpdate.Text = "&SmartUpdate"
+        '
+        'mnuMainToolsConfiguration
+        '
+        Me.mnuMainToolsConfiguration.Name = "mnuMainToolsConfiguration"
+        Me.mnuMainToolsConfiguration.Size = New System.Drawing.Size(152, 22)
+        Me.mnuMainToolsConfiguration.Text = "&Configuration"
         '
         'mnuMainToolsLinkedServers
         '
         Me.mnuMainToolsLinkedServers.Name = "mnuMainToolsLinkedServers"
-        Me.mnuMainToolsLinkedServers.Size = New System.Drawing.Size(149, 22)
-        Me.mnuMainToolsLinkedServers.Text = "Linked Servers"
+        Me.mnuMainToolsLinkedServers.Size = New System.Drawing.Size(152, 22)
+        Me.mnuMainToolsLinkedServers.Text = "&Linked Servers"
         '
         'mnuMainToolsSettings
         '
         Me.mnuMainToolsSettings.Name = "mnuMainToolsSettings"
-        Me.mnuMainToolsSettings.Size = New System.Drawing.Size(149, 22)
-        Me.mnuMainToolsSettings.Text = "Settings"
+        Me.mnuMainToolsSettings.Size = New System.Drawing.Size(152, 22)
+        Me.mnuMainToolsSettings.Text = "&Settings"
         '
         'mnuMainHelp
         '
@@ -318,24 +326,6 @@ Partial Class frmSequenchel
         Me.sptTable1.Size = New System.Drawing.Size(1246, 593)
         Me.sptTable1.SplitterDistance = 713
         Me.sptTable1.TabIndex = 106
-        '
-        'dgvTable1
-        '
-        Me.dgvTable1.AllowUserToOrderColumns = True
-        Me.dgvTable1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.dgvTable1.BackgroundColor = System.Drawing.SystemColors.Control
-        Me.dgvTable1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
-        Me.dgvTable1.BackImage = CType(resources.GetObject("dgvTable1.BackImage"), System.Drawing.Image)
-        Me.dgvTable1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvTable1.Location = New System.Drawing.Point(3, 3)
-        Me.dgvTable1.MultiSelect = False
-        Me.dgvTable1.Name = "dgvTable1"
-        Me.dgvTable1.ReadOnly = True
-        Me.dgvTable1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgvTable1.Size = New System.Drawing.Size(707, 587)
-        Me.dgvTable1.TabIndex = 0
         '
         'sptFields1
         '
@@ -570,6 +560,24 @@ Partial Class frmSequenchel
         Me.TableLayoutPanel1.Size = New System.Drawing.Size(1243, 87)
         Me.TableLayoutPanel1.TabIndex = 126
         '
+        'dgvTable1
+        '
+        Me.dgvTable1.AllowUserToOrderColumns = True
+        Me.dgvTable1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.dgvTable1.BackgroundColor = System.Drawing.SystemColors.Control
+        Me.dgvTable1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
+        Me.dgvTable1.BackImage = CType(resources.GetObject("dgvTable1.BackImage"), System.Drawing.Image)
+        Me.dgvTable1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dgvTable1.Location = New System.Drawing.Point(3, 3)
+        Me.dgvTable1.MultiSelect = False
+        Me.dgvTable1.Name = "dgvTable1"
+        Me.dgvTable1.ReadOnly = True
+        Me.dgvTable1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
+        Me.dgvTable1.Size = New System.Drawing.Size(707, 587)
+        Me.dgvTable1.TabIndex = 0
+        '
         'frmSequenchel
         '
         Me.AcceptButton = Me.btnSearch
@@ -606,7 +614,6 @@ Partial Class frmSequenchel
         Me.sptTable1.Panel2.ResumeLayout(False)
         CType(Me.sptTable1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.sptTable1.ResumeLayout(False)
-        CType(Me.dgvTable1, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.sptFields1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.sptFields1.ResumeLayout(False)
         Me.pnlFooterControls.ResumeLayout(False)
@@ -614,6 +621,7 @@ Partial Class frmSequenchel
         Me.pnlListCount.ResumeLayout(False)
         Me.pnlListCount.PerformLayout()
         Me.TableLayoutPanel1.ResumeLayout(False)
+        CType(Me.dgvTable1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -668,5 +676,6 @@ Partial Class frmSequenchel
     Friend WithEvents TableLayoutPanel1 As System.Windows.Forms.TableLayoutPanel
     Friend WithEvents mnuMainHelpManual As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents mnuMainToolsImport As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents mnuToolsSmartUpdate As System.Windows.Forms.ToolStripMenuItem
 
 End Class

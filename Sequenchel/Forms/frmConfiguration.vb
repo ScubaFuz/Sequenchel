@@ -230,30 +230,7 @@ Public Class frmConfiguration
         dhdConnection.LoginName = txtLoginName.Text
         dhdConnection.Password = txtPassword.Text
 
-        Try
-            Dim intSqlVersion As Integer = GetSqlVersion(dhdConnection)
-            Select Case intSqlVersion
-                Case 0
-                    MessageBox.Show("SQL Server not found or not accessible" & Environment.NewLine & "Please check your settings")
-                    WriteLog("SQL Server not found or not accessible" & Environment.NewLine & "Please check your settings", 1)
-                    Exit Sub
-                Case 7, 8
-                    MessageBox.Show("SQL Server 2000 or older is not supported")
-                    WriteLog("SQL Server 2000 or older is not supported", 1)
-                    Exit Sub
-                Case 9, 10, 11, 12, 13
-                    WriteLog("SQL Version " & intSqlVersion & " detected.", 3)
-                    'Just do it
-                Case Else
-                    MessageBox.Show("SQL Server version is not recognised" & Environment.NewLine & "Version detected = " & intSqlVersion)
-                    WriteLog("SQL Server version is not recognised" & Environment.NewLine & "Version detected = " & intSqlVersion, 1)
-                    Exit Sub
-            End Select
-        Catch ex As Exception
-            MessageBox.Show("SQL Server not found or not accessible" & Environment.NewLine & "Please check your settings")
-            WriteLog("SQL Server not found or not accessible" & Environment.NewLine & "Please check your settings", 1)
-            Exit Sub
-        End Try
+        If CheckSqlVersion(dhdConnection) = False Then Exit Sub
 
         strQuery = "SELECT name FROM sys.databases WHERE database_id <> 2"
         Dim dtsData As DataSet = QueryDb(dhdConnection, strQuery, True)
@@ -690,30 +667,7 @@ Public Class frmConfiguration
         CursorControl("Wait")
         'Application.DoEvents()
 
-        Try
-            Dim intSqlVersion As Integer = GetSqlVersion(dhdConnection)
-            Select Case intSqlVersion
-                Case 0
-                    MessageBox.Show("SQL Server not found or not accessible" & Environment.NewLine & "Please check your settings")
-                    WriteLog("SQL Server not found or not accessible" & Environment.NewLine & "Please check your settings", 1)
-                    Exit Sub
-                Case 7, 8
-                    MessageBox.Show("SQL Server 2000 or older is not supported")
-                    WriteLog("SQL Server 2000 or older is not supported", 1)
-                    Exit Sub
-                Case 9, 10, 11, 12, 13
-                    WriteLog("SQL Version " & intSqlVersion & " detected.", 3)
-                    'Just do it
-                Case Else
-                    MessageBox.Show("SQL Server version is not recognised" & Environment.NewLine & "Version detected = " & intSqlVersion)
-                    WriteLog("SQL Server version is not recognised" & Environment.NewLine & "Version detected = " & intSqlVersion, 1)
-                    Exit Sub
-            End Select
-        Catch ex As Exception
-            MessageBox.Show("SQL Server not found or not accessible" & Environment.NewLine & "Please check your settings")
-            WriteLog("SQL Server not found or not accessible" & Environment.NewLine & "Please check your settings", 1)
-            Exit Sub
-        End Try
+        If CheckSqlVersion(dhdConnection) = False Then Exit Sub
 
         Dim lstNewTables As List(Of String) = LoadTablesList(dhdConnection)
 
@@ -756,30 +710,7 @@ Public Class frmConfiguration
     Private Sub btnColumnsImport_Click(sender As Object, e As EventArgs) Handles btnColumnsImport.Click
         CursorControl("Wait")
 
-        Try
-            Dim intSqlVersion As Integer = GetSqlVersion(dhdConnection)
-            Select Case intSqlVersion
-                Case 0
-                    MessageBox.Show("SQL Server not found or not accessible" & Environment.NewLine & "Please check your settings")
-                    WriteLog("SQL Server not found or not accessible" & Environment.NewLine & "Please check your settings", 1)
-                    Exit Sub
-                Case 7, 8
-                    MessageBox.Show("SQL Server 2000 or older is not supported")
-                    WriteLog("SQL Server 2000 or older is not supported", 1)
-                    Exit Sub
-                Case 9, 10, 11, 12, 13
-                    WriteLog("SQL Version " & intSqlVersion & " detected.", 3)
-                    'Just do it
-                Case Else
-                    MessageBox.Show("SQL Server version is not recognised" & Environment.NewLine & "Version detected = " & intSqlVersion)
-                    WriteLog("SQL Server version is not recognised" & Environment.NewLine & "Version detected = " & intSqlVersion, 1)
-                    Exit Sub
-            End Select
-        Catch ex As Exception
-            MessageBox.Show("SQL Server not found or not accessible" & Environment.NewLine & "Please check your settings")
-            WriteLog("SQL Server not found or not accessible" & Environment.NewLine & "Please check your settings", 1)
-            Exit Sub
-        End Try
+        If CheckSqlVersion(dhdConnection) = False Then Exit Sub
 
         If txtTableName.Text.Length < 2 And chkImportAllTables.Checked = False Then
             lblStatus.Text = "Please enter a schema name with a table name first"
