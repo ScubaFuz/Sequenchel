@@ -12,7 +12,7 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyDescription("Sequenchel Digital Bonus Application SQL.[DBA]")> 
 <Assembly: AssemblyCompany("Thicor Services BV")> 
 <Assembly: AssemblyProduct("Sequenchel")> 
-<Assembly: AssemblyCopyright("Copyright © Thicor Services 2014-2015")> 
+<Assembly: AssemblyCopyright("Copyright © Thicor Services 2014-2016")> 
 <Assembly: AssemblyTrademark("")> 
 
 <Assembly: ComVisible(False)>
@@ -31,5 +31,5 @@ Imports System.Runtime.InteropServices
 ' by using the '*' as shown below:
 ' <Assembly: AssemblyVersion("1.0.*")> 
 
-<Assembly: AssemblyVersion("3.5.1.19")> 
-<Assembly: AssemblyFileVersion("3.5.1.19")> 
+<Assembly: AssemblyVersion("3.5.1.20")> 
+<Assembly: AssemblyFileVersion("3.5.1.20")> 

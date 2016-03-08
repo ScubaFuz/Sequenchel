@@ -68,7 +68,7 @@
     End Sub
 
     Private Sub btnDefaultConfigFilePath_Click(sender As Object, e As EventArgs) Handles btnDefaultConfigFilePath.Click
-        txtDefaultConfigFilePath.Text = CurVar.DefaultConfigFilePath
+        txtDefaultConfigFilePath.Text = Application.StartupPath & "\Config"
     End Sub
 
     Private Sub btnSettingsFileSystem_Click(sender As Object, e As EventArgs) Handles btnSettingsFileSystem.Click
