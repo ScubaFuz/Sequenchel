@@ -1,7 +1,14 @@
 ﻿Public Class frmSmartUpdate
 
+    Dim strSourceSchema As String = ""
+    Dim strSourceTable As String = ""
+    Dim strTargetSchema As String = ""
+    Dim strTargetTable As String = ""
+
     Private Sub frmSmartUpdate_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         LoadConnections()
+        LoadTables()
+        dtpStartDate.Value = Today()
     End Sub
 
     Private Sub LoadConnections()
@@ -18,22 +25,58 @@
         If cbxConnection.SelectedIndex >= -1 Then
             CurStatus.Connection = cbxConnection.SelectedItem
             LoadConnection(CurStatus.Connection)
+            LoadTables()
+            PanelsClear()
+            txtSourceTable.Text = ""
+            txtTargetTable.Text = ""
             'dhdText.FindXmlNode(xmlConnections, "Connection", "DatabasdeName", strConnection)
             'Dim xmlConnNode As xmlnode = xmlConnections.SelectSingleNode("\\Connection", "descendant::Connection[DataBaseName='" & strConnection & "']")
             'dhdConnection.DatabaseName = strConnection
         End If
     End Sub
 
+    Private Sub btnCreateSmartUpdateTable_Click(sender As Object, e As EventArgs) Handles btnCreateSmartUpdateTable.Click
+        Dim strSQL As String = ""
+
+        Try
+            Dim MydbRef As New SDBA.DBRef
+
+            strSQL = MydbRef.GetScript("01 dbo.SmartUpdate.sql")
+            strSQL = strSQL.Replace("Sequenchel", dhdDatabase.DatabaseName)
+            If CurVar.Encryption = False Then strSQL = strSQL.Replace("WITH ENCRYPTION", "")
+            If DevMode Then MessageBox.Show(strSQL)
+            QueryDb(dhdDatabase, strSQL, False, 10)
+            lblStatus.Text = "SmartUpdate Table created succesfully"
+        Catch ex As Exception
+            MessageBox.Show("There was an error while creating the SmartUpdate Table" & Environment.NewLine & ex.Message, "Error Creating Table", MessageBoxButtons.OK)
+        End Try
+    End Sub
+
+    Private Sub btnCreateSmartUpdateProcedure_Click(sender As Object, e As EventArgs) Handles btnCreateSmartUpdateProcedure.Click
+        Dim strSQL As String = ""
+
+        Try
+            Dim MydbRef As New SDBA.DBRef
+
+            strSQL = MydbRef.GetScript("01 dbo.usp_SmartUpdate.sql")
+            strSQL = strSQL.Replace("Sequenchel", dhdDatabase.DatabaseName)
+            If CurVar.Encryption = False Then strSQL = strSQL.Replace("WITH ENCRYPTION", "")
+            If DevMode Then MessageBox.Show(strSQL)
+            QueryDb(dhdDatabase, strSQL, False, 10)
+            lblStatus.Text = "SmartUpdate Procedure created succesfully"
+        Catch ex As Exception
+            MessageBox.Show("There was an error while creating the SmartUpdate Procedure" & Environment.NewLine & ex.Message, "Error Creating Procedure", MessageBoxButtons.OK)
+        End Try
+    End Sub
+
     Private Sub btnCrawlSourceTables_Click(sender As Object, e As EventArgs) Handles btnCrawlSourceTables.Click
-        CursorControl("Wait")
-        CrawlTables(True, lstSourceTables)
-        CursorControl()
+        lstSourceTables.Visible = True
+        lstSourceTables.Focus()
     End Sub
 
     Private Sub btnCrawlTargetTables_Click(sender As Object, e As EventArgs) Handles btnCrawlTargetTables.Click
-        CursorControl("Wait")
-        CrawlTables(False, lstTargetTables)
-        CursorControl()
+        lstTargetTables.Visible = True
+        lstTargetTables.Focus()
     End Sub
 
     Private Sub lstSourceTables_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lstSourceTables.SelectedIndexChanged
@@ -60,25 +103,79 @@
             Exit Sub
         End If
 
-        Dim strSourceSchema As String = ""
-        Dim strSourceTable As String = ""
-        Dim strTargetSchema As String = ""
-        Dim strTargetTable As String = ""
-        If txtSourceTable.Text.LastIndexOf(".") > 0 Then
-            strSourceSchema = txtSourceTable.Text.Substring(0, txtSourceTable.Text.LastIndexOf("."))
-            strSourceTable = txtSourceTable.Text.Substring(txtSourceTable.Text.LastIndexOf(".") + 1, txtSourceTable.Text.Length - (txtSourceTable.Text.LastIndexOf(".") + 1))
-        Else
-            strSourceSchema = "dbo"
-            strSourceTable = txtSourceTable.Text
-        End If
-        If txtTargetTable.Text.LastIndexOf(".") > 0 Then
-            strTargetSchema = txtTargetTable.Text.Substring(0, txtTargetTable.Text.LastIndexOf("."))
-            strTargetTable = txtTargetTable.Text.Substring(txtTargetTable.Text.LastIndexOf(".") + 1, txtTargetTable.Text.Length - (txtTargetTable.Text.LastIndexOf(".") + 1))
-        Else
-            strTargetSchema = "dbo"
-            strTargetTable = txtTargetTable.Text
-        End If
+        GetTableNames()
+        ResetScreen()
         GetColumns(strSourceSchema, strSourceTable, strTargetSchema, strTargetTable)
+    End Sub
+
+    Private Sub dtpEndDate_ValueChanged(sender As Object, e As EventArgs) Handles dtpEndDate.ValueChanged
+        'dtpEndDate.CustomFormat = "yyyy-MM-dd"
+        chkNoEndDate.Checked = False
+    End Sub
+
+    Private Sub chkNoEndDate_CheckedChanged(sender As Object, e As EventArgs) Handles chkNoEndDate.CheckedChanged
+        If chkNoEndDate.Checked = False Then
+            dtpEndDate.CustomFormat = "yyyy-MM-dd"
+        Else
+            dtpEndDate.CustomFormat = " "
+        End If
+    End Sub
+
+    Private Sub btnSaveConfiguration_Click(sender As Object, e As EventArgs) Handles btnSaveConfiguration.Click
+        'check for table dbo.SmartUpdate
+        'Dim strSQL As String = "IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.TABLES  WHERE TABLE_NAME = 'SmartUpdate') SELECT 1 AS TableExists ELSE SELECT 0 AS TableExists"
+        Dim strSQL As String = "SELECT 1 FROM INFORMATION_SCHEMA.TABLES  WHERE TABLE_NAME = 'SmartUpdate'"
+        Dim dtsData As DataSet = QueryDb(dhdConnection, strSQL, True, 5)
+        If DatasetCheck(dtsData) = False Then
+            lblStatus.Text = "The SmartUpdate table was not found. Please create the table first."
+            Exit Sub
+        End If
+        Dim dtmStartDate As Date = dtpStartDate.Value.Date
+        Dim dtmEndDate As Date = dtpEndDate.Value.Date
+        If chkNoEndDate.Checked = True Then dtmEndDate = Nothing
+
+        If rbnSourceConfig.Checked = True Then
+
+        ElseIf rbnTargetConfig.Checked = True Then
+
+        End If
+        'get start & end date
+        'set table name (source or target)
+        'get compare columns & PK columns
+        'save to table dbo.SmartUpdate
+    End Sub
+
+    Private Sub txtSourceTable_TextChanged(sender As Object, e As EventArgs) Handles txtSourceTable.TextChanged
+        SmartUpdateCommand()
+    End Sub
+
+    Private Sub txtTargetTable_TextChanged(sender As Object, e As EventArgs) Handles txtTargetTable.TextChanged
+        SmartUpdateCommand()
+    End Sub
+
+    Private Sub chkCreateTargetTable_CheckedChanged(sender As Object, e As EventArgs) Handles chkCreateTargetTable.CheckedChanged
+        SmartUpdateCommand()
+    End Sub
+
+    Private Sub chkUseAuditing_CheckedChanged(sender As Object, e As EventArgs) Handles chkUseAuditing.CheckedChanged
+        SmartUpdateCommand()
+    End Sub
+
+    Private Sub chkCreateAuditTable_CheckedChanged(sender As Object, e As EventArgs) Handles chkCreateAuditTable.CheckedChanged
+        SmartUpdateCommand()
+    End Sub
+
+    Private Sub chkRemoveNonSourceData_CheckedChanged(sender As Object, e As EventArgs) Handles chkRemoveNonSourceData.CheckedChanged
+        SmartUpdateCommand()
+    End Sub
+
+    Private Sub chkUseTargetCollation_CheckedChanged(sender As Object, e As EventArgs) Handles chkUseTargetCollation.CheckedChanged
+        SmartUpdateCommand()
+    End Sub
+
+    Private Sub LoadTables()
+        CrawlTables(True, lstSourceTables)
+        CrawlTables(False, lstTargetTables)
     End Sub
 
     Private Sub CrawlTables(blnCrawlViews As Boolean, lstTarget As ListBox)
@@ -105,8 +202,30 @@
         Else
             lstTarget.Height = 15 * 15
         End If
-        lstTarget.Visible = True
-        lstTarget.Focus()
+        'lstTarget.Visible = True
+        'lstTarget.Focus()
+    End Sub
+
+    Private Sub GetTableNames()
+        strSourceSchema = ""
+        strSourceTable = ""
+        strTargetSchema = ""
+        strTargetTable = ""
+        If txtSourceTable.Text.LastIndexOf(".") > 0 Then
+            strSourceSchema = txtSourceTable.Text.Substring(0, txtSourceTable.Text.LastIndexOf("."))
+            strSourceTable = txtSourceTable.Text.Substring(txtSourceTable.Text.LastIndexOf(".") + 1, txtSourceTable.Text.Length - (txtSourceTable.Text.LastIndexOf(".") + 1))
+        Else
+            strSourceSchema = "dbo"
+            strSourceTable = txtSourceTable.Text
+        End If
+        If txtTargetTable.Text.LastIndexOf(".") > 0 Then
+            strTargetSchema = txtTargetTable.Text.Substring(0, txtTargetTable.Text.LastIndexOf("."))
+            strTargetTable = txtTargetTable.Text.Substring(txtTargetTable.Text.LastIndexOf(".") + 1, txtTargetTable.Text.Length - (txtTargetTable.Text.LastIndexOf(".") + 1))
+        Else
+            strTargetSchema = "dbo"
+            strTargetTable = txtTargetTable.Text
+        End If
+
     End Sub
 
     Private Sub GetColumns(strSourceSchema As String, strSourceTable As String, strTargetSchema As String, strTargetTable As String)
@@ -201,15 +320,23 @@
         strSQL &= "	,tgt.colName"
 
         Dim dtsTables As New DataSet
+        Dim blnSourceOnly As Boolean = False
         dtsTables = QueryDb(dhdConnection, strSQL, True, 5)
         If DatasetCheck(dtsTables) = False Then Exit Sub
         PanelsClear()
         For intRowCount1 As Integer = 0 To dtsTables.Tables(0).Rows.Count - 1
             If dtsTables.Tables.Item(0).Rows(intRowCount1).Item("tgtSchemaName").GetType().ToString = "System.DBNull" Then
                 'create source row only
-                SourceFieldAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("srcColName"), False)
-                SourceDataTypeAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("srcColName"), dtsTables.Tables(0).Rows(intRowCount1).Item("srcDataType"), False)
-                SourcePkAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("srcColName"), dtsTables.Tables(0).Rows(intRowCount1).Item("srcPK"), dtsTables.Tables(0).Rows(intRowCount1).Item("srcIdentity"), False)
+                If intRowCount1 = 0 And (txtTargetTable.Text = "" Or lstTargetTables.Items.Contains(txtTargetTable.Text) = 0) Then blnSourceOnly = True
+                SourceFieldAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("srcColName"), blnSourceOnly)
+                SourceDataTypeAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("srcColName"), dtsTables.Tables(0).Rows(intRowCount1).Item("srcDataType"), blnSourceOnly)
+                SourcePkAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("srcColName"), dtsTables.Tables(0).Rows(intRowCount1).Item("srcPK"), dtsTables.Tables(0).Rows(intRowCount1).Item("srcIdentity"), blnSourceOnly)
+                If blnSourceOnly = True Then
+                    CompareColumnAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("srcColName"), True)
+                    chkCreateTargetTable.Checked = True
+                Else
+                    chkCreateTargetTable.Checked = False
+                End If
             ElseIf dtsTables.Tables.Item(0).Rows(intRowCount1).Item("srcSchemaName").GetType().ToString = "System.DBNull" Then
                 'create target row only
                 TargetFieldAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("tgtColName"), False)
@@ -217,6 +344,8 @@
                 TargetPkAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("tgtColName"), dtsTables.Tables(0).Rows(intRowCount1).Item("tgtPK"), dtsTables.Tables(0).Rows(intRowCount1).Item("tgtIdentity"), False)
             Else
                 'create CC row
+                chkCreateTargetTable.Checked = False
+                rbnTargetConfig.Enabled = True
                 SourceFieldAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("srcColName"), True)
                 TargetFieldAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("tgtColName"), True)
                 SourceDataTypeAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("srcColName"), dtsTables.Tables(0).Rows(intRowCount1).Item("srcDataType"), True)
@@ -233,10 +362,17 @@
 
         Dim intPercent As Integer = pnlCompareColumn.Controls.Count / dtsTables.Tables(0).Rows.Count * 200
         If intPercent < 50 Then
-            lblStatus.Text = "Matching columns is " & intPercent & " percent. Are you sure you have the correct tables selected?"
+            lblStatus.Text = "Matching columns is only " & intPercent & " percent. Are you sure you have the correct tables selected?"
         Else
             lblStatus.Text = ""
         End If
+    End Sub
+
+    Private Sub ResetScreen()
+        lblStatus.Text = ""
+        chkCreateTargetTable.Checked = False
+        rbnSourceConfig.Checked = True
+        rbnTargetConfig.Enabled = False
     End Sub
 
     Private Sub PanelsClear()
@@ -358,6 +494,24 @@
                 Control.checked = Control.tag
             Next
         End If
+    End Sub
+
+    Private Sub SmartUpdateCommand()
+        Dim strCommand As String = ""
+        If txtSourceTable.Text.Length > 0 And txtTargetTable.Text.Length > 0 Then
+            GetTableNames()
+            strCommand = "EXECUTE usp_SmartUpdate "
+            strCommand &= strSourceSchema & ", "
+            strCommand &= strSourceTable & ", "
+            strCommand &= strTargetSchema & ", "
+            strCommand &= strTargetTable & ", "
+            strCommand &= If(chkCreateTargetTable.Checked, 1, 0) & ", "
+            strCommand &= If(chkUseAuditing.Checked, 1, 0) & ", "
+            strCommand &= If(chkCreateAuditTable.Checked, 1, 0) & ", "
+            strCommand &= If(chkRemoveNonSourceData.Checked, 1, 0) & ", "
+            strCommand &= If(chkUseTargetCollation.Checked, 1, 0)
+        End If
+        txtSmartUpdateCommand.Text = strCommand
     End Sub
 
 End Class
