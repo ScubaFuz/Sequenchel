@@ -26,11 +26,11 @@ Partial Class frmSmartUpdate
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.cbxConnection = New System.Windows.Forms.ComboBox()
-        Me.CheckBox1 = New System.Windows.Forms.CheckBox()
-        Me.CheckBox2 = New System.Windows.Forms.CheckBox()
-        Me.CheckBox3 = New System.Windows.Forms.CheckBox()
-        Me.CheckBox4 = New System.Windows.Forms.CheckBox()
-        Me.CheckBox5 = New System.Windows.Forms.CheckBox()
+        Me.chkCreateTargetTable = New System.Windows.Forms.CheckBox()
+        Me.chkCreateAuditTable = New System.Windows.Forms.CheckBox()
+        Me.chkUseAuditing = New System.Windows.Forms.CheckBox()
+        Me.chkRemoveNonSourceData = New System.Windows.Forms.CheckBox()
+        Me.chkUseTargetCollation = New System.Windows.Forms.CheckBox()
         Me.txtSourceTable = New System.Windows.Forms.TextBox()
         Me.txtTargetTable = New System.Windows.Forms.TextBox()
         Me.pnlSourceTable = New System.Windows.Forms.Panel()
@@ -54,6 +54,20 @@ Partial Class frmSmartUpdate
         Me.Label10 = New System.Windows.Forms.Label()
         Me.pnlTargetPrimaryKey = New System.Windows.Forms.Panel()
         Me.pnlMain = New System.Windows.Forms.Panel()
+        Me.rbnSourceConfig = New System.Windows.Forms.RadioButton()
+        Me.rbnTargetConfig = New System.Windows.Forms.RadioButton()
+        Me.btnSaveConfiguration = New System.Windows.Forms.Button()
+        Me.lblStatusText = New System.Windows.Forms.Label()
+        Me.btnCreateSmartUpdateTable = New System.Windows.Forms.Button()
+        Me.btnCreateSmartUpdateProcedure = New System.Windows.Forms.Button()
+        Me.dtpStartDate = New System.Windows.Forms.DateTimePicker()
+        Me.Label12 = New System.Windows.Forms.Label()
+        Me.Label13 = New System.Windows.Forms.Label()
+        Me.dtpEndDate = New System.Windows.Forms.DateTimePicker()
+        Me.chkNoEndDate = New System.Windows.Forms.CheckBox()
+        Me.lblSmartUpdateCommand = New System.Windows.Forms.Label()
+        Me.txtSmartUpdateCommand = New System.Windows.Forms.TextBox()
+        Me.btnAddSmartUpdateSchedule = New System.Windows.Forms.Button()
         Me.pnlMain.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -92,55 +106,63 @@ Partial Class frmSmartUpdate
         Me.cbxConnection.Size = New System.Drawing.Size(185, 21)
         Me.cbxConnection.TabIndex = 3
         '
-        'CheckBox1
+        'chkCreateTargetTable
         '
-        Me.CheckBox1.AutoSize = True
-        Me.CheckBox1.Location = New System.Drawing.Point(810, 398)
-        Me.CheckBox1.Name = "CheckBox1"
-        Me.CheckBox1.Size = New System.Drawing.Size(171, 17)
-        Me.CheckBox1.TabIndex = 5
-        Me.CheckBox1.Text = "Create Target Table if not exist"
-        Me.CheckBox1.UseVisualStyleBackColor = True
+        Me.chkCreateTargetTable.AutoSize = True
+        Me.chkCreateTargetTable.Location = New System.Drawing.Point(810, 434)
+        Me.chkCreateTargetTable.Name = "chkCreateTargetTable"
+        Me.chkCreateTargetTable.Size = New System.Drawing.Size(171, 17)
+        Me.chkCreateTargetTable.TabIndex = 5
+        Me.chkCreateTargetTable.Text = "Create Target Table if not exist"
+        Me.chkCreateTargetTable.UseVisualStyleBackColor = True
         '
-        'CheckBox2
+        'chkCreateAuditTable
         '
-        Me.CheckBox2.AutoSize = True
-        Me.CheckBox2.Location = New System.Drawing.Point(810, 444)
-        Me.CheckBox2.Name = "CheckBox2"
-        Me.CheckBox2.Size = New System.Drawing.Size(164, 17)
-        Me.CheckBox2.TabIndex = 6
-        Me.CheckBox2.Text = "Create Audit Table if not exist"
-        Me.CheckBox2.UseVisualStyleBackColor = True
+        Me.chkCreateAuditTable.AutoSize = True
+        Me.chkCreateAuditTable.Checked = True
+        Me.chkCreateAuditTable.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.chkCreateAuditTable.Location = New System.Drawing.Point(810, 480)
+        Me.chkCreateAuditTable.Name = "chkCreateAuditTable"
+        Me.chkCreateAuditTable.Size = New System.Drawing.Size(164, 17)
+        Me.chkCreateAuditTable.TabIndex = 6
+        Me.chkCreateAuditTable.Text = "Create Audit Table if not exist"
+        Me.chkCreateAuditTable.UseVisualStyleBackColor = True
         '
-        'CheckBox3
+        'chkUseAuditing
         '
-        Me.CheckBox3.AutoSize = True
-        Me.CheckBox3.Location = New System.Drawing.Point(810, 421)
-        Me.CheckBox3.Name = "CheckBox3"
-        Me.CheckBox3.Size = New System.Drawing.Size(86, 17)
-        Me.CheckBox3.TabIndex = 7
-        Me.CheckBox3.Text = "Use Auditing"
-        Me.CheckBox3.UseVisualStyleBackColor = True
+        Me.chkUseAuditing.AutoSize = True
+        Me.chkUseAuditing.Checked = True
+        Me.chkUseAuditing.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.chkUseAuditing.Location = New System.Drawing.Point(810, 457)
+        Me.chkUseAuditing.Name = "chkUseAuditing"
+        Me.chkUseAuditing.Size = New System.Drawing.Size(86, 17)
+        Me.chkUseAuditing.TabIndex = 7
+        Me.chkUseAuditing.Text = "Use Auditing"
+        Me.chkUseAuditing.UseVisualStyleBackColor = True
         '
-        'CheckBox4
+        'chkRemoveNonSourceData
         '
-        Me.CheckBox4.AutoSize = True
-        Me.CheckBox4.Location = New System.Drawing.Point(810, 467)
-        Me.CheckBox4.Name = "CheckBox4"
-        Me.CheckBox4.Size = New System.Drawing.Size(213, 17)
-        Me.CheckBox4.TabIndex = 8
-        Me.CheckBox4.Text = "Remove NON-Source Data from Target"
-        Me.CheckBox4.UseVisualStyleBackColor = True
+        Me.chkRemoveNonSourceData.AutoSize = True
+        Me.chkRemoveNonSourceData.Checked = True
+        Me.chkRemoveNonSourceData.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.chkRemoveNonSourceData.Location = New System.Drawing.Point(810, 503)
+        Me.chkRemoveNonSourceData.Name = "chkRemoveNonSourceData"
+        Me.chkRemoveNonSourceData.Size = New System.Drawing.Size(213, 17)
+        Me.chkRemoveNonSourceData.TabIndex = 8
+        Me.chkRemoveNonSourceData.Text = "Remove NON-Source Data from Target"
+        Me.chkRemoveNonSourceData.UseVisualStyleBackColor = True
         '
-        'CheckBox5
+        'chkUseTargetCollation
         '
-        Me.CheckBox5.AutoSize = True
-        Me.CheckBox5.Location = New System.Drawing.Point(810, 490)
-        Me.CheckBox5.Name = "CheckBox5"
-        Me.CheckBox5.Size = New System.Drawing.Size(171, 17)
-        Me.CheckBox5.TabIndex = 9
-        Me.CheckBox5.Text = "Use Target Database Collation"
-        Me.CheckBox5.UseVisualStyleBackColor = True
+        Me.chkUseTargetCollation.AutoSize = True
+        Me.chkUseTargetCollation.Checked = True
+        Me.chkUseTargetCollation.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.chkUseTargetCollation.Location = New System.Drawing.Point(810, 526)
+        Me.chkUseTargetCollation.Name = "chkUseTargetCollation"
+        Me.chkUseTargetCollation.Size = New System.Drawing.Size(171, 17)
+        Me.chkUseTargetCollation.TabIndex = 9
+        Me.chkUseTargetCollation.Text = "Use Target Database Collation"
+        Me.chkUseTargetCollation.UseVisualStyleBackColor = True
         '
         'txtSourceTable
         '
@@ -246,10 +268,10 @@ Partial Class frmSmartUpdate
         '
         Me.lblStatus.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.lblStatus.AutoSize = True
-        Me.lblStatus.Font = New System.Drawing.Font("Microsoft Sans Serif", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblStatus.Location = New System.Drawing.Point(12, 573)
+        Me.lblStatus.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblStatus.Location = New System.Drawing.Point(80, 575)
         Me.lblStatus.Name = "lblStatus"
-        Me.lblStatus.Size = New System.Drawing.Size(0, 18)
+        Me.lblStatus.Size = New System.Drawing.Size(0, 16)
         Me.lblStatus.TabIndex = 148
         '
         'lstTargetTables
@@ -335,6 +357,7 @@ Partial Class frmSmartUpdate
         Me.pnlMain.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.pnlMain.AutoScroll = True
+        Me.pnlMain.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.pnlMain.Controls.Add(Me.Label8)
         Me.pnlMain.Controls.Add(Me.pnlSourceTable)
         Me.pnlMain.Controls.Add(Me.Label10)
@@ -354,11 +377,163 @@ Partial Class frmSmartUpdate
         Me.pnlMain.Size = New System.Drawing.Size(750, 377)
         Me.pnlMain.TabIndex = 158
         '
+        'rbnSourceConfig
+        '
+        Me.rbnSourceConfig.AutoSize = True
+        Me.rbnSourceConfig.Checked = True
+        Me.rbnSourceConfig.Location = New System.Drawing.Point(810, 171)
+        Me.rbnSourceConfig.Name = "rbnSourceConfig"
+        Me.rbnSourceConfig.Size = New System.Drawing.Size(176, 17)
+        Me.rbnSourceConfig.TabIndex = 159
+        Me.rbnSourceConfig.TabStop = True
+        Me.rbnSourceConfig.Text = "Use Source Table Configuration"
+        Me.rbnSourceConfig.UseVisualStyleBackColor = True
+        '
+        'rbnTargetConfig
+        '
+        Me.rbnTargetConfig.AutoSize = True
+        Me.rbnTargetConfig.Enabled = False
+        Me.rbnTargetConfig.Location = New System.Drawing.Point(810, 194)
+        Me.rbnTargetConfig.Name = "rbnTargetConfig"
+        Me.rbnTargetConfig.Size = New System.Drawing.Size(173, 17)
+        Me.rbnTargetConfig.TabIndex = 160
+        Me.rbnTargetConfig.Text = "Use Target Table Configuration"
+        Me.rbnTargetConfig.UseVisualStyleBackColor = True
+        '
+        'btnSaveConfiguration
+        '
+        Me.btnSaveConfiguration.Location = New System.Drawing.Point(810, 290)
+        Me.btnSaveConfiguration.Name = "btnSaveConfiguration"
+        Me.btnSaveConfiguration.Size = New System.Drawing.Size(171, 23)
+        Me.btnSaveConfiguration.TabIndex = 161
+        Me.btnSaveConfiguration.Text = "Save Configuration"
+        Me.btnSaveConfiguration.UseVisualStyleBackColor = True
+        '
+        'lblStatusText
+        '
+        Me.lblStatusText.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.lblStatusText.AutoSize = True
+        Me.lblStatusText.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblStatusText.Location = New System.Drawing.Point(13, 575)
+        Me.lblStatusText.Name = "lblStatusText"
+        Me.lblStatusText.Size = New System.Drawing.Size(55, 16)
+        Me.lblStatusText.TabIndex = 162
+        Me.lblStatusText.Text = "Status:"
+        '
+        'btnCreateSmartUpdateTable
+        '
+        Me.btnCreateSmartUpdateTable.Location = New System.Drawing.Point(810, 91)
+        Me.btnCreateSmartUpdateTable.Name = "btnCreateSmartUpdateTable"
+        Me.btnCreateSmartUpdateTable.Size = New System.Drawing.Size(171, 23)
+        Me.btnCreateSmartUpdateTable.TabIndex = 163
+        Me.btnCreateSmartUpdateTable.Text = "Create SmartUpdate Table"
+        Me.btnCreateSmartUpdateTable.UseVisualStyleBackColor = True
+        '
+        'btnCreateSmartUpdateProcedure
+        '
+        Me.btnCreateSmartUpdateProcedure.Location = New System.Drawing.Point(810, 120)
+        Me.btnCreateSmartUpdateProcedure.Name = "btnCreateSmartUpdateProcedure"
+        Me.btnCreateSmartUpdateProcedure.Size = New System.Drawing.Size(171, 23)
+        Me.btnCreateSmartUpdateProcedure.TabIndex = 164
+        Me.btnCreateSmartUpdateProcedure.Text = "Create SmartUpdate Procedure"
+        Me.btnCreateSmartUpdateProcedure.UseVisualStyleBackColor = True
+        '
+        'dtpStartDate
+        '
+        Me.dtpStartDate.CustomFormat = "yyyy-MM-dd"
+        Me.dtpStartDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom
+        Me.dtpStartDate.Location = New System.Drawing.Point(885, 217)
+        Me.dtpStartDate.Name = "dtpStartDate"
+        Me.dtpStartDate.Size = New System.Drawing.Size(96, 20)
+        Me.dtpStartDate.TabIndex = 165
+        '
+        'Label12
+        '
+        Me.Label12.AutoSize = True
+        Me.Label12.Location = New System.Drawing.Point(810, 223)
+        Me.Label12.Name = "Label12"
+        Me.Label12.Size = New System.Drawing.Size(55, 13)
+        Me.Label12.TabIndex = 166
+        Me.Label12.Text = "Start Date"
+        '
+        'Label13
+        '
+        Me.Label13.AutoSize = True
+        Me.Label13.Location = New System.Drawing.Point(810, 246)
+        Me.Label13.Name = "Label13"
+        Me.Label13.Size = New System.Drawing.Size(52, 13)
+        Me.Label13.TabIndex = 167
+        Me.Label13.Text = "End Date"
+        '
+        'dtpEndDate
+        '
+        Me.dtpEndDate.CustomFormat = " "
+        Me.dtpEndDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom
+        Me.dtpEndDate.Location = New System.Drawing.Point(885, 240)
+        Me.dtpEndDate.Name = "dtpEndDate"
+        Me.dtpEndDate.Size = New System.Drawing.Size(96, 20)
+        Me.dtpEndDate.TabIndex = 168
+        '
+        'chkNoEndDate
+        '
+        Me.chkNoEndDate.AutoSize = True
+        Me.chkNoEndDate.Checked = True
+        Me.chkNoEndDate.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.chkNoEndDate.Location = New System.Drawing.Point(885, 266)
+        Me.chkNoEndDate.Name = "chkNoEndDate"
+        Me.chkNoEndDate.Size = New System.Drawing.Size(88, 17)
+        Me.chkNoEndDate.TabIndex = 169
+        Me.chkNoEndDate.Text = "No End Date"
+        Me.chkNoEndDate.UseVisualStyleBackColor = True
+        '
+        'lblSmartUpdateCommand
+        '
+        Me.lblSmartUpdateCommand.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.lblSmartUpdateCommand.AutoSize = True
+        Me.lblSmartUpdateCommand.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblSmartUpdateCommand.Location = New System.Drawing.Point(15, 551)
+        Me.lblSmartUpdateCommand.Name = "lblSmartUpdateCommand"
+        Me.lblSmartUpdateCommand.Size = New System.Drawing.Size(122, 13)
+        Me.lblSmartUpdateCommand.TabIndex = 171
+        Me.lblSmartUpdateCommand.Text = "SmartUpdate Command:"
+        '
+        'txtSmartUpdateCommand
+        '
+        Me.txtSmartUpdateCommand.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.txtSmartUpdateCommand.Location = New System.Drawing.Point(147, 550)
+        Me.txtSmartUpdateCommand.Name = "txtSmartUpdateCommand"
+        Me.txtSmartUpdateCommand.ReadOnly = True
+        Me.txtSmartUpdateCommand.Size = New System.Drawing.Size(641, 20)
+        Me.txtSmartUpdateCommand.TabIndex = 172
+        '
+        'btnAddSmartUpdateSchedule
+        '
+        Me.btnAddSmartUpdateSchedule.Location = New System.Drawing.Point(810, 547)
+        Me.btnAddSmartUpdateSchedule.Name = "btnAddSmartUpdateSchedule"
+        Me.btnAddSmartUpdateSchedule.Size = New System.Drawing.Size(171, 23)
+        Me.btnAddSmartUpdateSchedule.TabIndex = 173
+        Me.btnAddSmartUpdateSchedule.Text = "Add to SmartUpdate Schedule"
+        Me.btnAddSmartUpdateSchedule.UseVisualStyleBackColor = True
+        '
         'frmSmartUpdate
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(1106, 600)
+        Me.Controls.Add(Me.btnAddSmartUpdateSchedule)
+        Me.Controls.Add(Me.txtSmartUpdateCommand)
+        Me.Controls.Add(Me.lblSmartUpdateCommand)
+        Me.Controls.Add(Me.chkNoEndDate)
+        Me.Controls.Add(Me.dtpEndDate)
+        Me.Controls.Add(Me.Label13)
+        Me.Controls.Add(Me.Label12)
+        Me.Controls.Add(Me.dtpStartDate)
+        Me.Controls.Add(Me.btnCreateSmartUpdateProcedure)
+        Me.Controls.Add(Me.btnCreateSmartUpdateTable)
+        Me.Controls.Add(Me.lblStatusText)
+        Me.Controls.Add(Me.btnSaveConfiguration)
+        Me.Controls.Add(Me.rbnTargetConfig)
+        Me.Controls.Add(Me.rbnSourceConfig)
         Me.Controls.Add(Me.lstTargetTables)
         Me.Controls.Add(Me.lstSourceTables)
         Me.Controls.Add(Me.pnlMain)
@@ -368,11 +543,11 @@ Partial Class frmSmartUpdate
         Me.Controls.Add(Me.btnCrawlSourceTables)
         Me.Controls.Add(Me.txtTargetTable)
         Me.Controls.Add(Me.txtSourceTable)
-        Me.Controls.Add(Me.CheckBox5)
-        Me.Controls.Add(Me.CheckBox4)
-        Me.Controls.Add(Me.CheckBox3)
-        Me.Controls.Add(Me.CheckBox2)
-        Me.Controls.Add(Me.CheckBox1)
+        Me.Controls.Add(Me.chkUseTargetCollation)
+        Me.Controls.Add(Me.chkRemoveNonSourceData)
+        Me.Controls.Add(Me.chkUseAuditing)
+        Me.Controls.Add(Me.chkCreateAuditTable)
+        Me.Controls.Add(Me.chkCreateTargetTable)
         Me.Controls.Add(Me.cbxConnection)
         Me.Controls.Add(Me.Label3)
         Me.Controls.Add(Me.Label2)
@@ -389,11 +564,11 @@ Partial Class frmSmartUpdate
     Friend WithEvents Label2 As System.Windows.Forms.Label
     Friend WithEvents Label3 As System.Windows.Forms.Label
     Friend WithEvents cbxConnection As System.Windows.Forms.ComboBox
-    Friend WithEvents CheckBox1 As System.Windows.Forms.CheckBox
-    Friend WithEvents CheckBox2 As System.Windows.Forms.CheckBox
-    Friend WithEvents CheckBox3 As System.Windows.Forms.CheckBox
-    Friend WithEvents CheckBox4 As System.Windows.Forms.CheckBox
-    Friend WithEvents CheckBox5 As System.Windows.Forms.CheckBox
+    Friend WithEvents chkCreateTargetTable As System.Windows.Forms.CheckBox
+    Friend WithEvents chkCreateAuditTable As System.Windows.Forms.CheckBox
+    Friend WithEvents chkUseAuditing As System.Windows.Forms.CheckBox
+    Friend WithEvents chkRemoveNonSourceData As System.Windows.Forms.CheckBox
+    Friend WithEvents chkUseTargetCollation As System.Windows.Forms.CheckBox
     Friend WithEvents txtSourceTable As System.Windows.Forms.TextBox
     Friend WithEvents txtTargetTable As System.Windows.Forms.TextBox
     Friend WithEvents pnlSourceTable As System.Windows.Forms.Panel
@@ -417,4 +592,18 @@ Partial Class frmSmartUpdate
     Friend WithEvents Label10 As System.Windows.Forms.Label
     Friend WithEvents pnlTargetPrimaryKey As System.Windows.Forms.Panel
     Friend WithEvents pnlMain As System.Windows.Forms.Panel
+    Friend WithEvents rbnSourceConfig As System.Windows.Forms.RadioButton
+    Friend WithEvents rbnTargetConfig As System.Windows.Forms.RadioButton
+    Friend WithEvents btnSaveConfiguration As System.Windows.Forms.Button
+    Friend WithEvents lblStatusText As System.Windows.Forms.Label
+    Friend WithEvents btnCreateSmartUpdateTable As System.Windows.Forms.Button
+    Friend WithEvents btnCreateSmartUpdateProcedure As System.Windows.Forms.Button
+    Friend WithEvents dtpStartDate As System.Windows.Forms.DateTimePicker
+    Friend WithEvents Label12 As System.Windows.Forms.Label
+    Friend WithEvents Label13 As System.Windows.Forms.Label
+    Friend WithEvents dtpEndDate As System.Windows.Forms.DateTimePicker
+    Friend WithEvents chkNoEndDate As System.Windows.Forms.CheckBox
+    Friend WithEvents lblSmartUpdateCommand As System.Windows.Forms.Label
+    Friend WithEvents txtSmartUpdateCommand As System.Windows.Forms.TextBox
+    Friend WithEvents btnAddSmartUpdateSchedule As System.Windows.Forms.Button
 End Class
