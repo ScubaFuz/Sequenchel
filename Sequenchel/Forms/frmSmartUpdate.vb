@@ -130,19 +130,34 @@
             lblStatus.Text = "The SmartUpdate table was not found. Please create the table first."
             Exit Sub
         End If
+
+        'get start & end date
         Dim dtmStartDate As Date = dtpStartDate.Value.Date
         Dim dtmEndDate As Date = dtpEndDate.Value.Date
         If chkNoEndDate.Checked = True Then dtmEndDate = Nothing
 
-        If rbnSourceConfig.Checked = True Then
-
-        ElseIf rbnTargetConfig.Checked = True Then
-
-        End If
-        'get start & end date
         'set table name (source or target)
+        GetTableNames()
+        Dim strSchemaName As String = ""
+        Dim strTableName As String = ""
+        Dim strInsert As String = ""
+        If rbnSourceConfig.Checked = True Then
+            strSchemaName = strSourceSchema
+            strTableName = strSourceTable
+            strInsert = InsertString(strSourceSchema, strSourceTable, pnlSourceTable, pnlSourceDataType, pnlSourcePrimaryKey, pnlCompareColumn, dtmStartDate, dtmEndDate)
+        ElseIf rbnTargetConfig.Checked = True Then
+            strSchemaName = strTargetSchema
+            strTableName = strTargetTable
+            strInsert = InsertString(strTargetSchema, strTargetTable, pnlTargetTable, pnlTargetDataType, pnlTargetPrimaryKey, pnlCompareColumn, dtmStartDate, dtmEndDate)
+        End If
+
         'get compare columns & PK columns
+
+
         'save to table dbo.SmartUpdate
+
+        MessageBox.Show(strInsert)
+        lblStatus.Text = "Configuration Saved to SmartUpdate Table"
     End Sub
 
     Private Sub txtSourceTable_TextChanged(sender As Object, e As EventArgs) Handles txtSourceTable.TextChanged
@@ -514,4 +529,34 @@
         txtSmartUpdateCommand.Text = strCommand
     End Sub
 
+    Private Function InsertString(strSchema As String, strTable As String, pnlTabel As Panel, pnlDataType As Panel, pnlPrimaryKey As Panel, pnlCompare As Panel, dtmStart As Date, dtmEnd As Date) As String
+        Dim strQuery As String = ""
+        Dim strColumnName As String = ""
+        Dim strDataType As String = ""
+        Dim strPrmaryKey As String = ""
+        Dim strCompare As String = ""
+
+        For Each ctrlColumn In pnlTabel.Controls
+            If ctrlColumn.Enabled = False Then Exit For
+            strColumnName = ctrlColumn.Text
+            For Each ctrlDataType In pnlDataType.Controls
+                If ctrlDataType.Name = pnlDataType.Name & strColumnName Then
+                    strDataType = ctrlDataType.Text
+                End If
+            Next
+            For Each ctrlPk In pnlPrimaryKey.Controls
+                If ctrlPk.Name = pnlPrimaryKey.Name & strColumnName Then
+                    strPrmaryKey = ctrlPk.Checked
+                End If
+            Next
+            For Each ctrlCompare In pnlCompare.Controls
+                If ctrlCompare.Name = pnlCompare.Name & strColumnName Then
+                    strCompare = ctrlCompare.Checked
+                End If
+            Next
+            strQuery &= "UNION SELECT '" & dhdConnection.DatabaseName & "', '" & strSchema & "', '" & strTable & "', '" & strColumnName & "', '" & strDataType & "', " & strPrmaryKey & ", " & strCompare & ", '" & dtmStart.ToString("yyyy-MM-dd") & "', '" & dtmEnd.ToString("yyyy-MM-dd") & "',1" & Environment.NewLine
+        Next
+
+        Return strQuery
+    End Function
 End Class
