@@ -43,17 +43,17 @@ Public Class frmConfiguration
     Private Sub ConfigurationSave()
         If CurStatus.ConnectionChanged = True Then
             CurStatus.ConnectionReload = True
-            dhdText.SaveXmlFile(xmlConnections, CurVar.ConnectionsFile, True)
+            dhdText.SaveXmlFile(xmlConnections, CheckFilePath(CurVar.ConnectionsFile), True)
             CurStatus.ConnectionChanged = False
         End If
         If CurStatus.TableSetChanged = True Then
             CurStatus.TableSetReload = True
-            dhdText.SaveXmlFile(xmlTableSets, CurVar.TableSetsFile, True)
+            dhdText.SaveXmlFile(xmlTableSets, CheckFilePath(CurVar.TableSetsFile), True)
             CurStatus.TableSetChanged = False
         End If
         If CurStatus.TableChanged = True Then
             CurStatus.TableReload = True
-            dhdText.SaveXmlFile(xmlTables, CurVar.TablesFile, True)
+            dhdText.SaveXmlFile(xmlTables, CheckFilePath(CurVar.TablesFile), True)
             CurStatus.TableChanged = False
         End If
     End Sub
@@ -1402,6 +1402,14 @@ Public Class frmConfiguration
         End If
         Dim xCNode As XmlNode = dhdText.FindXmlChildNode(xNode, "Relations")
         If xCNode Is Nothing Then xCNode = dhdText.CreateAppendElement(xNode, "Relations", Nothing, False)
+        'remove existing node
+        Try
+            Dim XDelNode As XmlNode = dhdText.FindXmlChildNode(xCNode, "Relation", "Relation", strRelation)
+            If Not XDelNode Is Nothing Then XDelNode.ParentNode.RemoveChild(XDelNode)
+            'dhdText.RemoveChildNode(xCNode, "Relation", "Relation", strRelation)
+        Catch ex As Exception
+            'No such node
+        End Try
         Dim xRNode As XmlNode = dhdText.CreateAppendElement(xCNode, "Relation", strRelation, False)
         If strRelatedField.Length > 0 Then
             dhdText.CreateAppendAttribute(xRNode, "RelatedField", strRelatedField, True)

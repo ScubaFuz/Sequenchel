@@ -219,6 +219,7 @@ Partial Class frmSettings
         Me.txtUploadSource = New System.Windows.Forms.TextBox()
         Me.btnClose = New System.Windows.Forms.Button()
         Me.ttpDefaultLogLocation = New System.Windows.Forms.ToolTip(Me.components)
+        Me.chkAllowSmartUpdate = New System.Windows.Forms.CheckBox()
         Me.tabSettings.SuspendLayout()
         Me.tpgGeneral.SuspendLayout()
         Me.grpSecurity.SuspendLayout()
@@ -354,6 +355,7 @@ Partial Class frmSettings
         '
         'grpSecurity
         '
+        Me.grpSecurity.Controls.Add(Me.chkAllowSmartUpdate)
         Me.grpSecurity.Controls.Add(Me.chkAllowDataImport)
         Me.grpSecurity.Controls.Add(Me.chkAllowQueryEdit)
         Me.grpSecurity.Controls.Add(Me.lblUsageText)
@@ -386,7 +388,7 @@ Partial Class frmSettings
         'chkAllowQueryEdit
         '
         Me.chkAllowQueryEdit.AutoSize = True
-        Me.chkAllowQueryEdit.Location = New System.Drawing.Point(6, 24)
+        Me.chkAllowQueryEdit.Location = New System.Drawing.Point(175, 24)
         Me.chkAllowQueryEdit.Name = "chkAllowQueryEdit"
         Me.chkAllowQueryEdit.Size = New System.Drawing.Size(138, 17)
         Me.chkAllowQueryEdit.TabIndex = 52
@@ -405,7 +407,7 @@ Partial Class frmSettings
         'chkAllowSettingsChange
         '
         Me.chkAllowSettingsChange.AutoSize = True
-        Me.chkAllowSettingsChange.Location = New System.Drawing.Point(175, 70)
+        Me.chkAllowSettingsChange.Location = New System.Drawing.Point(6, 24)
         Me.chkAllowSettingsChange.Name = "chkAllowSettingsChange"
         Me.chkAllowSettingsChange.Size = New System.Drawing.Size(132, 17)
         Me.chkAllowSettingsChange.TabIndex = 53
@@ -442,7 +444,7 @@ Partial Class frmSettings
         'chkAllowLinkedServers
         '
         Me.chkAllowLinkedServers.AutoSize = True
-        Me.chkAllowLinkedServers.Location = New System.Drawing.Point(175, 24)
+        Me.chkAllowLinkedServers.Location = New System.Drawing.Point(6, 70)
         Me.chkAllowLinkedServers.Name = "chkAllowLinkedServers"
         Me.chkAllowLinkedServers.Size = New System.Drawing.Size(160, 17)
         Me.chkAllowLinkedServers.TabIndex = 55
@@ -461,7 +463,7 @@ Partial Class frmSettings
         'chkAllowUpdate
         '
         Me.chkAllowUpdate.AutoSize = True
-        Me.chkAllowUpdate.Location = New System.Drawing.Point(360, 24)
+        Me.chkAllowUpdate.Location = New System.Drawing.Point(366, 24)
         Me.chkAllowUpdate.Name = "chkAllowUpdate"
         Me.chkAllowUpdate.Size = New System.Drawing.Size(89, 17)
         Me.chkAllowUpdate.TabIndex = 56
@@ -471,7 +473,7 @@ Partial Class frmSettings
         'chkAllowDelete
         '
         Me.chkAllowDelete.AutoSize = True
-        Me.chkAllowDelete.Location = New System.Drawing.Point(360, 70)
+        Me.chkAllowDelete.Location = New System.Drawing.Point(366, 70)
         Me.chkAllowDelete.Name = "chkAllowDelete"
         Me.chkAllowDelete.Size = New System.Drawing.Size(85, 17)
         Me.chkAllowDelete.TabIndex = 57
@@ -481,7 +483,7 @@ Partial Class frmSettings
         'chkAllowInsert
         '
         Me.chkAllowInsert.AutoSize = True
-        Me.chkAllowInsert.Location = New System.Drawing.Point(360, 47)
+        Me.chkAllowInsert.Location = New System.Drawing.Point(366, 47)
         Me.chkAllowInsert.Name = "chkAllowInsert"
         Me.chkAllowInsert.Size = New System.Drawing.Size(80, 17)
         Me.chkAllowInsert.TabIndex = 58
@@ -2199,11 +2201,21 @@ Partial Class frmSettings
         Me.btnClose.Text = "Close"
         Me.btnClose.UseVisualStyleBackColor = True
         '
+        'chkAllowSmartUpdate
+        '
+        Me.chkAllowSmartUpdate.AutoSize = True
+        Me.chkAllowSmartUpdate.Location = New System.Drawing.Point(175, 70)
+        Me.chkAllowSmartUpdate.Name = "chkAllowSmartUpdate"
+        Me.chkAllowSmartUpdate.Size = New System.Drawing.Size(181, 17)
+        Me.chkAllowSmartUpdate.TabIndex = 109
+        Me.chkAllowSmartUpdate.Text = "Allow SmartUpdate Configuration"
+        Me.chkAllowSmartUpdate.UseVisualStyleBackColor = True
+        '
         'frmSettings
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(637, 443)
+        Me.ClientSize = New System.Drawing.Size(637, 442)
         Me.Controls.Add(Me.btnClose)
         Me.Controls.Add(Me.tabSettings)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog
@@ -2433,4 +2445,5 @@ Partial Class frmSettings
     Friend WithEvents lblFtpStatus As System.Windows.Forms.Label
     Friend WithEvents btnCreateDownloadProcedure As System.Windows.Forms.Button
     Friend WithEvents chkAllowDataImport As System.Windows.Forms.CheckBox
+    Friend WithEvents chkAllowSmartUpdate As System.Windows.Forms.CheckBox
 End Class

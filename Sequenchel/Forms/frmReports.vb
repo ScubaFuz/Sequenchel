@@ -851,7 +851,7 @@ Public Class frmReports
             End If
         End If
 
-        dhdText.SaveXmlFile(xmlReports, CurVar.ReportSetFile, True)
+        dhdText.SaveXmlFile(xmlReports, CheckFilePath(CurVar.ReportSetFile), True)
         CursorControl()
     End Sub
 
@@ -869,7 +869,7 @@ Public Class frmReports
                 Exit Sub
             End If
         End If
-        dhdText.SaveXmlFile(xmlReports, CurVar.ReportSetFile, True)
+        dhdText.SaveXmlFile(xmlReports, CheckFilePath(CurVar.ReportSetFile), True)
         CursorControl()
     End Sub
 

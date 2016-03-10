@@ -1,3 +1,9 @@
+Version 3.6.0
+New: Added SmartUpdate for easy Datawarehouse building
+Enhanced: If no path is provided, config files are saved to the default config file location.
+Fixed: Updating a relation to "no connected field" now works.
+Fixed: Deleting an existing relation now works.
+
 Version 3.5.1
 New: Added an Import option for transferring data from a file into a database table.
 New: Doubleclick on the upper left corner in a report will resize all columns fo fit the data.

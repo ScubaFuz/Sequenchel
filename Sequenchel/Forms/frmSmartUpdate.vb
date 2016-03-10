@@ -6,6 +6,10 @@
     Dim strTargetTable As String = ""
 
     Private Sub frmSmartUpdate_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        If blnLicenseValidated = True Then
+            btnCreateSmartUpdateProcedure.Enabled = True
+            lblLicenseRequired.Visible = False
+        End If
         LoadConnections()
         LoadTables()
         dtpStartDate.Value = Today()
@@ -42,10 +46,10 @@
             Dim MydbRef As New SDBA.DBRef
 
             strSQL = MydbRef.GetScript("01 dbo.SmartUpdate.sql")
-            strSQL = strSQL.Replace("Sequenchel", dhdDatabase.DatabaseName)
+            strSQL = strSQL.Replace("Sequenchel", dhdConnection.DatabaseName)
             If CurVar.Encryption = False Then strSQL = strSQL.Replace("WITH ENCRYPTION", "")
             If DevMode Then MessageBox.Show(strSQL)
-            QueryDb(dhdDatabase, strSQL, False, 10)
+            QueryDb(dhdConnection, strSQL, False, 10)
             lblStatus.Text = "SmartUpdate Table created succesfully"
         Catch ex As Exception
             MessageBox.Show("There was an error while creating the SmartUpdate Table" & Environment.NewLine & ex.Message, "Error Creating Table", MessageBoxButtons.OK)
@@ -59,10 +63,10 @@
             Dim MydbRef As New SDBA.DBRef
 
             strSQL = MydbRef.GetScript("01 dbo.usp_SmartUpdate.sql")
-            strSQL = strSQL.Replace("Sequenchel", dhdDatabase.DatabaseName)
+            strSQL = strSQL.Replace("Sequenchel", dhdConnection.DatabaseName)
             If CurVar.Encryption = False Then strSQL = strSQL.Replace("WITH ENCRYPTION", "")
             If DevMode Then MessageBox.Show(strSQL)
-            QueryDb(dhdDatabase, strSQL, False, 10)
+            QueryDb(dhdConnection, strSQL, False, 10)
             lblStatus.Text = "SmartUpdate Procedure created succesfully"
         Catch ex As Exception
             MessageBox.Show("There was an error while creating the SmartUpdate Procedure" & Environment.NewLine & ex.Message, "Error Creating Procedure", MessageBoxButtons.OK)
@@ -84,7 +88,7 @@
         lstSourceTables.Visible = False
     End Sub
 
-    Private Sub lstSourceTables_LostFocus(sender As Object, e As EventArgs) Handles lstSourceTables.LostFocus
+    Private Sub lstSourceTables_LostFocus(sender As Object, e As EventArgs) Handles lstSourceTables.MouseLeave
         lstSourceTables.Visible = False
     End Sub
 
@@ -93,7 +97,7 @@
         lstTargetTables.Visible = False
     End Sub
 
-    Private Sub lstTargetTables_LostFocus(sender As Object, e As EventArgs) Handles lstTargetTables.LostFocus
+    Private Sub lstTargetTables_LostFocus(sender As Object, e As EventArgs) Handles lstTargetTables.MouseLeave
         lstTargetTables.Visible = False
     End Sub
 
@@ -124,7 +128,7 @@
     Private Sub btnSaveConfiguration_Click(sender As Object, e As EventArgs) Handles btnSaveConfiguration.Click
         'check for table dbo.SmartUpdate
         'Dim strSQL As String = "IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.TABLES  WHERE TABLE_NAME = 'SmartUpdate') SELECT 1 AS TableExists ELSE SELECT 0 AS TableExists"
-        Dim strSQL As String = "SELECT 1 FROM INFORMATION_SCHEMA.TABLES  WHERE TABLE_NAME = 'SmartUpdate'"
+        Dim strSQL As String = "SELECT 1 AS TableExists FROM INFORMATION_SCHEMA.TABLES  WHERE TABLE_NAME = 'SmartUpdate'"
         Dim dtsData As DataSet = QueryDb(dhdConnection, strSQL, True, 5)
         If DatasetCheck(dtsData) = False Then
             lblStatus.Text = "The SmartUpdate table was not found. Please create the table first."
@@ -141,23 +145,35 @@
         Dim strSchemaName As String = ""
         Dim strTableName As String = ""
         Dim strInsert As String = ""
+        Dim strDelete As String = ""
         If rbnSourceConfig.Checked = True Then
             strSchemaName = strSourceSchema
             strTableName = strSourceTable
             strInsert = InsertString(strSourceSchema, strSourceTable, pnlSourceTable, pnlSourceDataType, pnlSourcePrimaryKey, pnlCompareColumn, dtmStartDate, dtmEndDate)
+            strDelete = "DELETE FROM dbo.SmartUpdate WHERE [DataBaseName] = '" & dhdConnection.DatabaseName & "' AND [SchemaName] = '" & strSourceSchema & "' AND [TableName] = '" & strSourceTable & "'"
         ElseIf rbnTargetConfig.Checked = True Then
             strSchemaName = strTargetSchema
             strTableName = strTargetTable
+            strDelete = "DELETE FROM dbo.SmartUpdate WHERE [DataBaseName] = '" & dhdConnection.DatabaseName & "' AND [SchemaName] = '" & strTargetSchema & "' AND [TableName] = '" & strTargetTable & "'"
             strInsert = InsertString(strTargetSchema, strTargetTable, pnlTargetTable, pnlTargetDataType, pnlTargetPrimaryKey, pnlCompareColumn, dtmStartDate, dtmEndDate)
         End If
 
         'get compare columns & PK columns
-
+        strInsert = strInsert.Remove(0, 6)
+        strInsert = "INSERT INTO [dbo].[SmartUpdate] ([DataBaseName],[SchemaName],[TableName],[ColumnName],[DataType],[PrimaryKey],[CompareColumn],[DateStart],[DateStop],[Active]) " & Environment.NewLine & strInsert
 
         'save to table dbo.SmartUpdate
+        Try
+            QueryDb(dhdConnection, strDelete, 0)
+            QueryDb(dhdConnection, strInsert, 0)
+            lblStatus.Text = "Configuration Saved to SmartUpdate Table on connection: " & CurStatus.Connection
+        Catch ex As Exception
+            lblStatus.Text = "There was an error saving the configuration. Check the log for more details"
+            MessageBox.Show("There was an error saving the configuration: " & Environment.NewLine & ex.Message)
+            WriteLog("There was an error saving the configuration: " & Environment.NewLine & ex.Message, 1)
+        End Try
 
-        MessageBox.Show(strInsert)
-        lblStatus.Text = "Configuration Saved to SmartUpdate Table"
+
     End Sub
 
     Private Sub txtSourceTable_TextChanged(sender As Object, e As EventArgs) Handles txtSourceTable.TextChanged
@@ -186,6 +202,10 @@
 
     Private Sub chkUseTargetCollation_CheckedChanged(sender As Object, e As EventArgs) Handles chkUseTargetCollation.CheckedChanged
         SmartUpdateCommand()
+    End Sub
+
+    Private Sub btnAddSmartUpdateSchedule_Click(sender As Object, e As EventArgs) Handles btnAddSmartUpdateSchedule.Click
+        MessageBox.Show("The Scheduler is not yet operational. Please schedule the SmartUpdate Command manually.")
     End Sub
 
     Private Sub LoadTables()
@@ -347,7 +367,7 @@
                 SourceDataTypeAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("srcColName"), dtsTables.Tables(0).Rows(intRowCount1).Item("srcDataType"), blnSourceOnly)
                 SourcePkAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("srcColName"), dtsTables.Tables(0).Rows(intRowCount1).Item("srcPK"), dtsTables.Tables(0).Rows(intRowCount1).Item("srcIdentity"), blnSourceOnly)
                 If blnSourceOnly = True Then
-                    CompareColumnAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("srcColName"), True)
+                    CompareColumnAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("srcColName"), CompareDataType(dtsTables.Tables(0).Rows(intRowCount1).Item("srcDataType")))
                     chkCreateTargetTable.Checked = True
                 Else
                     chkCreateTargetTable.Checked = False
@@ -367,7 +387,7 @@
                 TargetDataTypeAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("tgtColName"), dtsTables.Tables(0).Rows(intRowCount1).Item("tgtDataType"), True)
                 SourcePkAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("srcColName"), dtsTables.Tables(0).Rows(intRowCount1).Item("srcPK"), dtsTables.Tables(0).Rows(intRowCount1).Item("srcIdentity"), True)
                 TargetPkAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("tgtColName"), dtsTables.Tables(0).Rows(intRowCount1).Item("tgtPK"), dtsTables.Tables(0).Rows(intRowCount1).Item("tgtIdentity"), True)
-                CompareColumnAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("srcColName"), True)
+                CompareColumnAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("srcColName"), CompareDataType(dtsTables.Tables(0).Rows(intRowCount1).Item("srcDataType")))
             End If
 
         Next
@@ -554,9 +574,12 @@
                     strCompare = ctrlCompare.Checked
                 End If
             Next
-            strQuery &= "UNION SELECT '" & dhdConnection.DatabaseName & "', '" & strSchema & "', '" & strTable & "', '" & strColumnName & "', '" & strDataType & "', " & strPrmaryKey & ", " & strCompare & ", '" & dtmStart.ToString("yyyy-MM-dd") & "', '" & dtmEnd.ToString("yyyy-MM-dd") & "',1" & Environment.NewLine
+            If strPrmaryKey = "True" Or strCompare = "True" Then
+                strQuery &= "UNION SELECT '" & dhdConnection.DatabaseName & "', '" & strSchema & "', '" & strTable & "', '" & strColumnName & "', '" & strDataType & "', '" & strPrmaryKey & "', '" & strCompare & "', '" & dtmStart.ToString("yyyy-MM-dd") & "', " & If(chkNoEndDate.Checked = True, "NULL", "'" & dtmEnd.ToString("yyyy-MM-dd") & "'") & ",1" & Environment.NewLine
+            End If
         Next
 
         Return strQuery
     End Function
+
 End Class

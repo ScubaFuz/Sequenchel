@@ -22,6 +22,7 @@ Partial Class frmSmartUpdate
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmSmartUpdate))
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Label3 = New System.Windows.Forms.Label()
@@ -68,13 +69,21 @@ Partial Class frmSmartUpdate
         Me.lblSmartUpdateCommand = New System.Windows.Forms.Label()
         Me.txtSmartUpdateCommand = New System.Windows.Forms.TextBox()
         Me.btnAddSmartUpdateSchedule = New System.Windows.Forms.Button()
+        Me.lblLicenseRequired = New System.Windows.Forms.Label()
+        Me.grpConfiguration = New System.Windows.Forms.GroupBox()
+        Me.Label11 = New System.Windows.Forms.Label()
+        Me.grpCommand = New System.Windows.Forms.GroupBox()
+        Me.grpCreateSQL = New System.Windows.Forms.GroupBox()
         Me.pnlMain.SuspendLayout()
+        Me.grpConfiguration.SuspendLayout()
+        Me.grpCommand.SuspendLayout()
+        Me.grpCreateSQL.SuspendLayout()
         Me.SuspendLayout()
         '
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(79, 72)
+        Me.Label1.Location = New System.Drawing.Point(53, 53)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(109, 13)
         Me.Label1.TabIndex = 0
@@ -83,7 +92,7 @@ Partial Class frmSmartUpdate
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(420, 72)
+        Me.Label2.Location = New System.Drawing.Point(394, 53)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(68, 13)
         Me.Label2.TabIndex = 1
@@ -92,7 +101,7 @@ Partial Class frmSmartUpdate
         'Label3
         '
         Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(80, 30)
+        Me.Label3.Location = New System.Drawing.Point(54, 21)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(61, 13)
         Me.Label3.TabIndex = 2
@@ -100,8 +109,9 @@ Partial Class frmSmartUpdate
         '
         'cbxConnection
         '
+        Me.cbxConnection.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cbxConnection.FormattingEnabled = True
-        Me.cbxConnection.Location = New System.Drawing.Point(147, 30)
+        Me.cbxConnection.Location = New System.Drawing.Point(121, 21)
         Me.cbxConnection.Name = "cbxConnection"
         Me.cbxConnection.Size = New System.Drawing.Size(185, 21)
         Me.cbxConnection.TabIndex = 3
@@ -109,7 +119,7 @@ Partial Class frmSmartUpdate
         'chkCreateTargetTable
         '
         Me.chkCreateTargetTable.AutoSize = True
-        Me.chkCreateTargetTable.Location = New System.Drawing.Point(810, 434)
+        Me.chkCreateTargetTable.Location = New System.Drawing.Point(6, 19)
         Me.chkCreateTargetTable.Name = "chkCreateTargetTable"
         Me.chkCreateTargetTable.Size = New System.Drawing.Size(171, 17)
         Me.chkCreateTargetTable.TabIndex = 5
@@ -121,7 +131,7 @@ Partial Class frmSmartUpdate
         Me.chkCreateAuditTable.AutoSize = True
         Me.chkCreateAuditTable.Checked = True
         Me.chkCreateAuditTable.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.chkCreateAuditTable.Location = New System.Drawing.Point(810, 480)
+        Me.chkCreateAuditTable.Location = New System.Drawing.Point(6, 65)
         Me.chkCreateAuditTable.Name = "chkCreateAuditTable"
         Me.chkCreateAuditTable.Size = New System.Drawing.Size(164, 17)
         Me.chkCreateAuditTable.TabIndex = 6
@@ -133,7 +143,7 @@ Partial Class frmSmartUpdate
         Me.chkUseAuditing.AutoSize = True
         Me.chkUseAuditing.Checked = True
         Me.chkUseAuditing.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.chkUseAuditing.Location = New System.Drawing.Point(810, 457)
+        Me.chkUseAuditing.Location = New System.Drawing.Point(6, 42)
         Me.chkUseAuditing.Name = "chkUseAuditing"
         Me.chkUseAuditing.Size = New System.Drawing.Size(86, 17)
         Me.chkUseAuditing.TabIndex = 7
@@ -142,10 +152,9 @@ Partial Class frmSmartUpdate
         '
         'chkRemoveNonSourceData
         '
-        Me.chkRemoveNonSourceData.AutoSize = True
         Me.chkRemoveNonSourceData.Checked = True
         Me.chkRemoveNonSourceData.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.chkRemoveNonSourceData.Location = New System.Drawing.Point(810, 503)
+        Me.chkRemoveNonSourceData.Location = New System.Drawing.Point(6, 88)
         Me.chkRemoveNonSourceData.Name = "chkRemoveNonSourceData"
         Me.chkRemoveNonSourceData.Size = New System.Drawing.Size(213, 17)
         Me.chkRemoveNonSourceData.TabIndex = 8
@@ -157,7 +166,7 @@ Partial Class frmSmartUpdate
         Me.chkUseTargetCollation.AutoSize = True
         Me.chkUseTargetCollation.Checked = True
         Me.chkUseTargetCollation.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.chkUseTargetCollation.Location = New System.Drawing.Point(810, 526)
+        Me.chkUseTargetCollation.Location = New System.Drawing.Point(6, 111)
         Me.chkUseTargetCollation.Name = "chkUseTargetCollation"
         Me.chkUseTargetCollation.Size = New System.Drawing.Size(171, 17)
         Me.chkUseTargetCollation.TabIndex = 9
@@ -166,7 +175,7 @@ Partial Class frmSmartUpdate
         '
         'txtSourceTable
         '
-        Me.txtSourceTable.Location = New System.Drawing.Point(82, 93)
+        Me.txtSourceTable.Location = New System.Drawing.Point(56, 74)
         Me.txtSourceTable.Name = "txtSourceTable"
         Me.txtSourceTable.ReadOnly = True
         Me.txtSourceTable.Size = New System.Drawing.Size(249, 20)
@@ -174,7 +183,7 @@ Partial Class frmSmartUpdate
         '
         'txtTargetTable
         '
-        Me.txtTargetTable.Location = New System.Drawing.Point(423, 93)
+        Me.txtTargetTable.Location = New System.Drawing.Point(397, 74)
         Me.txtTargetTable.Name = "txtTargetTable"
         Me.txtTargetTable.Size = New System.Drawing.Size(249, 20)
         Me.txtTargetTable.TabIndex = 11
@@ -247,7 +256,7 @@ Partial Class frmSmartUpdate
         '
         Me.lstSourceTables.FormattingEnabled = True
         Me.lstSourceTables.HorizontalScrollbar = True
-        Me.lstSourceTables.Location = New System.Drawing.Point(82, 93)
+        Me.lstSourceTables.Location = New System.Drawing.Point(56, 74)
         Me.lstSourceTables.Name = "lstSourceTables"
         Me.lstSourceTables.Size = New System.Drawing.Size(242, 82)
         Me.lstSourceTables.TabIndex = 147
@@ -258,7 +267,7 @@ Partial Class frmSmartUpdate
         '
         Me.btnCrawlSourceTables.BackgroundImage = Global.Sequenchel.My.Resources.Resources.button_down
         Me.btnCrawlSourceTables.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
-        Me.btnCrawlSourceTables.Location = New System.Drawing.Point(337, 94)
+        Me.btnCrawlSourceTables.Location = New System.Drawing.Point(311, 75)
         Me.btnCrawlSourceTables.Name = "btnCrawlSourceTables"
         Me.btnCrawlSourceTables.Size = New System.Drawing.Size(30, 20)
         Me.btnCrawlSourceTables.TabIndex = 146
@@ -269,7 +278,7 @@ Partial Class frmSmartUpdate
         Me.lblStatus.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.lblStatus.AutoSize = True
         Me.lblStatus.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblStatus.Location = New System.Drawing.Point(80, 575)
+        Me.lblStatus.Location = New System.Drawing.Point(103, 556)
         Me.lblStatus.Name = "lblStatus"
         Me.lblStatus.Size = New System.Drawing.Size(0, 16)
         Me.lblStatus.TabIndex = 148
@@ -278,7 +287,7 @@ Partial Class frmSmartUpdate
         '
         Me.lstTargetTables.FormattingEnabled = True
         Me.lstTargetTables.HorizontalScrollbar = True
-        Me.lstTargetTables.Location = New System.Drawing.Point(423, 93)
+        Me.lstTargetTables.Location = New System.Drawing.Point(397, 74)
         Me.lstTargetTables.Name = "lstTargetTables"
         Me.lstTargetTables.Size = New System.Drawing.Size(242, 82)
         Me.lstTargetTables.TabIndex = 150
@@ -289,7 +298,7 @@ Partial Class frmSmartUpdate
         '
         Me.btnCrawlTargetTables.BackgroundImage = Global.Sequenchel.My.Resources.Resources.button_down
         Me.btnCrawlTargetTables.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
-        Me.btnCrawlTargetTables.Location = New System.Drawing.Point(677, 94)
+        Me.btnCrawlTargetTables.Location = New System.Drawing.Point(651, 75)
         Me.btnCrawlTargetTables.Name = "btnCrawlTargetTables"
         Me.btnCrawlTargetTables.Size = New System.Drawing.Size(30, 20)
         Me.btnCrawlTargetTables.TabIndex = 149
@@ -297,7 +306,7 @@ Partial Class frmSmartUpdate
         '
         'btnImportTables
         '
-        Me.btnImportTables.Location = New System.Drawing.Point(302, 134)
+        Me.btnImportTables.Location = New System.Drawing.Point(276, 115)
         Me.btnImportTables.Name = "btnImportTables"
         Me.btnImportTables.Size = New System.Drawing.Size(164, 23)
         Me.btnImportTables.TabIndex = 151
@@ -372,16 +381,16 @@ Partial Class frmSmartUpdate
         Me.pnlMain.Controls.Add(Me.Label7)
         Me.pnlMain.Controls.Add(Me.pnlTargetTable)
         Me.pnlMain.Controls.Add(Me.pnlSourceDataType)
-        Me.pnlMain.Location = New System.Drawing.Point(38, 166)
+        Me.pnlMain.Location = New System.Drawing.Point(12, 147)
         Me.pnlMain.Name = "pnlMain"
-        Me.pnlMain.Size = New System.Drawing.Size(750, 377)
+        Me.pnlMain.Size = New System.Drawing.Size(750, 376)
         Me.pnlMain.TabIndex = 158
         '
         'rbnSourceConfig
         '
         Me.rbnSourceConfig.AutoSize = True
         Me.rbnSourceConfig.Checked = True
-        Me.rbnSourceConfig.Location = New System.Drawing.Point(810, 171)
+        Me.rbnSourceConfig.Location = New System.Drawing.Point(10, 19)
         Me.rbnSourceConfig.Name = "rbnSourceConfig"
         Me.rbnSourceConfig.Size = New System.Drawing.Size(176, 17)
         Me.rbnSourceConfig.TabIndex = 159
@@ -393,7 +402,7 @@ Partial Class frmSmartUpdate
         '
         Me.rbnTargetConfig.AutoSize = True
         Me.rbnTargetConfig.Enabled = False
-        Me.rbnTargetConfig.Location = New System.Drawing.Point(810, 194)
+        Me.rbnTargetConfig.Location = New System.Drawing.Point(10, 42)
         Me.rbnTargetConfig.Name = "rbnTargetConfig"
         Me.rbnTargetConfig.Size = New System.Drawing.Size(173, 17)
         Me.rbnTargetConfig.TabIndex = 160
@@ -402,7 +411,7 @@ Partial Class frmSmartUpdate
         '
         'btnSaveConfiguration
         '
-        Me.btnSaveConfiguration.Location = New System.Drawing.Point(810, 290)
+        Me.btnSaveConfiguration.Location = New System.Drawing.Point(10, 161)
         Me.btnSaveConfiguration.Name = "btnSaveConfiguration"
         Me.btnSaveConfiguration.Size = New System.Drawing.Size(171, 23)
         Me.btnSaveConfiguration.TabIndex = 161
@@ -414,7 +423,7 @@ Partial Class frmSmartUpdate
         Me.lblStatusText.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.lblStatusText.AutoSize = True
         Me.lblStatusText.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblStatusText.Location = New System.Drawing.Point(13, 575)
+        Me.lblStatusText.Location = New System.Drawing.Point(36, 556)
         Me.lblStatusText.Name = "lblStatusText"
         Me.lblStatusText.Size = New System.Drawing.Size(55, 16)
         Me.lblStatusText.TabIndex = 162
@@ -422,7 +431,7 @@ Partial Class frmSmartUpdate
         '
         'btnCreateSmartUpdateTable
         '
-        Me.btnCreateSmartUpdateTable.Location = New System.Drawing.Point(810, 91)
+        Me.btnCreateSmartUpdateTable.Location = New System.Drawing.Point(6, 19)
         Me.btnCreateSmartUpdateTable.Name = "btnCreateSmartUpdateTable"
         Me.btnCreateSmartUpdateTable.Size = New System.Drawing.Size(171, 23)
         Me.btnCreateSmartUpdateTable.TabIndex = 163
@@ -431,7 +440,8 @@ Partial Class frmSmartUpdate
         '
         'btnCreateSmartUpdateProcedure
         '
-        Me.btnCreateSmartUpdateProcedure.Location = New System.Drawing.Point(810, 120)
+        Me.btnCreateSmartUpdateProcedure.Enabled = False
+        Me.btnCreateSmartUpdateProcedure.Location = New System.Drawing.Point(6, 48)
         Me.btnCreateSmartUpdateProcedure.Name = "btnCreateSmartUpdateProcedure"
         Me.btnCreateSmartUpdateProcedure.Size = New System.Drawing.Size(171, 23)
         Me.btnCreateSmartUpdateProcedure.TabIndex = 164
@@ -442,7 +452,7 @@ Partial Class frmSmartUpdate
         '
         Me.dtpStartDate.CustomFormat = "yyyy-MM-dd"
         Me.dtpStartDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom
-        Me.dtpStartDate.Location = New System.Drawing.Point(885, 217)
+        Me.dtpStartDate.Location = New System.Drawing.Point(85, 88)
         Me.dtpStartDate.Name = "dtpStartDate"
         Me.dtpStartDate.Size = New System.Drawing.Size(96, 20)
         Me.dtpStartDate.TabIndex = 165
@@ -450,7 +460,7 @@ Partial Class frmSmartUpdate
         'Label12
         '
         Me.Label12.AutoSize = True
-        Me.Label12.Location = New System.Drawing.Point(810, 223)
+        Me.Label12.Location = New System.Drawing.Point(10, 94)
         Me.Label12.Name = "Label12"
         Me.Label12.Size = New System.Drawing.Size(55, 13)
         Me.Label12.TabIndex = 166
@@ -459,7 +469,7 @@ Partial Class frmSmartUpdate
         'Label13
         '
         Me.Label13.AutoSize = True
-        Me.Label13.Location = New System.Drawing.Point(810, 246)
+        Me.Label13.Location = New System.Drawing.Point(10, 117)
         Me.Label13.Name = "Label13"
         Me.Label13.Size = New System.Drawing.Size(52, 13)
         Me.Label13.TabIndex = 167
@@ -469,7 +479,7 @@ Partial Class frmSmartUpdate
         '
         Me.dtpEndDate.CustomFormat = " "
         Me.dtpEndDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom
-        Me.dtpEndDate.Location = New System.Drawing.Point(885, 240)
+        Me.dtpEndDate.Location = New System.Drawing.Point(85, 111)
         Me.dtpEndDate.Name = "dtpEndDate"
         Me.dtpEndDate.Size = New System.Drawing.Size(96, 20)
         Me.dtpEndDate.TabIndex = 168
@@ -479,7 +489,7 @@ Partial Class frmSmartUpdate
         Me.chkNoEndDate.AutoSize = True
         Me.chkNoEndDate.Checked = True
         Me.chkNoEndDate.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.chkNoEndDate.Location = New System.Drawing.Point(885, 266)
+        Me.chkNoEndDate.Location = New System.Drawing.Point(85, 137)
         Me.chkNoEndDate.Name = "chkNoEndDate"
         Me.chkNoEndDate.Size = New System.Drawing.Size(88, 17)
         Me.chkNoEndDate.TabIndex = 169
@@ -491,7 +501,7 @@ Partial Class frmSmartUpdate
         Me.lblSmartUpdateCommand.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.lblSmartUpdateCommand.AutoSize = True
         Me.lblSmartUpdateCommand.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblSmartUpdateCommand.Location = New System.Drawing.Point(15, 551)
+        Me.lblSmartUpdateCommand.Location = New System.Drawing.Point(9, 533)
         Me.lblSmartUpdateCommand.Name = "lblSmartUpdateCommand"
         Me.lblSmartUpdateCommand.Size = New System.Drawing.Size(122, 13)
         Me.lblSmartUpdateCommand.TabIndex = 171
@@ -500,40 +510,96 @@ Partial Class frmSmartUpdate
         'txtSmartUpdateCommand
         '
         Me.txtSmartUpdateCommand.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.txtSmartUpdateCommand.Location = New System.Drawing.Point(147, 550)
+        Me.txtSmartUpdateCommand.Location = New System.Drawing.Point(137, 530)
         Me.txtSmartUpdateCommand.Name = "txtSmartUpdateCommand"
         Me.txtSmartUpdateCommand.ReadOnly = True
-        Me.txtSmartUpdateCommand.Size = New System.Drawing.Size(641, 20)
+        Me.txtSmartUpdateCommand.Size = New System.Drawing.Size(625, 20)
         Me.txtSmartUpdateCommand.TabIndex = 172
         '
         'btnAddSmartUpdateSchedule
         '
-        Me.btnAddSmartUpdateSchedule.Location = New System.Drawing.Point(810, 547)
+        Me.btnAddSmartUpdateSchedule.Location = New System.Drawing.Point(6, 132)
         Me.btnAddSmartUpdateSchedule.Name = "btnAddSmartUpdateSchedule"
         Me.btnAddSmartUpdateSchedule.Size = New System.Drawing.Size(171, 23)
         Me.btnAddSmartUpdateSchedule.TabIndex = 173
         Me.btnAddSmartUpdateSchedule.Text = "Add to SmartUpdate Schedule"
         Me.btnAddSmartUpdateSchedule.UseVisualStyleBackColor = True
         '
+        'lblLicenseRequired
+        '
+        Me.lblLicenseRequired.AutoSize = True
+        Me.lblLicenseRequired.Location = New System.Drawing.Point(6, 78)
+        Me.lblLicenseRequired.Name = "lblLicenseRequired"
+        Me.lblLicenseRequired.Size = New System.Drawing.Size(185, 13)
+        Me.lblLicenseRequired.TabIndex = 174
+        Me.lblLicenseRequired.Text = "A License is required for SmartUpdate"
+        '
+        'grpConfiguration
+        '
+        Me.grpConfiguration.Controls.Add(Me.Label11)
+        Me.grpConfiguration.Controls.Add(Me.rbnSourceConfig)
+        Me.grpConfiguration.Controls.Add(Me.rbnTargetConfig)
+        Me.grpConfiguration.Controls.Add(Me.btnSaveConfiguration)
+        Me.grpConfiguration.Controls.Add(Me.dtpStartDate)
+        Me.grpConfiguration.Controls.Add(Me.Label12)
+        Me.grpConfiguration.Controls.Add(Me.chkNoEndDate)
+        Me.grpConfiguration.Controls.Add(Me.Label13)
+        Me.grpConfiguration.Controls.Add(Me.dtpEndDate)
+        Me.grpConfiguration.Location = New System.Drawing.Point(768, 169)
+        Me.grpConfiguration.Name = "grpConfiguration"
+        Me.grpConfiguration.Size = New System.Drawing.Size(220, 196)
+        Me.grpConfiguration.TabIndex = 175
+        Me.grpConfiguration.TabStop = False
+        Me.grpConfiguration.Text = "Configuration"
+        '
+        'Label11
+        '
+        Me.Label11.AutoSize = True
+        Me.Label11.Location = New System.Drawing.Point(10, 62)
+        Me.Label11.Name = "Label11"
+        Me.Label11.Size = New System.Drawing.Size(152, 13)
+        Me.Label11.TabIndex = 170
+        Me.Label11.Text = "Source has priority over Target"
+        '
+        'grpCommand
+        '
+        Me.grpCommand.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.grpCommand.Controls.Add(Me.btnAddSmartUpdateSchedule)
+        Me.grpCommand.Controls.Add(Me.chkCreateTargetTable)
+        Me.grpCommand.Controls.Add(Me.chkCreateAuditTable)
+        Me.grpCommand.Controls.Add(Me.chkUseAuditing)
+        Me.grpCommand.Controls.Add(Me.chkRemoveNonSourceData)
+        Me.grpCommand.Controls.Add(Me.chkUseTargetCollation)
+        Me.grpCommand.Location = New System.Drawing.Point(768, 397)
+        Me.grpCommand.Name = "grpCommand"
+        Me.grpCommand.Size = New System.Drawing.Size(220, 163)
+        Me.grpCommand.TabIndex = 176
+        Me.grpCommand.TabStop = False
+        Me.grpCommand.Text = "SmartUpdateCommand"
+        '
+        'grpCreateSQL
+        '
+        Me.grpCreateSQL.Controls.Add(Me.btnCreateSmartUpdateTable)
+        Me.grpCreateSQL.Controls.Add(Me.btnCreateSmartUpdateProcedure)
+        Me.grpCreateSQL.Controls.Add(Me.lblLicenseRequired)
+        Me.grpCreateSQL.Location = New System.Drawing.Point(768, 58)
+        Me.grpCreateSQL.Name = "grpCreateSQL"
+        Me.grpCreateSQL.Size = New System.Drawing.Size(220, 105)
+        Me.grpCreateSQL.TabIndex = 177
+        Me.grpCreateSQL.TabStop = False
+        Me.grpCreateSQL.Text = "Create SQL Components"
+        '
         'frmSmartUpdate
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1106, 600)
-        Me.Controls.Add(Me.btnAddSmartUpdateSchedule)
+        Me.ClientSize = New System.Drawing.Size(1002, 581)
+        Me.Controls.Add(Me.grpCreateSQL)
+        Me.Controls.Add(Me.grpCommand)
+        Me.Controls.Add(Me.grpConfiguration)
         Me.Controls.Add(Me.txtSmartUpdateCommand)
         Me.Controls.Add(Me.lblSmartUpdateCommand)
-        Me.Controls.Add(Me.chkNoEndDate)
-        Me.Controls.Add(Me.dtpEndDate)
-        Me.Controls.Add(Me.Label13)
-        Me.Controls.Add(Me.Label12)
-        Me.Controls.Add(Me.dtpStartDate)
-        Me.Controls.Add(Me.btnCreateSmartUpdateProcedure)
-        Me.Controls.Add(Me.btnCreateSmartUpdateTable)
         Me.Controls.Add(Me.lblStatusText)
-        Me.Controls.Add(Me.btnSaveConfiguration)
-        Me.Controls.Add(Me.rbnTargetConfig)
-        Me.Controls.Add(Me.rbnSourceConfig)
         Me.Controls.Add(Me.lstTargetTables)
         Me.Controls.Add(Me.lstSourceTables)
         Me.Controls.Add(Me.pnlMain)
@@ -543,19 +609,22 @@ Partial Class frmSmartUpdate
         Me.Controls.Add(Me.btnCrawlSourceTables)
         Me.Controls.Add(Me.txtTargetTable)
         Me.Controls.Add(Me.txtSourceTable)
-        Me.Controls.Add(Me.chkUseTargetCollation)
-        Me.Controls.Add(Me.chkRemoveNonSourceData)
-        Me.Controls.Add(Me.chkUseAuditing)
-        Me.Controls.Add(Me.chkCreateAuditTable)
-        Me.Controls.Add(Me.chkCreateTargetTable)
         Me.Controls.Add(Me.cbxConnection)
         Me.Controls.Add(Me.Label3)
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.Label1)
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "frmSmartUpdate"
-        Me.Text = "frmSmartUpdate"
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
+        Me.Text = "SmartUpdate"
         Me.pnlMain.ResumeLayout(False)
         Me.pnlMain.PerformLayout()
+        Me.grpConfiguration.ResumeLayout(False)
+        Me.grpConfiguration.PerformLayout()
+        Me.grpCommand.ResumeLayout(False)
+        Me.grpCommand.PerformLayout()
+        Me.grpCreateSQL.ResumeLayout(False)
+        Me.grpCreateSQL.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -606,4 +675,9 @@ Partial Class frmSmartUpdate
     Friend WithEvents lblSmartUpdateCommand As System.Windows.Forms.Label
     Friend WithEvents txtSmartUpdateCommand As System.Windows.Forms.TextBox
     Friend WithEvents btnAddSmartUpdateSchedule As System.Windows.Forms.Button
+    Friend WithEvents lblLicenseRequired As System.Windows.Forms.Label
+    Friend WithEvents grpConfiguration As System.Windows.Forms.GroupBox
+    Friend WithEvents Label11 As System.Windows.Forms.Label
+    Friend WithEvents grpCommand As System.Windows.Forms.GroupBox
+    Friend WithEvents grpCreateSQL As System.Windows.Forms.GroupBox
 End Class
