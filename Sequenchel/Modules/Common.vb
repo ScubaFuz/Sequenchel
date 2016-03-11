@@ -1262,6 +1262,58 @@ Module Common
         QueryDb(dhdDatabase, strQuery, False)
     End Sub
 
+    Friend Function GetDefaultLogPath(dhdConnect As DataHandler.db) As String
+        strQuery = "SELECT coalesce(serverproperty('InstanceDefaultLogPath'),LEFT(physical_name,LEN(physical_name) - charindex('\',reverse(physical_name)))) AS InstanceDefaultLogPath FROM sys.master_files where name = 'mastlog' "
+
+        Dim objData As DataSet
+        objData = QueryDb(dhdConnect, strQuery, True)
+        Dim strReturn As String = ""
+
+        If DatasetCheck(objData) = False Then
+            strReturn = ""
+        Else
+            strReturn = objData.Tables.Item(0).Rows(0).Item("InstanceDefaultLogPath")
+        End If
+
+        Return strReturn
+    End Function
+
+    Friend Function GetJobName(dhdConnect As DataHandler.db, strPattern As String) As String
+
+        strQuery = "select [name] AS JobName from msdb.dbo.sysjobs where name like '%" & strPattern & "%'"
+
+        Dim objData As DataSet
+        objData = QueryDb(dhdConnect, strQuery, True)
+        Dim strReturn As String = ""
+
+        If DatasetCheck(objData) = False Then
+            strReturn = ""
+        Else
+            strReturn = objData.Tables.Item(0).Rows(0).Item("JobName")
+        End If
+
+        Return strReturn
+    End Function
+
+    Friend Function GetJobStepCount(dhdConnect As DataHandler.db, strJobName As String) As Integer
+        Dim intReturn As Integer = 0
+        Try
+            strQuery = "select COUNT(*) AS StepsCount FROM [msdb].[dbo].[sysjobs] AS [job] INNER JOIN [msdb].[dbo].[sysjobsteps] AS [stp] ON [job].[job_id] = [stp].[job_id] WHERE [job].name = 'Sequenchel SmartUpdate'"
+            Dim objData As DataSet
+            objData = QueryDb(dhdConnect, strQuery, True)
+
+            If DatasetCheck(objData) = False Then
+                intReturn = -1
+            Else
+                intReturn = objData.Tables.Item(0).Rows(0).Item("StepsCount")
+            End If
+        Catch ex As Exception
+            WriteLog("Error retrieving Job Information" & Environment.NewLine & ex.Message, 1)
+            Return -1
+        End Try
+
+        Return intReturn
+    End Function
     'Friend Sub LoadLookupList(cbxField As ComboField, blnRefine As Boolean, blnUseOtherLookups As Boolean)
     '    If dhdConnection.DataBaseOnline = True Then
     '        Dim strQuerySelect As String = "SELECT DISTINCT "

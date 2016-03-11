@@ -1007,23 +1007,7 @@
     End Sub
 
     Private Sub btnErrorlogPathDatabase_Click(sender As Object, e As EventArgs) Handles btnErrorlogPathDatabase.Click
-        strQuery = "select InstanceDefaultLogPath = serverproperty('InstanceDefaultLogPath')"
-
-        Dim objData As DataSet
-        objData = QueryDb(dhdDatabase, strQuery, True)
-        Dim strReturn As String = ""
-
-        If objData Is Nothing Then
-            'blnDatabaseOnLine = False
-            Exit Sub
-        End If
-        If objData.Tables.Count = 0 Then Exit Sub
-        If objData.Tables(0).Rows.Count = 0 Then Exit Sub
-
-        For intRowCount = 0 To objData.Tables(0).Rows.Count - 1
-            strReturn = objData.Tables.Item(0).Rows(intRowCount).Item("InstanceDefaultLogPath")
-        Next
-        txtErrorlogPath.Text = strReturn
+        txtErrorlogPath.Text = GetDefaultLogPath(dhdDatabase)
     End Sub
 
     Private Sub btnErrorlogPathSystem_Click(sender As Object, e As EventArgs) Handles btnErrorlogPathSystem.Click
@@ -1132,6 +1116,8 @@
                 strReturn = "CycleErrorlogs"
             Case "Defragment Indexes"
                 strReturn = "DefragIndexes"
+            Case "SmartUpdate"
+                strReturn = "SmartUpdate"
             Case Else
                 strReturn = ""
         End Select

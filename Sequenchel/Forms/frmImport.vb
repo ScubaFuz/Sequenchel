@@ -23,6 +23,24 @@ Public Class frmImport
         UploadFile()
     End Sub
 
+    Private Sub btnUploadTable_Click(sender As Object, e As EventArgs) Handles btnUploadTable.Click
+        Dim intRecordsAffected As Integer = 0
+        Try
+            intRecordsAffected = UploadTable(dgvImport.DataSource)
+            If intRecordsAffected = -1 Then
+                MessageBox.Show("Export to database failed. Check if the columns match and try again")
+                lblStatusText.Text = "0 rows uploaded"
+                Exit Sub
+            End If
+        Catch ex As Exception
+            MessageBox.Show("Export to database failed. Check if the columns match and try again" & Environment.NewLine & ex.Message)
+            lblStatusText.Text = "0 rows uploaded"
+            Exit Sub
+        End Try
+        lblStatusText.Text = intRecordsAffected & " rows uploaded"
+
+    End Sub
+
     Private Sub LoadDefaults()
         txtServer.Text = dhdConnection.DataLocation
         txtDatabase.Text = dhdConnection.DatabaseName
@@ -266,20 +284,8 @@ Public Class frmImport
     End Function
 
     Private Sub SaveToDatabase(dtsInput As DataSet)
-        Dim dhdDB As New DataHandler.db
         Dim intRecordsAffected As Integer = 0
-
-        dhdDB.DataLocation = txtServer.Text
-        dhdDB.DatabaseName = txtDatabase.Text
-        dhdDB.DataTableName = txtTable.Text
-        dhdDB.DataProvider = "SQL"
-        If chkWinAuth.Checked = True Then
-            dhdDB.LoginMethod = "Windows"
-        Else
-            dhdDB.LoginMethod = "SQL"
-        End If
-        dhdDB.LoginName = txtUser.Text
-        dhdDB.Password = txtPassword.Text
+        Dim intReturn As Integer = 0
 
         Try
             For Each Table In dtsInput.Tables
@@ -292,7 +298,13 @@ Public Class frmImport
                     End If
                 End If
                 If blnExport = True Then
-                    intRecordsAffected += dhdDB.UploadSqlData(Table)
+                    intReturn = UploadTable(Table)
+                    If intReturn = -1 Then
+                        MessageBox.Show("Export to database failed. Check if the columns match and try again" & Environment.NewLine & "If you are importing more than 1 table, make sure they have identical columns")
+                        Exit Sub
+                    Else
+                        intRecordsAffected += intReturn
+                    End If
                 End If
             Next
             'intRecordsAffected = dhdDB.UploadSqlData(dgvImport.DataSource)
@@ -301,6 +313,32 @@ Public Class frmImport
             MessageBox.Show("Export to database failed. Check if the columns match and try again" & Environment.NewLine & "If you are importing more than 1 table, make sure they have identical columns" & Environment.NewLine & ex.Message)
         End Try
     End Sub
+
+    Private Function UploadTable(dttInput As DataTable) As Integer
+        Dim dhdDB As New DataHandler.db
+        Dim intRecordsAffected As Integer = 0
+
+        Try
+            dhdDB.DataLocation = txtServer.Text
+            dhdDB.DatabaseName = txtDatabase.Text
+            dhdDB.DataTableName = txtTable.Text
+            dhdDB.DataProvider = "SQL"
+            If chkWinAuth.Checked = True Then
+                dhdDB.LoginMethod = "Windows"
+            Else
+                dhdDB.LoginMethod = "SQL"
+            End If
+            dhdDB.LoginName = txtUser.Text
+            dhdDB.Password = txtPassword.Text
+
+            intRecordsAffected = dhdDB.UploadSqlData(dttInput)
+
+        Catch ex As Exception
+            WriteLog("Uploading Table failed. " & ex.Message, 1)
+            Return -1
+        End Try
+        Return intRecordsAffected
+    End Function
 
     Private Sub Checkfields()
         If chkDatabase.Checked = True Then

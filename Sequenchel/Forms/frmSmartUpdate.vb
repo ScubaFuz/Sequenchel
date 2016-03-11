@@ -50,7 +50,7 @@
             If CurVar.Encryption = False Then strSQL = strSQL.Replace("WITH ENCRYPTION", "")
             If DevMode Then MessageBox.Show(strSQL)
             QueryDb(dhdConnection, strSQL, False, 10)
-            lblStatus.Text = "SmartUpdate Table created succesfully"
+            lblStatusText.Text = "SmartUpdate Table created succesfully"
         Catch ex As Exception
             MessageBox.Show("There was an error while creating the SmartUpdate Table" & Environment.NewLine & ex.Message, "Error Creating Table", MessageBoxButtons.OK)
         End Try
@@ -67,7 +67,7 @@
             If CurVar.Encryption = False Then strSQL = strSQL.Replace("WITH ENCRYPTION", "")
             If DevMode Then MessageBox.Show(strSQL)
             QueryDb(dhdConnection, strSQL, False, 10)
-            lblStatus.Text = "SmartUpdate Procedure created succesfully"
+            lblStatusText.Text = "SmartUpdate Procedure created succesfully"
         Catch ex As Exception
             MessageBox.Show("There was an error while creating the SmartUpdate Procedure" & Environment.NewLine & ex.Message, "Error Creating Procedure", MessageBoxButtons.OK)
         End Try
@@ -131,7 +131,7 @@
         Dim strSQL As String = "SELECT 1 AS TableExists FROM INFORMATION_SCHEMA.TABLES  WHERE TABLE_NAME = 'SmartUpdate'"
         Dim dtsData As DataSet = QueryDb(dhdConnection, strSQL, True, 5)
         If DatasetCheck(dtsData) = False Then
-            lblStatus.Text = "The SmartUpdate table was not found. Please create the table first."
+            lblStatusText.Text = "The SmartUpdate table was not found. Please create the table first."
             Exit Sub
         End If
 
@@ -166,9 +166,9 @@
         Try
             QueryDb(dhdConnection, strDelete, 0)
             QueryDb(dhdConnection, strInsert, 0)
-            lblStatus.Text = "Configuration Saved to SmartUpdate Table on connection: " & CurStatus.Connection
+            lblStatusText.Text = "Configuration Saved to SmartUpdate Table on connection: " & CurStatus.Connection
         Catch ex As Exception
-            lblStatus.Text = "There was an error saving the configuration. Check the log for more details"
+            lblStatusText.Text = "There was an error saving the configuration. Check the log for more details"
             MessageBox.Show("There was an error saving the configuration: " & Environment.NewLine & ex.Message)
             WriteLog("There was an error saving the configuration: " & Environment.NewLine & ex.Message, 1)
         End Try
@@ -205,7 +205,40 @@
     End Sub
 
     Private Sub btnAddSmartUpdateSchedule_Click(sender As Object, e As EventArgs) Handles btnAddSmartUpdateSchedule.Click
-        MessageBox.Show("The Scheduler is not yet operational. Please schedule the SmartUpdate Command manually.")
+        'MessageBox.Show("The Scheduler is not yet operational. Please schedule the SmartUpdate Command manually.")
+
+        'get logpath
+        Dim strLogPath As String = GetDefaultLogPath(dhdConnection)
+        'get jobname
+        Dim strJobName As String = GetJobName(dhdConnection, "SmartUpdate")
+        If strJobName = "" Then
+            lblStatusText.Text = "Job SmartUpdate was not found on the server. Create the job first with the scheduler (Settings)"
+            Exit Sub
+        End If
+        'get JobStepCount
+        Dim intJobStepCount As Integer = GetJobStepCount(dhdConnection, strJobName)
+        If intJobStepCount = -1 Then
+            lblStatusText.Text = "There was an error retrieving information about the SmartUpdate Job, aborting action"
+            Exit Sub
+        End If
+        Dim intFlags As Integer = 0
+        If intJobStepCount > 0 Then intFlags = 2
+
+        'get SqlCommand
+        Dim strSQL As String = txtSmartUpdateCommand.Text
+
+        'create jobstep
+        strQuery = " EXEC msdb.dbo.sp_add_jobstep "
+        strQuery &= " @job_name='" & strJobName & "',"
+        strQuery &= " @step_name='SU_" & txtSourceTable.Text & "_" & txtTargetTable.Text & "',"
+        strQuery &= " @subsystem=N'TSQL',"
+        strQuery &= " @command='" & strSQL & "',"
+        strQuery &= " @database_name='" & dhdConnection.DatabaseName & "',"
+        strQuery &= " @output_file_name='" & strLogPath & "\SmartUpdate.log',"
+        strQuery &= " @flags=" & intFlags & ";"
+
+        QueryDb(dhdConnection, strQuery, 0)
+        lblStatusText.Text = "Jobstep added to job: " & strJobName & " on database: " & dhdConnection.DatabaseName
     End Sub
 
     Private Sub LoadTables()
@@ -220,7 +253,7 @@
 
         If lstNewTables Is Nothing Then
             CursorControl()
-            lblStatus.Text = "No tables found"
+            lblStatusText.Text = "No tables found"
             Exit Sub
         End If
 
@@ -397,14 +430,14 @@
 
         Dim intPercent As Integer = pnlCompareColumn.Controls.Count / dtsTables.Tables(0).Rows.Count * 200
         If intPercent < 50 Then
-            lblStatus.Text = "Matching columns is only " & intPercent & " percent. Are you sure you have the correct tables selected?"
+            lblStatusText.Text = "Matching columns is only " & intPercent & " percent. Are you sure you have the correct tables selected?"
         Else
-            lblStatus.Text = ""
+            lblStatusText.Text = ""
         End If
     End Sub
 
     Private Sub ResetScreen()
-        lblStatus.Text = ""
+        lblStatusText.Text = ""
         chkCreateTargetTable.Checked = False
         rbnSourceConfig.Checked = True
         rbnTargetConfig.Enabled = False

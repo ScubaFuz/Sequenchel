@@ -44,7 +44,7 @@ Partial Class frmSmartUpdate
         Me.Label8 = New System.Windows.Forms.Label()
         Me.lstSourceTables = New System.Windows.Forms.ListBox()
         Me.btnCrawlSourceTables = New System.Windows.Forms.Button()
-        Me.lblStatus = New System.Windows.Forms.Label()
+        Me.lblStatusText = New System.Windows.Forms.Label()
         Me.lstTargetTables = New System.Windows.Forms.ListBox()
         Me.btnCrawlTargetTables = New System.Windows.Forms.Button()
         Me.btnImportTables = New System.Windows.Forms.Button()
@@ -58,7 +58,7 @@ Partial Class frmSmartUpdate
         Me.rbnSourceConfig = New System.Windows.Forms.RadioButton()
         Me.rbnTargetConfig = New System.Windows.Forms.RadioButton()
         Me.btnSaveConfiguration = New System.Windows.Forms.Button()
-        Me.lblStatusText = New System.Windows.Forms.Label()
+        Me.lblStatusTitle = New System.Windows.Forms.Label()
         Me.btnCreateSmartUpdateTable = New System.Windows.Forms.Button()
         Me.btnCreateSmartUpdateProcedure = New System.Windows.Forms.Button()
         Me.dtpStartDate = New System.Windows.Forms.DateTimePicker()
@@ -273,15 +273,15 @@ Partial Class frmSmartUpdate
         Me.btnCrawlSourceTables.TabIndex = 146
         Me.btnCrawlSourceTables.Text = "..."
         '
-        'lblStatus
+        'lblStatusText
         '
-        Me.lblStatus.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.lblStatus.AutoSize = True
-        Me.lblStatus.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblStatus.Location = New System.Drawing.Point(103, 556)
-        Me.lblStatus.Name = "lblStatus"
-        Me.lblStatus.Size = New System.Drawing.Size(0, 16)
-        Me.lblStatus.TabIndex = 148
+        Me.lblStatusText.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.lblStatusText.AutoSize = True
+        Me.lblStatusText.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblStatusText.Location = New System.Drawing.Point(103, 556)
+        Me.lblStatusText.Name = "lblStatusText"
+        Me.lblStatusText.Size = New System.Drawing.Size(0, 16)
+        Me.lblStatusText.TabIndex = 148
         '
         'lstTargetTables
         '
@@ -418,20 +418,20 @@ Partial Class frmSmartUpdate
         Me.btnSaveConfiguration.Text = "Save Configuration"
         Me.btnSaveConfiguration.UseVisualStyleBackColor = True
         '
-        'lblStatusText
+        'lblStatusTitle
         '
-        Me.lblStatusText.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.lblStatusText.AutoSize = True
-        Me.lblStatusText.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblStatusText.Location = New System.Drawing.Point(36, 556)
-        Me.lblStatusText.Name = "lblStatusText"
-        Me.lblStatusText.Size = New System.Drawing.Size(55, 16)
-        Me.lblStatusText.TabIndex = 162
-        Me.lblStatusText.Text = "Status:"
+        Me.lblStatusTitle.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.lblStatusTitle.AutoSize = True
+        Me.lblStatusTitle.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblStatusTitle.Location = New System.Drawing.Point(36, 556)
+        Me.lblStatusTitle.Name = "lblStatusTitle"
+        Me.lblStatusTitle.Size = New System.Drawing.Size(55, 16)
+        Me.lblStatusTitle.TabIndex = 162
+        Me.lblStatusTitle.Text = "Status:"
         '
         'btnCreateSmartUpdateTable
         '
-        Me.btnCreateSmartUpdateTable.Location = New System.Drawing.Point(6, 19)
+        Me.btnCreateSmartUpdateTable.Location = New System.Drawing.Point(10, 17)
         Me.btnCreateSmartUpdateTable.Name = "btnCreateSmartUpdateTable"
         Me.btnCreateSmartUpdateTable.Size = New System.Drawing.Size(171, 23)
         Me.btnCreateSmartUpdateTable.TabIndex = 163
@@ -441,7 +441,7 @@ Partial Class frmSmartUpdate
         'btnCreateSmartUpdateProcedure
         '
         Me.btnCreateSmartUpdateProcedure.Enabled = False
-        Me.btnCreateSmartUpdateProcedure.Location = New System.Drawing.Point(6, 48)
+        Me.btnCreateSmartUpdateProcedure.Location = New System.Drawing.Point(10, 48)
         Me.btnCreateSmartUpdateProcedure.Name = "btnCreateSmartUpdateProcedure"
         Me.btnCreateSmartUpdateProcedure.Size = New System.Drawing.Size(171, 23)
         Me.btnCreateSmartUpdateProcedure.TabIndex = 164
@@ -518,7 +518,7 @@ Partial Class frmSmartUpdate
         '
         'btnAddSmartUpdateSchedule
         '
-        Me.btnAddSmartUpdateSchedule.Location = New System.Drawing.Point(6, 132)
+        Me.btnAddSmartUpdateSchedule.Location = New System.Drawing.Point(10, 130)
         Me.btnAddSmartUpdateSchedule.Name = "btnAddSmartUpdateSchedule"
         Me.btnAddSmartUpdateSchedule.Size = New System.Drawing.Size(171, 23)
         Me.btnAddSmartUpdateSchedule.TabIndex = 173
@@ -528,7 +528,7 @@ Partial Class frmSmartUpdate
         'lblLicenseRequired
         '
         Me.lblLicenseRequired.AutoSize = True
-        Me.lblLicenseRequired.Location = New System.Drawing.Point(6, 78)
+        Me.lblLicenseRequired.Location = New System.Drawing.Point(10, 74)
         Me.lblLicenseRequired.Name = "lblLicenseRequired"
         Me.lblLicenseRequired.Size = New System.Drawing.Size(185, 13)
         Me.lblLicenseRequired.TabIndex = 174
@@ -599,13 +599,13 @@ Partial Class frmSmartUpdate
         Me.Controls.Add(Me.grpConfiguration)
         Me.Controls.Add(Me.txtSmartUpdateCommand)
         Me.Controls.Add(Me.lblSmartUpdateCommand)
-        Me.Controls.Add(Me.lblStatusText)
+        Me.Controls.Add(Me.lblStatusTitle)
         Me.Controls.Add(Me.lstTargetTables)
         Me.Controls.Add(Me.lstSourceTables)
         Me.Controls.Add(Me.pnlMain)
         Me.Controls.Add(Me.btnImportTables)
         Me.Controls.Add(Me.btnCrawlTargetTables)
-        Me.Controls.Add(Me.lblStatus)
+        Me.Controls.Add(Me.lblStatusText)
         Me.Controls.Add(Me.btnCrawlSourceTables)
         Me.Controls.Add(Me.txtTargetTable)
         Me.Controls.Add(Me.txtSourceTable)
@@ -650,7 +650,7 @@ Partial Class frmSmartUpdate
     Friend WithEvents Label8 As System.Windows.Forms.Label
     Friend WithEvents lstSourceTables As System.Windows.Forms.ListBox
     Friend WithEvents btnCrawlSourceTables As System.Windows.Forms.Button
-    Friend WithEvents lblStatus As System.Windows.Forms.Label
+    Friend WithEvents lblStatusText As System.Windows.Forms.Label
     Friend WithEvents lstTargetTables As System.Windows.Forms.ListBox
     Friend WithEvents btnCrawlTargetTables As System.Windows.Forms.Button
     Friend WithEvents btnImportTables As System.Windows.Forms.Button
@@ -664,7 +664,7 @@ Partial Class frmSmartUpdate
     Friend WithEvents rbnSourceConfig As System.Windows.Forms.RadioButton
     Friend WithEvents rbnTargetConfig As System.Windows.Forms.RadioButton
     Friend WithEvents btnSaveConfiguration As System.Windows.Forms.Button
-    Friend WithEvents lblStatusText As System.Windows.Forms.Label
+    Friend WithEvents lblStatusTitle As System.Windows.Forms.Label
     Friend WithEvents btnCreateSmartUpdateTable As System.Windows.Forms.Button
     Friend WithEvents btnCreateSmartUpdateProcedure As System.Windows.Forms.Button
     Friend WithEvents dtpStartDate As System.Windows.Forms.DateTimePicker
