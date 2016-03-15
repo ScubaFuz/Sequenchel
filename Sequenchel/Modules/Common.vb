@@ -58,6 +58,8 @@ Module Common
             If intPosition < 1 Then intPosition = Command.Length
             Dim strCommand As String = Command.ToLower.Substring(0, intPosition)
             Select Case strCommand
+                Case "/silent"
+                    'Start wihtout any windows / forms
                 Case "/debug"
                     DebugMode = True
                 Case "/control"
@@ -71,14 +73,20 @@ Module Common
                         CurVar.OverridePassword = Encrypt(Command.Substring(intPosition + 1, Command.Length - (intPosition + 1)))
                     End If
                 Case "/report"
-                    'Open Report Tab dirctly
+                    'Open Report window directly
                 Case "/connection"
-                    'Open the chosen connection
-                Case "/TableSet"
-                    'Open the chosen TableSet
+                    'Use the chosen connection
+                Case "/tableset"
+                    'Use the chosen TableSet
+                Case "/table"
+                    'Use the chosen Table
                 Case "/reportname"
                     'Open the report if found
                 Case "/exportfile"
+                    'Export the report to the chosen file
+                Case "/import"
+                    'open the Import window
+                Case "/importfile"
                     'Export the report to the chosen file
             End Select
         Next
