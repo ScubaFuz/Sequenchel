@@ -144,19 +144,30 @@
         GetTableNames()
         Dim strSchemaName As String = ""
         Dim strTableName As String = ""
+        Dim pnlTable As Panel = Nothing
+        Dim pnlDataType As Panel = Nothing
+        Dim pnlPrimaryKey As Panel = Nothing
         Dim strInsert As String = ""
+        Dim strUpdate As String = ""
         Dim strDelete As String = ""
         If rbnSourceConfig.Checked = True Then
             strSchemaName = strSourceSchema
             strTableName = strSourceTable
-            strInsert = InsertString(strSourceSchema, strSourceTable, pnlSourceTable, pnlSourceDataType, pnlSourcePrimaryKey, pnlCompareColumn, dtmStartDate, dtmEndDate)
-            strDelete = "DELETE FROM dbo.SmartUpdate WHERE [DataBaseName] = '" & dhdConnection.DatabaseName & "' AND [SchemaName] = '" & strSourceSchema & "' AND [TableName] = '" & strSourceTable & "'"
+            pnlTable = pnlSourceTable
+            pnlDataType = pnlSourceDataType
+            pnlPrimaryKey = pnlSourcePrimaryKey
         ElseIf rbnTargetConfig.Checked = True Then
             strSchemaName = strTargetSchema
             strTableName = strTargetTable
-            strDelete = "DELETE FROM dbo.SmartUpdate WHERE [DataBaseName] = '" & dhdConnection.DatabaseName & "' AND [SchemaName] = '" & strTargetSchema & "' AND [TableName] = '" & strTargetTable & "'"
-            strInsert = InsertString(strTargetSchema, strTargetTable, pnlTargetTable, pnlTargetDataType, pnlTargetPrimaryKey, pnlCompareColumn, dtmStartDate, dtmEndDate)
+            pnlTable = pnlTargetTable
+            pnlDataType = pnlTargetDataType
+            pnlPrimaryKey = pnlTargetPrimaryKey
         End If
+        strInsert = InsertString(strSchemaName, strTableName, pnlTable, pnlDataType, pnlPrimaryKey, pnlCompareColumn, dtmStartDate, dtmEndDate)
+        strUpdate = "UPDATE dbo.SmartUpdate SET [DateStop] = '" & dtmStartDate.AddDays(-1).ToString("yyyy-MM-dd") & "' WHERE [DataBaseName] = '" & dhdConnection.DatabaseName & "' AND [SchemaName] = '" & strSchemaName & "' AND [TableName] = '" & strTableName & "' 	AND [DateStart] < '" & dtmStartDate.ToString("yyyy-MM-dd") & "' AND COALESCE([DateStop],'2999-12-31') > '" & dtmStartDate.ToString("yyyy-MM-dd") & "' AND [Active] = 1"
+        If dtmEndDate = Nothing Then dtmEndDate = "2999-12-31"
+        strDelete = "UPDATE dbo.SmartUpdate SET [Active] = 0 WHERE [DataBaseName] = '" & dhdConnection.DatabaseName & "' AND [SchemaName] = '" & strSchemaName & "' AND [TableName] = '" & strTableName & "' AND [DateStart] BETWEEN '" & dtmStartDate.ToString("yyyy-MM-dd") & "' AND '" & dtmEndDate.ToString("yyyy-MM-dd") & "' AND [Active] = 1"
+        'strDelete = "DELETE FROM dbo.SmartUpdate WHERE [DataBaseName] = '" & dhdConnection.DatabaseName & "' AND [SchemaName] = '" & strSchemaName & "' AND [TableName] = '" & strTableName & "'"
 
         'get compare columns & PK columns
         strInsert = strInsert.Remove(0, 6)
@@ -164,6 +175,7 @@
 
         'save to table dbo.SmartUpdate
         Try
+            QueryDb(dhdConnection, strUpdate, 0)
             QueryDb(dhdConnection, strDelete, 0)
             QueryDb(dhdConnection, strInsert, 0)
             lblStatusText.Text = "Configuration Saved to SmartUpdate Table on connection: " & CurStatus.Connection

@@ -789,6 +789,7 @@ Public Class frmSequenchel
             cbxSearch.SelectedIndex = -1
             CurStatus.SuspendActions = False
         End If
+        dgvTable1.ClearSelection()
         FieldsClear()
         If CurStatus.Status > 3 Then
             CurStatus.Status = CurrentStatus.StatusList.ControlSearch
@@ -1411,7 +1412,7 @@ Public Class frmSequenchel
 
     Private Sub ItemDelete()
         If dgvTable1.SelectedRows.Count <> 1 Then
-            WriteStatus("You need to select a sinbgle row in order to delete an item", 1, lblStatusText)
+            WriteStatus("You need to select a single row/item in order to delete an item", 1, lblStatusText)
             Exit Sub
         End If
 
