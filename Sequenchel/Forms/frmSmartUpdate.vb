@@ -580,11 +580,11 @@
         Dim strCommand As String = ""
         If txtSourceTable.Text.Length > 0 And txtTargetTable.Text.Length > 0 Then
             GetTableNames()
-            strCommand = "EXECUTE usp_SmartUpdate "
-            strCommand &= strSourceSchema & ", "
-            strCommand &= strSourceTable & ", "
-            strCommand &= strTargetSchema & ", "
-            strCommand &= strTargetTable & ", "
+            strCommand = "EXECUTE [dbo].[usp_SmartUpdate] "
+            strCommand &= "'" & strSourceSchema & "', "
+            strCommand &= "'" & strSourceTable & "', "
+            strCommand &= "'" & strTargetSchema & "', "
+            strCommand &= "'" & strTargetTable & "', "
             strCommand &= If(chkCreateTargetTable.Checked, 1, 0) & ", "
             strCommand &= If(chkUseAuditing.Checked, 1, 0) & ", "
             strCommand &= If(chkCreateAuditTable.Checked, 1, 0) & ", "
