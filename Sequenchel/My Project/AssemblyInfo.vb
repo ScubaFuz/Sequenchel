@@ -12,7 +12,7 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyDescription("Sequenchel Digital Bonus Application SQL.[DBA]")> 
 <Assembly: AssemblyCompany("Thicor Services BV")> 
 <Assembly: AssemblyProduct("Sequenchel")> 
-<Assembly: AssemblyCopyright("Copyright © Thicor Services 2014-2015")> 
+<Assembly: AssemblyCopyright("Copyright © Thicor Services 2014-2016")> 
 <Assembly: AssemblyTrademark("")> 
 
 <Assembly: ComVisible(False)>
