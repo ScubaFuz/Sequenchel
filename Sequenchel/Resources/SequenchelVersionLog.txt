@@ -2,7 +2,7 @@ Version 3.6.0
 New: Added SmartUpdate for easy Datawarehouse building.
 New: Import file can import multiple sheets from 1 Excel file at once. Upload to database per sheet is possible.
 Enhanced: If no path is provided, config files are saved to the default config file location.
-Enhanced: Create Schedule can now create a schedule without jobstep (for SmartUpdate)
+Enhanced: Create Schedule can now create a schedule without jobstep (for SmartUpdate).
 Fixed: Updating a relation to "no connected field" now works.
 Fixed: Deleting an existing relation now works.
 Fixed: Database log path retrieval for SQL older than 2012 (2005 and up) now works.
