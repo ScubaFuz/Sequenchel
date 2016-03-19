@@ -39,12 +39,14 @@ Partial Class frmSequenchel
         Me.mnuMain = New System.Windows.Forms.MenuStrip()
         Me.mnuMainFile = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuMainFileExit = New System.Windows.Forms.ToolStripMenuItem()
+        Me.mnuMainEdit = New System.Windows.Forms.ToolStripMenuItem()
+        Me.mnuMainEditSettings = New System.Windows.Forms.ToolStripMenuItem()
+        Me.mnuMainEditLinkedServers = New System.Windows.Forms.ToolStripMenuItem()
+        Me.mnuMainEditConfiguration = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuMainTools = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuMainToolsReports = New System.Windows.Forms.ToolStripMenuItem()
-        Me.mnuMainToolsConfiguration = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuMainToolsImport = New System.Windows.Forms.ToolStripMenuItem()
-        Me.mnuMainToolsLinkedServers = New System.Windows.Forms.ToolStripMenuItem()
-        Me.mnuMainToolsSettings = New System.Windows.Forms.ToolStripMenuItem()
+        Me.mnuMainToolsSmartUpdate = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuMainHelp = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuMainHelpManual = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuMainHelpAbout = New System.Windows.Forms.ToolStripMenuItem()
@@ -106,6 +108,7 @@ Partial Class frmSequenchel
         Me.btnClose.TabIndex = 5
         Me.btnClose.Text = "Close"
         Me.btnClose.UseVisualStyleBackColor = True
+        Me.btnClose.Visible = False
         '
         'lblStatusText
         '
@@ -212,7 +215,7 @@ Partial Class frmSequenchel
         '
         'mnuMain
         '
-        Me.mnuMain.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuMainFile, Me.mnuMainTools, Me.mnuMainHelp})
+        Me.mnuMain.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuMainFile, Me.mnuMainEdit, Me.mnuMainTools, Me.mnuMainHelp})
         Me.mnuMain.Location = New System.Drawing.Point(0, 0)
         Me.mnuMain.Name = "mnuMain"
         Me.mnuMain.Size = New System.Drawing.Size(1284, 24)
@@ -232,9 +235,34 @@ Partial Class frmSequenchel
         Me.mnuMainFileExit.Size = New System.Drawing.Size(92, 22)
         Me.mnuMainFileExit.Text = "&Exit"
         '
+        'mnuMainEdit
+        '
+        Me.mnuMainEdit.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuMainEditSettings, Me.mnuMainEditConfiguration, Me.mnuMainEditLinkedServers})
+        Me.mnuMainEdit.Name = "mnuMainEdit"
+        Me.mnuMainEdit.Size = New System.Drawing.Size(39, 20)
+        Me.mnuMainEdit.Text = "&Edit"
+        '
+        'mnuMainEditSettings
+        '
+        Me.mnuMainEditSettings.Name = "mnuMainEditSettings"
+        Me.mnuMainEditSettings.Size = New System.Drawing.Size(152, 22)
+        Me.mnuMainEditSettings.Text = "&Settings"
+        '
+        'mnuMainEditLinkedServers
+        '
+        Me.mnuMainEditLinkedServers.Name = "mnuMainEditLinkedServers"
+        Me.mnuMainEditLinkedServers.Size = New System.Drawing.Size(152, 22)
+        Me.mnuMainEditLinkedServers.Text = "&Linked Servers"
+        '
+        'mnuMainEditConfiguration
+        '
+        Me.mnuMainEditConfiguration.Name = "mnuMainEditConfiguration"
+        Me.mnuMainEditConfiguration.Size = New System.Drawing.Size(152, 22)
+        Me.mnuMainEditConfiguration.Text = "&Configuration"
+        '
         'mnuMainTools
         '
-        Me.mnuMainTools.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuMainToolsReports, Me.mnuMainToolsConfiguration, Me.mnuMainToolsImport, Me.mnuMainToolsLinkedServers, Me.mnuMainToolsSettings})
+        Me.mnuMainTools.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuMainToolsReports, Me.mnuMainToolsImport, Me.mnuMainToolsSmartUpdate})
         Me.mnuMainTools.Name = "mnuMainTools"
         Me.mnuMainTools.Size = New System.Drawing.Size(47, 20)
         Me.mnuMainTools.Text = "Tools"
@@ -242,32 +270,20 @@ Partial Class frmSequenchel
         'mnuMainToolsReports
         '
         Me.mnuMainToolsReports.Name = "mnuMainToolsReports"
-        Me.mnuMainToolsReports.Size = New System.Drawing.Size(149, 22)
-        Me.mnuMainToolsReports.Text = "Reports"
-        '
-        'mnuMainToolsConfiguration
-        '
-        Me.mnuMainToolsConfiguration.Name = "mnuMainToolsConfiguration"
-        Me.mnuMainToolsConfiguration.Size = New System.Drawing.Size(149, 22)
-        Me.mnuMainToolsConfiguration.Text = "Configuration"
+        Me.mnuMainToolsReports.Size = New System.Drawing.Size(152, 22)
+        Me.mnuMainToolsReports.Text = "&Reports"
         '
         'mnuMainToolsImport
         '
         Me.mnuMainToolsImport.Name = "mnuMainToolsImport"
-        Me.mnuMainToolsImport.Size = New System.Drawing.Size(149, 22)
-        Me.mnuMainToolsImport.Text = "Import"
+        Me.mnuMainToolsImport.Size = New System.Drawing.Size(152, 22)
+        Me.mnuMainToolsImport.Text = "&Import"
         '
-        'mnuMainToolsLinkedServers
+        'mnuMainToolsSmartUpdate
         '
-        Me.mnuMainToolsLinkedServers.Name = "mnuMainToolsLinkedServers"
-        Me.mnuMainToolsLinkedServers.Size = New System.Drawing.Size(149, 22)
-        Me.mnuMainToolsLinkedServers.Text = "Linked Servers"
-        '
-        'mnuMainToolsSettings
-        '
-        Me.mnuMainToolsSettings.Name = "mnuMainToolsSettings"
-        Me.mnuMainToolsSettings.Size = New System.Drawing.Size(149, 22)
-        Me.mnuMainToolsSettings.Text = "Settings"
+        Me.mnuMainToolsSmartUpdate.Name = "mnuMainToolsSmartUpdate"
+        Me.mnuMainToolsSmartUpdate.Size = New System.Drawing.Size(152, 22)
+        Me.mnuMainToolsSmartUpdate.Text = "&SmartUpdate"
         '
         'mnuMainHelp
         '
@@ -642,9 +658,6 @@ Partial Class frmSequenchel
     Friend WithEvents lblListCount As System.Windows.Forms.Label
     Friend WithEvents lblListCountNumber As System.Windows.Forms.Label
     Friend WithEvents mnuMainToolsReports As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents mnuMainToolsLinkedServers As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents mnuMainToolsConfiguration As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents mnuMainToolsSettings As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents mnuMainFileExit As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents pnlFooterControls As System.Windows.Forms.Panel
     Friend WithEvents cbxSearch As System.Windows.Forms.ComboBox
@@ -668,5 +681,10 @@ Partial Class frmSequenchel
     Friend WithEvents TableLayoutPanel1 As System.Windows.Forms.TableLayoutPanel
     Friend WithEvents mnuMainHelpManual As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents mnuMainToolsImport As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents mnuMainToolsSmartUpdate As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents mnuMainEdit As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents mnuMainEditSettings As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents mnuMainEditLinkedServers As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents mnuMainEditConfiguration As System.Windows.Forms.ToolStripMenuItem
 
 End Class

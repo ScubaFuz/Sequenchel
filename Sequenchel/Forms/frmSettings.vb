@@ -40,22 +40,27 @@
         txtSettingsFile.Text = CurVar.GeneralSettings
         txtConnectionsFile.Tag = CurVar.ConnectionsFile
         txtConnectionsFile.Text = CurVar.ConnectionsFile
-        chkAllowQueryEdit.Tag = CurVar.AllowQueryEdit
-        chkAllowQueryEdit.Checked = CurVar.AllowQueryEdit
+
+        chkAllowSettingsChange.Tag = CurVar.AllowSettingsChange
+        chkAllowSettingsChange.Checked = CurVar.AllowSettingsChange
         chkAllowConfiguration.Tag = CurVar.AllowConfiguration
         chkAllowConfiguration.Checked = CurVar.AllowConfiguration
+        chkAllowLinkedServers.Tag = CurVar.AllowLinkedServers
+        chkAllowLinkedServers.Checked = CurVar.AllowLinkedServers
+
+        chkAllowQueryEdit.Tag = CurVar.AllowQueryEdit
+        chkAllowQueryEdit.Checked = CurVar.AllowQueryEdit
+        chkAllowDataImport.Tag = CurVar.AllowDataImport
+        chkAllowDataImport.Checked = CurVar.AllowDataImport
+        chkAllowSmartUpdate.Tag = CurVar.AllowSmartUpdate
+        chkAllowSmartUpdate.Checked = CurVar.AllowSmartUpdate
+
         chkAllowUpdate.Tag = CurVar.AllowUpdate
         chkAllowUpdate.Checked = CurVar.AllowUpdate
         chkAllowInsert.Tag = CurVar.AllowInsert
         chkAllowInsert.Checked = CurVar.AllowInsert
         chkAllowDelete.Tag = CurVar.AllowDelete
         chkAllowDelete.Checked = CurVar.AllowDelete
-        chkAllowLinkedServers.Tag = CurVar.AllowLinkedServers
-        chkAllowLinkedServers.Checked = CurVar.AllowLinkedServers
-        chkAllowDataImport.Tag = CurVar.AllowDataImport
-        chkAllowDataImport.Checked = CurVar.AllowDataImport
-        chkAllowSettingsChange.Tag = CurVar.AllowSettingsChange
-        chkAllowSettingsChange.Checked = CurVar.AllowSettingsChange
 
         chkLimitLookupLists.Tag = CurVar.LimitLookupLists
         chkLimitLookupLists.Checked = CurVar.LimitLookupLists
@@ -129,11 +134,11 @@
         End If
     End Sub
 
-    Private Sub chkAllowQueryEdit_CheckedChanged(sender As Object, e As EventArgs) Handles chkAllowQueryEdit.CheckedChanged
-        If chkAllowQueryEdit.Checked = chkAllowQueryEdit.Tag Then
-            chkAllowQueryEdit.BackColor = clrControl
+    Private Sub chkAllowSettingsChange_CheckedChanged(sender As Object, e As EventArgs) Handles chkAllowSettingsChange.CheckedChanged
+        If chkAllowSettingsChange.Checked = chkAllowSettingsChange.Tag Then
+            chkAllowSettingsChange.BackColor = clrControl
         Else
-            chkAllowQueryEdit.BackColor = clrMarked
+            chkAllowSettingsChange.BackColor = clrMarked
         End If
     End Sub
 
@@ -142,6 +147,38 @@
             chkAllowConfiguration.BackColor = clrControl
         Else
             chkAllowConfiguration.BackColor = clrMarked
+        End If
+    End Sub
+
+    Private Sub chkAllowLinkedServers_CheckedChanged(sender As Object, e As EventArgs) Handles chkAllowLinkedServers.CheckedChanged
+        If chkAllowLinkedServers.Checked = chkAllowLinkedServers.Tag Then
+            chkAllowLinkedServers.BackColor = clrControl
+        Else
+            chkAllowLinkedServers.BackColor = clrMarked
+        End If
+    End Sub
+
+    Private Sub chkAllowQueryEdit_CheckedChanged(sender As Object, e As EventArgs) Handles chkAllowQueryEdit.CheckedChanged
+        If chkAllowQueryEdit.Checked = chkAllowQueryEdit.Tag Then
+            chkAllowQueryEdit.BackColor = clrControl
+        Else
+            chkAllowQueryEdit.BackColor = clrMarked
+        End If
+    End Sub
+
+    Private Sub chkAllowDataImport_CheckedChanged(sender As Object, e As EventArgs) Handles chkAllowDataImport.CheckedChanged
+        If chkAllowDataImport.Checked = chkAllowDataImport.Tag Then
+            chkAllowDataImport.BackColor = clrControl
+        Else
+            chkAllowDataImport.BackColor = clrMarked
+        End If
+    End Sub
+
+    Private Sub chkAllowSmartUpdate_CheckedChanged(sender As Object, e As EventArgs) Handles chkAllowSmartUpdate.CheckedChanged
+        If chkAllowSmartUpdate.Checked = chkAllowSmartUpdate.Tag Then
+            chkAllowSmartUpdate.BackColor = clrControl
+        Else
+            chkAllowSmartUpdate.BackColor = clrMarked
         End If
     End Sub
 
@@ -166,30 +203,6 @@
             chkAllowDelete.BackColor = clrControl
         Else
             chkAllowDelete.BackColor = clrMarked
-        End If
-    End Sub
-
-    Private Sub chkAllowLinkedServers_CheckedChanged(sender As Object, e As EventArgs) Handles chkAllowLinkedServers.CheckedChanged
-        If chkAllowLinkedServers.Checked = chkAllowLinkedServers.Tag Then
-            chkAllowLinkedServers.BackColor = clrControl
-        Else
-            chkAllowLinkedServers.BackColor = clrMarked
-        End If
-    End Sub
-
-    Private Sub chkAllowDataImport_CheckedChanged(sender As Object, e As EventArgs) Handles chkAllowDataImport.CheckedChanged
-        If chkAllowDataImport.Checked = chkAllowDataImport.Tag Then
-            chkAllowDataImport.BackColor = clrControl
-        Else
-            chkAllowDataImport.BackColor = clrMarked
-        End If
-    End Sub
-
-    Private Sub chkAllowSettingsChange_CheckedChanged(sender As Object, e As EventArgs) Handles chkAllowSettingsChange.CheckedChanged
-        If chkAllowSettingsChange.Checked = chkAllowSettingsChange.Tag Then
-            chkAllowSettingsChange.BackColor = clrControl
-        Else
-            chkAllowSettingsChange.BackColor = clrMarked
         End If
     End Sub
 
@@ -236,16 +249,40 @@
             'dhdText.CheckDir(CurVar.GeneralSettings, True)
             blnSettingsChanged = True
         End If
-        If chkAllowQueryEdit.BackColor = clrMarked Then
-            CurVar.AllowQueryEdit = chkAllowQueryEdit.Checked
-            chkAllowQueryEdit.Tag = CurVar.AllowQueryEdit
-            chkAllowQueryEdit.BackColor = clrOriginal
+        If chkAllowSettingsChange.BackColor = clrMarked Then
+            CurVar.AllowSettingsChange = chkAllowSettingsChange.Checked
+            chkAllowSettingsChange.Tag = CurVar.AllowSettingsChange
+            chkAllowSettingsChange.BackColor = clrOriginal
             blnSettingsChanged = True
         End If
         If chkAllowConfiguration.BackColor = clrMarked Then
             CurVar.AllowConfiguration = chkAllowConfiguration.Checked
             chkAllowConfiguration.Tag = CurVar.AllowConfiguration
             chkAllowConfiguration.BackColor = clrOriginal
+            blnSettingsChanged = True
+        End If
+        If chkAllowLinkedServers.BackColor = clrMarked Then
+            CurVar.AllowLinkedServers = chkAllowLinkedServers.Checked
+            chkAllowLinkedServers.Tag = CurVar.AllowLinkedServers
+            chkAllowLinkedServers.BackColor = clrOriginal
+            blnSettingsChanged = True
+        End If
+        If chkAllowQueryEdit.BackColor = clrMarked Then
+            CurVar.AllowQueryEdit = chkAllowQueryEdit.Checked
+            chkAllowQueryEdit.Tag = CurVar.AllowQueryEdit
+            chkAllowQueryEdit.BackColor = clrOriginal
+            blnSettingsChanged = True
+        End If
+        If chkAllowDataImport.BackColor = clrMarked Then
+            CurVar.AllowDataImport = chkAllowDataImport.Checked
+            chkAllowDataImport.Tag = CurVar.AllowDataImport
+            chkAllowDataImport.BackColor = clrOriginal
+            blnSettingsChanged = True
+        End If
+        If chkAllowSmartUpdate.BackColor = clrMarked Then
+            CurVar.AllowSmartUpdate = chkAllowSmartUpdate.Checked
+            chkAllowSmartUpdate.Tag = CurVar.AllowSmartUpdate
+            chkAllowSmartUpdate.BackColor = clrOriginal
             blnSettingsChanged = True
         End If
         If chkAllowUpdate.BackColor = clrMarked Then
@@ -264,24 +301,6 @@
             CurVar.AllowDelete = chkAllowDelete.Checked
             chkAllowDelete.Tag = CurVar.AllowDelete
             chkAllowDelete.BackColor = clrOriginal
-            blnSettingsChanged = True
-        End If
-        If chkAllowLinkedServers.BackColor = clrMarked Then
-            CurVar.AllowLinkedServers = chkAllowLinkedServers.Checked
-            chkAllowLinkedServers.Tag = CurVar.AllowLinkedServers
-            chkAllowLinkedServers.BackColor = clrOriginal
-            blnSettingsChanged = True
-        End If
-        If chkAllowDataImport.BackColor = clrMarked Then
-            CurVar.AllowDataImport = chkAllowDataImport.Checked
-            chkAllowDataImport.Tag = CurVar.AllowDataImport
-            chkAllowDataImport.BackColor = clrOriginal
-            blnSettingsChanged = True
-        End If
-        If chkAllowSettingsChange.BackColor = clrMarked Then
-            CurVar.AllowSettingsChange = chkAllowSettingsChange.Checked
-            chkAllowSettingsChange.Tag = CurVar.AllowSettingsChange
-            chkAllowSettingsChange.BackColor = clrOriginal
             blnSettingsChanged = True
         End If
         If txtOverridePassword.Text.Length > 0 Then
@@ -951,6 +970,7 @@
 
         cbxProcedures.Items.Add("Cycle Error logs")
         cbxProcedures.Items.Add("Defragment Indexes")
+        cbxProcedures.Items.Add("SmartUpdate")
         txtJobNamePrefix.Text = dhdDatabase.DatabaseName
     End Sub
 
@@ -987,23 +1007,7 @@
     End Sub
 
     Private Sub btnErrorlogPathDatabase_Click(sender As Object, e As EventArgs) Handles btnErrorlogPathDatabase.Click
-        strQuery = "select InstanceDefaultLogPath = serverproperty('InstanceDefaultLogPath')"
-
-        Dim objData As DataSet
-        objData = QueryDb(dhdDatabase, strQuery, True)
-        Dim strReturn As String = ""
-
-        If objData Is Nothing Then
-            'blnDatabaseOnLine = False
-            Exit Sub
-        End If
-        If objData.Tables.Count = 0 Then Exit Sub
-        If objData.Tables(0).Rows.Count = 0 Then Exit Sub
-
-        For intRowCount = 0 To objData.Tables(0).Rows.Count - 1
-            strReturn = objData.Tables.Item(0).Rows(intRowCount).Item("InstanceDefaultLogPath")
-        Next
-        txtErrorlogPath.Text = strReturn
+        txtErrorlogPath.Text = GetDefaultLogPath(dhdDatabase)
     End Sub
 
     Private Sub btnErrorlogPathSystem_Click(sender As Object, e As EventArgs) Handles btnErrorlogPathSystem.Click
@@ -1112,6 +1116,8 @@
                 strReturn = "CycleErrorlogs"
             Case "Defragment Indexes"
                 strReturn = "DefragIndexes"
+            Case "SmartUpdate"
+                strReturn = "SmartUpdate"
             Case Else
                 strReturn = ""
         End Select

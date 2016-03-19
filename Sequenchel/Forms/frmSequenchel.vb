@@ -87,10 +87,11 @@ Public Class frmSequenchel
     End Sub
 
     Private Sub SecuritySet()
+        If CurVar.AllowSettingsChange = False And CurVar.SecurityOverride = False Then mnuMainEditSettings.Enabled = False
+        If CurVar.AllowConfiguration = False And CurVar.SecurityOverride = False Then mnuMainEditConfiguration.Enabled = False
+        If CurVar.AllowLinkedServers = False And CurVar.SecurityOverride = False Then mnuMainEditLinkedServers.Enabled = False
         If CurVar.AllowDataImport = False And CurVar.SecurityOverride = False Then mnuMainToolsImport.Enabled = False
-        If CurVar.AllowConfiguration = False And CurVar.SecurityOverride = False Then mnuMainToolsConfiguration.Enabled = False
-        If CurVar.AllowLinkedServers = False And CurVar.SecurityOverride = False Then mnuMainToolsLinkedServers.Enabled = False
-        If CurVar.AllowSettingsChange = False And CurVar.SecurityOverride = False Then mnuMainToolsSettings.Enabled = False
+        If CurVar.AllowSmartUpdate = False And CurVar.SecurityOverride = False Then mnuMainToolsSmartUpdate.Enabled = False
         If CurVar.AllowUpdate = False And CurVar.SecurityOverride = False Then btnUpdate.Enabled = False
         If CurVar.AllowInsert = False And CurVar.SecurityOverride = False Then btnAdd.Enabled = False
         If CurVar.AllowDelete = False And CurVar.SecurityOverride = False Then btnDelete.Enabled = False
@@ -111,6 +112,20 @@ Public Class frmSequenchel
         Application.Exit()
     End Sub
 
+    Private Sub mnuMainEditSettings_Click(sender As Object, e As EventArgs) Handles mnuMainEditSettings.Click
+        CursorControl("Wait")
+        ShowSettingsForm()
+        CursorControl()
+    End Sub
+
+    Private Sub mnuMainEditLinkedServers_Click(sender As Object, e As EventArgs) Handles mnuMainEditLinkedServers.Click
+        ShowLinkedServerForm()
+    End Sub
+
+    Private Sub mnuMainEditConfiguration_Click(sender As Object, e As EventArgs) Handles mnuMainEditConfiguration.Click
+        ShowConfigurationForm()
+    End Sub
+
     Private Sub mnuMainToolsReports_Click(sender As Object, e As EventArgs) Handles mnuMainToolsReports.Click
         ShowReportsForm()
     End Sub
@@ -119,18 +134,8 @@ Public Class frmSequenchel
         ShowImportForm()
     End Sub
 
-    Private Sub mnuMainToolsLinkedServers_Click(sender As Object, e As EventArgs) Handles mnuMainToolsLinkedServers.Click
-        ShowLinkedServerForm()
-    End Sub
-
-    Private Sub mnuMainToolsConfiguration_Click(sender As Object, e As EventArgs) Handles mnuMainToolsConfiguration.Click
-        ShowConfigurationForm()
-    End Sub
-
-    Private Sub mnuMainToolsSettings_Click(sender As Object, e As EventArgs) Handles mnuMainToolsSettings.Click
-        CursorControl("Wait")
-        ShowSettingsForm()
-        CursorControl()
+    Private Sub mnuMainToolsSmartUpdate_Click(sender As Object, e As EventArgs) Handles mnuMainToolsSmartUpdate.Click
+        ShowSmartUpdateForm()
     End Sub
 
     Private Sub mnuMainHelpManual_Click(sender As Object, e As EventArgs) Handles mnuMainHelpManual.Click
@@ -147,12 +152,17 @@ Public Class frmSequenchel
 
     Private Sub ShowReportsForm()
         Dim frmReportsForm As New frmReports
-        frmReportsForm.Show()
+        frmReportsForm.Show(Me)
     End Sub
 
     Private Sub ShowImportForm()
         Dim frmImportForm As New frmImport
-        frmImportForm.Show()
+        frmImportForm.Show(Me)
+    End Sub
+
+    Private Sub ShowSmartUpdateForm()
+        Dim frmSmartUpdateForm As New frmSmartUpdate
+        frmSmartUpdateForm.Show(Me)
     End Sub
 
     Private Sub ShowLinkedServerForm()
@@ -708,7 +718,7 @@ Public Class frmSequenchel
                 Exit Sub
             End If
         End If
-        dhdText.SaveXmlFile(xmlSearch, CurVar.SearchFile, True)
+        dhdText.SaveXmlFile(xmlSearch, CheckFilePath(CurVar.SearchFile), True)
         cbxSearch.Items.Add(cbxSearch.Text)
         lblStatusText.Text = "Search saved"
         'SearchListLoad(tblTable.TableName)
@@ -727,7 +737,7 @@ Public Class frmSequenchel
                 Exit Sub
             End If
         End If
-        dhdText.SaveXmlFile(xmlSearch, CurVar.SearchFile, True)
+        dhdText.SaveXmlFile(xmlSearch, CheckFilePath(CurVar.SearchFile), True)
         SearchListLoad(tblTable.TableName)
         btnClear_Click(Nothing, Nothing)
         cbxSearch.SelectedIndex = -1
@@ -779,6 +789,7 @@ Public Class frmSequenchel
             cbxSearch.SelectedIndex = -1
             CurStatus.SuspendActions = False
         End If
+        dgvTable1.ClearSelection()
         FieldsClear()
         If CurStatus.Status > 3 Then
             CurStatus.Status = CurrentStatus.StatusList.ControlSearch
@@ -847,7 +858,7 @@ Public Class frmSequenchel
     End Sub
 
     Private Sub FieldsClear(Optional blnIdentityOnly As Boolean = False)
-        For intField As Integer = 0 To tblTable.Count - 1
+        For intField As Integer = tblTable.Count - 1 To 0 Step -1
             Select Case tblTable.Item(intField).FieldCategory
                 Case 1, 3, 4
                     If blnIdentityOnly = False Or tblTable.Item(intField).Identity = True Or tblTable.Item(intField).PrimaryKey = True Then
@@ -1401,7 +1412,7 @@ Public Class frmSequenchel
 
     Private Sub ItemDelete()
         If dgvTable1.SelectedRows.Count <> 1 Then
-            WriteStatus("You need to select a sinbgle row in order to delete an item", 1, lblStatusText)
+            WriteStatus("You need to select a single row/item in order to delete an item", 1, lblStatusText)
             Exit Sub
         End If
 

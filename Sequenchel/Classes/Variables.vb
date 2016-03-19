@@ -119,14 +119,16 @@
     Private _Encryption As Boolean = True
     Private _SecurityOverride As Boolean = False
     Private _OverridePassword As String = ""
-    Private _AllowQueryEdit As Boolean = True
+
+    Private _AllowSettingsChange As Boolean = True
     Private _AllowConfiguration As Boolean = True
+    Private _AllowLinkedServers As Boolean = True
+    Private _AllowQueryEdit As Boolean = True
+    Private _AllowDataImport As Boolean = True
+    Private _AllowSmartUpdate As Boolean = True
     Private _AllowUpdate As Boolean = True
     Private _AllowInsert As Boolean = True
     Private _AllowDelete As Boolean = True
-    Private _AllowLinkedServers As Boolean = True
-    Private _AllowDataImport As Boolean = True
-    Private _AllowSettingsChange As Boolean = True
 
     Public Property Encryption() As Boolean
         Get
@@ -155,12 +157,12 @@
         End Set
     End Property
 
-    Public Property AllowQueryEdit() As Boolean
+    Public Property AllowSettingsChange() As Boolean
         Get
-            Return _AllowQueryEdit
+            Return _AllowSettingsChange
         End Get
         Set(ByVal Value As Boolean)
-            _AllowQueryEdit = Value
+            _AllowSettingsChange = Value
         End Set
     End Property
 
@@ -170,6 +172,42 @@
         End Get
         Set(ByVal Value As Boolean)
             _AllowConfiguration = Value
+        End Set
+    End Property
+
+    Public Property AllowLinkedServers() As Boolean
+        Get
+            Return _AllowLinkedServers
+        End Get
+        Set(ByVal Value As Boolean)
+            _AllowLinkedServers = Value
+        End Set
+    End Property
+
+    Public Property AllowQueryEdit() As Boolean
+        Get
+            Return _AllowQueryEdit
+        End Get
+        Set(ByVal Value As Boolean)
+            _AllowQueryEdit = Value
+        End Set
+    End Property
+
+    Public Property AllowDataImport() As Boolean
+        Get
+            Return _AllowDataImport
+        End Get
+        Set(ByVal Value As Boolean)
+            _AllowDataImport = Value
+        End Set
+    End Property
+
+    Public Property AllowSmartUpdate() As Boolean
+        Get
+            Return _AllowSmartUpdate
+        End Get
+        Set(ByVal Value As Boolean)
+            _AllowSmartUpdate = Value
         End Set
     End Property
 
@@ -200,32 +238,6 @@
         End Set
     End Property
 
-    Public Property AllowLinkedServers() As Boolean
-        Get
-            Return _AllowLinkedServers
-        End Get
-        Set(ByVal Value As Boolean)
-            _AllowLinkedServers = Value
-        End Set
-    End Property
-
-    Public Property AllowDataImport() As Boolean
-        Get
-            Return _AllowDataImport
-        End Get
-        Set(ByVal Value As Boolean)
-            _AllowDataImport = Value
-        End Set
-    End Property
-
-    Public Property AllowSettingsChange() As Boolean
-        Get
-            Return _AllowSettingsChange
-        End Get
-        Set(ByVal Value As Boolean)
-            _AllowSettingsChange = Value
-        End Set
-    End Property
 
 #End Region
 

@@ -44,18 +44,25 @@ Partial Class frmImport
         Me.chkDatabase = New System.Windows.Forms.CheckBox()
         Me.chkScreen = New System.Windows.Forms.CheckBox()
         Me.chkCreateTable = New System.Windows.Forms.CheckBox()
-        Me.btnExportFile = New System.Windows.Forms.Button()
-        Me.dgvImport = New Sequenchel.usrDataGridView()
+        Me.btnUploadFile = New System.Windows.Forms.Button()
         Me.lblStatus = New System.Windows.Forms.Label()
         Me.lblStatusText = New System.Windows.Forms.Label()
+        Me.btnPreviousTable = New System.Windows.Forms.Button()
+        Me.btnNextTable = New System.Windows.Forms.Button()
+        Me.lblTableNumber = New System.Windows.Forms.Label()
+        Me.lblTableName = New System.Windows.Forms.Label()
+        Me.lblTableNameText = New System.Windows.Forms.Label()
+        Me.chkUploadTable = New System.Windows.Forms.CheckBox()
+        Me.dgvImport = New Sequenchel.usrDataGridView()
+        Me.btnUploadTable = New System.Windows.Forms.Button()
         CType(Me.dgvImport, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'btnImportFile
         '
-        Me.btnImportFile.Location = New System.Drawing.Point(607, 29)
+        Me.btnImportFile.Location = New System.Drawing.Point(571, 29)
         Me.btnImportFile.Name = "btnImportFile"
-        Me.btnImportFile.Size = New System.Drawing.Size(135, 23)
+        Me.btnImportFile.Size = New System.Drawing.Size(171, 23)
         Me.btnImportFile.TabIndex = 5
         Me.btnImportFile.Text = "Import File"
         Me.btnImportFile.UseVisualStyleBackColor = True
@@ -73,7 +80,7 @@ Partial Class frmImport
         '
         Me.txtCurrentFile.Location = New System.Drawing.Point(240, 31)
         Me.txtCurrentFile.Name = "txtCurrentFile"
-        Me.txtCurrentFile.Size = New System.Drawing.Size(323, 20)
+        Me.txtCurrentFile.Size = New System.Drawing.Size(313, 20)
         Me.txtCurrentFile.TabIndex = 7
         '
         'btnSelectFile
@@ -88,7 +95,7 @@ Partial Class frmImport
         'lblPassword
         '
         Me.lblPassword.AutoSize = True
-        Me.lblPassword.Location = New System.Drawing.Point(580, 159)
+        Me.lblPassword.Location = New System.Drawing.Point(568, 159)
         Me.lblPassword.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
         Me.lblPassword.Name = "lblPassword"
         Me.lblPassword.Size = New System.Drawing.Size(53, 13)
@@ -98,7 +105,7 @@ Partial Class frmImport
         'lblUser
         '
         Me.lblUser.AutoSize = True
-        Me.lblUser.Location = New System.Drawing.Point(580, 136)
+        Me.lblUser.Location = New System.Drawing.Point(568, 136)
         Me.lblUser.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
         Me.lblUser.Name = "lblUser"
         Me.lblUser.Size = New System.Drawing.Size(60, 13)
@@ -111,7 +118,7 @@ Partial Class frmImport
         Me.chkWinAuth.Checked = True
         Me.chkWinAuth.CheckState = System.Windows.Forms.CheckState.Checked
         Me.chkWinAuth.Enabled = False
-        Me.chkWinAuth.Location = New System.Drawing.Point(582, 113)
+        Me.chkWinAuth.Location = New System.Drawing.Point(570, 113)
         Me.chkWinAuth.Margin = New System.Windows.Forms.Padding(2)
         Me.chkWinAuth.Name = "chkWinAuth"
         Me.chkWinAuth.Size = New System.Drawing.Size(160, 17)
@@ -165,26 +172,26 @@ Partial Class frmImport
         Me.txtFileName.Location = New System.Drawing.Point(240, 86)
         Me.txtFileName.Margin = New System.Windows.Forms.Padding(2)
         Me.txtFileName.Name = "txtFileName"
-        Me.txtFileName.Size = New System.Drawing.Size(322, 20)
+        Me.txtFileName.Size = New System.Drawing.Size(312, 20)
         Me.txtFileName.TabIndex = 31
         '
         'txtPassword
         '
         Me.txtPassword.Enabled = False
-        Me.txtPassword.Location = New System.Drawing.Point(644, 157)
+        Me.txtPassword.Location = New System.Drawing.Point(632, 157)
         Me.txtPassword.Margin = New System.Windows.Forms.Padding(2)
         Me.txtPassword.Name = "txtPassword"
         Me.txtPassword.PasswordChar = Global.Microsoft.VisualBasic.ChrW(42)
-        Me.txtPassword.Size = New System.Drawing.Size(98, 20)
+        Me.txtPassword.Size = New System.Drawing.Size(110, 20)
         Me.txtPassword.TabIndex = 30
         '
         'txtUser
         '
         Me.txtUser.Enabled = False
-        Me.txtUser.Location = New System.Drawing.Point(644, 134)
+        Me.txtUser.Location = New System.Drawing.Point(632, 134)
         Me.txtUser.Margin = New System.Windows.Forms.Padding(2)
         Me.txtUser.Name = "txtUser"
-        Me.txtUser.Size = New System.Drawing.Size(98, 20)
+        Me.txtUser.Size = New System.Drawing.Size(110, 20)
         Me.txtUser.TabIndex = 29
         '
         'txtTable
@@ -193,7 +200,7 @@ Partial Class frmImport
         Me.txtTable.Location = New System.Drawing.Point(360, 157)
         Me.txtTable.Margin = New System.Windows.Forms.Padding(2)
         Me.txtTable.Name = "txtTable"
-        Me.txtTable.Size = New System.Drawing.Size(203, 20)
+        Me.txtTable.Size = New System.Drawing.Size(193, 20)
         Me.txtTable.TabIndex = 28
         '
         'txtDatabase
@@ -202,7 +209,7 @@ Partial Class frmImport
         Me.txtDatabase.Location = New System.Drawing.Point(360, 134)
         Me.txtDatabase.Margin = New System.Windows.Forms.Padding(2)
         Me.txtDatabase.Name = "txtDatabase"
-        Me.txtDatabase.Size = New System.Drawing.Size(203, 20)
+        Me.txtDatabase.Size = New System.Drawing.Size(193, 20)
         Me.txtDatabase.TabIndex = 27
         '
         'txtServer
@@ -211,7 +218,7 @@ Partial Class frmImport
         Me.txtServer.Location = New System.Drawing.Point(360, 111)
         Me.txtServer.Margin = New System.Windows.Forms.Padding(2)
         Me.txtServer.Name = "txtServer"
-        Me.txtServer.Size = New System.Drawing.Size(203, 20)
+        Me.txtServer.Size = New System.Drawing.Size(193, 20)
         Me.txtServer.TabIndex = 26
         '
         'chkFile
@@ -253,7 +260,7 @@ Partial Class frmImport
         '
         Me.chkCreateTable.AutoSize = True
         Me.chkCreateTable.Enabled = False
-        Me.chkCreateTable.Location = New System.Drawing.Point(29, 158)
+        Me.chkCreateTable.Location = New System.Drawing.Point(29, 137)
         Me.chkCreateTable.Margin = New System.Windows.Forms.Padding(2)
         Me.chkCreateTable.Name = "chkCreateTable"
         Me.chkCreateTable.Size = New System.Drawing.Size(87, 17)
@@ -261,29 +268,14 @@ Partial Class frmImport
         Me.chkCreateTable.Text = "Create Table"
         Me.chkCreateTable.UseVisualStyleBackColor = True
         '
-        'btnExportFile
+        'btnUploadFile
         '
-        Me.btnExportFile.Location = New System.Drawing.Point(607, 83)
-        Me.btnExportFile.Name = "btnExportFile"
-        Me.btnExportFile.Size = New System.Drawing.Size(135, 23)
-        Me.btnExportFile.TabIndex = 40
-        Me.btnExportFile.Text = "Export File"
-        Me.btnExportFile.UseVisualStyleBackColor = True
-        '
-        'dgvImport
-        '
-        Me.dgvImport.AllowUserToOrderColumns = True
-        Me.dgvImport.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.dgvImport.BackgroundColor = System.Drawing.SystemColors.Control
-        Me.dgvImport.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
-        Me.dgvImport.BackImage = CType(resources.GetObject("dgvImport.BackImage"), System.Drawing.Image)
-        Me.dgvImport.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvImport.Location = New System.Drawing.Point(29, 193)
-        Me.dgvImport.Name = "dgvImport"
-        Me.dgvImport.Size = New System.Drawing.Size(713, 519)
-        Me.dgvImport.TabIndex = 1
+        Me.btnUploadFile.Location = New System.Drawing.Point(571, 83)
+        Me.btnUploadFile.Name = "btnUploadFile"
+        Me.btnUploadFile.Size = New System.Drawing.Size(171, 23)
+        Me.btnUploadFile.TabIndex = 40
+        Me.btnUploadFile.Text = "Upload File"
+        Me.btnUploadFile.UseVisualStyleBackColor = True
         '
         'lblStatus
         '
@@ -305,14 +297,99 @@ Partial Class frmImport
         Me.lblStatusText.Size = New System.Drawing.Size(0, 13)
         Me.lblStatusText.TabIndex = 42
         '
+        'btnPreviousTable
+        '
+        Me.btnPreviousTable.Location = New System.Drawing.Point(29, 185)
+        Me.btnPreviousTable.Name = "btnPreviousTable"
+        Me.btnPreviousTable.Size = New System.Drawing.Size(34, 23)
+        Me.btnPreviousTable.TabIndex = 43
+        Me.btnPreviousTable.Text = "<"
+        Me.btnPreviousTable.UseVisualStyleBackColor = True
+        '
+        'btnNextTable
+        '
+        Me.btnNextTable.Location = New System.Drawing.Point(177, 185)
+        Me.btnNextTable.Name = "btnNextTable"
+        Me.btnNextTable.Size = New System.Drawing.Size(34, 23)
+        Me.btnNextTable.TabIndex = 44
+        Me.btnNextTable.Text = ">"
+        Me.btnNextTable.UseVisualStyleBackColor = True
+        '
+        'lblTableNumber
+        '
+        Me.lblTableNumber.AutoSize = True
+        Me.lblTableNumber.Location = New System.Drawing.Point(84, 190)
+        Me.lblTableNumber.Name = "lblTableNumber"
+        Me.lblTableNumber.Size = New System.Drawing.Size(64, 13)
+        Me.lblTableNumber.TabIndex = 45
+        Me.lblTableNumber.Text = "Table 0 of 0"
+        '
+        'lblTableName
+        '
+        Me.lblTableName.AutoSize = True
+        Me.lblTableName.Location = New System.Drawing.Point(238, 190)
+        Me.lblTableName.Name = "lblTableName"
+        Me.lblTableName.Size = New System.Drawing.Size(37, 13)
+        Me.lblTableName.TabIndex = 46
+        Me.lblTableName.Text = "Table:"
+        '
+        'lblTableNameText
+        '
+        Me.lblTableNameText.AutoSize = True
+        Me.lblTableNameText.Location = New System.Drawing.Point(281, 190)
+        Me.lblTableNameText.Name = "lblTableNameText"
+        Me.lblTableNameText.Size = New System.Drawing.Size(0, 13)
+        Me.lblTableNameText.TabIndex = 47
+        '
+        'chkUploadTable
+        '
+        Me.chkUploadTable.AutoSize = True
+        Me.chkUploadTable.Location = New System.Drawing.Point(360, 190)
+        Me.chkUploadTable.Name = "chkUploadTable"
+        Me.chkUploadTable.Size = New System.Drawing.Size(113, 17)
+        Me.chkUploadTable.TabIndex = 48
+        Me.chkUploadTable.Text = "Upload This Table"
+        Me.chkUploadTable.UseVisualStyleBackColor = True
+        '
+        'dgvImport
+        '
+        Me.dgvImport.AllowUserToOrderColumns = True
+        Me.dgvImport.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.dgvImport.BackgroundColor = System.Drawing.SystemColors.Control
+        Me.dgvImport.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
+        Me.dgvImport.BackImage = CType(resources.GetObject("dgvImport.BackImage"), System.Drawing.Image)
+        Me.dgvImport.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dgvImport.Location = New System.Drawing.Point(29, 214)
+        Me.dgvImport.Name = "dgvImport"
+        Me.dgvImport.Size = New System.Drawing.Size(713, 498)
+        Me.dgvImport.TabIndex = 1
+        '
+        'btnUploadTable
+        '
+        Me.btnUploadTable.Location = New System.Drawing.Point(571, 186)
+        Me.btnUploadTable.Name = "btnUploadTable"
+        Me.btnUploadTable.Size = New System.Drawing.Size(171, 23)
+        Me.btnUploadTable.TabIndex = 49
+        Me.btnUploadTable.Text = "Upload currently selected Table"
+        Me.btnUploadTable.UseVisualStyleBackColor = True
+        '
         'frmImport
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(777, 753)
+        Me.Controls.Add(Me.btnUploadTable)
+        Me.Controls.Add(Me.chkUploadTable)
+        Me.Controls.Add(Me.lblTableNameText)
+        Me.Controls.Add(Me.lblTableName)
+        Me.Controls.Add(Me.lblTableNumber)
+        Me.Controls.Add(Me.btnNextTable)
+        Me.Controls.Add(Me.btnPreviousTable)
         Me.Controls.Add(Me.lblStatusText)
         Me.Controls.Add(Me.lblStatus)
-        Me.Controls.Add(Me.btnExportFile)
+        Me.Controls.Add(Me.btnUploadFile)
         Me.Controls.Add(Me.chkCreateTable)
         Me.Controls.Add(Me.lblPassword)
         Me.Controls.Add(Me.lblUser)
@@ -366,7 +443,14 @@ Partial Class frmImport
     Friend WithEvents chkDatabase As System.Windows.Forms.CheckBox
     Friend WithEvents chkScreen As System.Windows.Forms.CheckBox
     Friend WithEvents chkCreateTable As System.Windows.Forms.CheckBox
-    Friend WithEvents btnExportFile As System.Windows.Forms.Button
+    Friend WithEvents btnUploadFile As System.Windows.Forms.Button
     Friend WithEvents lblStatus As System.Windows.Forms.Label
     Friend WithEvents lblStatusText As System.Windows.Forms.Label
+    Friend WithEvents btnPreviousTable As System.Windows.Forms.Button
+    Friend WithEvents btnNextTable As System.Windows.Forms.Button
+    Friend WithEvents lblTableNumber As System.Windows.Forms.Label
+    Friend WithEvents lblTableName As System.Windows.Forms.Label
+    Friend WithEvents lblTableNameText As System.Windows.Forms.Label
+    Friend WithEvents chkUploadTable As System.Windows.Forms.CheckBox
+    Friend WithEvents btnUploadTable As System.Windows.Forms.Button
 End Class

@@ -58,6 +58,8 @@ Module Common
             If intPosition < 1 Then intPosition = Command.Length
             Dim strCommand As String = Command.ToLower.Substring(0, intPosition)
             Select Case strCommand
+                Case "/silent"
+                    'Start wihtout any windows / forms
                 Case "/debug"
                     DebugMode = True
                 Case "/control"
@@ -71,14 +73,20 @@ Module Common
                         CurVar.OverridePassword = Encrypt(Command.Substring(intPosition + 1, Command.Length - (intPosition + 1)))
                     End If
                 Case "/report"
-                    'Open Report Tab dirctly
+                    'Open Report window directly
                 Case "/connection"
-                    'Open the chosen connection
-                Case "/TableSet"
-                    'Open the chosen TableSet
+                    'Use the chosen connection
+                Case "/tableset"
+                    'Use the chosen TableSet
+                Case "/table"
+                    'Use the chosen Table
                 Case "/reportname"
                     'Open the report if found
                 Case "/exportfile"
+                    'Export the report to the chosen file
+                Case "/import"
+                    'open the Import window
+                Case "/importfile"
                     'Export the report to the chosen file
             End Select
         Next
@@ -361,14 +369,15 @@ Module Common
                 xmlSDBASettings.Load(Application.StartupPath & "\" & dhdText.InputFile)
                 If dhdText.CheckElement(xmlSDBASettings, "DefaultConfigFilePath") Then CurVar.DefaultConfigFilePath = xmlSDBASettings.Item("Sequenchel").Item("Settings").Item("DefaultConfigFilePath").InnerText
                 If dhdText.CheckElement(xmlSDBASettings, "SettingsFile") Then CurVar.GeneralSettings = xmlSDBASettings.Item("Sequenchel").Item("Settings").Item("SettingsFile").InnerText
-                If dhdText.CheckElement(xmlSDBASettings, "AllowReportQueryEdit") Then CurVar.AllowQueryEdit = xmlSDBASettings.Item("Sequenchel").Item("Settings").Item("AllowReportQueryEdit").InnerText
+                If dhdText.CheckElement(xmlSDBASettings, "AllowSettingsChange") Then CurVar.AllowSettingsChange = xmlSDBASettings.Item("Sequenchel").Item("Settings").Item("AllowSettingsChange").InnerText
                 If dhdText.CheckElement(xmlSDBASettings, "AllowConfigurationChange") Then CurVar.AllowConfiguration = xmlSDBASettings.Item("Sequenchel").Item("Settings").Item("AllowConfigurationChange").InnerText
+                If dhdText.CheckElement(xmlSDBASettings, "AllowLinkedServersChange") Then CurVar.AllowLinkedServers = xmlSDBASettings.Item("Sequenchel").Item("Settings").Item("AllowLinkedServersChange").InnerText
+                If dhdText.CheckElement(xmlSDBASettings, "AllowReportQueryEdit") Then CurVar.AllowQueryEdit = xmlSDBASettings.Item("Sequenchel").Item("Settings").Item("AllowReportQueryEdit").InnerText
+                If dhdText.CheckElement(xmlSDBASettings, "AllowDataImport") Then CurVar.AllowDataImport = xmlSDBASettings.Item("Sequenchel").Item("Settings").Item("AllowDataImport").InnerText
+                If dhdText.CheckElement(xmlSDBASettings, "AllowSmartUpdate") Then CurVar.AllowSmartUpdate = xmlSDBASettings.Item("Sequenchel").Item("Settings").Item("AllowSmartUpdate").InnerText
                 If dhdText.CheckElement(xmlSDBASettings, "AllowUpdate") Then CurVar.AllowUpdate = xmlSDBASettings.Item("Sequenchel").Item("Settings").Item("AllowUpdate").InnerText
                 If dhdText.CheckElement(xmlSDBASettings, "AllowInsert") Then CurVar.AllowInsert = xmlSDBASettings.Item("Sequenchel").Item("Settings").Item("AllowInsert").InnerText
                 If dhdText.CheckElement(xmlSDBASettings, "AllowDelete") Then CurVar.AllowDelete = xmlSDBASettings.Item("Sequenchel").Item("Settings").Item("AllowDelete").InnerText
-                If dhdText.CheckElement(xmlSDBASettings, "AllowLinkedServersChange") Then CurVar.AllowLinkedServers = xmlSDBASettings.Item("Sequenchel").Item("Settings").Item("AllowLinkedServersChange").InnerText
-                If dhdText.CheckElement(xmlSDBASettings, "AllowDataImport") Then CurVar.AllowDataImport = xmlSDBASettings.Item("Sequenchel").Item("Settings").Item("AllowDataImport").InnerText
-                If dhdText.CheckElement(xmlSDBASettings, "AllowSettingsChange") Then CurVar.AllowSettingsChange = xmlSDBASettings.Item("Sequenchel").Item("Settings").Item("AllowSettingsChange").InnerText
                 If dhdText.CheckElement(xmlSDBASettings, "OverridePassword") Then
                     If xmlSDBASettings.Item("Sequenchel").Item("Settings").Item("OverridePassword").InnerText.Length > 0 Then
                         If CurVar.OverridePassword = xmlSDBASettings.Item("Sequenchel").Item("Settings").Item("OverridePassword").InnerText Then
@@ -397,14 +406,15 @@ Module Common
         strXmlText &= "	<Settings>" & Environment.NewLine
         strXmlText &= "		<DefaultConfigFilePath>" & CurVar.DefaultConfigFilePath & "</DefaultConfigFilePath>" & Environment.NewLine
         strXmlText &= "		<SettingsFile>" & CurVar.GeneralSettings & "</SettingsFile>" & Environment.NewLine
-        strXmlText &= "		<AllowReportQueryEdit>" & CurVar.AllowQueryEdit & "</AllowReportQueryEdit>" & Environment.NewLine
+        strXmlText &= "		<AllowSettingsChange>" & CurVar.AllowSettingsChange & "</AllowSettingsChange>" & Environment.NewLine
         strXmlText &= "		<AllowConfigurationChange>" & CurVar.AllowConfiguration & "</AllowConfigurationChange>" & Environment.NewLine
+        strXmlText &= "		<AllowLinkedServersChange>" & CurVar.AllowLinkedServers & "</AllowLinkedServersChange>" & Environment.NewLine
+        strXmlText &= "		<AllowReportQueryEdit>" & CurVar.AllowQueryEdit & "</AllowReportQueryEdit>" & Environment.NewLine
+        strXmlText &= "		<AllowDataImport>" & CurVar.AllowDataImport & "</AllowDataImport>" & Environment.NewLine
+        strXmlText &= "		<AllowSmartUpdate>" & CurVar.AllowSmartUpdate & "</AllowSmartUpdate>" & Environment.NewLine
         strXmlText &= "		<AllowUpdate>" & CurVar.AllowUpdate & "</AllowUpdate>" & Environment.NewLine
         strXmlText &= "		<AllowInsert>" & CurVar.AllowInsert & "</AllowInsert>" & Environment.NewLine
         strXmlText &= "		<AllowDelete>" & CurVar.AllowDelete & "</AllowDelete>" & Environment.NewLine
-        strXmlText &= "		<AllowLinkedServersChange>" & CurVar.AllowLinkedServers & "</AllowLinkedServersChange>" & Environment.NewLine
-        strXmlText &= "		<AllowDataImport>" & CurVar.AllowDataImport & "</AllowDataImport>" & Environment.NewLine
-        strXmlText &= "		<AllowSettingsChange>" & CurVar.AllowSettingsChange & "</AllowSettingsChange>" & Environment.NewLine
         strXmlText &= "		<OverridePassword>" & CurVar.OverridePassword & "</OverridePassword>" & Environment.NewLine
         strXmlText &= "	</Settings>" & Environment.NewLine
         strXmlText &= "</Sequenchel>" & Environment.NewLine
@@ -418,32 +428,11 @@ Module Common
         End Try
     End Function
 
-    'Public Function XMLToDataSet(ByVal xmlStr As String) As DataSet
-    '    'Convert xmlData to a Dataset
-    '    Dim sr As New IO.StringReader(xmlStr)
-    '    Dim ds As New DataSet
-
-    '    ds.ReadXml(sr)
-
-    '    For Each relation As DataRelation In ds.Relations
-    '        For Each c As DataColumn In relation.ParentColumns
-    '            If Not relation.ChildTable.Columns.Contains(c.ColumnName) Then
-    '                relation.ChildTable.Columns.Add(c)
-    '            End If
-    '            For Each dr As DataRow In relation.ChildTable.Rows
-    '                dr(c.ColumnName) = dr.GetParentRow(relation)(c.ColumnName)
-    '            Next
-    '        Next
-    '    Next
-
-    '    Return ds
-    'End Function
-
     Friend Sub LoadGeneralSettingsXml()
-        If dhdText.CheckFile(CurVar.GeneralSettings) = True Then
+        If dhdText.CheckFile(CheckFilePath(CurVar.GeneralSettings)) = True Then
             'LoadXmlFile
             Try
-                xmlGeneralSettings.Load(dhdText.PathConvert(CurVar.GeneralSettings))
+                xmlGeneralSettings.Load(dhdText.PathConvert(CheckFilePath(CurVar.GeneralSettings)))
                 If dhdText.CheckElement(xmlGeneralSettings, "DataLocation") Then dhdDatabase.DataLocation = xmlGeneralSettings.Item("Sequenchel").Item("DataBase").Item("DataLocation").InnerText
                 If dhdText.CheckElement(xmlGeneralSettings, "DatabaseName") Then dhdDatabase.DatabaseName = xmlGeneralSettings.Item("Sequenchel").Item("DataBase").Item("DatabaseName").InnerText
                 If dhdText.CheckElement(xmlGeneralSettings, "DataProvider") Then dhdDatabase.DataProvider = xmlGeneralSettings.Item("Sequenchel").Item("DataBase").Item("DataProvider").InnerText
@@ -536,7 +525,7 @@ Module Common
 
         Try
             xmlGeneralSettings.LoadXml(strXmlText)
-            SaveGeneralSettingsXml = dhdText.CreateFile(strXmlText, CurVar.GeneralSettings)
+            SaveGeneralSettingsXml = dhdText.CreateFile(strXmlText, CheckFilePath(CurVar.GeneralSettings))
             If SaveGeneralSettingsXml = False Then WriteLog("There was an error saving the General Settings file" & Environment.NewLine & dhdText.Errormessage, 1)
         Catch ex As Exception
             WriteLog(strMessages.strXmlError & Environment.NewLine & ex.Message, 1)
@@ -545,11 +534,11 @@ Module Common
     End Function
 
     Friend Function LoadConnectionsXml() As List(Of String)
-        If dhdText.CheckFile(CurVar.ConnectionsFile) = True Then
+        If dhdText.CheckFile(CheckFilePath(CurVar.ConnectionsFile)) = True Then
             'LoadXmlFile
             'Dim lstXml As XmlNodeList
             Try
-                xmlConnections.Load(dhdText.PathConvert(CurVar.ConnectionsFile))
+                xmlConnections.Load(dhdText.PathConvert(CheckFilePath(CurVar.ConnectionsFile)))
                 Dim blnConnectionExists As Boolean = False
                 CurVar.ConnectionDefault = ""
 
@@ -609,12 +598,12 @@ Module Common
     End Sub
 
     Friend Function LoadTableSetsXml() As List(Of String)
-        If dhdText.CheckFile(CurVar.TableSetsFile) = True Then
+        If dhdText.CheckFile(CheckFilePath(CurVar.TableSetsFile)) = True Then
 
             'LoadXmlFile
             'Dim lstXml As XmlNodeList
             Try
-                xmlTableSets.Load(dhdText.PathConvert(CurVar.TableSetsFile))
+                xmlTableSets.Load(dhdText.PathConvert(CheckFilePath(CurVar.TableSetsFile)))
                 CurVar.TableSetDefault = ""
                 Dim blnTableSetExists As Boolean = False
 
@@ -662,12 +651,12 @@ Module Common
     End Sub
 
     Friend Function LoadTablesXml() As List(Of String)
-        If dhdText.CheckFile(CurVar.TablesFile) = True Then
+        If dhdText.CheckFile(CheckFilePath(CurVar.TablesFile)) = True Then
 
             'LoadXmlFile
             'Dim lstXml As XmlNodeList
             Try
-                xmlTables.Load(dhdText.PathConvert(CurVar.TablesFile))
+                xmlTables.Load(dhdText.PathConvert(CheckFilePath(CurVar.TablesFile)))
                 Dim blnTableExists As Boolean = False
                 CurVar.TableDefault = ""
 
@@ -697,11 +686,11 @@ Module Common
     End Function
 
     Friend Function LoadReportsXml() As List(Of String)
-        If dhdText.CheckFile(CurVar.ReportSetFile) = True Then
+        If dhdText.CheckFile(CheckFilePath(CurVar.ReportSetFile)) = True Then
             'LoadXmlFile
             'Dim lstXml As XmlNodeList
             Try
-                xmlReports.Load(dhdText.PathConvert(CurVar.ReportSetFile))
+                xmlReports.Load(dhdText.PathConvert(CheckFilePath(CurVar.ReportSetFile)))
                 'Dim blnConnectionExists As Boolean = False
                 'CurVar.ConnectionDefault = ""
 
@@ -727,11 +716,11 @@ Module Common
     End Function
 
     Friend Function LoadSearchXml(strTable As String) As List(Of String)
-        If dhdText.CheckFile(CurVar.SearchFile) = True Then
+        If dhdText.CheckFile(CheckFilePath(CurVar.SearchFile)) = True Then
             'LoadXmlFile
             'Dim lstXml As XmlNodeList
             Try
-                xmlSearch.Load(dhdText.PathConvert(CurVar.SearchFile))
+                xmlSearch.Load(dhdText.PathConvert(CheckFilePath(CurVar.SearchFile)))
                 'Dim blnConnectionExists As Boolean = False
                 'CurVar.ConnectionDefault = ""
 
@@ -1072,6 +1061,34 @@ Module Common
         Return blnDatabaseOnLine
     End Function
 
+    Friend Function CheckSqlVersion(dhdConnect As DataHandler.db) As Boolean
+        Try
+            Dim intSqlVersion As Integer = GetSqlVersion(dhdConnect)
+            Select Case intSqlVersion
+                Case 0
+                    MessageBox.Show("SQL Server not found or not accessible" & Environment.NewLine & "Please check your settings")
+                    WriteLog("SQL Server not found or not accessible" & Environment.NewLine & "Please check your settings", 1)
+                    Return False
+                Case 7, 8
+                    MessageBox.Show("SQL Server 2000 or older is not supported")
+                    WriteLog("SQL Server 2000 or older is not supported", 1)
+                    Return False
+                Case 9, 10, 11, 12, 13, 14
+                    WriteLog("SQL Version " & intSqlVersion & " detected.", 3)
+                    'Just do it
+                    Return True
+                Case Else
+                    MessageBox.Show("SQL Server version is not recognised" & Environment.NewLine & "Version detected = " & intSqlVersion)
+                    WriteLog("SQL Server version is not recognised" & Environment.NewLine & "Version detected = " & intSqlVersion, 1)
+                    Return False
+            End Select
+        Catch ex As Exception
+            MessageBox.Show("SQL Server not found or not accessible" & Environment.NewLine & "Please check your settings")
+            WriteLog("SQL Server not found or not accessible" & Environment.NewLine & "Please check your settings", 1)
+            Return False
+        End Try
+    End Function
+
     Friend Function GetSqlVersion(dhdConnect As DataHandler.db) As Integer
         Dim strDatabase As String = dhdConnect.DatabaseName
         dhdConnect.DatabaseName = "master"
@@ -1193,28 +1210,32 @@ Module Common
         End Try
     End Sub
 
-    Friend Function LoadTablesList(ByVal dhdConnect As DataHandler.db) As List(Of String)
+    Friend Function LoadTablesList(ByVal dhdConnect As DataHandler.db, Optional blnCrawlViews As Boolean = True) As List(Of String)
         strQuery = "SELECT "
         strQuery &= " sch.[name] + '.' + "
         strQuery &= " tbl.[name] AS TableName FROM sys.tables tbl"
         strQuery &= " INNER JOIN sys.schemas sch"
         strQuery &= " ON tbl.[schema_id] = sch.[schema_id]"
-        strQuery &= " UNION SELECT "
-        strQuery &= " sch.[name] + '.' + "
-        strQuery &= " vw.[name] AS TableName FROM sys.views vw"
-        strQuery &= " INNER JOIN sys.schemas sch"
-        strQuery &= " ON vw.[schema_id] = sch.[schema_id]"
+        If blnCrawlViews = True Then
+            strQuery &= " UNION SELECT "
+            strQuery &= " sch.[name] + '.' + "
+            strQuery &= " vw.[name] AS TableName FROM sys.views vw"
+            strQuery &= " INNER JOIN sys.schemas sch"
+            strQuery &= " ON vw.[schema_id] = sch.[schema_id]"
+        End If
         strQuery &= " ORDER BY TableName"
 
         CursorControl("Wait")
         'Application.DoEvents()
 
         Dim dtsData As DataSet = QueryDb(dhdConnect, strQuery, True)
-        If dtsData Is Nothing Then
-            Return Nothing
-        End If
-        If dtsData.Tables.Count = 0 Then Return Nothing
-        If dtsData.Tables(0).Rows.Count = 0 Then Return Nothing
+        If DatasetCheck(dtsData) = False Then Return Nothing
+
+        'If dtsData Is Nothing Then
+        '    Return Nothing
+        'End If
+        'If dtsData.Tables.Count = 0 Then Return Nothing
+        'If dtsData.Tables(0).Rows.Count = 0 Then Return Nothing
 
         Dim ReturnValue As New List(Of String)
         For intRowCount = 0 To dtsData.Tables(0).Rows.Count - 1
@@ -1249,6 +1270,58 @@ Module Common
         QueryDb(dhdDatabase, strQuery, False)
     End Sub
 
+    Friend Function GetDefaultLogPath(dhdConnect As DataHandler.db) As String
+        strQuery = "SELECT coalesce(serverproperty('InstanceDefaultLogPath'),LEFT(physical_name,LEN(physical_name) - charindex('\',reverse(physical_name)))) AS InstanceDefaultLogPath FROM sys.master_files where name = 'mastlog' "
+
+        Dim objData As DataSet
+        objData = QueryDb(dhdConnect, strQuery, True)
+        Dim strReturn As String = ""
+
+        If DatasetCheck(objData) = False Then
+            strReturn = ""
+        Else
+            strReturn = objData.Tables.Item(0).Rows(0).Item("InstanceDefaultLogPath")
+        End If
+
+        Return strReturn
+    End Function
+
+    Friend Function GetJobName(dhdConnect As DataHandler.db, strPattern As String) As String
+
+        strQuery = "select [name] AS JobName from msdb.dbo.sysjobs where name like '%" & strPattern & "%'"
+
+        Dim objData As DataSet
+        objData = QueryDb(dhdConnect, strQuery, True)
+        Dim strReturn As String = ""
+
+        If DatasetCheck(objData) = False Then
+            strReturn = ""
+        Else
+            strReturn = objData.Tables.Item(0).Rows(0).Item("JobName")
+        End If
+
+        Return strReturn
+    End Function
+
+    Friend Function GetJobStepCount(dhdConnect As DataHandler.db, strJobName As String) As Integer
+        Dim intReturn As Integer = 0
+        Try
+            strQuery = "select COUNT(*) AS StepsCount FROM [msdb].[dbo].[sysjobs] AS [job] INNER JOIN [msdb].[dbo].[sysjobsteps] AS [stp] ON [job].[job_id] = [stp].[job_id] WHERE [job].name = 'Sequenchel SmartUpdate'"
+            Dim objData As DataSet
+            objData = QueryDb(dhdConnect, strQuery, True)
+
+            If DatasetCheck(objData) = False Then
+                intReturn = -1
+            Else
+                intReturn = objData.Tables.Item(0).Rows(0).Item("StepsCount")
+            End If
+        Catch ex As Exception
+            WriteLog("Error retrieving Job Information" & Environment.NewLine & ex.Message, 1)
+            Return -1
+        End Try
+
+        Return intReturn
+    End Function
     'Friend Sub LoadLookupList(cbxField As ComboField, blnRefine As Boolean, blnUseOtherLookups As Boolean)
     '    If dhdConnection.DataBaseOnline = True Then
     '        Dim strQuerySelect As String = "SELECT DISTINCT "
@@ -1459,6 +1532,15 @@ Module Common
                 Return 100
             Case Else
                 Return 50
+        End Select
+    End Function
+
+    Friend Function CompareDataType(strDataType As String) As Boolean
+        Select Case strDataType.ToLower
+            Case "text", "ntext", "image"
+                Return False
+            Case Else
+                Return True
         End Select
     End Function
 
@@ -1674,7 +1756,7 @@ Module Common
                 dhdDatabase.WriteLog(strLogtext, intLogLevel, dhdText.LogLevel)
             Else
                 dhdText.WriteLog(strLogtext, intLogLevel)
-                If DevMode Then MessageBox.Show(dhdText.LogFileName & Environment.NewLine & dhdText.LogLocation & Environment.NewLine & dhdText.LogLevel)
+                'If DevMode Then MessageBox.Show(dhdText.LogFileName & Environment.NewLine & dhdText.LogLocation & Environment.NewLine & dhdText.LogLevel)
             End If
         Catch ex As Exception
             Dim strMyDir As String
@@ -1960,6 +2042,15 @@ Module Common
         Return dtmInput
     End Function
 
+    Friend Function CheckFilePath(strFilePathName As String) As String
+        If strFilePathName.Contains("\") Then
+            Return strFilePathName
+        ElseIf CurVar.DefaultConfigFilePath.Length > 0 Then
+            Return CurVar.DefaultConfigFilePath & "\" & strFilePathName
+        Else
+            Return Application.StartupPath & "\" & strFilePathName
+        End If
+    End Function
 #End Region
 
     Friend Function DataSet2DataGridView(dtsSource As DataSet, SourceTable As Integer, dgvTarget As DataGridView, RebuildColumns As Boolean) As Boolean
