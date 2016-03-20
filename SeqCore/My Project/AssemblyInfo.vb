@@ -8,17 +8,17 @@ Imports System.Runtime.InteropServices
 
 ' Review the values of the assembly attributes
 
-<Assembly: AssemblyTitle("Sequenchel")> 
-<Assembly: AssemblyDescription("Sequenchel Digital Bonus Application SQL.[DBA]")> 
-<Assembly: AssemblyCompany("Thicor Services BV")> 
-<Assembly: AssemblyProduct("Sequenchel")> 
-<Assembly: AssemblyCopyright("Copyright © Thicor Services 2014-2016")> 
+<Assembly: AssemblyTitle("SeqCore")> 
+<Assembly: AssemblyDescription("")> 
+<Assembly: AssemblyCompany("")> 
+<Assembly: AssemblyProduct("SeqCore")> 
+<Assembly: AssemblyCopyright("Copyright ©  2016")> 
 <Assembly: AssemblyTrademark("")> 
 
 <Assembly: ComVisible(False)>
 
 'The following GUID is for the ID of the typelib if this project is exposed to COM
-<Assembly: Guid("03d03e4f-a4e5-4fba-bc91-d178d1e0795f")> 
+<Assembly: Guid("5647cfd2-1139-4e04-8a90-6aca4b1f3a7f")> 
 
 ' Version information for an assembly consists of the following four values:
 '
@@ -31,5 +31,5 @@ Imports System.Runtime.InteropServices
 ' by using the '*' as shown below:
 ' <Assembly: AssemblyVersion("1.0.*")> 
 
-<Assembly: AssemblyVersion("3.7.0.2")> 
-<Assembly: AssemblyFileVersion("3.7.0.2")> 
+<Assembly: AssemblyVersion("1.0.0.0")> 
+<Assembly: AssemblyFileVersion("1.0.0.0")> 

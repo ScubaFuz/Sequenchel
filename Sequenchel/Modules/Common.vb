@@ -6,9 +6,7 @@ Imports System.Security.Cryptography
 Imports System.Environment.SpecialFolder
 
 Module Common
-    Friend DebugMode As Boolean = False
     Friend ErrorMode As Boolean = False
-    Friend DevMode As Boolean = False
 
     Friend strLicenseName As String = "Thicor Services Demo License"
     Friend strLicenseKey As String
@@ -16,6 +14,9 @@ Module Common
     Friend strErrorMessage As String = ""
     Friend strQuery As String = Nothing
 
+    Friend Core As New SeqCore.Core
+    Friend Excel As New SeqCore.Excel
+    Friend CoreData As New SeqCore.Data
     Friend dhdText As New DataHandler.txt
     Friend dhdReg As New DataHandler.reg
     Friend dhdDatabase As New DataHandler.db
@@ -35,9 +36,9 @@ Module Common
     Friend dtsReport As New DataSet
     Friend dtsImport As New DataSet
 
-    Friend strMessages As New Messages
-    Friend CurVar As New Variables
-    Friend CurStatus As New CurrentStatus
+    Friend strMessages As New SeqCore.Messages
+    Friend CurVar As New SeqCore.Variables
+    Friend CurStatus As New SeqCore.CurrentStatus
 
     Friend clrOriginal As Color = System.Drawing.SystemColors.Window
     Friend clrControl As Color = System.Drawing.SystemColors.Control
@@ -50,6 +51,17 @@ Module Common
     Friend dtmElapsedTime As DateTime
     Friend tmsElapsedTime As TimeSpan
 
+    Private _SelectedItem As DataGridViewRow
+
+    Public Property SelectedItem() As System.Windows.Forms.DataGridViewRow
+        Get
+            Return _SelectedItem
+        End Get
+        Set(ByVal Value As System.Windows.Forms.DataGridViewRow)
+            _SelectedItem = Value
+        End Set
+    End Property
+
     Friend Sub ParseCommands()
         Dim intLength As Integer = 0
 
@@ -61,16 +73,16 @@ Module Common
                 Case "/silent"
                     'Start wihtout any windows / forms
                 Case "/debug"
-                    DebugMode = True
+                    CurVar.DebugMode = True
                 Case "/control"
-                    CurStatus.Status = CurrentStatus.StatusList.ControlSearch
+                    CurStatus.Status = SeqCore.CurrentStatus.StatusList.ControlSearch
                 Case "/dev"
-                    DevMode = True
+                    CurVar.DevMode = True
                 Case "/noencryption"
                     CurVar.Encryption = False
                 Case "/securityoverride"
                     If Command.Length > intPosition + 1 Then
-                        CurVar.OverridePassword = Encrypt(Command.Substring(intPosition + 1, Command.Length - (intPosition + 1)))
+                        CurVar.OverridePassword = Core.Encrypt(Command.Substring(intPosition + 1, Command.Length - (intPosition + 1)))
                     End If
                 Case "/report"
                     'Open Report window directly
@@ -92,7 +104,7 @@ Module Common
         Next
 
         'If My.Application.CommandLineArgs.Contains("/debug") Then
-        '    DebugMode = True
+        '    CurVar.DebugMode = True
         '    MessageBox.Show("Running in Debug Mode")
         'End If
         'If My.Application.CommandLineArgs.Contains("/control") Then
@@ -155,9 +167,9 @@ Module Common
         dhdDatabase.DatabaseName = "Sequenchel"
         dhdDatabase.DataProvider = "SQL"
         If CurStatus.Status > 3 Then
-            CurStatus.Status = CurrentStatus.StatusList.ControlSearch
+            CurStatus.Status = SeqCore.CurrentStatus.StatusList.ControlSearch
         Else
-            CurStatus.Status = CurrentStatus.StatusList.Search
+            CurStatus.Status = SeqCore.CurrentStatus.StatusList.Search
         End If
 
     End Sub
@@ -171,19 +183,19 @@ Module Common
             strLicenseKey = dhdReg.ReadAnyRegKey("LicenseKey", dhdReg.RegistryPath)
             If strLicenseKey = "-1" Then WriteLog(dhdReg.RegMessage, 1)
         Catch ex As Exception
-            If DebugMode = True Then MessageBox.Show(ex.Message)
+            If CurVar.DebugMode = True Then MessageBox.Show(ex.Message)
             WriteLog(ex.Message, 1)
             blnLicenseValidated = False
         End Try
 
-        'If DebugMode Then MessageBox.Show(strLicenseName & Environment.NewLine & dtmExpiryDate.ToString & Environment.NewLine & My.Application.Info.Version.Major.ToString & Environment.NewLine & strLicenseKey)
+        'If CurVar.DebugMode Then MessageBox.Show(strLicenseName & Environment.NewLine & dtmExpiryDate.ToString & Environment.NewLine & My.Application.Info.Version.Major.ToString & Environment.NewLine & strLicenseKey)
         If strLicenseKey <> "-1" Then
             If CheckLicenseKey(strLicenseKey, strLicenseName, GetVersion("M"), Nothing) = False Then
                 'MessageBox.Show(strMessages.strLicenseError)
                 blnLicenseValidated = False
             Else
                 blnLicenseValidated = True
-                'If DebugMode Then MessageBox.Show(lanStrings.strLicenseValidated)
+                'If CurVar.DebugMode Then MessageBox.Show(lanStrings.strLicenseValidated)
             End If
         Else
             blnLicenseValidated = False
@@ -465,7 +477,7 @@ Module Common
 
         'dhdDatabase.CheckDB()
 
-        If DebugMode Then
+        If CurVar.DebugMode Then
             MessageBox.Show("Sequenchel v " & Application.ProductVersion & Environment.NewLine _
              & "   GeneralSettings = " & CurVar.GeneralSettings & Environment.NewLine _
              & "   DatabaseServer = " & dhdDatabase.DataLocation & Environment.NewLine _
@@ -582,7 +594,7 @@ Module Common
 
         dhdConnection.CheckDB()
 
-        'If DebugMode Then
+        'If CurVar.DebugMode Then
         '    MessageBox.Show(xmlConnNode.OuterXml & Environment.NewLine & _
         '    dhdConnection.DataLocation & Environment.NewLine & _
         '    dhdConnection.DatabaseName & Environment.NewLine & _
@@ -640,7 +652,7 @@ Module Common
         CurVar.ReportSetFile = xmlTSNode.Item("ReportSet").InnerText
         If dhdText.CheckNodeElement(xmlTSNode, "Search") Then CurVar.SearchFile = xmlTSNode.Item("Search").InnerText
 
-        'If DebugMode Then
+        'If CurVar.DebugMode Then
         '    MessageBox.Show(xmlTSNode.OuterXml & Environment.NewLine & _
         '        CurVar.TableSet & Environment.NewLine & _
         '        CurVar.TablesFile & Environment.NewLine & _
@@ -791,7 +803,7 @@ Module Common
 
     Friend Sub ExportFile(dtsInput As DataSet, strFileName As String, blnShowFile As Boolean)
         If CurVar.IncludeDate = True Then
-            strFileName = strFileName & "_" & FormatFileDate(Now)
+            strFileName = strFileName & "_" & CoreData.FormatFileDate(Now)
         End If
 
         Dim sfdFile As New SaveFileDialog
@@ -838,21 +850,21 @@ Module Common
         Return xmlDoc.Descendants(name).Any()
     End Function
 
-    Friend Function LoadItemList(xmlInput As XmlDocument, strSearchItem As String, strSearchField As String, strSearchValue As String, strTargetItem As String, strDisplayItem As String)
-        Dim xPNode As System.Xml.XmlNode = dhdText.FindXmlNode(xmlInput, strSearchItem, strSearchField, strSearchValue)
-        Dim blnSearchValueExists As Boolean = False
-        If Not xPNode Is Nothing Then
-            Dim ReturnValue As New List(Of String)
-            Dim xNode As System.Xml.XmlNode
-            For Each xNode In xPNode.SelectNodes(".//" & strTargetItem)
-                ReturnValue.Add(xNode.Item(strDisplayItem).InnerText)
-                'If xNode.Item("ConnectionName").InnerText = CurStatus.Connection Then blnSearchValueExists = True
-            Next
-            'If blnSearchValueExists = False Then CurStatus.Connection = CurVar.ConnectionDefault
-            Return ReturnValue
-        End If
-        Return Nothing
-    End Function
+    'Friend Function LoadItemList(xmlInput As XmlDocument, strSearchItem As String, strSearchField As String, strSearchValue As String, strTargetItem As String, strDisplayItem As String)
+    '    Dim xPNode As System.Xml.XmlNode = dhdText.FindXmlNode(xmlInput, strSearchItem, strSearchField, strSearchValue)
+    '    Dim blnSearchValueExists As Boolean = False
+    '    If Not xPNode Is Nothing Then
+    '        Dim ReturnValue As New List(Of String)
+    '        Dim xNode As System.Xml.XmlNode
+    '        For Each xNode In xPNode.SelectNodes(".//" & strTargetItem)
+    '            ReturnValue.Add(xNode.Item(strDisplayItem).InnerText)
+    '            'If xNode.Item("ConnectionName").InnerText = CurStatus.Connection Then blnSearchValueExists = True
+    '        Next
+    '        'If blnSearchValueExists = False Then CurStatus.Connection = CurVar.ConnectionDefault
+    '        Return ReturnValue
+    '    End If
+    '    Return Nothing
+    'End Function
 
     Friend Sub DisplayXmlFile(ByVal xmlDoc As Xml.XmlDocument, ByVal tvw As TreeView)
         tvw.Nodes.Clear()
@@ -896,126 +908,6 @@ Module Common
         Loop
     End Sub
 
-    Friend Function ReportQueryBuild(xmlQueryDoc As XmlDocument, strReportName As String) As String
-        Dim strTableName As String = ""
-        Dim strFieldName As String = ""
-        Dim strShowMode As String = Nothing
-        'Dim strHavingMode As String = Nothing
-        Dim strQueryFrom As String = ""
-        Dim strQueryWhere As String = "WHERE "
-        Dim strWhereClause As String = ""
-        Dim strWhereMode As String = ""
-        Dim strQueryGroup As String = "GROUP BY ", blnGroup As Boolean = False
-        Dim strQueryHaving As String = ""
-        Dim strQueryOrder As String = ""
-
-        Dim xNode As XmlNode = dhdText.FindXmlNode(xmlQueryDoc, "Report", "ReportName", strReportName)
-
-        strQuery = "SELECT "
-        'iterate through all fields
-
-        For Each xCNode As XmlNode In dhdText.FindXmlChildNodes(xNode, "Tables/Table/Fields/Field")
-            strTableName = xCNode.ParentNode.ParentNode.Item("TableName").InnerText
-            If strTableName.IndexOf(".") = -1 Then strTableName = "dbo." & strTableName
-            strFieldName = xCNode.Item("FieldName").InnerText
-            Try
-                If xCNode.Item("FieldShow").InnerText = 1 Then
-                    strQuery &= ", " & FormatFieldXML(strTableName & "." & strFieldName, xCNode.Item("FieldShowMode").InnerText, True, True)
-                    Select Case strShowMode
-                        Case Nothing
-                            strQueryGroup &= ", " & strFieldName
-                        Case "DATE", "YEAR", "MONTH", "DAY", "TIME", "HOUR", "MINUTE", "SECOND"
-                            strQueryGroup &= ", " & strFieldName
-                        Case Else
-                            blnGroup = True
-                    End Select
-                End If
-
-                'xCNode.Item("FieldSort").InnerText)
-                'xCNode.Item("FieldSortOrder").InnerText)
-
-                For Each xFnode In dhdText.FindXmlChildNodes(xCNode, "Filters/Filter")
-                    If xFnode.Item("FilterEnabled").InnerText = "Indeterminate" Then blnGroup = True
-
-                    If xFnode.Item("FilterEnabled").InnerText = "Checked" Then
-                        strWhereMode = xFnode.Item("FilterMode").InnerText
-                        If strWhereMode = "" Then strWhereMode = "AND"
-                        If strWhereMode.Contains("AND") Then strWhereMode = ") " & strWhereMode & " ("
-                        strWhereClause = SetDelimiters(xFnode.Item("FilterText").InnerText, GetFieldDataType(strTableName & "." & strFieldName), xFnode.Item("FilterType").InnerText)
-
-                        If xFnode.Item("FilterType").InnerText = "LIKE" And strWhereClause.Contains("*") Then strWhereClause = strWhereClause.Replace("*", "%")
-                        If xFnode.Item("FilterType").InnerText <> "" And strWhereClause <> "" Then
-                            If strWhereMode = "" Then
-                                strQueryWhere &= " " & strFieldName & " " & xFnode.Item("FilterType").InnerText & " " & strWhereClause
-                            Else
-                                strQueryWhere &= " " & strWhereMode & " " & strFieldName & " " & xFnode.Item("FilterType").InnerText & " " & strWhereClause
-                            End If
-                        End If
-                    End If
-
-                Next
-            Catch ex As Exception
-                'Skip this field
-            End Try
-        Next
-
-        'Dim intControlNumber As Integer = 0
-        'Dim strFromClause As String = "FROM "
-        'Dim strFromSource As String = Nothing, strFromType As String = Nothing, strFromRelation As String = Nothing, strTargetTable As String = Nothing
-
-        'For incCount As Integer = 0 To lvwSelectedTables.Items.Count - 1
-        '    strTableName = lvwSelectedTables.Items.Item(incCount).Name
-        '    If incCount = 0 Then strFromClause &= strTableName
-        '    For Each ctrFrom In pnlRelationsUse.Controls
-        '        If ctrFrom.Checked = True Then
-        '            If strTableName = ctrFrom.Tag Then
-        '                intControlNumber = ctrFrom.Name.ToString.Substring(ctrFrom.Name.ToString.Length - strTableName.Length - 1, 1)
-        '                strFromSource = GetCtrText(pnlRelationsField, strTableName, intControlNumber)
-        '                strFromRelation = GetCtrText(pnlRelationsRelation, strTableName, intControlNumber)
-        '                strFromType = GetCtrText(pnlRelationsJoinType, strTableName, intControlNumber)
-        '                strTargetTable = strFromRelation.Substring(0, strFromRelation.LastIndexOf("."))
-        '                strTargetTable = strTargetTable.Substring(strTargetTable.LastIndexOf("(") + 1, strTargetTable.Length - (strTargetTable.LastIndexOf("(") + 1))
-        '                If strFromClause.Contains(strTargetTable) = True And strFromClause.Contains(strTableName) = False Then
-        '                    strFromClause &= Environment.NewLine & strFromType & " JOIN " & strTableName & " ON " & strTableName & "." & strFromSource & " = " & strFromRelation
-        '                ElseIf strFromClause.Contains(strTargetTable) = True And strFromClause.Contains(strTableName) = True Then
-        '                    strFromClause &= Environment.NewLine & " AND " & strTableName & "." & strFromSource & " = " & strFromRelation
-        '                ElseIf strFromClause.Contains(strTargetTable) = False And strFromClause.Contains(strTableName) = False Then
-        '                    strFromClause &= Environment.NewLine & strFromType & " JOIN " & strTargetTable & " ON " & strTableName & "." & strFromSource & " = " & strFromRelation
-        '                ElseIf strFromClause.Contains(strTargetTable) = False And strFromClause.Contains(strTableName) = True Then
-        '                    strFromClause &= Environment.NewLine & strFromType & " JOIN " & strTargetTable & " ON " & strTableName & "." & strFromSource & " = " & strFromRelation
-        '                End If
-        '            End If
-        '        End If
-        '    Next
-        'Next
-
-
-        If strQuery = "SELECT " Then
-            Return Nothing
-        End If
-        strQuery = strQuery.Replace("SELECT ,", "SELECT ")
-        'Check for top x 
-        If xNode.Item("UseTop").InnerText = True And IsNumeric(xNode.Item("UseTopNumber").InnerText) = True Then strQuery = strQuery.Replace("SELECT ", "SELECT TOP " & xNode.Item("UseTopNumber").InnerText & " ")
-        'Check for distinct
-        If xNode.Item("UseDistinct").InnerText = True Then strQuery = strQuery.Replace("SELECT ", "SELECT DISTINCT ")
-        strQueryGroup = strQueryGroup.Replace("GROUP BY ,", "GROUP BY ")
-        If strQueryGroup = "GROUP BY " Then blnGroup = False
-
-        'strQueryFrom = FromClauseGet()
-        'strQuery &= Environment.NewLine & strQueryFrom
-        'strQueryWhere = WhereClauseGet()
-        strQueryWhere &= ")"
-        strQueryWhere = strQueryWhere.Replace("WHERE  ) AND", "WHERE ").Replace("WHERE  OR", "WHERE (").Replace("WHERE  ) AND NOT", "WHERE NOT (")
-
-        If strQueryWhere.Length > 10 Then strQuery &= Environment.NewLine & strQueryWhere
-        If blnGroup = True Then strQuery &= Environment.NewLine & strQueryGroup
-        'strQueryHaving = HavingClauseGet()
-        'If strQueryHaving.Length > 11 Then strQuery &= Environment.NewLine & strQueryHaving
-        'strQueryOrder = OrderClauseGet()
-        'If strQueryOrder.Length > 10 Then strQuery &= Environment.NewLine & strQueryOrder
-
-        Return strQuery
-    End Function
 #End Region
 
 #Region "Database"
@@ -1046,7 +938,7 @@ Module Common
     End Function
 
     Friend Function DatabaseTest(dhdConnect As DataHandler.db) As Boolean
-        If DebugMode Then
+        If CurVar.DebugMode Then
             MessageBox.Show("Sequenchel v " & Application.ProductVersion & " Database Settings" & Environment.NewLine _
              & "   DatabaseServer = " & dhdConnect.DataLocation & Environment.NewLine _
              & "   Database Name = " & dhdConnect.DatabaseName & Environment.NewLine _
@@ -1069,7 +961,7 @@ Module Common
 
     Friend Function CheckSqlVersion(dhdConnect As DataHandler.db) As Boolean
         Try
-            Dim intSqlVersion As Integer = GetSqlVersion(dhdConnect)
+            Dim intSqlVersion As Integer = CoreData.GetSqlVersion(dhdConnect)
             Select Case intSqlVersion
                 Case 0
                     MessageBox.Show("SQL Server not found or not accessible" & Environment.NewLine & "Please check your settings")
@@ -1095,14 +987,14 @@ Module Common
         End Try
     End Function
 
-    Friend Function GetSqlVersion(dhdConnect As DataHandler.db) As Integer
-        Dim strDatabase As String = dhdConnect.DatabaseName
-        dhdConnect.DatabaseName = "master"
-        Dim intSqlVersion As Integer = dhdConnect.GetSqlVersion()
-        dhdConnect.DatabaseName = strDatabase
+    'Friend Function GetSqlVersion(dhdConnect As DataHandler.db) As Integer
+    '    Dim strDatabase As String = dhdConnect.DatabaseName
+    '    dhdConnect.DatabaseName = "master"
+    '    Dim intSqlVersion As Integer = dhdConnect.GetSqlVersion()
+    '    dhdConnect.DatabaseName = strDatabase
 
-        Return intSqlVersion
-    End Function
+    '    Return intSqlVersion
+    'End Function
 
     Friend Sub BackupDatabase(ByVal dhdConnect As DataHandler.db, ByVal strPath As String)
 
@@ -1111,7 +1003,7 @@ Module Common
         strDateTime = Now.ToString("yyyyMMdd_HHmmss")
         strQuery = ""
         strQuery = "exec usp_BackupHandle 'CREATE','" & dhdConnect.DatabaseName & "','" & strPath & "','" & strDateTime & "'"
-        If DebugMode Then MessageBox.Show("DatabaseName = " & dhdConnect.DatabaseName & Environment.NewLine & _
+        If CurVar.DebugMode Then MessageBox.Show("DatabaseName = " & dhdConnect.DatabaseName & Environment.NewLine & _
                                             "strPath = " & strPath & Environment.NewLine & _
                                             "strDateTime = " & strDateTime & Environment.NewLine & _
                                             strQuery)
@@ -1390,165 +1282,165 @@ Module Common
 
 #Region "DataTypes"
 
-    Friend Function GetDataType(strInput As String) As String
-        Select Case strInput
-            Case "varchar"
-                Return "CHAR"
-            Case "char"
-                Return "CHAR"
-            Case "nvarchar"
-                Return "CHAR"
-            Case "nchar"
-                Return "CHAR"
-            Case "bit"
-                Return "BIT"
-            Case "tinyint"
-                Return "INTEGER"
-            Case "smallint"
-                Return "INTEGER"
-            Case "int"
-                Return "INTEGER"
-            Case "bigint"
-                Return "INTEGER"
-            Case "date"
-                Return "DATETIME"
-            Case "time"
-                Return "TIME"
-            Case "datetime"
-                Return "DATETIME"
-            Case "smalldatetime"
-                Return "DATETIME"
-            Case "datetime2"
-                Return "DATETIME"
-            Case "datetimeoffset"
-                Return "CHAR"
-            Case "timestamp"
-                Return "TIMESTAMP"
-            Case "decimal"
-                Return "INTEGER"
-            Case "numeric"
-                Return "INTEGER"
-            Case "real"
-                Return "INTEGER"
-            Case "float"
-                Return "INTEGER"
-            Case "smallmoney"
-                Return "INTEGER"
-            Case "money"
-                Return "INTEGER"
-            Case "uniqueidentifier"
-                Return "GUID"
-            Case "image"
-                Return "IMAGE"
-            Case "sql_variant"
-                Return "BINARY"
-            Case "hierarchyid"
-                Return "CHAR"
-            Case "geometry"
-                Return "GEO"
-            Case "geography"
-                Return "GEO"
-            Case "varbinary"
-                Return "BINARY"
-            Case "binary"
-                Return "BINARY"
-            Case "text"
-                Return "TEXT"
-            Case "ntext"
-                Return "TEXT"
-            Case "xml"
-                Return "XML"
-            Case "sysname"
-                Return "CHAR"
-        End Select
-        Return ""
-    End Function
+    'Friend Function GetDataType(strInput As String) As String
+    '    Select Case strInput
+    '        Case "varchar"
+    '            Return "CHAR"
+    '        Case "char"
+    '            Return "CHAR"
+    '        Case "nvarchar"
+    '            Return "CHAR"
+    '        Case "nchar"
+    '            Return "CHAR"
+    '        Case "bit"
+    '            Return "BIT"
+    '        Case "tinyint"
+    '            Return "INTEGER"
+    '        Case "smallint"
+    '            Return "INTEGER"
+    '        Case "int"
+    '            Return "INTEGER"
+    '        Case "bigint"
+    '            Return "INTEGER"
+    '        Case "date"
+    '            Return "DATETIME"
+    '        Case "time"
+    '            Return "TIME"
+    '        Case "datetime"
+    '            Return "DATETIME"
+    '        Case "smalldatetime"
+    '            Return "DATETIME"
+    '        Case "datetime2"
+    '            Return "DATETIME"
+    '        Case "datetimeoffset"
+    '            Return "CHAR"
+    '        Case "timestamp"
+    '            Return "TIMESTAMP"
+    '        Case "decimal"
+    '            Return "INTEGER"
+    '        Case "numeric"
+    '            Return "INTEGER"
+    '        Case "real"
+    '            Return "INTEGER"
+    '        Case "float"
+    '            Return "INTEGER"
+    '        Case "smallmoney"
+    '            Return "INTEGER"
+    '        Case "money"
+    '            Return "INTEGER"
+    '        Case "uniqueidentifier"
+    '            Return "GUID"
+    '        Case "image"
+    '            Return "IMAGE"
+    '        Case "sql_variant"
+    '            Return "BINARY"
+    '        Case "hierarchyid"
+    '            Return "CHAR"
+    '        Case "geometry"
+    '            Return "GEO"
+    '        Case "geography"
+    '            Return "GEO"
+    '        Case "varbinary"
+    '            Return "BINARY"
+    '        Case "binary"
+    '            Return "BINARY"
+    '        Case "text"
+    '            Return "TEXT"
+    '        Case "ntext"
+    '            Return "TEXT"
+    '        Case "xml"
+    '            Return "XML"
+    '        Case "sysname"
+    '            Return "CHAR"
+    '    End Select
+    '    Return ""
+    'End Function
 
-    Friend Function GetDataTypes()
-        Dim ReturnValue As New List(Of String)
-        ReturnValue.Add("CHAR")
-        ReturnValue.Add("INTEGER")
-        ReturnValue.Add("BIT")
-        ReturnValue.Add("BINARY")
-        ReturnValue.Add("GUID")
-        ReturnValue.Add("IMAGE")
-        ReturnValue.Add("TEXT")
-        ReturnValue.Add("DATETIME")
-        ReturnValue.Add("TIME")
-        ReturnValue.Add("TIMESTAMP")
-        ReturnValue.Add("XML")
-        ReturnValue.Add("GEO")
-        Return ReturnValue
-    End Function
+    'Friend Function GetDataTypes()
+    '    Dim ReturnValue As New List(Of String)
+    '    ReturnValue.Add("CHAR")
+    '    ReturnValue.Add("INTEGER")
+    '    ReturnValue.Add("BIT")
+    '    ReturnValue.Add("BINARY")
+    '    ReturnValue.Add("GUID")
+    '    ReturnValue.Add("IMAGE")
+    '    ReturnValue.Add("TEXT")
+    '    ReturnValue.Add("DATETIME")
+    '    ReturnValue.Add("TIME")
+    '    ReturnValue.Add("TIMESTAMP")
+    '    ReturnValue.Add("XML")
+    '    ReturnValue.Add("GEO")
+    '    Return ReturnValue
+    'End Function
 
-    Friend Function SetDelimiters(strInput As String, strDataType As String, strCompare As String) As String
-        If strInput.Length > 2 Then
-            If strInput.Substring(0, 2) = "f:" Then
-                Return "(" & strInput.Replace("f:", "") & ")"
-            End If
-            If strInput.Substring(0, 2) = "v:" Then
-                strInput = strInput.Replace("v:", "")
-                strInput = ProcessDefaultValue(strInput)
-            End If
-        End If
-        If strCompare = "IS" Or strCompare = "IS NOT" Then
-            Return strInput
-        End If
-        If strDataType = "CHAR" Or _
-                strDataType = "BINARY" Or _
-                strDataType = "GUID" Or _
-                strDataType = "TEXT" Or _
-                strDataType = "IMAGE" Or _
-                strDataType = "DATETIME" Or _
-                strDataType = "TIME" Or _
-                strDataType = "TIMESTAMP" Or _
-                strDataType = "XML" Or _
-                strDataType = "GEO" Then
-            strInput = strInput.Replace("'", "''")
-            strInput = "N'" & strInput & "'"
-            If (strCompare = "IN" Or strCompare = "NOT IN") Then
-                strInput = strInput.Replace(",", "','")
-            End If
-        End If
-        If (strCompare = "IN" Or strCompare = "NOT IN") Then
-            strInput = "(" & strInput & ")"
-        End If
-        Return strInput
-    End Function
+    'Friend Function SetDelimiters(strInput As String, strDataType As String, strCompare As String) As String
+    '    If strInput.Length > 2 Then
+    '        If strInput.Substring(0, 2) = "f:" Then
+    '            Return "(" & strInput.Replace("f:", "") & ")"
+    '        End If
+    '        If strInput.Substring(0, 2) = "v:" Then
+    '            strInput = strInput.Replace("v:", "")
+    '            strInput = ProcessDefaultValue(strInput)
+    '        End If
+    '    End If
+    '    If strCompare = "IS" Or strCompare = "IS NOT" Then
+    '        Return strInput
+    '    End If
+    '    If strDataType = "CHAR" Or _
+    '            strDataType = "BINARY" Or _
+    '            strDataType = "GUID" Or _
+    '            strDataType = "TEXT" Or _
+    '            strDataType = "IMAGE" Or _
+    '            strDataType = "DATETIME" Or _
+    '            strDataType = "TIME" Or _
+    '            strDataType = "TIMESTAMP" Or _
+    '            strDataType = "XML" Or _
+    '            strDataType = "GEO" Then
+    '        strInput = strInput.Replace("'", "''")
+    '        strInput = "N'" & strInput & "'"
+    '        If (strCompare = "IN" Or strCompare = "NOT IN") Then
+    '            strInput = strInput.Replace(",", "','")
+    '        End If
+    '    End If
+    '    If (strCompare = "IN" Or strCompare = "NOT IN") Then
+    '        strInput = "(" & strInput & ")"
+    '    End If
+    '    Return strInput
+    'End Function
 
-    Friend Function GetWidth(strDataType As String, intMaxLength As Integer) As Integer
-        Select Case strDataType
-            Case "CHAR", "BINARY"
-                If intMaxLength < 50 Then
-                    Return 50
-                ElseIf intMaxLength < 100 Then
-                    Return 100
-                ElseIf intMaxLength < 150 Then
-                    Return 150
-                Else
-                    Return 200
-                End If
-            Case "INTEGER"
-                Return intMaxLength * 10
-            Case "BIT"
-                Return 25
-            Case "GUID", "XML", "TEXT", "IMAGE"
-                Return 200
-            Case "TIMESTAMP", "GEO", "DATETIME", "TIME"
-                Return 100
-            Case Else
-                Return 50
-        End Select
-    End Function
+    'Friend Function GetWidth(strDataType As String, intMaxLength As Integer) As Integer
+    '    Select Case strDataType
+    '        Case "CHAR", "BINARY"
+    '            If intMaxLength < 50 Then
+    '                Return 50
+    '            ElseIf intMaxLength < 100 Then
+    '                Return 100
+    '            ElseIf intMaxLength < 150 Then
+    '                Return 150
+    '            Else
+    '                Return 200
+    '            End If
+    '        Case "INTEGER"
+    '            Return intMaxLength * 10
+    '        Case "BIT"
+    '            Return 25
+    '        Case "GUID", "XML", "TEXT", "IMAGE"
+    '            Return 200
+    '        Case "TIMESTAMP", "GEO", "DATETIME", "TIME"
+    '            Return 100
+    '        Case Else
+    '            Return 50
+    '    End Select
+    'End Function
 
-    Friend Function CompareDataType(strDataType As String) As Boolean
-        Select Case strDataType.ToLower
-            Case "text", "ntext", "image"
-                Return False
-            Case Else
-                Return True
-        End Select
-    End Function
+    'Friend Function CompareDataType(strDataType As String) As Boolean
+    '    Select Case strDataType.ToLower
+    '        Case "text", "ntext", "image"
+    '            Return False
+    '        Case Else
+    '            Return True
+    '    End Select
+    'End Function
 
     Friend Function GetFieldDataType(strFullFieldName As String) As String
         Dim strTableName As String = strFullFieldName.Substring(0, strFullFieldName.LastIndexOf("."))
@@ -1853,31 +1745,31 @@ Module Common
         End If
     End Function
 
-    Friend Function FormatFileDate(ByVal dtmInput As Date, Optional strFormatStyle As String = Nothing) As String
-        If dtmInput = Nothing Then
-            FormatFileDate = ""
-        Else
-            If strFormatStyle = Nothing Then strFormatStyle = CurVar.DateTimeStyle
-            FormatFileDate = dtmInput.ToString("yyyy-MM-dd")
-            Select Case strFormatStyle
-                Case 120
-                    FormatFileDate = dtmInput.ToString("yyyy-MM-dd")
-                Case 100
-                    FormatFileDate = dtmInput.ToString("MMM dd yyyy")
-                Case 101
-                    FormatFileDate = dtmInput.ToString("MM/dd/yyyy")
-                Case 105
-                    FormatFileDate = dtmInput.ToString("dd-MM-yyyy")
-                Case 109
-                    FormatFileDate = dtmInput.ToString("MMM dd yyyy")
-                Case 113
-                    FormatFileDate = dtmInput.ToString("dd MMM yyyy")
-                Case Else
-                    FormatFileDate = dtmInput.ToString("yyyy-MM-dd")
-            End Select
-        End If
-        Return FormatFileDate
-    End Function
+    'Friend Function FormatFileDate(ByVal dtmInput As Date, Optional strFormatStyle As String = Nothing) As String
+    '    If dtmInput = Nothing Then
+    '        FormatFileDate = ""
+    '    Else
+    '        If strFormatStyle = Nothing Then strFormatStyle = CurVar.DateTimeStyle
+    '        FormatFileDate = dtmInput.ToString("yyyy-MM-dd")
+    '        Select Case strFormatStyle
+    '            Case 120
+    '                FormatFileDate = dtmInput.ToString("yyyy-MM-dd")
+    '            Case 100
+    '                FormatFileDate = dtmInput.ToString("MMM dd yyyy")
+    '            Case 101
+    '                FormatFileDate = dtmInput.ToString("MM/dd/yyyy")
+    '            Case 105
+    '                FormatFileDate = dtmInput.ToString("dd-MM-yyyy")
+    '            Case 109
+    '                FormatFileDate = dtmInput.ToString("MMM dd yyyy")
+    '            Case 113
+    '                FormatFileDate = dtmInput.ToString("dd MMM yyyy")
+    '            Case Else
+    '                FormatFileDate = dtmInput.ToString("yyyy-MM-dd")
+    '        End Select
+    '    End If
+    '    Return FormatFileDate
+    'End Function
 
     Friend Sub CursorControl(Optional strStyle As String = "Default")
         Select Case strStyle
@@ -1890,115 +1782,115 @@ Module Common
         End Select
     End Sub
 
-    Friend Function ProcessDefaultValue(strValue As String) As String
-        Dim strReturn As String = strValue
-        Dim intFirstBracket As Integer = strValue.IndexOf("(")
-        Dim intLastBracket As Integer = strValue.LastIndexOf(")")
-        Dim strInput As String = ""
+    'Friend Function ProcessDefaultValue(strValue As String) As String
+    '    Dim strReturn As String = strValue
+    '    Dim intFirstBracket As Integer = strValue.IndexOf("(")
+    '    Dim intLastBracket As Integer = strValue.LastIndexOf(")")
+    '    Dim strInput As String = ""
 
-        If intFirstBracket > 0 And intLastBracket > 0 Then
+    '    If intFirstBracket > 0 And intLastBracket > 0 Then
 
-            If intLastBracket - intFirstBracket > 1 Then
-                strInput = strValue.Substring(intFirstBracket + 1, intLastBracket - (intFirstBracket + 1))
-            End If
+    '        If intLastBracket - intFirstBracket > 1 Then
+    '            strInput = strValue.Substring(intFirstBracket + 1, intLastBracket - (intFirstBracket + 1))
+    '        End If
 
-            Select Case strValue.Substring(0, strValue.IndexOf("(") + 1).ToLower
-                Case "now("
-                    Dim dtmOutput As DateTime = DateTime.Now
-                    Try
-                        dtmOutput = AlterDate(dtmOutput, strInput, "HOUR")
-                    Catch ex As Exception
-                    End Try
-                    strReturn = dtmOutput.ToString("yyyy-MM-dd HH:mm:ss")
-                Case "date("
-                    Dim dtmOutput As DateTime = Date.Today
-                    Try
-                        dtmOutput = AlterDate(dtmOutput, strInput, "DAY")
-                    Catch ex As Exception
-                    End Try
-                    strReturn = FormatFileDate(dtmOutput, 120)
-                Case "time("
-                    Dim dtmOutput As DateTime = DateTime.Now
-                    Try
-                        dtmOutput = AlterDate(dtmOutput, strInput, "MINUTE")
-                        strReturn = dtmOutput.ToString("HH:mm:ss")
-                    Catch ex As Exception
-                        strReturn = TimeOfDay.ToString("HH:mm:ss")
-                    End Try
-                Case "yearstart("
-                    Dim dtmOutput As New DateTime(DateTime.Now.Year, 1, 1)
-                    Try
-                        dtmOutput = AlterDate(dtmOutput, strInput, "YEAR")
-                    Catch ex As Exception
-                        strReturn = FormatFileDate(dtmOutput, 120)
-                    End Try
-                    strReturn = FormatFileDate(dtmOutput, 120)
-                Case "yearend("
-                    Dim dtmOutput As New DateTime(DateTime.Now.Year, 1, 1)
-                    dtmOutput = dtmOutput.AddYears(1).AddDays(-1)
-                    Try
-                        dtmOutput = AlterDate(dtmOutput, strInput, "YEAR")
-                    Catch ex As Exception
-                        strReturn = FormatFileDate(dtmOutput, 120)
-                    End Try
-                    strReturn = FormatFileDate(dtmOutput, 120)
-                Case "monthstart("
-                    Dim dtmOutput As DateTime = Date.Today.AddDays(-Date.Today.Day + 1)
-                    Try
-                        dtmOutput = AlterDate(dtmOutput, strInput, "MONTH")
-                    Catch ex As Exception
-                        strReturn = FormatFileDate(dtmOutput, 120)
-                    End Try
-                    strReturn = FormatFileDate(dtmOutput, 120)
-                Case "monthend("
-                    Dim dtmOutput As DateTime = Date.Today.AddMonths(1).AddDays(-Date.Today.Day)
-                    Dim IntAddMonths As Integer = 1
+    '        Select Case strValue.Substring(0, strValue.IndexOf("(") + 1).ToLower
+    '            Case "now("
+    '                Dim dtmOutput As DateTime = DateTime.Now
+    '                Try
+    '                    dtmOutput = AlterDate(dtmOutput, strInput, "HOUR")
+    '                Catch ex As Exception
+    '                End Try
+    '                strReturn = dtmOutput.ToString("yyyy-MM-dd HH:mm:ss")
+    '            Case "date("
+    '                Dim dtmOutput As DateTime = Date.Today
+    '                Try
+    '                    dtmOutput = AlterDate(dtmOutput, strInput, "DAY")
+    '                Catch ex As Exception
+    '                End Try
+    '                strReturn = FormatFileDate(dtmOutput, 120)
+    '            Case "time("
+    '                Dim dtmOutput As DateTime = DateTime.Now
+    '                Try
+    '                    dtmOutput = AlterDate(dtmOutput, strInput, "MINUTE")
+    '                    strReturn = dtmOutput.ToString("HH:mm:ss")
+    '                Catch ex As Exception
+    '                    strReturn = TimeOfDay.ToString("HH:mm:ss")
+    '                End Try
+    '            Case "yearstart("
+    '                Dim dtmOutput As New DateTime(DateTime.Now.Year, 1, 1)
+    '                Try
+    '                    dtmOutput = AlterDate(dtmOutput, strInput, "YEAR")
+    '                Catch ex As Exception
+    '                    strReturn = FormatFileDate(dtmOutput, 120)
+    '                End Try
+    '                strReturn = FormatFileDate(dtmOutput, 120)
+    '            Case "yearend("
+    '                Dim dtmOutput As New DateTime(DateTime.Now.Year, 1, 1)
+    '                dtmOutput = dtmOutput.AddYears(1).AddDays(-1)
+    '                Try
+    '                    dtmOutput = AlterDate(dtmOutput, strInput, "YEAR")
+    '                Catch ex As Exception
+    '                    strReturn = FormatFileDate(dtmOutput, 120)
+    '                End Try
+    '                strReturn = FormatFileDate(dtmOutput, 120)
+    '            Case "monthstart("
+    '                Dim dtmOutput As DateTime = Date.Today.AddDays(-Date.Today.Day + 1)
+    '                Try
+    '                    dtmOutput = AlterDate(dtmOutput, strInput, "MONTH")
+    '                Catch ex As Exception
+    '                    strReturn = FormatFileDate(dtmOutput, 120)
+    '                End Try
+    '                strReturn = FormatFileDate(dtmOutput, 120)
+    '            Case "monthend("
+    '                Dim dtmOutput As DateTime = Date.Today.AddMonths(1).AddDays(-Date.Today.Day)
+    '                Dim IntAddMonths As Integer = 1
 
-                    Try
-                        dtmOutput = AlterDate(dtmOutput, strInput, "MONTH")
-                        dtmOutput = dtmOutput.AddMonths(1).AddDays(-dtmOutput.Day)
-                    Catch ex As Exception
-                        strReturn = FormatFileDate(dtmOutput, 120)
-                    End Try
-                    strReturn = FormatFileDate(dtmOutput, 120)
+    '                Try
+    '                    dtmOutput = AlterDate(dtmOutput, strInput, "MONTH")
+    '                    dtmOutput = dtmOutput.AddMonths(1).AddDays(-dtmOutput.Day)
+    '                Catch ex As Exception
+    '                    strReturn = FormatFileDate(dtmOutput, 120)
+    '                End Try
+    '                strReturn = FormatFileDate(dtmOutput, 120)
 
-                Case "weekstart("
-                    Dim IntAddWeeks As Integer = 0
-                    Dim dtmOutput As DateTime = Date.Today
-                    Dim dayIndex As Integer = dtmOutput.DayOfWeek
-                    If dayIndex < DayOfWeek.Monday Then
-                        dayIndex += 7 'Monday is first day of week, no day of week should have a smaller index
-                    End If
-                    Dim dayDiff As Integer = dayIndex - DayOfWeek.Monday
-                    dtmOutput = dtmOutput.AddDays(-dayDiff)
-                    Try
-                        dtmOutput = AlterDate(dtmOutput, strInput, "WEEK")
-                    Catch ex As Exception
-                    End Try
-                    strReturn = FormatFileDate(dtmOutput, 120)
-                Case "weekend("
-                    Dim IntAddWeeks As Integer = 0
-                    Dim dtmOutput As DateTime = Date.Today
-                    Dim dayIndex As Integer = dtmOutput.DayOfWeek
-                    If dayIndex < DayOfWeek.Monday Then
-                        dayIndex += 7 'Monday is first day of week, no day of week should have a smaller index
-                    End If
-                    Dim dayDiff As Integer = dayIndex - DayOfWeek.Monday
-                    dtmOutput = dtmOutput.AddDays(-dayDiff).AddDays(6)
+    '            Case "weekstart("
+    '                Dim IntAddWeeks As Integer = 0
+    '                Dim dtmOutput As DateTime = Date.Today
+    '                Dim dayIndex As Integer = dtmOutput.DayOfWeek
+    '                If dayIndex < DayOfWeek.Monday Then
+    '                    dayIndex += 7 'Monday is first day of week, no day of week should have a smaller index
+    '                End If
+    '                Dim dayDiff As Integer = dayIndex - DayOfWeek.Monday
+    '                dtmOutput = dtmOutput.AddDays(-dayDiff)
+    '                Try
+    '                    dtmOutput = AlterDate(dtmOutput, strInput, "WEEK")
+    '                Catch ex As Exception
+    '                End Try
+    '                strReturn = FormatFileDate(dtmOutput, 120)
+    '            Case "weekend("
+    '                Dim IntAddWeeks As Integer = 0
+    '                Dim dtmOutput As DateTime = Date.Today
+    '                Dim dayIndex As Integer = dtmOutput.DayOfWeek
+    '                If dayIndex < DayOfWeek.Monday Then
+    '                    dayIndex += 7 'Monday is first day of week, no day of week should have a smaller index
+    '                End If
+    '                Dim dayDiff As Integer = dayIndex - DayOfWeek.Monday
+    '                dtmOutput = dtmOutput.AddDays(-dayDiff).AddDays(6)
 
-                    Try
-                        dtmOutput = AlterDate(dtmOutput, strInput, "WEEK")
-                    Catch ex As Exception
-                    End Try
-                    strReturn = FormatFileDate(dtmOutput, 120)
-                Case "pi("
-                    strReturn = "3.1415926535897932384626433832795"
-                Case Else
-                    'nothing
-            End Select
-        End If
-        Return strReturn
-    End Function
+    '                Try
+    '                    dtmOutput = AlterDate(dtmOutput, strInput, "WEEK")
+    '                Catch ex As Exception
+    '                End Try
+    '                strReturn = FormatFileDate(dtmOutput, 120)
+    '            Case "pi("
+    '                strReturn = "3.1415926535897932384626433832795"
+    '            Case Else
+    '                'nothing
+    '        End Select
+    '    End If
+    '    Return strReturn
+    'End Function
 
     Private Function AlterDate(dtmInput As DateTime, strInput As String, strDefault As String) As DateTime
         Dim intComma As Integer = 0
@@ -2135,16 +2027,16 @@ Module Common
         Next
     End Sub
 
-    Friend Function Encrypt(strPassword As String) As String
-        Dim x As New System.Security.Cryptography.MD5CryptoServiceProvider()
-        Dim bs As Byte() = System.Text.Encoding.UTF8.GetBytes(strPassword)
-        bs = x.ComputeHash(bs)
-        Dim s As New System.Text.StringBuilder()
-        For Each b As Byte In bs
-            s.Append(b.ToString("x2").ToLower())
-        Next
-        Return s.ToString()
-    End Function
+    'Friend Function Encrypt(strPassword As String) As String
+    '    Dim x As New System.Security.Cryptography.MD5CryptoServiceProvider()
+    '    Dim bs As Byte() = System.Text.Encoding.UTF8.GetBytes(strPassword)
+    '    bs = x.ComputeHash(bs)
+    '    Dim s As New System.Text.StringBuilder()
+    '    For Each b As Byte In bs
+    '        s.Append(b.ToString("x2").ToLower())
+    '    Next
+    '    Return s.ToString()
+    'End Function
 
     'Friend Function ReplaceNulls(dtsInput As DataSet) As DataSet
     '    Dim dtsOutput As New DataSet

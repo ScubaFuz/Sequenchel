@@ -1,6 +1,8 @@
 ﻿Public Class Variables
 
 #Region "General"
+    Private _DebugMode As Boolean = False
+    Private _DevMode As Boolean = False
     Private _UsersetLocation As String = "REGISTRY"
     Private _BuildMargin As Integer = 5
     Private _FieldHeight As Integer = 20
@@ -12,6 +14,24 @@
     Private _LimitLookupLists As Boolean = True
     Private _LimitLookupListsCount As Integer = 100
     Private _IncludeDate As Boolean = False
+
+    Public Property DebugMode() As Boolean
+        Get
+            Return _DebugMode
+        End Get
+        Set(ByVal Value As Boolean)
+            _DebugMode = Value
+        End Set
+    End Property
+
+    Public Property DevMode() As Boolean
+        Get
+            Return _DevMode
+        End Get
+        Set(ByVal Value As Boolean)
+            _DevMode = Value
+        End Set
+    End Property
 
     Public Property UsersetLocation() As String
         Get
@@ -242,7 +262,7 @@
 #End Region
 
 #Region "XML"
-    Private _DefaultConfigFilePath As String = Application.StartupPath & "\Config"
+    Private _DefaultConfigFilePath As String = System.Reflection.Assembly.GetCallingAssembly.Location & "\Config"
     Private _GeneralSettings As String = _DefaultConfigFilePath & "\" & "SequenchelSettings.xml"
     Private _ConnectionsFile As String = _DefaultConfigFilePath & "\" & "SDBAConnections.xml"
     Private _ConnectionDefault As String = ""

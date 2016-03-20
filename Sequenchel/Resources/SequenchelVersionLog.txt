@@ -1,3 +1,6 @@
+Version 3.7.0
+New: Added Commandline options to export a report or import an Excel file without user intervention.
+
 Version 3.6.0
 New: Added SmartUpdate for easy Datawarehouse building.
 New: Import file can import multiple sheets from 1 Excel file at once. Upload to database per sheet is possible.

@@ -9,9 +9,9 @@ Public Class frmSequenchel
 
         ParseCommands()
         Me.Text = My.Application.Info.Title
-        If CurStatus.Status = CurrentStatus.StatusList.ControlSearch Then Me.Text &= " ControlMode"
-        If DebugMode Then Me.Text &= " Debug"
-        If DevMode Then Me.Text &= " Development"
+        If CurStatus.Status = SeqCore.CurrentStatus.StatusList.ControlSearch Then Me.Text &= " ControlMode"
+        If CurVar.DebugMode Then Me.Text &= " Debug"
+        If CurVar.DevMode Then Me.Text &= " Development"
         If CurVar.Encryption = False Then Me.Text &= " NoEncryption"
 
         DebugSettings()
@@ -78,10 +78,10 @@ Public Class frmSequenchel
     End Sub
 
     Private Sub DebugSettings()
-        If DebugMode Then
+        If CurVar.DebugMode Then
             btnTest.Visible = True
         End If
-        If DevMode Then
+        If CurVar.DevMode Then
             'mnuMain.Visible = True
         End If
     End Sub
@@ -569,9 +569,9 @@ Public Class frmSequenchel
             'LoadRelatedSearchCriteria()
             SearchListLoad(tblTable.TableName)
             If CurStatus.Status > 3 Then
-                CurStatus.Status = CurrentStatus.StatusList.ControlSearch
+                CurStatus.Status = SeqCore.CurrentStatus.StatusList.ControlSearch
             Else
-                CurStatus.Status = CurrentStatus.StatusList.Search
+                CurStatus.Status = SeqCore.CurrentStatus.StatusList.Search
             End If
             ButtonHandle()
         Catch ex As Exception
@@ -663,9 +663,9 @@ Public Class frmSequenchel
                                "Click 'Save' to save the new item to the database" _
                                , "How it works", MessageBoxButtons.OK, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1)
             If CurStatus.Status > 3 Then
-                CurStatus.Status = CurrentStatus.StatusList.ControlAdd
+                CurStatus.Status = SeqCore.CurrentStatus.StatusList.ControlAdd
             Else
-                CurStatus.Status = CurrentStatus.StatusList.Add
+                CurStatus.Status = SeqCore.CurrentStatus.StatusList.Add
             End If
             FieldsClear(True)
             FieldsEnable(False)
@@ -679,9 +679,9 @@ Public Class frmSequenchel
             btnAdd.Text = "New Item"
             btnAdd.BackColor = clrControl
             If CurStatus.Status > 3 Then
-                CurStatus.Status = CurrentStatus.StatusList.ControlEdit
+                CurStatus.Status = SeqCore.CurrentStatus.StatusList.ControlEdit
             Else
-                CurStatus.Status = CurrentStatus.StatusList.Edit
+                CurStatus.Status = SeqCore.CurrentStatus.StatusList.Edit
             End If
             FieldsEnable()
             ButtonHandle()
@@ -763,19 +763,19 @@ Public Class frmSequenchel
         btnAdd.Enabled = False
         btnDelete.Enabled = False
 
-        If CurStatus.Status = CurrentStatus.StatusList.Search And tblTable.TableSearch = True Then
+        If CurStatus.Status = SeqCore.CurrentStatus.StatusList.Search And tblTable.TableSearch = True Then
             btnSearch.Enabled = True
         End If
-        If CurStatus.Status = CurrentStatus.StatusList.Edit And tblTable.TableUpdate = True And (CurVar.AllowUpdate = True Or CurVar.SecurityOverride = True) Then
+        If CurStatus.Status = SeqCore.CurrentStatus.StatusList.Edit And tblTable.TableUpdate = True And (CurVar.AllowUpdate = True Or CurVar.SecurityOverride = True) Then
             btnUpdate.Enabled = True
         End If
         If tblTable.TableInsert = True And (CurVar.AllowInsert = True Or CurVar.SecurityOverride = True) Then
             btnAdd.Enabled = True
         End If
-        If CurStatus.Status = CurrentStatus.StatusList.ControlSearch Then
+        If CurStatus.Status = SeqCore.CurrentStatus.StatusList.ControlSearch Then
             btnSearch.Enabled = True
         End If
-        If CurStatus.Status = CurrentStatus.StatusList.ControlEdit And (CurVar.AllowUpdate = True Or CurVar.SecurityOverride = True) Then
+        If CurStatus.Status = SeqCore.CurrentStatus.StatusList.ControlEdit And (CurVar.AllowUpdate = True Or CurVar.SecurityOverride = True) Then
             btnUpdate.Enabled = True
         End If
         If tblTable.TableDelete = True And (CurVar.AllowDelete = True Or CurVar.SecurityOverride = True) Then
@@ -792,9 +792,9 @@ Public Class frmSequenchel
         dgvTable1.ClearSelection()
         FieldsClear()
         If CurStatus.Status > 3 Then
-            CurStatus.Status = CurrentStatus.StatusList.ControlSearch
+            CurStatus.Status = SeqCore.CurrentStatus.StatusList.ControlSearch
         Else
-            CurStatus.Status = CurrentStatus.StatusList.Search
+            CurStatus.Status = SeqCore.CurrentStatus.StatusList.Search
         End If
         FieldsEnable()
         'ColorReset()
@@ -810,11 +810,11 @@ Public Class frmSequenchel
     Private Sub FieldsEnable(Optional blnEnableIdentity As Boolean = True)
 
         Select Case CurStatus.Status
-            Case CurrentStatus.StatusList.Search, CurrentStatus.StatusList.ControlSearch
+            Case SeqCore.CurrentStatus.StatusList.Search, SeqCore.CurrentStatus.StatusList.ControlSearch
                 For intField As Integer = 0 To tblTable.Count - 1
                     FieldEnableHandler(tblTable.Item(intField), tblTable.Item(intField).FieldSearch)
                 Next
-            Case CurrentStatus.StatusList.Edit
+            Case SeqCore.CurrentStatus.StatusList.Edit
                 FieldsDisable()
                 If tblTable.TableUpdate = True Then
                     For intField As Integer = 0 To tblTable.Count - 1
@@ -843,13 +843,13 @@ Public Class frmSequenchel
                         End If
                     Next
                 End If
-            Case CurrentStatus.StatusList.Add, CurrentStatus.StatusList.ControlAdd
+            Case SeqCore.CurrentStatus.StatusList.Add, SeqCore.CurrentStatus.StatusList.ControlAdd
                 For intField As Integer = 0 To tblTable.Count - 1
                     If tblTable.Item(intField).Identity = False Or blnEnableIdentity = True Then
                         FieldEnableHandler(tblTable.Item(intField), tblTable.Item(intField).FieldSearch)
                     End If
                 Next
-            Case CurrentStatus.StatusList.ControlEdit
+            Case SeqCore.CurrentStatus.StatusList.ControlEdit
                 For intField As Integer = 0 To tblTable.Count - 1
                     FieldEnableHandler(tblTable.Item(intField), tblTable.Item(intField).ControlMode)
                 Next
@@ -988,8 +988,8 @@ Public Class frmSequenchel
         If CurStatus.SuspendActions = False Then
             FieldsClear()
             If dgvTable1.SelectedRows.Count = 1 Then
-                CurStatus.SelectedItem = dgvTable1.SelectedRows(0)
-                LoadItem(CurStatus.SelectedItem)
+                SelectedItem = dgvTable1.SelectedRows(0)
+                LoadItem(SelectedItem)
             End If
             ButtonHandle()
         End If
@@ -1018,11 +1018,11 @@ Public Class frmSequenchel
                         If Not cell.Value Is Nothing Then
                             If tblTable.Item(intField).Identity = True Or tblTable.Item(intField).PrimaryKey = True Then
                                 'strQueryWhere &= " AND [" & tblTable.TableName.Replace(".", "].[") & "].[" & tblTable.Item(intField).FieldName & "] = " & SetDelimiters(cell.Value.ToString, tblTable.Item(intField).FieldDataType, "=")
-                                strQueryWhere &= " AND " & FormatField(tblTable.Item(intField).FieldName, tblTable.TableName, tblTable.Item(intField).Width, tblTable.Item(intField).FieldDataType, Nothing, Nothing, False) & " = " & SetDelimiters(cell.Value.ToString, tblTable.Item(intField).FieldDataType, "=")
+                                strQueryWhere &= " AND " & FormatField(tblTable.Item(intField).FieldName, tblTable.TableName, tblTable.Item(intField).Width, tblTable.Item(intField).FieldDataType, Nothing, Nothing, False) & " = " & CoreData.SetDelimiters(cell.Value.ToString, tblTable.Item(intField).FieldDataType, "=")
 
                             End If
                             'strQueryWhere2 &= " AND [" & tblTable.TableName.Replace(".", "].[") & "].[" & tblTable.Item(intField).FieldName & "] = " & SetDelimiters(cell.Value.ToString, tblTable.Item(intField).FieldDataType, "=")
-                            strQueryWhere2 &= " AND " & FormatField(tblTable.Item(intField).FieldName, tblTable.TableName, tblTable.Item(intField).Width, tblTable.Item(intField).FieldDataType, Nothing, Nothing, False) & " = " & SetDelimiters(cell.Value.ToString, tblTable.Item(intField).FieldDataType, "=")
+                            strQueryWhere2 &= " AND " & FormatField(tblTable.Item(intField).FieldName, tblTable.TableName, tblTable.Item(intField).Width, tblTable.Item(intField).FieldDataType, Nothing, Nothing, False) & " = " & CoreData.SetDelimiters(cell.Value.ToString, tblTable.Item(intField).FieldDataType, "=")
                         End If
                     End If
                 Next
@@ -1033,7 +1033,7 @@ Public Class frmSequenchel
         If strQueryWhere = " WHERE 1=1 " Then Exit Sub
         strQuery &= strQueryWhere
         strQuery = strQuery.Replace(",,", " ")
-        'If DebugMode Then MessageBox.Show(strQuery)
+        'If CurVar.DebugMode Then MessageBox.Show(strQuery)
 
         Dim objData As DataSet = QueryDb(dhdConnection, strQuery, True)
         If objData Is Nothing Then Exit Sub
@@ -1075,9 +1075,9 @@ Public Class frmSequenchel
         End Try
         CurStatus.SuspendActions = False
         If CurStatus.Status > 3 Then
-            CurStatus.Status = CurrentStatus.StatusList.ControlEdit
+            CurStatus.Status = SeqCore.CurrentStatus.StatusList.ControlEdit
         Else
-            CurStatus.Status = CurrentStatus.StatusList.Edit
+            CurStatus.Status = SeqCore.CurrentStatus.StatusList.Edit
         End If
         'ButtonHandle()
         FieldsEnable()
@@ -1245,7 +1245,7 @@ Public Class frmSequenchel
     Private Sub LoadDefaultValue(strFieldName As String)
         For Each Field In tblTable
             If Field.FieldName = strFieldName Then
-                Dim strValue As String = ProcessDefaultValue(Field.DefaultValue)
+                Dim strValue As String = CoreData.ProcessDefaultValue(Field.DefaultValue)
                 Select Case Field.FieldDataType.ToUpper
                     Case "BIT"
                         Field.Checked = strValue
@@ -1314,7 +1314,7 @@ Public Class frmSequenchel
         strQuery = strQuery & strQuery1 & ") VALUES (" & strQuery2 & ")"
         strQuery = Replace(strQuery, "(,", "(")
 
-        If DebugMode Then
+        If CurVar.DebugMode Then
             If MessageBox.Show("The query to be executed is: " & Environment.NewLine & strQuery & Environment.NewLine & strMessages.strContinue, strMessages.strAreYouSure, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.No Then
                 lblStatusText.Text = "Insert cancelled"
                 Exit Sub
@@ -1332,9 +1332,9 @@ Public Class frmSequenchel
         End Try
 
         If CurStatus.Status > 3 Then
-            CurStatus.Status = CurrentStatus.StatusList.ControlEdit
+            CurStatus.Status = SeqCore.CurrentStatus.StatusList.ControlEdit
         Else
-            CurStatus.Status = CurrentStatus.StatusList.Edit
+            CurStatus.Status = SeqCore.CurrentStatus.StatusList.Edit
         End If
         ColorReset()
         ButtonHandle()
@@ -1372,7 +1372,7 @@ Public Class frmSequenchel
             If tblTable.Item(intField).Identity = True Or tblTable.Item(intField).PrimaryKey = True Then
                 For Each cell In dgvTable1.SelectedRows(0).Cells
                     If cell.OwningColumn.Name = tblTable.Item(intField).FieldName Then
-                        strQueryWhere &= " AND [" & tblTable.Item(intField).FieldName & "] = " & SetDelimiters(cell.Value, tblTable.Item(intField).FieldDataType, "=")
+                        strQueryWhere &= " AND [" & tblTable.Item(intField).FieldName & "] = " & CoreData.SetDelimiters(cell.Value, tblTable.Item(intField).FieldDataType, "=")
                     End If
                 Next
             End If
@@ -1389,7 +1389,7 @@ Public Class frmSequenchel
         strQuery = strQuery & strQueryUpdate & strQueryWhere
         strQuery = Replace(strQuery, ",,", "")
 
-        If DebugMode Then
+        If CurVar.DebugMode Then
             If MessageBox.Show("The query to be executed is: " & Environment.NewLine & strQuery & Environment.NewLine & strMessages.strContinue, strMessages.strAreYouSure, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.No Then
                 lblStatusText.Text = "Update cancelled"
                 Exit Sub
@@ -1424,7 +1424,7 @@ Public Class frmSequenchel
             If tblTable.Item(intField).Identity = True Or tblTable.Item(intField).PrimaryKey = True Then
                 For Each cell In dgvTable1.SelectedRows(0).Cells
                     If cell.OwningColumn.Name = tblTable.Item(intField).FieldName Then
-                        strQueryWhere &= " AND [" & tblTable.Item(intField).FieldName & "] = " & SetDelimiters(cell.Value, tblTable.Item(intField).FieldDataType, "=")
+                        strQueryWhere &= " AND [" & tblTable.Item(intField).FieldName & "] = " & CoreData.SetDelimiters(cell.Value, tblTable.Item(intField).FieldDataType, "=")
                     End If
                 Next
             End If
@@ -1436,7 +1436,7 @@ Public Class frmSequenchel
         End If
         strQuery = strQuery & strQueryWhere
 
-        If DebugMode Then
+        If CurVar.DebugMode Then
             If MessageBox.Show("The query to be executed is: " & Environment.NewLine & strQuery & Environment.NewLine & strMessages.strContinue, strMessages.strAreYouSure, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.No Then
                 WriteStatus("Delete cancelled", 0, lblStatusText)
                 Exit Sub
@@ -1454,9 +1454,9 @@ Public Class frmSequenchel
         End Try
 
         If CurStatus.Status > 3 Then
-            CurStatus.Status = CurrentStatus.StatusList.ControlEdit
+            CurStatus.Status = SeqCore.CurrentStatus.StatusList.ControlEdit
         Else
-            CurStatus.Status = CurrentStatus.StatusList.Edit
+            CurStatus.Status = SeqCore.CurrentStatus.StatusList.Edit
         End If
         dgvTable1.Rows.Remove(dgvTable1.SelectedRows(0))
         ColorReset()

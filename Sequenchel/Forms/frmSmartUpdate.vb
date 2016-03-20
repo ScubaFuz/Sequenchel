@@ -48,7 +48,7 @@
             strSQL = MydbRef.GetScript("01 dbo.SmartUpdate.sql")
             strSQL = strSQL.Replace("Sequenchel", dhdConnection.DatabaseName)
             If CurVar.Encryption = False Then strSQL = strSQL.Replace("WITH ENCRYPTION", "")
-            If DevMode Then MessageBox.Show(strSQL)
+            If CurVar.DevMode Then MessageBox.Show(strSQL)
             QueryDb(dhdConnection, strSQL, False, 10)
             lblStatusText.Text = "SmartUpdate Table created succesfully"
         Catch ex As Exception
@@ -65,7 +65,7 @@
             strSQL = MydbRef.GetScript("01 dbo.usp_SmartUpdate.sql")
             strSQL = strSQL.Replace("Sequenchel", dhdConnection.DatabaseName)
             If CurVar.Encryption = False Then strSQL = strSQL.Replace("WITH ENCRYPTION", "")
-            If DevMode Then MessageBox.Show(strSQL)
+            If CurVar.DevMode Then MessageBox.Show(strSQL)
             QueryDb(dhdConnection, strSQL, False, 10)
             lblStatusText.Text = "SmartUpdate Procedure created succesfully"
         Catch ex As Exception
@@ -412,7 +412,7 @@
                 SourceDataTypeAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("srcColName"), dtsTables.Tables(0).Rows(intRowCount1).Item("srcDataType"), blnSourceOnly)
                 SourcePkAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("srcColName"), dtsTables.Tables(0).Rows(intRowCount1).Item("srcPK"), dtsTables.Tables(0).Rows(intRowCount1).Item("srcIdentity"), blnSourceOnly)
                 If blnSourceOnly = True Then
-                    CompareColumnAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("srcColName"), CompareDataType(dtsTables.Tables(0).Rows(intRowCount1).Item("srcDataType")))
+                    CompareColumnAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("srcColName"), CoreData.CompareDataType(dtsTables.Tables(0).Rows(intRowCount1).Item("srcDataType")))
                     chkCreateTargetTable.Checked = True
                 Else
                     chkCreateTargetTable.Checked = False
@@ -432,7 +432,7 @@
                 TargetDataTypeAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("tgtColName"), dtsTables.Tables(0).Rows(intRowCount1).Item("tgtDataType"), True)
                 SourcePkAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("srcColName"), dtsTables.Tables(0).Rows(intRowCount1).Item("srcPK"), dtsTables.Tables(0).Rows(intRowCount1).Item("srcIdentity"), True)
                 TargetPkAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("tgtColName"), dtsTables.Tables(0).Rows(intRowCount1).Item("tgtPK"), dtsTables.Tables(0).Rows(intRowCount1).Item("tgtIdentity"), True)
-                CompareColumnAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("srcColName"), CompareDataType(dtsTables.Tables(0).Rows(intRowCount1).Item("srcDataType")))
+                CompareColumnAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("srcColName"), CoreData.CompareDataType(dtsTables.Tables(0).Rows(intRowCount1).Item("srcDataType")))
             End If
 
         Next

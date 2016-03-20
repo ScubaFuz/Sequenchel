@@ -5,18 +5,18 @@ Imports System.Data.OleDb
 
 Public Class Excel
 
-    Public Shared Function CreateExcelDocument(ByVal dt As DataTable, ByVal Filename As String) As Boolean
+    Public Function CreateExcelDocument(ByVal dt As DataTable, ByVal Filename As String) As Boolean
         Try
             Dim dtsInput As New DataSet
             dtsInput.Tables.Add(dt)
             Return CreateExcelDocument(dtsInput, Filename)
         Catch ex As Exception
-            WriteLog("Failed to create Excel Document: " & ex.Message, 1)
+            'WriteLog("Failed to create Excel Document: " & ex.Message, 1)
             Return False
         End Try
     End Function
 
-    Public Shared Function CreateExcelDocument(ByVal ds As DataSet, ByVal excelFilename As String) As Boolean
+    Public Function CreateExcelDocument(ByVal ds As DataSet, ByVal excelFilename As String) As Boolean
         Try
             'Dim document As SpreadsheetDocument = CreateWorkbook(excelFilename)
             Using document As SpreadsheetDocument = SpreadsheetDocument.Create(excelFilename, SpreadsheetDocumentType.Workbook)
@@ -44,7 +44,7 @@ Public Class Excel
 
     End Function
 
-    Private Shared Sub CreateParts(ByVal ds As DataSet, ByVal spreadsheet As SpreadsheetDocument)
+    Private Sub CreateParts(ByVal ds As DataSet, ByVal spreadsheet As SpreadsheetDocument)
 
         '  Loop through each of the DataTables in our DataSet, and create a new Excel Worksheet for each.
         Dim worksheetNumber As Integer = 1
@@ -57,7 +57,7 @@ Public Class Excel
         Next
     End Sub
 
-    Private Shared Function AddWorksheet(ByVal spreadsheet As SpreadsheetDocument, ByVal dt As DataTable, intWorkSheetNumber As Integer, Optional SheetName As String = Nothing) As SpreadsheetDocument
+    Private Function AddWorksheet(ByVal spreadsheet As SpreadsheetDocument, ByVal dt As DataTable, intWorkSheetNumber As Integer, Optional SheetName As String = Nothing) As SpreadsheetDocument
         Try
             '  For each worksheet you want to create
             'Dim workSheetID As String = "rId" + worksheetNumber.ToString()
@@ -100,14 +100,14 @@ Public Class Excel
 
             Return spreadsheet
         Catch ex As Exception
-            MessageBox.Show(ex.Message)
-            WriteLog("Failed to create Excel Sheet: " & ex.Message, 1)
+            'MessageBox.Show(ex.Message)
+            'WriteLog("Failed to create Excel Sheet: " & ex.Message, 1)
             Return Nothing
         End Try
 
     End Function
 
-    Private Shared Sub WriteDataTableToExcelWorksheet(ByVal dt As DataTable, ByVal worksheetPart As WorksheetPart)
+    Private Sub WriteDataTableToExcelWorksheet(ByVal dt As DataTable, ByVal worksheetPart As WorksheetPart)
         Try
 
             Dim worksheet As Worksheet = worksheetPart.Worksheet
@@ -164,13 +164,13 @@ Public Class Excel
 
             Next
         Catch ex As Exception
-            MessageBox.Show(ex.Message)
+            'MessageBox.Show(ex.Message)
 
         End Try
 
     End Sub
 
-    Private Shared Function CustomColumnWidth(ByVal columnIndex As Integer, ByVal columnWidth As Double) As Column
+    Private Function CustomColumnWidth(ByVal columnIndex As Integer, ByVal columnWidth As Double) As Column
         ' This creates a Column variable for a zero-based column-index (eg 0 = Excel Column A), with a particular column width.
         Dim column As New Column
         column.Min = columnIndex + 1
@@ -180,7 +180,7 @@ Public Class Excel
         Return column
     End Function
 
-    'Public Shared Function GetExcelColumnName(ByVal columnIndex As Integer) As String
+    'Public Function GetExcelColumnName(ByVal columnIndex As Integer) As String
     '    If (columnIndex < 26) Then
     '        Return Chr(Asc("A") + columnIndex)
     '    End If
@@ -194,7 +194,7 @@ Public Class Excel
     '    Return firstChar + secondChar
     'End Function
 
-    Public Shared Function ColumnNameFromIndex(columnIndex As Integer) As String
+    Public Function ColumnNameFromIndex(columnIndex As Integer) As String
         Dim remainder As Integer
         Dim columnName As String = ""
 
@@ -207,7 +207,7 @@ Public Class Excel
         Return columnName
     End Function
 
-    Public Shared Sub AppendCell(ByVal cellReference As String, cellType As CellValues, ByVal cellStringValue As String, ByVal excelRow As Row)
+    Public Sub AppendCell(ByVal cellReference As String, cellType As CellValues, ByVal cellStringValue As String, ByVal excelRow As Row)
         '/  Add a new Excel Cell to our Row 
         Dim cell As New Cell
         cell.CellReference = cellReference
@@ -225,7 +225,7 @@ Public Class Excel
         excelRow.Append(cell)
     End Sub
 
-    Public Shared Function FormatValue(value As Object, Style As DocumentFormat.OpenXml.Spreadsheet.CellValues) As String
+    Public Function FormatValue(value As Object, Style As DocumentFormat.OpenXml.Spreadsheet.CellValues) As String
         Try
 
             Dim strValue As String = ""
@@ -272,21 +272,21 @@ Public Class Excel
 
     End Function
 
-    Public Shared Function ImportExcelFile(strFilePath As String) As DataSet
+    Public Function ImportExcelFile(strFilePath As String) As DataSet
         Dim Ext As String = strFilePath.Substring(strFilePath.LastIndexOf(".") + 1)
         Dim dtsExcel As New DataSet
 
         If Ext = "xls" Then
             'ImportExcel2003(strFilePath)
             'dstImport = ReadExcelFile(strFilePath)
-            dtsExcel = Excel.ReadXlsFile(strFilePath)
+            dtsExcel = ReadXlsFile(strFilePath)
         ElseIf Ext = "xlsx" Then
-            dtsExcel = Excel.ReadXlsxFile(strFilePath)
+            dtsExcel = ReadXlsxFile(strFilePath)
         End If
         Return dtsExcel
     End Function
 
-    Public Shared Function ReadXlsFile(ByVal StrFilePath As String) As DataSet
+    Public Function ReadXlsFile(ByVal StrFilePath As String) As DataSet
         Dim ExcelCon As New OleDbConnection
         Dim ExcelAdp As OleDbDataAdapter
         Dim ExcelComm As OleDbCommand
@@ -322,7 +322,7 @@ Public Class Excel
             ExcelCon.Close()
             Return dstOutput
         Catch ex As Exception
-            MessageBox.Show("An error has occured importing the data" & Environment.NewLine & ex.Message)
+            'MessageBox.Show("An error has occured importing the data" & Environment.NewLine & ex.Message)
             Return Nothing
         Finally
             ExcelCon = Nothing
@@ -331,7 +331,7 @@ Public Class Excel
         End Try
     End Function
 
-    Public Shared Function ReadXlsxFile(strFilePath As String) As DataSet
+    Public Function ReadXlsxFile(strFilePath As String) As DataSet
         Dim dstOutput As New DataSet
 
         'Open the Excel file in Read Mode using OpenXml.
@@ -374,7 +374,7 @@ Public Class Excel
         Return dstOutput
     End Function
 
-    Private Shared Function GetValue(doc As SpreadsheetDocument, cell As Cell) As String
+    Private Function GetValue(doc As SpreadsheetDocument, cell As Cell) As String
         Dim value As String = Nothing
         If cell.CellValue IsNot Nothing Then
             value = cell.CellValue.InnerText

@@ -5,7 +5,7 @@ Public Class frmConfiguration
 
     Private Sub frmConfiguration_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         System.Windows.Forms.Application.CurrentCulture = New System.Globalization.CultureInfo("EN-US")
-        If DebugMode Then btnTest.Visible = True
+        If CurVar.DebugMode Then btnTest.Visible = True
         cbxDataProvider.SelectedItem = "SQL"
         cbxLoginMethod.SelectedItem = "Windows"
         SecuritySet()
@@ -60,7 +60,7 @@ Public Class frmConfiguration
 
     Private Sub DataTypesLoad()
         cbxDataType.Items.Clear()
-        Dim lstDataTypes As List(Of String) = GetDataTypes()
+        Dim lstDataTypes As List(Of String) = CoreData.GetDataTypes()
         For Each DataType In lstDataTypes
             cbxDataType.Items.Add(DataType)
         Next
@@ -360,7 +360,7 @@ Public Class frmConfiguration
     End Sub
 
     Private Sub btnConnectionClear_Click(sender As Object, e As EventArgs) Handles btnConnectionClear.Click
-        ConnectionClear
+        ConnectionClear()
     End Sub
 
     Private Sub btnConnectionDelete_Click(sender As Object, e As EventArgs) Handles btnConnectionDelete.Click
@@ -832,9 +832,9 @@ Public Class frmConfiguration
                 End If
             End If
 
-            strDataType = GetDataType(dtsData.Tables.Item(0).Rows(intRowCount).Item("DataType"))
+            strDataType = CoreData.GetDataType(dtsData.Tables.Item(0).Rows(intRowCount).Item("DataType"))
             blnIdentity = dtsData.Tables.Item(0).Rows(intRowCount).Item("is_identity")
-            intWidth = GetWidth(strDataType, dtsData.Tables.Item(0).Rows(intRowCount).Item("MaxLength"))
+            intWidth = CoreData.GetWidth(strDataType, dtsData.Tables.Item(0).Rows(intRowCount).Item("MaxLength"))
             If intRowCount = dtsData.Tables(0).Rows.Count - 1 And blnReloadAll = True Then blnReload = True
             FieldAddOrUpdate(strSchemaName & "." & strTableName, dtsData.Tables.Item(0).Rows(intRowCount).Item("colName"), dtsData.Tables.Item(0).Rows(intRowCount).Item("colName"), _
                      strDataType, blnIdentity, blnPrimaryKey, intWidth, "", "", False, txtControlField.Text, txtControlValue.Text, chkControlUpdate.Checked, chkControlMode.Checked, False, "", _
@@ -1342,7 +1342,7 @@ Public Class frmConfiguration
 
         strQuery = "BACKUP DATABASE [" & dhdConnection.DatabaseName & "] TO  DISK = N'" & strPath & "\" & dhdConnection.DatabaseName & "_" & strDateTime & ".bak' WITH NOFORMAT, NOINIT,  NAME = N'" & dhdConnection.DatabaseName & "-Full Database Backup', SKIP, NOREWIND, NOUNLOAD,  STATS = 10"
 
-        If DebugMode Then MessageBox.Show(strQuery)
+        If CurVar.DebugMode Then MessageBox.Show(strQuery)
         Try
             QueryDb(dhdConnection, strQuery, False)
         Catch ex As Exception

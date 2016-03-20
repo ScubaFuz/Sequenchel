@@ -304,7 +304,7 @@
             blnSettingsChanged = True
         End If
         If txtOverridePassword.Text.Length > 0 Then
-            CurVar.OverridePassword = Encrypt(txtOverridePassword.Text)
+            CurVar.OverridePassword = Core.Encrypt(txtOverridePassword.Text)
             blnSettingsChanged = True
         End If
 
@@ -492,7 +492,7 @@
             MessageBox.Show("Your license validated: " & blnLicenseValidated)
         Else
             blnLicenseValidated = True
-            'If DebugMode Then MessageBox.Show(lanStrings.strLicenseValidated)
+            'If CurVar.DebugMode Then MessageBox.Show(lanStrings.strLicenseValidated)
         End If
         If blnLicenseValidated = True Then
             Try
@@ -503,7 +503,7 @@
                 Else
                     strLocation = "HKLM"
                 End If
-                If DebugMode And dhdReg.ErrorLevel = -1 Then MessageBox.Show(dhdReg.RegMessage)
+                If CurVar.DebugMode And dhdReg.ErrorLevel = -1 Then MessageBox.Show(dhdReg.RegMessage)
                 dhdReg.AddLMRegKey("LicenseKey", txtLicenseKey.Text)
                 If dhdReg.ErrorLevel = -1 Then
                     dhdReg.AddCURRegKey("LicenseKey", txtLicenseKey.Text)
@@ -511,7 +511,7 @@
                 Else
                     strLocation = "HKLM"
                 End If
-                If DebugMode And dhdReg.ErrorLevel = -1 Then MessageBox.Show(dhdReg.RegMessage)
+                If CurVar.DebugMode And dhdReg.ErrorLevel = -1 Then MessageBox.Show(dhdReg.RegMessage)
                 MessageBox.Show("Your License information has been saved to " & strLocation)
             Catch ex As Exception
                 MessageBox.Show("There ws an errror saving you license information" & Environment.NewLine & ex.Message)
@@ -525,7 +525,7 @@
             blnLicenseValidated = False
         Else
             blnLicenseValidated = True
-            'If DebugMode Then MessageBox.Show(lanStrings.strLicenseValidated)
+            'If CurVar.DebugMode Then MessageBox.Show(lanStrings.strLicenseValidated)
         End If
         MessageBox.Show("Your license validated: " & blnLicenseValidated)
     End Sub
@@ -604,7 +604,7 @@
             If rbtKeepLogDay.Checked = True Then dtmDate = dtmDate.AddDays(-1)
             If rbtKeepLogWeek.Checked = True Then dtmDate = dtmDate.AddDays(-7)
             If rbtKeepLogMonth.Checked = True Then dtmDate = dtmDate.AddMonths(-1)
-            If DebugMode = True Then MessageBox.Show(dtmDate.ToString)
+            If CurVar.DebugMode = True Then MessageBox.Show(dtmDate.ToString)
             If dhdText.LogLocation.ToLower = "database" Then
                 ClearDBLog(dtmDate)
             Else
@@ -679,7 +679,7 @@
             dhdDatabase.Password = txtPassword.Text
             dhdDatabase.DatabaseName = "master"
             strDBName = txtDatabaseName.Text
-            If DebugMode Then
+            If CurVar.DebugMode Then
                 MessageBox.Show("Sequenchel v " & Application.ProductVersion & " Database Creation" & Environment.NewLine _
                  & "   DatabaseServer = " & dhdDatabase.DataLocation & Environment.NewLine _
                  & "   Database Context = " & dhdDatabase.DatabaseName & Environment.NewLine _
@@ -714,7 +714,7 @@
             strSQL = MydbRef.GetScript(arrScripts(0))
             strSQL = strSQL.Replace("Sequenchel", strDBName)
             If CurVar.Encryption = False Then strSQL = strSQL.Replace("WITH ENCRYPTION", "")
-            If DevMode Then MessageBox.Show(strSQL)
+            If CurVar.DevMode Then MessageBox.Show(strSQL)
             QueryDb(dhdDatabase, strSQL, False, 10)
             dhdDatabase.DatabaseName = strDBName
             txtJobNamePrefix.Text = dhdDatabase.DatabaseName
@@ -727,10 +727,10 @@
                     strSQL = strSQL.Replace("Sequenchel", strDBName)
                     If CurVar.Encryption = False Then strSQL = strSQL.Replace("WITH ENCRYPTION", "")
                     If blnIncludeTables = False Then strSQL = Replace(strSQL, "CREATE", "ALTER", 1, 1)
-                    If DevMode Then MessageBox.Show(strSQL)
+                    If CurVar.DevMode Then MessageBox.Show(strSQL)
                     QueryDb(dhdDatabase, strSQL, False, 5)
                 Else
-                    If DebugMode Then MessageBox.Show("The script: " & arrScripts(i) & " returned: " & strSQL)
+                    If CurVar.DebugMode Then MessageBox.Show("The script: " & arrScripts(i) & " returned: " & strSQL)
                 End If
                 prbCreateDatabase.PerformStep()
             Next
@@ -871,7 +871,7 @@
             arrScripts = MydbRef.GetNewList(txtUpgradeDatabase.Tag)
 
             strSQL = MydbRef.GetScript(arrScripts(0, 0))
-            If DebugMode Then MessageBox.Show("<debug>Number of Scripts: " & arrScripts.GetUpperBound(1) + 1)
+            If CurVar.DebugMode Then MessageBox.Show("<debug>Number of Scripts: " & arrScripts.GetUpperBound(1) + 1)
 
             strMode = arrScripts(1, 0)
             If strSQL = "-1" Then
@@ -929,7 +929,7 @@
             strSQL = MydbRef.GetScript(arrScripts(0))
             strSQL = strSQL.Replace("Sequenchel", dhdDatabase.DatabaseName)
             If CurVar.Encryption = False Then strSQL = strSQL.Replace("WITH ENCRYPTION", "")
-            If DevMode Then MessageBox.Show(strSQL)
+            If CurVar.DevMode Then MessageBox.Show(strSQL)
             QueryDb(dhdDatabase, strSQL, False, 10)
             prbCreateDatabase.PerformStep()
 
@@ -939,10 +939,10 @@
                     'strSQL = Replace(strSQL, "Sequenchel", strDBName)
                     strSQL = strSQL.Replace("Sequenchel", dhdDatabase.DatabaseName)
                     If CurVar.Encryption = False Then strSQL = strSQL.Replace("WITH ENCRYPTION", "")
-                    'If DevMode Then MessageBox.Show(strSQL)
+                    'If CurVar.DevMode Then MessageBox.Show(strSQL)
                     QueryDb(dhdDatabase, strSQL, False, 10)
                 Else
-                    If DevMode Then MessageBox.Show("The script: " & arrScripts(i) & " returned: " & strSQL)
+                    If CurVar.DevMode Then MessageBox.Show("The script: " & arrScripts(i) & " returned: " & strSQL)
                 End If
             Next
 
@@ -1318,7 +1318,7 @@
                 MessageBox.Show("There was an error creating the procedure" & Environment.NewLine & ex.Message)
             End Try
         Else
-            If DebugMode Then MessageBox.Show("The script: 01 dbo.usp_PutFTPfiles.sql returned: " & strSQL)
+            If CurVar.DebugMode Then MessageBox.Show("The script: 01 dbo.usp_PutFTPfiles.sql returned: " & strSQL)
         End If
 
     End Sub
@@ -1349,7 +1349,7 @@
                 MessageBox.Show("There was an error creating the procedure" & Environment.NewLine & ex.Message)
             End Try
         Else
-            If DebugMode Then MessageBox.Show("The script: 01 dbo.usp_GetFTPfiles.sql returned: " & strSQL)
+            If CurVar.DebugMode Then MessageBox.Show("The script: 01 dbo.usp_GetFTPfiles.sql returned: " & strSQL)
         End If
     End Sub
 
