@@ -33,7 +33,7 @@ Module Common
     Friend arrLabels As New LabelArray
     Friend dtsTable As New DataSet
     Friend dtsReport As New DataSet
-    Friend dstImport As New DataSet
+    Friend dtsImport As New DataSet
 
     Friend strMessages As New Messages
     Friend CurVar As New Variables
@@ -740,54 +740,54 @@ Module Common
         Return Nothing
     End Function
 
-    Friend Sub XmlExportListView(lvwInput As ListView)
-        'Create xml file
-        Dim xmlDoc As New XmlDocument
-        Dim xmlDec As XmlDeclaration = xmlDoc.CreateXmlDeclaration("1.0", "utf-8", "yes")
-        Dim RootNode As XmlElement = xmlDoc.CreateElement("Sequenchel")
-        xmlDoc.InsertBefore(xmlDec, xmlDoc.DocumentElement)
-        xmlDoc.AppendChild(RootNode)
+    'Friend Sub XmlExportListView(lvwInput As ListView)
+    '    'Create xml file
+    '    Dim xmlDoc As XmlDocument = dhdText.CreateBasicXmlDocument
+    '    'Dim xmlDec As XmlDeclaration = xmlDoc.CreateXmlDeclaration("1.0", "utf-8", "yes")
+    '    'xmlDoc.InsertBefore(xmlDec, xmlDoc.DocumentElement)
+    '    Dim RootNode As XmlElement = xmlDoc.CreateElement("Sequenchel")
+    '    xmlDoc.AppendChild(RootNode)
 
-        'Add parent Node
-        Dim ParentNode As XmlElement = xmlDoc.CreateElement("Servers")
-        'ParentNode.SetAttribute("Name", cbxLanguage.Text)
-        xmlDoc.DocumentElement.AppendChild(ParentNode)
+    '    'Add parent Node
+    '    Dim ParentNode As XmlElement = xmlDoc.CreateElement("Servers")
+    '    'ParentNode.SetAttribute("Name", cbxLanguage.Text)
+    '    xmlDoc.DocumentElement.AppendChild(ParentNode)
 
-        'Add Items to parentnode
-        For Each lanItem In lvwInput.Items
-            Dim ItemNode As XmlElement = xmlDoc.CreateElement("Server")
+    '    'Add Items to parentnode
+    '    For Each lanItem In lvwInput.Items
+    '        Dim ItemNode As XmlElement = xmlDoc.CreateElement("Server")
 
-            For intHeader As Integer = 0 To lvwInput.Columns.Count - 1
-                Dim Childnode As XmlElement = xmlDoc.CreateElement(lvwInput.Columns(intHeader).Text)
-                Dim ItemText As XmlText = xmlDoc.CreateTextNode(lanItem.SubItems(intHeader).Text)
-                ItemNode.AppendChild(Childnode)
-                Childnode.AppendChild(ItemText)
-            Next
-            ParentNode.AppendChild(ItemNode)
-        Next
+    '        For intHeader As Integer = 0 To lvwInput.Columns.Count - 1
+    '            Dim Childnode As XmlElement = xmlDoc.CreateElement(lvwInput.Columns(intHeader).Text)
+    '            Dim ItemText As XmlText = xmlDoc.CreateTextNode(lanItem.SubItems(intHeader).Text)
+    '            ItemNode.AppendChild(Childnode)
+    '            Childnode.AppendChild(ItemText)
+    '        Next
+    '        ParentNode.AppendChild(ItemNode)
+    '    Next
 
-        Using sw As New System.IO.StringWriter()
-            ' Make the XmlTextWriter to format the XML.
-            Using xml_writer As New XmlTextWriter(sw)
-                xml_writer.Formatting = Formatting.Indented
-                xmlDoc.WriteTo(xml_writer)
-                xml_writer.Flush()
+    '    Using sw As New System.IO.StringWriter()
+    '        ' Make the XmlTextWriter to format the XML.
+    '        Using xml_writer As New XmlTextWriter(sw)
+    '            xml_writer.Formatting = Formatting.Indented
+    '            xmlDoc.WriteTo(xml_writer)
+    '            xml_writer.Flush()
 
-                Try
-                    'get the filename and location to write to
-                    Dim sfdFile As New SaveFileDialog
-                    sfdFile.Filter = "Sequenchel File (*.xml)|*.xml"
-                    sfdFile.ShowDialog()
+    '            Try
+    '                'get the filename and location to write to
+    '                Dim sfdFile As New SaveFileDialog
+    '                sfdFile.Filter = "Sequenchel File (*.xml)|*.xml"
+    '                sfdFile.ShowDialog()
 
-                    'Write the XML to disk
-                    dhdText.CreateFile(sw.ToString(), sfdFile.FileName)
-                Catch ex As Exception
-                    WriteLog(ex.Message, 1)
-                End Try
-            End Using
-        End Using
+    '                'Write the XML to disk
+    '                dhdText.CreateFile(sw.ToString(), sfdFile.FileName)
+    '            Catch ex As Exception
+    '                WriteLog(ex.Message, 1)
+    '            End Try
+    '        End Using
+    '    End Using
 
-    End Sub
+    'End Sub
 
     Friend Sub ExportFile(dtsInput As DataSet, strFileName As String, blnShowFile As Boolean)
         If CurVar.IncludeDate = True Then
@@ -808,18 +808,22 @@ Module Common
         CursorControl("Wait")
         Dim strTargetFile As String = sfdFile.FileName
         Dim strExtension As String = sfdFile.FileName.Substring(sfdFile.FileName.LastIndexOf(".") + 1, sfdFile.FileName.Length - (sfdFile.FileName.LastIndexOf(".") + 1))
-        Select Case sfdFile.FilterIndex
-            Case 1
-                ExportXML(ReplaceNulls(dtsInput), strTargetFile)
-            Case 2
-                'ExportExcel(dtsInput, strTargetFile)
-                Excel.CreateExcelDocument(dtsInput, strTargetFile)
-            Case 3
-                ExportExcel(ReplaceNulls(dtsInput), strTargetFile)
-            Case Else
-                Return
-                'unknown filetype, do nothing
-        End Select
+        Try
+            Select Case sfdFile.FilterIndex
+                Case 1
+                    dhdText.ExportDataSetToXML(dhdDatabase.ReplaceNulls(dtsInput), strTargetFile)
+                Case 2
+                    Excel.CreateExcelDocument(dtsInput, strTargetFile)
+                Case 3
+                    Excel.CreateExcelDocument(dhdDatabase.ReplaceNulls(dtsInput), strTargetFile)
+                Case Else
+                    'unknown filetype, do nothing
+                    blnShowFile = False
+            End Select
+        Catch ex As Exception
+            blnShowFile = False
+            WriteLog("Couldn't create Excel file.\r\nException: " + ex.Message, 1)
+        End Try
         CursorControl()
 
         If blnShowFile = True Then
@@ -827,105 +831,6 @@ Module Common
             p.StartInfo = New ProcessStartInfo(strTargetFile)
             p.Start()
         End If
-
-    End Sub
-
-    Friend Sub ExportXML(dtsInput As DataSet, strFileName As String)
-        Try
-            Dim xmlDocExport As New XmlDocument
-            xmlDocExport.LoadXml(dtsInput.GetXml())
-            Dim xmlDec As XmlDeclaration = xmlDocExport.CreateXmlDeclaration("1.0", "utf-8", "yes")
-            xmlDocExport.InsertBefore(xmlDec, xmlDocExport.DocumentElement)
-            'xmlDocExport.Save(strFileName)
-
-            Using sw As New System.IO.StringWriter()
-                ' Make the XmlTextWriter to format the XML.
-                Using xml_writer As New XmlTextWriter(sw)
-                    xml_writer.Formatting = Formatting.Indented
-                    'dtsInput.WriteXml(xml_writer)
-                    xmlDocExport.WriteTo(xml_writer)
-                    xml_writer.Flush()
-
-                    'Write the XML to disk
-                    dhdText.CreateFile(sw.ToString(), strFileName)
-                End Using
-            End Using
-
-            'Dim strXMl As String = dtsInput.GetXml()
-            'dhdText.CreateFile(strXMl, strFileName)
-        Catch ex As Exception
-            WriteLog(ex.Message, 1)
-        End Try
-    End Sub
-
-    Friend Sub XmlExportDatagridView(dgvInput As DataGridView, Optional ByVal strRootNode As String = "Sequenchel", Optional ByVal strParentNode As String = "Table", Optional ByVal strItemNode As String = "Row")
-        'Create xml file
-        Dim xmlDoc As New XmlDocument
-        Dim xmlDec As XmlDeclaration = xmlDoc.CreateXmlDeclaration("1.0", "utf-8", "yes")
-        Dim RootNode As XmlElement = xmlDoc.CreateElement(strRootNode)
-        xmlDoc.InsertBefore(xmlDec, xmlDoc.DocumentElement)
-        xmlDoc.AppendChild(RootNode)
-        strRootNode = strRootNode.Replace(" ", "")
-        strParentNode = strParentNode.Replace(" ", "")
-        strItemNode = strItemNode.Replace(" ", "")
-
-        'Add parent Node
-        Dim ParentNode As XmlElement = xmlDoc.CreateElement(strParentNode)
-        'ParentNode.SetAttribute("Name", cbxLanguage.Text)
-        xmlDoc.DocumentElement.AppendChild(ParentNode)
-        'Add Items to parentnode
-        For Each rowItem In dgvInput.Rows
-            If rowItem.index = dgvInput.Rows.Count - 1 Then Exit For
-            Dim ItemNode As XmlElement = xmlDoc.CreateElement(strItemNode)
-            For Each colItem In dgvInput.Columns
-                Dim Childnode As XmlElement = xmlDoc.CreateElement(colItem.Name.ToString.Replace(" ", "_"))
-                Dim ItemText As XmlText = xmlDoc.CreateTextNode(If(String.IsNullOrEmpty(Trim(CStr(rowItem.Cells(colItem.Index).Value))), String.Empty, rowItem.Cells(colItem.Index).Value.ToString))
-                ItemNode.AppendChild(Childnode)
-                Childnode.AppendChild(ItemText)
-            Next
-
-            'For intHeader As Integer = 0 To dgvInput.Columns.Count - 1
-            '    Dim Childnode As XmlElement = xmlDoc.CreateElement(dgvInput.Columns(intHeader).Name)
-            '    Dim ItemText As XmlText = xmlDoc.CreateTextNode(rowItem.Cells(intHeader).Value)
-            '    ItemNode.AppendChild(Childnode)
-            '    Childnode.AppendChild(ItemText)
-            '    Dim newAttribute As XmlAttribute = xmlDoc.CreateAttribute("Alias")
-            '    Childnode.Attributes.Append(newAttribute)
-            '    newAttribute.Value = dgvInput.Columns(intHeader).HeaderCell.Value
-            'Next
-            ParentNode.AppendChild(ItemNode)
-        Next
-
-        Using sw As New System.IO.StringWriter()
-            ' Make the XmlTextWriter to format the XML.
-            Using xml_writer As New XmlTextWriter(sw)
-                xml_writer.Formatting = Formatting.Indented
-                xmlDoc.WriteTo(xml_writer)
-                xml_writer.Flush()
-
-                Try
-                    'get the filename and location to write to
-                    Dim sfdFile As New SaveFileDialog
-                    sfdFile.Filter = "Sequenchel File (*.xml)|*.xml"
-                    sfdFile.ShowDialog()
-
-                    'Write the XML to disk
-                    dhdText.CreateFile(sw.ToString(), sfdFile.FileName)
-                Catch ex As Exception
-                    WriteLog(ex.Message, 1)
-                End Try
-            End Using
-        End Using
-
-    End Sub
-
-    Friend Sub ExportExcel(dtsInput As DataSet, strTargetFile As String)
-        Try
-            CreateExcelFile.CreateExcelDocument(dtsInput, strTargetFile)
-        Catch ex As Exception
-            WriteLog("Couldn't create Excel file.\r\nException: " + ex.Message, 1)
-            Return
-        End Try
 
     End Sub
 
@@ -991,25 +896,126 @@ Module Common
         Loop
     End Sub
 
-    'Friend Function PathConvert(strPath As String) As String
-    '    If strPath.Contains("%Documents%") Then
-    '        strPath = strPath.Replace("%Documents%", Environment.GetFolderPath(MyDocuments))
-    '    End If
-    '    If strPath.Contains("%ProgramFiles%") Then
-    '        strPath = strPath.Replace("%ProgramFiles%", Environment.GetFolderPath(ProgramFiles))
-    '    End If
-    '    If strPath.Contains("%ApplicationData%") Then
-    '        strPath = strPath.Replace("%ApplicationData%", Environment.GetFolderPath(ApplicationData))
-    '    End If
-    '    If strPath.Contains("%CommonApplicationData%") Then
-    '        strPath = strPath.Replace("%CommonApplicationData%", Environment.GetFolderPath(CommonApplicationData))
-    '    End If
-    '    If strPath.Contains("%Desktop%") Then
-    '        strPath = strPath.Replace("%Desktop%", Environment.GetFolderPath(Desktop))
-    '    End If
-    '    Return strPath
-    'End Function
+    Friend Function ReportQueryBuild(xmlQueryDoc As XmlDocument, strReportName As String) As String
+        Dim strTableName As String = ""
+        Dim strFieldName As String = ""
+        Dim strShowMode As String = Nothing
+        'Dim strHavingMode As String = Nothing
+        Dim strQueryFrom As String = ""
+        Dim strQueryWhere As String = "WHERE "
+        Dim strWhereClause As String = ""
+        Dim strWhereMode As String = ""
+        Dim strQueryGroup As String = "GROUP BY ", blnGroup As Boolean = False
+        Dim strQueryHaving As String = ""
+        Dim strQueryOrder As String = ""
 
+        Dim xNode As XmlNode = dhdText.FindXmlNode(xmlQueryDoc, "Report", "ReportName", strReportName)
+
+        strQuery = "SELECT "
+        'iterate through all fields
+
+        For Each xCNode As XmlNode In dhdText.FindXmlChildNodes(xNode, "Tables/Table/Fields/Field")
+            strTableName = xCNode.ParentNode.ParentNode.Item("TableName").InnerText
+            If strTableName.IndexOf(".") = -1 Then strTableName = "dbo." & strTableName
+            strFieldName = xCNode.Item("FieldName").InnerText
+            Try
+                If xCNode.Item("FieldShow").InnerText = 1 Then
+                    strQuery &= ", " & FormatFieldXML(strTableName & "." & strFieldName, xCNode.Item("FieldShowMode").InnerText, True, True)
+                    Select Case strShowMode
+                        Case Nothing
+                            strQueryGroup &= ", " & strFieldName
+                        Case "DATE", "YEAR", "MONTH", "DAY", "TIME", "HOUR", "MINUTE", "SECOND"
+                            strQueryGroup &= ", " & strFieldName
+                        Case Else
+                            blnGroup = True
+                    End Select
+                End If
+
+                'xCNode.Item("FieldSort").InnerText)
+                'xCNode.Item("FieldSortOrder").InnerText)
+
+                For Each xFnode In dhdText.FindXmlChildNodes(xCNode, "Filters/Filter")
+                    If xFnode.Item("FilterEnabled").InnerText = "Indeterminate" Then blnGroup = True
+
+                    If xFnode.Item("FilterEnabled").InnerText = "Checked" Then
+                        strWhereMode = xFnode.Item("FilterMode").InnerText
+                        If strWhereMode = "" Then strWhereMode = "AND"
+                        If strWhereMode.Contains("AND") Then strWhereMode = ") " & strWhereMode & " ("
+                        strWhereClause = SetDelimiters(xFnode.Item("FilterText").InnerText, GetFieldDataType(strTableName & "." & strFieldName), xFnode.Item("FilterType").InnerText)
+
+                        If xFnode.Item("FilterType").InnerText = "LIKE" And strWhereClause.Contains("*") Then strWhereClause = strWhereClause.Replace("*", "%")
+                        If xFnode.Item("FilterType").InnerText <> "" And strWhereClause <> "" Then
+                            If strWhereMode = "" Then
+                                strQueryWhere &= " " & strFieldName & " " & xFnode.Item("FilterType").InnerText & " " & strWhereClause
+                            Else
+                                strQueryWhere &= " " & strWhereMode & " " & strFieldName & " " & xFnode.Item("FilterType").InnerText & " " & strWhereClause
+                            End If
+                        End If
+                    End If
+
+                Next
+            Catch ex As Exception
+                'Skip this field
+            End Try
+        Next
+
+        'Dim intControlNumber As Integer = 0
+        'Dim strFromClause As String = "FROM "
+        'Dim strFromSource As String = Nothing, strFromType As String = Nothing, strFromRelation As String = Nothing, strTargetTable As String = Nothing
+
+        'For incCount As Integer = 0 To lvwSelectedTables.Items.Count - 1
+        '    strTableName = lvwSelectedTables.Items.Item(incCount).Name
+        '    If incCount = 0 Then strFromClause &= strTableName
+        '    For Each ctrFrom In pnlRelationsUse.Controls
+        '        If ctrFrom.Checked = True Then
+        '            If strTableName = ctrFrom.Tag Then
+        '                intControlNumber = ctrFrom.Name.ToString.Substring(ctrFrom.Name.ToString.Length - strTableName.Length - 1, 1)
+        '                strFromSource = GetCtrText(pnlRelationsField, strTableName, intControlNumber)
+        '                strFromRelation = GetCtrText(pnlRelationsRelation, strTableName, intControlNumber)
+        '                strFromType = GetCtrText(pnlRelationsJoinType, strTableName, intControlNumber)
+        '                strTargetTable = strFromRelation.Substring(0, strFromRelation.LastIndexOf("."))
+        '                strTargetTable = strTargetTable.Substring(strTargetTable.LastIndexOf("(") + 1, strTargetTable.Length - (strTargetTable.LastIndexOf("(") + 1))
+        '                If strFromClause.Contains(strTargetTable) = True And strFromClause.Contains(strTableName) = False Then
+        '                    strFromClause &= Environment.NewLine & strFromType & " JOIN " & strTableName & " ON " & strTableName & "." & strFromSource & " = " & strFromRelation
+        '                ElseIf strFromClause.Contains(strTargetTable) = True And strFromClause.Contains(strTableName) = True Then
+        '                    strFromClause &= Environment.NewLine & " AND " & strTableName & "." & strFromSource & " = " & strFromRelation
+        '                ElseIf strFromClause.Contains(strTargetTable) = False And strFromClause.Contains(strTableName) = False Then
+        '                    strFromClause &= Environment.NewLine & strFromType & " JOIN " & strTargetTable & " ON " & strTableName & "." & strFromSource & " = " & strFromRelation
+        '                ElseIf strFromClause.Contains(strTargetTable) = False And strFromClause.Contains(strTableName) = True Then
+        '                    strFromClause &= Environment.NewLine & strFromType & " JOIN " & strTargetTable & " ON " & strTableName & "." & strFromSource & " = " & strFromRelation
+        '                End If
+        '            End If
+        '        End If
+        '    Next
+        'Next
+
+
+        If strQuery = "SELECT " Then
+            Return Nothing
+        End If
+        strQuery = strQuery.Replace("SELECT ,", "SELECT ")
+        'Check for top x 
+        If xNode.Item("UseTop").InnerText = True And IsNumeric(xNode.Item("UseTopNumber").InnerText) = True Then strQuery = strQuery.Replace("SELECT ", "SELECT TOP " & xNode.Item("UseTopNumber").InnerText & " ")
+        'Check for distinct
+        If xNode.Item("UseDistinct").InnerText = True Then strQuery = strQuery.Replace("SELECT ", "SELECT DISTINCT ")
+        strQueryGroup = strQueryGroup.Replace("GROUP BY ,", "GROUP BY ")
+        If strQueryGroup = "GROUP BY " Then blnGroup = False
+
+        'strQueryFrom = FromClauseGet()
+        'strQuery &= Environment.NewLine & strQueryFrom
+        'strQueryWhere = WhereClauseGet()
+        strQueryWhere &= ")"
+        strQueryWhere = strQueryWhere.Replace("WHERE  ) AND", "WHERE ").Replace("WHERE  OR", "WHERE (").Replace("WHERE  ) AND NOT", "WHERE NOT (")
+
+        If strQueryWhere.Length > 10 Then strQuery &= Environment.NewLine & strQueryWhere
+        If blnGroup = True Then strQuery &= Environment.NewLine & strQueryGroup
+        'strQueryHaving = HavingClauseGet()
+        'If strQueryHaving.Length > 11 Then strQuery &= Environment.NewLine & strQueryHaving
+        'strQueryOrder = OrderClauseGet()
+        'If strQueryOrder.Length > 10 Then strQuery &= Environment.NewLine & strQueryOrder
+
+        Return strQuery
+    End Function
 #End Region
 
 #Region "Database"
@@ -1542,6 +1548,15 @@ Module Common
             Case Else
                 Return True
         End Select
+    End Function
+
+    Friend Function GetFieldDataType(strFullFieldName As String) As String
+        Dim strTableName As String = strFullFieldName.Substring(0, strFullFieldName.LastIndexOf("."))
+        Dim strFieldName As String = strFullFieldName.Substring(strFullFieldName.LastIndexOf(".") + 1, strFullFieldName.Length - (strFullFieldName.LastIndexOf(".") + 1))
+        Dim xNode As XmlNode = dhdText.FindXmlNode(xmlTables, "Table", "Name", strTableName)
+        Dim xCNode As XmlNode = dhdText.FindXmlChildNode(xNode, "Fields/Field", "FldName", strFieldName)
+        Dim strFieldDataType As String = xCNode.Item("DataType").InnerText
+        Return strFieldDataType
     End Function
 
     Friend Function FormatFieldXML(strFullFieldName As String, strShowMode As String, blnUseAlias As Boolean, blnSelect As Boolean) As String
@@ -2131,38 +2146,38 @@ Module Common
         Return s.ToString()
     End Function
 
-    Friend Function ReplaceNulls(dtsInput As DataSet) As DataSet
-        Dim dtsOutput As New DataSet
-        Dim row As DataRow
-        Dim col As DataColumn
-        '....
-        For Each Table In dtsInput.Tables
-            Dim newTable As DataTable = Table.clone
-            For Each colOrg In newTable.Columns
-                colOrg.DataType = System.Type.GetType("System.String")
-            Next
-            For Each rowOrg In Table.rows
-                newTable.ImportRow(rowOrg)
-            Next
-            dtsOutput.Tables.Add(newTable)
+    'Friend Function ReplaceNulls(dtsInput As DataSet) As DataSet
+    '    Dim dtsOutput As New DataSet
+    '    Dim row As DataRow
+    '    Dim col As DataColumn
 
-            For Each row In newTable.Rows
-                For Each col In newTable.Columns
-                    If row.IsNull(col) Then
-                        Select Case Type.GetTypeCode(col.DataType)
-                            Case TypeCode.Int32
-                                row.Item(col) = 0
-                            Case TypeCode.String
-                                row.Item(col) = ""
-                            Case Else
-                                row.Item(col) = ""
-                        End Select
-                    End If
-                Next
-            Next
-        Next
-        Return dtsOutput
-    End Function
+    '    For Each Table In dtsInput.Tables
+    '        Dim newTable As DataTable = Table.clone
+    '        For Each colOrg In newTable.Columns
+    '            colOrg.DataType = System.Type.GetType("System.String")
+    '        Next
+    '        For Each rowOrg In Table.rows
+    '            newTable.ImportRow(rowOrg)
+    '        Next
+    '        dtsOutput.Tables.Add(newTable)
+
+    '        For Each row In newTable.Rows
+    '            For Each col In newTable.Columns
+    '                If row.IsNull(col) Then
+    '                    Select Case Type.GetTypeCode(col.DataType)
+    '                        Case TypeCode.Int32
+    '                            row.Item(col) = 0
+    '                        Case TypeCode.String
+    '                            row.Item(col) = ""
+    '                        Case Else
+    '                            row.Item(col) = ""
+    '                    End Select
+    '                End If
+    '            Next
+    '        Next
+    '    Next
+    '    Return dtsOutput
+    'End Function
 
     'Friend Function ComboFieldMultiColumnCreate(cbxInput As ComboField, dtsInput As DataSet)
     '    'Dim strName As String = "dt" & cbxInput.Name

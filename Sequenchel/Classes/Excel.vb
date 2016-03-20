@@ -1,8 +1,7 @@
-﻿'Imports System.Reflection
-'Imports System.Collections.Generic
-Imports DocumentFormat.OpenXml.Packaging
+﻿Imports DocumentFormat.OpenXml.Packaging
 Imports DocumentFormat.OpenXml.Spreadsheet
 Imports DocumentFormat.OpenXml
+Imports System.Data.OleDb
 
 Public Class Excel
 
@@ -273,5 +272,117 @@ Public Class Excel
 
     End Function
 
+    Public Shared Function ImportExcelFile(strFilePath As String) As DataSet
+        Dim Ext As String = strFilePath.Substring(strFilePath.LastIndexOf(".") + 1)
+        Dim dtsExcel As New DataSet
+
+        If Ext = "xls" Then
+            'ImportExcel2003(strFilePath)
+            'dstImport = ReadExcelFile(strFilePath)
+            dtsExcel = Excel.ReadXlsFile(strFilePath)
+        ElseIf Ext = "xlsx" Then
+            dtsExcel = Excel.ReadXlsxFile(strFilePath)
+        End If
+        Return dtsExcel
+    End Function
+
+    Public Shared Function ReadXlsFile(ByVal StrFilePath As String) As DataSet
+        Dim ExcelCon As New OleDbConnection
+        Dim ExcelAdp As OleDbDataAdapter
+        Dim ExcelComm As OleDbCommand
+        'Dim Col1 As DataColumn
+        Dim StrSql As String
+        Dim dstOutput As New DataSet
+
+        Try
+            ExcelCon.ConnectionString = "Provider=Microsoft.Jet.OLEDB.4.0;" & _
+                "Data Source= " & StrFilePath & _
+                ";Extended Properties=""Excel 8.0;"""
+            ExcelCon.Open()
+
+            Dim dtSheets As DataTable =
+              ExcelCon.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, Nothing)
+            Dim listSheet As New List(Of String)
+            Dim drSheet As DataRow
+
+            For Each drSheet In dtSheets.Rows
+                listSheet.Add(drSheet("TABLE_NAME").ToString())
+            Next
+
+            '//show sheetname in textbox where multiline is true
+            For Each sheet As String In listSheet
+                StrSql = "Select * From [" & sheet & "]"
+                ExcelComm = New OleDbCommand(StrSql, ExcelCon)
+                ExcelAdp = New OleDbDataAdapter(ExcelComm)
+                Dim objdt = New DataTable()
+                ExcelAdp.Fill(objdt)
+                dstOutput.Tables.Add(objdt)
+            Next
+
+            ExcelCon.Close()
+            Return dstOutput
+        Catch ex As Exception
+            MessageBox.Show("An error has occured importing the data" & Environment.NewLine & ex.Message)
+            Return Nothing
+        Finally
+            ExcelCon = Nothing
+            ExcelAdp = Nothing
+            ExcelComm = Nothing
+        End Try
+    End Function
+
+    Public Shared Function ReadXlsxFile(strFilePath As String) As DataSet
+        Dim dstOutput As New DataSet
+
+        'Open the Excel file in Read Mode using OpenXml.
+        Using doc As SpreadsheetDocument = SpreadsheetDocument.Open(strFilePath, False)
+            'Read the first Sheet from Excel file.
+            For Each excelSheet As Sheet In doc.WorkbookPart.Workbook.Sheets
+
+                'Dim sheet As Sheet = doc.WorkbookPart.Workbook.Sheets.GetFirstChild(Of Sheet)()
+
+                'Get the Worksheet instance.
+                Dim worksheet As Worksheet = TryCast(doc.WorkbookPart.GetPartById(excelSheet.Id.Value), WorksheetPart).Worksheet
+
+                'Fetch all the rows present in the Worksheet.
+                Dim rows As IEnumerable(Of Row) = worksheet.GetFirstChild(Of SheetData)().Descendants(Of Row)()
+
+                'Create a new DataTable.
+                Dim dt As New DataTable()
+                dt.TableName = excelSheet.Name
+                'Loop through the Worksheet rows.
+                For Each row As Row In rows
+                    'Use the first row to add columns to DataTable.
+                    If row.RowIndex.Value = 1 Then
+                        For Each cell As Cell In row.Descendants(Of Cell)()
+                            dt.Columns.Add(GetValue(doc, cell))
+                        Next
+                    Else
+                        'Add rows to DataTable.
+                        dt.Rows.Add()
+                        Dim i As Integer = 0
+                        For Each cell As Cell In row.Descendants(Of Cell)()
+                            dt.Rows(dt.Rows.Count - 1)(i) = GetValue(doc, cell)
+                            i += 1
+                        Next
+                    End If
+                Next
+                dstOutput.Tables.Add(dt)
+            Next
+        End Using
+
+        Return dstOutput
+    End Function
+
+    Private Shared Function GetValue(doc As SpreadsheetDocument, cell As Cell) As String
+        Dim value As String = Nothing
+        If cell.CellValue IsNot Nothing Then
+            value = cell.CellValue.InnerText
+            If cell.DataType IsNot Nothing AndAlso cell.DataType.Value = CellValues.SharedString Then
+                Return doc.WorkbookPart.SharedStringTablePart.SharedStringTable.ChildElements.GetItem(Integer.Parse(value)).InnerText
+            End If
+        End If
+        Return value
+    End Function
 
 End Class
