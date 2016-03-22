@@ -293,6 +293,10 @@
       <Project>{03d663f2-7098-4085-9b75-31a322b4cc26}</Project>
       <Name>SDBA</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SeqCmd\SeqCmd.vbproj">
+      <Project>{e3178a6e-4726-48ae-a20f-40eaeb1c2e2b}</Project>
+      <Name>SeqCmd</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SeqCore\SeqCore.vbproj">
       <Project>{029272af-b66d-4873-b2f0-c0ada5aec85c}</Project>
       <Name>SeqCore</Name>

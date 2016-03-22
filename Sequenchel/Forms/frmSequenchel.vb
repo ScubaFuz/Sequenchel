@@ -1018,11 +1018,11 @@ Public Class frmSequenchel
                         If Not cell.Value Is Nothing Then
                             If tblTable.Item(intField).Identity = True Or tblTable.Item(intField).PrimaryKey = True Then
                                 'strQueryWhere &= " AND [" & tblTable.TableName.Replace(".", "].[") & "].[" & tblTable.Item(intField).FieldName & "] = " & SetDelimiters(cell.Value.ToString, tblTable.Item(intField).FieldDataType, "=")
-                                strQueryWhere &= " AND " & FormatField(tblTable.Item(intField).FieldName, tblTable.TableName, tblTable.Item(intField).Width, tblTable.Item(intField).FieldDataType, Nothing, Nothing, False) & " = " & CoreData.SetDelimiters(cell.Value.ToString, tblTable.Item(intField).FieldDataType, "=")
+                                strQueryWhere &= " AND " & FormatField(tblTable.Item(intField).FieldName, tblTable.TableName, tblTable.Item(intField).Width, tblTable.Item(intField).FieldDataType, Nothing, Nothing, False) & " = " & SeqData.SetDelimiters(cell.Value.ToString, tblTable.Item(intField).FieldDataType, "=")
 
                             End If
                             'strQueryWhere2 &= " AND [" & tblTable.TableName.Replace(".", "].[") & "].[" & tblTable.Item(intField).FieldName & "] = " & SetDelimiters(cell.Value.ToString, tblTable.Item(intField).FieldDataType, "=")
-                            strQueryWhere2 &= " AND " & FormatField(tblTable.Item(intField).FieldName, tblTable.TableName, tblTable.Item(intField).Width, tblTable.Item(intField).FieldDataType, Nothing, Nothing, False) & " = " & CoreData.SetDelimiters(cell.Value.ToString, tblTable.Item(intField).FieldDataType, "=")
+                            strQueryWhere2 &= " AND " & FormatField(tblTable.Item(intField).FieldName, tblTable.TableName, tblTable.Item(intField).Width, tblTable.Item(intField).FieldDataType, Nothing, Nothing, False) & " = " & SeqData.SetDelimiters(cell.Value.ToString, tblTable.Item(intField).FieldDataType, "=")
                         End If
                     End If
                 Next
@@ -1245,7 +1245,7 @@ Public Class frmSequenchel
     Private Sub LoadDefaultValue(strFieldName As String)
         For Each Field In tblTable
             If Field.FieldName = strFieldName Then
-                Dim strValue As String = CoreData.ProcessDefaultValue(Field.DefaultValue)
+                Dim strValue As String = SeqData.ProcessDefaultValue(Field.DefaultValue)
                 Select Case Field.FieldDataType.ToUpper
                     Case "BIT"
                         Field.Checked = strValue
@@ -1372,7 +1372,7 @@ Public Class frmSequenchel
             If tblTable.Item(intField).Identity = True Or tblTable.Item(intField).PrimaryKey = True Then
                 For Each cell In dgvTable1.SelectedRows(0).Cells
                     If cell.OwningColumn.Name = tblTable.Item(intField).FieldName Then
-                        strQueryWhere &= " AND [" & tblTable.Item(intField).FieldName & "] = " & CoreData.SetDelimiters(cell.Value, tblTable.Item(intField).FieldDataType, "=")
+                        strQueryWhere &= " AND [" & tblTable.Item(intField).FieldName & "] = " & SeqData.SetDelimiters(cell.Value, tblTable.Item(intField).FieldDataType, "=")
                     End If
                 Next
             End If
@@ -1424,7 +1424,7 @@ Public Class frmSequenchel
             If tblTable.Item(intField).Identity = True Or tblTable.Item(intField).PrimaryKey = True Then
                 For Each cell In dgvTable1.SelectedRows(0).Cells
                     If cell.OwningColumn.Name = tblTable.Item(intField).FieldName Then
-                        strQueryWhere &= " AND [" & tblTable.Item(intField).FieldName & "] = " & CoreData.SetDelimiters(cell.Value, tblTable.Item(intField).FieldDataType, "=")
+                        strQueryWhere &= " AND [" & tblTable.Item(intField).FieldName & "] = " & SeqData.SetDelimiters(cell.Value, tblTable.Item(intField).FieldDataType, "=")
                     End If
                 Next
             End If

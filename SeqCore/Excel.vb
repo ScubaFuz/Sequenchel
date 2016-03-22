@@ -362,6 +362,9 @@ Public Class Excel
                         dt.Rows.Add()
                         Dim i As Integer = 0
                         For Each cell As Cell In row.Descendants(Of Cell)()
+                            'Dim strReference As String = cell.CellReference
+                            'Dim strCellValue As String = cell.CellValue.InnerText.ToString
+                            'Dim strValue As String = GetValue(doc, cell)
                             dt.Rows(dt.Rows.Count - 1)(i) = GetValue(doc, cell)
                             i += 1
                         Next

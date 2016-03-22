@@ -262,7 +262,7 @@
 #End Region
 
 #Region "XML"
-    Private _DefaultConfigFilePath As String = System.Reflection.Assembly.GetCallingAssembly.Location & "\Config"
+    Private _DefaultConfigFilePath As String = System.AppDomain.CurrentDomain.BaseDirectory & "Config"
     Private _GeneralSettings As String = _DefaultConfigFilePath & "\" & "SequenchelSettings.xml"
     Private _ConnectionsFile As String = _DefaultConfigFilePath & "\" & "SDBAConnections.xml"
     Private _ConnectionDefault As String = ""

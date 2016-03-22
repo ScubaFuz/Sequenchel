@@ -2,9 +2,33 @@
 
 Public Class Data
 
+    Public dhdReg As New DataHandler.reg
     Public dhdText As New DataHandler.txt
+    Public dhdConnection As New DataHandler.db
+    Public curVar As New Variables
+    Public curStatus As New CurrentStatus
+    Public Excel As New Excel
 
 #Region "DataBase"
+    Public Function QueryDb(ByVal dhdConnect As DataHandler.db, ByVal strQueryData As String, ByVal ReturnValue As Boolean, Optional ByVal LogLevel As Integer = 5) As DataSet
+        'WriteLog(strQueryData, LogLevel)
+        'strErrorMessage = ""
+        dhdConnect.CheckDB()
+        If dhdConnect.DataBaseOnline = False Then
+            'MessageBox.Show("The database was not found." & Environment.NewLine & "Please check your settings")
+            'strErrorMessage = "The database was not found. Please check your settings"
+            Return Nothing
+        End If
+        Dim dtsData As DataSet
+        Try
+            dtsData = dhdConnect.QueryDatabase(strQueryData, ReturnValue)
+            Return dtsData
+        Catch ex As Exception
+            'WriteLog(ex.Message, 1)
+            'strErrorMessage = ex.Message
+            Return Nothing
+        End Try
+    End Function
 
     Public Function GetSqlVersion(dhdConnect As DataHandler.db) As Integer
         Dim strDatabase As String = dhdConnect.DatabaseName
@@ -373,9 +397,270 @@ Public Class Data
         Return FormatFileDate
     End Function
 
+    Public Function SaveToDatabase(dtsInput As DataSet, Optional ConvertToText As Boolean = False) As Integer
+        Dim intRecordsAffected As Integer = 0
+        Dim intReturn As Integer = 0
+
+        Try
+            For Each Table As DataTable In dtsInput.Tables
+                Dim blnExport As Boolean = True
+                If Table.ExtendedProperties.Count > 0 Then
+                    If Table.ExtendedProperties.ContainsKey("ExportTable") = True Then
+                        If Table.ExtendedProperties("ExportTable") = "False" Then
+                            blnExport = False
+                        End If
+                    End If
+                End If
+                If blnExport = True Then
+                    If ConvertToText = True Then Table = dhdConnection.ConvertToText(Table)
+                    intReturn = UploadSqlData(Table)
+                    If intReturn = -1 Then
+                        Return -1
+                    Else
+                        intRecordsAffected += intReturn
+                    End If
+                End If
+            Next
+            'intRecordsAffected = dhdDB.UploadSqlData(dgvImport.DataSource)
+            Return intRecordsAffected
+        Catch ex As Exception
+            dhdConnection.dbMessage = "Export to database failed. Check if the columns match and try again. If you are importing more than 1 table, make sure they have identical columns" & ex.Message
+            Return -1
+        End Try
+        Return intRecordsAffected
+    End Function
+
+    Public Function UploadSqlData(ByVal objDataTable As DataTable) As Integer
+        Dim intRecordsAffected As Integer = 0
+        Dim bcp As System.Data.SqlClient.SqlBulkCopy = New System.Data.SqlClient.SqlBulkCopy(dhdConnection.SqlConnection)
+        If dhdConnection.SqlConnection.State = ConnectionState.Closed Then dhdConnection.SqlConnection.Open()
+        bcp.DestinationTableName = dhdConnection.DataTableName
+        Dim reader As DataTableReader = objDataTable.CreateDataReader()
+        intRecordsAffected = objDataTable.Rows.Count
+        Try
+            bcp.WriteToServer(reader)
+        Catch ex As Exception
+            dhdConnection.ErrorMessage = ex.Message
+            dhdConnection.ErrorLevel = -1
+            intRecordsAffected = -1
+        End Try
+        'bcp.Close()
+        Try
+            If dhdConnection.SqlConnection.State = ConnectionState.Open Then dhdConnection.SqlConnection.Close()
+        Catch ex As Exception
+        End Try
+        Return intRecordsAffected
+    End Function
 #End Region
 
 #Region "XML"
+    Public Function LoadSDBASettingsXml(xmlLoadDoc As XmlDocument) As String
+        If dhdText.CheckFile(System.AppDomain.CurrentDomain.BaseDirectory & dhdText.InputFile) = True Then
+            'LoadXmlFile
+            Try
+                xmlLoadDoc.Load(System.AppDomain.CurrentDomain.BaseDirectory & dhdText.InputFile)
+                If dhdText.CheckElement(xmlLoadDoc, "DefaultConfigFilePath") Then curVar.DefaultConfigFilePath = xmlLoadDoc.Item("Sequenchel").Item("Settings").Item("DefaultConfigFilePath").InnerText
+                If dhdText.CheckElement(xmlLoadDoc, "SettingsFile") Then curVar.GeneralSettings = xmlLoadDoc.Item("Sequenchel").Item("Settings").Item("SettingsFile").InnerText
+                If dhdText.CheckElement(xmlLoadDoc, "AllowSettingsChange") Then curVar.AllowSettingsChange = xmlLoadDoc.Item("Sequenchel").Item("Settings").Item("AllowSettingsChange").InnerText
+                If dhdText.CheckElement(xmlLoadDoc, "AllowConfigurationChange") Then curVar.AllowConfiguration = xmlLoadDoc.Item("Sequenchel").Item("Settings").Item("AllowConfigurationChange").InnerText
+                If dhdText.CheckElement(xmlLoadDoc, "AllowLinkedServersChange") Then curVar.AllowLinkedServers = xmlLoadDoc.Item("Sequenchel").Item("Settings").Item("AllowLinkedServersChange").InnerText
+                If dhdText.CheckElement(xmlLoadDoc, "AllowReportQueryEdit") Then curVar.AllowQueryEdit = xmlLoadDoc.Item("Sequenchel").Item("Settings").Item("AllowReportQueryEdit").InnerText
+                If dhdText.CheckElement(xmlLoadDoc, "AllowDataImport") Then curVar.AllowDataImport = xmlLoadDoc.Item("Sequenchel").Item("Settings").Item("AllowDataImport").InnerText
+                If dhdText.CheckElement(xmlLoadDoc, "AllowSmartUpdate") Then curVar.AllowSmartUpdate = xmlLoadDoc.Item("Sequenchel").Item("Settings").Item("AllowSmartUpdate").InnerText
+                If dhdText.CheckElement(xmlLoadDoc, "AllowUpdate") Then curVar.AllowUpdate = xmlLoadDoc.Item("Sequenchel").Item("Settings").Item("AllowUpdate").InnerText
+                If dhdText.CheckElement(xmlLoadDoc, "AllowInsert") Then curVar.AllowInsert = xmlLoadDoc.Item("Sequenchel").Item("Settings").Item("AllowInsert").InnerText
+                If dhdText.CheckElement(xmlLoadDoc, "AllowDelete") Then curVar.AllowDelete = xmlLoadDoc.Item("Sequenchel").Item("Settings").Item("AllowDelete").InnerText
+                If dhdText.CheckElement(xmlLoadDoc, "OverridePassword") Then
+                    If xmlLoadDoc.Item("Sequenchel").Item("Settings").Item("OverridePassword").InnerText.Length > 0 Then
+                        If curVar.OverridePassword = xmlLoadDoc.Item("Sequenchel").Item("Settings").Item("OverridePassword").InnerText Then
+                            curVar.SecurityOverride = True
+                        End If
+                    End If
+                End If
+            Catch ex As Exception
+                Return "There was an error reading the XML file. Please check the file" & Environment.NewLine & System.AppDomain.CurrentDomain.BaseDirectory & dhdText.InputFile & Environment.NewLine & Environment.NewLine & ex.Message
+                'WriteLog("There was an error reading the XML file. Please check the file" & Environment.NewLine & Application.StartupPath & "\" & dhdText.InputFile & Environment.NewLine & Environment.NewLine & ex.Message, 1)
+            End Try
+        Else
+            Return "The XML file was not found. Please check the file" & Environment.NewLine & System.AppDomain.CurrentDomain.BaseDirectory & dhdText.InputFile
+        End If
+        Return ""
+    End Function
+
+    Public Function LoadGeneralSettingsXml(xmlLoadDoc As XmlDocument) As String
+        If dhdText.CheckFile(CheckFilePath(curVar.GeneralSettings)) = True Then
+            'LoadXmlFile
+            Try
+                xmlLoadDoc.Load(dhdText.PathConvert(CheckFilePath(curVar.GeneralSettings)))
+                'If dhdText.CheckElement(xmlLoadDoc, "DataLocation") Then dhdDatabase.DataLocation = xmlLoadDoc.Item("Sequenchel").Item("DataBase").Item("DataLocation").InnerText
+                'If dhdText.CheckElement(xmlLoadDoc, "DatabaseName") Then dhdDatabase.DatabaseName = xmlLoadDoc.Item("Sequenchel").Item("DataBase").Item("DatabaseName").InnerText
+                'If dhdText.CheckElement(xmlLoadDoc, "DataProvider") Then dhdDatabase.DataProvider = xmlLoadDoc.Item("Sequenchel").Item("DataBase").Item("DataProvider").InnerText
+                'If dhdText.CheckElement(xmlLoadDoc, "LoginMethod") Then dhdDatabase.LoginMethod = xmlLoadDoc.Item("Sequenchel").Item("DataBase").Item("LoginMethod").InnerText
+                'If dhdText.CheckElement(xmlLoadDoc, "LoginName") Then dhdDatabase.LoginName = xmlLoadDoc.Item("Sequenchel").Item("DataBase").Item("LoginName").InnerText
+                'If dhdText.CheckElement(xmlLoadDoc, "Password") Then dhdDatabase.Password = xmlLoadDoc.Item("Sequenchel").Item("DataBase").Item("Password").InnerText
+
+                If dhdText.CheckElement(xmlLoadDoc, "LogFileName") Then dhdText.LogFileName = xmlLoadDoc.Item("Sequenchel").Item("LogSettings").Item("LogFileName").InnerText
+                If dhdText.CheckElement(xmlLoadDoc, "LogLevel") Then dhdText.LogLevel = xmlLoadDoc.Item("Sequenchel").Item("LogSettings").Item("LogLevel").InnerText
+                If dhdText.CheckElement(xmlLoadDoc, "LogLocation") Then dhdText.LogLocation = xmlLoadDoc.Item("Sequenchel").Item("LogSettings").Item("LogLocation").InnerText
+                If dhdText.CheckElement(xmlLoadDoc, "Retenion") Then dhdText.Retenion = xmlLoadDoc.Item("Sequenchel").Item("LogSettings").Item("Retenion").InnerText
+                If dhdText.CheckElement(xmlLoadDoc, "AutoDelete") Then dhdText.AutoDelete = xmlLoadDoc.Item("Sequenchel").Item("LogSettings").Item("AutoDelete").InnerText
+
+                If dhdText.CheckElement(xmlLoadDoc, "Connections") Then curVar.ConnectionsFile = xmlLoadDoc.Item("Sequenchel").Item("Settings").Item("Connections").InnerText
+                If dhdText.CheckElement(xmlLoadDoc, "UsersetLocation") Then curVar.UsersetLocation = xmlLoadDoc.Item("Sequenchel").Item("Settings").Item("UsersetLocation").InnerText
+                If dhdText.CheckElement(xmlLoadDoc, "LimitLookupLists") Then curVar.LimitLookupLists = xmlLoadDoc.Item("Sequenchel").Item("Settings").Item("LimitLookupLists").InnerText
+                If dhdText.CheckElement(xmlLoadDoc, "LimitLookupListsCount") Then curVar.LimitLookupListsCount = xmlLoadDoc.Item("Sequenchel").Item("Settings").Item("LimitLookupListsCount").InnerText
+                If dhdText.CheckElement(xmlLoadDoc, "DateTimeStyle") Then curVar.DateTimeStyle = xmlLoadDoc.Item("Sequenchel").Item("Settings").Item("DateTimeStyle").InnerText
+                If dhdText.CheckElement(xmlLoadDoc, "IncludeDate") Then curVar.IncludeDate = xmlLoadDoc.Item("Sequenchel").Item("Settings").Item("IncludeDate").InnerText
+
+            Catch ex As Exception
+                Return "There was an error reading the XML file. Please check the file" & Environment.NewLine & curVar.GeneralSettings & Environment.NewLine & ex.Message
+                'WriteLog("There was an error reading the XML file. Please check the file" & Environment.NewLine & CurVar.GeneralSettings & Environment.NewLine & ex.Message, 1)
+            End Try
+        Else
+            Return "The XML file was not found. Please check the file" & Environment.NewLine & curVar.GeneralSettings
+        End If
+        Return ""
+    End Function
+
+    Public Function CheckFilePath(strFilePathName As String) As String
+        If strFilePathName.Contains("\") Then
+            Return strFilePathName
+        ElseIf CurVar.DefaultConfigFilePath.Length > 0 Then
+            Return CurVar.DefaultConfigFilePath & "\" & strFilePathName
+        Else
+            Return System.AppDomain.CurrentDomain.BaseDirectory & strFilePathName
+        End If
+    End Function
+
+    Public Function LoadConnectionsXml(xmlConnections As XmlDocument) As List(Of String)
+        If dhdText.CheckFile(CheckFilePath(curVar.ConnectionsFile)) = True Then
+            'LoadXmlFile
+            'Dim lstXml As XmlNodeList
+            Try
+                xmlConnections.Load(dhdText.PathConvert(CheckFilePath(curVar.ConnectionsFile)))
+                Dim blnConnectionExists As Boolean = False
+                curVar.ConnectionDefault = ""
+
+                Dim xNode As XmlNode
+                Dim ReturnValue As New List(Of String)
+                For Each xNode In xmlConnections.SelectNodes("//Connection")
+                    If xNode.Item("ConnectionName").InnerText = CurStatus.Connection Then blnConnectionExists = True
+                    ReturnValue.Add(xNode.Item("ConnectionName").InnerText)
+                    If xNode.Attributes("Default").Value = "True" Then
+                        curVar.ConnectionDefault = xNode.Item("ConnectionName").InnerText
+                    End If
+                Next
+                If blnConnectionExists = False Then CurStatus.Connection = curVar.ConnectionDefault
+                Return ReturnValue
+            Catch ex As Exception
+                Return Nothing
+                '"There was an error reading the XML file. Please check the file" & Environment.NewLine & dhdText.PathConvert(curVar.ConnectionsFile) & Environment.NewLine & ex.Message)
+                'WriteLog("There was an error reading the XML file. Please check the file" & Environment.NewLine & dhdText.PathConvert(curVar.ConnectionsFile) & Environment.NewLine & ex.Message, 1)
+            End Try
+        End If
+        Return Nothing
+    End Function
+
+    Public Sub LoadConnection(xmlConnections As XmlDocument, strConnection As String)
+        Dim xmlConnNode As XmlNode = dhdText.FindXmlNode(xmlConnections, "Connection", "ConnectionName", strConnection)
+
+        dhdConnection.DataLocation = xmlConnNode.Item("DataLocation").InnerText
+        dhdConnection.DatabaseName = xmlConnNode.Item("DataBaseName").InnerText
+        dhdConnection.DataProvider = xmlConnNode.Item("DataProvider").InnerText
+        dhdConnection.LoginMethod = xmlConnNode.Item("LoginMethod").InnerText
+        dhdConnection.LoginName = xmlConnNode.Item("LoginName").InnerText
+        dhdConnection.Password = DataHandler.txt.DecryptText(xmlConnNode.Item("Password").InnerText)
+        curVar.TableSetsFile = xmlConnNode.Item("TableSets").InnerText
+
+        dhdConnection.CheckDB()
+    End Sub
+
+    Public Function LoadTableSetsXml(xmlTableSets As XmlDocument) As List(Of String)
+        If dhdText.CheckFile(CheckFilePath(curVar.TableSetsFile)) = True Then
+
+            'LoadXmlFile
+            'Dim lstXml As XmlNodeList
+            Try
+                xmlTableSets.Load(dhdText.PathConvert(CheckFilePath(curVar.TableSetsFile)))
+                curVar.TableSetDefault = ""
+                Dim blnTableSetExists As Boolean = False
+
+                Dim TableSetNode As XmlNode
+                Dim ReturnValue As New List(Of String)
+                For Each TableSetNode In xmlTableSets.SelectNodes("//TableSet")
+                    If TableSetNode.Item("TableSetName").InnerText = curStatus.TableSet Then blnTableSetExists = True
+                    ReturnValue.Add(TableSetNode.Item("TableSetName").InnerText)
+                    If TableSetNode.Attributes("Default").Value = "True" Then
+                        curVar.TableSetDefault = TableSetNode.Item("TableSetName").InnerText
+                    End If
+                Next
+                If blnTableSetExists = False Then curStatus.TableSet = curVar.TableSetDefault
+                Return ReturnValue
+            Catch ex As Exception
+                Return Nothing
+                'MessageBox.Show("There was an error reading the XML file. Please check the file" & Environment.NewLine & dhdText.PathConvert(curVar.TableSetsFile) & Environment.NewLine & ex.Message)
+                'WriteLog("There was an error reading the XML file. Please check the file" & Environment.NewLine & dhdText.PathConvert(curVar.TableSetsFile) & Environment.NewLine & ex.Message, 1)
+            End Try
+        End If
+        Return Nothing
+    End Function
+
+    Public Sub LoadTableSet(xmlTableSets As XmlDocument, strTableSet As String)
+        Dim xmlTSNode As XmlNode = dhdText.FindXmlNode(xmlTableSets, "TableSet", "TableSetName", strTableSet)
+        If xmlTSNode Is Nothing Then Exit Sub
+        'curStatus.TableSet = xmlTSNode.Item("TableSetName").InnerText
+        curVar.TablesFile = xmlTSNode.Item("TablesFile").InnerText
+        dhdText.OutputFile = xmlTSNode.Item("OutputPath").InnerText
+        curVar.ReportSetFile = xmlTSNode.Item("ReportSet").InnerText
+        If dhdText.CheckNodeElement(xmlTSNode, "Search") Then curVar.SearchFile = xmlTSNode.Item("Search").InnerText
+    End Sub
+
+    Public Function LoadTablesXml(xmlTables As XmlDocument) As List(Of String)
+        If dhdText.CheckFile(CheckFilePath(curVar.TablesFile)) = True Then
+            Try
+                xmlTables.Load(dhdText.PathConvert(CheckFilePath(curVar.TablesFile)))
+                Dim blnTableExists As Boolean = False
+                curVar.TableDefault = ""
+
+                Dim TableNode As XmlNode
+                Dim ReturnValue As New List(Of String)
+                For Each TableNode In xmlTables.SelectNodes("//Table")
+                    If TableNode.Item("Name").InnerText = curStatus.Table Then blnTableExists = True
+                    ReturnValue.Add(TableNode.Item("Alias").InnerText)
+                    If TableNode.Attributes("Default").Value = "True" Then
+                        curVar.TableDefault = TableNode.Item("Alias").InnerText
+                    End If
+                Next
+                If blnTableExists = False Then curStatus.Table = curVar.TableDefault
+                Return ReturnValue
+            Catch ex As Exception
+                Return Nothing
+                'MessageBox.Show("There was an error reading the XML file. Please check the file" & Environment.NewLine & dhdText.PathConvert(curVar.TablesFile) & Environment.NewLine & ex.Message)
+                'WriteLog("There was an error reading the XML file. Please check the file" & Environment.NewLine & dhdText.PathConvert(curVar.TablesFile) & Environment.NewLine & ex.Message, 1)
+            End Try
+        End If
+        Return Nothing
+    End Function
+
+    Public Function LoadReportsXml(xmlReports As XmlDocument) As List(Of String)
+        If dhdText.CheckFile(CheckFilePath(curVar.ReportSetFile)) = True Then
+            Try
+                xmlReports.Load(dhdText.PathConvert(CheckFilePath(curVar.ReportSetFile)))
+
+                Dim xNode As XmlNode
+                Dim ReturnValue As New List(Of String)
+                For Each xNode In xmlReports.SelectNodes("//Report")
+                    ReturnValue.Add(xNode.Item("ReportName").InnerText)
+                Next
+                Return ReturnValue
+            Catch ex As Exception
+                Return Nothing
+                'MessageBox.Show("There was an error reading the XML file. Please check the file" & Environment.NewLine & dhdText.PathConvert(curVar.ReportSetFile) & Environment.NewLine & ex.Message)
+                'WriteLog("There was an error reading the XML file. Please check the file" & Environment.NewLine & dhdText.PathConvert(curVar.ReportSetFile) & Environment.NewLine & ex.Message, 1)
+            End Try
+        End If
+        Return Nothing
+    End Function
 
     Public Function GetFieldDataType(xmlTables As XmlDocument, strFullFieldName As String) As String
         Dim strTableName As String = strFullFieldName.Substring(0, strFullFieldName.LastIndexOf("."))
@@ -476,6 +761,8 @@ Public Class Data
         Dim strQueryWhere As String = "WHERE "
         Dim strWhereClause As String = ""
         Dim strWhereMode As String = ""
+        Dim intSort As Integer = 0
+        Dim intMaxSort As Integer = 0
 
         Dim strHavingField As String = ""
         Dim strQueryHaving As String = "HAVING "
@@ -489,17 +776,22 @@ Public Class Data
         Dim strQuery As String = "SELECT "
         'iterate through all fields
 
-        For Each xCNode As XmlNode In dhdText.FindXmlChildNodes(xNode, "Fields/Field")
+        Dim xmlCNodelist As XmlNodeList = dhdText.FindXmlChildNodes(xNode, "Fields/Field")
+        For Each xCNode As XmlNode In xmlCNodelist
             strTableName = xCNode.Item("TableName").InnerText
             If strTableName.IndexOf(".") = -1 Then strTableName = "dbo." & strTableName
             strFieldName = xCNode.Item("FieldName").InnerText
+            If IsNumeric(xCNode.Item("FieldSortOrder").InnerText) Then
+                intSort = xCNode.Item("FieldSortOrder").InnerText
+                If intSort > intMaxSort Then intMaxSort = intSort
+            End If
             Try
                 If xCNode.Item("FieldShow").InnerText = 1 Then
                     strShowMode = xCNode.Item("FieldShowMode").InnerText
                     strQuery &= ", " & FormatFieldXML(xmlTables, strTableName & "." & strFieldName, strShowMode, True, True, DateTimeStyle)
                     Select Case strShowMode
                         Case Nothing
-                            strQueryGroup &= ", " & strFieldName
+                            strQueryGroup &= ", " & strTableName & "." & strFieldName
                         Case "DATE", "YEAR", "MONTH", "DAY", "TIME", "HOUR", "MINUTE", "SECOND"
                             strQueryGroup &= ", " & strFieldName
                         Case Else
@@ -522,11 +814,11 @@ Public Class Data
                         If strHavingType.Contains("LIKE") And strHavingClause.Contains("*") Then strHavingClause = strHavingClause.Replace("*", "%")
 
                         If strHavingType <> Nothing And strHavingClause <> Nothing Then
-                            If strHavingMode = Nothing Then
-                                strQueryHaving &= " " & strHavingField & " " & strHavingType & " " & strHavingClause
-                            Else
-                                strQueryHaving &= " " & strHavingMode & " " & strHavingField & " " & strHavingType & " " & strHavingClause
-                            End If
+                            'If strHavingMode = Nothing Then
+                            '    strQueryHaving &= " " & strHavingField & " " & strHavingType & " " & strHavingClause
+                            'Else
+                            strQueryHaving &= " " & strHavingMode & " " & strHavingField & " " & strHavingType & " " & strHavingClause
+                            'End If
                         End If
                     End If
 
@@ -538,11 +830,7 @@ Public Class Data
 
                         If xFnode.Item("FilterType").InnerText.Contains("LIKE") And strWhereClause.Contains("*") Then strWhereClause = strWhereClause.Replace("*", "%")
                         If xFnode.Item("FilterType").InnerText <> "" And strWhereClause <> "" Then
-                            If strWhereMode = "" Then
-                                strQueryWhere &= " " & strFieldName & " " & xFnode.Item("FilterType").InnerText & " " & strWhereClause
-                            Else
-                                strQueryWhere &= " " & strWhereMode & " " & strFieldName & " " & xFnode.Item("FilterType").InnerText & " " & strWhereClause
-                            End If
+                            strQueryWhere &= " " & strWhereMode & " " & strTableName & "." & strFieldName & " " & xFnode.Item("FilterType").InnerText & " " & strWhereClause
                         End If
                     End If
 
@@ -552,7 +840,7 @@ Public Class Data
             End Try
         Next
 
- 
+
         If strQuery = "SELECT " Then
             Return Nothing
         End If
@@ -575,8 +863,8 @@ Public Class Data
         If strQueryWhere.Length > 10 Then strQuery &= Environment.NewLine & strQueryWhere
         If blnGroup = True Then strQuery &= Environment.NewLine & strQueryGroup
         If strQueryHaving.Length > 11 Then strQuery &= Environment.NewLine & strQueryHaving
-        'strQueryOrder = OrderClauseGet()
-        'If strQueryOrder.Length > 10 Then strQuery &= Environment.NewLine & strQueryOrder
+        strQueryOrder = OrderClauseGet(xmlCNodelist, intMaxSort)
+        If strQueryOrder.Length > 10 Then strQuery &= Environment.NewLine & strQueryOrder
 
         Return strQuery
     End Function
@@ -612,6 +900,69 @@ Public Class Data
         Next
         Return strFromClause
     End Function
+
+    Private Function OrderClauseGet(xmlCNodelist As XmlNodeList, intMaxSort As Integer) As String
+        Dim strQueryOrder As String = "ORDER BY "
+        Dim strTableName As String = ""
+        Dim strFieldName As String = ""
+        Dim strFieldSort As String = ""
+        Dim intOrder As Integer = 0
+
+        For intCount As Integer = 1 To intMaxSort
+            For Each xCNode As XmlNode In xmlCNodelist
+                If IsNumeric(xCNode.Item("FieldSortOrder").InnerText) Then
+                    intOrder = xCNode.Item("FieldSortOrder").InnerText
+                    If intCount = intOrder Or (intCount > intMaxSort And intOrder > intMaxSort) Then
+                        strTableName = xCNode.Item("TableName").InnerText
+                        If strTableName.IndexOf(".") = -1 Then strTableName = "dbo." & strTableName
+                        strFieldName = xCNode.Item("FieldName").InnerText
+                        strQueryOrder &= ", " & strTableName & "." & strFieldName
+                        strFieldSort = xCNode.Item("FieldSort").InnerText
+                        If strFieldSort = "ASC" Or strFieldSort = "DESC" Then strQueryOrder &= " " & strFieldSort
+                    End If
+                End If
+            Next
+        Next
+
+        strQueryOrder = strQueryOrder.Replace("ORDER BY ,", "ORDER BY ")
+        Return strQueryOrder
+    End Function
+
 #End Region
 
+#Region "Export"
+    Public Sub ExportFile(dtsInput As DataSet, strFileName As String, blnShowFile As Boolean)
+        Dim strTargetFile As String = strFileName.Substring(0, strFileName.LastIndexOf("."))
+        If curVar.IncludeDate = True Then
+            strTargetFile = strTargetFile & "_" & FormatFileDate(Now)
+        End If
+
+        Dim strExtension As String = strFileName.Substring(strFileName.LastIndexOf(".") + 1, strFileName.Length - (strFileName.LastIndexOf(".") + 1))
+        Dim strExportFile As String = strTargetFile & "." & strExtension
+        Try
+            Select Case strExtension.ToLower
+                Case "xml"
+                    dhdText.ExportDataSetToXML(dhdConnection.ConvertToText(dtsInput), strExportFile)
+                Case "xlsx"
+                    Excel.CreateExcelDocument(dtsInput, strExportFile)
+                Case "xls"
+                    Excel.CreateExcelDocument(dhdConnection.ConvertToText(dtsInput), strExportFile)
+                Case Else
+                    'unknown filetype, do nothing
+                    blnShowFile = False
+            End Select
+        Catch ex As Exception
+            blnShowFile = False
+            'WriteLog("Couldn't create Excel file.\r\nException: " + ex.Message, 1)
+        End Try
+
+        If blnShowFile = True Then
+            Dim p As New Process
+            p.StartInfo = New ProcessStartInfo(strExportFile)
+            p.Start()
+        End If
+
+    End Sub
+
+#End Region
 End Class

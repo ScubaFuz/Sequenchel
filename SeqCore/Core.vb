@@ -1,6 +1,5 @@
 ﻿Public Class Core
 
-
     Public Function Encrypt(strPassword As String) As String
         Dim x As New System.Security.Cryptography.MD5CryptoServiceProvider()
         Dim bs As Byte() = System.Text.Encoding.UTF8.GetBytes(strPassword)
@@ -11,4 +10,5 @@
         Next
         Return s.ToString()
     End Function
+
 End Class

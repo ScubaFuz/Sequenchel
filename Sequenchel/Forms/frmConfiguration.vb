@@ -60,7 +60,7 @@ Public Class frmConfiguration
 
     Private Sub DataTypesLoad()
         cbxDataType.Items.Clear()
-        Dim lstDataTypes As List(Of String) = CoreData.GetDataTypes()
+        Dim lstDataTypes As List(Of String) = SeqData.GetDataTypes()
         For Each DataType In lstDataTypes
             cbxDataType.Items.Add(DataType)
         Next
@@ -832,9 +832,9 @@ Public Class frmConfiguration
                 End If
             End If
 
-            strDataType = CoreData.GetDataType(dtsData.Tables.Item(0).Rows(intRowCount).Item("DataType"))
+            strDataType = SeqData.GetDataType(dtsData.Tables.Item(0).Rows(intRowCount).Item("DataType"))
             blnIdentity = dtsData.Tables.Item(0).Rows(intRowCount).Item("is_identity")
-            intWidth = CoreData.GetWidth(strDataType, dtsData.Tables.Item(0).Rows(intRowCount).Item("MaxLength"))
+            intWidth = SeqData.GetWidth(strDataType, dtsData.Tables.Item(0).Rows(intRowCount).Item("MaxLength"))
             If intRowCount = dtsData.Tables(0).Rows.Count - 1 And blnReloadAll = True Then blnReload = True
             FieldAddOrUpdate(strSchemaName & "." & strTableName, dtsData.Tables.Item(0).Rows(intRowCount).Item("colName"), dtsData.Tables.Item(0).Rows(intRowCount).Item("colName"), _
                      strDataType, blnIdentity, blnPrimaryKey, intWidth, "", "", False, txtControlField.Text, txtControlValue.Text, chkControlUpdate.Checked, chkControlMode.Checked, False, "", _

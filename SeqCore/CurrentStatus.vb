@@ -2,6 +2,7 @@
     Private _Connection As String = ""
     Private _TableSet As String = ""
     Private _Table As String = ""
+    Private _Report As String = ""
     Private _Status As Short
     Private _SuspendActions As Boolean = False
     'Private _SelectedItem As DataGridViewRow
@@ -52,6 +53,15 @@
         End Get
         Set(ByVal Value As String)
             _Table = Value
+        End Set
+    End Property
+
+    Public Property Report() As String
+        Get
+            Return _Report
+        End Get
+        Set(ByVal Value As String)
+            _Report = Value
         End Set
     End Property
 

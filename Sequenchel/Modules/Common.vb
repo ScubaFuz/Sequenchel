@@ -16,7 +16,7 @@ Module Common
 
     Friend Core As New SeqCore.Core
     Friend Excel As New SeqCore.Excel
-    Friend CoreData As New SeqCore.Data
+    Friend SeqData As New SeqCore.Data
     Friend dhdText As New DataHandler.txt
     Friend dhdReg As New DataHandler.reg
     Friend dhdDatabase As New DataHandler.db
@@ -803,7 +803,7 @@ Module Common
 
     Friend Sub ExportFile(dtsInput As DataSet, strFileName As String, blnShowFile As Boolean)
         If CurVar.IncludeDate = True Then
-            strFileName = strFileName & "_" & CoreData.FormatFileDate(Now)
+            strFileName = strFileName & "_" & SeqData.FormatFileDate(Now)
         End If
 
         Dim sfdFile As New SaveFileDialog
@@ -823,11 +823,11 @@ Module Common
         Try
             Select Case sfdFile.FilterIndex
                 Case 1
-                    dhdText.ExportDataSetToXML(dhdDatabase.ReplaceNulls(dtsInput), strTargetFile)
+                    dhdText.ExportDataSetToXML(dhdDatabase.ConvertToText(dtsInput), strTargetFile)
                 Case 2
                     Excel.CreateExcelDocument(dtsInput, strTargetFile)
                 Case 3
-                    Excel.CreateExcelDocument(dhdDatabase.ReplaceNulls(dtsInput), strTargetFile)
+                    Excel.CreateExcelDocument(dhdDatabase.ConvertToText(dtsInput), strTargetFile)
                 Case Else
                     'unknown filetype, do nothing
                     blnShowFile = False
@@ -961,7 +961,7 @@ Module Common
 
     Friend Function CheckSqlVersion(dhdConnect As DataHandler.db) As Boolean
         Try
-            Dim intSqlVersion As Integer = CoreData.GetSqlVersion(dhdConnect)
+            Dim intSqlVersion As Integer = SeqData.GetSqlVersion(dhdConnect)
             Select Case intSqlVersion
                 Case 0
                     MessageBox.Show("SQL Server not found or not accessible" & Environment.NewLine & "Please check your settings")
