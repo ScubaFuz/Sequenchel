@@ -55,6 +55,8 @@ Partial Class frmImport
         Me.chkUploadTable = New System.Windows.Forms.CheckBox()
         Me.dgvImport = New Sequenchel.usrDataGridView()
         Me.btnUploadTable = New System.Windows.Forms.Button()
+        Me.chkCovertToText = New System.Windows.Forms.CheckBox()
+        Me.chkCovertToNull = New System.Windows.Forms.CheckBox()
         CType(Me.dgvImport, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -375,11 +377,35 @@ Partial Class frmImport
         Me.btnUploadTable.Text = "Upload currently selected Table"
         Me.btnUploadTable.UseVisualStyleBackColor = True
         '
+        'chkCovertToText
+        '
+        Me.chkCovertToText.AutoSize = True
+        Me.chkCovertToText.Location = New System.Drawing.Point(240, 63)
+        Me.chkCovertToText.Margin = New System.Windows.Forms.Padding(2)
+        Me.chkCovertToText.Name = "chkCovertToText"
+        Me.chkCovertToText.Size = New System.Drawing.Size(139, 17)
+        Me.chkCovertToText.TabIndex = 50
+        Me.chkCovertToText.Text = "Convert All Data to Text"
+        Me.chkCovertToText.UseVisualStyleBackColor = True
+        '
+        'chkCovertToNull
+        '
+        Me.chkCovertToNull.AutoSize = True
+        Me.chkCovertToNull.Location = New System.Drawing.Point(386, 63)
+        Me.chkCovertToNull.Margin = New System.Windows.Forms.Padding(2)
+        Me.chkCovertToNull.Name = "chkCovertToNull"
+        Me.chkCovertToNull.Size = New System.Drawing.Size(167, 17)
+        Me.chkCovertToNull.TabIndex = 51
+        Me.chkCovertToNull.Text = "Convert Empty cells to DBNull"
+        Me.chkCovertToNull.UseVisualStyleBackColor = True
+        '
         'frmImport
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(777, 753)
+        Me.Controls.Add(Me.chkCovertToNull)
+        Me.Controls.Add(Me.chkCovertToText)
         Me.Controls.Add(Me.btnUploadTable)
         Me.Controls.Add(Me.chkUploadTable)
         Me.Controls.Add(Me.lblTableNameText)
@@ -453,4 +479,6 @@ Partial Class frmImport
     Friend WithEvents lblTableNameText As System.Windows.Forms.Label
     Friend WithEvents chkUploadTable As System.Windows.Forms.CheckBox
     Friend WithEvents btnUploadTable As System.Windows.Forms.Button
+    Friend WithEvents chkCovertToText As System.Windows.Forms.CheckBox
+    Friend WithEvents chkCovertToNull As System.Windows.Forms.CheckBox
 End Class

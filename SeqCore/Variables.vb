@@ -14,6 +14,8 @@
     Private _LimitLookupLists As Boolean = True
     Private _LimitLookupListsCount As Integer = 100
     Private _IncludeDate As Boolean = False
+    Private _ConvertToText As Boolean = False
+    Private _ConvertToNull As Boolean = False
 
     Public Property DebugMode() As Boolean
         Get
@@ -132,6 +134,23 @@
         End Set
     End Property
 
+    Public Property ConvertToText() As Boolean
+        Get
+            Return _ConvertToText
+        End Get
+        Set(ByVal Value As Boolean)
+            _ConvertToText = Value
+        End Set
+    End Property
+
+    Public Property ConvertToNull() As Boolean
+        Get
+            Return _ConvertToNull
+        End Get
+        Set(ByVal Value As Boolean)
+            _ConvertToNull = Value
+        End Set
+    End Property
 
 #End Region
 

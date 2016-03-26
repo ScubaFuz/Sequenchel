@@ -157,7 +157,7 @@ Public Class frmSequenchel
 
     Private Sub ShowImportForm()
         Dim frmImportForm As New frmImport
-        frmImportForm.Show(Me)
+        frmImportForm.Show()
     End Sub
 
     Private Sub ShowSmartUpdateForm()

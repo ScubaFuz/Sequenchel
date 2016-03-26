@@ -2,6 +2,7 @@
 Imports DocumentFormat.OpenXml.Spreadsheet
 Imports DocumentFormat.OpenXml
 Imports System.Data.OleDb
+Imports System.Text.RegularExpressions
 
 Public Class Excel
 
@@ -333,6 +334,7 @@ Public Class Excel
 
     Public Function ReadXlsxFile(strFilePath As String) As DataSet
         Dim dstOutput As New DataSet
+        Dim ColumnList As New List(Of String)
 
         'Open the Excel file in Read Mode using OpenXml.
         Using doc As SpreadsheetDocument = SpreadsheetDocument.Open(strFilePath, False)
@@ -356,17 +358,24 @@ Public Class Excel
                     If row.RowIndex.Value = 1 Then
                         For Each cell As Cell In row.Descendants(Of Cell)()
                             dt.Columns.Add(GetValue(doc, cell))
+                            ColumnList.Add(GetColumnName(cell.CellReference))
                         Next
                     Else
                         'Add rows to DataTable.
                         dt.Rows.Add()
-                        Dim i As Integer = 0
+                        'Dim i As Integer = 0
                         For Each cell As Cell In row.Descendants(Of Cell)()
-                            'Dim strReference As String = cell.CellReference
+                            Dim strColReference As String = GetColumnName(cell.CellReference)
+                            If ColumnList.Contains(strColReference) Then
+                                Dim intCol As Integer = ColumnList.FindIndex(Function(value As String)
+                                                                                 Return value = strColReference
+                                                                             End Function)
+                                dt.Rows(dt.Rows.Count - 1)(intCol) = GetValue(doc, cell)
+                                'dt.Rows(dt.Rows.Count - 1)(i) = GetValue(doc, cell)
+                            End If
                             'Dim strCellValue As String = cell.CellValue.InnerText.ToString
                             'Dim strValue As String = GetValue(doc, cell)
-                            dt.Rows(dt.Rows.Count - 1)(i) = GetValue(doc, cell)
-                            i += 1
+                            'i += 1
                         Next
                     End If
                 Next
@@ -375,6 +384,14 @@ Public Class Excel
         End Using
 
         Return dstOutput
+    End Function
+
+    Private Function GetColumnName(strInput As String) As String
+        Dim m As Match = Regex.Match(strInput, "^\D+")
+        If m.Success Then
+            Return m.Value
+        End If
+        Return Nothing
     End Function
 
     Private Function GetValue(doc As SpreadsheetDocument, cell As Cell) As String

@@ -13,7 +13,7 @@ Module SeqCmd
 
     Friend RunReport As Boolean = False
     Friend RunImport As Boolean = False
-    Friend ConvertToText As Boolean = False
+    'Friend ConvertToText As Boolean = False
     Friend ImportTable As String = ""
 
     Dim lstConnections As New List(Of String)
@@ -47,7 +47,7 @@ Module SeqCmd
             Dim dtsImport As DataSet = SeqData.Excel.ImportExcelFile(SeqData.dhdText.ImportFile)
             If dtsImport Is Nothing Then Environment.Exit(0)
             SeqData.dhdConnection.DataTableName = SeqData.curStatus.Table
-            Dim intRecords As Integer = SeqData.SaveToDatabase(dtsImport, ConvertToText)
+            Dim intRecords As Integer = SeqData.SaveToDatabase(SeqData.dhdConnection, dtsImport, SeqData.curVar.ConvertToText)
             If intRecords = -1 Then
                 Console.WriteLine(SeqData.dhdConnection.errormessage)
                 Console.ReadLine()
@@ -117,7 +117,7 @@ Module SeqCmd
                     SeqData.dhdText.ImportFile = strInput
                 Case "/converttotext"
                     'Export the report to the chosen file
-                    ConvertToText = strInput
+                    SeqData.curVar.ConvertToText = strInput
             End Select
         Next
 

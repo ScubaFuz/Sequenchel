@@ -397,23 +397,22 @@ Public Class Data
         Return FormatFileDate
     End Function
 
-    Public Function SaveToDatabase(dtsInput As DataSet, Optional ConvertToText As Boolean = False) As Integer
+    Public Function SaveToDatabase(ByVal dhdConnect As DataHandler.db, dtsInput As DataSet, Optional ConvertToText As Boolean = False, Optional ConvertToNull As Boolean = False) As Integer
         Dim intRecordsAffected As Integer = 0
         Dim intReturn As Integer = 0
 
         Try
-            For Each Table As DataTable In dtsInput.Tables
+            For Each dttInput As DataTable In dtsInput.Tables
                 Dim blnExport As Boolean = True
-                If Table.ExtendedProperties.Count > 0 Then
-                    If Table.ExtendedProperties.ContainsKey("ExportTable") = True Then
-                        If Table.ExtendedProperties("ExportTable") = "False" Then
+                If dttInput.ExtendedProperties.Count > 0 Then
+                    If dttInput.ExtendedProperties.ContainsKey("ExportTable") = True Then
+                        If dttInput.ExtendedProperties("ExportTable") = "False" Then
                             blnExport = False
                         End If
                     End If
                 End If
                 If blnExport = True Then
-                    If ConvertToText = True Then Table = dhdConnection.ConvertToText(Table)
-                    intReturn = UploadSqlData(Table)
+                    intReturn = UploadSqlData(dhdConnect, dttInput, ConvertToText, ConvertToNull)
                     If intReturn = -1 Then
                         Return -1
                     Else
@@ -424,29 +423,31 @@ Public Class Data
             'intRecordsAffected = dhdDB.UploadSqlData(dgvImport.DataSource)
             Return intRecordsAffected
         Catch ex As Exception
-            dhdConnection.dbMessage = "Export to database failed. Check if the columns match and try again. If you are importing more than 1 table, make sure they have identical columns" & ex.Message
+            dhdConnect.dbMessage = "Export to database failed. Check if the columns match and try again. If you are importing more than 1 table, make sure they have identical columns" & ex.Message
             Return -1
         End Try
         Return intRecordsAffected
     End Function
 
-    Public Function UploadSqlData(ByVal objDataTable As DataTable) As Integer
+    Public Function UploadSqlData(ByVal dhdConnect As DataHandler.db, ByVal dttInput As DataTable, Optional ConvertToText As Boolean = False, Optional ConvertToNull As Boolean = False) As Integer
         Dim intRecordsAffected As Integer = 0
-        Dim bcp As System.Data.SqlClient.SqlBulkCopy = New System.Data.SqlClient.SqlBulkCopy(dhdConnection.SqlConnection)
-        If dhdConnection.SqlConnection.State = ConnectionState.Closed Then dhdConnection.SqlConnection.Open()
-        bcp.DestinationTableName = dhdConnection.DataTableName
-        Dim reader As DataTableReader = objDataTable.CreateDataReader()
-        intRecordsAffected = objDataTable.Rows.Count
+        intRecordsAffected = dttInput.Rows.Count
         Try
+            Dim bcp As System.Data.SqlClient.SqlBulkCopy = New System.Data.SqlClient.SqlBulkCopy(dhdConnect.SqlConnection)
+            If dhdConnect.SqlConnection.State = ConnectionState.Closed Then dhdConnect.SqlConnection.Open()
+            bcp.DestinationTableName = dhdConnect.DataTableName
+            If ConvertToText = True Then dttInput = dhdConnect.ConvertToText(dttInput)
+            If ConvertToNull = True Then dttInput = dhdConnect.EmptyToNull(dttInput)
+            Dim reader As DataTableReader = dttInput.CreateDataReader()
             bcp.WriteToServer(reader)
         Catch ex As Exception
-            dhdConnection.ErrorMessage = ex.Message
-            dhdConnection.ErrorLevel = -1
+            dhdConnect.ErrorMessage = ex.Message
+            dhdConnect.ErrorLevel = -1
             intRecordsAffected = -1
         End Try
         'bcp.Close()
         Try
-            If dhdConnection.SqlConnection.State = ConnectionState.Open Then dhdConnection.SqlConnection.Close()
+            If dhdConnect.SqlConnection.State = ConnectionState.Open Then dhdConnect.SqlConnection.Close()
         Catch ex As Exception
         End Try
         Return intRecordsAffected
