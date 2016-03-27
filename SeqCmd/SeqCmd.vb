@@ -44,7 +44,7 @@ Module SeqCmd
         LoadTables()
 
         If RunImport = True And SeqData.dhdText.ImportFile.Length > 0 And SeqData.curStatus.Table.Length > 0 Then
-            Dim dtsImport As DataSet = SeqData.Excel.ImportExcelFile(SeqData.dhdText.ImportFile)
+            Dim dtsImport As DataSet = SeqData.ImportFile(SeqData.dhdText.ImportFile, SeqData.curVar.HasHeaders, SeqData.curVar.Delimiter)
             If dtsImport Is Nothing Then Environment.Exit(0)
             SeqData.dhdConnection.DataTableName = SeqData.curStatus.Table
             Dim intRecords As Integer = SeqData.SaveToDatabase(SeqData.dhdConnection, dtsImport, SeqData.curVar.ConvertToText)
@@ -59,7 +59,7 @@ Module SeqCmd
             Dim strQuery As String = SeqData.ReportQueryBuild(xmlReports, xmlTables, SeqData.curStatus.Report, SeqData.curVar.DateTimeStyle)
             Dim dtsData As DataSet = SeqData.QueryDb(SeqData.dhdConnection, strQuery, True, 5)
             If dtsData Is Nothing Then Environment.Exit(0)
-            SeqData.ExportFile(dtsData, SeqData.dhdText.ExportFile, False)
+            SeqData.ExportFile(dtsData, SeqData.dhdText.ExportFile, False, SeqData.curVar.HasHeaders, SeqData.curVar.Delimiter)
         End If
     End Sub
 
@@ -118,6 +118,15 @@ Module SeqCmd
                 Case "/converttotext"
                     'Export the report to the chosen file
                     SeqData.curVar.ConvertToText = strInput
+                Case "/converttonull"
+                    'Export the report to the chosen file
+                    SeqData.curVar.ConvertToNull = strInput
+                Case "/hasheaders"
+                    'Export the report to the chosen file
+                    SeqData.curVar.HasHeaders = strInput
+                Case "/delimiter"
+                    'Export the report to the chosen file
+                    SeqData.curVar.Delimiter = strInput
             End Select
         Next
 

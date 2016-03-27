@@ -1,5 +1,9 @@
 Version 3.7.0
-New: Added Commandline options to export a report or import an Excel file without user intervention.
+New: Added Commandline options to export a report or import a file without user intervention.
+New: Export to CSV (text) option.
+New: Import XML option.
+New: Import CSV (txt) files option.
+Fixed: Importing Excel sheets with empty values now works correctly.
 
 Version 3.6.0
 New: Added SmartUpdate for easy Datawarehouse building.

@@ -752,63 +752,14 @@ Module Common
         Return Nothing
     End Function
 
-    'Friend Sub XmlExportListView(lvwInput As ListView)
-    '    'Create xml file
-    '    Dim xmlDoc As XmlDocument = dhdText.CreateBasicXmlDocument
-    '    'Dim xmlDec As XmlDeclaration = xmlDoc.CreateXmlDeclaration("1.0", "utf-8", "yes")
-    '    'xmlDoc.InsertBefore(xmlDec, xmlDoc.DocumentElement)
-    '    Dim RootNode As XmlElement = xmlDoc.CreateElement("Sequenchel")
-    '    xmlDoc.AppendChild(RootNode)
-
-    '    'Add parent Node
-    '    Dim ParentNode As XmlElement = xmlDoc.CreateElement("Servers")
-    '    'ParentNode.SetAttribute("Name", cbxLanguage.Text)
-    '    xmlDoc.DocumentElement.AppendChild(ParentNode)
-
-    '    'Add Items to parentnode
-    '    For Each lanItem In lvwInput.Items
-    '        Dim ItemNode As XmlElement = xmlDoc.CreateElement("Server")
-
-    '        For intHeader As Integer = 0 To lvwInput.Columns.Count - 1
-    '            Dim Childnode As XmlElement = xmlDoc.CreateElement(lvwInput.Columns(intHeader).Text)
-    '            Dim ItemText As XmlText = xmlDoc.CreateTextNode(lanItem.SubItems(intHeader).Text)
-    '            ItemNode.AppendChild(Childnode)
-    '            Childnode.AppendChild(ItemText)
-    '        Next
-    '        ParentNode.AppendChild(ItemNode)
-    '    Next
-
-    '    Using sw As New System.IO.StringWriter()
-    '        ' Make the XmlTextWriter to format the XML.
-    '        Using xml_writer As New XmlTextWriter(sw)
-    '            xml_writer.Formatting = Formatting.Indented
-    '            xmlDoc.WriteTo(xml_writer)
-    '            xml_writer.Flush()
-
-    '            Try
-    '                'get the filename and location to write to
-    '                Dim sfdFile As New SaveFileDialog
-    '                sfdFile.Filter = "Sequenchel File (*.xml)|*.xml"
-    '                sfdFile.ShowDialog()
-
-    '                'Write the XML to disk
-    '                dhdText.CreateFile(sw.ToString(), sfdFile.FileName)
-    '            Catch ex As Exception
-    '                WriteLog(ex.Message, 1)
-    '            End Try
-    '        End Using
-    '    End Using
-
-    'End Sub
-
-    Friend Sub ExportFile(dtsInput As DataSet, strFileName As String, blnShowFile As Boolean)
+    Friend Sub ExportFile(dtsInput As DataSet, strFileName As String, blnShowFile As Boolean, Optional blnHasHeaders As Boolean = True, Optional Delimiter As String = ",", Optional QuoteValues As Boolean = False)
         If CurVar.IncludeDate = True Then
             strFileName = strFileName & "_" & SeqData.FormatFileDate(Now)
         End If
 
         Dim sfdFile As New SaveFileDialog
         sfdFile.FileName = strFileName
-        sfdFile.Filter = "XML File (*.xml)|*.xml|Excel 2007 file (*.xlsx)|*.xlsx|Excel 2007 Text file(*.xlsx)|*.xlsx"
+        sfdFile.Filter = "Excel 2007 file (*.xlsx)|*.xlsx|Excel 2007 Text file(*.xlsx)|*.xlsx|XML File (*.xml)|*.xml|Text File (*.csv, *.txt)|*.csv;*.txt"
         sfdFile.FilterIndex = 1
         sfdFile.RestoreDirectory = True
         sfdFile.OverwritePrompt = True
@@ -819,15 +770,17 @@ Module Common
 
         CursorControl("Wait")
         Dim strTargetFile As String = sfdFile.FileName
-        Dim strExtension As String = sfdFile.FileName.Substring(sfdFile.FileName.LastIndexOf(".") + 1, sfdFile.FileName.Length - (sfdFile.FileName.LastIndexOf(".") + 1))
+        'Dim strExtension As String = sfdFile.FileName.Substring(sfdFile.FileName.LastIndexOf(".") + 1, sfdFile.FileName.Length - (sfdFile.FileName.LastIndexOf(".") + 1))
         Try
             Select Case sfdFile.FilterIndex
                 Case 1
-                    dhdText.ExportDataSetToXML(dhdDatabase.ConvertToText(dtsInput), strTargetFile)
-                Case 2
                     Excel.CreateExcelDocument(dtsInput, strTargetFile)
-                Case 3
+                Case 2
                     Excel.CreateExcelDocument(dhdDatabase.ConvertToText(dtsInput), strTargetFile)
+                Case 3
+                    dhdText.ExportDataSetToXML(dhdDatabase.ConvertToText(dtsInput), strTargetFile)
+                Case 4
+                    dhdText.DataSetToCsv(dtsInput.Tables(0), strTargetFile, blnHasHeaders, Delimiter, QuoteValues)
                 Case Else
                     'unknown filetype, do nothing
                     blnShowFile = False
@@ -849,22 +802,6 @@ Module Common
     Friend Function CheckElement(ByVal xmlDoc As XDocument, ByVal name As XName) As Boolean
         Return xmlDoc.Descendants(name).Any()
     End Function
-
-    'Friend Function LoadItemList(xmlInput As XmlDocument, strSearchItem As String, strSearchField As String, strSearchValue As String, strTargetItem As String, strDisplayItem As String)
-    '    Dim xPNode As System.Xml.XmlNode = dhdText.FindXmlNode(xmlInput, strSearchItem, strSearchField, strSearchValue)
-    '    Dim blnSearchValueExists As Boolean = False
-    '    If Not xPNode Is Nothing Then
-    '        Dim ReturnValue As New List(Of String)
-    '        Dim xNode As System.Xml.XmlNode
-    '        For Each xNode In xPNode.SelectNodes(".//" & strTargetItem)
-    '            ReturnValue.Add(xNode.Item(strDisplayItem).InnerText)
-    '            'If xNode.Item("ConnectionName").InnerText = CurStatus.Connection Then blnSearchValueExists = True
-    '        Next
-    '        'If blnSearchValueExists = False Then CurStatus.Connection = CurVar.ConnectionDefault
-    '        Return ReturnValue
-    '    End If
-    '    Return Nothing
-    'End Function
 
     Friend Sub DisplayXmlFile(ByVal xmlDoc As Xml.XmlDocument, ByVal tvw As TreeView)
         tvw.Nodes.Clear()
@@ -1220,63 +1157,6 @@ Module Common
 
         Return intReturn
     End Function
-    'Friend Sub LoadLookupList(cbxField As ComboField, blnRefine As Boolean, blnUseOtherLookups As Boolean)
-    '    If dhdConnection.DataBaseOnline = True Then
-    '        Dim strQuerySelect As String = "SELECT DISTINCT "
-    '        Dim strQueryFrom As String = " FROM "
-    '        Dim strQueryWhere As String = " WHERE 1=1 "
-    '        Dim strQueryOrder As String = " ORDER BY "
-    '        strQuery = ""
-
-    '        If CurVar.LimitLookupLists = True Then
-    '            strQuerySelect &= "TOP " & CurVar.LimitLookupListsCount & " "
-    '        End If
-    '        If cbxField.FieldCategory = 4 Or cbxField.FieldCategory = 5 Then
-    '            strQuerySelect &= "[" & cbxField.Name.Substring(0, cbxField.Name.LastIndexOf(".")).Replace(".", "].[") & "].[" & cbxField.FieldRelatedField & "],"
-    '        End If
-
-    '        strQuerySelect &= "[" & cbxField.Name.Replace(".", "].[") & "]"
-    '        strQueryFrom &= "[" & cbxField.Name.Substring(0, cbxField.Name.LastIndexOf(".")).Replace(".", "].[") & "] "
-    '        strQueryOrder &= "[" & cbxField.Name.Replace(".", "].[") & "] "
-
-    '        If blnRefine = True And cbxField.Text.Length > 0 Then
-    '            strQueryWhere &= " AND [" & cbxField.FieldName & "] LIKE '%" & cbxField.Text & "%'"
-    '        End If
-    '        If cbxField.FieldCategory = 3 And blnUseOtherLookups = True Then
-    '            For intFieldCount As Integer = 0 To tblTable.Count - 1
-    '                If tblTable.Item(intFieldCount).BackColor = clrMarked And tblTable.Item(intFieldCount).FieldName <> cbxField.FieldName Then
-    '                    strQueryWhere &= " AND [" & tblTable.Item(intFieldCount).FieldName & "] = '" & tblTable.Item(intFieldCount).Text & "'"
-    '                End If
-    '            Next
-    '        End If
-
-
-    '        strQuery = strQuerySelect & strQueryFrom & strQueryWhere & strQueryOrder
-    '        Try
-    '            Dim objData As DataSet = QueryDb(dhdConnection, strQuery, True)
-    '            If objData Is Nothing Then Exit Sub
-    '            If objData.Tables.Count = 0 Then Exit Sub
-    '            If objData.Tables(0).Rows.Count = 0 Then Exit Sub
-
-    '            cbxField.Items.Clear()
-    '            For intRowCount1 As Integer = 0 To objData.Tables(0).Rows.Count - 1
-    '                If objData.Tables(0).Columns.Count = 1 Then
-    '                    cbxField.Items.Add(objData.Tables.Item(0).Rows(intRowCount1).Item(0))
-    '                ElseIf objData.Tables(0).Columns.Count = 2 Then
-    '                    cbxField.Items.Add(objData.Tables.Item(0).Rows(intRowCount1).Item(0) & " | " & objData.Tables.Item(0).Rows(intRowCount1).Item(1))
-    '                End If
-    '            Next
-    '            cbxField.Focus()
-    '            'cbxField.AutoCompleteMode = AutoCompleteMode.Suggest
-    '            'cbxField.AutoCompleteSource = AutoCompleteSource.ListItems
-    '            cbxField.SelectionStart = cbxField.Text.Length
-    '        Catch ex As Exception
-    '            WriteLog(ex.Message, 1)
-    '        End Try
-
-    '    End If
-
-    'End Sub
 
 #End Region
 
@@ -1782,116 +1662,6 @@ Module Common
         End Select
     End Sub
 
-    'Friend Function ProcessDefaultValue(strValue As String) As String
-    '    Dim strReturn As String = strValue
-    '    Dim intFirstBracket As Integer = strValue.IndexOf("(")
-    '    Dim intLastBracket As Integer = strValue.LastIndexOf(")")
-    '    Dim strInput As String = ""
-
-    '    If intFirstBracket > 0 And intLastBracket > 0 Then
-
-    '        If intLastBracket - intFirstBracket > 1 Then
-    '            strInput = strValue.Substring(intFirstBracket + 1, intLastBracket - (intFirstBracket + 1))
-    '        End If
-
-    '        Select Case strValue.Substring(0, strValue.IndexOf("(") + 1).ToLower
-    '            Case "now("
-    '                Dim dtmOutput As DateTime = DateTime.Now
-    '                Try
-    '                    dtmOutput = AlterDate(dtmOutput, strInput, "HOUR")
-    '                Catch ex As Exception
-    '                End Try
-    '                strReturn = dtmOutput.ToString("yyyy-MM-dd HH:mm:ss")
-    '            Case "date("
-    '                Dim dtmOutput As DateTime = Date.Today
-    '                Try
-    '                    dtmOutput = AlterDate(dtmOutput, strInput, "DAY")
-    '                Catch ex As Exception
-    '                End Try
-    '                strReturn = FormatFileDate(dtmOutput, 120)
-    '            Case "time("
-    '                Dim dtmOutput As DateTime = DateTime.Now
-    '                Try
-    '                    dtmOutput = AlterDate(dtmOutput, strInput, "MINUTE")
-    '                    strReturn = dtmOutput.ToString("HH:mm:ss")
-    '                Catch ex As Exception
-    '                    strReturn = TimeOfDay.ToString("HH:mm:ss")
-    '                End Try
-    '            Case "yearstart("
-    '                Dim dtmOutput As New DateTime(DateTime.Now.Year, 1, 1)
-    '                Try
-    '                    dtmOutput = AlterDate(dtmOutput, strInput, "YEAR")
-    '                Catch ex As Exception
-    '                    strReturn = FormatFileDate(dtmOutput, 120)
-    '                End Try
-    '                strReturn = FormatFileDate(dtmOutput, 120)
-    '            Case "yearend("
-    '                Dim dtmOutput As New DateTime(DateTime.Now.Year, 1, 1)
-    '                dtmOutput = dtmOutput.AddYears(1).AddDays(-1)
-    '                Try
-    '                    dtmOutput = AlterDate(dtmOutput, strInput, "YEAR")
-    '                Catch ex As Exception
-    '                    strReturn = FormatFileDate(dtmOutput, 120)
-    '                End Try
-    '                strReturn = FormatFileDate(dtmOutput, 120)
-    '            Case "monthstart("
-    '                Dim dtmOutput As DateTime = Date.Today.AddDays(-Date.Today.Day + 1)
-    '                Try
-    '                    dtmOutput = AlterDate(dtmOutput, strInput, "MONTH")
-    '                Catch ex As Exception
-    '                    strReturn = FormatFileDate(dtmOutput, 120)
-    '                End Try
-    '                strReturn = FormatFileDate(dtmOutput, 120)
-    '            Case "monthend("
-    '                Dim dtmOutput As DateTime = Date.Today.AddMonths(1).AddDays(-Date.Today.Day)
-    '                Dim IntAddMonths As Integer = 1
-
-    '                Try
-    '                    dtmOutput = AlterDate(dtmOutput, strInput, "MONTH")
-    '                    dtmOutput = dtmOutput.AddMonths(1).AddDays(-dtmOutput.Day)
-    '                Catch ex As Exception
-    '                    strReturn = FormatFileDate(dtmOutput, 120)
-    '                End Try
-    '                strReturn = FormatFileDate(dtmOutput, 120)
-
-    '            Case "weekstart("
-    '                Dim IntAddWeeks As Integer = 0
-    '                Dim dtmOutput As DateTime = Date.Today
-    '                Dim dayIndex As Integer = dtmOutput.DayOfWeek
-    '                If dayIndex < DayOfWeek.Monday Then
-    '                    dayIndex += 7 'Monday is first day of week, no day of week should have a smaller index
-    '                End If
-    '                Dim dayDiff As Integer = dayIndex - DayOfWeek.Monday
-    '                dtmOutput = dtmOutput.AddDays(-dayDiff)
-    '                Try
-    '                    dtmOutput = AlterDate(dtmOutput, strInput, "WEEK")
-    '                Catch ex As Exception
-    '                End Try
-    '                strReturn = FormatFileDate(dtmOutput, 120)
-    '            Case "weekend("
-    '                Dim IntAddWeeks As Integer = 0
-    '                Dim dtmOutput As DateTime = Date.Today
-    '                Dim dayIndex As Integer = dtmOutput.DayOfWeek
-    '                If dayIndex < DayOfWeek.Monday Then
-    '                    dayIndex += 7 'Monday is first day of week, no day of week should have a smaller index
-    '                End If
-    '                Dim dayDiff As Integer = dayIndex - DayOfWeek.Monday
-    '                dtmOutput = dtmOutput.AddDays(-dayDiff).AddDays(6)
-
-    '                Try
-    '                    dtmOutput = AlterDate(dtmOutput, strInput, "WEEK")
-    '                Catch ex As Exception
-    '                End Try
-    '                strReturn = FormatFileDate(dtmOutput, 120)
-    '            Case "pi("
-    '                strReturn = "3.1415926535897932384626433832795"
-    '            Case Else
-    '                'nothing
-    '        End Select
-    '    End If
-    '    Return strReturn
-    'End Function
-
     Private Function AlterDate(dtmInput As DateTime, strInput As String, strDefault As String) As DateTime
         Dim intComma As Integer = 0
         Dim strStep As String = ""
@@ -2026,73 +1796,6 @@ Module Common
             dgvTarget.Columns(i).Width = colw
         Next
     End Sub
-
-    'Friend Function Encrypt(strPassword As String) As String
-    '    Dim x As New System.Security.Cryptography.MD5CryptoServiceProvider()
-    '    Dim bs As Byte() = System.Text.Encoding.UTF8.GetBytes(strPassword)
-    '    bs = x.ComputeHash(bs)
-    '    Dim s As New System.Text.StringBuilder()
-    '    For Each b As Byte In bs
-    '        s.Append(b.ToString("x2").ToLower())
-    '    Next
-    '    Return s.ToString()
-    'End Function
-
-    'Friend Function ReplaceNulls(dtsInput As DataSet) As DataSet
-    '    Dim dtsOutput As New DataSet
-    '    Dim row As DataRow
-    '    Dim col As DataColumn
-
-    '    For Each Table In dtsInput.Tables
-    '        Dim newTable As DataTable = Table.clone
-    '        For Each colOrg In newTable.Columns
-    '            colOrg.DataType = System.Type.GetType("System.String")
-    '        Next
-    '        For Each rowOrg In Table.rows
-    '            newTable.ImportRow(rowOrg)
-    '        Next
-    '        dtsOutput.Tables.Add(newTable)
-
-    '        For Each row In newTable.Rows
-    '            For Each col In newTable.Columns
-    '                If row.IsNull(col) Then
-    '                    Select Case Type.GetTypeCode(col.DataType)
-    '                        Case TypeCode.Int32
-    '                            row.Item(col) = 0
-    '                        Case TypeCode.String
-    '                            row.Item(col) = ""
-    '                        Case Else
-    '                            row.Item(col) = ""
-    '                    End Select
-    '                End If
-    '            Next
-    '        Next
-    '    Next
-    '    Return dtsOutput
-    'End Function
-
-    'Friend Function ComboFieldMultiColumnCreate(cbxInput As ComboField, dtsInput As DataSet)
-    '    'Dim strName As String = "dt" & cbxInput.Name
-    '    Dim dtFormats As DataTable = New DataTable()
-    '    dtFormats.Columns.Add("ID", GetType(Integer))
-    '    dtFormats.Columns.Add("Name", GetType(String))
-
-    '    'CurStatus.SuspendActions = True
-    '    'dtFormats.Rows.Add(1, "Name")
-    '    For intRowCount1 As Integer = 0 To dtsInput.Tables(0).Rows.Count - 1
-    '        dtFormats.Rows.Add(dtsInput.Tables.Item(0).Rows(intRowCount1).Item(0), dtsInput.Tables.Item(0).Rows(intRowCount1).Item(1))
-    '    Next
-    '    'CurStatus.SuspendActions = False
-
-    '    cbxInput.DataSource = dtFormats
-    '    cbxInput.DisplayMember = "Name"
-    '    cbxInput.ValueMember = "ID"
-
-
-    '    cbxInput.DrawMode = DrawMode.OwnerDrawFixed
-    '    Return cbxInput
-    'End Function
-
 
 
 End Module

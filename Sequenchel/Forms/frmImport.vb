@@ -1,10 +1,4 @@
 ﻿
-'Imports System.IO
-'Imports System.Data
-'Imports DocumentFormat.OpenXml.Packaging
-'Imports DocumentFormat.OpenXml.Spreadsheet
-'Imports System.Data.OleDb
-
 Public Class frmImport
 
     Private Sub frmImport_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -55,8 +49,8 @@ Public Class frmImport
     Private Sub SelectFile()
         Dim ofdFile As New OpenFileDialog
         'sfdFile.FileName = strFileName
-        'sfdFile.Filter = "XML File (*.xml)|*.xml|XML Text File(*.xml)|*.xml|Excel 2007 file (*.xlsx)|*.xlsx|Excel 2007 Text file(*.xlsx)|*.xlsx"
-        ofdFile.Filter = "Excel file (*.xls, *.xlsx)|*.xls;*.xlsx"
+        'sfdFile.Filter = "XML File (*.xml)|*.xml|Excel 2007 file (*.xlsx)|*.xlsx|"
+        ofdFile.Filter = "All supported file types (*.xls, *.xlsx, *.xml, *.csv, *.txt)|*.xls;*.xlsx;*.xml;*.csv;*.txt|Excel file (*.xls, *.xlsx)|*.xls;*.xlsx|XML File (*.xml)|*.xml|Text File (*.csv, *.txt)|*.csv;*.txt"
         ofdFile.FilterIndex = 1
         ofdFile.RestoreDirectory = True
         'sfdFile.OverwritePrompt = True
@@ -71,16 +65,24 @@ Public Class frmImport
     End Sub
 
     Private Sub ImportFile()
-        dtsImport = Excel.ImportExcelFile(dhdText.ImportFile)
+        dtsImport = SeqData.ImportFile(dhdText.ImportFile, chkHasHeaders.Checked, txtDelimiter.Text)
+
+        If dtsImport Is Nothing Then
+            MessageBox.Show("File extension or delimiter not recognised." & Environment.NewLine & "Please try again or select a different file.")
+            Exit Sub
+        End If
+
         Try
             If dtsImport.Tables.Count > 0 Then
                 If chkScreen.Checked Then
                     DisplayData(0)
                 End If
                 UploadFile()
+            Else
+                MessageBox.Show("No data was loaded from the file." & Environment.NewLine & "Please check the file before trying again.")
             End If
         Catch ex As Exception
-            MessageBox.Show("there was an error importing the file" & Environment.NewLine & ex.Message)
+            MessageBox.Show("There was an error displaying or uploading the file." & Environment.NewLine & ex.Message)
         End Try
     End Sub
 
@@ -111,30 +113,29 @@ Public Class frmImport
 
     Private Sub UploadFile()
         If chkFile.Checked = True Then
-            ExportToFile()
+            ExportToFile(dtsImport)
         End If
         If chkDatabase.Checked = True Then
             UploadToDatabase(dtsImport)
         End If
     End Sub
 
-    Private Sub ExportToFile()
+    Private Sub ExportToFile(dtsUpload As DataSet)
         Try
-            Dim strExtension As String = txtFileName.Text.Substring(txtFileName.Text.LastIndexOf(".") + 1, txtFileName.Text.Length - (txtFileName.Text.LastIndexOf(".") + 1))
-            If strExtension.ToLower = "xml" Then
-                Dim dtsUpload As DataSet = dtsImport
-                If SeqData.curVar.ConvertToText = True Then
-                    dtsUpload = dhdConnection.ConvertToText(dtsUpload)
-                    'Dim dtsConvert As DataSet = dhdConnection.ConvertToText(dtsImport)
-                    'Else
-                    '    dhdText.ExportDataSetToXML(dtsImport, txtFileName.Text, False)
+            For intCount As Integer = dtsUpload.Tables.Count To 0 Step -1
+                If dtsUpload.Tables(intCount).ExtendedProperties.Count > 0 Then
+                    If dtsUpload.Tables(intCount).ExtendedProperties.ContainsKey("ExportTable") = True Then
+                        If dtsUpload.Tables(intCount).ExtendedProperties("ExportTable") = "False" Then
+                            dtsUpload.Tables.Remove(dtsUpload.Tables(intCount))
+                        End If
+                    End If
                 End If
-                If SeqData.curVar.ConvertToNull = True Then
-                    dtsUpload = dhdConnection.EmptyToNull(dtsUpload)
-                End If
-                dhdText.ExportDataSetToXML(dtsUpload, txtFileName.Text, False)
-            Else
-                MessageBox.Show("Only files with XML extension are allowed at this time.")
+            Next
+            If dtsUpload.Tables.Count > 0 Then
+                If SeqData.curVar.ConvertToText = True Then dtsUpload = dhdConnection.ConvertToText(dtsUpload)
+                If SeqData.curVar.ConvertToNull = True Then dtsUpload = dhdConnection.EmptyToNull(dtsUpload)
+
+                SeqData.ExportFile(dtsUpload, txtFileName.Text, False, chkHasHeaders.Checked, txtDelimiter.Text)
             End If
         Catch ex As Exception
             MessageBox.Show("There was an error writng to " & txtFileName.Text & Environment.NewLine & ex.Message)
@@ -164,68 +165,6 @@ Public Class frmImport
             lblStatusText.Text = intRecordsAffected & " rows uploaded"
         End If
     End Sub
-
-    'Private Sub SaveToDatabase(dtsInput As DataSet)
-    '    Dim intRecordsAffected As Integer = 0
-    '    Dim intReturn As Integer = 0
-
-    '    Try
-    '        For Each Table In dtsInput.Tables
-    '            Dim blnExport As Boolean = True
-    '            If Table.ExtendedProperties.Count > 0 Then
-    '                If Table.ExtendedProperties.ContainsKey("ExportTable") = True Then
-    '                    If Table.ExtendedProperties("ExportTable") = "False" Then
-    '                        blnExport = False
-    '                    End If
-    '                End If
-    '            End If
-    '            If blnExport = True Then
-    '                intReturn = UploadTable(Table)
-    '                If intReturn = -1 Then
-    '                    MessageBox.Show("Export to database failed. Check if the columns match and try again" & Environment.NewLine & "If you are importing more than 1 table, make sure they have identical columns")
-    '                    Exit Sub
-    '                Else
-    '                    intRecordsAffected += intReturn
-    '                End If
-    '            End If
-    '        Next
-    '        'intRecordsAffected = dhdDB.UploadSqlData(dgvImport.DataSource)
-    '        lblStatusText.Text = intRecordsAffected & " rows uploaded"
-    '    Catch ex As Exception
-    '        MessageBox.Show("Export to database failed. Check if the columns match and try again" & Environment.NewLine & "If you are importing more than 1 table, make sure they have identical columns" & Environment.NewLine & ex.Message)
-    '    End Try
-    'End Sub
-
-    'Private Function UploadTable(dttInput As DataTable) As Integer
-    '    Dim dhdDB As New DataHandler.db
-    '    Dim intRecordsAffected As Integer = 0
-
-    '    Try
-    '        dhdDB.DataLocation = txtServer.Text
-    '        dhdDB.DatabaseName = txtDatabase.Text
-    '        dhdDB.DataTableName = txtTable.Text
-    '        dhdDB.DataProvider = "SQL"
-    '        If chkWinAuth.Checked = True Then
-    '            dhdDB.LoginMethod = "Windows"
-    '        Else
-    '            dhdDB.LoginMethod = "SQL"
-    '        End If
-    '        dhdDB.LoginName = txtUser.Text
-    '        dhdDB.Password = txtPassword.Text
-
-    '        If SeqData.curVar.ConvertToText = True Then
-    '            Dim dttConvert As DataTable = dhdConnection.ConvertToText(dttInput)
-    '            intRecordsAffected = dhdDB.UploadSqlData(dttConvert)
-    '        Else
-    '            intRecordsAffected = dhdDB.UploadSqlData(dttInput)
-    '        End If
-
-    '    Catch ex As Exception
-    '        WriteLog("Uploading Table failed. " & ex.Message, 1)
-    '        Return -1
-    '    End Try
-    '    Return intRecordsAffected
-    'End Function
 
     Private Sub Checkfields()
         If chkDatabase.Checked = True Then
@@ -311,5 +250,18 @@ Public Class frmImport
 
     Private Sub chkCovertToNull_CheckedChanged(sender As Object, e As EventArgs) Handles chkCovertToNull.CheckedChanged
         SeqData.curVar.ConvertToNull = chkCovertToNull.Checked
+    End Sub
+
+    Private Sub txtDelimiter_MouseHover(sender As Object, e As EventArgs) Handles txtDelimiter.MouseHover
+        txtDelimiterShow.Text = txtDelimiter.Text
+        txtDelimiterShow.Visible = True
+    End Sub
+
+    Private Sub txtDelimiter_MouseLeave(sender As Object, e As EventArgs) Handles txtDelimiter.MouseLeave
+        txtDelimiterShow.Visible = False
+    End Sub
+
+    Private Sub txtDelimiter_TextChanged(sender As Object, e As EventArgs) Handles txtDelimiter.TextChanged
+        txtDelimiterShow.Text = txtDelimiter.Text
     End Sub
 End Class

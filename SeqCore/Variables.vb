@@ -16,6 +16,8 @@
     Private _IncludeDate As Boolean = False
     Private _ConvertToText As Boolean = False
     Private _ConvertToNull As Boolean = False
+    Private _HasHeaders As Boolean = True
+    Private _Delimiter As String = ","
 
     Public Property DebugMode() As Boolean
         Get
@@ -149,6 +151,24 @@
         End Get
         Set(ByVal Value As Boolean)
             _ConvertToNull = Value
+        End Set
+    End Property
+
+    Public Property HasHeaders() As Boolean
+        Get
+            Return _HasHeaders
+        End Get
+        Set(ByVal Value As Boolean)
+            _HasHeaders = Value
+        End Set
+    End Property
+
+    Public Property Delimiter() As String
+        Get
+            Return _Delimiter
+        End Get
+        Set(ByVal Value As String)
+            _Delimiter = Value
         End Set
     End Property
 

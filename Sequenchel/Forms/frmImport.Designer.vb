@@ -57,6 +57,10 @@ Partial Class frmImport
         Me.btnUploadTable = New System.Windows.Forms.Button()
         Me.chkCovertToText = New System.Windows.Forms.CheckBox()
         Me.chkCovertToNull = New System.Windows.Forms.CheckBox()
+        Me.chkHasHeaders = New System.Windows.Forms.CheckBox()
+        Me.lblTextDelimiter = New System.Windows.Forms.Label()
+        Me.txtDelimiter = New System.Windows.Forms.TextBox()
+        Me.txtDelimiterShow = New System.Windows.Forms.TextBox()
         CType(Me.dgvImport, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -97,7 +101,7 @@ Partial Class frmImport
         'lblPassword
         '
         Me.lblPassword.AutoSize = True
-        Me.lblPassword.Location = New System.Drawing.Point(568, 159)
+        Me.lblPassword.Location = New System.Drawing.Point(568, 173)
         Me.lblPassword.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
         Me.lblPassword.Name = "lblPassword"
         Me.lblPassword.Size = New System.Drawing.Size(53, 13)
@@ -107,7 +111,7 @@ Partial Class frmImport
         'lblUser
         '
         Me.lblUser.AutoSize = True
-        Me.lblUser.Location = New System.Drawing.Point(568, 136)
+        Me.lblUser.Location = New System.Drawing.Point(568, 150)
         Me.lblUser.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
         Me.lblUser.Name = "lblUser"
         Me.lblUser.Size = New System.Drawing.Size(60, 13)
@@ -120,7 +124,7 @@ Partial Class frmImport
         Me.chkWinAuth.Checked = True
         Me.chkWinAuth.CheckState = System.Windows.Forms.CheckState.Checked
         Me.chkWinAuth.Enabled = False
-        Me.chkWinAuth.Location = New System.Drawing.Point(570, 113)
+        Me.chkWinAuth.Location = New System.Drawing.Point(570, 127)
         Me.chkWinAuth.Margin = New System.Windows.Forms.Padding(2)
         Me.chkWinAuth.Name = "chkWinAuth"
         Me.chkWinAuth.Size = New System.Drawing.Size(160, 17)
@@ -131,7 +135,7 @@ Partial Class frmImport
         'lblTable
         '
         Me.lblTable.AutoSize = True
-        Me.lblTable.Location = New System.Drawing.Point(238, 159)
+        Me.lblTable.Location = New System.Drawing.Point(238, 173)
         Me.lblTable.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
         Me.lblTable.Name = "lblTable"
         Me.lblTable.Size = New System.Drawing.Size(65, 13)
@@ -141,7 +145,7 @@ Partial Class frmImport
         'lblDatabaseServerName
         '
         Me.lblDatabaseServerName.AutoSize = True
-        Me.lblDatabaseServerName.Location = New System.Drawing.Point(238, 114)
+        Me.lblDatabaseServerName.Location = New System.Drawing.Point(238, 128)
         Me.lblDatabaseServerName.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
         Me.lblDatabaseServerName.Name = "lblDatabaseServerName"
         Me.lblDatabaseServerName.Size = New System.Drawing.Size(118, 13)
@@ -151,7 +155,7 @@ Partial Class frmImport
         'lblDatabaseName
         '
         Me.lblDatabaseName.AutoSize = True
-        Me.lblDatabaseName.Location = New System.Drawing.Point(238, 136)
+        Me.lblDatabaseName.Location = New System.Drawing.Point(238, 150)
         Me.lblDatabaseName.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
         Me.lblDatabaseName.Name = "lblDatabaseName"
         Me.lblDatabaseName.Size = New System.Drawing.Size(82, 13)
@@ -161,7 +165,7 @@ Partial Class frmImport
         'lblFileName
         '
         Me.lblFileName.AutoSize = True
-        Me.lblFileName.Location = New System.Drawing.Point(174, 88)
+        Me.lblFileName.Location = New System.Drawing.Point(174, 102)
         Me.lblFileName.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
         Me.lblFileName.Name = "lblFileName"
         Me.lblFileName.Size = New System.Drawing.Size(54, 13)
@@ -171,7 +175,7 @@ Partial Class frmImport
         'txtFileName
         '
         Me.txtFileName.Enabled = False
-        Me.txtFileName.Location = New System.Drawing.Point(240, 86)
+        Me.txtFileName.Location = New System.Drawing.Point(240, 100)
         Me.txtFileName.Margin = New System.Windows.Forms.Padding(2)
         Me.txtFileName.Name = "txtFileName"
         Me.txtFileName.Size = New System.Drawing.Size(312, 20)
@@ -180,7 +184,7 @@ Partial Class frmImport
         'txtPassword
         '
         Me.txtPassword.Enabled = False
-        Me.txtPassword.Location = New System.Drawing.Point(632, 157)
+        Me.txtPassword.Location = New System.Drawing.Point(632, 171)
         Me.txtPassword.Margin = New System.Windows.Forms.Padding(2)
         Me.txtPassword.Name = "txtPassword"
         Me.txtPassword.PasswordChar = Global.Microsoft.VisualBasic.ChrW(42)
@@ -190,7 +194,7 @@ Partial Class frmImport
         'txtUser
         '
         Me.txtUser.Enabled = False
-        Me.txtUser.Location = New System.Drawing.Point(632, 134)
+        Me.txtUser.Location = New System.Drawing.Point(632, 148)
         Me.txtUser.Margin = New System.Windows.Forms.Padding(2)
         Me.txtUser.Name = "txtUser"
         Me.txtUser.Size = New System.Drawing.Size(110, 20)
@@ -199,7 +203,7 @@ Partial Class frmImport
         'txtTable
         '
         Me.txtTable.Enabled = False
-        Me.txtTable.Location = New System.Drawing.Point(360, 157)
+        Me.txtTable.Location = New System.Drawing.Point(360, 171)
         Me.txtTable.Margin = New System.Windows.Forms.Padding(2)
         Me.txtTable.Name = "txtTable"
         Me.txtTable.Size = New System.Drawing.Size(193, 20)
@@ -208,7 +212,7 @@ Partial Class frmImport
         'txtDatabase
         '
         Me.txtDatabase.Enabled = False
-        Me.txtDatabase.Location = New System.Drawing.Point(360, 134)
+        Me.txtDatabase.Location = New System.Drawing.Point(360, 148)
         Me.txtDatabase.Margin = New System.Windows.Forms.Padding(2)
         Me.txtDatabase.Name = "txtDatabase"
         Me.txtDatabase.Size = New System.Drawing.Size(193, 20)
@@ -217,7 +221,7 @@ Partial Class frmImport
         'txtServer
         '
         Me.txtServer.Enabled = False
-        Me.txtServer.Location = New System.Drawing.Point(360, 111)
+        Me.txtServer.Location = New System.Drawing.Point(360, 125)
         Me.txtServer.Margin = New System.Windows.Forms.Padding(2)
         Me.txtServer.Name = "txtServer"
         Me.txtServer.Size = New System.Drawing.Size(193, 20)
@@ -226,7 +230,7 @@ Partial Class frmImport
         'chkFile
         '
         Me.chkFile.AutoSize = True
-        Me.chkFile.Location = New System.Drawing.Point(29, 88)
+        Me.chkFile.Location = New System.Drawing.Point(29, 102)
         Me.chkFile.Margin = New System.Windows.Forms.Padding(2)
         Me.chkFile.Name = "chkFile"
         Me.chkFile.Size = New System.Drawing.Size(89, 17)
@@ -237,7 +241,7 @@ Partial Class frmImport
         'chkDatabase
         '
         Me.chkDatabase.AutoSize = True
-        Me.chkDatabase.Location = New System.Drawing.Point(29, 113)
+        Me.chkDatabase.Location = New System.Drawing.Point(29, 127)
         Me.chkDatabase.Margin = New System.Windows.Forms.Padding(2)
         Me.chkDatabase.Name = "chkDatabase"
         Me.chkDatabase.Size = New System.Drawing.Size(119, 17)
@@ -250,7 +254,7 @@ Partial Class frmImport
         Me.chkScreen.AutoSize = True
         Me.chkScreen.Checked = True
         Me.chkScreen.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.chkScreen.Location = New System.Drawing.Point(29, 63)
+        Me.chkScreen.Location = New System.Drawing.Point(29, 77)
         Me.chkScreen.Margin = New System.Windows.Forms.Padding(2)
         Me.chkScreen.Name = "chkScreen"
         Me.chkScreen.Size = New System.Drawing.Size(107, 17)
@@ -262,7 +266,7 @@ Partial Class frmImport
         '
         Me.chkCreateTable.AutoSize = True
         Me.chkCreateTable.Enabled = False
-        Me.chkCreateTable.Location = New System.Drawing.Point(29, 137)
+        Me.chkCreateTable.Location = New System.Drawing.Point(29, 151)
         Me.chkCreateTable.Margin = New System.Windows.Forms.Padding(2)
         Me.chkCreateTable.Name = "chkCreateTable"
         Me.chkCreateTable.Size = New System.Drawing.Size(87, 17)
@@ -272,7 +276,7 @@ Partial Class frmImport
         '
         'btnUploadFile
         '
-        Me.btnUploadFile.Location = New System.Drawing.Point(571, 83)
+        Me.btnUploadFile.Location = New System.Drawing.Point(571, 97)
         Me.btnUploadFile.Name = "btnUploadFile"
         Me.btnUploadFile.Size = New System.Drawing.Size(171, 23)
         Me.btnUploadFile.TabIndex = 40
@@ -301,7 +305,7 @@ Partial Class frmImport
         '
         'btnPreviousTable
         '
-        Me.btnPreviousTable.Location = New System.Drawing.Point(29, 185)
+        Me.btnPreviousTable.Location = New System.Drawing.Point(29, 199)
         Me.btnPreviousTable.Name = "btnPreviousTable"
         Me.btnPreviousTable.Size = New System.Drawing.Size(34, 23)
         Me.btnPreviousTable.TabIndex = 43
@@ -310,7 +314,7 @@ Partial Class frmImport
         '
         'btnNextTable
         '
-        Me.btnNextTable.Location = New System.Drawing.Point(177, 185)
+        Me.btnNextTable.Location = New System.Drawing.Point(177, 199)
         Me.btnNextTable.Name = "btnNextTable"
         Me.btnNextTable.Size = New System.Drawing.Size(34, 23)
         Me.btnNextTable.TabIndex = 44
@@ -320,7 +324,7 @@ Partial Class frmImport
         'lblTableNumber
         '
         Me.lblTableNumber.AutoSize = True
-        Me.lblTableNumber.Location = New System.Drawing.Point(84, 190)
+        Me.lblTableNumber.Location = New System.Drawing.Point(84, 204)
         Me.lblTableNumber.Name = "lblTableNumber"
         Me.lblTableNumber.Size = New System.Drawing.Size(64, 13)
         Me.lblTableNumber.TabIndex = 45
@@ -329,7 +333,7 @@ Partial Class frmImport
         'lblTableName
         '
         Me.lblTableName.AutoSize = True
-        Me.lblTableName.Location = New System.Drawing.Point(238, 190)
+        Me.lblTableName.Location = New System.Drawing.Point(238, 204)
         Me.lblTableName.Name = "lblTableName"
         Me.lblTableName.Size = New System.Drawing.Size(37, 13)
         Me.lblTableName.TabIndex = 46
@@ -338,7 +342,7 @@ Partial Class frmImport
         'lblTableNameText
         '
         Me.lblTableNameText.AutoSize = True
-        Me.lblTableNameText.Location = New System.Drawing.Point(281, 190)
+        Me.lblTableNameText.Location = New System.Drawing.Point(281, 204)
         Me.lblTableNameText.Name = "lblTableNameText"
         Me.lblTableNameText.Size = New System.Drawing.Size(0, 13)
         Me.lblTableNameText.TabIndex = 47
@@ -346,11 +350,11 @@ Partial Class frmImport
         'chkUploadTable
         '
         Me.chkUploadTable.AutoSize = True
-        Me.chkUploadTable.Location = New System.Drawing.Point(360, 190)
+        Me.chkUploadTable.Location = New System.Drawing.Point(360, 204)
         Me.chkUploadTable.Name = "chkUploadTable"
-        Me.chkUploadTable.Size = New System.Drawing.Size(113, 17)
+        Me.chkUploadTable.Size = New System.Drawing.Size(174, 17)
         Me.chkUploadTable.TabIndex = 48
-        Me.chkUploadTable.Text = "Upload This Table"
+        Me.chkUploadTable.Text = "Upload This Table to Database"
         Me.chkUploadTable.UseVisualStyleBackColor = True
         '
         'dgvImport
@@ -363,14 +367,14 @@ Partial Class frmImport
         Me.dgvImport.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
         Me.dgvImport.BackImage = CType(resources.GetObject("dgvImport.BackImage"), System.Drawing.Image)
         Me.dgvImport.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvImport.Location = New System.Drawing.Point(29, 214)
+        Me.dgvImport.Location = New System.Drawing.Point(29, 229)
         Me.dgvImport.Name = "dgvImport"
-        Me.dgvImport.Size = New System.Drawing.Size(713, 498)
+        Me.dgvImport.Size = New System.Drawing.Size(713, 483)
         Me.dgvImport.TabIndex = 1
         '
         'btnUploadTable
         '
-        Me.btnUploadTable.Location = New System.Drawing.Point(571, 186)
+        Me.btnUploadTable.Location = New System.Drawing.Point(571, 200)
         Me.btnUploadTable.Name = "btnUploadTable"
         Me.btnUploadTable.Size = New System.Drawing.Size(171, 23)
         Me.btnUploadTable.TabIndex = 49
@@ -380,7 +384,7 @@ Partial Class frmImport
         'chkCovertToText
         '
         Me.chkCovertToText.AutoSize = True
-        Me.chkCovertToText.Location = New System.Drawing.Point(240, 63)
+        Me.chkCovertToText.Location = New System.Drawing.Point(240, 77)
         Me.chkCovertToText.Margin = New System.Windows.Forms.Padding(2)
         Me.chkCovertToText.Name = "chkCovertToText"
         Me.chkCovertToText.Size = New System.Drawing.Size(139, 17)
@@ -391,7 +395,7 @@ Partial Class frmImport
         'chkCovertToNull
         '
         Me.chkCovertToNull.AutoSize = True
-        Me.chkCovertToNull.Location = New System.Drawing.Point(386, 63)
+        Me.chkCovertToNull.Location = New System.Drawing.Point(386, 77)
         Me.chkCovertToNull.Margin = New System.Windows.Forms.Padding(2)
         Me.chkCovertToNull.Name = "chkCovertToNull"
         Me.chkCovertToNull.Size = New System.Drawing.Size(167, 17)
@@ -399,11 +403,63 @@ Partial Class frmImport
         Me.chkCovertToNull.Text = "Convert Empty cells to DBNull"
         Me.chkCovertToNull.UseVisualStyleBackColor = True
         '
+        'chkHasHeaders
+        '
+        Me.chkHasHeaders.AutoSize = True
+        Me.chkHasHeaders.Checked = True
+        Me.chkHasHeaders.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.chkHasHeaders.Location = New System.Drawing.Point(240, 56)
+        Me.chkHasHeaders.Margin = New System.Windows.Forms.Padding(2)
+        Me.chkHasHeaders.Name = "chkHasHeaders"
+        Me.chkHasHeaders.Size = New System.Drawing.Size(153, 17)
+        Me.chkHasHeaders.TabIndex = 52
+        Me.chkHasHeaders.Text = "Text File Contains Headers"
+        Me.chkHasHeaders.UseVisualStyleBackColor = True
+        '
+        'lblTextDelimiter
+        '
+        Me.lblTextDelimiter.AutoSize = True
+        Me.lblTextDelimiter.Location = New System.Drawing.Point(455, 57)
+        Me.lblTextDelimiter.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
+        Me.lblTextDelimiter.Name = "lblTextDelimiter"
+        Me.lblTextDelimiter.Size = New System.Drawing.Size(71, 13)
+        Me.lblTextDelimiter.TabIndex = 54
+        Me.lblTextDelimiter.Text = "Text Delimiter"
+        '
+        'txtDelimiter
+        '
+        Me.txtDelimiter.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtDelimiter.Location = New System.Drawing.Point(530, 54)
+        Me.txtDelimiter.Margin = New System.Windows.Forms.Padding(2)
+        Me.txtDelimiter.Name = "txtDelimiter"
+        Me.txtDelimiter.Size = New System.Drawing.Size(22, 20)
+        Me.txtDelimiter.TabIndex = 53
+        Me.txtDelimiter.Text = ","
+        Me.txtDelimiter.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        '
+        'txtDelimiterShow
+        '
+        Me.txtDelimiterShow.BackColor = System.Drawing.SystemColors.Control
+        Me.txtDelimiterShow.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.txtDelimiterShow.Font = New System.Drawing.Font("Microsoft Sans Serif", 20.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtDelimiterShow.Location = New System.Drawing.Point(551, 45)
+        Me.txtDelimiterShow.Margin = New System.Windows.Forms.Padding(2)
+        Me.txtDelimiterShow.Name = "txtDelimiterShow"
+        Me.txtDelimiterShow.Size = New System.Drawing.Size(39, 38)
+        Me.txtDelimiterShow.TabIndex = 55
+        Me.txtDelimiterShow.Text = ","
+        Me.txtDelimiterShow.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        Me.txtDelimiterShow.Visible = False
+        '
         'frmImport
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(777, 753)
+        Me.Controls.Add(Me.txtDelimiterShow)
+        Me.Controls.Add(Me.lblTextDelimiter)
+        Me.Controls.Add(Me.txtDelimiter)
+        Me.Controls.Add(Me.chkHasHeaders)
         Me.Controls.Add(Me.chkCovertToNull)
         Me.Controls.Add(Me.chkCovertToText)
         Me.Controls.Add(Me.btnUploadTable)
@@ -481,4 +537,8 @@ Partial Class frmImport
     Friend WithEvents btnUploadTable As System.Windows.Forms.Button
     Friend WithEvents chkCovertToText As System.Windows.Forms.CheckBox
     Friend WithEvents chkCovertToNull As System.Windows.Forms.CheckBox
+    Friend WithEvents chkHasHeaders As System.Windows.Forms.CheckBox
+    Friend WithEvents lblTextDelimiter As System.Windows.Forms.Label
+    Friend WithEvents txtDelimiter As System.Windows.Forms.TextBox
+    Friend WithEvents txtDelimiterShow As System.Windows.Forms.TextBox
 End Class

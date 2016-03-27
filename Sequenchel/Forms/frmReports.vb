@@ -846,7 +846,7 @@ Public Class frmReports
 
     Private Sub QueryShow()
         ReportClear(True)
-        Dim xmlReportShow As XmlDocument = dhdText.CreateBasicXmlDocument
+        Dim xmlReportShow As XmlDocument = dhdText.CreateRootDocument(Nothing, Nothing, Nothing)
         Dim strReportName As String = cbxReportName.Text
         If strReportName = "" Then strReportName = "TempReport"
         'ReportAdd(xmlReportShow, strReportName)
@@ -943,7 +943,6 @@ Public Class frmReports
             strReportName = CurStatus.Connection
         End If
         ExportFile(dtsReport, strReportName, False)
-        'XmlExportDatagridView(dgvReport, "Sequenchel", CurStatus.Connection, strReportName)
     End Sub
 
 #End Region
@@ -1548,7 +1547,7 @@ Public Class frmReports
     End Sub
 
     Private Sub btnReportExport_Click(sender As Object, e As EventArgs) Handles btnReportExport.Click
-        Dim xmlExport As XmlDocument = dhdText.CreateBasicXmlDocument
+        Dim xmlExport As XmlDocument = dhdText.CreateRootDocument(Nothing, Nothing, Nothing)
         'ReportAdd(xmlExport, cbxReportName.Text)
         ReportToXML(xmlExport, cbxReportName.Text)
 
