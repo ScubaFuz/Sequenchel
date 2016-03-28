@@ -890,13 +890,13 @@ Public Class frmReports
         'ReportAdd(xmlReports, cbxReportName.Text)
         If Not cbxReportName.Items.Contains(cbxReportName.Text) Then cbxReportName.Items.Add(cbxReportName.Text)
 
-        If dhdText.CheckDir(CheckFilePath(CurVar.ReportSetFile).Substring(0, CheckFilePath(CurVar.ReportSetFile).LastIndexOf("\")), False) = False Then
-            If MessageBox.Show("The folder " & CheckFilePath(CurVar.ReportSetFile).Substring(0, CheckFilePath(CurVar.ReportSetFile).LastIndexOf("\")) & " does not exist." & Environment.NewLine & "do you wish to create it?", "Folder does not exist", MessageBoxButtons.YesNo, MessageBoxIcon.Hand, MessageBoxDefaultButton.Button1) = Windows.Forms.DialogResult.No Then
+        If dhdText.CheckDir(SeqData.CheckFilePath(CurVar.ReportSetFile).Substring(0, SeqData.CheckFilePath(CurVar.ReportSetFile).LastIndexOf("\")), False) = False Then
+            If MessageBox.Show("The folder " & SeqData.CheckFilePath(CurVar.ReportSetFile).Substring(0, SeqData.CheckFilePath(CurVar.ReportSetFile).LastIndexOf("\")) & " does not exist." & Environment.NewLine & "do you wish to create it?", "Folder does not exist", MessageBoxButtons.YesNo, MessageBoxIcon.Hand, MessageBoxDefaultButton.Button1) = Windows.Forms.DialogResult.No Then
                 Exit Sub
             End If
         End If
 
-        dhdText.SaveXmlFile(xmlReports, CheckFilePath(CurVar.ReportSetFile), True)
+        dhdText.SaveXmlFile(xmlReports, SeqData.CheckFilePath(CurVar.ReportSetFile), True)
         CursorControl()
     End Sub
 
@@ -914,7 +914,7 @@ Public Class frmReports
                 Exit Sub
             End If
         End If
-        dhdText.SaveXmlFile(xmlReports, CheckFilePath(CurVar.ReportSetFile), True)
+        dhdText.SaveXmlFile(xmlReports, SeqData.CheckFilePath(CurVar.ReportSetFile), True)
         CursorControl()
     End Sub
 

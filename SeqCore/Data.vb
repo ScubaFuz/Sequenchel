@@ -548,9 +548,11 @@ Public Class Data
         Return ""
     End Function
 
-    Public Function CheckFilePath(strFilePathName As String) As String
+    Public Function CheckFilePath(strFilePathName As String, Optional blnPersonal As Boolean = False) As String
         If strFilePathName.Contains("\") Then
             Return strFilePathName
+        ElseIf blnPersonal = True Then
+            Return dhdText.PathConvert("%Documents%\" & strFilePathName)
         ElseIf curVar.DefaultConfigFilePath.Length > 0 Then
             Return curVar.DefaultConfigFilePath & "\" & strFilePathName
         Else

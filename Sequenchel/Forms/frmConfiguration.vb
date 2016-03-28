@@ -43,17 +43,17 @@ Public Class frmConfiguration
     Private Sub ConfigurationSave()
         If CurStatus.ConnectionChanged = True Then
             CurStatus.ConnectionReload = True
-            dhdText.SaveXmlFile(xmlConnections, CheckFilePath(CurVar.ConnectionsFile), True)
+            dhdText.SaveXmlFile(xmlConnections, SeqData.CheckFilePath(CurVar.ConnectionsFile), True)
             CurStatus.ConnectionChanged = False
         End If
         If CurStatus.TableSetChanged = True Then
             CurStatus.TableSetReload = True
-            dhdText.SaveXmlFile(xmlTableSets, CheckFilePath(CurVar.TableSetsFile), True)
+            dhdText.SaveXmlFile(xmlTableSets, SeqData.CheckFilePath(CurVar.TableSetsFile), True)
             CurStatus.TableSetChanged = False
         End If
         If CurStatus.TableChanged = True Then
             CurStatus.TableReload = True
-            dhdText.SaveXmlFile(xmlTables, CheckFilePath(CurVar.TablesFile), True)
+            dhdText.SaveXmlFile(xmlTables, SeqData.CheckFilePath(CurVar.TablesFile), True)
             CurStatus.TableChanged = False
         End If
     End Sub

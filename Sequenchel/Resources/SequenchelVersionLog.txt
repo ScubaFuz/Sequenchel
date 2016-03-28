@@ -1,7 +1,7 @@
 Version 3.7.0
 New: Added Commandline options to export a report or import a file without user intervention.
-New: Export to CSV (text) option.
-New: Import XML option.
+New: Export to CSV (txt) option.
+New: Import XML files option.
 New: Import CSV (txt) files option.
 Fixed: Importing Excel sheets with empty values now works correctly.
 

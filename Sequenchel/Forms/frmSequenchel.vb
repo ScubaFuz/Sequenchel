@@ -718,7 +718,7 @@ Public Class frmSequenchel
                 Exit Sub
             End If
         End If
-        dhdText.SaveXmlFile(xmlSearch, CheckFilePath(CurVar.SearchFile), True)
+        dhdText.SaveXmlFile(xmlSearch, SeqData.CheckFilePath(CurVar.SearchFile), True)
         cbxSearch.Items.Add(cbxSearch.Text)
         lblStatusText.Text = "Search saved"
         'SearchListLoad(tblTable.TableName)
@@ -737,7 +737,7 @@ Public Class frmSequenchel
                 Exit Sub
             End If
         End If
-        dhdText.SaveXmlFile(xmlSearch, CheckFilePath(CurVar.SearchFile), True)
+        dhdText.SaveXmlFile(xmlSearch, SeqData.CheckFilePath(CurVar.SearchFile), True)
         SearchListLoad(tblTable.TableName)
         btnClear_Click(Nothing, Nothing)
         cbxSearch.SelectedIndex = -1

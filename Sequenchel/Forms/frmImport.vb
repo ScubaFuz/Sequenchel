@@ -18,16 +18,16 @@ Public Class frmImport
     End Sub
 
     Private Sub btnUploadFile_Click(sender As Object, e As EventArgs) Handles btnUploadFile.Click
-        UploadFile()
+        UploadFile(dtsImport)
     End Sub
 
     Private Sub btnUploadTable_Click(sender As Object, e As EventArgs) Handles btnUploadTable.Click
         Try
             Dim dtsUpload As New DataSet
             dtsUpload.Tables.Add(dgvImport.DataSource.Copy)
-            UploadToDatabase(dtsUpload)
+            UploadFile(dtsUpload)
         Catch ex As Exception
-            MessageBox.Show("Export to database failed. Check if the columns match and try again" & Environment.NewLine & ex.Message)
+            MessageBox.Show("Table Upload failed. Check if the columns match and try again" & Environment.NewLine & ex.Message)
             lblStatusText.Text = "0 rows uploaded"
             Exit Sub
         End Try
@@ -77,7 +77,7 @@ Public Class frmImport
                 If chkScreen.Checked Then
                     DisplayData(0)
                 End If
-                UploadFile()
+                UploadFile(dtsImport)
             Else
                 MessageBox.Show("No data was loaded from the file." & Environment.NewLine & "Please check the file before trying again.")
             End If
@@ -111,18 +111,18 @@ Public Class frmImport
         chkUploadTable.Checked = DataTableGetExtendedProperty(dtsImport.Tables(intTable))
     End Sub
 
-    Private Sub UploadFile()
+    Private Sub UploadFile(dtsUpload As DataSet)
         If chkFile.Checked = True Then
-            ExportToFile(dtsImport)
+            ExportToFile(dtsUpload)
         End If
         If chkDatabase.Checked = True Then
-            UploadToDatabase(dtsImport)
+            UploadToDatabase(dtsUpload)
         End If
     End Sub
 
     Private Sub ExportToFile(dtsUpload As DataSet)
         Try
-            For intCount As Integer = dtsUpload.Tables.Count To 0 Step -1
+            For intCount As Integer = dtsUpload.Tables.Count - 1 To 0 Step -1
                 If dtsUpload.Tables(intCount).ExtendedProperties.Count > 0 Then
                     If dtsUpload.Tables(intCount).ExtendedProperties.ContainsKey("ExportTable") = True Then
                         If dtsUpload.Tables(intCount).ExtendedProperties("ExportTable") = "False" Then
@@ -135,7 +135,7 @@ Public Class frmImport
                 If SeqData.curVar.ConvertToText = True Then dtsUpload = dhdConnection.ConvertToText(dtsUpload)
                 If SeqData.curVar.ConvertToNull = True Then dtsUpload = dhdConnection.EmptyToNull(dtsUpload)
 
-                SeqData.ExportFile(dtsUpload, txtFileName.Text, False, chkHasHeaders.Checked, txtDelimiter.Text)
+                SeqData.ExportFile(dtsUpload, SeqData.CheckFilePath(txtFileName.Text, True), False, chkHasHeaders.Checked, txtDelimiter.Text)
             End If
         Catch ex As Exception
             MessageBox.Show("There was an error writng to " & txtFileName.Text & Environment.NewLine & ex.Message)

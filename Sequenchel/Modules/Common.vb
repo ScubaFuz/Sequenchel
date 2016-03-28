@@ -441,10 +441,10 @@ Module Common
     End Function
 
     Friend Sub LoadGeneralSettingsXml()
-        If dhdText.CheckFile(CheckFilePath(CurVar.GeneralSettings)) = True Then
+        If dhdText.CheckFile(SeqData.CheckFilePath(CurVar.GeneralSettings)) = True Then
             'LoadXmlFile
             Try
-                xmlGeneralSettings.Load(dhdText.PathConvert(CheckFilePath(CurVar.GeneralSettings)))
+                xmlGeneralSettings.Load(dhdText.PathConvert(SeqData.CheckFilePath(CurVar.GeneralSettings)))
                 If dhdText.CheckElement(xmlGeneralSettings, "DataLocation") Then dhdDatabase.DataLocation = xmlGeneralSettings.Item("Sequenchel").Item("DataBase").Item("DataLocation").InnerText
                 If dhdText.CheckElement(xmlGeneralSettings, "DatabaseName") Then dhdDatabase.DatabaseName = xmlGeneralSettings.Item("Sequenchel").Item("DataBase").Item("DatabaseName").InnerText
                 If dhdText.CheckElement(xmlGeneralSettings, "DataProvider") Then dhdDatabase.DataProvider = xmlGeneralSettings.Item("Sequenchel").Item("DataBase").Item("DataProvider").InnerText
@@ -537,7 +537,7 @@ Module Common
 
         Try
             xmlGeneralSettings.LoadXml(strXmlText)
-            SaveGeneralSettingsXml = dhdText.CreateFile(strXmlText, CheckFilePath(CurVar.GeneralSettings))
+            SaveGeneralSettingsXml = dhdText.CreateFile(strXmlText, SeqData.CheckFilePath(CurVar.GeneralSettings))
             If SaveGeneralSettingsXml = False Then WriteLog("There was an error saving the General Settings file" & Environment.NewLine & dhdText.Errormessage, 1)
         Catch ex As Exception
             WriteLog(strMessages.strXmlError & Environment.NewLine & ex.Message, 1)
@@ -546,11 +546,11 @@ Module Common
     End Function
 
     Friend Function LoadConnectionsXml() As List(Of String)
-        If dhdText.CheckFile(CheckFilePath(CurVar.ConnectionsFile)) = True Then
+        If dhdText.CheckFile(SeqData.CheckFilePath(CurVar.ConnectionsFile)) = True Then
             'LoadXmlFile
             'Dim lstXml As XmlNodeList
             Try
-                xmlConnections.Load(dhdText.PathConvert(CheckFilePath(CurVar.ConnectionsFile)))
+                xmlConnections.Load(dhdText.PathConvert(SeqData.CheckFilePath(CurVar.ConnectionsFile)))
                 Dim blnConnectionExists As Boolean = False
                 CurVar.ConnectionDefault = ""
 
@@ -610,12 +610,12 @@ Module Common
     End Sub
 
     Friend Function LoadTableSetsXml() As List(Of String)
-        If dhdText.CheckFile(CheckFilePath(CurVar.TableSetsFile)) = True Then
+        If dhdText.CheckFile(SeqData.CheckFilePath(CurVar.TableSetsFile)) = True Then
 
             'LoadXmlFile
             'Dim lstXml As XmlNodeList
             Try
-                xmlTableSets.Load(dhdText.PathConvert(CheckFilePath(CurVar.TableSetsFile)))
+                xmlTableSets.Load(dhdText.PathConvert(SeqData.CheckFilePath(CurVar.TableSetsFile)))
                 CurVar.TableSetDefault = ""
                 Dim blnTableSetExists As Boolean = False
 
@@ -663,12 +663,12 @@ Module Common
     End Sub
 
     Friend Function LoadTablesXml() As List(Of String)
-        If dhdText.CheckFile(CheckFilePath(CurVar.TablesFile)) = True Then
+        If dhdText.CheckFile(SeqData.CheckFilePath(CurVar.TablesFile)) = True Then
 
             'LoadXmlFile
             'Dim lstXml As XmlNodeList
             Try
-                xmlTables.Load(dhdText.PathConvert(CheckFilePath(CurVar.TablesFile)))
+                xmlTables.Load(dhdText.PathConvert(SeqData.CheckFilePath(CurVar.TablesFile)))
                 Dim blnTableExists As Boolean = False
                 CurVar.TableDefault = ""
 
@@ -698,11 +698,11 @@ Module Common
     End Function
 
     Friend Function LoadReportsXml() As List(Of String)
-        If dhdText.CheckFile(CheckFilePath(CurVar.ReportSetFile)) = True Then
+        If dhdText.CheckFile(SeqData.CheckFilePath(CurVar.ReportSetFile)) = True Then
             'LoadXmlFile
             'Dim lstXml As XmlNodeList
             Try
-                xmlReports.Load(dhdText.PathConvert(CheckFilePath(CurVar.ReportSetFile)))
+                xmlReports.Load(dhdText.PathConvert(SeqData.CheckFilePath(CurVar.ReportSetFile)))
                 'Dim blnConnectionExists As Boolean = False
                 'CurVar.ConnectionDefault = ""
 
@@ -728,11 +728,11 @@ Module Common
     End Function
 
     Friend Function LoadSearchXml(strTable As String) As List(Of String)
-        If dhdText.CheckFile(CheckFilePath(CurVar.SearchFile)) = True Then
+        If dhdText.CheckFile(SeqData.CheckFilePath(CurVar.SearchFile)) = True Then
             'LoadXmlFile
             'Dim lstXml As XmlNodeList
             Try
-                xmlSearch.Load(dhdText.PathConvert(CheckFilePath(CurVar.SearchFile)))
+                xmlSearch.Load(dhdText.PathConvert(SeqData.CheckFilePath(CurVar.SearchFile)))
                 'Dim blnConnectionExists As Boolean = False
                 'CurVar.ConnectionDefault = ""
 
@@ -1719,15 +1719,6 @@ Module Common
         Return dtmInput
     End Function
 
-    Friend Function CheckFilePath(strFilePathName As String) As String
-        If strFilePathName.Contains("\") Then
-            Return strFilePathName
-        ElseIf CurVar.DefaultConfigFilePath.Length > 0 Then
-            Return CurVar.DefaultConfigFilePath & "\" & strFilePathName
-        Else
-            Return Application.StartupPath & "\" & strFilePathName
-        End If
-    End Function
 #End Region
 
     Friend Function DataSet2DataGridView(dtsSource As DataSet, SourceTable As Integer, dgvTarget As DataGridView, RebuildColumns As Boolean) As Boolean
