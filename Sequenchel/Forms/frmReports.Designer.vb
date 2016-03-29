@@ -46,6 +46,7 @@ Partial Class frmReports
         Me.colSeltableName = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.colSelFieldAlias = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.pnlReportHeaders = New System.Windows.Forms.Panel()
+        Me.chkReportShow = New System.Windows.Forms.CheckBox()
         Me.lblReportSortOrder = New System.Windows.Forms.Label()
         Me.lblReportSort = New System.Windows.Forms.Label()
         Me.lblReportShowMode = New System.Windows.Forms.Label()
@@ -115,11 +116,12 @@ Partial Class frmReports
         Me.btnSaveQuery = New System.Windows.Forms.Button()
         Me.btnExecuteQuery = New System.Windows.Forms.Button()
         Me.rtbQuery = New System.Windows.Forms.RichTextBox()
-        Me.dgvReport = New Sequenchel.usrDataGridView()
         Me.btnTest = New System.Windows.Forms.Button()
         Me.btnClose = New System.Windows.Forms.Button()
         Me.tmrElapsedTime = New System.Windows.Forms.Timer(Me.components)
-        Me.chkReportShow = New System.Windows.Forms.CheckBox()
+        Me.btnEmailResults = New System.Windows.Forms.Button()
+        Me.cbxEmailResults = New System.Windows.Forms.ComboBox()
+        Me.dgvReport = New Sequenchel.usrDataGridView()
         Me.tabReports.SuspendLayout()
         Me.tpgReportDefinition.SuspendLayout()
         Me.pnlReportName.SuspendLayout()
@@ -405,6 +407,16 @@ Partial Class frmReports
         Me.pnlReportHeaders.Name = "pnlReportHeaders"
         Me.pnlReportHeaders.Size = New System.Drawing.Size(810, 24)
         Me.pnlReportHeaders.TabIndex = 154
+        '
+        'chkReportShow
+        '
+        Me.chkReportShow.AutoSize = True
+        Me.chkReportShow.Location = New System.Drawing.Point(155, 6)
+        Me.chkReportShow.Name = "chkReportShow"
+        Me.chkReportShow.Size = New System.Drawing.Size(53, 17)
+        Me.chkReportShow.TabIndex = 126
+        Me.chkReportShow.Text = "Show"
+        Me.chkReportShow.UseVisualStyleBackColor = True
         '
         'lblReportSortOrder
         '
@@ -953,6 +965,8 @@ Partial Class frmReports
         '
         'tpgReportResult
         '
+        Me.tpgReportResult.Controls.Add(Me.cbxEmailResults)
+        Me.tpgReportResult.Controls.Add(Me.btnEmailResults)
         Me.tpgReportResult.Controls.Add(Me.lblElapsedTime)
         Me.tpgReportResult.Controls.Add(Me.btnDefinition)
         Me.tpgReportResult.Controls.Add(Me.btnExportToFile)
@@ -1070,21 +1084,6 @@ Partial Class frmReports
         Me.rtbQuery.TabIndex = 0
         Me.rtbQuery.Text = ""
         '
-        'dgvReport
-        '
-        Me.dgvReport.AllowUserToOrderColumns = True
-        Me.dgvReport.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.dgvReport.BackgroundColor = System.Drawing.SystemColors.Control
-        Me.dgvReport.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
-        Me.dgvReport.BackImage = CType(resources.GetObject("dgvReport.BackImage"), System.Drawing.Image)
-        Me.dgvReport.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvReport.Location = New System.Drawing.Point(6, 6)
-        Me.dgvReport.Name = "dgvReport"
-        Me.dgvReport.Size = New System.Drawing.Size(1243, 563)
-        Me.dgvReport.TabIndex = 0
-        '
         'btnTest
         '
         Me.btnTest.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
@@ -1111,15 +1110,40 @@ Partial Class frmReports
         '
         Me.tmrElapsedTime.Interval = 1000
         '
-        'chkReportShow
+        'btnEmailResults
         '
-        Me.chkReportShow.AutoSize = True
-        Me.chkReportShow.Location = New System.Drawing.Point(155, 6)
-        Me.chkReportShow.Name = "chkReportShow"
-        Me.chkReportShow.Size = New System.Drawing.Size(53, 17)
-        Me.chkReportShow.TabIndex = 126
-        Me.chkReportShow.Text = "Show"
-        Me.chkReportShow.UseVisualStyleBackColor = True
+        Me.btnEmailResults.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.btnEmailResults.Location = New System.Drawing.Point(602, 703)
+        Me.btnEmailResults.Name = "btnEmailResults"
+        Me.btnEmailResults.Size = New System.Drawing.Size(135, 23)
+        Me.btnEmailResults.TabIndex = 179
+        Me.btnEmailResults.Text = "Email Results as:"
+        Me.btnEmailResults.UseVisualStyleBackColor = True
+        '
+        'cbxEmailResults
+        '
+        Me.cbxEmailResults.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cbxEmailResults.FormattingEnabled = True
+        Me.cbxEmailResults.Items.AddRange(New Object() {"HTML", "Excel", "XML", "CSV"})
+        Me.cbxEmailResults.Location = New System.Drawing.Point(738, 704)
+        Me.cbxEmailResults.Name = "cbxEmailResults"
+        Me.cbxEmailResults.Size = New System.Drawing.Size(60, 21)
+        Me.cbxEmailResults.TabIndex = 180
+        '
+        'dgvReport
+        '
+        Me.dgvReport.AllowUserToOrderColumns = True
+        Me.dgvReport.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.dgvReport.BackgroundColor = System.Drawing.SystemColors.Control
+        Me.dgvReport.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
+        Me.dgvReport.BackImage = CType(resources.GetObject("dgvReport.BackImage"), System.Drawing.Image)
+        Me.dgvReport.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dgvReport.Location = New System.Drawing.Point(6, 6)
+        Me.dgvReport.Name = "dgvReport"
+        Me.dgvReport.Size = New System.Drawing.Size(1243, 563)
+        Me.dgvReport.TabIndex = 0
         '
         'frmReports
         '
@@ -1262,4 +1286,6 @@ Partial Class frmReports
     Friend WithEvents txtDescription As System.Windows.Forms.TextBox
     Friend WithEvents pnlReportName As System.Windows.Forms.Panel
     Friend WithEvents chkReportShow As System.Windows.Forms.CheckBox
+    Friend WithEvents cbxEmailResults As System.Windows.Forms.ComboBox
+    Friend WithEvents btnEmailResults As System.Windows.Forms.Button
 End Class

@@ -25,6 +25,8 @@
         txtErrorlogPath.Text = dhdText.LogLocation
         ResetColors()
         SetFtpDefaults()
+        SetEmailDefaults()
+        EmailSettingsShow()
     End Sub
 
     Private Sub btnClose_Click(sender As Object, e As EventArgs) Handles btnClose.Click
@@ -1350,6 +1352,85 @@
             End Try
         Else
             If CurVar.DebugMode Then MessageBox.Show("The script: 01 dbo.usp_GetFTPfiles.sql returned: " & strSQL)
+        End If
+    End Sub
+
+#End Region
+
+#Region "Email"
+    Private Sub SetEmailDefaults()
+        SetDefaultText(txtSmtpServerPassword)
+    End Sub
+
+    Private Sub EmailSettingsShow()
+        txtSmtpServer.Text = SeqData.dhdText.SmtpServer
+        chkSmtpCredentials.Checked = SeqData.dhdText.SmtpCredentials
+        txtSmtpServerUsername.Text = SeqData.dhdText.SmtpUser
+        'DataHandler.txt.EncryptText(txtSmtpServerPassword.Text) = SeqData.dhdText.SmtpPassword
+        txtSmtpReply.Text = SeqData.dhdText.SmtpReply
+        txtSmtpPortNumber.Text = SeqData.dhdText.SmtpPort
+        chkUseSslEncryption.Checked = SeqData.dhdText.SmtpSsl
+    End Sub
+
+    Private Sub btnSettingsEmailSave_Click(sender As Object, e As EventArgs) Handles btnSettingsEmailSave.Click
+        SeqData.dhdText.SmtpServer = txtSmtpServer.Text
+        SeqData.dhdText.SmtpCredentials = chkSmtpCredentials.Checked
+        SeqData.dhdText.SmtpUser = txtSmtpServerUsername.Text
+        If txtSmtpServerPassword.Text.Length > 0 Then SeqData.dhdText.SmtpPassword = DataHandler.txt.EncryptText(txtSmtpServerPassword.Text)
+        SeqData.dhdText.SmtpReply = txtSmtpReply.Text
+        SeqData.dhdText.SmtpPort = txtSmtpPortNumber.Text
+        SeqData.dhdText.SmtpSsl = chkUseSslEncryption.Checked
+        SaveGeneralSettingsXml()
+    End Sub
+
+    Private Sub chkSmtpCredentials_CheckedChanged(sender As Object, e As EventArgs) Handles chkSmtpCredentials.CheckedChanged
+        If chkSmtpCredentials.Checked = True Then
+            txtSmtpServerUsername.Enabled = False
+            txtSmtpServerUsername.Text = ""
+            txtSmtpServerPassword.Enabled = False
+            txtSmtpServerPassword.Text = ""
+        Else
+            txtSmtpServerUsername.Enabled = True
+            txtSmtpServerUsername.Text = SeqData.dhdText.SmtpUser
+            txtSmtpServerPassword.Enabled = True
+            'txtSmtpServerPassword.Text = SeqData.dhdText.SmtpPassword
+            btnShowPassword.Enabled = True
+        End If
+    End Sub
+
+    Private Sub txtSmtpServerPassword_GotFocus(sender As Object, e As EventArgs) Handles txtSmtpServerPassword.GotFocus
+        RemoveDefaultText(sender)
+        PasswordCharSet(txtSmtpServerPassword)
+    End Sub
+
+    Private Sub txtSmtpServerPassword_LostFocus(sender As Object, e As EventArgs) Handles txtSmtpServerPassword.LostFocus
+        SetDefaultText(sender)
+        PasswordCharSet(txtSmtpServerPassword)
+    End Sub
+
+    Private Sub txtSmtpServerPassword_TextChanged(sender As Object, e As EventArgs) Handles txtSmtpServerPassword.TextChanged
+        PasswordCharSet(txtSmtpServerPassword)
+    End Sub
+
+    Private Sub btnShowPassword_Click(sender As Object, e As EventArgs) Handles btnShowPassword.MouseDown
+        txtSmtpServerPassword.PasswordChar = Nothing
+    End Sub
+
+    Private Sub btnShowPassword_MouseLeave(sender As Object, e As EventArgs) Handles btnShowPassword.MouseLeave
+        PasswordCharSet(txtSmtpServerPassword)
+    End Sub
+
+    Private Sub btnShowPassword_MouseUp(sender As Object, e As MouseEventArgs) Handles btnShowPassword.MouseUp
+        PasswordCharSet(txtSmtpServerPassword)
+    End Sub
+
+    Private Sub PasswordCharSet(objTextBox As TextBox)
+        If objTextBox.Text.Length = 0 Then
+            objTextBox.PasswordChar = Nothing
+        ElseIf objTextBox.Text = objTextBox.Tag Then
+            objTextBox.PasswordChar = Nothing
+        Else
+            objTextBox.PasswordChar = "*"
         End If
     End Sub
 

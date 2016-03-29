@@ -465,6 +465,14 @@ Module Common
                 If dhdText.CheckElement(xmlGeneralSettings, "DateTimeStyle") Then CurVar.DateTimeStyle = xmlGeneralSettings.Item("Sequenchel").Item("Settings").Item("DateTimeStyle").InnerText
                 If dhdText.CheckElement(xmlGeneralSettings, "IncludeDate") Then CurVar.IncludeDate = xmlGeneralSettings.Item("Sequenchel").Item("Settings").Item("IncludeDate").InnerText
 
+                If dhdText.CheckElement(xmlGeneralSettings, "SmtpServer") Then SeqData.dhdText.SmtpServer = xmlGeneralSettings.Item("Sequenchel").Item("Email").Item("SmtpServer").InnerText
+                If dhdText.CheckElement(xmlGeneralSettings, "SmtpCredentials") Then SeqData.dhdText.SmtpCredentials = xmlGeneralSettings.Item("Sequenchel").Item("Email").Item("SmtpCredentials").InnerText
+                If dhdText.CheckElement(xmlGeneralSettings, "SmtpServerUsername") Then SeqData.dhdText.SmtpUser = xmlGeneralSettings.Item("Sequenchel").Item("Email").Item("SmtpServerUsername").InnerText
+                If dhdText.CheckElement(xmlGeneralSettings, "SmtpServerPassword") Then SeqData.dhdText.SmtpPassword = xmlGeneralSettings.Item("Sequenchel").Item("Email").Item("SmtpServerPassword").InnerText
+                If dhdText.CheckElement(xmlGeneralSettings, "SmtpReply") Then SeqData.dhdText.SmtpReply = xmlGeneralSettings.Item("Sequenchel").Item("Email").Item("SmtpReply").InnerText
+                If dhdText.CheckElement(xmlGeneralSettings, "SmtpPort") Then SeqData.dhdText.SmtpPort = xmlGeneralSettings.Item("Sequenchel").Item("Email").Item("SmtpPort").InnerText
+                If dhdText.CheckElement(xmlGeneralSettings, "SmtpSsl") Then SeqData.dhdText.SmtpSsl = xmlGeneralSettings.Item("Sequenchel").Item("Email").Item("SmtpSsl").InnerText
+
             Catch ex As Exception
                 MessageBox.Show("There was an error reading the XML file. Please check the file" & Environment.NewLine & CurVar.GeneralSettings & Environment.NewLine & ex.Message)
                 WriteLog("There was an error reading the XML file. Please check the file" & Environment.NewLine & CurVar.GeneralSettings & Environment.NewLine & ex.Message, 1)
@@ -533,6 +541,15 @@ Module Common
         strXmlText &= "		<DateTimeStyle>" & CurVar.DateTimeStyle & "</DateTimeStyle>" & Environment.NewLine
         strXmlText &= "		<IncludeDate>" & CurVar.IncludeDate & "</IncludeDate>" & Environment.NewLine
         strXmlText &= "	</Settings>" & Environment.NewLine
+        strXmlText &= "	<Email>" & Environment.NewLine
+        strXmlText &= "		<SmtpServer>" & SeqData.dhdText.SmtpServer & "</SmtpServer>" & Environment.NewLine
+        strXmlText &= "		<SmtpCredentials>" & SeqData.dhdText.SmtpCredentials & "</SmtpCredentials>" & Environment.NewLine
+        strXmlText &= "		<SmtpServerUsername>" & SeqData.dhdText.SmtpUser & "</SmtpServerUsername>" & Environment.NewLine
+        strXmlText &= "		<SmtpServerPassword>" & SeqData.dhdText.SmtpPassword & "</SmtpServerPassword>" & Environment.NewLine
+        strXmlText &= "		<SmtpReply>" & SeqData.dhdText.SmtpReply & "</SmtpReply>" & Environment.NewLine
+        strXmlText &= "		<SmtpPort>" & SeqData.dhdText.SmtpPort & "</SmtpPort>" & Environment.NewLine
+        strXmlText &= "		<SmtpSsl>" & SeqData.dhdText.SmtpSsl & "</SmtpSsl>" & Environment.NewLine
+        strXmlText &= "	</Email>" & Environment.NewLine
         strXmlText &= "</Sequenchel>" & Environment.NewLine
 
         Try

@@ -699,7 +699,7 @@ Public Class Data
         Return strFieldDataType
     End Function
 
-    Public Function FormatFieldXML(xmlTablesDoc As XmlDocument, strFullFieldName As String, strShowMode As String, blnUseAlias As Boolean, blnSelect As Boolean, DateTimeStyle As Integer) As String
+    Public Function FormatFieldXML(xmlTablesDoc As XmlDocument, strFullFieldName As String, strShowMode As String, blnUseAlias As Boolean, blnSelect As Boolean, blnConvert As Boolean, DateTimeStyle As Integer) As String
         Dim strOutput As String = ""
         Dim strTableName As String = strFullFieldName.Substring(0, strFullFieldName.LastIndexOf("."))
         Dim strFieldName As String = strFullFieldName.Substring(strFullFieldName.LastIndexOf(".") + 1, strFullFieldName.Length - (strFullFieldName.LastIndexOf(".") + 1))
@@ -710,11 +710,11 @@ Public Class Data
         Dim strFieldAlias As String = xCNode.Item("FldAlias").InnerText
         If blnUseAlias = False Then strFieldAlias = Nothing
 
-        strOutput = FormatField(strFieldName, strTableName, strFieldWidth, strFieldType, strFieldAlias, strShowMode, blnSelect, DateTimeStyle)
+        strOutput = FormatField(strFieldName, strTableName, strFieldWidth, strFieldType, strFieldAlias, strShowMode, blnSelect, blnConvert, DateTimeStyle)
         Return strOutput
     End Function
 
-    Public Function FormatField(strFieldName As String, strTableName As String, strFieldWidth As String, strFieldType As String, strFieldAlias As String, strShowMode As String, blnSelect As Boolean, DateTimeStyle As Integer) As String
+    Public Function FormatField(strFieldName As String, strTableName As String, strFieldWidth As String, strFieldType As String, strFieldAlias As String, strShowMode As String, blnSelect As Boolean, blnConvert As Boolean, DateTimeStyle As Integer) As String
         Dim strOutput As String = ""
         Dim strFQDN As String = "[" & strTableName.Replace(".", "].[") & "].[" & strFieldName & "]"
 
@@ -744,30 +744,34 @@ Public Class Data
             End If
         End If
 
-        Select Case strFieldType.ToUpper
-            Case "IMAGE"
-                strOutput = "(CONVERT([varchar](" & strFieldWidth & "), " & strFQDN & "))"
-            Case "BINARY", "GEO", "TEXT", "GUID"
-                strOutput = "(CONVERT([nvarchar](" & strFieldWidth & "), " & strFQDN & "))"
-            Case "TIME", "TIMESTAMP"
-                Dim intFieldWidth As Integer = 8
-                If IsNumeric(strFieldWidth) = 1 And strFieldWidth < intFieldWidth Then intFieldWidth = strFieldWidth
-                Select Case DateTimeStyle
-                    Case 101, 100
-                        strOutput = "(CONVERT([nvarchar](7), " & strFQDN & ", 100))"
-                    Case 105, 102
-                        strOutput = "(CONVERT([nvarchar](8), " & strFQDN & ", 120))"
-                    Case Else
-                        strOutput = "(CONVERT([nvarchar](13), " & strFQDN & ", " & DateTimeStyle & "))"
-                End Select
-            Case "XML"
-                strOutput = "(CONVERT([nvarchar](max), " & strFQDN & "))"
-            Case "DATETIME"
-                strOutput = "(CONVERT([nvarchar](" & strFieldWidth & "), " & strFQDN & ", " & DateTimeStyle & "))"
-            Case Else
-                'CHAR: no need to convert char or int values to char.
-                strOutput = strFQDN
-        End Select
+        If blnConvert = True Then
+            Select Case strFieldType.ToUpper
+                Case "IMAGE"
+                    strOutput = "(CONVERT([varchar](" & strFieldWidth & "), " & strFQDN & "))"
+                Case "BINARY", "GEO", "TEXT", "GUID"
+                    strOutput = "(CONVERT([nvarchar](" & strFieldWidth & "), " & strFQDN & "))"
+                Case "TIME", "TIMESTAMP"
+                    Dim intFieldWidth As Integer = 8
+                    If IsNumeric(strFieldWidth) = 1 And strFieldWidth < intFieldWidth Then intFieldWidth = strFieldWidth
+                    Select Case DateTimeStyle
+                        Case 101, 100
+                            strOutput = "(CONVERT([nvarchar](7), " & strFQDN & ", 100))"
+                        Case 105, 102
+                            strOutput = "(CONVERT([nvarchar](8), " & strFQDN & ", 120))"
+                        Case Else
+                            strOutput = "(CONVERT([nvarchar](13), " & strFQDN & ", " & DateTimeStyle & "))"
+                    End Select
+                Case "XML"
+                    strOutput = "(CONVERT([nvarchar](max), " & strFQDN & "))"
+                Case "DATETIME"
+                    strOutput = "(CONVERT([nvarchar](" & strFieldWidth & "), " & strFQDN & ", " & DateTimeStyle & "))"
+                Case Else
+                    'CHAR: no need to convert char or int values to char.
+                    strOutput = strFQDN
+            End Select
+        Else
+            strOutput = strFQDN
+        End If
 
         If blnSelect = True Then
             If Not strFieldAlias Is Nothing Then
@@ -816,12 +820,13 @@ Public Class Data
             Try
                 If xCNode.Item("FieldShow").InnerText = 1 Then
                     strShowMode = xCNode.Item("FieldShowMode").InnerText
-                    strQuery &= ", " & FormatFieldXML(xmlTables, strTableName & "." & strFieldName, strShowMode, True, True, DateTimeStyle)
+                    Dim strQueryField As String = FormatFieldXML(xmlTables, strTableName & "." & strFieldName, strShowMode, True, True, True, DateTimeStyle)
+                    strQuery &= ", " & strQueryField
                     Select Case strShowMode
                         Case Nothing
-                            strQueryGroup &= ", " & strTableName & "." & strFieldName
+                            strQueryGroup &= ", " & FormatFieldXML(xmlTables, strTableName & "." & strFieldName, strShowMode, False, False, True, DateTimeStyle)
                         Case "DATE", "YEAR", "MONTH", "DAY", "TIME", "HOUR", "MINUTE", "SECOND"
-                            strQueryGroup &= ", " & strFieldName
+                            strQueryGroup &= ", " & FormatFieldXML(xmlTables, strTableName & "." & strFieldName, strShowMode, False, False, True, DateTimeStyle)
                         Case Else
                             blnGroup = True
                     End Select
@@ -838,7 +843,7 @@ Public Class Data
                         If strHavingMode.Contains("AND") Then strHavingMode = ") " & strHavingMode & " ("
                         strHavingType = xFnode.Item("FilterType").InnerText
                         strHavingClause = SetDelimiters(xFnode.Item("FilterText").InnerText, GetFieldDataType(xmlTables, strTableName & "." & strFieldName), strHavingType, strShowMode)
-                        strHavingField = " " & FormatFieldXML(xmlTables, strTableName & "." & strFieldName, strShowMode, False, False, DateTimeStyle)
+                        strHavingField = " " & FormatFieldXML(xmlTables, strTableName & "." & strFieldName, strShowMode, False, False, True, DateTimeStyle)
                         If strHavingType.Contains("LIKE") And strHavingClause.Contains("*") Then strHavingClause = strHavingClause.Replace("*", "%")
 
                         If strHavingType <> Nothing And strHavingClause <> Nothing Then

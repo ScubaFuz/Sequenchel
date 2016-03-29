@@ -14,6 +14,7 @@ Public Class frmReports
         SecuritySet()
         'ReportFieldsDispose(True)
         LoadConnections()
+        cbxEmailResults.SelectedIndex = 0
         'LoadTableFields()
         'ReportsLoad()
     End Sub
@@ -1647,5 +1648,51 @@ Public Class frmReports
         For Each chkBox As CheckBox In pnlReportDisplay.Controls
             chkBox.Checked = chkReportShow.Checked
         Next
+    End Sub
+
+    Private Sub btnEmailResults_Click(sender As Object, e As EventArgs) Handles btnEmailResults.Click
+        Dim strEmail As String = Nothing
+        strEmail = InputBox("Please enter a valid Email Address", "Email", strEmail)
+        If strEmail = "" Then
+            'SetStatus("Email not send")
+            Exit Sub
+        End If
+        Dim strRecepientName As String = strEmail.Substring(0, strEmail.IndexOf("@"))
+        Dim strSenderName As String = SeqData.dhdText.SmtpReply.Substring(0, SeqData.dhdText.SmtpReply.IndexOf("@"))
+
+        Dim strReportName As String = "", strTargetName As String
+        If cbxReportName.Text.Length > 0 Then
+            strReportName = cbxReportName.Text
+        Else
+            strReportName = CurStatus.Connection
+        End If
+        strTargetName = strReportName
+        If CurVar.IncludeDate = True Then
+            strTargetName = strTargetName & "_" & SeqData.FormatFileDate(Now)
+        End If
+
+        Select Case cbxEmailResults.SelectedItem
+            Case "HTML"
+                Dim strBody As String = SeqData.dhdText.DataSetToHtml(dtsReport)
+                SeqData.dhdText.SendSMTP(SeqData.dhdText.SmtpReply, strSenderName, strEmail, strRecepientName, SeqData.dhdText.SmtpReply, strSenderName, strReportName, strBody, "")
+            Case "Excel"
+                strTargetName &= "xlsx"
+                Excel.CreateExcelDocument(dtsReport, strTargetName)
+                SeqData.dhdText.SendSMTP(SeqData.dhdText.SmtpReply, SeqData.dhdText.SmtpReply, strEmail, strEmail, SeqData.dhdText.SmtpReply, SeqData.dhdText.SmtpReply, strReportName, "Report", strTargetName)
+                SeqData.dhdText.DeleteFile(strTargetName)
+            Case "XML"
+                strTargetName &= "xml"
+                SeqData.dhdText.ExportDataSetToXML(dhdDatabase.ConvertToText(dtsReport), strTargetName)
+                SeqData.dhdText.SendSMTP(SeqData.dhdText.SmtpReply, SeqData.dhdText.SmtpReply, strEmail, strEmail, SeqData.dhdText.SmtpReply, SeqData.dhdText.SmtpReply, strReportName, "Report", strTargetName)
+                SeqData.dhdText.DeleteFile(strTargetName)
+            Case "CSV"
+                strTargetName &= "csv"
+                SeqData.dhdText.DataSetToCsv(dtsReport.Tables(0), strTargetName, True, ",", False)
+                SeqData.dhdText.SendSMTP(SeqData.dhdText.SmtpReply, SeqData.dhdText.SmtpReply, strEmail, strEmail, SeqData.dhdText.SmtpReply, SeqData.dhdText.SmtpReply, strReportName, "Report", strTargetName)
+                SeqData.dhdText.DeleteFile(strTargetName)
+            Case Else
+                'unknown filetype, do nothing
+        End Select
+
     End Sub
 End Class
