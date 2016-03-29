@@ -1,4 +1,5 @@
 ﻿Imports System.Xml
+Imports System.IO
 
 Module SeqCmd
     Friend Core As New SeqCore.Core
@@ -44,14 +45,15 @@ Module SeqCmd
         LoadTables()
 
         If RunImport = True And SeqData.dhdText.ImportFile.Length > 0 And SeqData.curStatus.Table.Length > 0 Then
-            Dim dtsImport As DataSet = SeqData.ImportFile(SeqData.dhdText.ImportFile, SeqData.curVar.HasHeaders, SeqData.curVar.Delimiter)
-            If dtsImport Is Nothing Then Environment.Exit(0)
-            SeqData.dhdConnection.DataTableName = SeqData.curStatus.Table
-            Dim intRecords As Integer = SeqData.SaveToDatabase(SeqData.dhdConnection, dtsImport, SeqData.curVar.ConvertToText)
-            If intRecords = -1 Then
-                Console.WriteLine(SeqData.dhdConnection.errormessage)
+            If SeqData.dhdText.ImportFile.Contains("\") = False Then
+                Console.WriteLine("You need to provide a valid filepath and filename")
                 Console.ReadLine()
-                Exit Sub
+                Environment.Exit(0)
+            End If
+            If SeqData.dhdText.ImportFile.Contains("*") Then
+                ImportFiles(SeqData.dhdText.ImportFile)
+            Else
+                ImportFile(SeqData.dhdText.ImportFile)
             End If
         End If
         If Not SeqData.dhdText.ExportFile Is Nothing AndAlso RunReport = True AndAlso SeqData.dhdText.ExportFile.Length > 0 Then
@@ -194,6 +196,30 @@ Module SeqCmd
         If lstReports Is Nothing Then Environment.Exit(0)
         If lstReports.Contains(SeqData.curStatus.Report) = False Or SeqData.curStatus.Report = "" Then
             Console.WriteLine("The specified Report was not found. please check your settings")
+            Console.ReadLine()
+            Environment.Exit(0)
+        End If
+    End Sub
+
+    Friend Sub ImportFiles(strImportFiles As String)
+        Dim strFolder As String = strImportFiles.Substring(0, strImportFiles.LastIndexOf("\") + 1)
+        Dim strFileFilter As String = strImportFiles.Substring(strImportFiles.LastIndexOf("\") + 1, strImportFiles.Length - (strImportFiles.LastIndexOf("\") + 1))
+        Dim FilesArray As ArrayList = SeqData.dhdText.GetFiles(strFolder, strFileFilter)
+        For Each strFile As String In FilesArray
+            ImportFile(strFile)
+            Console.WriteLine(strFile)
+        Next
+        Console.ReadLine()
+        Environment.Exit(0)
+    End Sub
+
+    Friend Sub ImportFile(strImportFile As String)
+        Dim dtsImport As DataSet = SeqData.ImportFile(strImportFile, SeqData.curVar.HasHeaders, SeqData.curVar.Delimiter)
+        If dtsImport Is Nothing Then Environment.Exit(0)
+        SeqData.dhdConnection.DataTableName = SeqData.curStatus.Table
+        Dim intRecords As Integer = SeqData.SaveToDatabase(SeqData.dhdConnection, dtsImport, SeqData.curVar.ConvertToText)
+        If intRecords = -1 Then
+            Console.WriteLine(SeqData.dhdConnection.ErrorMessage)
             Console.ReadLine()
             Environment.Exit(0)
         End If
