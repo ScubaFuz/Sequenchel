@@ -9,6 +9,11 @@ Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "SeqCore", "SeqCore\SeqCore.
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "SeqCmd", "SeqCmd\SeqCmd.vbproj", "{E3178A6E-4726-48AE-A20F-40EAEB1C2E2B}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{259837B0-E19D-406A-9B7B-BCF8A5DABE51}"
+	ProjectSection(SolutionItems) = preProject
+		Version.vb = Version.vb
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

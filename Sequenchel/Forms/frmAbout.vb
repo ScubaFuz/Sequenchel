@@ -20,7 +20,7 @@
     End Sub
 
     Private Sub lblVersion_Click(sender As Object, e As EventArgs) Handles lblVersion.Click
-        If dhdText.CheckFile(Application.StartupPath & "\Resources\SequenchelVersionLog.txt") Then
+        If SeqData.dhdText.CheckFile(Application.StartupPath & "\Resources\SequenchelVersionLog.txt") Then
             System.Diagnostics.Process.Start(Application.StartupPath & "\Resources\SequenchelVersionLog.txt")
             Me.Close()
         Else
@@ -35,7 +35,7 @@
     End Sub
 
     Private Sub frmAbout_LostFocus(sender As Object, e As EventArgs) Handles Me.LostFocus
-        If CurVar.CallSplash = True Then
+        If SeqData.curVar.CallSplash = True Then
             Me.Close()
         End If
     End Sub

@@ -45,23 +45,44 @@ Module SeqCmd
         LoadTables()
 
         If RunImport = True And SeqData.dhdText.ImportFile.Length > 0 And SeqData.curStatus.Table.Length > 0 Then
+            'Import file
             If SeqData.dhdText.ImportFile.Contains("\") = False Then
                 Console.WriteLine("You need to provide a valid filepath and filename")
                 Console.ReadLine()
                 Environment.Exit(0)
             End If
+            Dim dtsInput As DataSet = Nothing
             If SeqData.dhdText.ImportFile.Contains("*") Then
-                ImportFiles(SeqData.dhdText.ImportFile)
+                If ImportTable <> "" And ImportTable = SeqData.curStatus.Table Then
+                    ImportFiles(SeqData.dhdText.ImportFile)
+                End If
             Else
-                ImportFile(SeqData.dhdText.ImportFile)
+                dtsInput = ImportFile(SeqData.dhdText.ImportFile)
+                Dim intRecords As Integer = 0
+                If ImportTable <> "" And ImportTable = SeqData.curStatus.Table Then
+                    intRecords = UploadFile(dtsInput)
+                    Console.WriteLine(intRecords & " Records Uploaded")
+                End If
+                If Not SeqData.dhdText.ExportFile Is Nothing AndAlso RunReport = False AndAlso SeqData.dhdText.ExportFile.Length > 0 Then
+                    'export imported file
+                    SeqData.ExportFile(dtsInput, SeqData.dhdText.ExportFile, SeqData.curVar.ConvertToText, SeqData.curVar.ConvertToNull, SeqData.curVar.ShowFile, SeqData.curVar.HasHeaders, SeqData.curVar.Delimiter, SeqData.curVar.QuoteValues, SeqData.curVar.CreateDir)
+                End If
             End If
         End If
         If Not SeqData.dhdText.ExportFile Is Nothing AndAlso RunReport = True AndAlso SeqData.dhdText.ExportFile.Length > 0 Then
+            'Export Report
             LoadReports()
             Dim strQuery As String = SeqData.ReportQueryBuild(xmlReports, xmlTables, SeqData.curStatus.Report, SeqData.curVar.DateTimeStyle)
             Dim dtsData As DataSet = SeqData.QueryDb(SeqData.dhdConnection, strQuery, True, 5)
             If dtsData Is Nothing Then Environment.Exit(0)
-            SeqData.ExportFile(dtsData, SeqData.dhdText.ExportFile, False, SeqData.curVar.HasHeaders, SeqData.curVar.Delimiter)
+            SeqData.ExportFile(dtsData, SeqData.dhdText.ExportFile, SeqData.curVar.ConvertToText, SeqData.curVar.ConvertToNull, SeqData.curVar.ShowFile, SeqData.curVar.HasHeaders, SeqData.curVar.Delimiter, SeqData.curVar.QuoteValues, SeqData.curVar.CreateDir)
+            If SeqData.dhdText.SmtpRecipient.Length > 0 AndAlso SeqData.dhdText.SmtpRecipient.Contains("@") Then
+                'Email Report
+                Dim strRecepientName As String = SeqData.dhdText.SmtpRecipient.Substring(0, SeqData.dhdText.SmtpRecipient.IndexOf("@"))
+                Dim strSenderName As String = SeqData.dhdText.SmtpReply.Substring(0, SeqData.dhdText.SmtpReply.IndexOf("@"))
+                Dim strBody As String = "Sequenchel Report: " & SeqData.curStatus.Report
+                SeqData.dhdText.SendSMTP(SeqData.dhdText.SmtpReply, strSenderName, SeqData.dhdText.SmtpRecipient, strRecepientName, SeqData.dhdText.SmtpReply, strSenderName, SeqData.curStatus.Report, strBody, SeqData.dhdText.ExportFile)
+            End If
         End If
     End Sub
 
@@ -90,7 +111,7 @@ Module SeqCmd
                     '    CurVar.Encryption = False
                 Case "/securityoverride"
                     If Command.Length > intPosition + 1 Then
-                        SeqData.curVar.OverridePassword = Core.Encrypt(Command.Substring(intPosition + 1, Command.Length - (intPosition + 1)))
+                        SeqData.curVar.OverridePassword = SeqData.dhdText.MD5Encrypt(Command.Substring(intPosition + 1, Command.Length - (intPosition + 1)))
                     End If
                 Case "/report"
                     'Run Report
@@ -129,6 +150,9 @@ Module SeqCmd
                 Case "/delimiter"
                     'Export the report to the chosen file
                     SeqData.curVar.Delimiter = strInput
+                Case "/EmailRecepient"
+                    'Export the report to the chosen file
+                    SeqData.dhdText.SmtpRecipient = strInput
             End Select
         Next
 
@@ -206,23 +230,26 @@ Module SeqCmd
         Dim strFileFilter As String = strImportFiles.Substring(strImportFiles.LastIndexOf("\") + 1, strImportFiles.Length - (strImportFiles.LastIndexOf("\") + 1))
         Dim FilesArray As ArrayList = SeqData.dhdText.GetFiles(strFolder, strFileFilter)
         For Each strFile As String In FilesArray
-            ImportFile(strFile)
             Console.WriteLine(strFile)
+            Dim dtsInput As DataSet = ImportFile(strFile)
+            Dim intRecords As Integer = UploadFile(dtsInput)
+            Console.WriteLine(intRecords & " Records Uploaded")
         Next
-        Console.ReadLine()
-        Environment.Exit(0)
     End Sub
 
-    Friend Sub ImportFile(strImportFile As String)
+    Friend Function ImportFile(strImportFile As String) As DataSet
         Dim dtsImport As DataSet = SeqData.ImportFile(strImportFile, SeqData.curVar.HasHeaders, SeqData.curVar.Delimiter)
-        If dtsImport Is Nothing Then Environment.Exit(0)
+        Return dtsImport
+    End Function
+
+    Friend Function UploadFile(dtsInput As DataSet) As Integer
         SeqData.dhdConnection.DataTableName = SeqData.curStatus.Table
-        Dim intRecords As Integer = SeqData.SaveToDatabase(SeqData.dhdConnection, dtsImport, SeqData.curVar.ConvertToText)
+        Dim intRecords As Integer = SeqData.SaveToDatabase(SeqData.dhdConnection, dtsInput, SeqData.curVar.ConvertToText)
         If intRecords = -1 Then
             Console.WriteLine(SeqData.dhdConnection.ErrorMessage)
             Console.ReadLine()
             Environment.Exit(0)
         End If
-    End Sub
-
+        Return intRecords
+    End Function
 End Module

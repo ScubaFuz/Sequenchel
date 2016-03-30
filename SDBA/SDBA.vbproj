@@ -62,6 +62,9 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Version.vb">
+      <Link>Version.vb</Link>
+    </Compile>
     <Compile Include="DBRef.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">

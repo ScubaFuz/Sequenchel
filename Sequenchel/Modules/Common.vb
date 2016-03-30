@@ -17,8 +17,8 @@ Module Common
     Friend Core As New SeqCore.Core
     Friend Excel As New SeqCore.Excel
     Friend SeqData As New SeqCore.Data
-    Friend dhdText As New DataHandler.txt
-    Friend dhdReg As New DataHandler.reg
+    'Friend dhdText As New DataHandler.txt
+    'Friend dhdReg As New DataHandler.reg
     Friend dhdDatabase As New DataHandler.db
     Friend dhdConnection As New DataHandler.db
     Friend xmlDoc As New XmlDocument
@@ -37,8 +37,8 @@ Module Common
     Friend dtsImport As New DataSet
 
     Friend strMessages As New SeqCore.Messages
-    Friend CurVar As New SeqCore.Variables
-    Friend CurStatus As New SeqCore.CurrentStatus
+    'Friend CurVar As New SeqCore.Variables
+    'Friend CurStatus As New SeqCore.CurrentStatus
 
     Friend clrOriginal As Color = System.Drawing.SystemColors.Window
     Friend clrControl As Color = System.Drawing.SystemColors.Control
@@ -73,16 +73,16 @@ Module Common
                 Case "/silent"
                     'Start wihtout any windows / forms
                 Case "/debug"
-                    CurVar.DebugMode = True
+                    SeqData.curVar.DebugMode = True
                 Case "/control"
-                    CurStatus.Status = SeqCore.CurrentStatus.StatusList.ControlSearch
+                    SeqData.curStatus.Status = SeqCore.CurrentStatus.StatusList.ControlSearch
                 Case "/dev"
-                    CurVar.DevMode = True
+                    SeqData.curVar.DevMode = True
                 Case "/noencryption"
-                    CurVar.Encryption = False
+                    SeqData.curVar.Encryption = False
                 Case "/securityoverride"
                     If Command.Length > intPosition + 1 Then
-                        CurVar.OverridePassword = Core.Encrypt(Command.Substring(intPosition + 1, Command.Length - (intPosition + 1)))
+                        SeqData.curVar.OverridePassword = SeqData.dhdText.MD5Encrypt(Command.Substring(intPosition + 1, Command.Length - (intPosition + 1)))
                     End If
                 Case "/report"
                     'Open Report window directly
@@ -152,13 +152,13 @@ Module Common
     End Function
 
     Friend Sub SetDefaults()
-        dhdReg.RegistryPath = "Software\Thicor\Sequenchel\3.0"
+        SeqData.dhdReg.RegistryPath = "Software\Thicor\Sequenchel\3.0"
 
-        dhdText.InputFile = "SequenchelDBA.xml"
-        dhdText.LogFileName = "Sequenchel.Log"
-        dhdText.LogLevel = 5
-        dhdText.LogLocation = Application.StartupPath & "\LOG"
-        dhdText.OutputFile = Environment.SpecialFolder.MyDocuments
+        SeqData.dhdText.InputFile = "SequenchelDBA.xml"
+        SeqData.dhdText.LogFileName = "Sequenchel.Log"
+        SeqData.dhdText.LogLevel = 5
+        SeqData.dhdText.LogLocation = Application.StartupPath & "\LOG"
+        SeqData.dhdText.OutputFile = Environment.SpecialFolder.MyDocuments
 
         dhdDatabase.LoginMethod = "WINDOWS"
         dhdDatabase.LoginName = "SDBAUser"
@@ -166,10 +166,10 @@ Module Common
         dhdDatabase.DataLocation = Environment.MachineName & "\SQLEXPRESS"
         dhdDatabase.DatabaseName = "Sequenchel"
         dhdDatabase.DataProvider = "SQL"
-        If CurStatus.Status > 3 Then
-            CurStatus.Status = SeqCore.CurrentStatus.StatusList.ControlSearch
+        If SeqData.curStatus.Status > 3 Then
+            SeqData.curStatus.Status = SeqCore.CurrentStatus.StatusList.ControlSearch
         Else
-            CurStatus.Status = SeqCore.CurrentStatus.StatusList.Search
+            SeqData.curStatus.Status = SeqCore.CurrentStatus.StatusList.Search
         End If
 
     End Sub
@@ -177,13 +177,13 @@ Module Common
     Friend Sub LoadLicense()
         Try
             Dim strLicense As String
-            strLicense = dhdReg.ReadAnyRegKey("LicenseName", dhdReg.RegistryPath)
-            If strLicense = "-1" Then WriteLog(dhdReg.RegMessage, 1)
+            strLicense = SeqData.dhdReg.ReadAnyRegKey("LicenseName", SeqData.dhdReg.RegistryPath)
+            If strLicense = "-1" Then WriteLog(SeqData.dhdReg.RegMessage, 1)
             If strLicense <> "-1" Then strLicenseName = strLicense
-            strLicenseKey = dhdReg.ReadAnyRegKey("LicenseKey", dhdReg.RegistryPath)
-            If strLicenseKey = "-1" Then WriteLog(dhdReg.RegMessage, 1)
+            strLicenseKey = SeqData.dhdReg.ReadAnyRegKey("LicenseKey", SeqData.dhdReg.RegistryPath)
+            If strLicenseKey = "-1" Then WriteLog(SeqData.dhdReg.RegMessage, 1)
         Catch ex As Exception
-            If CurVar.DebugMode = True Then MessageBox.Show(ex.Message)
+            If SeqData.curVar.DebugMode = True Then MessageBox.Show(ex.Message)
             WriteLog(ex.Message, 1)
             blnLicenseValidated = False
         End Try
@@ -207,7 +207,7 @@ Module Common
     End Sub
 
     Public Sub FieldTextHandler(sender As Object)
-        If CurStatus.SuspendActions = False Then
+        If SeqData.curStatus.SuspendActions = False Then
             Select Case sender.FieldCategory
                 Case 1
                     If sender.Text <> sender.Tag.ToString Then
@@ -368,38 +368,38 @@ Module Common
     End Sub
 
     Public Sub DeleteOldLogs(blnUseAutoDelete As Boolean)
-        If blnUseAutoDelete = False Or dhdText.AutoDelete = True Then
+        If blnUseAutoDelete = False Or SeqData.dhdText.AutoDelete = True Then
             'delete old logs
         End If
     End Sub
 
 #Region "XML"
     Friend Sub LoadSDBASettingsXml()
-        If dhdText.CheckFile(Application.StartupPath & "\" & dhdText.InputFile) = True Then
+        If SeqData.dhdText.CheckFile(Application.StartupPath & "\" & SeqData.dhdText.InputFile) = True Then
             'LoadXmlFile
             Try
-                xmlSDBASettings.Load(Application.StartupPath & "\" & dhdText.InputFile)
-                If dhdText.CheckElement(xmlSDBASettings, "DefaultConfigFilePath") Then CurVar.DefaultConfigFilePath = xmlSDBASettings.Item("Sequenchel").Item("Settings").Item("DefaultConfigFilePath").InnerText
-                If dhdText.CheckElement(xmlSDBASettings, "SettingsFile") Then CurVar.GeneralSettings = xmlSDBASettings.Item("Sequenchel").Item("Settings").Item("SettingsFile").InnerText
-                If dhdText.CheckElement(xmlSDBASettings, "AllowSettingsChange") Then CurVar.AllowSettingsChange = xmlSDBASettings.Item("Sequenchel").Item("Settings").Item("AllowSettingsChange").InnerText
-                If dhdText.CheckElement(xmlSDBASettings, "AllowConfigurationChange") Then CurVar.AllowConfiguration = xmlSDBASettings.Item("Sequenchel").Item("Settings").Item("AllowConfigurationChange").InnerText
-                If dhdText.CheckElement(xmlSDBASettings, "AllowLinkedServersChange") Then CurVar.AllowLinkedServers = xmlSDBASettings.Item("Sequenchel").Item("Settings").Item("AllowLinkedServersChange").InnerText
-                If dhdText.CheckElement(xmlSDBASettings, "AllowReportQueryEdit") Then CurVar.AllowQueryEdit = xmlSDBASettings.Item("Sequenchel").Item("Settings").Item("AllowReportQueryEdit").InnerText
-                If dhdText.CheckElement(xmlSDBASettings, "AllowDataImport") Then CurVar.AllowDataImport = xmlSDBASettings.Item("Sequenchel").Item("Settings").Item("AllowDataImport").InnerText
-                If dhdText.CheckElement(xmlSDBASettings, "AllowSmartUpdate") Then CurVar.AllowSmartUpdate = xmlSDBASettings.Item("Sequenchel").Item("Settings").Item("AllowSmartUpdate").InnerText
-                If dhdText.CheckElement(xmlSDBASettings, "AllowUpdate") Then CurVar.AllowUpdate = xmlSDBASettings.Item("Sequenchel").Item("Settings").Item("AllowUpdate").InnerText
-                If dhdText.CheckElement(xmlSDBASettings, "AllowInsert") Then CurVar.AllowInsert = xmlSDBASettings.Item("Sequenchel").Item("Settings").Item("AllowInsert").InnerText
-                If dhdText.CheckElement(xmlSDBASettings, "AllowDelete") Then CurVar.AllowDelete = xmlSDBASettings.Item("Sequenchel").Item("Settings").Item("AllowDelete").InnerText
-                If dhdText.CheckElement(xmlSDBASettings, "OverridePassword") Then
+                xmlSDBASettings.Load(Application.StartupPath & "\" & SeqData.dhdText.InputFile)
+                If SeqData.dhdText.CheckElement(xmlSDBASettings, "DefaultConfigFilePath") Then SeqData.curVar.DefaultConfigFilePath = xmlSDBASettings.Item("Sequenchel").Item("Settings").Item("DefaultConfigFilePath").InnerText
+                If SeqData.dhdText.CheckElement(xmlSDBASettings, "SettingsFile") Then SeqData.curVar.GeneralSettings = xmlSDBASettings.Item("Sequenchel").Item("Settings").Item("SettingsFile").InnerText
+                If SeqData.dhdText.CheckElement(xmlSDBASettings, "AllowSettingsChange") Then SeqData.curVar.AllowSettingsChange = xmlSDBASettings.Item("Sequenchel").Item("Settings").Item("AllowSettingsChange").InnerText
+                If SeqData.dhdText.CheckElement(xmlSDBASettings, "AllowConfigurationChange") Then SeqData.curVar.AllowConfiguration = xmlSDBASettings.Item("Sequenchel").Item("Settings").Item("AllowConfigurationChange").InnerText
+                If SeqData.dhdText.CheckElement(xmlSDBASettings, "AllowLinkedServersChange") Then SeqData.curVar.AllowLinkedServers = xmlSDBASettings.Item("Sequenchel").Item("Settings").Item("AllowLinkedServersChange").InnerText
+                If SeqData.dhdText.CheckElement(xmlSDBASettings, "AllowReportQueryEdit") Then SeqData.curVar.AllowQueryEdit = xmlSDBASettings.Item("Sequenchel").Item("Settings").Item("AllowReportQueryEdit").InnerText
+                If SeqData.dhdText.CheckElement(xmlSDBASettings, "AllowDataImport") Then SeqData.curVar.AllowDataImport = xmlSDBASettings.Item("Sequenchel").Item("Settings").Item("AllowDataImport").InnerText
+                If SeqData.dhdText.CheckElement(xmlSDBASettings, "AllowSmartUpdate") Then SeqData.curVar.AllowSmartUpdate = xmlSDBASettings.Item("Sequenchel").Item("Settings").Item("AllowSmartUpdate").InnerText
+                If SeqData.dhdText.CheckElement(xmlSDBASettings, "AllowUpdate") Then SeqData.curVar.AllowUpdate = xmlSDBASettings.Item("Sequenchel").Item("Settings").Item("AllowUpdate").InnerText
+                If SeqData.dhdText.CheckElement(xmlSDBASettings, "AllowInsert") Then SeqData.curVar.AllowInsert = xmlSDBASettings.Item("Sequenchel").Item("Settings").Item("AllowInsert").InnerText
+                If SeqData.dhdText.CheckElement(xmlSDBASettings, "AllowDelete") Then SeqData.curVar.AllowDelete = xmlSDBASettings.Item("Sequenchel").Item("Settings").Item("AllowDelete").InnerText
+                If SeqData.dhdText.CheckElement(xmlSDBASettings, "OverridePassword") Then
                     If xmlSDBASettings.Item("Sequenchel").Item("Settings").Item("OverridePassword").InnerText.Length > 0 Then
-                        If CurVar.OverridePassword = xmlSDBASettings.Item("Sequenchel").Item("Settings").Item("OverridePassword").InnerText Then
-                            CurVar.SecurityOverride = True
+                        If SeqData.curVar.OverridePassword = xmlSDBASettings.Item("Sequenchel").Item("Settings").Item("OverridePassword").InnerText Then
+                            SeqData.curVar.SecurityOverride = True
                         End If
                     End If
                 End If
             Catch ex As Exception
-                MessageBox.Show("There was an error reading the XML file. Please check the file" & Environment.NewLine & Application.StartupPath & "\" & dhdText.InputFile & Environment.NewLine & Environment.NewLine & ex.Message)
-                WriteLog("There was an error reading the XML file. Please check the file" & Environment.NewLine & Application.StartupPath & "\" & dhdText.InputFile & Environment.NewLine & Environment.NewLine & ex.Message, 1)
+                MessageBox.Show("There was an error reading the XML file. Please check the file" & Environment.NewLine & Application.StartupPath & "\" & SeqData.dhdText.InputFile & Environment.NewLine & Environment.NewLine & ex.Message)
+                WriteLog("There was an error reading the XML file. Please check the file" & Environment.NewLine & Application.StartupPath & "\" & SeqData.dhdText.InputFile & Environment.NewLine & Environment.NewLine & ex.Message, 1)
             End Try
         Else
             If SaveSDBASettingsXml() = False Then
@@ -416,24 +416,24 @@ Module Common
         strXmlText = "<?xml version=""1.0"" standalone=""yes""?>" & Environment.NewLine
         strXmlText &= "<Sequenchel>" & Environment.NewLine
         strXmlText &= "	<Settings>" & Environment.NewLine
-        strXmlText &= "		<DefaultConfigFilePath>" & CurVar.DefaultConfigFilePath & "</DefaultConfigFilePath>" & Environment.NewLine
-        strXmlText &= "		<SettingsFile>" & CurVar.GeneralSettings & "</SettingsFile>" & Environment.NewLine
-        strXmlText &= "		<AllowSettingsChange>" & CurVar.AllowSettingsChange & "</AllowSettingsChange>" & Environment.NewLine
-        strXmlText &= "		<AllowConfigurationChange>" & CurVar.AllowConfiguration & "</AllowConfigurationChange>" & Environment.NewLine
-        strXmlText &= "		<AllowLinkedServersChange>" & CurVar.AllowLinkedServers & "</AllowLinkedServersChange>" & Environment.NewLine
-        strXmlText &= "		<AllowReportQueryEdit>" & CurVar.AllowQueryEdit & "</AllowReportQueryEdit>" & Environment.NewLine
-        strXmlText &= "		<AllowDataImport>" & CurVar.AllowDataImport & "</AllowDataImport>" & Environment.NewLine
-        strXmlText &= "		<AllowSmartUpdate>" & CurVar.AllowSmartUpdate & "</AllowSmartUpdate>" & Environment.NewLine
-        strXmlText &= "		<AllowUpdate>" & CurVar.AllowUpdate & "</AllowUpdate>" & Environment.NewLine
-        strXmlText &= "		<AllowInsert>" & CurVar.AllowInsert & "</AllowInsert>" & Environment.NewLine
-        strXmlText &= "		<AllowDelete>" & CurVar.AllowDelete & "</AllowDelete>" & Environment.NewLine
-        strXmlText &= "		<OverridePassword>" & CurVar.OverridePassword & "</OverridePassword>" & Environment.NewLine
+        strXmlText &= "		<DefaultConfigFilePath>" & SeqData.curVar.DefaultConfigFilePath & "</DefaultConfigFilePath>" & Environment.NewLine
+        strXmlText &= "		<SettingsFile>" & SeqData.curVar.GeneralSettings & "</SettingsFile>" & Environment.NewLine
+        strXmlText &= "		<AllowSettingsChange>" & SeqData.curVar.AllowSettingsChange & "</AllowSettingsChange>" & Environment.NewLine
+        strXmlText &= "		<AllowConfigurationChange>" & SeqData.curVar.AllowConfiguration & "</AllowConfigurationChange>" & Environment.NewLine
+        strXmlText &= "		<AllowLinkedServersChange>" & SeqData.curVar.AllowLinkedServers & "</AllowLinkedServersChange>" & Environment.NewLine
+        strXmlText &= "		<AllowReportQueryEdit>" & SeqData.curVar.AllowQueryEdit & "</AllowReportQueryEdit>" & Environment.NewLine
+        strXmlText &= "		<AllowDataImport>" & SeqData.curVar.AllowDataImport & "</AllowDataImport>" & Environment.NewLine
+        strXmlText &= "		<AllowSmartUpdate>" & SeqData.curVar.AllowSmartUpdate & "</AllowSmartUpdate>" & Environment.NewLine
+        strXmlText &= "		<AllowUpdate>" & SeqData.curVar.AllowUpdate & "</AllowUpdate>" & Environment.NewLine
+        strXmlText &= "		<AllowInsert>" & SeqData.curVar.AllowInsert & "</AllowInsert>" & Environment.NewLine
+        strXmlText &= "		<AllowDelete>" & SeqData.curVar.AllowDelete & "</AllowDelete>" & Environment.NewLine
+        strXmlText &= "		<OverridePassword>" & SeqData.curVar.OverridePassword & "</OverridePassword>" & Environment.NewLine
         strXmlText &= "	</Settings>" & Environment.NewLine
         strXmlText &= "</Sequenchel>" & Environment.NewLine
         Try
             xmlSDBASettings.LoadXml(strXmlText)
-            SaveSDBASettingsXml = dhdText.CreateFile(strXmlText, Application.StartupPath & "\" & dhdText.InputFile)
-            If SaveSDBASettingsXml = False Then WriteLog("There was an error saving the Settings file" & Environment.NewLine & dhdText.Errormessage, 1)
+            SaveSDBASettingsXml = SeqData.dhdText.CreateFile(strXmlText, Application.StartupPath & "\" & SeqData.dhdText.InputFile)
+            If SaveSDBASettingsXml = False Then WriteLog("There was an error saving the Settings file" & Environment.NewLine & SeqData.dhdText.Errormessage, 1)
         Catch ex As Exception
             WriteLog(strMessages.strXmlError & Environment.NewLine & ex.Message, 1)
             SaveSDBASettingsXml = Nothing
@@ -441,41 +441,41 @@ Module Common
     End Function
 
     Friend Sub LoadGeneralSettingsXml()
-        If dhdText.CheckFile(SeqData.CheckFilePath(CurVar.GeneralSettings)) = True Then
+        If SeqData.dhdText.CheckFile(SeqData.CheckFilePath(SeqData.curVar.GeneralSettings)) = True Then
             'LoadXmlFile
             Try
-                xmlGeneralSettings.Load(dhdText.PathConvert(SeqData.CheckFilePath(CurVar.GeneralSettings)))
-                If dhdText.CheckElement(xmlGeneralSettings, "DataLocation") Then dhdDatabase.DataLocation = xmlGeneralSettings.Item("Sequenchel").Item("DataBase").Item("DataLocation").InnerText
-                If dhdText.CheckElement(xmlGeneralSettings, "DatabaseName") Then dhdDatabase.DatabaseName = xmlGeneralSettings.Item("Sequenchel").Item("DataBase").Item("DatabaseName").InnerText
-                If dhdText.CheckElement(xmlGeneralSettings, "DataProvider") Then dhdDatabase.DataProvider = xmlGeneralSettings.Item("Sequenchel").Item("DataBase").Item("DataProvider").InnerText
-                If dhdText.CheckElement(xmlGeneralSettings, "LoginMethod") Then dhdDatabase.LoginMethod = xmlGeneralSettings.Item("Sequenchel").Item("DataBase").Item("LoginMethod").InnerText
-                If dhdText.CheckElement(xmlGeneralSettings, "LoginName") Then dhdDatabase.LoginName = xmlGeneralSettings.Item("Sequenchel").Item("DataBase").Item("LoginName").InnerText
-                If dhdText.CheckElement(xmlGeneralSettings, "Password") Then dhdDatabase.Password = xmlGeneralSettings.Item("Sequenchel").Item("DataBase").Item("Password").InnerText
+                xmlGeneralSettings.Load(SeqData.dhdText.PathConvert(SeqData.CheckFilePath(SeqData.curVar.GeneralSettings)))
+                If SeqData.dhdText.CheckElement(xmlGeneralSettings, "DataLocation") Then dhdDatabase.DataLocation = xmlGeneralSettings.Item("Sequenchel").Item("DataBase").Item("DataLocation").InnerText
+                If SeqData.dhdText.CheckElement(xmlGeneralSettings, "DatabaseName") Then dhdDatabase.DatabaseName = xmlGeneralSettings.Item("Sequenchel").Item("DataBase").Item("DatabaseName").InnerText
+                If SeqData.dhdText.CheckElement(xmlGeneralSettings, "DataProvider") Then dhdDatabase.DataProvider = xmlGeneralSettings.Item("Sequenchel").Item("DataBase").Item("DataProvider").InnerText
+                If SeqData.dhdText.CheckElement(xmlGeneralSettings, "LoginMethod") Then dhdDatabase.LoginMethod = xmlGeneralSettings.Item("Sequenchel").Item("DataBase").Item("LoginMethod").InnerText
+                If SeqData.dhdText.CheckElement(xmlGeneralSettings, "LoginName") Then dhdDatabase.LoginName = xmlGeneralSettings.Item("Sequenchel").Item("DataBase").Item("LoginName").InnerText
+                If SeqData.dhdText.CheckElement(xmlGeneralSettings, "Password") Then dhdDatabase.Password = xmlGeneralSettings.Item("Sequenchel").Item("DataBase").Item("Password").InnerText
 
-                If dhdText.CheckElement(xmlGeneralSettings, "LogFileName") Then dhdText.LogFileName = xmlGeneralSettings.Item("Sequenchel").Item("LogSettings").Item("LogFileName").InnerText
-                If dhdText.CheckElement(xmlGeneralSettings, "LogLevel") Then dhdText.LogLevel = xmlGeneralSettings.Item("Sequenchel").Item("LogSettings").Item("LogLevel").InnerText
-                If dhdText.CheckElement(xmlGeneralSettings, "LogLocation") Then dhdText.LogLocation = xmlGeneralSettings.Item("Sequenchel").Item("LogSettings").Item("LogLocation").InnerText
-                If dhdText.CheckElement(xmlGeneralSettings, "Retenion") Then dhdText.Retenion = xmlGeneralSettings.Item("Sequenchel").Item("LogSettings").Item("Retenion").InnerText
-                If dhdText.CheckElement(xmlGeneralSettings, "AutoDelete") Then dhdText.AutoDelete = xmlGeneralSettings.Item("Sequenchel").Item("LogSettings").Item("AutoDelete").InnerText
+                If SeqData.dhdText.CheckElement(xmlGeneralSettings, "LogFileName") Then SeqData.dhdText.LogFileName = xmlGeneralSettings.Item("Sequenchel").Item("LogSettings").Item("LogFileName").InnerText
+                If SeqData.dhdText.CheckElement(xmlGeneralSettings, "LogLevel") Then SeqData.dhdText.LogLevel = xmlGeneralSettings.Item("Sequenchel").Item("LogSettings").Item("LogLevel").InnerText
+                If SeqData.dhdText.CheckElement(xmlGeneralSettings, "LogLocation") Then SeqData.dhdText.LogLocation = xmlGeneralSettings.Item("Sequenchel").Item("LogSettings").Item("LogLocation").InnerText
+                If SeqData.dhdText.CheckElement(xmlGeneralSettings, "Retenion") Then SeqData.dhdText.Retenion = xmlGeneralSettings.Item("Sequenchel").Item("LogSettings").Item("Retenion").InnerText
+                If SeqData.dhdText.CheckElement(xmlGeneralSettings, "AutoDelete") Then SeqData.dhdText.AutoDelete = xmlGeneralSettings.Item("Sequenchel").Item("LogSettings").Item("AutoDelete").InnerText
 
-                If dhdText.CheckElement(xmlGeneralSettings, "Connections") Then CurVar.ConnectionsFile = xmlGeneralSettings.Item("Sequenchel").Item("Settings").Item("Connections").InnerText
-                If dhdText.CheckElement(xmlGeneralSettings, "UsersetLocation") Then CurVar.UsersetLocation = xmlGeneralSettings.Item("Sequenchel").Item("Settings").Item("UsersetLocation").InnerText
-                If dhdText.CheckElement(xmlGeneralSettings, "LimitLookupLists") Then CurVar.LimitLookupLists = xmlGeneralSettings.Item("Sequenchel").Item("Settings").Item("LimitLookupLists").InnerText
-                If dhdText.CheckElement(xmlGeneralSettings, "LimitLookupListsCount") Then CurVar.LimitLookupListsCount = xmlGeneralSettings.Item("Sequenchel").Item("Settings").Item("LimitLookupListsCount").InnerText
-                If dhdText.CheckElement(xmlGeneralSettings, "DateTimeStyle") Then CurVar.DateTimeStyle = xmlGeneralSettings.Item("Sequenchel").Item("Settings").Item("DateTimeStyle").InnerText
-                If dhdText.CheckElement(xmlGeneralSettings, "IncludeDate") Then CurVar.IncludeDate = xmlGeneralSettings.Item("Sequenchel").Item("Settings").Item("IncludeDate").InnerText
+                If SeqData.dhdText.CheckElement(xmlGeneralSettings, "Connections") Then SeqData.curVar.ConnectionsFile = xmlGeneralSettings.Item("Sequenchel").Item("Settings").Item("Connections").InnerText
+                If SeqData.dhdText.CheckElement(xmlGeneralSettings, "UsersetLocation") Then SeqData.curVar.UsersetLocation = xmlGeneralSettings.Item("Sequenchel").Item("Settings").Item("UsersetLocation").InnerText
+                If SeqData.dhdText.CheckElement(xmlGeneralSettings, "LimitLookupLists") Then SeqData.curVar.LimitLookupLists = xmlGeneralSettings.Item("Sequenchel").Item("Settings").Item("LimitLookupLists").InnerText
+                If SeqData.dhdText.CheckElement(xmlGeneralSettings, "LimitLookupListsCount") Then SeqData.curVar.LimitLookupListsCount = xmlGeneralSettings.Item("Sequenchel").Item("Settings").Item("LimitLookupListsCount").InnerText
+                If SeqData.dhdText.CheckElement(xmlGeneralSettings, "DateTimeStyle") Then SeqData.curVar.DateTimeStyle = xmlGeneralSettings.Item("Sequenchel").Item("Settings").Item("DateTimeStyle").InnerText
+                If SeqData.dhdText.CheckElement(xmlGeneralSettings, "IncludeDate") Then SeqData.curVar.IncludeDate = xmlGeneralSettings.Item("Sequenchel").Item("Settings").Item("IncludeDate").InnerText
 
-                If dhdText.CheckElement(xmlGeneralSettings, "SmtpServer") Then SeqData.dhdText.SmtpServer = xmlGeneralSettings.Item("Sequenchel").Item("Email").Item("SmtpServer").InnerText
-                If dhdText.CheckElement(xmlGeneralSettings, "SmtpCredentials") Then SeqData.dhdText.SmtpCredentials = xmlGeneralSettings.Item("Sequenchel").Item("Email").Item("SmtpCredentials").InnerText
-                If dhdText.CheckElement(xmlGeneralSettings, "SmtpServerUsername") Then SeqData.dhdText.SmtpUser = xmlGeneralSettings.Item("Sequenchel").Item("Email").Item("SmtpServerUsername").InnerText
-                If dhdText.CheckElement(xmlGeneralSettings, "SmtpServerPassword") Then SeqData.dhdText.SmtpPassword = xmlGeneralSettings.Item("Sequenchel").Item("Email").Item("SmtpServerPassword").InnerText
-                If dhdText.CheckElement(xmlGeneralSettings, "SmtpReply") Then SeqData.dhdText.SmtpReply = xmlGeneralSettings.Item("Sequenchel").Item("Email").Item("SmtpReply").InnerText
-                If dhdText.CheckElement(xmlGeneralSettings, "SmtpPort") Then SeqData.dhdText.SmtpPort = xmlGeneralSettings.Item("Sequenchel").Item("Email").Item("SmtpPort").InnerText
-                If dhdText.CheckElement(xmlGeneralSettings, "SmtpSsl") Then SeqData.dhdText.SmtpSsl = xmlGeneralSettings.Item("Sequenchel").Item("Email").Item("SmtpSsl").InnerText
+                If SeqData.dhdText.CheckElement(xmlGeneralSettings, "SmtpServer") Then SeqData.dhdText.SmtpServer = xmlGeneralSettings.Item("Sequenchel").Item("Email").Item("SmtpServer").InnerText
+                If SeqData.dhdText.CheckElement(xmlGeneralSettings, "SmtpCredentials") Then SeqData.dhdText.SmtpCredentials = xmlGeneralSettings.Item("Sequenchel").Item("Email").Item("SmtpCredentials").InnerText
+                If SeqData.dhdText.CheckElement(xmlGeneralSettings, "SmtpServerUsername") Then SeqData.dhdText.SmtpUser = xmlGeneralSettings.Item("Sequenchel").Item("Email").Item("SmtpServerUsername").InnerText
+                If SeqData.dhdText.CheckElement(xmlGeneralSettings, "SmtpServerPassword") Then SeqData.dhdText.SmtpPassword = xmlGeneralSettings.Item("Sequenchel").Item("Email").Item("SmtpServerPassword").InnerText
+                If SeqData.dhdText.CheckElement(xmlGeneralSettings, "SmtpReply") Then SeqData.dhdText.SmtpReply = xmlGeneralSettings.Item("Sequenchel").Item("Email").Item("SmtpReply").InnerText
+                If SeqData.dhdText.CheckElement(xmlGeneralSettings, "SmtpPort") Then SeqData.dhdText.SmtpPort = xmlGeneralSettings.Item("Sequenchel").Item("Email").Item("SmtpPort").InnerText
+                If SeqData.dhdText.CheckElement(xmlGeneralSettings, "SmtpSsl") Then SeqData.dhdText.SmtpSsl = xmlGeneralSettings.Item("Sequenchel").Item("Email").Item("SmtpSsl").InnerText
 
             Catch ex As Exception
-                MessageBox.Show("There was an error reading the XML file. Please check the file" & Environment.NewLine & CurVar.GeneralSettings & Environment.NewLine & ex.Message)
-                WriteLog("There was an error reading the XML file. Please check the file" & Environment.NewLine & CurVar.GeneralSettings & Environment.NewLine & ex.Message, 1)
+                MessageBox.Show("There was an error reading the XML file. Please check the file" & Environment.NewLine & SeqData.curVar.GeneralSettings & Environment.NewLine & ex.Message)
+                WriteLog("There was an error reading the XML file. Please check the file" & Environment.NewLine & SeqData.curVar.GeneralSettings & Environment.NewLine & ex.Message, 1)
             End Try
         Else
             If SaveGeneralSettingsXml() = False Then
@@ -485,9 +485,9 @@ Module Common
 
         'dhdDatabase.CheckDB()
 
-        If CurVar.DebugMode Then
+        If SeqData.curVar.DebugMode Then
             MessageBox.Show("Sequenchel v " & Application.ProductVersion & Environment.NewLine _
-             & "   GeneralSettings = " & CurVar.GeneralSettings & Environment.NewLine _
+             & "   GeneralSettings = " & SeqData.curVar.GeneralSettings & Environment.NewLine _
              & "   DatabaseServer = " & dhdDatabase.DataLocation & Environment.NewLine _
              & "   Database Name = " & dhdDatabase.DatabaseName & Environment.NewLine _
              & "   DataProvider = " & dhdDatabase.DataProvider & Environment.NewLine _
@@ -496,16 +496,16 @@ Module Common
              & "   Password = " & dhdDatabase.Password & Environment.NewLine _
              & "   Main Database online = " & dhdDatabase.DataBaseOnline & Environment.NewLine _
              & Environment.NewLine _
-             & "   LogFileName = " & dhdText.LogFileName & Environment.NewLine _
-             & "   LogLevel = " & dhdText.LogLevel & Environment.NewLine _
-             & "   LogLocation = " & dhdText.LogLocation & Environment.NewLine _
-             & "   Retenion = " & dhdText.Retenion & Environment.NewLine _
-             & "   AutoDelete = " & dhdText.AutoDelete & Environment.NewLine _
+             & "   LogFileName = " & SeqData.dhdText.LogFileName & Environment.NewLine _
+             & "   LogLevel = " & SeqData.dhdText.LogLevel & Environment.NewLine _
+             & "   LogLocation = " & SeqData.dhdText.LogLocation & Environment.NewLine _
+             & "   Retenion = " & SeqData.dhdText.Retenion & Environment.NewLine _
+             & "   AutoDelete = " & SeqData.dhdText.AutoDelete & Environment.NewLine _
              & Environment.NewLine _
-             & "   ConnectionsFile = " & CurVar.ConnectionsFile & Environment.NewLine _
-             & "   UsersetLocation = " & CurVar.UsersetLocation & Environment.NewLine _
-             & "   DateTimeStyle = " & CurVar.DateTimeStyle & Environment.NewLine _
-             & "   IncludeDate = " & CurVar.IncludeDate & Environment.NewLine _
+             & "   ConnectionsFile = " & SeqData.curVar.ConnectionsFile & Environment.NewLine _
+             & "   UsersetLocation = " & SeqData.curVar.UsersetLocation & Environment.NewLine _
+             & "   DateTimeStyle = " & SeqData.curVar.DateTimeStyle & Environment.NewLine _
+             & "   IncludeDate = " & SeqData.curVar.IncludeDate & Environment.NewLine _
              & "   Running in Debug Mode")
         End If
 
@@ -525,21 +525,21 @@ Module Common
         strXmlText &= "		<Password>" & dhdDatabase.Password & "</Password>" & Environment.NewLine
         strXmlText &= "	</DataBase>" & Environment.NewLine
         strXmlText &= "	<LogSettings>" & Environment.NewLine
-        strXmlText &= "		<LogFileName>" & dhdText.LogFileName & "</LogFileName>" & Environment.NewLine
-        strXmlText &= "		<LogLevel>" & dhdText.LogLevel & "</LogLevel>" & Environment.NewLine
-        strXmlText &= "		<LogLocation>" & dhdText.LogLocation & "</LogLocation>" & Environment.NewLine
-        strXmlText &= "		<Retenion>" & dhdText.Retenion & "</Retenion>" & Environment.NewLine
-        strXmlText &= "		<AutoDelete>" & dhdText.AutoDelete & "</AutoDelete>" & Environment.NewLine
+        strXmlText &= "		<LogFileName>" & SeqData.dhdText.LogFileName & "</LogFileName>" & Environment.NewLine
+        strXmlText &= "		<LogLevel>" & SeqData.dhdText.LogLevel & "</LogLevel>" & Environment.NewLine
+        strXmlText &= "		<LogLocation>" & SeqData.dhdText.LogLocation & "</LogLocation>" & Environment.NewLine
+        strXmlText &= "		<Retenion>" & SeqData.dhdText.Retenion & "</Retenion>" & Environment.NewLine
+        strXmlText &= "		<AutoDelete>" & SeqData.dhdText.AutoDelete & "</AutoDelete>" & Environment.NewLine
         strXmlText &= "		<Language>EN</Language>" & Environment.NewLine
         strXmlText &= "		<LanguageOverride>False</LanguageOverride>" & Environment.NewLine
         strXmlText &= "	</LogSettings>" & Environment.NewLine
         strXmlText &= "	<Settings>" & Environment.NewLine
-        strXmlText &= "		<Connections>" & CurVar.ConnectionsFile & "</Connections>" & Environment.NewLine
+        strXmlText &= "		<Connections>" & SeqData.curVar.ConnectionsFile & "</Connections>" & Environment.NewLine
         strXmlText &= "		<UsersetLocation>REGISTRY</UsersetLocation>" & Environment.NewLine
-        strXmlText &= "		<LimitLookupLists>" & CurVar.LimitLookupLists & "</LimitLookupLists>" & Environment.NewLine
-        strXmlText &= "		<LimitLookupListsCount>" & CurVar.LimitLookupListsCount & "</LimitLookupListsCount>" & Environment.NewLine
-        strXmlText &= "		<DateTimeStyle>" & CurVar.DateTimeStyle & "</DateTimeStyle>" & Environment.NewLine
-        strXmlText &= "		<IncludeDate>" & CurVar.IncludeDate & "</IncludeDate>" & Environment.NewLine
+        strXmlText &= "		<LimitLookupLists>" & SeqData.curVar.LimitLookupLists & "</LimitLookupLists>" & Environment.NewLine
+        strXmlText &= "		<LimitLookupListsCount>" & SeqData.curVar.LimitLookupListsCount & "</LimitLookupListsCount>" & Environment.NewLine
+        strXmlText &= "		<DateTimeStyle>" & SeqData.curVar.DateTimeStyle & "</DateTimeStyle>" & Environment.NewLine
+        strXmlText &= "		<IncludeDate>" & SeqData.curVar.IncludeDate & "</IncludeDate>" & Environment.NewLine
         strXmlText &= "	</Settings>" & Environment.NewLine
         strXmlText &= "	<Email>" & Environment.NewLine
         strXmlText &= "		<SmtpServer>" & SeqData.dhdText.SmtpServer & "</SmtpServer>" & Environment.NewLine
@@ -554,8 +554,8 @@ Module Common
 
         Try
             xmlGeneralSettings.LoadXml(strXmlText)
-            SaveGeneralSettingsXml = dhdText.CreateFile(strXmlText, SeqData.CheckFilePath(CurVar.GeneralSettings))
-            If SaveGeneralSettingsXml = False Then WriteLog("There was an error saving the General Settings file" & Environment.NewLine & dhdText.Errormessage, 1)
+            SaveGeneralSettingsXml = SeqData.dhdText.CreateFile(strXmlText, SeqData.CheckFilePath(SeqData.curVar.GeneralSettings))
+            If SaveGeneralSettingsXml = False Then WriteLog("There was an error saving the General Settings file" & Environment.NewLine & SeqData.dhdText.Errormessage, 1)
         Catch ex As Exception
             WriteLog(strMessages.strXmlError & Environment.NewLine & ex.Message, 1)
             SaveGeneralSettingsXml = Nothing
@@ -563,35 +563,35 @@ Module Common
     End Function
 
     Friend Function LoadConnectionsXml() As List(Of String)
-        If dhdText.CheckFile(SeqData.CheckFilePath(CurVar.ConnectionsFile)) = True Then
+        If SeqData.dhdText.CheckFile(SeqData.CheckFilePath(SeqData.curVar.ConnectionsFile)) = True Then
             'LoadXmlFile
             'Dim lstXml As XmlNodeList
             Try
-                xmlConnections.Load(dhdText.PathConvert(SeqData.CheckFilePath(CurVar.ConnectionsFile)))
+                xmlConnections.Load(SeqData.dhdText.PathConvert(SeqData.CheckFilePath(SeqData.curVar.ConnectionsFile)))
                 Dim blnConnectionExists As Boolean = False
-                CurVar.ConnectionDefault = ""
+                SeqData.curVar.ConnectionDefault = ""
 
                 Dim xNode As XmlNode
                 Dim ReturnValue As New List(Of String)
                 For Each xNode In xmlConnections.SelectNodes("//Connection")
-                    If xNode.Item("ConnectionName").InnerText = CurStatus.Connection Then blnConnectionExists = True
+                    If xNode.Item("ConnectionName").InnerText = SeqData.curStatus.Connection Then blnConnectionExists = True
                     ReturnValue.Add(xNode.Item("ConnectionName").InnerText)
                     If xNode.Attributes("Default").Value = "True" Then
-                        CurVar.ConnectionDefault = xNode.Item("ConnectionName").InnerText
+                        SeqData.curVar.ConnectionDefault = xNode.Item("ConnectionName").InnerText
                     End If
                 Next
-                If blnConnectionExists = False Then CurStatus.Connection = CurVar.ConnectionDefault
+                If blnConnectionExists = False Then SeqData.curStatus.Connection = SeqData.curVar.ConnectionDefault
                 Return ReturnValue
             Catch ex As Exception
-                MessageBox.Show("There was an error reading the XML file. Please check the file" & Environment.NewLine & dhdText.PathConvert(CurVar.ConnectionsFile) & Environment.NewLine & ex.Message)
-                WriteLog("There was an error reading the XML file. Please check the file" & Environment.NewLine & dhdText.PathConvert(CurVar.ConnectionsFile) & Environment.NewLine & ex.Message, 1)
+                MessageBox.Show("There was an error reading the XML file. Please check the file" & Environment.NewLine & SeqData.dhdText.PathConvert(SeqData.curVar.ConnectionsFile) & Environment.NewLine & ex.Message)
+                WriteLog("There was an error reading the XML file. Please check the file" & Environment.NewLine & SeqData.dhdText.PathConvert(SeqData.curVar.ConnectionsFile) & Environment.NewLine & ex.Message, 1)
             End Try
         Else
             xmlConnections.RemoveAll()
             xmlTableSets.RemoveAll()
-            CurVar.TableSetsFile = ""
+            SeqData.curVar.TableSetsFile = ""
             xmlTables.RemoveAll()
-            CurVar.TablesFile = ""
+            SeqData.curVar.TablesFile = ""
             TableClear()
             dhdConnection = dhdDatabase
         End If
@@ -599,7 +599,7 @@ Module Common
     End Function
 
     Friend Sub LoadConnection(strConnection As String)
-        Dim xmlConnNode As XmlNode = dhdText.FindXmlNode(xmlConnections, "Connection", "ConnectionName", strConnection)
+        Dim xmlConnNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlConnections, "Connection", "ConnectionName", strConnection)
 
         dhdConnection.DataLocation = xmlConnNode.Item("DataLocation").InnerText
         dhdConnection.DatabaseName = xmlConnNode.Item("DataBaseName").InnerText
@@ -607,7 +607,7 @@ Module Common
         dhdConnection.LoginMethod = xmlConnNode.Item("LoginMethod").InnerText
         dhdConnection.LoginName = xmlConnNode.Item("LoginName").InnerText
         dhdConnection.Password = DataHandler.txt.DecryptText(xmlConnNode.Item("Password").InnerText)
-        CurVar.TableSetsFile = xmlConnNode.Item("TableSets").InnerText
+        SeqData.curVar.TableSetsFile = xmlConnNode.Item("TableSets").InnerText
 
         dhdConnection.CheckDB()
 
@@ -627,47 +627,47 @@ Module Common
     End Sub
 
     Friend Function LoadTableSetsXml() As List(Of String)
-        If dhdText.CheckFile(SeqData.CheckFilePath(CurVar.TableSetsFile)) = True Then
+        If SeqData.dhdText.CheckFile(SeqData.CheckFilePath(SeqData.curVar.TableSetsFile)) = True Then
 
             'LoadXmlFile
             'Dim lstXml As XmlNodeList
             Try
-                xmlTableSets.Load(dhdText.PathConvert(SeqData.CheckFilePath(CurVar.TableSetsFile)))
-                CurVar.TableSetDefault = ""
+                xmlTableSets.Load(SeqData.dhdText.PathConvert(SeqData.CheckFilePath(SeqData.curVar.TableSetsFile)))
+                SeqData.curVar.TableSetDefault = ""
                 Dim blnTableSetExists As Boolean = False
 
                 Dim TableSetNode As XmlNode
                 Dim ReturnValue As New List(Of String)
                 For Each TableSetNode In xmlTableSets.SelectNodes("//TableSet")
-                    If TableSetNode.Item("TableSetName").InnerText = CurStatus.TableSet Then blnTableSetExists = True
+                    If TableSetNode.Item("TableSetName").InnerText = SeqData.curStatus.TableSet Then blnTableSetExists = True
                     ReturnValue.Add(TableSetNode.Item("TableSetName").InnerText)
                     If TableSetNode.Attributes("Default").Value = "True" Then
-                        CurVar.TableSetDefault = TableSetNode.Item("TableSetName").InnerText
+                        SeqData.curVar.TableSetDefault = TableSetNode.Item("TableSetName").InnerText
                     End If
                 Next
-                If blnTableSetExists = False Then CurStatus.TableSet = CurVar.TableSetDefault
+                If blnTableSetExists = False Then SeqData.curStatus.TableSet = SeqData.curVar.TableSetDefault
                 Return ReturnValue
             Catch ex As Exception
-                MessageBox.Show("There was an error reading the XML file. Please check the file" & Environment.NewLine & dhdText.PathConvert(CurVar.TableSetsFile) & Environment.NewLine & ex.Message)
-                WriteLog("There was an error reading the XML file. Please check the file" & Environment.NewLine & dhdText.PathConvert(CurVar.TableSetsFile) & Environment.NewLine & ex.Message, 1)
+                MessageBox.Show("There was an error reading the XML file. Please check the file" & Environment.NewLine & SeqData.dhdText.PathConvert(SeqData.curVar.TableSetsFile) & Environment.NewLine & ex.Message)
+                WriteLog("There was an error reading the XML file. Please check the file" & Environment.NewLine & SeqData.dhdText.PathConvert(SeqData.curVar.TableSetsFile) & Environment.NewLine & ex.Message, 1)
             End Try
         Else
             xmlTableSets.RemoveAll()
             xmlTables.RemoveAll()
-            CurVar.TablesFile = ""
+            SeqData.curVar.TablesFile = ""
             TableClear()
         End If
         Return Nothing
     End Function
 
     Friend Sub LoadTableSet(strTableSet As String)
-        Dim xmlTSNode As XmlNode = dhdText.FindXmlNode(xmlTableSets, "TableSet", "TableSetName", strTableSet)
+        Dim xmlTSNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlTableSets, "TableSet", "TableSetName", strTableSet)
         If xmlTSNode Is Nothing Then Exit Sub
-        CurStatus.TableSet = xmlTSNode.Item("TableSetName").InnerText
-        CurVar.TablesFile = xmlTSNode.Item("TablesFile").InnerText
-        dhdText.OutputFile = xmlTSNode.Item("OutputPath").InnerText
-        CurVar.ReportSetFile = xmlTSNode.Item("ReportSet").InnerText
-        If dhdText.CheckNodeElement(xmlTSNode, "Search") Then CurVar.SearchFile = xmlTSNode.Item("Search").InnerText
+        SeqData.curStatus.TableSet = xmlTSNode.Item("TableSetName").InnerText
+        SeqData.curVar.TablesFile = xmlTSNode.Item("TablesFile").InnerText
+        SeqData.dhdText.OutputFile = xmlTSNode.Item("OutputPath").InnerText
+        SeqData.curVar.ReportSetFile = xmlTSNode.Item("ReportSet").InnerText
+        If SeqData.dhdText.CheckNodeElement(xmlTSNode, "Search") Then SeqData.curVar.SearchFile = xmlTSNode.Item("Search").InnerText
 
         'If CurVar.DebugMode Then
         '    MessageBox.Show(xmlTSNode.OuterXml & Environment.NewLine & _
@@ -680,46 +680,46 @@ Module Common
     End Sub
 
     Friend Function LoadTablesXml() As List(Of String)
-        If dhdText.CheckFile(SeqData.CheckFilePath(CurVar.TablesFile)) = True Then
+        If SeqData.dhdText.CheckFile(SeqData.CheckFilePath(SeqData.curVar.TablesFile)) = True Then
 
             'LoadXmlFile
             'Dim lstXml As XmlNodeList
             Try
-                xmlTables.Load(dhdText.PathConvert(SeqData.CheckFilePath(CurVar.TablesFile)))
+                xmlTables.Load(SeqData.dhdText.PathConvert(SeqData.CheckFilePath(SeqData.curVar.TablesFile)))
                 Dim blnTableExists As Boolean = False
-                CurVar.TableDefault = ""
+                SeqData.curVar.TableDefault = ""
 
                 Dim TableNode As XmlNode
                 Dim ReturnValue As New List(Of String)
                 For Each TableNode In xmlTables.SelectNodes("//Table")
-                    If TableNode.Item("Name").InnerText = CurStatus.Table Then blnTableExists = True
+                    If TableNode.Item("Name").InnerText = SeqData.curStatus.Table Then blnTableExists = True
                     ReturnValue.Add(TableNode.Item("Alias").InnerText)
                     If TableNode.Attributes("Default").Value = "True" Then
-                        CurVar.TableDefault = TableNode.Item("Alias").InnerText
+                        SeqData.curVar.TableDefault = TableNode.Item("Alias").InnerText
                     End If
                 Next
-                If blnTableExists = False Then CurStatus.Table = CurVar.TableDefault
+                If blnTableExists = False Then SeqData.curStatus.Table = SeqData.curVar.TableDefault
                 Return ReturnValue
             Catch ex As Exception
-                MessageBox.Show("There was an error reading the XML file. Please check the file" & Environment.NewLine & dhdText.PathConvert(CurVar.TablesFile) & Environment.NewLine & ex.Message)
-                WriteLog("There was an error reading the XML file. Please check the file" & Environment.NewLine & dhdText.PathConvert(CurVar.TablesFile) & Environment.NewLine & ex.Message, 1)
+                MessageBox.Show("There was an error reading the XML file. Please check the file" & Environment.NewLine & SeqData.dhdText.PathConvert(SeqData.curVar.TablesFile) & Environment.NewLine & ex.Message)
+                WriteLog("There was an error reading the XML file. Please check the file" & Environment.NewLine & SeqData.dhdText.PathConvert(SeqData.curVar.TablesFile) & Environment.NewLine & ex.Message, 1)
             End Try
         Else
             xmlTables.RemoveAll()
             Dim root As XmlElement = xmlTables.DocumentElement
             If root Is Nothing Then
-                xmlTables = dhdText.CreateRootDocument(xmlTables, "Sequenchel", "Tables", True)
+                xmlTables = SeqData.dhdText.CreateRootDocument(xmlTables, "Sequenchel", "Tables", True)
             End If
         End If
         Return Nothing
     End Function
 
     Friend Function LoadReportsXml() As List(Of String)
-        If dhdText.CheckFile(SeqData.CheckFilePath(CurVar.ReportSetFile)) = True Then
+        If SeqData.dhdText.CheckFile(SeqData.CheckFilePath(SeqData.curVar.ReportSetFile)) = True Then
             'LoadXmlFile
             'Dim lstXml As XmlNodeList
             Try
-                xmlReports.Load(dhdText.PathConvert(SeqData.CheckFilePath(CurVar.ReportSetFile)))
+                xmlReports.Load(SeqData.dhdText.PathConvert(SeqData.CheckFilePath(SeqData.curVar.ReportSetFile)))
                 'Dim blnConnectionExists As Boolean = False
                 'CurVar.ConnectionDefault = ""
 
@@ -735,8 +735,8 @@ Module Common
                 ' If blnConnectionExists = False Then CurStatus.Connection = CurVar.ConnectionDefault
                 Return ReturnValue
             Catch ex As Exception
-                MessageBox.Show("There was an error reading the XML file. Please check the file" & Environment.NewLine & dhdText.PathConvert(CurVar.ReportSetFile) & Environment.NewLine & ex.Message)
-                WriteLog("There was an error reading the XML file. Please check the file" & Environment.NewLine & dhdText.PathConvert(CurVar.ReportSetFile) & Environment.NewLine & ex.Message, 1)
+                MessageBox.Show("There was an error reading the XML file. Please check the file" & Environment.NewLine & SeqData.dhdText.PathConvert(SeqData.curVar.ReportSetFile) & Environment.NewLine & ex.Message)
+                WriteLog("There was an error reading the XML file. Please check the file" & Environment.NewLine & SeqData.dhdText.PathConvert(SeqData.curVar.ReportSetFile) & Environment.NewLine & ex.Message, 1)
             End Try
         Else
             xmlReports.RemoveAll()
@@ -745,23 +745,23 @@ Module Common
     End Function
 
     Friend Function LoadSearchXml(strTable As String) As List(Of String)
-        If dhdText.CheckFile(SeqData.CheckFilePath(CurVar.SearchFile)) = True Then
+        If SeqData.dhdText.CheckFile(SeqData.CheckFilePath(SeqData.curVar.SearchFile)) = True Then
             'LoadXmlFile
             'Dim lstXml As XmlNodeList
             Try
-                xmlSearch.Load(dhdText.PathConvert(SeqData.CheckFilePath(CurVar.SearchFile)))
+                xmlSearch.Load(SeqData.dhdText.PathConvert(SeqData.CheckFilePath(SeqData.curVar.SearchFile)))
                 'Dim blnConnectionExists As Boolean = False
                 'CurVar.ConnectionDefault = ""
 
                 Dim xNode As XmlNode
                 Dim ReturnValue As New List(Of String)
-                For Each xNode In dhdText.FindXmlNodes(xmlSearch, "Searches/Search", "TableName", strTable)
+                For Each xNode In SeqData.dhdText.FindXmlNodes(xmlSearch, "Searches/Search", "TableName", strTable)
                     ReturnValue.Add(xNode.Item("SearchName").InnerText)
                 Next
                 Return ReturnValue
             Catch ex As Exception
-                MessageBox.Show("There was an error reading the XML file. Please check the file" & Environment.NewLine & dhdText.PathConvert(CurVar.SearchFile) & Environment.NewLine & ex.Message)
-                WriteLog("There was an error reading the XML file. Please check the file" & Environment.NewLine & dhdText.PathConvert(CurVar.SearchFile) & Environment.NewLine & ex.Message, 1)
+                MessageBox.Show("There was an error reading the XML file. Please check the file" & Environment.NewLine & SeqData.dhdText.PathConvert(SeqData.curVar.SearchFile) & Environment.NewLine & ex.Message)
+                WriteLog("There was an error reading the XML file. Please check the file" & Environment.NewLine & SeqData.dhdText.PathConvert(SeqData.curVar.SearchFile) & Environment.NewLine & ex.Message, 1)
             End Try
         Else
             xmlSearch.RemoveAll()
@@ -769,8 +769,8 @@ Module Common
         Return Nothing
     End Function
 
-    Friend Sub ExportFile(dtsInput As DataSet, strFileName As String, blnShowFile As Boolean, Optional blnHasHeaders As Boolean = True, Optional Delimiter As String = ",", Optional QuoteValues As Boolean = False)
-        If CurVar.IncludeDate = True Then
+    Friend Function GetSaveFileName(strFileName As String) As String
+        If SeqData.curVar.IncludeDate = True Then
             strFileName = strFileName & "_" & SeqData.FormatFileDate(Now)
         End If
 
@@ -782,43 +782,42 @@ Module Common
         sfdFile.OverwritePrompt = True
 
         If (sfdFile.ShowDialog() <> DialogResult.OK) Then
-            Return
+            Return Nothing
         End If
 
-        CursorControl("Wait")
         Dim strTargetFile As String = sfdFile.FileName
-        'Dim strExtension As String = sfdFile.FileName.Substring(sfdFile.FileName.LastIndexOf(".") + 1, sfdFile.FileName.Length - (sfdFile.FileName.LastIndexOf(".") + 1))
+        Select Case sfdFile.FilterIndex
+            Case 1
+                SeqData.curVar.ConvertToText = False
+                SeqData.curVar.ConvertToNull = False
+            Case 2
+                SeqData.curVar.ConvertToText = True
+                SeqData.curVar.ConvertToNull = False
+            Case 3
+                SeqData.curVar.ConvertToText = True
+                SeqData.curVar.ConvertToNull = False
+            Case 4
+                SeqData.curVar.ConvertToText = True
+                SeqData.curVar.ConvertToNull = False
+            Case Else
+                'unknown selection, do not try to save or show file
+                SeqData.curVar.ShowFile = False
+                Return Nothing
+        End Select
+
+        Return strTargetFile
+    End Function
+
+    Friend Sub ExportFile(dtsInput As DataSet, strFileName As String)
+        CursorControl("Wait")
         Try
-            Select Case sfdFile.FilterIndex
-                Case 1
-                    Excel.CreateExcelDocument(dtsInput, strTargetFile)
-                Case 2
-                    Excel.CreateExcelDocument(dhdDatabase.ConvertToText(dtsInput), strTargetFile)
-                Case 3
-                    dhdText.ExportDataSetToXML(dhdDatabase.ConvertToText(dtsInput), strTargetFile)
-                Case 4
-                    dhdText.DataSetToCsv(dtsInput.Tables(0), strTargetFile, blnHasHeaders, Delimiter, QuoteValues)
-                Case Else
-                    'unknown filetype, do nothing
-                    blnShowFile = False
-            End Select
+            SeqData.ExportFile(dtsInput, strFileName, SeqData.curVar.ConvertToText, SeqData.curVar.ConvertToNull, SeqData.curVar.ShowFile, SeqData.curVar.HasHeaders, SeqData.curVar.Delimiter, SeqData.curVar.QuoteValues, SeqData.curVar.CreateDir)
         Catch ex As Exception
-            blnShowFile = False
-            WriteLog("Couldn't create Excel file.\r\nException: " + ex.Message, 1)
+            SeqData.curVar.ShowFile = False
+            WriteLog("An error occured while creating the file." & Environment.NewLine & +ex.Message, 1)
         End Try
         CursorControl()
-
-        If blnShowFile = True Then
-            Dim p As New Process
-            p.StartInfo = New ProcessStartInfo(strTargetFile)
-            p.Start()
-        End If
-
     End Sub
-
-    Friend Function CheckElement(ByVal xmlDoc As XDocument, ByVal name As XName) As Boolean
-        Return xmlDoc.Descendants(name).Any()
-    End Function
 
     Friend Sub DisplayXmlFile(ByVal xmlDoc As Xml.XmlDocument, ByVal tvw As TreeView)
         tvw.Nodes.Clear()
@@ -892,7 +891,7 @@ Module Common
     End Function
 
     Friend Function DatabaseTest(dhdConnect As DataHandler.db) As Boolean
-        If CurVar.DebugMode Then
+        If SeqData.curVar.DebugMode Then
             MessageBox.Show("Sequenchel v " & Application.ProductVersion & " Database Settings" & Environment.NewLine _
              & "   DatabaseServer = " & dhdConnect.DataLocation & Environment.NewLine _
              & "   Database Name = " & dhdConnect.DatabaseName & Environment.NewLine _
@@ -957,14 +956,14 @@ Module Common
         strDateTime = Now.ToString("yyyyMMdd_HHmmss")
         strQuery = ""
         strQuery = "exec usp_BackupHandle 'CREATE','" & dhdConnect.DatabaseName & "','" & strPath & "','" & strDateTime & "'"
-        If CurVar.DebugMode Then MessageBox.Show("DatabaseName = " & dhdConnect.DatabaseName & Environment.NewLine & _
+        If SeqData.curVar.DebugMode Then MessageBox.Show("DatabaseName = " & dhdConnect.DatabaseName & Environment.NewLine & _
                                             "strPath = " & strPath & Environment.NewLine & _
                                             "strDateTime = " & strDateTime & Environment.NewLine & _
                                             strQuery)
         Try
             QueryDb(dhdConnect, strQuery, False)
         Catch ex As Exception
-            dhdText.LogLocation = ""
+            SeqData.dhdText.LogLocation = ""
             WriteLog(ex.Message, 1)
             MessageBox.Show(ex.Message)
         End Try
@@ -1043,7 +1042,7 @@ Module Common
         Try
             dhdDatabase.QueryDatabase(strQuery, False)
         Catch ex As Exception
-            dhdText.LogLocation = ""
+            SeqData.dhdText.LogLocation = ""
             WriteLog(ex.Message, 1)
             MessageBox.Show(ex.Message)
         End Try
@@ -1056,7 +1055,7 @@ Module Common
         Try
             QueryDb(dhdDatabase, strQuery, False)
         Catch ex As Exception
-            dhdText.LogLocation = ""
+            SeqData.dhdText.LogLocation = ""
             WriteLog(ex.Message, 1)
             MessageBox.Show(ex.Message)
         End Try
@@ -1342,8 +1341,8 @@ Module Common
     Friend Function GetFieldDataType(strFullFieldName As String) As String
         Dim strTableName As String = strFullFieldName.Substring(0, strFullFieldName.LastIndexOf("."))
         Dim strFieldName As String = strFullFieldName.Substring(strFullFieldName.LastIndexOf(".") + 1, strFullFieldName.Length - (strFullFieldName.LastIndexOf(".") + 1))
-        Dim xNode As XmlNode = dhdText.FindXmlNode(xmlTables, "Table", "Name", strTableName)
-        Dim xCNode As XmlNode = dhdText.FindXmlChildNode(xNode, "Fields/Field", "FldName", strFieldName)
+        Dim xNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlTables, "Table", "Name", strTableName)
+        Dim xCNode As XmlNode = SeqData.dhdText.FindXmlChildNode(xNode, "Fields/Field", "FldName", strFieldName)
         Dim strFieldDataType As String = xCNode.Item("DataType").InnerText
         Return strFieldDataType
     End Function
@@ -1352,8 +1351,8 @@ Module Common
         Dim strOutput As String = ""
         Dim strTableName As String = strFullFieldName.Substring(0, strFullFieldName.LastIndexOf("."))
         Dim strFieldName As String = strFullFieldName.Substring(strFullFieldName.LastIndexOf(".") + 1, strFullFieldName.Length - (strFullFieldName.LastIndexOf(".") + 1))
-        Dim xNode As XmlNode = dhdText.FindXmlNode(xmlTables, "Table", "Name", strTableName)
-        Dim xCNode As XmlNode = dhdText.FindXmlChildNode(xNode, "Fields/Field", "FldName", strFieldName)
+        Dim xNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlTables, "Table", "Name", strTableName)
+        Dim xCNode As XmlNode = SeqData.dhdText.FindXmlChildNode(xNode, "Fields/Field", "FldName", strFieldName)
         Dim strFieldType As String = xCNode.Item("DataType").InnerText
         Dim strFieldWidth As String = xCNode.Item("FldWidth").InnerText
         Dim strFieldAlias As String = xCNode.Item("FldAlias").InnerText
@@ -1401,18 +1400,18 @@ Module Common
             Case "TIME", "TIMESTAMP"
                 Dim intFieldWidth As Integer = 8
                 If IsNumeric(strFieldWidth) = 1 And strFieldWidth < intFieldWidth Then intFieldWidth = strFieldWidth
-                Select Case CurVar.DateTimeStyle
+                Select Case SeqData.curVar.DateTimeStyle
                     Case 101, 100
                         strOutput = "(CONVERT([nvarchar](7), " & strFQDN & ", 100))"
                     Case 105, 102
                         strOutput = "(CONVERT([nvarchar](8), " & strFQDN & ", 120))"
                     Case Else
-                        strOutput = "(CONVERT([nvarchar](13), " & strFQDN & ", " & CurVar.DateTimeStyle & "))"
+                        strOutput = "(CONVERT([nvarchar](13), " & strFQDN & ", " & SeqData.curVar.DateTimeStyle & "))"
                 End Select
             Case "XML"
                 strOutput = "(CONVERT([nvarchar](max), " & strFQDN & "))"
             Case "DATETIME"
-                strOutput = "(CONVERT([nvarchar](" & strFieldWidth & "), " & strFQDN & ", " & CurVar.DateTimeStyle & "))"
+                strOutput = "(CONVERT([nvarchar](" & strFieldWidth & "), " & strFQDN & ", " & SeqData.curVar.DateTimeStyle & "))"
             Case Else
                 'CHAR: no need to convert char or int values to char.
                 strOutput = strFQDN
@@ -1448,7 +1447,7 @@ Module Common
                 If strFieldValue = "NULL" Or strFieldValue = "" Then
                     strOutput = " (COALESCE([" & strTableName.Replace(".", "].[") & "].[" & strFieldName & "],0) = 0) "
                 Else
-                    strOutput = " ((CONVERT([nvarchar](" & strFieldWidth & "), [" & strTableName.Replace(".", "].[") & "].[" & strFieldName & "], " & CurVar.DateTimeStyle & ")) IN ('" & strFieldValue.Replace(",", "','") & "') OR (CONVERT([nvarchar](" & strFieldWidth & "), [" & strTableName.Replace(".", "].[") & "].[" & strFieldName & "], " & CurVar.DateTimeStyle & ")) LIKE '%" & strFieldValue & "%')"
+                    strOutput = " ((CONVERT([nvarchar](" & strFieldWidth & "), [" & strTableName.Replace(".", "].[") & "].[" & strFieldName & "], " & SeqData.curVar.DateTimeStyle & ")) IN ('" & strFieldValue.Replace(",", "','") & "') OR (CONVERT([nvarchar](" & strFieldWidth & "), [" & strTableName.Replace(".", "].[") & "].[" & strFieldName & "], " & SeqData.curVar.DateTimeStyle & ")) LIKE '%" & strFieldValue & "%')"
                 End If
             Case "BINARY", "XML", "GEO", "TEXT", "GUID", "TIME", "TIMESTAMP"
                 If strFieldValue = "NULL" Or strFieldValue = "" Then
@@ -1502,7 +1501,7 @@ Module Common
                     Case "INTEGER", "BIT"
                         strOutput = " (" & strTableField & " IN (" & strFieldValue & "))" & Environment.NewLine
                     Case "DATETIME"
-                        strOutput = " ((CONVERT([nvarchar](" & strFieldWidth & "), " & strTableField & ", " & CurVar.DateTimeStyle & ")) IN ('" & strFieldValue.Replace(",", "','") & "'))" & Environment.NewLine
+                        strOutput = " ((CONVERT([nvarchar](" & strFieldWidth & "), " & strTableField & ", " & SeqData.curVar.DateTimeStyle & ")) IN ('" & strFieldValue.Replace(",", "','") & "'))" & Environment.NewLine
                     Case "IMAGE"
                         'do nothing. cannot search on an image data type.
                     Case Else
@@ -1532,7 +1531,7 @@ Module Common
                         Case "INTEGER"
                             strOutput = " (" & strTableField & " LIKE '%" & strFieldValue & "%')"
                         Case "DATETIME"
-                            strOutput = " (CONVERT([nvarchar](" & strFieldWidth & "), " & strTableField & ", " & CurVar.DateTimeStyle & ")) LIKE '%" & strFieldValue & "%')"
+                            strOutput = " (CONVERT([nvarchar](" & strFieldWidth & "), " & strTableField & ", " & SeqData.curVar.DateTimeStyle & ")) LIKE '%" & strFieldValue & "%')"
                         Case "BINARY", "XML", "GEO", "TEXT", "GUID", "TIME", "TIMESTAMP"
                             strOutput = " (CONVERT([nvarchar](" & strFieldWidth & "), " & strTableField & ")) LIKE '%" & strFieldValue & "%')"
                         Case "BIT"
@@ -1556,20 +1555,20 @@ Module Common
 
     Friend Sub WriteLog(ByVal strLogtext As String, ByVal intLogLevel As Integer)
         Try
-            If dhdText.LogLocation.ToLower = "database" Then
-                dhdDatabase.WriteLog(strLogtext, intLogLevel, dhdText.LogLevel)
+            If SeqData.dhdText.LogLocation.ToLower = "database" Then
+                dhdDatabase.WriteLog(strLogtext, intLogLevel, SeqData.dhdText.LogLevel)
             Else
-                dhdText.WriteLog(strLogtext, intLogLevel)
+                SeqData.dhdText.WriteLog(strLogtext, intLogLevel)
                 'If DevMode Then MessageBox.Show(dhdText.LogFileName & Environment.NewLine & dhdText.LogLocation & Environment.NewLine & dhdText.LogLevel)
             End If
         Catch ex As Exception
             Dim strMyDir As String
             strMyDir = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
 
-            If dhdText.CheckDir(strMyDir & "\Sequenchel", True) = False Then dhdText.CreateDir(strMyDir & "\Sequenchel")
-            If dhdText.CheckDir(strMyDir & "\Sequenchel\LOG", True) = False Then dhdText.CreateDir(strMyDir & "\Sequenchel\LOG")
-            dhdText.LogFileName = "Sequenchel.Log"
-            dhdText.LogLocation = strMyDir & "\Sequenchel\LOG"
+            If SeqData.dhdText.CheckDir(strMyDir & "\Sequenchel", True) = False Then SeqData.dhdText.CreateDir(strMyDir & "\Sequenchel")
+            If SeqData.dhdText.CheckDir(strMyDir & "\Sequenchel\LOG", True) = False Then SeqData.dhdText.CreateDir(strMyDir & "\Sequenchel\LOG")
+            SeqData.dhdText.LogFileName = "Sequenchel.Log"
+            SeqData.dhdText.LogLocation = strMyDir & "\Sequenchel\LOG"
             MessageBox.Show("there was an error writing to the logfile: " & Environment.NewLine & ex.Message)
         End Try
     End Sub
@@ -1797,7 +1796,7 @@ Module Common
         For i = 0 To dgvTarget.Columns.Count - 1
             'store autosized widths
             Dim colw As Integer = dgvTarget.Columns(i).Width
-            If colw > CurVar.MaxColumnWidth Then colw = CurVar.MaxColumnWidth
+            If colw > SeqData.curVar.MaxColumnWidth Then colw = SeqData.curVar.MaxColumnWidth
             'remove autosizing
             dgvTarget.Columns(i).AutoSizeMode = DataGridViewAutoSizeColumnMode.None
             'set width to calculated by autosize

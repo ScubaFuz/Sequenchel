@@ -22,13 +22,13 @@
         For Each lstItem As String In lstConnections
             cbxConnection.Items.Add(lstItem)
         Next
-        cbxConnection.SelectedItem = CurStatus.Connection
+        cbxConnection.SelectedItem = SeqData.curStatus.Connection
     End Sub
 
     Private Sub cbxConnection_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbxConnection.SelectedIndexChanged
         If cbxConnection.SelectedIndex >= -1 Then
-            CurStatus.Connection = cbxConnection.SelectedItem
-            LoadConnection(CurStatus.Connection)
+            SeqData.curStatus.Connection = cbxConnection.SelectedItem
+            LoadConnection(SeqData.curStatus.Connection)
             LoadTables()
             PanelsClear()
             txtSourceTable.Text = ""
@@ -47,8 +47,8 @@
 
             strSQL = MydbRef.GetScript("01 dbo.SmartUpdate.sql")
             strSQL = strSQL.Replace("Sequenchel", dhdConnection.DatabaseName)
-            If CurVar.Encryption = False Then strSQL = strSQL.Replace("WITH ENCRYPTION", "")
-            If CurVar.DevMode Then MessageBox.Show(strSQL)
+            If SeqData.curVar.Encryption = False Then strSQL = strSQL.Replace("WITH ENCRYPTION", "")
+            If SeqData.curVar.DevMode Then MessageBox.Show(strSQL)
             QueryDb(dhdConnection, strSQL, False, 10)
             lblStatusText.Text = "SmartUpdate Table created succesfully"
         Catch ex As Exception
@@ -64,8 +64,8 @@
 
             strSQL = MydbRef.GetScript("01 dbo.usp_SmartUpdate.sql")
             strSQL = strSQL.Replace("Sequenchel", dhdConnection.DatabaseName)
-            If CurVar.Encryption = False Then strSQL = strSQL.Replace("WITH ENCRYPTION", "")
-            If CurVar.DevMode Then MessageBox.Show(strSQL)
+            If SeqData.curVar.Encryption = False Then strSQL = strSQL.Replace("WITH ENCRYPTION", "")
+            If SeqData.curVar.DevMode Then MessageBox.Show(strSQL)
             QueryDb(dhdConnection, strSQL, False, 10)
             lblStatusText.Text = "SmartUpdate Procedure created succesfully"
         Catch ex As Exception
@@ -178,7 +178,7 @@
             QueryDb(dhdConnection, strUpdate, 0)
             QueryDb(dhdConnection, strDelete, 0)
             QueryDb(dhdConnection, strInsert, 0)
-            lblStatusText.Text = "Configuration Saved to SmartUpdate Table on connection: " & CurStatus.Connection
+            lblStatusText.Text = "Configuration Saved to SmartUpdate Table on connection: " & SeqData.curStatus.Connection
         Catch ex As Exception
             lblStatusText.Text = "There was an error saving the configuration. Check the log for more details"
             MessageBox.Show("There was an error saving the configuration: " & Environment.NewLine & ex.Message)
@@ -483,9 +483,9 @@
         txtNew.Enabled = blnEnableCC
         txtNew.Width = 166
         pnlSourceTable.Controls.Add(txtNew)
-        txtNew.Top = ((pnlSourceTable.Controls.Count - 1) * CurVar.FieldHeight)
+        txtNew.Top = ((pnlSourceTable.Controls.Count - 1) * SeqData.curVar.FieldHeight)
         If pnlSourceTable.Height < txtNew.Top + txtNew.Height Then pnlSourceTable.Height = txtNew.Top + txtNew.Height
-        txtNew.Left = CurVar.BuildMargin
+        txtNew.Left = SeqData.curVar.BuildMargin
     End Sub
 
     Private Sub SourceDataTypeAdd(strFieldName As String, strDataType As String, blnEnableCC As Boolean)
@@ -496,9 +496,9 @@
         txtNew.Enabled = blnEnableCC
         txtNew.Width = 117
         pnlSourceDataType.Controls.Add(txtNew)
-        txtNew.Top = ((pnlSourceTable.Controls.Count - 1) * CurVar.FieldHeight)
+        txtNew.Top = ((pnlSourceTable.Controls.Count - 1) * SeqData.curVar.FieldHeight)
         pnlSourceDataType.Height = pnlSourceTable.Height
-        txtNew.Left = CurVar.BuildMargin
+        txtNew.Left = SeqData.curVar.BuildMargin
     End Sub
 
     Private Sub SourcePkAdd(strFieldName As String, blnFieldPK As Boolean, blnFieldIdentity As Boolean, blnEnableCC As Boolean)
@@ -508,9 +508,9 @@
         chkNew.Tag = blnFieldIdentity
         chkNew.Enabled = blnEnableCC
         pnlSourcePrimaryKey.Controls.Add(chkNew)
-        chkNew.Top = ((pnlSourceTable.Controls.Count - 1) * CurVar.FieldHeight)
+        chkNew.Top = ((pnlSourceTable.Controls.Count - 1) * SeqData.curVar.FieldHeight)
         pnlSourcePrimaryKey.Height = pnlSourceTable.Height
-        chkNew.Left = CurVar.BuildMargin
+        chkNew.Left = SeqData.curVar.BuildMargin
     End Sub
 
     Private Sub TargetFieldAdd(strFieldName As String, blnEnableCC As Boolean)
@@ -521,9 +521,9 @@
         txtNew.Enabled = blnEnableCC
         txtNew.Width = 166
         pnlTargetTable.Controls.Add(txtNew)
-        txtNew.Top = ((pnlTargetTable.Controls.Count - 1) * CurVar.FieldHeight)
+        txtNew.Top = ((pnlTargetTable.Controls.Count - 1) * SeqData.curVar.FieldHeight)
         If pnlTargetTable.Height < txtNew.Top + txtNew.Height Then pnlTargetTable.Height = txtNew.Top + txtNew.Height
-        txtNew.Left = CurVar.BuildMargin
+        txtNew.Left = SeqData.curVar.BuildMargin
 
     End Sub
 
@@ -535,9 +535,9 @@
         txtNew.Enabled = blnEnableCC
         txtNew.Width = 117
         pnlTargetDataType.Controls.Add(txtNew)
-        txtNew.Top = ((pnlTargetDataType.Controls.Count - 1) * CurVar.FieldHeight)
+        txtNew.Top = ((pnlTargetDataType.Controls.Count - 1) * SeqData.curVar.FieldHeight)
         pnlTargetDataType.Height = pnlTargetTable.Height
-        txtNew.Left = CurVar.BuildMargin
+        txtNew.Left = SeqData.curVar.BuildMargin
     End Sub
 
     Private Sub TargetPkAdd(strFieldName As String, blnFieldPK As Boolean, blnFieldIdentity As Boolean, blnEnableCC As Boolean)
@@ -547,9 +547,9 @@
         chkNew.Tag = blnFieldIdentity
         chkNew.Enabled = blnEnableCC
         pnlTargetPrimaryKey.Controls.Add(chkNew)
-        chkNew.Top = ((pnlTargetTable.Controls.Count - 1) * CurVar.FieldHeight)
+        chkNew.Top = ((pnlTargetTable.Controls.Count - 1) * SeqData.curVar.FieldHeight)
         pnlTargetPrimaryKey.Height = pnlTargetTable.Height
-        chkNew.Left = CurVar.BuildMargin
+        chkNew.Left = SeqData.curVar.BuildMargin
     End Sub
 
     Private Sub CompareColumnAdd(strFieldName As String, blnEnableCC As Boolean)
@@ -559,9 +559,9 @@
         chkNew.Tag = blnEnableCC
         chkNew.Enabled = blnEnableCC
         pnlCompareColumn.Controls.Add(chkNew)
-        chkNew.Top = ((pnlSourceTable.Controls.Count - 1) * CurVar.FieldHeight)
+        chkNew.Top = ((pnlSourceTable.Controls.Count - 1) * SeqData.curVar.FieldHeight)
         pnlCompareColumn.Height = pnlSourceTable.Height
-        chkNew.Left = CurVar.BuildMargin
+        chkNew.Left = SeqData.curVar.BuildMargin
     End Sub
 
     Private Sub CheckPrimaryKey(pnlInput As Panel)

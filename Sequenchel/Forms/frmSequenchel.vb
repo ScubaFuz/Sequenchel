@@ -9,10 +9,10 @@ Public Class frmSequenchel
 
         ParseCommands()
         Me.Text = My.Application.Info.Title
-        If CurStatus.Status = SeqCore.CurrentStatus.StatusList.ControlSearch Then Me.Text &= " ControlMode"
-        If CurVar.DebugMode Then Me.Text &= " Debug"
-        If CurVar.DevMode Then Me.Text &= " Development"
-        If CurVar.Encryption = False Then Me.Text &= " NoEncryption"
+        If SeqData.CurStatus.Status = SeqCore.CurrentStatus.StatusList.ControlSearch Then Me.Text &= " ControlMode"
+        If SeqData.curVar.DebugMode Then Me.Text &= " Debug"
+        If SeqData.CurVar.DevMode Then Me.Text &= " Development"
+        If SeqData.CurVar.Encryption = False Then Me.Text &= " NoEncryption"
 
         DebugSettings()
         SetDefaults()
@@ -22,7 +22,7 @@ Public Class frmSequenchel
         frmAbout.Refresh()
 
         lblLicense.Text = "Licensed to: " & strLicenseName
-        lblLicense.Left = Me.Width - lblLicense.Width - (CurVar.BuildMargin * 5)
+        lblLicense.Left = Me.Width - lblLicense.Width - (SeqData.CurVar.BuildMargin * 5)
 
         LoadSDBASettingsXml()
         SecuritySet()
@@ -30,7 +30,7 @@ Public Class frmSequenchel
         DeleteOldLogs(True)
         LoadConnections()
 
-        If CurVar.SecurityOverride = True Then Me.Text &= " SecurityOverride"
+        If SeqData.CurVar.SecurityOverride = True Then Me.Text &= " SecurityOverride"
 
         Me.Show()
         If blnLicenseValidated Then
@@ -43,58 +43,58 @@ Public Class frmSequenchel
 
     Private Sub frmSequenchel_Activated(sender As Object, e As EventArgs) Handles Me.Activated
         SecuritySet()
-        If CurStatus.ConnectionReload = True Then
+        If SeqData.curStatus.ConnectionReload = True Then
             LoadConnections()
-            CurStatus.ConnectionReload = False
-            CurStatus.TableSetReload = False
-            CurStatus.TableReload = False
+            SeqData.CurStatus.ConnectionReload = False
+            SeqData.CurStatus.TableSetReload = False
+            SeqData.CurStatus.TableReload = False
         Else
             If Not cbxConnection.SelectedItem Is Nothing Then
-                CurStatus.Connection = cbxConnection.SelectedItem
-                LoadConnection(CurStatus.Connection)
+                SeqData.CurStatus.Connection = cbxConnection.SelectedItem
+                LoadConnection(SeqData.curStatus.Connection)
             End If
         End If
-        If CurStatus.TableSetReload = True Then
+        If SeqData.CurStatus.TableSetReload = True Then
             LoadTableSets()
-            CurStatus.TableSetReload = False
-            CurStatus.TableReload = False
+            SeqData.CurStatus.TableSetReload = False
+            SeqData.CurStatus.TableReload = False
         Else
             If Not cbxTableSet.SelectedItem Is Nothing Then
-                CurStatus.TableSet = cbxTableSet.SelectedItem
-                LoadTableSet(CurStatus.TableSet)
+                SeqData.CurStatus.TableSet = cbxTableSet.SelectedItem
+                LoadTableSet(SeqData.CurStatus.TableSet)
             End If
         End If
-        If CurStatus.TableReload = True Then
+        If SeqData.CurStatus.TableReload = True Then
             LoadTables()
-            CurStatus.TableReload = False
+            SeqData.CurStatus.TableReload = False
         Else
             If Not cbxTable.SelectedItem Is Nothing Then
-                If CurStatus.Table <> cbxTable.SelectedItem Then
-                    CurStatus.Table = cbxTable.SelectedItem
-                    LoadTable(CurStatus.Table)
+                If SeqData.CurStatus.Table <> cbxTable.SelectedItem Then
+                    SeqData.CurStatus.Table = cbxTable.SelectedItem
+                    LoadTable(SeqData.CurStatus.Table)
                 End If
             End If
         End If
     End Sub
 
     Private Sub DebugSettings()
-        If CurVar.DebugMode Then
+        If SeqData.CurVar.DebugMode Then
             btnTest.Visible = True
         End If
-        If CurVar.DevMode Then
+        If SeqData.CurVar.DevMode Then
             'mnuMain.Visible = True
         End If
     End Sub
 
     Private Sub SecuritySet()
-        If CurVar.AllowSettingsChange = False And CurVar.SecurityOverride = False Then mnuMainEditSettings.Enabled = False
-        If CurVar.AllowConfiguration = False And CurVar.SecurityOverride = False Then mnuMainEditConfiguration.Enabled = False
-        If CurVar.AllowLinkedServers = False And CurVar.SecurityOverride = False Then mnuMainEditLinkedServers.Enabled = False
-        If CurVar.AllowDataImport = False And CurVar.SecurityOverride = False Then mnuMainToolsImport.Enabled = False
-        If CurVar.AllowSmartUpdate = False And CurVar.SecurityOverride = False Then mnuMainToolsSmartUpdate.Enabled = False
-        If CurVar.AllowUpdate = False And CurVar.SecurityOverride = False Then btnUpdate.Enabled = False
-        If CurVar.AllowInsert = False And CurVar.SecurityOverride = False Then btnAdd.Enabled = False
-        If CurVar.AllowDelete = False And CurVar.SecurityOverride = False Then btnDelete.Enabled = False
+        If SeqData.CurVar.AllowSettingsChange = False And SeqData.CurVar.SecurityOverride = False Then mnuMainEditSettings.Enabled = False
+        If SeqData.CurVar.AllowConfiguration = False And SeqData.CurVar.SecurityOverride = False Then mnuMainEditConfiguration.Enabled = False
+        If SeqData.CurVar.AllowLinkedServers = False And SeqData.CurVar.SecurityOverride = False Then mnuMainEditLinkedServers.Enabled = False
+        If SeqData.CurVar.AllowDataImport = False And SeqData.CurVar.SecurityOverride = False Then mnuMainToolsImport.Enabled = False
+        If SeqData.CurVar.AllowSmartUpdate = False And SeqData.CurVar.SecurityOverride = False Then mnuMainToolsSmartUpdate.Enabled = False
+        If SeqData.CurVar.AllowUpdate = False And SeqData.CurVar.SecurityOverride = False Then btnUpdate.Enabled = False
+        If SeqData.CurVar.AllowInsert = False And SeqData.CurVar.SecurityOverride = False Then btnAdd.Enabled = False
+        If SeqData.CurVar.AllowDelete = False And SeqData.CurVar.SecurityOverride = False Then btnDelete.Enabled = False
     End Sub
 
     Private Sub btnTest_Click(sender As Object, e As EventArgs) Handles btnTest.Click
@@ -143,7 +143,7 @@ Public Class frmSequenchel
     End Sub
 
     Private Sub mnuMainHelpAbout_Click(sender As Object, e As EventArgs) Handles mnuMainHelpAbout.Click
-        CurVar.CallSplash = True
+        SeqData.CurVar.CallSplash = True
         Dim frmAboutForm As New frmAbout
         frmAboutForm.Show(Me)
     End Sub
@@ -196,8 +196,8 @@ Public Class frmSequenchel
 
     Private Sub cbxConnection_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbxConnection.SelectedIndexChanged
         If cbxConnection.SelectedIndex >= -1 Then
-            CurStatus.Connection = cbxConnection.SelectedItem
-            LoadConnection(CurStatus.Connection)
+            SeqData.CurStatus.Connection = cbxConnection.SelectedItem
+            LoadConnection(SeqData.CurStatus.Connection)
             LoadTableSets()
             'dhdText.FindXmlNode(xmlConnections, "Connection", "DatabasdeName", strConnection)
             'Dim xmlConnNode As xmlnode = xmlConnections.SelectSingleNode("\\Connection", "descendant::Connection[DataBaseName='" & strConnection & "']")
@@ -211,8 +211,8 @@ Public Class frmSequenchel
 
     Private Sub cbxTableSet_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbxTableSet.SelectedIndexChanged
         If cbxTableSet.SelectedIndex >= -1 Then
-            CurStatus.TableSet = cbxTableSet.SelectedItem
-            LoadTableSet(CurStatus.TableSet)
+            SeqData.CurStatus.TableSet = cbxTableSet.SelectedItem
+            LoadTableSet(SeqData.CurStatus.TableSet)
             LoadTables()
         End If
 
@@ -224,8 +224,8 @@ Public Class frmSequenchel
 
     Private Sub cbxTable_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbxTable.SelectedIndexChanged
         If cbxTable.SelectedIndex >= -1 Then
-            CurStatus.Table = cbxTable.SelectedItem
-            LoadTable(CurStatus.Table)
+            SeqData.CurStatus.Table = cbxTable.SelectedItem
+            LoadTable(SeqData.CurStatus.Table)
         End If
     End Sub
 
@@ -281,7 +281,7 @@ Public Class frmSequenchel
     End Sub
 
     Private Sub FieldsDispose()
-        CurStatus.SuspendActions = True
+        SeqData.curStatus.SuspendActions = True
 
         tblTable.Clear()
         arrLabels.Clear()
@@ -292,7 +292,7 @@ Public Class frmSequenchel
         sptFields1.SplitterDistance = 150
         dgvTable1.Columns.Clear()
         lblListCountNumber.Text = 0
-        CurStatus.SuspendActions = False
+        SeqData.curStatus.SuspendActions = False
 
         sptFields1.Panel1.VerticalScroll.Minimum = sptFields1.Panel2.VerticalScroll.Minimum
         sptFields1.Panel1.VerticalScroll.Maximum = sptFields1.Panel2.VerticalScroll.Maximum
@@ -309,7 +309,7 @@ Public Class frmSequenchel
         For Each lstItem As String In lstConnections
             cbxConnection.Items.Add(lstItem)
         Next
-        cbxConnection.SelectedItem = CurStatus.Connection
+        cbxConnection.SelectedItem = SeqData.curStatus.Connection
     End Sub
 
     Private Sub LoadTableSets()
@@ -319,7 +319,7 @@ Public Class frmSequenchel
         For Each lstItem As String In lstTableSets
             cbxTableSet.Items.Add(lstItem)
         Next
-        cbxTableSet.SelectedItem = CurStatus.TableSet
+        cbxTableSet.SelectedItem = SeqData.curStatus.TableSet
     End Sub
 
     Private Sub LoadTables()
@@ -329,23 +329,23 @@ Public Class frmSequenchel
         For Each lstItem As String In lstTables
             cbxTable.Items.Add(lstItem)
         Next
-        cbxTable.SelectedItem = CurStatus.Table
+        cbxTable.SelectedItem = SeqData.curStatus.Table
     End Sub
 
     Friend Sub LoadTable(strTable As String)
         Try
             FieldsDispose()
-            Dim xPNode As System.Xml.XmlNode = dhdText.FindXmlNode(xmlTables, "Table", "Alias", strTable)
+            Dim xPNode As System.Xml.XmlNode = SeqData.dhdText.FindXmlNode(xmlTables, "Table", "Alias", strTable)
 
             If Not xPNode Is Nothing Then
-                'If dhdText.CheckNodeElement(xPNode, "Alias") Then tabTables.TabPages("tpgTable1").Text = xPNode.Item("Alias").InnerText
-                If dhdText.CheckNodeElement(xPNode, "Name") Then tblTable.TableName = xPNode.Item("Name").InnerText
-                If dhdText.CheckNodeElement(xPNode, "Alias") Then tblTable.TableAlias = xPNode.Item("Alias").InnerText
-                If dhdText.CheckNodeElement(xPNode, "Visible") Then tblTable.TableVisible = xPNode.Item("Visible").InnerText
-                If dhdText.CheckNodeElement(xPNode, "Update") Then tblTable.TableUpdate = xPNode.Item("Update").InnerText
-                If dhdText.CheckNodeElement(xPNode, "Search") Then tblTable.TableSearch = xPNode.Item("Search").InnerText
-                If dhdText.CheckNodeElement(xPNode, "Insert") Then tblTable.TableInsert = xPNode.Item("Insert").InnerText
-                If dhdText.CheckNodeElement(xPNode, "Delete") Then tblTable.TableDelete = xPNode.Item("Delete").InnerText
+                'If SeqData.dhdText.CheckNodeElement(xPNode, "Alias") Then tabTables.TabPages("tpgTable1").Text = xPNode.Item("Alias").InnerText
+                If SeqData.dhdText.CheckNodeElement(xPNode, "Name") Then tblTable.TableName = xPNode.Item("Name").InnerText
+                If SeqData.dhdText.CheckNodeElement(xPNode, "Alias") Then tblTable.TableAlias = xPNode.Item("Alias").InnerText
+                If SeqData.dhdText.CheckNodeElement(xPNode, "Visible") Then tblTable.TableVisible = xPNode.Item("Visible").InnerText
+                If SeqData.dhdText.CheckNodeElement(xPNode, "Update") Then tblTable.TableUpdate = xPNode.Item("Update").InnerText
+                If SeqData.dhdText.CheckNodeElement(xPNode, "Search") Then tblTable.TableSearch = xPNode.Item("Search").InnerText
+                If SeqData.dhdText.CheckNodeElement(xPNode, "Insert") Then tblTable.TableInsert = xPNode.Item("Insert").InnerText
+                If SeqData.dhdText.CheckNodeElement(xPNode, "Delete") Then tblTable.TableDelete = xPNode.Item("Delete").InnerText
 
                 If tblTable.TableVisible = True Then
                     Dim xNode As System.Xml.XmlNode
@@ -363,18 +363,18 @@ Public Class frmSequenchel
                             fldField = New TextField
                         End If
                         tblTable.Add(fldField)
-                        If dhdText.CheckNodeElement(xNode, "FldName") Then fldField.FieldName = xNode.Item("FldName").InnerText
-                        If dhdText.CheckNodeElement(xNode, "FldAlias") Then fldField.FieldAlias = xNode.Item("FldAlias").InnerText
+                        If SeqData.dhdText.CheckNodeElement(xNode, "FldName") Then fldField.FieldName = xNode.Item("FldName").InnerText
+                        If SeqData.dhdText.CheckNodeElement(xNode, "FldAlias") Then fldField.FieldAlias = xNode.Item("FldAlias").InnerText
                         If fldField.FieldAlias = "" Then fldField.FieldAlias = fldField.FieldName
-                        If dhdText.CheckNodeElement(xNode, "FldName") Then fldField.Name = tblTable.TableName & "." & xNode.Item("FldName").InnerText
-                        If dhdText.CheckNodeElement(xNode, "DataType") Then fldField.FieldDataType = xNode.Item("DataType").InnerText
-                        If dhdText.CheckNodeElement(xNode, "Identity") Then fldField.Identity = xNode.Item("Identity").InnerText
-                        If dhdText.CheckNodeElement(xNode, "PrimaryKey") Then fldField.PrimaryKey = xNode.Item("PrimaryKey").InnerText
+                        If SeqData.dhdText.CheckNodeElement(xNode, "FldName") Then fldField.Name = tblTable.TableName & "." & xNode.Item("FldName").InnerText
+                        If SeqData.dhdText.CheckNodeElement(xNode, "DataType") Then fldField.FieldDataType = xNode.Item("DataType").InnerText
+                        If SeqData.dhdText.CheckNodeElement(xNode, "Identity") Then fldField.Identity = xNode.Item("Identity").InnerText
+                        If SeqData.dhdText.CheckNodeElement(xNode, "PrimaryKey") Then fldField.PrimaryKey = xNode.Item("PrimaryKey").InnerText
 
-                        fldField.Left = CurVar.BuildMargin
-                        If dhdText.CheckNodeElement(xNode, "FldWidth") Then
-                            If xNode.Item("FldWidth").InnerText >= sptFields1.Panel2.Width - CurVar.BuildMargin * 3 Then
-                                fldField.Width = sptFields1.Panel2.Width - CurVar.BuildMargin * 3
+                        fldField.Left = SeqData.curVar.BuildMargin
+                        If SeqData.dhdText.CheckNodeElement(xNode, "FldWidth") Then
+                            If xNode.Item("FldWidth").InnerText >= sptFields1.Panel2.Width - SeqData.curVar.BuildMargin * 3 Then
+                                fldField.Width = sptFields1.Panel2.Width - SeqData.curVar.BuildMargin * 3
                                 fldField.Anchor = AnchorStyles.Top Or AnchorStyles.Left Or AnchorStyles.Right
                             Else
                                 fldField.Width = xNode.Item("FldWidth").InnerText
@@ -392,7 +392,7 @@ Public Class frmSequenchel
                             fldField.SearchField = fldField.FieldName
                         End If
 
-                        If dhdText.CheckNodeElement(xNode, "Relations") Then
+                        If SeqData.dhdText.CheckNodeElement(xNode, "Relations") Then
                             For Each xRnode As XmlNode In xNode.Item("Relations").ChildNodes
                                 fldField.FieldRelation = xRnode.InnerText
                                 If xRnode.Attributes.Count > 0 Then
@@ -400,13 +400,13 @@ Public Class frmSequenchel
                                     If xRnode.Attributes.Count > 1 Then
                                         If xRnode.Attributes(1).Name = "RelatedFieldList" Then fldField.FieldRelatedFieldList = xRnode.Attributes("RelatedFieldList").InnerText
                                     End If
-                                    'If dhdText.CheckNodeElement(xRnode, "RelatedField") Then fldField.FieldRelatedField = xRnode.Attributes("RelatedField").InnerText
+                                    'If SeqData.dhdText.CheckNodeElement(xRnode, "RelatedField") Then fldField.FieldRelatedField = xRnode.Attributes("RelatedField").InnerText
                                     Exit For
                                 End If
                             Next
                         End If
                         'fldField.FieldRelation = xNode.Item("Relations").InnerText
-                        If dhdText.CheckNodeElement(xNode, "DefaultButton") Then fldField.DefaultButton = xNode.Item("DefaultButton").InnerText
+                        If SeqData.dhdText.CheckNodeElement(xNode, "DefaultButton") Then fldField.DefaultButton = xNode.Item("DefaultButton").InnerText
                         If fldField.DefaultButton = True Then
                             Try
                                 fldField.DefaultValue = xNode.Item("DefaultButton").Attributes("DefaultValue").Value
@@ -416,7 +416,7 @@ Public Class frmSequenchel
                             End Try
                         End If
 
-                        If dhdText.CheckNodeElement(xNode, "FldList") Then fldField.FieldList = xNode.Item("FldList").InnerText
+                        If SeqData.dhdText.CheckNodeElement(xNode, "FldList") Then fldField.FieldList = xNode.Item("FldList").InnerText
                         If fldField.FieldList = True Then
                             Try
                                 fldField.FieldListOrder = xNode.Item("FldList").Attributes("Order").Value
@@ -427,35 +427,35 @@ Public Class frmSequenchel
                                 WriteLog("there was an error setting the value for ListOrder or ListWidth: " & Environment.NewLine & ex.Message, 1)
                             End Try
                         End If
-                        If dhdText.CheckNodeElement(xNode, "FldSearch") Then fldField.FieldSearch = xNode.Item("FldSearch").InnerText
-                        If dhdText.CheckNodeElement(xNode, "FldSearchList") Then fldField.FieldSearchList = xNode.Item("FldSearchList").InnerText
-                        If dhdText.CheckNodeElement(xNode, "FldUpdate") Then fldField.FieldUpdate = xNode.Item("FldUpdate").InnerText
-                        If dhdText.CheckNodeElement(xNode, "FldVisible") Then fldField.FieldVisible = xNode.Item("FldVisible").InnerText
+                        If SeqData.dhdText.CheckNodeElement(xNode, "FldSearch") Then fldField.FieldSearch = xNode.Item("FldSearch").InnerText
+                        If SeqData.dhdText.CheckNodeElement(xNode, "FldSearchList") Then fldField.FieldSearchList = xNode.Item("FldSearchList").InnerText
+                        If SeqData.dhdText.CheckNodeElement(xNode, "FldUpdate") Then fldField.FieldUpdate = xNode.Item("FldUpdate").InnerText
+                        If SeqData.dhdText.CheckNodeElement(xNode, "FldVisible") Then fldField.FieldVisible = xNode.Item("FldVisible").InnerText
 
-                        If dhdText.CheckNodeElement(xNode, "ControlField") Then fldField.ControlField = xNode.Item("ControlField").InnerText
-                        If dhdText.CheckNodeElement(xNode, "ControlValue") Then fldField.ControlValue = xNode.Item("ControlValue").InnerText
-                        If dhdText.CheckNodeElement(xNode, "ControlUpdate") Then fldField.ControlUpdate = xNode.Item("ControlUpdate").InnerText
-                        If dhdText.CheckNodeElement(xNode, "ControlMode") Then fldField.ControlMode = xNode.Item("ControlMode").InnerText
+                        If SeqData.dhdText.CheckNodeElement(xNode, "ControlField") Then fldField.ControlField = xNode.Item("ControlField").InnerText
+                        If SeqData.dhdText.CheckNodeElement(xNode, "ControlValue") Then fldField.ControlValue = xNode.Item("ControlValue").InnerText
+                        If SeqData.dhdText.CheckNodeElement(xNode, "ControlUpdate") Then fldField.ControlUpdate = xNode.Item("ControlUpdate").InnerText
+                        If SeqData.dhdText.CheckNodeElement(xNode, "ControlMode") Then fldField.ControlMode = xNode.Item("ControlMode").InnerText
 
                         If fldField.FieldVisible = True Then
                             sptFields1.Panel2.Controls.Add(fldField)
                             If tblTable.Count = 1 Then
-                                fldField.Top = CurVar.BuildMargin
+                                fldField.Top = SeqData.curVar.BuildMargin
                             Else
-                                fldField.Top = tblTable(tblTable.Count - 2).Top + fldField.Height + CurVar.BuildMargin
+                                fldField.Top = tblTable(tblTable.Count - 2).Top + fldField.Height + SeqData.curVar.BuildMargin
                             End If
-                            If fldField.top > sptFields1.Panel2.Height And fldField.Width >= sptFields1.Panel2.Width - (CurVar.BuildMargin * 3) - SystemInformation.VerticalScrollBarWidth Then
-                                fldField.width = sptFields1.Panel2.Width - (CurVar.BuildMargin * 3) - SystemInformation.VerticalScrollBarWidth
+                            If fldField.top > sptFields1.Panel2.Height And fldField.Width >= sptFields1.Panel2.Width - (SeqData.curVar.BuildMargin * 3) - SystemInformation.VerticalScrollBarWidth Then
+                                fldField.width = sptFields1.Panel2.Width - (SeqData.CurVar.BuildMargin * 3) - SystemInformation.VerticalScrollBarWidth
                             End If
                             Dim lblLabel As New Label
                             arrLabels.Add(lblLabel)
                             lblLabel.Name = "lbl" & fldField.Name
                             sptFields1.Panel1.Controls.Add(lblLabel)
                             lblLabel.Text = fldField.FieldAlias
-                            lblLabel.Top = fldField.Top + CurVar.BuildMargin
+                            lblLabel.Top = fldField.Top + SeqData.curVar.BuildMargin
                             lblLabel.AutoSize = True
                             lblLabel.Anchor = AnchorStyles.Right Or AnchorStyles.Top
-                            lblLabel.Left = sptFields1.Panel1.Width - lblLabel.Width - 25 - CurVar.BuildMargin
+                            lblLabel.Left = sptFields1.Panel1.Width - lblLabel.Width - 25 - SeqData.curVar.BuildMargin
                             If lblLabel.Left < 0 Then
                                 sptTable1.SplitterDistance += lblLabel.Left
                                 sptFields1.SplitterDistance += (lblLabel.Left * -1)
@@ -468,7 +468,7 @@ Public Class frmSequenchel
                                 btnButton.Image = My.Resources.reload16
                                 btnButton.ImageAlign = ContentAlignment.MiddleCenter
                                 btnButton.Size = New System.Drawing.Size(25, 23)
-                                btnButton.Top = fldField.Top - CurVar.BuildMargin / 2
+                                btnButton.Top = fldField.Top - SeqData.curVar.BuildMargin / 2
                                 btnButton.Left = sptFields1.Panel1.Width - btnButton.Width
                                 btnButton.Anchor = AnchorStyles.Right Or AnchorStyles.Top
                                 btnButton.UseVisualStyleBackColor = True
@@ -483,7 +483,7 @@ Public Class frmSequenchel
                                 btnButton.Image = My.Resources.TSfavicon
                                 btnButton.ImageAlign = ContentAlignment.MiddleCenter
                                 btnButton.Size = New System.Drawing.Size(25, 23)
-                                btnButton.Top = fldField.Top - CurVar.BuildMargin / 2
+                                btnButton.Top = fldField.Top - SeqData.curVar.BuildMargin / 2
                                 btnButton.Left = sptFields1.Panel1.Width - btnButton.Width
                                 btnButton.Anchor = AnchorStyles.Right Or AnchorStyles.Top
                                 btnButton.UseVisualStyleBackColor = True
@@ -518,14 +518,14 @@ Public Class frmSequenchel
 
                                 sptFields1.Panel2.Controls.Add(msfRelatedField)
                                 msfRelatedField.Top = fldField.Top
-                                msfRelatedField.Left = fldField.Left + fldField.Width + CurVar.BuildMargin
+                                msfRelatedField.Left = fldField.Left + fldField.Width + SeqData.curVar.BuildMargin
                                 If fldField.top > sptFields1.Panel2.Height Then
-                                    msfRelatedField.Width = sptFields1.Panel2.Width - msfRelatedField.Left - (CurVar.BuildMargin * 3) - SystemInformation.VerticalScrollBarWidth
+                                    msfRelatedField.Width = sptFields1.Panel2.Width - msfRelatedField.Left - (SeqData.CurVar.BuildMargin * 3) - SystemInformation.VerticalScrollBarWidth
                                 Else
-                                    msfRelatedField.Width = sptFields1.Panel2.Width - msfRelatedField.Left - (CurVar.BuildMargin * 3)
+                                    msfRelatedField.Width = sptFields1.Panel2.Width - msfRelatedField.Left - (SeqData.CurVar.BuildMargin * 3)
                                 End If
 
-                                msfRelatedField.Width = sptFields1.Panel2.Width - msfRelatedField.Left - (CurVar.BuildMargin * 3) - SystemInformation.VerticalScrollBarWidth
+                                msfRelatedField.Width = sptFields1.Panel2.Width - msfRelatedField.Left - (SeqData.CurVar.BuildMargin * 3) - SystemInformation.VerticalScrollBarWidth
                                 msfRelatedField.Anchor = AnchorStyles.Top Or AnchorStyles.Left Or AnchorStyles.Right
                                 msfRelatedField.Visible = True
                                 msfRelatedField.RunSearch()
@@ -568,10 +568,10 @@ Public Class frmSequenchel
             'LoadSearchCriteria()
             'LoadRelatedSearchCriteria()
             SearchListLoad(tblTable.TableName)
-            If CurStatus.Status > 3 Then
-                CurStatus.Status = SeqCore.CurrentStatus.StatusList.ControlSearch
+            If SeqData.curStatus.Status > 3 Then
+                SeqData.curStatus.Status = SeqCore.CurrentStatus.StatusList.ControlSearch
             Else
-                CurStatus.Status = SeqCore.CurrentStatus.StatusList.Search
+                SeqData.curStatus.Status = SeqCore.CurrentStatus.StatusList.Search
             End If
             ButtonHandle()
         Catch ex As Exception
@@ -602,8 +602,8 @@ Public Class frmSequenchel
 
     Private Sub SetWidth()
         For Each ctrField In sptFields1.Panel2.Controls
-            If ctrField.Left + ctrField.Width > sptFields1.Panel2.Width - (CurVar.BuildMargin * 3) - SystemInformation.VerticalScrollBarWidth Then
-                ctrField.Width = sptFields1.Panel2.Width - ctrField.Left - (CurVar.BuildMargin * 3) - SystemInformation.VerticalScrollBarWidth
+            If ctrField.Left + ctrField.Width > sptFields1.Panel2.Width - (SeqData.CurVar.BuildMargin * 3) - SystemInformation.VerticalScrollBarWidth Then
+                ctrField.Width = sptFields1.Panel2.Width - ctrField.Left - (SeqData.CurVar.BuildMargin * 3) - SystemInformation.VerticalScrollBarWidth
             End If
         Next
     End Sub
@@ -649,10 +649,11 @@ Public Class frmSequenchel
         ElseIf cbxTable.Text.Length > 0 Then
             strReportName = cbxTable.Text
         Else
-            strReportName = CurStatus.Table
+            strReportName = SeqData.CurStatus.Table
         End If
-        ExportFile(dtsTable, strReportName, False)
-        'XmlExportDatagridView(dgvTable1, "Sequenchel", CurStatus.Table, CurStatus.Table & "-Item")
+        Dim strFileName As String = GetSaveFileName(strReportName)
+        ExportFile(dtsTable, strFileName)
+        'XmlExportDatagridView(dgvTable1, "Sequenchel", SeqData.CurStatus.Table, SeqData.CurStatus.Table & "-Item")
     End Sub
 
     Private Sub btnAdd_Click(sender As Object, e As EventArgs) Handles btnAdd.Click
@@ -662,10 +663,10 @@ Public Class frmSequenchel
                                "Click 'Clear' to cancel the operation" & Environment.NewLine & _
                                "Click 'Save' to save the new item to the database" _
                                , "How it works", MessageBoxButtons.OK, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1)
-            If CurStatus.Status > 3 Then
-                CurStatus.Status = SeqCore.CurrentStatus.StatusList.ControlAdd
+            If SeqData.CurStatus.Status > 3 Then
+                SeqData.CurStatus.Status = SeqCore.CurrentStatus.StatusList.ControlAdd
             Else
-                CurStatus.Status = SeqCore.CurrentStatus.StatusList.Add
+                SeqData.CurStatus.Status = SeqCore.CurrentStatus.StatusList.Add
             End If
             FieldsClear(True)
             FieldsEnable(False)
@@ -678,10 +679,10 @@ Public Class frmSequenchel
             ItemAdd()
             btnAdd.Text = "New Item"
             btnAdd.BackColor = clrControl
-            If CurStatus.Status > 3 Then
-                CurStatus.Status = SeqCore.CurrentStatus.StatusList.ControlEdit
+            If SeqData.CurStatus.Status > 3 Then
+                SeqData.CurStatus.Status = SeqCore.CurrentStatus.StatusList.ControlEdit
             Else
-                CurStatus.Status = SeqCore.CurrentStatus.StatusList.Edit
+                SeqData.CurStatus.Status = SeqCore.CurrentStatus.StatusList.Edit
             End If
             FieldsEnable()
             ButtonHandle()
@@ -712,13 +713,13 @@ Public Class frmSequenchel
         End If
         SearchDelete(True)
         SearchAdd()
-        If dhdText.CheckDir(CurVar.SearchFile.Substring(0, CurVar.SearchFile.LastIndexOf("\")), False) = False Then
-            If MessageBox.Show("The folder " & CurVar.SearchFile.Substring(0, CurVar.SearchFile.LastIndexOf("\")) & " does not exist." & Environment.NewLine & "do you wish to create it?", "Folder does not exist", MessageBoxButtons.YesNo, MessageBoxIcon.Hand, MessageBoxDefaultButton.Button1) = Windows.Forms.DialogResult.No Then
+        If SeqData.dhdText.CheckDir(SeqData.CurVar.SearchFile.Substring(0, SeqData.CurVar.SearchFile.LastIndexOf("\")), False) = False Then
+            If MessageBox.Show("The folder " & SeqData.CurVar.SearchFile.Substring(0, SeqData.CurVar.SearchFile.LastIndexOf("\")) & " does not exist." & Environment.NewLine & "do you wish to create it?", "Folder does not exist", MessageBoxButtons.YesNo, MessageBoxIcon.Hand, MessageBoxDefaultButton.Button1) = Windows.Forms.DialogResult.No Then
                 lblStatusText.Text = "File Save Aborted"
                 Exit Sub
             End If
         End If
-        dhdText.SaveXmlFile(xmlSearch, SeqData.CheckFilePath(CurVar.SearchFile), True)
+        SeqData.dhdText.SaveXmlFile(xmlSearch, SeqData.CheckFilePath(SeqData.CurVar.SearchFile), True)
         cbxSearch.Items.Add(cbxSearch.Text)
         lblStatusText.Text = "Search saved"
         'SearchListLoad(tblTable.TableName)
@@ -731,13 +732,13 @@ Public Class frmSequenchel
             Exit Sub
         End If
         SearchDelete(False)
-        If dhdText.CheckDir(CurVar.SearchFile.Substring(0, CurVar.SearchFile.LastIndexOf("\")), False) = False Then
-            If MessageBox.Show("The folder " & CurVar.SearchFile.Substring(0, CurVar.SearchFile.LastIndexOf("\")) & " does not exist." & Environment.NewLine & "do you wish to create it?", "Folder does not exist", MessageBoxButtons.YesNo, MessageBoxIcon.Hand, MessageBoxDefaultButton.Button1) = Windows.Forms.DialogResult.No Then
+        If SeqData.dhdText.CheckDir(SeqData.CurVar.SearchFile.Substring(0, SeqData.CurVar.SearchFile.LastIndexOf("\")), False) = False Then
+            If MessageBox.Show("The folder " & SeqData.CurVar.SearchFile.Substring(0, SeqData.CurVar.SearchFile.LastIndexOf("\")) & " does not exist." & Environment.NewLine & "do you wish to create it?", "Folder does not exist", MessageBoxButtons.YesNo, MessageBoxIcon.Hand, MessageBoxDefaultButton.Button1) = Windows.Forms.DialogResult.No Then
                 lblStatusText.Text = "File Save Aborted"
                 Exit Sub
             End If
         End If
-        dhdText.SaveXmlFile(xmlSearch, SeqData.CheckFilePath(CurVar.SearchFile), True)
+        SeqData.dhdText.SaveXmlFile(xmlSearch, SeqData.CheckFilePath(SeqData.CurVar.SearchFile), True)
         SearchListLoad(tblTable.TableName)
         btnClear_Click(Nothing, Nothing)
         cbxSearch.SelectedIndex = -1
@@ -746,7 +747,7 @@ Public Class frmSequenchel
     End Sub
 
     Private Sub cbxSearch_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbxSearch.SelectedIndexChanged
-        If CurStatus.SuspendActions = False Then
+        If SeqData.CurStatus.SuspendActions = False Then
             CursorControl("Wait")
             FieldsClearAll()
             SearchLoad()
@@ -763,38 +764,38 @@ Public Class frmSequenchel
         btnAdd.Enabled = False
         btnDelete.Enabled = False
 
-        If CurStatus.Status = SeqCore.CurrentStatus.StatusList.Search And tblTable.TableSearch = True Then
+        If SeqData.CurStatus.Status = SeqCore.CurrentStatus.StatusList.Search And tblTable.TableSearch = True Then
             btnSearch.Enabled = True
         End If
-        If CurStatus.Status = SeqCore.CurrentStatus.StatusList.Edit And tblTable.TableUpdate = True And (CurVar.AllowUpdate = True Or CurVar.SecurityOverride = True) Then
+        If SeqData.CurStatus.Status = SeqCore.CurrentStatus.StatusList.Edit And tblTable.TableUpdate = True And (SeqData.CurVar.AllowUpdate = True Or SeqData.CurVar.SecurityOverride = True) Then
             btnUpdate.Enabled = True
         End If
-        If tblTable.TableInsert = True And (CurVar.AllowInsert = True Or CurVar.SecurityOverride = True) Then
+        If tblTable.TableInsert = True And (SeqData.CurVar.AllowInsert = True Or SeqData.CurVar.SecurityOverride = True) Then
             btnAdd.Enabled = True
         End If
-        If CurStatus.Status = SeqCore.CurrentStatus.StatusList.ControlSearch Then
+        If SeqData.CurStatus.Status = SeqCore.CurrentStatus.StatusList.ControlSearch Then
             btnSearch.Enabled = True
         End If
-        If CurStatus.Status = SeqCore.CurrentStatus.StatusList.ControlEdit And (CurVar.AllowUpdate = True Or CurVar.SecurityOverride = True) Then
+        If SeqData.CurStatus.Status = SeqCore.CurrentStatus.StatusList.ControlEdit And (SeqData.CurVar.AllowUpdate = True Or SeqData.CurVar.SecurityOverride = True) Then
             btnUpdate.Enabled = True
         End If
-        If tblTable.TableDelete = True And (CurVar.AllowDelete = True Or CurVar.SecurityOverride = True) Then
+        If tblTable.TableDelete = True And (SeqData.CurVar.AllowDelete = True Or SeqData.CurVar.SecurityOverride = True) Then
             btnDelete.Enabled = True
         End If
     End Sub
 
     Private Sub FieldsClearAll(Optional ClearSearch As Boolean = False)
         If ClearSearch = True Then
-            CurStatus.SuspendActions = True
+            SeqData.curStatus.SuspendActions = True
             cbxSearch.SelectedIndex = -1
-            CurStatus.SuspendActions = False
+            SeqData.curStatus.SuspendActions = False
         End If
         dgvTable1.ClearSelection()
         FieldsClear()
-        If CurStatus.Status > 3 Then
-            CurStatus.Status = SeqCore.CurrentStatus.StatusList.ControlSearch
+        If SeqData.curStatus.Status > 3 Then
+            SeqData.curStatus.Status = SeqCore.CurrentStatus.StatusList.ControlSearch
         Else
-            CurStatus.Status = SeqCore.CurrentStatus.StatusList.Search
+            SeqData.curStatus.Status = SeqCore.CurrentStatus.StatusList.Search
         End If
         FieldsEnable()
         'ColorReset()
@@ -809,7 +810,7 @@ Public Class frmSequenchel
 
     Private Sub FieldsEnable(Optional blnEnableIdentity As Boolean = True)
 
-        Select Case CurStatus.Status
+        Select Case SeqData.curStatus.Status
             Case SeqCore.CurrentStatus.StatusList.Search, SeqCore.CurrentStatus.StatusList.ControlSearch
                 For intField As Integer = 0 To tblTable.Count - 1
                     FieldEnableHandler(tblTable.Item(intField), tblTable.Item(intField).FieldSearch)
@@ -892,7 +893,7 @@ Public Class frmSequenchel
 
     Friend Sub LoadList(blnRefine As Boolean)
         If tblTable.TableName.Length < 1 Then Exit Sub
-        CurStatus.SuspendActions = True
+        SeqData.curStatus.SuspendActions = True
         Dim strQuerySelect As String = SelectBuild()
         Dim strQueryOrder As String = OrderBuild()
 
@@ -928,7 +929,7 @@ Public Class frmSequenchel
 
         dgvTable1.ClearSelection()
         lblListCountNumber.Text = dgvTable1.RowCount - 1
-        CurStatus.SuspendActions = False
+        SeqData.curStatus.SuspendActions = False
     End Sub
 
     Private Function SelectBuild() As String
@@ -959,7 +960,7 @@ Public Class frmSequenchel
         Dim intColumnCount As Integer = 0
         strQuery = strMode & " "
         For intOrder As Integer = 0 To dgvTable1.Columns.Count
-            If intColumnCount >= CurVar.MaxColumnSort Then Exit For
+            If intColumnCount >= SeqData.curVar.MaxColumnSort Then Exit For
 
             For Each column In dgvTable1.Columns
                 If intOrder = column.displayindex And column.Visible = True Then
@@ -985,7 +986,7 @@ Public Class frmSequenchel
     End Function
 
     Private Sub ItemSelect()
-        If CurStatus.SuspendActions = False Then
+        If SeqData.curStatus.SuspendActions = False Then
             FieldsClear()
             If dgvTable1.SelectedRows.Count = 1 Then
                 SelectedItem = dgvTable1.SelectedRows(0)
@@ -1033,13 +1034,13 @@ Public Class frmSequenchel
         If strQueryWhere = " WHERE 1=1 " Then Exit Sub
         strQuery &= strQueryWhere
         strQuery = strQuery.Replace(",,", " ")
-        'If CurVar.DebugMode Then MessageBox.Show(strQuery)
+        'If SeqData.CurVar.DebugMode Then MessageBox.Show(strQuery)
 
         Dim objData As DataSet = QueryDb(dhdConnection, strQuery, True)
         If objData Is Nothing Then Exit Sub
         If objData.Tables.Count = 0 Then Exit Sub
         If objData.Tables(0).Rows.Count = 0 Then Exit Sub
-        CurStatus.SuspendActions = True
+        SeqData.curStatus.SuspendActions = True
         Try
             'For intRowCount1 As Integer = 0 To objData.Tables(0).Rows.Count - 1
             'If objData.Tables.Item(0).Rows(intRowCount1).Item(0).GetType().ToString = "System.DBNull" Then
@@ -1071,13 +1072,13 @@ Public Class frmSequenchel
             MessageBox.Show("There was an error loading the data." & Environment.NewLine & ex.Message)
             WriteLog("There was an error loading the data." & Environment.NewLine & ex.Message, 1)
 
-            CurStatus.SuspendActions = False
+            SeqData.curStatus.SuspendActions = False
         End Try
-        CurStatus.SuspendActions = False
-        If CurStatus.Status > 3 Then
-            CurStatus.Status = SeqCore.CurrentStatus.StatusList.ControlEdit
+        SeqData.curStatus.SuspendActions = False
+        If SeqData.curStatus.Status > 3 Then
+            SeqData.curStatus.Status = SeqCore.CurrentStatus.StatusList.ControlEdit
         Else
-            CurStatus.Status = SeqCore.CurrentStatus.StatusList.Edit
+            SeqData.curStatus.Status = SeqCore.CurrentStatus.StatusList.Edit
         End If
         'ButtonHandle()
         FieldsEnable()
@@ -1093,7 +1094,7 @@ Public Class frmSequenchel
                 If tblTable.Item(intField).FieldSearchList = True Then
                     'If tblTable.Item(intField).FieldName = strCriterium Or strCriterium = "" Then
                     '    strQuery = "SELECT DISTINCT " & " "
-                    '    If CurVar.LimitLookupLists = True Then strQuery &= "TOP " & CurVar.LimitLookupListsCount & " "
+                    '    If SeqData.CurVar.LimitLookupLists = True Then strQuery &= "TOP " & SeqData.CurVar.LimitLookupListsCount & " "
                     '    strQuery &= "COALESCE([" & tblTable.Item(intField).FieldName & "],'') AS [" & tblTable.Item(intField).FieldName & "]"
                     '    strQuery &= " FROM [" & tblTable.TableName.Replace(".", "].[") & "] "
                     '    strQuery3 = " ORDER BY [" & tblTable.Item(intField).FieldName & "] "
@@ -1314,7 +1315,7 @@ Public Class frmSequenchel
         strQuery = strQuery & strQuery1 & ") VALUES (" & strQuery2 & ")"
         strQuery = Replace(strQuery, "(,", "(")
 
-        If CurVar.DebugMode Then
+        If SeqData.curVar.DebugMode Then
             If MessageBox.Show("The query to be executed is: " & Environment.NewLine & strQuery & Environment.NewLine & strMessages.strContinue, strMessages.strAreYouSure, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.No Then
                 lblStatusText.Text = "Insert cancelled"
                 Exit Sub
@@ -1331,10 +1332,10 @@ Public Class frmSequenchel
             WriteLog("There was an error inserting the record: " & Environment.NewLine & ex.Message, 1)
         End Try
 
-        If CurStatus.Status > 3 Then
-            CurStatus.Status = SeqCore.CurrentStatus.StatusList.ControlEdit
+        If SeqData.curStatus.Status > 3 Then
+            SeqData.curStatus.Status = SeqCore.CurrentStatus.StatusList.ControlEdit
         Else
-            CurStatus.Status = SeqCore.CurrentStatus.StatusList.Edit
+            SeqData.curStatus.Status = SeqCore.CurrentStatus.StatusList.Edit
         End If
         ColorReset()
         ButtonHandle()
@@ -1389,7 +1390,7 @@ Public Class frmSequenchel
         strQuery = strQuery & strQueryUpdate & strQueryWhere
         strQuery = Replace(strQuery, ",,", "")
 
-        If CurVar.DebugMode Then
+        If SeqData.curVar.DebugMode Then
             If MessageBox.Show("The query to be executed is: " & Environment.NewLine & strQuery & Environment.NewLine & strMessages.strContinue, strMessages.strAreYouSure, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.No Then
                 lblStatusText.Text = "Update cancelled"
                 Exit Sub
@@ -1436,7 +1437,7 @@ Public Class frmSequenchel
         End If
         strQuery = strQuery & strQueryWhere
 
-        If CurVar.DebugMode Then
+        If SeqData.curVar.DebugMode Then
             If MessageBox.Show("The query to be executed is: " & Environment.NewLine & strQuery & Environment.NewLine & strMessages.strContinue, strMessages.strAreYouSure, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.No Then
                 WriteStatus("Delete cancelled", 0, lblStatusText)
                 Exit Sub
@@ -1453,10 +1454,10 @@ Public Class frmSequenchel
             WriteLog("There was an error deleting the record: " & Environment.NewLine & ex.Message, 1)
         End Try
 
-        If CurStatus.Status > 3 Then
-            CurStatus.Status = SeqCore.CurrentStatus.StatusList.ControlEdit
+        If SeqData.curStatus.Status > 3 Then
+            SeqData.curStatus.Status = SeqCore.CurrentStatus.StatusList.ControlEdit
         Else
-            CurStatus.Status = SeqCore.CurrentStatus.StatusList.Edit
+            SeqData.curStatus.Status = SeqCore.CurrentStatus.StatusList.Edit
         End If
         dgvTable1.Rows.Remove(dgvTable1.SelectedRows(0))
         ColorReset()
@@ -1467,18 +1468,18 @@ Public Class frmSequenchel
 
         Dim root As XmlElement = xmlSearch.DocumentElement
         If root Is Nothing Then
-            xmlTables = dhdText.CreateRootDocument(xmlSearch, "Sequenchel", "Searches", True)
+            xmlTables = SeqData.dhdText.CreateRootDocument(xmlSearch, "Sequenchel", "Searches", True)
         End If
 
-        Dim NewNode As XmlNode = dhdText.CreateAppendElement(xmlSearch.Item("Sequenchel").Item("Searches"), "Search")
-        dhdText.CreateAppendElement(NewNode, "TableName", tblTable.TableName)
-        dhdText.CreateAppendElement(NewNode, "SearchName", cbxSearch.Text)
+        Dim NewNode As XmlNode = SeqData.dhdText.CreateAppendElement(xmlSearch.Item("Sequenchel").Item("Searches"), "Search")
+        SeqData.dhdText.CreateAppendElement(NewNode, "TableName", tblTable.TableName)
+        SeqData.dhdText.CreateAppendElement(NewNode, "SearchName", cbxSearch.Text)
 
-        dhdText.CreateAppendElement(NewNode, "UseTop", chkUseTop.Checked)
-        dhdText.CreateAppendElement(NewNode, "UseTopCount", txtUseTop.Text)
-        dhdText.CreateAppendElement(NewNode, "ReversedOrder", chkReversedSortOrder.Checked)
+        SeqData.dhdText.CreateAppendElement(NewNode, "UseTop", chkUseTop.Checked)
+        SeqData.dhdText.CreateAppendElement(NewNode, "UseTopCount", txtUseTop.Text)
+        SeqData.dhdText.CreateAppendElement(NewNode, "ReversedOrder", chkReversedSortOrder.Checked)
 
-        Dim FieldsNode As XmlNode = dhdText.CreateAppendElement(NewNode, "Fields", "")
+        Dim FieldsNode As XmlNode = SeqData.dhdText.CreateAppendElement(NewNode, "Fields", "")
 
         For intField As Integer = 0 To tblTable.Count - 1
             If tblTable.Item(intField).BackColor = clrMarked Then
@@ -1488,10 +1489,10 @@ Public Class frmSequenchel
 
                 Select Case tblTable.Item(intField).FieldDataType.ToUpper
                     Case "BIT"
-                        Dim NewFieldNode As XmlNode = dhdText.CreateAppendElement(FieldsNode, "Field", tblTable.Item(intField).CheckState)
+                        Dim NewFieldNode As XmlNode = SeqData.dhdText.CreateAppendElement(FieldsNode, "Field", tblTable.Item(intField).CheckState)
                         NewFieldNode.Attributes.Append(newAttribute1)
                     Case Else
-                        Dim NewFieldNode As XmlNode = dhdText.CreateAppendElement(FieldsNode, "Field", tblTable.Item(intField).Text)
+                        Dim NewFieldNode As XmlNode = SeqData.dhdText.CreateAppendElement(FieldsNode, "Field", tblTable.Item(intField).Text)
                         NewFieldNode.Attributes.Append(newAttribute1)
                 End Select
             End If
@@ -1512,7 +1513,7 @@ Public Class frmSequenchel
         Dim strSelection As String = cbxSearch.Text
 
         If strSelection.Length = 0 Then Exit Sub
-        Dim xNode As XmlNode = dhdText.FindXmlNode(xmlSearch, "Search", "SearchName", strSelection)
+        Dim xNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlSearch, "Search", "SearchName", strSelection)
         If Not xNode Is Nothing Then
             If UpdateMode = False Then
                 If MessageBox.Show("This will permanently remove the Item: " & strSelection & Environment.NewLine & strMessages.strContinue, strMessages.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Exit Sub
@@ -1527,12 +1528,12 @@ Public Class frmSequenchel
         Dim strFieldName As String = "", strFieldValue As String = ""
 
         If strSelection.Length = 0 Then Exit Sub
-        Dim xPNode As XmlNode = dhdText.FindXmlNode(xmlSearch, "Search", "SearchName", strSelection)
+        Dim xPNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlSearch, "Search", "SearchName", strSelection)
         If Not xPNode Is Nothing Then
 
-            If dhdText.CheckNodeElement(xPNode, "UseTop") Then chkUseTop.Checked = xPNode.Item("UseTop").InnerText
-            If dhdText.CheckNodeElement(xPNode, "UseTopCount") Then txtUseTop.Text = xPNode.Item("UseTopCount").InnerText
-            If dhdText.CheckNodeElement(xPNode, "ReversedOrder") Then chkReversedSortOrder.Checked = xPNode.Item("ReversedOrder").InnerText
+            If SeqData.dhdText.CheckNodeElement(xPNode, "UseTop") Then chkUseTop.Checked = xPNode.Item("UseTop").InnerText
+            If SeqData.dhdText.CheckNodeElement(xPNode, "UseTopCount") Then txtUseTop.Text = xPNode.Item("UseTopCount").InnerText
+            If SeqData.dhdText.CheckNodeElement(xPNode, "ReversedOrder") Then chkReversedSortOrder.Checked = xPNode.Item("ReversedOrder").InnerText
 
             For Each xNode As XmlNode In xPNode.SelectNodes(".//Field")
                 strFieldName = xNode.Attributes("FieldName").Value

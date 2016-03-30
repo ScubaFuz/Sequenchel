@@ -983,7 +983,7 @@ Public Class Data
         Return dtsImport
     End Function
 
-    Public Sub ExportFile(dtsInput As DataSet, strFileName As String, blnShowFile As Boolean, Optional blnHasHeaders As Boolean = True, Optional Delimiter As String = ",")
+    Public Function ExportFile(dtsInput As DataSet, strFileName As String, Optional blnConvertToText As Boolean = False, Optional blnConvertToNull As Boolean = False, Optional blnShowFile As Boolean = False, Optional blnHasHeaders As Boolean = True, Optional Delimiter As String = ",", Optional QuoteValues As Boolean = False, Optional CreateDir As Boolean = False) As Boolean
         Dim strTargetFile As String = strFileName.Substring(0, strFileName.LastIndexOf("."))
         If curVar.IncludeDate = True Then
             strTargetFile = strTargetFile & "_" & FormatFileDate(Now)
@@ -992,15 +992,18 @@ Public Class Data
         Dim strExtension As String = strFileName.Substring(strFileName.LastIndexOf(".") + 1, strFileName.Length - (strFileName.LastIndexOf(".") + 1))
         Dim strExportFile As String = strTargetFile & "." & strExtension
         Try
+            If blnConvertToText = True Then dtsInput = dhdConnection.ConvertToText(dtsInput)
+            If blnConvertToNull = True Then dtsInput = dhdConnection.EmptyToNull(dtsInput)
+
             Select Case strExtension.ToLower
                 Case "xml"
-                    dhdText.ExportDataSetToXML(dhdConnection.ConvertToText(dtsInput), strExportFile)
-                Case "xlsx"
+                    dtsInput = dhdConnection.ConvertToText(dtsInput)
+                    dhdText.ExportDataSetToXML(dtsInput, strExportFile, CreateDir)
+                Case "xlsx", "xls"
                     Excel.CreateExcelDocument(dtsInput, strExportFile)
-                Case "xls"
-                    Excel.CreateExcelDocument(dhdConnection.ConvertToText(dtsInput), strExportFile)
                 Case "txt", "csv"
-                    dhdText.DataSetToCsv(dtsInput.Tables(0), strExportFile, blnHasHeaders, Delimiter)
+                    dtsInput = dhdConnection.ConvertToText(dtsInput)
+                    dhdText.DataSetToCsv(dtsInput.Tables(0), strExportFile, blnHasHeaders, Delimiter, QuoteValues)
                 Case Else
                     'unknown filetype, do nothing
                     blnShowFile = False
@@ -1008,6 +1011,7 @@ Public Class Data
         Catch ex As Exception
             blnShowFile = False
             'WriteLog("Couldn't create Excel file.\r\nException: " + ex.Message, 1)
+            Return False
         End Try
 
         If blnShowFile = True Then
@@ -1016,52 +1020,9 @@ Public Class Data
             p.Start()
         End If
 
-    End Sub
-
-    'Public Function CsvToDataSet(strFileName As String, blnHasHeaders As Boolean, Optional Delimiter As String = ",") As DataSet
-    '    Dim dtsOutput As New DataSet
-    '    Dim dttOutput As New DataTable
-    '    dtsOutput.Tables.Add(dttOutput)
-
-    '    Dim intRowCount As Integer = 0
-
-    '    Using MyReader As New Microsoft.VisualBasic.FileIO.TextFieldParser(strFileName)
-    '        MyReader.TextFieldType = FileIO.FieldType.Delimited
-    '        MyReader.SetDelimiters(Delimiter)
-    '        Dim currentRow As String()
-    '        While Not MyReader.EndOfData
-    '            Try
-    '                currentRow = MyReader.ReadFields()
-    '                If intRowCount = 0 And blnHasHeaders = False Then
-    '                    For intColumns = 1 To currentRow.Count
-    '                        dttOutput.Columns.Add("col" & intColumns)
-    '                    Next
-    '                End If
-    '                If intRowCount > 0 Or blnHasHeaders = False Then dttOutput.Rows.Add()
-
-    '                Dim currentField As String
-    '                Dim intColCount As Integer = 0
-    '                For Each currentField In currentRow
-    '                    If intRowCount = 0 And blnHasHeaders = True Then
-    '                        'Create Columns
-    '                        dttOutput.Columns.Add(currentField)
-    '                    Else
-    '                        'fill datarow
-    '                        dttOutput.Rows(dttOutput.Rows.Count - 1)(intColCount) = currentField
-    '                    End If
-    '                    intColCount += 1
-    '                    'MsgBox(currentField)
-    '                Next
-    '            Catch ex As Microsoft.VisualBasic.
-    '                        FileIO.MalformedLineException
-    '                MsgBox("Line " & ex.Message & "is not valid and will be skipped.")
-    '            End Try
-    '            intRowCount += 1
-    '        End While
-    '    End Using
-    '    Return dtsOutput
-    'End Function
-
+        Return True
+    End Function
 
 #End Region
+
 End Class

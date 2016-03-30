@@ -68,6 +68,9 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Version.vb">
+      <Link>Version.vb</Link>
+    </Compile>
     <Compile Include="Core.vb" />
     <Compile Include="CurrentStatus.vb" />
     <Compile Include="Data.vb" />

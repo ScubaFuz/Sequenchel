@@ -36,7 +36,7 @@ Public Class frmImport
     Private Sub LoadDefaults()
         txtServer.Text = dhdConnection.DataLocation
         txtDatabase.Text = dhdConnection.DatabaseName
-        txtTable.Text = CurStatus.Table
+        txtTable.Text = SeqData.curStatus.Table
         If dhdConnection.LoginMethod = "Windows" Then
             chkWinAuth.Checked = True
         Else
@@ -59,13 +59,13 @@ Public Class frmImport
             Return
         End If
 
-        dhdText.ImportFile = ofdFile.FileName
-        txtCurrentFile.Text = dhdText.ImportFile
+        SeqData.dhdText.ImportFile = ofdFile.FileName
+        txtCurrentFile.Text = SeqData.dhdText.ImportFile
         ImportFile()
     End Sub
 
     Private Sub ImportFile()
-        dtsImport = SeqData.ImportFile(dhdText.ImportFile, chkHasHeaders.Checked, txtDelimiter.Text)
+        dtsImport = SeqData.ImportFile(SeqData.dhdText.ImportFile, chkHasHeaders.Checked, txtDelimiter.Text)
 
         If dtsImport Is Nothing Then
             MessageBox.Show("File extension or delimiter not recognised." & Environment.NewLine & "Please try again or select a different file.")
@@ -132,10 +132,7 @@ Public Class frmImport
                 End If
             Next
             If dtsUpload.Tables.Count > 0 Then
-                If SeqData.curVar.ConvertToText = True Then dtsUpload = dhdConnection.ConvertToText(dtsUpload)
-                If SeqData.curVar.ConvertToNull = True Then dtsUpload = dhdConnection.EmptyToNull(dtsUpload)
-
-                SeqData.ExportFile(dtsUpload, SeqData.CheckFilePath(txtFileName.Text, True), False, chkHasHeaders.Checked, txtDelimiter.Text)
+                SeqData.ExportFile(dtsUpload, SeqData.CheckFilePath(txtFileName.Text, True), SeqData.curVar.ConvertToText, SeqData.curVar.ConvertToNull, SeqData.curVar.ShowFile, chkHasHeaders.Checked, txtDelimiter.Text, SeqData.curVar.QuoteValues, SeqData.curVar.CreateDir)
             End If
         Catch ex As Exception
             MessageBox.Show("There was an error writng to " & txtFileName.Text & Environment.NewLine & ex.Message)

@@ -14,10 +14,6 @@
     Private _LimitLookupLists As Boolean = True
     Private _LimitLookupListsCount As Integer = 100
     Private _IncludeDate As Boolean = False
-    Private _ConvertToText As Boolean = False
-    Private _ConvertToNull As Boolean = False
-    Private _HasHeaders As Boolean = True
-    Private _Delimiter As String = ","
 
     Public Property DebugMode() As Boolean
         Get
@@ -136,6 +132,17 @@
         End Set
     End Property
 
+#End Region
+
+#Region "Export Data"
+    Private _ConvertToText As Boolean = False
+    Private _ConvertToNull As Boolean = False
+    Private _ShowFile As Boolean = False
+    Private _HasHeaders As Boolean = True
+    Private _Delimiter As String = ","
+    Private _QuoteValues As Boolean = False
+    Private _CreateDir As Boolean = False
+
     Public Property ConvertToText() As Boolean
         Get
             Return _ConvertToText
@@ -154,6 +161,15 @@
         End Set
     End Property
 
+    Public Property ShowFile() As Boolean
+        Get
+            Return _ShowFile
+        End Get
+        Set(ByVal Value As Boolean)
+            _ShowFile = Value
+        End Set
+    End Property
+
     Public Property HasHeaders() As Boolean
         Get
             Return _HasHeaders
@@ -169,6 +185,24 @@
         End Get
         Set(ByVal Value As String)
             _Delimiter = Value
+        End Set
+    End Property
+
+    Public Property QuoteValues() As String
+        Get
+            Return _QuoteValues
+        End Get
+        Set(ByVal Value As String)
+            _QuoteValues = Value
+        End Set
+    End Property
+
+    Public Property CreateDir() As String
+        Get
+            Return _CreateDir
+        End Get
+        Set(ByVal Value As String)
+            _CreateDir = Value
         End Set
     End Property
 
