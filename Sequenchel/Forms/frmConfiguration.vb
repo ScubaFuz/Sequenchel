@@ -308,7 +308,7 @@ Public Class frmConfiguration
         End If
 
         If txtConnectionName.Text.Length < 2 Or txtDataLocation.Text.Length < 2 Or txtDataBaseName.Text.Length < 2 Or txtTableSetsFile.Text.Length < 2 Then
-            lblStatus.Text = strMessages.strAllData
+            lblStatus.Text = Core.Messages.strAllData
             Exit Sub
         End If
 
@@ -373,7 +373,7 @@ Public Class frmConfiguration
         If strSelection.Length = 0 Then Exit Sub
         Dim xNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlConnections, "Connection", "ConnectionName", strSelection)
         If Not xNode Is Nothing Then
-            If MessageBox.Show("This will permanently remove the Item: " & strSelection & Environment.NewLine & strMessages.strContinue, strMessages.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Exit Sub
+            If MessageBox.Show("This will permanently remove the Item: " & strSelection & Environment.NewLine & Core.Messages.strContinue, Core.Messages.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Exit Sub
             xNode.ParentNode.RemoveChild(xNode)
 
             SeqData.curStatus.ConnectionChanged = True
@@ -549,7 +549,7 @@ Public Class frmConfiguration
     Private Sub TableSetAddOrUpdate()
         'dhdText.RemoveNode(xmlConnections, "Connections", "ConnectionName", txtConnectionName.Text)
         If txtTableSetName.Text.Length < 2 Or txtTablesFile.Text.Length < 2 Then
-            lblStatus.Text = strMessages.strAllData
+            lblStatus.Text = Core.Messages.strAllData
             Exit Sub
         End If
 
@@ -599,7 +599,7 @@ Public Class frmConfiguration
         If strSelection.Length = 0 Then Exit Sub
         Dim xNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlTableSets, "TableSet", "TableSetName", strSelection)
         If Not xNode Is Nothing Then
-            If MessageBox.Show("This will permanently remove the Item: " & strSelection & Environment.NewLine & strMessages.strContinue, strMessages.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Exit Sub
+            If MessageBox.Show("This will permanently remove the Item: " & strSelection & Environment.NewLine & Core.Messages.strContinue, Core.Messages.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Exit Sub
             xNode.ParentNode.RemoveChild(xNode)
 
             SeqData.curStatus.TableSetChanged = True
@@ -965,7 +965,7 @@ Public Class frmConfiguration
         If strSelection.Length = 0 Then Exit Sub
         Dim xNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlTables, "Table", "Name", strSelection)
         If Not xNode Is Nothing Then
-            If MessageBox.Show("This will permanently remove the Item: " & strSelection & Environment.NewLine & strMessages.strContinue, strMessages.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Exit Sub
+            If MessageBox.Show("This will permanently remove the Item: " & strSelection & Environment.NewLine & Core.Messages.strContinue, Core.Messages.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Exit Sub
             xNode.ParentNode.RemoveChild(xNode)
 
             SeqData.curStatus.TableChanged = True
@@ -1224,7 +1224,7 @@ Public Class frmConfiguration
         If strSelection.Length = 0 Then Exit Sub
         Dim xNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlTables, "Field", "FldName", strSelection)
         If Not xNode Is Nothing Then
-            If MessageBox.Show("This will permanently remove the Item: " & strSelection & Environment.NewLine & strMessages.strContinue, strMessages.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Exit Sub
+            If MessageBox.Show("This will permanently remove the Item: " & strSelection & Environment.NewLine & Core.Messages.strContinue, Core.Messages.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Exit Sub
             xNode.ParentNode.RemoveChild(xNode)
 
             SeqData.curStatus.TableChanged = True
@@ -1371,7 +1371,7 @@ Public Class frmConfiguration
         Dim xRNode As XmlNode = SeqData.dhdText.FindXmlChildNode(xCNode, "Relation", "Relation", strSelection)
 
         If Not xRNode Is Nothing Then
-            If MessageBox.Show("This will permanently remove the Item: " & strSelection & Environment.NewLine & strMessages.strContinue, strMessages.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Exit Sub
+            If MessageBox.Show("This will permanently remove the Item: " & strSelection & Environment.NewLine & Core.Messages.strContinue, Core.Messages.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Exit Sub
             xRNode.ParentNode.RemoveChild(xRNode)
 
             tvwTable.Nodes.Clear()

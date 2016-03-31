@@ -2,9 +2,9 @@
 
     Private Sub frmAbout_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
 
-        lblVersion.Text = "Version: " & GetVersion("R")
+        lblVersion.Text = "Version: " & Core.GetVersion("R")
         lblCopyright.Text = My.Application.Info.Copyright
-        lblLicenseName.Text = "Licensed to: " & strLicenseName
+        lblLicenseName.Text = "Licensed to: " & Core.LicenseName
         lblLicenseText.Text = "Sequenchel is free for personal use. Companies are required to purchase a license. " _
             + Environment.NewLine + "Having a license will automatically close this screen at startup. Thank you for playing fair." _
             + Environment.NewLine + "Click anywhere on this screen to close it. Click on the Version number to see the version log."

@@ -24,7 +24,7 @@ Module SeqCmd
 
     Sub Main()
         ParseCommands()
-        SetDefaults()
+        SeqData.SetDefaults()
         Dim strReturn As String = SeqData.LoadSDBASettingsXml(xmlSDBASettings)
         If strReturn.Length > 0 Then
             Console.WriteLine(strReturn)
@@ -85,6 +85,38 @@ Module SeqCmd
             End If
         End If
     End Sub
+
+    Public Function GetVersion(strPart As String) As String
+        If (System.Deployment.Application.ApplicationDeployment.IsNetworkDeployed) Then
+            Dim ver As Version
+            ver = System.Deployment.Application.ApplicationDeployment.CurrentDeployment.CurrentVersion
+            Select Case strPart
+                Case "M"
+                    Return String.Format("{0}", ver.Major)
+                Case "m"
+                    Return String.Format("{0}.{1}", ver.Major, ver.Minor)
+                Case "B"
+                    Return String.Format("{0}.{1}.{2}", ver.Major, ver.Minor, ver.Build)
+                Case "R"
+                    Return String.Format("{0}.{1}.{2}.{3}", ver.Major, ver.Minor, ver.Build, ver.Revision)
+                Case Else
+                    Return String.Format("{0}.{1}.{2}.{3}", ver.Major, ver.Minor, ver.Build, ver.Revision)
+            End Select
+        Else
+            Select Case strPart
+                Case "M"
+                    Return My.Application.Info.Version.Major
+                Case "m"
+                    Return My.Application.Info.Version.Major & "." & My.Application.Info.Version.Minor
+                Case "B"
+                    Return My.Application.Info.Version.Major & "." & My.Application.Info.Version.Minor & "." & My.Application.Info.Version.Build
+                Case "R"
+                    Return My.Application.Info.Version.Major & "." & My.Application.Info.Version.Minor & "." & My.Application.Info.Version.Build & "." & My.Application.Info.Version.Revision
+                Case Else
+                    Return My.Application.Info.Version.Major & "." & My.Application.Info.Version.Minor & "." & My.Application.Info.Version.Build & "." & My.Application.Info.Version.Revision
+            End Select
+        End If
+    End Function
 
     Friend Sub ParseCommands()
         Dim intLength As Integer = 0
@@ -156,25 +188,6 @@ Module SeqCmd
             End Select
         Next
 
-    End Sub
-
-    Friend Sub SetDefaults()
-        SeqData.dhdReg.RegistryPath = "Software\Thicor\Sequenchel\3.0"
-
-        SeqData.dhdText.InputFile = "SequenchelDBA.xml"
-        SeqData.dhdText.LogFileName = "Sequenchel.Log"
-        SeqData.dhdText.LogLevel = 5
-        SeqData.dhdText.LogLocation = System.AppDomain.CurrentDomain.BaseDirectory & "LOG"
-        SeqData.dhdText.OutputFile = Environment.SpecialFolder.MyDocuments
-
-        SeqData.dhdConnection.LoginMethod = "WINDOWS"
-        SeqData.dhdConnection.LoginName = "SDBAUser"
-        SeqData.dhdConnection.Password = "SDBAPassword"
-        SeqData.dhdConnection.DataLocation = Environment.MachineName & "\SQLEXPRESS"
-        SeqData.dhdConnection.DatabaseName = "Sequenchel"
-        SeqData.dhdConnection.DataProvider = "SQL"
-
-        SeqData.curStatus.Status = SeqCore.CurrentStatus.StatusList.Search
     End Sub
 
     Friend Sub LoadConnections()

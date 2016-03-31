@@ -6,7 +6,7 @@
     Dim strTargetTable As String = ""
 
     Private Sub frmSmartUpdate_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        If blnLicenseValidated = True Then
+        If Core.LicenseValidated = True Then
             btnCreateSmartUpdateProcedure.Enabled = True
             lblLicenseRequired.Visible = False
         End If

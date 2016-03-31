@@ -332,7 +332,7 @@
     Private Sub LinkedServerDelete()
         Dim strSelection As String = txtLinkedServerName.Text
         'If txtInstance.Text.Length > 0 Then strSelection &= "\" & txtInstance.Text
-        If MessageBox.Show("This will permanently remove the Item: " & strSelection & Environment.NewLine & strMessages.strContinue, strMessages.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Exit Sub
+        If MessageBox.Show("This will permanently remove the Item: " & strSelection & Environment.NewLine & Core.Messages.strContinue, Core.Messages.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Exit Sub
 
         strQuery = "master.dbo.sp_dropserver @server=N'" & strSelection & "', @droplogins='droplogins'"
         QueryDb(dhdConnection, strQuery, False)

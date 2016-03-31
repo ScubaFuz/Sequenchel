@@ -8,8 +8,6 @@ Imports System.Environment.SpecialFolder
 Module Common
     Friend ErrorMode As Boolean = False
 
-    Friend strLicenseName As String = "Thicor Services Demo License"
-    Friend strLicenseKey As String
     Friend blnDatabaseOnLine As Boolean = False
     Friend strErrorMessage As String = ""
     Friend strQuery As String = Nothing
@@ -36,7 +34,7 @@ Module Common
     Friend dtsReport As New DataSet
     Friend dtsImport As New DataSet
 
-    Friend strMessages As New SeqCore.Messages
+    'Friend strMessages As New SeqCore.Messages
     'Friend CurVar As New SeqCore.Variables
     'Friend CurStatus As New SeqCore.CurrentStatus
 
@@ -47,7 +45,7 @@ Module Common
     Friend clrWarning As Color = System.Drawing.Color.IndianRed
     Friend clrEmpty As Color = System.Drawing.Color.LemonChiffon
 
-    Friend strReport As String = "Sequenchel " & vbTab & " version: " & Application.ProductVersion & "  Licensed by: " & strLicenseName
+    Friend strReport As String = "Sequenchel " & vbTab & " version: " & Core.GetVersion("B") & "  Licensed by: " & Core.LicenseName
     Friend dtmElapsedTime As DateTime
     Friend tmsElapsedTime As TimeSpan
 
@@ -119,90 +117,11 @@ Module Common
 
     End Sub
 
-    Public Function GetVersion(strPart As String) As String
-        If (System.Deployment.Application.ApplicationDeployment.IsNetworkDeployed) Then
-            Dim ver As Version
-            ver = System.Deployment.Application.ApplicationDeployment.CurrentDeployment.CurrentVersion
-            Select Case strPart
-                Case "M"
-                    Return String.Format("{0}", ver.Major)
-                Case "m"
-                    Return String.Format("{0}.{1}", ver.Major, ver.Minor)
-                Case "B"
-                    Return String.Format("{0}.{1}.{2}", ver.Major, ver.Minor, ver.Build)
-                Case "R"
-                    Return String.Format("{0}.{1}.{2}.{3}", ver.Major, ver.Minor, ver.Build, ver.Revision)
-                Case Else
-                    Return String.Format("{0}.{1}.{2}.{3}", ver.Major, ver.Minor, ver.Build, ver.Revision)
-            End Select
-        Else
-            Select Case strPart
-                Case "M"
-                    Return My.Application.Info.Version.Major
-                Case "m"
-                    Return My.Application.Info.Version.Major & "." & My.Application.Info.Version.Minor
-                Case "B"
-                    Return My.Application.Info.Version.Major & "." & My.Application.Info.Version.Minor & "." & My.Application.Info.Version.Build
-                Case "R"
-                    Return My.Application.Info.Version.Major & "." & My.Application.Info.Version.Minor & "." & My.Application.Info.Version.Build & "." & My.Application.Info.Version.Revision
-                Case Else
-                    Return My.Application.Info.Version.Major & "." & My.Application.Info.Version.Minor & "." & My.Application.Info.Version.Build & "." & My.Application.Info.Version.Revision
-            End Select
-        End If
-    End Function
-
-    Friend Sub SetDefaults()
-        SeqData.dhdReg.RegistryPath = "Software\Thicor\Sequenchel\3.0"
-
-        SeqData.dhdText.InputFile = "SequenchelDBA.xml"
-        SeqData.dhdText.LogFileName = "Sequenchel.Log"
-        SeqData.dhdText.LogLevel = 5
-        SeqData.dhdText.LogLocation = Application.StartupPath & "\LOG"
-        SeqData.dhdText.OutputFile = Environment.SpecialFolder.MyDocuments
-
-        dhdDatabase.LoginMethod = "WINDOWS"
-        dhdDatabase.LoginName = "SDBAUser"
-        dhdDatabase.Password = "SDBAPassword"
-        dhdDatabase.DataLocation = Environment.MachineName & "\SQLEXPRESS"
-        dhdDatabase.DatabaseName = "Sequenchel"
-        dhdDatabase.DataProvider = "SQL"
-        If SeqData.curStatus.Status > 3 Then
-            SeqData.curStatus.Status = SeqCore.CurrentStatus.StatusList.ControlSearch
-        Else
-            SeqData.curStatus.Status = SeqCore.CurrentStatus.StatusList.Search
-        End If
-
-    End Sub
-
     Friend Sub LoadLicense()
-        Try
-            Dim strLicense As String
-            strLicense = SeqData.dhdReg.ReadAnyRegKey("LicenseName", SeqData.dhdReg.RegistryPath)
-            If strLicense = "-1" Then WriteLog(SeqData.dhdReg.RegMessage, 1)
-            If strLicense <> "-1" Then strLicenseName = strLicense
-            strLicenseKey = SeqData.dhdReg.ReadAnyRegKey("LicenseKey", SeqData.dhdReg.RegistryPath)
-            If strLicenseKey = "-1" Then WriteLog(SeqData.dhdReg.RegMessage, 1)
-        Catch ex As Exception
-            If SeqData.curVar.DebugMode = True Then MessageBox.Show(ex.Message)
-            WriteLog(ex.Message, 1)
-            blnLicenseValidated = False
-        End Try
-
-        'If CurVar.DebugMode Then MessageBox.Show(strLicenseName & Environment.NewLine & dtmExpiryDate.ToString & Environment.NewLine & My.Application.Info.Version.Major.ToString & Environment.NewLine & strLicenseKey)
-        If strLicenseKey <> "-1" Then
-            If CheckLicenseKey(strLicenseKey, strLicenseName, GetVersion("M"), Nothing) = False Then
-                'MessageBox.Show(strMessages.strLicenseError)
-                blnLicenseValidated = False
-            Else
-                blnLicenseValidated = True
-                'If CurVar.DebugMode Then MessageBox.Show(lanStrings.strLicenseValidated)
-            End If
-        Else
-            blnLicenseValidated = False
-
+        If Core.LoadLicense = False Then
+            MessageBox.Show(Core.Messages.ErrorMessage, "Error loading license", MessageBoxButtons.OK)
         End If
-
-        strReport = "Sequenchel " & vbTab & " version: " & Application.ProductVersion & vbTab & "  Licensed to: " & strLicenseName
+        strReport = "Sequenchel " & vbTab & " version: " & Core.GetVersion("B") & vbTab & "  Licensed to: " & Core.LicenseName
 
     End Sub
 
@@ -367,12 +286,6 @@ Module Common
         tblTable.TableDelete = False
     End Sub
 
-    Public Sub DeleteOldLogs(blnUseAutoDelete As Boolean)
-        If blnUseAutoDelete = False Or SeqData.dhdText.AutoDelete = True Then
-            'delete old logs
-        End If
-    End Sub
-
 #Region "XML"
     Friend Sub LoadSDBASettingsXml()
         If SeqData.dhdText.CheckFile(Application.StartupPath & "\" & SeqData.dhdText.InputFile) = True Then
@@ -403,8 +316,8 @@ Module Common
             End Try
         Else
             If SaveSDBASettingsXml() = False Then
-                WriteLog(strMessages.strXmlError, 1)
-                MessageBox.Show(strMessages.strXmlError)
+                WriteLog(Core.Messages.strXmlError, 1)
+                MessageBox.Show(Core.Messages.strXmlError)
             End If
         End If
 
@@ -435,7 +348,7 @@ Module Common
             SaveSDBASettingsXml = SeqData.dhdText.CreateFile(strXmlText, Application.StartupPath & "\" & SeqData.dhdText.InputFile)
             If SaveSDBASettingsXml = False Then WriteLog("There was an error saving the Settings file" & Environment.NewLine & SeqData.dhdText.Errormessage, 1)
         Catch ex As Exception
-            WriteLog(strMessages.strXmlError & Environment.NewLine & ex.Message, 1)
+            WriteLog(Core.Messages.strXmlError & Environment.NewLine & ex.Message, 1)
             SaveSDBASettingsXml = Nothing
         End Try
     End Function
@@ -479,7 +392,7 @@ Module Common
             End Try
         Else
             If SaveGeneralSettingsXml() = False Then
-                WriteLog(strMessages.strXmlError, 1)
+                WriteLog(Core.Messages.strXmlError, 1)
             End If
         End If
 
@@ -557,7 +470,7 @@ Module Common
             SaveGeneralSettingsXml = SeqData.dhdText.CreateFile(strXmlText, SeqData.CheckFilePath(SeqData.curVar.GeneralSettings))
             If SaveGeneralSettingsXml = False Then WriteLog("There was an error saving the General Settings file" & Environment.NewLine & SeqData.dhdText.Errormessage, 1)
         Catch ex As Exception
-            WriteLog(strMessages.strXmlError & Environment.NewLine & ex.Message, 1)
+            WriteLog(Core.Messages.strXmlError & Environment.NewLine & ex.Message, 1)
             SaveGeneralSettingsXml = Nothing
         End Try
     End Function

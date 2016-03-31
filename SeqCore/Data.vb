@@ -2,12 +2,35 @@
 
 Public Class Data
 
-    Public dhdReg As New DataHandler.reg
     Public dhdText As New DataHandler.txt
     Public dhdConnection As New DataHandler.db
     Public curVar As New Variables
     Public curStatus As New CurrentStatus
     Public Excel As New Excel
+
+#Region "General"
+    Public Sub SetDefaults()
+        dhdText.InputFile = "SequenchelDBA.xml"
+        dhdText.LogFileName = "Sequenchel.Log"
+        dhdText.LogLevel = 5
+        dhdText.LogLocation = System.AppDomain.CurrentDomain.BaseDirectory & "LOG"
+        dhdText.OutputFile = Environment.SpecialFolder.MyDocuments
+
+        dhdConnection.LoginMethod = "WINDOWS"
+        dhdConnection.LoginName = "SDBAUser"
+        dhdConnection.Password = "SDBAPassword"
+        dhdConnection.DataLocation = Environment.MachineName & "\SQLEXPRESS"
+        dhdConnection.DatabaseName = "Sequenchel"
+        dhdConnection.DataProvider = "SQL"
+
+        If curStatus.Status > 3 Then
+            curStatus.Status = SeqCore.CurrentStatus.StatusList.ControlSearch
+        Else
+            curStatus.Status = SeqCore.CurrentStatus.StatusList.Search
+        End If
+    End Sub
+
+#End Region
 
 #Region "DataBase"
     Public Function QueryDb(ByVal dhdConnect As DataHandler.db, ByVal strQueryData As String, ByVal ReturnValue As Boolean, Optional ByVal LogLevel As Integer = 5) As DataSet

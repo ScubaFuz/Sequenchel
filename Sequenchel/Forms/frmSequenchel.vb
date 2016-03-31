@@ -15,25 +15,26 @@ Public Class frmSequenchel
         If SeqData.CurVar.Encryption = False Then Me.Text &= " NoEncryption"
 
         DebugSettings()
-        SetDefaults()
+        Core.SetDefaults()
+        SeqData.SetDefaults()
         LoadLicense()
         Me.Hide()
         frmAbout.Show()
         frmAbout.Refresh()
 
-        lblLicense.Text = "Licensed to: " & strLicenseName
+        lblLicense.Text = "Licensed to: " & Core.LicenseName
         lblLicense.Left = Me.Width - lblLicense.Width - (SeqData.CurVar.BuildMargin * 5)
 
         LoadSDBASettingsXml()
         SecuritySet()
         LoadGeneralSettingsXml()
-        DeleteOldLogs(True)
+        'Core.DeleteOldLogs()
         LoadConnections()
 
         If SeqData.CurVar.SecurityOverride = True Then Me.Text &= " SecurityOverride"
 
         Me.Show()
-        If blnLicenseValidated Then
+        If Core.LicenseValidated Then
             frmAbout.Hide()
         Else
             frmAbout.TopMost = True
@@ -698,7 +699,7 @@ Public Class frmSequenchel
             WriteStatus("You need to select 1 item from the list to use this function", 1, lblStatusText)
             Exit Sub
         End If
-        If MessageBox.Show("This will permanently delete the selected Item from the database." & Environment.NewLine & strMessages.strContinue, strMessages.strAreYouSure, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.No Then
+        If MessageBox.Show("This will permanently delete the selected Item from the database." & Environment.NewLine & Core.Messages.strContinue, Core.Messages.strAreYouSure, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.No Then
             WriteStatus("Delete cancelled", 5, lblStatusText)
             Exit Sub
         End If
@@ -1316,7 +1317,7 @@ Public Class frmSequenchel
         strQuery = Replace(strQuery, "(,", "(")
 
         If SeqData.curVar.DebugMode Then
-            If MessageBox.Show("The query to be executed is: " & Environment.NewLine & strQuery & Environment.NewLine & strMessages.strContinue, strMessages.strAreYouSure, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.No Then
+            If MessageBox.Show("The query to be executed is: " & Environment.NewLine & strQuery & Environment.NewLine & Core.Messages.strContinue, Core.Messages.strAreYouSure, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.No Then
                 lblStatusText.Text = "Insert cancelled"
                 Exit Sub
             End If
@@ -1391,7 +1392,7 @@ Public Class frmSequenchel
         strQuery = Replace(strQuery, ",,", "")
 
         If SeqData.curVar.DebugMode Then
-            If MessageBox.Show("The query to be executed is: " & Environment.NewLine & strQuery & Environment.NewLine & strMessages.strContinue, strMessages.strAreYouSure, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.No Then
+            If MessageBox.Show("The query to be executed is: " & Environment.NewLine & strQuery & Environment.NewLine & Core.Messages.strContinue, Core.Messages.strAreYouSure, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.No Then
                 lblStatusText.Text = "Update cancelled"
                 Exit Sub
             End If
@@ -1438,7 +1439,7 @@ Public Class frmSequenchel
         strQuery = strQuery & strQueryWhere
 
         If SeqData.curVar.DebugMode Then
-            If MessageBox.Show("The query to be executed is: " & Environment.NewLine & strQuery & Environment.NewLine & strMessages.strContinue, strMessages.strAreYouSure, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.No Then
+            If MessageBox.Show("The query to be executed is: " & Environment.NewLine & strQuery & Environment.NewLine & Core.Messages.strContinue, Core.Messages.strAreYouSure, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.No Then
                 WriteStatus("Delete cancelled", 0, lblStatusText)
                 Exit Sub
             End If
@@ -1516,7 +1517,7 @@ Public Class frmSequenchel
         Dim xNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlSearch, "Search", "SearchName", strSelection)
         If Not xNode Is Nothing Then
             If UpdateMode = False Then
-                If MessageBox.Show("This will permanently remove the Item: " & strSelection & Environment.NewLine & strMessages.strContinue, strMessages.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Exit Sub
+                If MessageBox.Show("This will permanently remove the Item: " & strSelection & Environment.NewLine & Core.Messages.strContinue, Core.Messages.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Exit Sub
             End If
             xNode.ParentNode.RemoveChild(xNode)
         End If

@@ -2,7 +2,7 @@
 
     Private Sub frmSettings_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         System.Windows.Forms.Application.CurrentCulture = New System.Globalization.CultureInfo("EN-US")
-        txtLicenseName.Text = strLicenseName
+        txtLicenseName.Text = Core.LicenseName
         DatabaseShow()
         dhdDatabase.CheckDB()
         blnDatabaseOnLine = dhdDatabase.DataBaseOnline
@@ -488,32 +488,28 @@
 
     Private Sub btnSaveLicense_Click(sender As Object, e As EventArgs) Handles btnSaveLicense.Click
         Dim strLocation As String = ""
-        If CheckLicenseKey(txtLicenseKey.Text, txtLicenseName.Text, GetVersion("M"), Nothing) = False Then
+        If Core.CheckLicense(txtLicenseKey.Text, txtLicenseName.Text, Core.GetVersion("M"), Nothing) = False Then
             'MessageBox.Show(strMessages.strLicenseError)
-            blnLicenseValidated = False
-            MessageBox.Show("Your license validated: " & blnLicenseValidated)
-        Else
-            blnLicenseValidated = True
-            'If SeqData.CurVar.DebugMode Then MessageBox.Show(lanStrings.strLicenseValidated)
+            MessageBox.Show("Your license validated: " & Core.LicenseValidated)
         End If
-        If blnLicenseValidated = True Then
+        If Core.LicenseValidated = True Then
             Try
-                SeqData.dhdReg.AddLMRegKey("LicenseName", txtLicenseName.Text)
-                If SeqData.dhdReg.ErrorLevel = -1 Then
-                    SeqData.dhdReg.AddCURRegKey("LicenseName", txtLicenseName.Text)
+                Core.dhdReg.AddLMRegKey("LicenseName", txtLicenseName.Text)
+                If Core.dhdReg.ErrorLevel = -1 Then
+                    Core.dhdReg.AddCURRegKey("LicenseName", txtLicenseName.Text)
                     strLocation = "HK Current User"
                 Else
                     strLocation = "HKLM"
                 End If
-                If SeqData.curVar.DebugMode And SeqData.dhdReg.ErrorLevel = -1 Then MessageBox.Show(SeqData.dhdReg.RegMessage)
-                SeqData.dhdReg.AddLMRegKey("LicenseKey", txtLicenseKey.Text)
-                If SeqData.dhdReg.ErrorLevel = -1 Then
-                    SeqData.dhdReg.AddCURRegKey("LicenseKey", txtLicenseKey.Text)
+                If SeqData.curVar.DebugMode And Core.dhdReg.ErrorLevel = -1 Then MessageBox.Show(Core.dhdReg.RegMessage)
+                Core.dhdReg.AddLMRegKey("LicenseKey", txtLicenseKey.Text)
+                If Core.dhdReg.ErrorLevel = -1 Then
+                    Core.dhdReg.AddCURRegKey("LicenseKey", txtLicenseKey.Text)
                     strLocation = "HK Current User"
                 Else
                     strLocation = "HKLM"
                 End If
-                If SeqData.curVar.DebugMode And SeqData.dhdReg.ErrorLevel = -1 Then MessageBox.Show(SeqData.dhdReg.RegMessage)
+                If SeqData.curVar.DebugMode And Core.dhdReg.ErrorLevel = -1 Then MessageBox.Show(Core.dhdReg.RegMessage)
                 MessageBox.Show("Your License information has been saved to " & strLocation)
             Catch ex As Exception
                 MessageBox.Show("There ws an errror saving you license information" & Environment.NewLine & ex.Message)
@@ -522,14 +518,8 @@
     End Sub
 
     Private Sub btnValidateLicense_Click(sender As Object, e As EventArgs) Handles btnValidateLicense.Click
-        If CheckLicenseKey(txtLicenseKey.Text, txtLicenseName.Text, GetVersion("M"), Nothing) = False Then
-            'MessageBox.Show(strMessages.strLicenseError)
-            blnLicenseValidated = False
-        Else
-            blnLicenseValidated = True
-            'If SeqData.CurVar.DebugMode Then MessageBox.Show(lanStrings.strLicenseValidated)
-        End If
-        MessageBox.Show("Your license validated: " & blnLicenseValidated)
+        Core.CheckLicense(txtLicenseKey.Text, txtLicenseName.Text, Core.GetVersion("M"), Nothing)
+        MessageBox.Show("Your license validated: " & Core.LicenseValidated)
     End Sub
 
 #End Region
@@ -659,7 +649,7 @@
     Private Sub btnRefreshDatabase_Click(sender As Object, e As EventArgs) Handles btnRefreshDatabase.Click
         If MessageBox.Show("This will update all standard Sequenchel Views, Stored Procedures and Functions to their latest version. " & Environment.NewLine _
             & "Your Tables will not be changed." & Environment.NewLine _
-            & strMessages.strAreYouSure, strMessages.strWarning, MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.No Then Exit Sub
+            & Core.Messages.strAreYouSure, Core.Messages.strWarning, MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.No Then Exit Sub
         CreateDatabase(False)
     End Sub
 
@@ -773,7 +763,7 @@
             txtUpgradeDatabase.Tag = strTarget
             tabSettings.SelectTab(tpgDatabase)
             btnUpgradeDatabase.BackColor = clrWarning
-            MessageBox.Show(strMessages.strUpdateDatabase)
+            MessageBox.Show(Core.Messages.strUpdateDatabase)
             Return True
         Else
             btnUpgradeDatabase.Enabled = False
@@ -793,7 +783,7 @@
 
     Private Sub btnSaveSettingsDatabase_Click(sender As Object, e As EventArgs) Handles btnSaveSettingsDatabase.Click
         If cbxDataProvider.Items.Contains(cbxDataProvider.Text) = False Or cbxLoginMethod.Items.Contains(cbxLoginMethod.Text) = False Then
-            MessageBox.Show(strMessages.strPreconfigured & Environment.NewLine & strMessages.strCheckSettings)
+            MessageBox.Show(Core.Messages.strPreconfigured & Environment.NewLine & Core.Messages.strCheckSettings)
             Exit Sub
         End If
         'If dhdDatabase.DataLocation <> txtDatabaseLocation.Text Or _
@@ -818,7 +808,7 @@
             txtJobNamePrefix.Text = dhdDatabase.DatabaseName
             'btnSaveSettingsDatabase.BackColor = clrOriginal
         Catch ex As Exception
-            MessageBox.Show(strMessages.strDataError & Environment.NewLine & strMessages.strCheckSettings)
+            MessageBox.Show(Core.Messages.strDataError & Environment.NewLine & Core.Messages.strCheckSettings)
             LoadGeneralSettingsXml()
             DatabaseShow()
         End Try
@@ -919,7 +909,7 @@
     End Sub
 
     Private Sub btnCreateExtraProcs_Click(sender As Object, e As EventArgs) Handles btnCreateExtraProcs.Click
-        If MessageBox.Show("This will create extra procedures with the power to damage your data or database. Create these procedures in a secure database." & Environment.NewLine & strMessages.strContinue, strMessages.strWarning, MessageBoxButtons.YesNo, MessageBoxIcon.Hand, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.No Then Exit Sub
+        If MessageBox.Show("This will create extra procedures with the power to damage your data or database. Create these procedures in a secure database." & Environment.NewLine & Core.Messages.strContinue, Core.Messages.strWarning, MessageBoxButtons.YesNo, MessageBoxIcon.Hand, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.No Then Exit Sub
 
         Dim strSQL As String
         Dim MydbRef As New SDBA.DBRef

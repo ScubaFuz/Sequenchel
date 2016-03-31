@@ -5,7 +5,7 @@ Public Class frmReports
     Private fontSize As Integer = 20
 
     Private Sub frmReports_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        lblLicense.Text = "Licensed to: " & strLicenseName
+        lblLicense.Text = "Licensed to: " & Core.LicenseName
         lblLicense.Left = Me.Width - lblLicense.Width - (SeqData.curVar.BuildMargin * 5)
 
         mousePath = New System.Drawing.Drawing2D.GraphicsPath()
@@ -902,7 +902,7 @@ Public Class frmReports
     End Sub
 
     Private Sub btnReportDelete_Click(sender As Object, e As EventArgs) Handles btnReportDelete.Click
-        If MessageBox.Show("This will permanently remove the Item: " & cbxReportName.Text & Environment.NewLine & strMessages.strContinue, strMessages.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Exit Sub
+        If MessageBox.Show("This will permanently remove the Item: " & cbxReportName.Text & Environment.NewLine & Core.Messages.strContinue, Core.Messages.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Exit Sub
         CursorControl("Wait")
         ReportDelete(cbxReportName.Text)
         If cbxReportName.Items.Contains(cbxReportName.Text) Then cbxReportName.Items.Remove(cbxReportName.Text)
