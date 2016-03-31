@@ -456,23 +456,29 @@ Public Class Data
         Dim intRecordsAffected As Integer = 0
         intRecordsAffected = dttInput.Rows.Count
         Try
-            Dim bcp As System.Data.SqlClient.SqlBulkCopy = New System.Data.SqlClient.SqlBulkCopy(dhdConnect.SqlConnection)
-            If dhdConnect.SqlConnection.State = ConnectionState.Closed Then dhdConnect.SqlConnection.Open()
-            bcp.DestinationTableName = dhdConnect.DataTableName
-            If ConvertToText = True Then dttInput = dhdConnect.ConvertToText(dttInput)
-            If ConvertToNull = True Then dttInput = dhdConnect.EmptyToNull(dttInput)
-            Dim reader As DataTableReader = dttInput.CreateDataReader()
-            bcp.WriteToServer(reader)
+            If dhdConnect.SqlConnection.State = ConnectionState.Open Then dhdConnect.SqlConnection.Close()
+            Using bcp As System.Data.SqlClient.SqlBulkCopy = New System.Data.SqlClient.SqlBulkCopy(dhdConnect.SqlConnection)
+                If dhdConnect.SqlConnection.State = ConnectionState.Closed Then dhdConnect.SqlConnection.Open()
+                bcp.DestinationTableName = dhdConnect.DataTableName
+                If ConvertToText = True Then dttInput = dhdConnect.ConvertToText(dttInput)
+                If ConvertToNull = True Then dttInput = dhdConnect.EmptyToNull(dttInput)
+                Dim reader As DataTableReader = dttInput.CreateDataReader()
+                bcp.WriteToServer(reader)
+                bcp.Close()
+
+            End Using
         Catch ex As Exception
             dhdConnect.ErrorMessage = ex.Message
             dhdConnect.ErrorLevel = -1
             intRecordsAffected = -1
         End Try
         'bcp.Close()
-        Try
-            If dhdConnect.SqlConnection.State = ConnectionState.Open Then dhdConnect.SqlConnection.Close()
-        Catch ex As Exception
-        End Try
+        'Try
+        '    'If dhdConnect.SqlConnection.State = ConnectionState.Open Then dhdConnect.SqlConnection.Close()
+        'Catch ex As Exception
+        '    dhdConnect.ErrorMessage = ex.Message
+        '    dhdConnect.ErrorLevel = -1
+        'End Try
         Return intRecordsAffected
     End Function
 #End Region

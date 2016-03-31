@@ -256,13 +256,30 @@ Module SeqCmd
     End Function
 
     Friend Function UploadFile(dtsInput As DataSet) As Integer
-        SeqData.dhdConnection.DataTableName = SeqData.curStatus.Table
-        Dim intRecords As Integer = SeqData.SaveToDatabase(SeqData.dhdConnection, dtsInput, SeqData.curVar.ConvertToText)
-        If intRecords = -1 Then
-            Console.WriteLine(SeqData.dhdConnection.ErrorMessage)
+        Try
+            Dim dhdDB As New DataHandler.db
+            dhdDB.DataLocation = SeqData.dhdConnection.DataLocation
+            dhdDB.DatabaseName = SeqData.dhdConnection.DatabaseName
+            dhdDB.DataTableName = SeqData.dhdConnection.DataTableName
+            dhdDB.DataProvider = SeqData.dhdConnection.DataProvider
+            dhdDB.LoginMethod = SeqData.dhdConnection.LoginMethod
+            dhdDB.LoginName = SeqData.dhdConnection.LoginName
+            dhdDB.Password = SeqData.dhdConnection.Password
+
+            If dhdDB.DataTableName <> SeqData.curStatus.Table Then dhdDB.DataTableName = SeqData.curStatus.Table
+            Dim intRecords As Integer = SeqData.SaveToDatabase(dhdDB, dtsInput, SeqData.curVar.ConvertToText, SeqData.curVar.ConvertToNull)
+            If intRecords = -1 Then
+                Console.WriteLine(SeqData.dhdConnection.ErrorMessage)
+                Console.ReadLine()
+                Environment.Exit(0)
+            End If
+            Return intRecords
+        Catch ex As Exception
+            Console.WriteLine(ex.Message)
             Console.ReadLine()
             Environment.Exit(0)
-        End If
-        Return intRecords
+            Return 0
+        End Try
+
     End Function
 End Module
