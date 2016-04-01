@@ -4,16 +4,15 @@
         System.Windows.Forms.Application.CurrentCulture = New System.Globalization.CultureInfo("EN-US")
         txtLicenseName.Text = Core.LicenseName
         DatabaseShow()
-        dhdDatabase.CheckDB()
-        blnDatabaseOnLine = dhdDatabase.DataBaseOnline
-        If blnDatabaseOnLine = True Then
+        SeqData.dhdMainDB.CheckDB()
+        If SeqData.dhdMainDB.DataBaseOnline = True Then
             If VersionLoad() = True Then
                 tabSettings.SelectTab(tpgDatabase)
                 btnUpgradeDatabase.BackColor = clrMarked
             End If
             MonitorDataspacesLoad()
         End If
-        If blnDatabaseOnLine = False Then
+        If SeqData.dhdMainDB.DataBaseOnline = False Then
             tabSettings.SelectTab(tpgDatabase)
         End If
         LogSettingsShow()
@@ -347,7 +346,7 @@
             blnSettingsChanged = False
         End If
         If blnGeneralSettingsChanged = True Then
-            SaveGeneralSettingsXml()
+            SeqData.SaveGeneralSettingsXml(xmlGeneralSettings)
             blnGeneralSettingsChanged = False
         End If
     End Sub
@@ -586,7 +585,7 @@
         Else
             SeqData.dhdText.AutoDelete = False
         End If
-        SaveGeneralSettingsXml()
+        SeqData.SaveGeneralSettingsXml(xmlGeneralSettings)
     End Sub
 
     Private Sub btnClearOldLogs_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnClearOldLogs.Click
@@ -649,7 +648,7 @@
     Private Sub btnRefreshDatabase_Click(sender As Object, e As EventArgs) Handles btnRefreshDatabase.Click
         If MessageBox.Show("This will update all standard Sequenchel Views, Stored Procedures and Functions to their latest version. " & Environment.NewLine _
             & "Your Tables will not be changed." & Environment.NewLine _
-            & Core.Messages.strAreYouSure, Core.Messages.strWarning, MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.No Then Exit Sub
+            & Core.Message.strAreYouSure, Core.Message.strWarning, MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.No Then Exit Sub
         CreateDatabase(False)
     End Sub
 
@@ -664,36 +663,36 @@
         prbCreateDatabase.Visible = True
 
         If blnIncludeTables = True Then
-            dhdDatabase.DataProvider = cbxDataProvider.SelectedItem
-            dhdDatabase.DataLocation = txtDatabaseLocation.Text
-            dhdDatabase.LoginMethod = cbxLoginMethod.SelectedItem
-            dhdDatabase.LoginName = txtLoginName.Text
-            dhdDatabase.Password = txtPassword.Text
-            dhdDatabase.DatabaseName = "master"
+            SeqData.dhdMainDB.DataProvider = cbxDataProvider.SelectedItem
+            SeqData.dhdMainDB.DataLocation = txtDatabaseLocation.Text
+            SeqData.dhdMainDB.LoginMethod = cbxLoginMethod.SelectedItem
+            SeqData.dhdMainDB.LoginName = txtLoginName.Text
+            SeqData.dhdMainDB.Password = txtPassword.Text
+            SeqData.dhdMainDB.DatabaseName = "master"
             strDBName = txtDatabaseName.Text
             If SeqData.CurVar.DebugMode Then
                 MessageBox.Show("Sequenchel v " & Application.ProductVersion & " Database Creation" & Environment.NewLine _
-                 & "   DatabaseServer = " & dhdDatabase.DataLocation & Environment.NewLine _
-                 & "   Database Context = " & dhdDatabase.DatabaseName & Environment.NewLine _
+                 & "   DatabaseServer = " & SeqData.dhdMainDB.DataLocation & Environment.NewLine _
+                 & "   Database Context = " & SeqData.dhdMainDB.DatabaseName & Environment.NewLine _
                  & "   Database to create: = " & strDBName & Environment.NewLine _
-                 & "   DataProvider = " & dhdDatabase.DataProvider & Environment.NewLine _
-                 & "   LoginMethod = " & dhdDatabase.LoginMethod & Environment.NewLine _
+                 & "   DataProvider = " & SeqData.dhdMainDB.DataProvider & Environment.NewLine _
+                 & "   LoginMethod = " & SeqData.dhdMainDB.LoginMethod & Environment.NewLine _
                  & "   Running in Debug Mode")
             End If
         Else
-            strDBName = dhdDatabase.DatabaseName
+            strDBName = SeqData.dhdMainDB.DatabaseName
         End If
 
         Try
-            dhdDatabase.CheckDB()
-            If dhdDatabase.DataBaseOnline = False Then
+            SeqData.dhdMainDB.CheckDB()
+            If SeqData.dhdMainDB.DataBaseOnline = False Then
                 MessageBox.Show("The server was not found. Please check your settings")
-                dhdDatabase.DatabaseName = strDBName
+                SeqData.dhdMainDB.DatabaseName = strDBName
                 Exit Sub
             End If
         Catch ex As Exception
             MessageBox.Show("There was an error connecting to the server. please check your settings")
-            dhdDatabase.DatabaseName = strDBName
+            SeqData.dhdMainDB.DatabaseName = strDBName
             Exit Sub
         End Try
 
@@ -707,9 +706,9 @@
             strSQL = strSQL.Replace("Sequenchel", strDBName)
             If SeqData.CurVar.Encryption = False Then strSQL = strSQL.Replace("WITH ENCRYPTION", "")
             If SeqData.CurVar.DevMode Then MessageBox.Show(strSQL)
-            QueryDb(dhdDatabase, strSQL, False, 10)
-            dhdDatabase.DatabaseName = strDBName
-            txtJobNamePrefix.Text = dhdDatabase.DatabaseName
+            QueryDb(SeqData.dhdMainDB, strSQL, False, 10)
+            SeqData.dhdMainDB.DatabaseName = strDBName
+            txtJobNamePrefix.Text = SeqData.dhdMainDB.DatabaseName
             prbCreateDatabase.PerformStep()
 
             For i = 1 To arrScripts.GetUpperBound(0)
@@ -720,7 +719,7 @@
                     If SeqData.CurVar.Encryption = False Then strSQL = strSQL.Replace("WITH ENCRYPTION", "")
                     If blnIncludeTables = False Then strSQL = Replace(strSQL, "CREATE", "ALTER", 1, 1)
                     If SeqData.CurVar.DevMode Then MessageBox.Show(strSQL)
-                    QueryDb(dhdDatabase, strSQL, False, 5)
+                    QueryDb(SeqData.dhdMainDB, strSQL, False, 5)
                 Else
                     If SeqData.CurVar.DebugMode Then MessageBox.Show("The script: " & arrScripts(i) & " returned: " & strSQL)
                 End If
@@ -732,8 +731,8 @@
             'btnCreateDemoData.Visible = True
 
         Catch ex As Exception
-            dhdDatabase.DatabaseName = strDBName
-            txtJobNamePrefix.Text = dhdDatabase.DatabaseName
+            SeqData.dhdMainDB.DatabaseName = strDBName
+            txtJobNamePrefix.Text = SeqData.dhdMainDB.DatabaseName
         End Try
 
         lblStatusDatabase.Visible = False
@@ -763,7 +762,7 @@
             txtUpgradeDatabase.Tag = strTarget
             tabSettings.SelectTab(tpgDatabase)
             btnUpgradeDatabase.BackColor = clrWarning
-            MessageBox.Show(Core.Messages.strUpdateDatabase)
+            MessageBox.Show(Core.Message.strUpdateDatabase)
             Return True
         Else
             btnUpgradeDatabase.Enabled = False
@@ -783,57 +782,57 @@
 
     Private Sub btnSaveSettingsDatabase_Click(sender As Object, e As EventArgs) Handles btnSaveSettingsDatabase.Click
         If cbxDataProvider.Items.Contains(cbxDataProvider.Text) = False Or cbxLoginMethod.Items.Contains(cbxLoginMethod.Text) = False Then
-            MessageBox.Show(Core.Messages.strPreconfigured & Environment.NewLine & Core.Messages.strCheckSettings)
+            MessageBox.Show(Core.Message.strPreconfigured & Environment.NewLine & Core.Message.strCheckSettings)
             Exit Sub
         End If
-        'If dhdDatabase.DataLocation <> txtDatabaseLocation.Text Or _
-        ' dhdDatabase.DatabaseName <> txtDatabaseName.Text Or _
-        ' dhdDatabase.DataProvider <> cbxDataProvider.SelectedItem Then
+        'If SeqData.dhdMainDB.DataLocation <> txtDatabaseLocation.Text Or _
+        ' SeqData.dhdMainDB.DatabaseName <> txtDatabaseName.Text Or _
+        ' SeqData.dhdMainDB.DataProvider <> cbxDataProvider.SelectedItem Then
         '    If MessageBox.Show(strMessages.strSettingReload & Environment.NewLine & strMessages.strContinue, strMessages.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Exit Sub
         'End If
-        dhdDatabase.DataLocation = txtDatabaseLocation.Text
-        dhdDatabase.DatabaseName = txtDatabaseName.Text
-        dhdDatabase.DataProvider = cbxDataProvider.SelectedItem
-        dhdDatabase.LoginMethod = cbxLoginMethod.SelectedItem
-        dhdDatabase.LoginName = txtLoginName.Text
-        dhdDatabase.Password = txtPassword.Text
-        DatabaseTest(dhdDatabase)
+        SeqData.dhdMainDB.DataLocation = txtDatabaseLocation.Text
+        SeqData.dhdMainDB.DatabaseName = txtDatabaseName.Text
+        SeqData.dhdMainDB.DataProvider = cbxDataProvider.SelectedItem
+        SeqData.dhdMainDB.LoginMethod = cbxLoginMethod.SelectedItem
+        SeqData.dhdMainDB.LoginName = txtLoginName.Text
+        SeqData.dhdMainDB.Password = txtPassword.Text
+        DatabaseTest(SeqData.dhdMainDB)
         Try
-            If blnDatabaseOnLine = False Then
+            If SeqData.dhdMainDB.DataBaseOnline = False Then
                 If MessageBox.Show("The database specified was not found." & Environment.NewLine & "Do you wish to save anyway?", "Database not found", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.No Then
                     Exit Sub
                 End If
             End If
-            SaveGeneralSettingsXml()
-            txtJobNamePrefix.Text = dhdDatabase.DatabaseName
+            SeqData.SaveGeneralSettingsXml(xmlGeneralSettings)
+            txtJobNamePrefix.Text = SeqData.dhdMainDB.DatabaseName
             'btnSaveSettingsDatabase.BackColor = clrOriginal
         Catch ex As Exception
-            MessageBox.Show(Core.Messages.strDataError & Environment.NewLine & Core.Messages.strCheckSettings)
-            LoadGeneralSettingsXml()
+            MessageBox.Show(Core.Message.strDataError & Environment.NewLine & Core.Message.strCheckSettings)
+            SeqData.LoadGeneralSettingsXml(xmlGeneralSettings)
             DatabaseShow()
         End Try
 
     End Sub
 
     Private Sub btnTestConnection_Click(sender As Object, e As EventArgs) Handles btnTestConnection.Click
-        dhdDatabase.DataProvider = cbxDataProvider.SelectedItem
-        dhdDatabase.DataLocation = txtDatabaseLocation.Text
-        dhdDatabase.LoginMethod = cbxLoginMethod.SelectedItem
-        dhdDatabase.LoginName = txtLoginName.Text
-        dhdDatabase.Password = txtPassword.Text
-        dhdDatabase.DatabaseName = txtDatabaseName.Text
+        SeqData.dhdMainDB.DataProvider = cbxDataProvider.SelectedItem
+        SeqData.dhdMainDB.DataLocation = txtDatabaseLocation.Text
+        SeqData.dhdMainDB.LoginMethod = cbxLoginMethod.SelectedItem
+        SeqData.dhdMainDB.LoginName = txtLoginName.Text
+        SeqData.dhdMainDB.Password = txtPassword.Text
+        SeqData.dhdMainDB.DatabaseName = txtDatabaseName.Text
 
-        DatabaseTest(dhdDatabase)
-        MessageBox.Show("Database Connection tested: " & blnDatabaseOnLine)
+        DatabaseTest(SeqData.dhdMainDB)
+        MessageBox.Show("Database Connection tested: " & SeqData.dhdMainDB.DataBaseOnline)
     End Sub
 
     Private Sub DatabaseShow()
-        cbxDataProvider.SelectedItem = dhdDatabase.DataProvider
-        txtDatabaseLocation.Text = dhdDatabase.DataLocation
-        txtDatabaseName.Text = dhdDatabase.DatabaseName
-        cbxLoginMethod.SelectedItem = dhdDatabase.LoginMethod
-        txtLoginName.Text = dhdDatabase.LoginName
-        txtPassword.Text = dhdDatabase.Password
+        cbxDataProvider.SelectedItem = SeqData.dhdMainDB.DataProvider
+        txtDatabaseLocation.Text = SeqData.dhdMainDB.DataLocation
+        txtDatabaseName.Text = SeqData.dhdMainDB.DatabaseName
+        cbxLoginMethod.SelectedItem = SeqData.dhdMainDB.LoginMethod
+        txtLoginName.Text = SeqData.dhdMainDB.LoginName
+        txtPassword.Text = SeqData.dhdMainDB.Password
         cbxLoginMethod_SelectedIndexChanged(Nothing, Nothing)
     End Sub
 
@@ -841,8 +840,8 @@
         If cbxLoginMethod.SelectedItem = "SQL" Then
             txtLoginName.Enabled = True
             txtPassword.Enabled = True
-            txtLoginName.Text = dhdDatabase.LoginName
-            txtPassword.Text = dhdDatabase.Password
+            txtLoginName.Text = SeqData.dhdMainDB.LoginName
+            txtPassword.Text = SeqData.dhdMainDB.Password
         ElseIf cbxLoginMethod.SelectedItem = "Windows" Then
             txtLoginName.Enabled = False
             txtPassword.Enabled = False
@@ -870,18 +869,18 @@
                 MessageBox.Show("Error retrieving SQL Script " & arrScripts(0, 0) & ", please contact your vendor")
                 Exit Sub
             End If
-            strSQL = Replace(strSQL, "Sequenchel", dhdDatabase.DatabaseName)
+            strSQL = Replace(strSQL, "Sequenchel", SeqData.dhdMainDB.DatabaseName)
             If SeqData.CurVar.Encryption = False Then strSQL = strSQL.Replace("WITH ENCRYPTION", "")
             If strMode = "ALTER" Then strSQL = Replace(strSQL, "CREATE", "ALTER", 1, 1)
-            QueryDb(dhdDatabase, strSQL, False)
+            QueryDb(SeqData.dhdMainDB, strSQL, False)
 
             For i = 1 To arrScripts.GetUpperBound(1)
                 strSQL = MydbRef.GetScript(arrScripts(0, i))
                 If Not strSQL = "-1" Then
-                    strSQL = Replace(strSQL, "Sequenchel", dhdDatabase.DatabaseName)
+                    strSQL = Replace(strSQL, "Sequenchel", SeqData.dhdMainDB.DatabaseName)
                     strMode = arrScripts(1, i)
                     If strMode = "ALTER" Then strSQL = Replace(strSQL, "CREATE", "ALTER", 1, 1)
-                    QueryDb(dhdDatabase, strSQL, False)
+                    QueryDb(SeqData.dhdMainDB, strSQL, False)
                 Else
                     MessageBox.Show("Error retrieving SQL Script " & arrScripts(0, 0) & ", please contact your vendor")
                     Exit Sub
@@ -901,7 +900,7 @@
 
     Private Sub btnBackupDatabase_Click(sender As Object, e As EventArgs) Handles btnBackupDatabase.Click
         Try
-            BackupDatabase(dhdDatabase, txtBackupDatabase.Text)
+            BackupDatabase(SeqData.dhdMainDB, txtBackupDatabase.Text)
             SaveConfigSetting("Database", "BackupLocation", txtBackupDatabase.Text, "A valid location on the server")
         Catch ex As Exception
             MessageBox.Show("While saving the database, the following error occured: " & Environment.NewLine & ex.Message)
@@ -909,7 +908,7 @@
     End Sub
 
     Private Sub btnCreateExtraProcs_Click(sender As Object, e As EventArgs) Handles btnCreateExtraProcs.Click
-        If MessageBox.Show("This will create extra procedures with the power to damage your data or database. Create these procedures in a secure database." & Environment.NewLine & Core.Messages.strContinue, Core.Messages.strWarning, MessageBoxButtons.YesNo, MessageBoxIcon.Hand, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.No Then Exit Sub
+        If MessageBox.Show("This will create extra procedures with the power to damage your data or database. Create these procedures in a secure database." & Environment.NewLine & Core.Message.strContinue, Core.Message.strWarning, MessageBoxButtons.YesNo, MessageBoxIcon.Hand, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.No Then Exit Sub
 
         Dim strSQL As String
         Dim MydbRef As New SDBA.DBRef
@@ -919,20 +918,20 @@
             arrScripts = MydbRef.GetDBAList()
 
             strSQL = MydbRef.GetScript(arrScripts(0))
-            strSQL = strSQL.Replace("Sequenchel", dhdDatabase.DatabaseName)
+            strSQL = strSQL.Replace("Sequenchel", SeqData.dhdMainDB.DatabaseName)
             If SeqData.CurVar.Encryption = False Then strSQL = strSQL.Replace("WITH ENCRYPTION", "")
             If SeqData.CurVar.DevMode Then MessageBox.Show(strSQL)
-            QueryDb(dhdDatabase, strSQL, False, 10)
+            QueryDb(SeqData.dhdMainDB, strSQL, False, 10)
             prbCreateDatabase.PerformStep()
 
             For i = 1 To arrScripts.GetUpperBound(0)
                 strSQL = MydbRef.GetScript(arrScripts(i))
                 If Not strSQL = "-1" Then
                     'strSQL = Replace(strSQL, "Sequenchel", strDBName)
-                    strSQL = strSQL.Replace("Sequenchel", dhdDatabase.DatabaseName)
+                    strSQL = strSQL.Replace("Sequenchel", SeqData.dhdMainDB.DatabaseName)
                     If SeqData.CurVar.Encryption = False Then strSQL = strSQL.Replace("WITH ENCRYPTION", "")
                     'If SeqData.CurVar.DevMode Then MessageBox.Show(strSQL)
-                    QueryDb(dhdDatabase, strSQL, False, 10)
+                    QueryDb(SeqData.dhdMainDB, strSQL, False, 10)
                 Else
                     If SeqData.CurVar.DevMode Then MessageBox.Show("The script: " & arrScripts(i) & " returned: " & strSQL)
                 End If
@@ -963,7 +962,7 @@
         cbxProcedures.Items.Add("Cycle Error logs")
         cbxProcedures.Items.Add("Defragment Indexes")
         cbxProcedures.Items.Add("SmartUpdate")
-        txtJobNamePrefix.Text = dhdDatabase.DatabaseName
+        txtJobNamePrefix.Text = SeqData.dhdMainDB.DatabaseName
     End Sub
 
     Private Sub HoursLoad()
@@ -999,7 +998,7 @@
     End Sub
 
     Private Sub btnErrorlogPathDatabase_Click(sender As Object, e As EventArgs) Handles btnErrorlogPathDatabase.Click
-        txtErrorlogPath.Text = GetDefaultLogPath(dhdDatabase)
+        txtErrorlogPath.Text = GetDefaultLogPath(SeqData.dhdMainDB)
     End Sub
 
     Private Sub btnErrorlogPathSystem_Click(sender As Object, e As EventArgs) Handles btnErrorlogPathSystem.Click
@@ -1304,7 +1303,7 @@
                 strSQL = strSQL.Replace("--reconfigure", "reconfigure")
             End If
             Try
-                QueryDb(dhdDatabase, strSQL, False, 10)
+                QueryDb(SeqData.dhdMainDB, strSQL, False, 10)
                 lblFtpStatus.Text = "Procedure PutFTPfiles was created succesfully"
             Catch ex As Exception
                 MessageBox.Show("There was an error creating the procedure" & Environment.NewLine & ex.Message)
@@ -1335,7 +1334,7 @@
                 strSQL = strSQL.Replace("--reconfigure", "reconfigure")
             End If
             Try
-                QueryDb(dhdDatabase, strSQL, False, 10)
+                QueryDb(SeqData.dhdMainDB, strSQL, False, 10)
                 lblFtpStatus.Text = "Procedure GetFTPfiles was created succesfully"
             Catch ex As Exception
                 MessageBox.Show("There was an error creating the procedure" & Environment.NewLine & ex.Message)
@@ -1366,11 +1365,11 @@
         SeqData.dhdText.SmtpServer = txtSmtpServer.Text
         SeqData.dhdText.SmtpCredentials = chkSmtpCredentials.Checked
         SeqData.dhdText.SmtpUser = txtSmtpServerUsername.Text
-        If txtSmtpServerPassword.Text.Length > 0 Then SeqData.dhdText.SmtpPassword = DataHandler.txt.EncryptText(txtSmtpServerPassword.Text)
+        If txtSmtpServerPassword.Text.Length > 0 And txtSmtpServerPassword.Text <> txtSmtpServerPassword.Tag Then SeqData.dhdText.SmtpPassword = DataHandler.txt.EncryptText(txtSmtpServerPassword.Text)
         SeqData.dhdText.SmtpReply = txtSmtpReply.Text
         SeqData.dhdText.SmtpPort = txtSmtpPortNumber.Text
         SeqData.dhdText.SmtpSsl = chkUseSslEncryption.Checked
-        SaveGeneralSettingsXml()
+        SeqData.SaveGeneralSettingsXml(xmlGeneralSettings)
     End Sub
 
     Private Sub chkSmtpCredentials_CheckedChanged(sender As Object, e As EventArgs) Handles chkSmtpCredentials.CheckedChanged

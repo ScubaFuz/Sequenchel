@@ -17,8 +17,17 @@
 
     Private Sub LoadConnections()
         'AllClear(4)
-        Dim lstConnections As List(Of String) = LoadConnectionsXml()
-        If lstConnections Is Nothing Then Exit Sub
+        Dim lstConnections As List(Of String) = SeqData.LoadConnectionsXml(xmlConnections)
+        If lstConnections Is Nothing Then
+            xmlConnections.RemoveAll()
+            xmlTableSets.RemoveAll()
+            SeqData.curVar.TableSetsFile = ""
+            xmlTables.RemoveAll()
+            SeqData.curVar.TablesFile = ""
+            TableClear()
+            SeqData.dhdConnection = SeqData.dhdMainDB
+            Exit Sub
+        End If
         For Each lstItem As String In lstConnections
             cbxConnection.Items.Add(lstItem)
         Next
@@ -28,7 +37,7 @@
     Private Sub cbxConnection_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbxConnection.SelectedIndexChanged
         If cbxConnection.SelectedIndex >= -1 Then
             SeqData.curStatus.Connection = cbxConnection.SelectedItem
-            LoadConnection(SeqData.curStatus.Connection)
+            SeqData.LoadConnection(xmlConnections, SeqData.curStatus.Connection)
             LoadTables()
             PanelsClear()
             txtSourceTable.Text = ""
@@ -46,10 +55,10 @@
             Dim MydbRef As New SDBA.DBRef
 
             strSQL = MydbRef.GetScript("01 dbo.SmartUpdate.sql")
-            strSQL = strSQL.Replace("Sequenchel", dhdConnection.DatabaseName)
+            strSQL = strSQL.Replace("Sequenchel", SeqData.dhdConnection.DatabaseName)
             If SeqData.curVar.Encryption = False Then strSQL = strSQL.Replace("WITH ENCRYPTION", "")
             If SeqData.curVar.DevMode Then MessageBox.Show(strSQL)
-            QueryDb(dhdConnection, strSQL, False, 10)
+            QueryDb(SeqData.dhdConnection, strSQL, False, 10)
             lblStatusText.Text = "SmartUpdate Table created succesfully"
         Catch ex As Exception
             MessageBox.Show("There was an error while creating the SmartUpdate Table" & Environment.NewLine & ex.Message, "Error Creating Table", MessageBoxButtons.OK)
@@ -63,10 +72,10 @@
             Dim MydbRef As New SDBA.DBRef
 
             strSQL = MydbRef.GetScript("01 dbo.usp_SmartUpdate.sql")
-            strSQL = strSQL.Replace("Sequenchel", dhdConnection.DatabaseName)
+            strSQL = strSQL.Replace("Sequenchel", SeqData.dhdConnection.DatabaseName)
             If SeqData.curVar.Encryption = False Then strSQL = strSQL.Replace("WITH ENCRYPTION", "")
             If SeqData.curVar.DevMode Then MessageBox.Show(strSQL)
-            QueryDb(dhdConnection, strSQL, False, 10)
+            QueryDb(SeqData.dhdConnection, strSQL, False, 10)
             lblStatusText.Text = "SmartUpdate Procedure created succesfully"
         Catch ex As Exception
             MessageBox.Show("There was an error while creating the SmartUpdate Procedure" & Environment.NewLine & ex.Message, "Error Creating Procedure", MessageBoxButtons.OK)
@@ -129,7 +138,7 @@
         'check for table dbo.SmartUpdate
         'Dim strSQL As String = "IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.TABLES  WHERE TABLE_NAME = 'SmartUpdate') SELECT 1 AS TableExists ELSE SELECT 0 AS TableExists"
         Dim strSQL As String = "SELECT 1 AS TableExists FROM INFORMATION_SCHEMA.TABLES  WHERE TABLE_NAME = 'SmartUpdate'"
-        Dim dtsData As DataSet = QueryDb(dhdConnection, strSQL, True, 5)
+        Dim dtsData As DataSet = QueryDb(SeqData.dhdConnection, strSQL, True, 5)
         If DatasetCheck(dtsData) = False Then
             lblStatusText.Text = "The SmartUpdate table was not found. Please create the table first."
             Exit Sub
@@ -164,9 +173,9 @@
             pnlPrimaryKey = pnlTargetPrimaryKey
         End If
         strInsert = InsertString(strSchemaName, strTableName, pnlTable, pnlDataType, pnlPrimaryKey, pnlCompareColumn, dtmStartDate, dtmEndDate)
-        strUpdate = "UPDATE dbo.SmartUpdate SET [DateStop] = '" & dtmStartDate.AddDays(-1).ToString("yyyy-MM-dd") & "' WHERE [DataBaseName] = '" & dhdConnection.DatabaseName & "' AND [SchemaName] = '" & strSchemaName & "' AND [TableName] = '" & strTableName & "' 	AND [DateStart] < '" & dtmStartDate.ToString("yyyy-MM-dd") & "' AND COALESCE([DateStop],'2999-12-31') > '" & dtmStartDate.ToString("yyyy-MM-dd") & "' AND [Active] = 1"
+        strUpdate = "UPDATE dbo.SmartUpdate SET [DateStop] = '" & dtmStartDate.AddDays(-1).ToString("yyyy-MM-dd") & "' WHERE [DataBaseName] = '" & SeqData.dhdConnection.DatabaseName & "' AND [SchemaName] = '" & strSchemaName & "' AND [TableName] = '" & strTableName & "' 	AND [DateStart] < '" & dtmStartDate.ToString("yyyy-MM-dd") & "' AND COALESCE([DateStop],'2999-12-31') > '" & dtmStartDate.ToString("yyyy-MM-dd") & "' AND [Active] = 1"
         If dtmEndDate = Nothing Then dtmEndDate = "2999-12-31"
-        strDelete = "UPDATE dbo.SmartUpdate SET [Active] = 0 WHERE [DataBaseName] = '" & dhdConnection.DatabaseName & "' AND [SchemaName] = '" & strSchemaName & "' AND [TableName] = '" & strTableName & "' AND [DateStart] BETWEEN '" & dtmStartDate.ToString("yyyy-MM-dd") & "' AND '" & dtmEndDate.ToString("yyyy-MM-dd") & "' AND [Active] = 1"
+        strDelete = "UPDATE dbo.SmartUpdate SET [Active] = 0 WHERE [DataBaseName] = '" & SeqData.dhdConnection.DatabaseName & "' AND [SchemaName] = '" & strSchemaName & "' AND [TableName] = '" & strTableName & "' AND [DateStart] BETWEEN '" & dtmStartDate.ToString("yyyy-MM-dd") & "' AND '" & dtmEndDate.ToString("yyyy-MM-dd") & "' AND [Active] = 1"
         'strDelete = "DELETE FROM dbo.SmartUpdate WHERE [DataBaseName] = '" & dhdConnection.DatabaseName & "' AND [SchemaName] = '" & strSchemaName & "' AND [TableName] = '" & strTableName & "'"
 
         'get compare columns & PK columns
@@ -175,14 +184,14 @@
 
         'save to table dbo.SmartUpdate
         Try
-            QueryDb(dhdConnection, strUpdate, 0)
-            QueryDb(dhdConnection, strDelete, 0)
-            QueryDb(dhdConnection, strInsert, 0)
+            QueryDb(SeqData.dhdConnection, strUpdate, 0)
+            QueryDb(SeqData.dhdConnection, strDelete, 0)
+            QueryDb(SeqData.dhdConnection, strInsert, 0)
             lblStatusText.Text = "Configuration Saved to SmartUpdate Table on connection: " & SeqData.curStatus.Connection
         Catch ex As Exception
             lblStatusText.Text = "There was an error saving the configuration. Check the log for more details"
             MessageBox.Show("There was an error saving the configuration: " & Environment.NewLine & ex.Message)
-            WriteLog("There was an error saving the configuration: " & Environment.NewLine & ex.Message, 1)
+            SeqData.WriteLog("There was an error saving the configuration: " & Environment.NewLine & ex.Message, 1)
         End Try
 
 
@@ -220,15 +229,15 @@
         'MessageBox.Show("The Scheduler is not yet operational. Please schedule the SmartUpdate Command manually.")
 
         'get logpath
-        Dim strLogPath As String = GetDefaultLogPath(dhdConnection)
+        Dim strLogPath As String = GetDefaultLogPath(SeqData.dhdConnection)
         'get jobname
-        Dim strJobName As String = GetJobName(dhdConnection, "SmartUpdate")
+        Dim strJobName As String = GetJobName(SeqData.dhdConnection, "SmartUpdate")
         If strJobName = "" Then
             lblStatusText.Text = "Job SmartUpdate was not found on the server. Create the job first with the scheduler (Settings)"
             Exit Sub
         End If
         'get JobStepCount
-        Dim intJobStepCount As Integer = GetJobStepCount(dhdConnection, strJobName)
+        Dim intJobStepCount As Integer = GetJobStepCount(SeqData.dhdConnection, strJobName)
         If intJobStepCount = -1 Then
             lblStatusText.Text = "There was an error retrieving information about the SmartUpdate Job, aborting action"
             Exit Sub
@@ -245,12 +254,12 @@
         strQuery &= " @step_name='SU_" & txtSourceTable.Text & "_" & txtTargetTable.Text & "',"
         strQuery &= " @subsystem=N'TSQL',"
         strQuery &= " @command='" & strSQL & "',"
-        strQuery &= " @database_name='" & dhdConnection.DatabaseName & "',"
+        strQuery &= " @database_name='" & SeqData.dhdConnection.DatabaseName & "',"
         strQuery &= " @output_file_name='" & strLogPath & "\SmartUpdate.log',"
         strQuery &= " @flags=" & intFlags & ";"
 
-        QueryDb(dhdConnection, strQuery, 0)
-        lblStatusText.Text = "Jobstep added to job: " & strJobName & " on database: " & dhdConnection.DatabaseName
+        QueryDb(SeqData.dhdConnection, strQuery, 0)
+        lblStatusText.Text = "Jobstep added to job: " & strJobName & " on database: " & SeqData.dhdConnection.DatabaseName
     End Sub
 
     Private Sub LoadTables()
@@ -259,9 +268,9 @@
     End Sub
 
     Private Sub CrawlTables(blnCrawlViews As Boolean, lstTarget As ListBox)
-        If CheckSqlVersion(dhdConnection) = False Then Exit Sub
+        If CheckSqlVersion(SeqData.dhdConnection) = False Then Exit Sub
 
-        Dim lstNewTables As List(Of String) = LoadTablesList(dhdConnection, blnCrawlViews)
+        Dim lstNewTables As List(Of String) = LoadTablesList(SeqData.dhdConnection, blnCrawlViews)
 
         If lstNewTables Is Nothing Then
             CursorControl()
@@ -401,7 +410,7 @@
 
         Dim dtsTables As New DataSet
         Dim blnSourceOnly As Boolean = False
-        dtsTables = QueryDb(dhdConnection, strSQL, True, 5)
+        dtsTables = QueryDb(SeqData.dhdConnection, strSQL, True, 5)
         If DatasetCheck(dtsTables) = False Then Exit Sub
         PanelsClear()
         For intRowCount1 As Integer = 0 To dtsTables.Tables(0).Rows.Count - 1
@@ -620,7 +629,7 @@
                 End If
             Next
             If strPrmaryKey = "True" Or strCompare = "True" Then
-                strQuery &= "UNION SELECT '" & dhdConnection.DatabaseName & "', '" & strSchema & "', '" & strTable & "', '" & strColumnName & "', '" & strDataType & "', '" & strPrmaryKey & "', '" & strCompare & "', '" & dtmStart.ToString("yyyy-MM-dd") & "', " & If(chkNoEndDate.Checked = True, "NULL", "'" & dtmEnd.ToString("yyyy-MM-dd") & "'") & ",1" & Environment.NewLine
+                strQuery &= "UNION SELECT '" & SeqData.dhdConnection.DatabaseName & "', '" & strSchema & "', '" & strTable & "', '" & strColumnName & "', '" & strDataType & "', '" & strPrmaryKey & "', '" & strCompare & "', '" & dtmStart.ToString("yyyy-MM-dd") & "', " & If(chkNoEndDate.Checked = True, "NULL", "'" & dtmEnd.ToString("yyyy-MM-dd") & "'") & ",1" & Environment.NewLine
             End If
         Next
 

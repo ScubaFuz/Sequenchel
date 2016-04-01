@@ -1,7 +1,7 @@
 ﻿Public Class frmLinkedServer
 
     Private Sub frmLinkedServer_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        txtHostServer.Text = dhdConnection.DataLocation
+        txtHostServer.Text = SeqData.dhdConnection.DataLocation
     End Sub
 
     Private Sub txtServer_TextChanged(sender As Object, e As EventArgs) Handles txtServer.TextChanged
@@ -100,7 +100,7 @@
     End Sub
 
     Private Sub ClearAll()
-        txtHostServer.Text = dhdConnection.DataLocation
+        txtHostServer.Text = SeqData.dhdConnection.DataLocation
         txtLinkedServerName.Text = ""
         txtServer.Text = ""
         txtInstance.Text = ""
@@ -147,7 +147,7 @@
         Dim intInstance As Integer = 0, intInstanceLength As Integer = 0
         Dim intPort As Integer = 0, intPortLength As Integer = 0
 
-        Dim objData As DataSet = QueryDb(dhdConnection, strQuery, True)
+        Dim objData As DataSet = QueryDb(SeqData.dhdConnection, strQuery, True)
         If objData Is Nothing Then Exit Sub
         If objData.Tables.Count = 0 Then Exit Sub
         If objData.Tables(0).Rows.Count = 0 Then Exit Sub
@@ -216,7 +216,7 @@
 
                 'End If
             Catch ex As Exception
-                WriteLog("There was a problem processing the Linked Server with datasource:" & Environment.NewLine & strDataSource & Environment.NewLine & Environment.NewLine & ex.Message, 1)
+                SeqData.WriteLog("There was a problem processing the Linked Server with datasource:" & Environment.NewLine & strDataSource & Environment.NewLine & Environment.NewLine & ex.Message, 1)
                 MessageBox.Show("There was a problem processing the Linked Server with datasource:" & Environment.NewLine & strDataSource & Environment.NewLine & Environment.NewLine & ex.Message)
             End Try
         Next
@@ -236,7 +236,7 @@
             strQuery &= " AND server_id = " & lvwLinkedServers.SelectedItems(0).Tag
             strQuery &= " ORDER BY [name] ASC"
 
-            Dim objData As DataSet = QueryDb(dhdConnection, strQuery, True)
+            Dim objData As DataSet = QueryDb(SeqData.dhdConnection, strQuery, True)
             If objData Is Nothing Then Exit Sub
             If objData.Tables.Count = 0 Then Exit Sub
             If objData.Tables(0).Rows.Count = 0 Then Exit Sub
@@ -321,7 +321,7 @@
         strQuery &= " EXEC master.dbo.sp_serveroption @server=@LinkedServerName, @optname=N'use remote collation', @optvalue=N'" & chkRemoteCollation.Checked & "';" & Environment.NewLine
         strQuery &= " EXEC master.dbo.sp_serveroption @server=@LinkedServerName, @optname=N'remote proc transaction promotion', @optvalue=N'" & chkRPTPromotion.Checked & "';" & Environment.NewLine
 
-        QueryDb(dhdConnection, strQuery, False)
+        QueryDb(SeqData.dhdConnection, strQuery, False)
         LinkedServersLoad()
     End Sub
 
@@ -332,10 +332,10 @@
     Private Sub LinkedServerDelete()
         Dim strSelection As String = txtLinkedServerName.Text
         'If txtInstance.Text.Length > 0 Then strSelection &= "\" & txtInstance.Text
-        If MessageBox.Show("This will permanently remove the Item: " & strSelection & Environment.NewLine & Core.Messages.strContinue, Core.Messages.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Exit Sub
+        If MessageBox.Show("This will permanently remove the Item: " & strSelection & Environment.NewLine & Core.Message.strContinue, Core.Message.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Exit Sub
 
         strQuery = "master.dbo.sp_dropserver @server=N'" & strSelection & "', @droplogins='droplogins'"
-        QueryDb(dhdConnection, strQuery, False)
+        QueryDb(SeqData.dhdConnection, strQuery, False)
         txtLinkedServerName.Text = ""
         LinkedServersLoad()
     End Sub

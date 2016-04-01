@@ -2,7 +2,7 @@
 Public Class Core
 
     Public dhdReg As New DataHandler.reg
-    Public Messages As New Messages
+    Public Message As New Messages
 
     Private _LicenseName As String = "Thicor Services Demo License"
     Private _LicenseKey As String = ""
@@ -47,22 +47,22 @@ Public Class Core
             Dim strLicense As String
             strLicense = dhdReg.ReadAnyRegKey("LicenseName", dhdReg.RegistryPath)
             If strLicense = "-1" Then
-                Messages.ErrorLevel = 1
-                Messages.ErrorMessage = dhdReg.RegMessage
+                Message.ErrorLevel = 1
+                Message.ErrorMessage = dhdReg.RegMessage
                 _LicenseValidated = False
                 Return False
             End If
             If strLicense <> "-1" Then LicenseName = strLicense
             LicenseKey = dhdReg.ReadAnyRegKey("LicenseKey", dhdReg.RegistryPath)
             If LicenseKey = "-1" Then
-                Messages.ErrorLevel = 1
-                Messages.ErrorMessage = dhdReg.RegMessage
+                Message.ErrorLevel = 1
+                Message.ErrorMessage = dhdReg.RegMessage
                 _LicenseValidated = False
                 Return False
             End If
         Catch ex As Exception
-            Messages.ErrorLevel = 1
-            Messages.ErrorMessage = ex.Message
+            Message.ErrorLevel = 1
+            Message.ErrorMessage = ex.Message
             _LicenseValidated = False
             Return False
         End Try
@@ -70,12 +70,12 @@ Public Class Core
         'If CurVar.DebugMode Then MessageBox.Show(strLicenseName & Environment.NewLine & dtmExpiryDate.ToString & Environment.NewLine & My.Application.Info.Version.Major.ToString & Environment.NewLine & strLicenseKey)
         If LicenseKey <> "-1" Then
             If CheckLicense(LicenseKey, LicenseName, GetVersion("M"), Nothing) = False Then
-                Messages.ErrorLevel = 2
-                Messages.ErrorMessage = "The License could not be validated"
+                Message.ErrorLevel = 2
+                Message.ErrorMessage = "The License could not be validated"
             End If
         Else
-            Messages.ErrorLevel = 2
-            Messages.ErrorMessage = "The License could not be loaded"
+            Message.ErrorLevel = 2
+            Message.ErrorMessage = "The License could not be loaded"
             _LicenseValidated = False
         End If
 

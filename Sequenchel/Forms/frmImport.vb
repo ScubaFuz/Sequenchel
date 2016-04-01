@@ -34,16 +34,16 @@ Public Class frmImport
     End Sub
 
     Private Sub LoadDefaults()
-        txtServer.Text = dhdConnection.DataLocation
-        txtDatabase.Text = dhdConnection.DatabaseName
+        txtServer.Text = SeqData.dhdConnection.DataLocation
+        txtDatabase.Text = SeqData.dhdConnection.DatabaseName
         txtTable.Text = SeqData.curStatus.Table
-        If dhdConnection.LoginMethod = "Windows" Then
+        If SeqData.dhdConnection.LoginMethod = "Windows" Then
             chkWinAuth.Checked = True
         Else
             chkWinAuth.Checked = False
         End If
-        txtUser.Text = dhdConnection.LoginName
-        txtPassword.Text = dhdConnection.Password
+        txtUser.Text = SeqData.dhdConnection.LoginName
+        txtPassword.Text = SeqData.dhdConnection.Password
     End Sub
 
     Private Sub SelectFile()
@@ -65,7 +65,7 @@ Public Class frmImport
     End Sub
 
     Private Sub ImportFile()
-        dtsImport = SeqData.ImportFile(SeqData.dhdText.ImportFile, chkHasHeaders.Checked, txtDelimiter.Text)
+        dtsImport = SeqData.ImportFile(SeqData.CheckFilePath(SeqData.dhdText.ImportFile), chkHasHeaders.Checked, txtDelimiter.Text)
 
         If dtsImport Is Nothing Then
             MessageBox.Show("File extension or delimiter not recognised." & Environment.NewLine & "Please try again or select a different file.")
@@ -89,7 +89,7 @@ Public Class frmImport
     Private Sub DisplayData(Optional intTable As Integer = 0)
         dgvImport.DataSource = Nothing
         If SeqData.curVar.ConvertToText = True Then
-            Dim dttConvert As DataTable = dhdDatabase.ConvertToText(dtsImport.Tables(intTable))
+            Dim dttConvert As DataTable = SeqData.dhdMainDB.ConvertToText(dtsImport.Tables(intTable))
             dgvImport.DataSource = dttConvert
         Else
             dgvImport.DataSource = dtsImport.Tables(intTable)

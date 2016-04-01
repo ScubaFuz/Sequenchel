@@ -84,12 +84,12 @@ Public Class frmConfiguration
             lvwConnections.Items.Add(lsvItem)
 
             If xNode.Item("ConnectionName").InnerText = SeqData.curStatus.Connection Then
-                dhdConnection.DatabaseName = xNode.Item("DataBaseName").InnerText
-                dhdConnection.DataLocation = xNode.Item("DataLocation").InnerText
-                dhdConnection.DataProvider = xNode.Item("DataProvider").InnerText
-                dhdConnection.LoginMethod = xNode.Item("LoginMethod").InnerText
-                dhdConnection.LoginName = xNode.Item("LoginName").InnerText
-                dhdConnection.Password = xNode.Item("Password").InnerText
+                SeqData.dhdConnection.DatabaseName = xNode.Item("DataBaseName").InnerText
+                SeqData.dhdConnection.DataLocation = xNode.Item("DataLocation").InnerText
+                SeqData.dhdConnection.DataProvider = xNode.Item("DataProvider").InnerText
+                SeqData.dhdConnection.LoginMethod = xNode.Item("LoginMethod").InnerText
+                SeqData.dhdConnection.LoginName = xNode.Item("LoginName").InnerText
+                SeqData.dhdConnection.Password = xNode.Item("Password").InnerText
             End If
         Next
         For Each lstItem In lvwConnections.Items
@@ -111,7 +111,7 @@ Public Class frmConfiguration
             'If CurStatus.Connection <> lvwConnections.SelectedItems.Item(0).Tag Then
             SeqData.curStatus.ConnectionReload = True
             SeqData.curStatus.Connection = lvwConnections.SelectedItems.Item(0).Tag
-            LoadConnection(SeqData.curStatus.Connection)
+            SeqData.LoadConnection(xmlConnections, SeqData.curStatus.Connection)
             TableSetClear()
             LoadTableSetsXml()
             LoadTableSet(SeqData.curStatus.TableSet)
@@ -200,8 +200,8 @@ Public Class frmConfiguration
         If cbxLoginMethod.SelectedItem = "SQL" Then
             txtLoginName.Enabled = True
             txtPassword.Enabled = True
-            txtLoginName.Text = dhdDatabase.LoginName
-            txtPassword.Text = dhdDatabase.Password
+            txtLoginName.Text = SeqData.dhdMainDB.LoginName
+            txtPassword.Text = SeqData.dhdMainDB.Password
         ElseIf cbxLoginMethod.SelectedItem = "Windows" Then
             txtLoginName.Enabled = False
             txtPassword.Enabled = False
@@ -223,17 +223,17 @@ Public Class frmConfiguration
         CursorControl("Wait")
         'Application.DoEvents()
 
-        dhdConnection.DatabaseName = "master"
-        dhdConnection.DataLocation = txtDataLocation.Text
-        dhdConnection.DataProvider = cbxDataProvider.SelectedItem
-        dhdConnection.LoginMethod = cbxLoginMethod.SelectedItem
-        dhdConnection.LoginName = txtLoginName.Text
-        dhdConnection.Password = txtPassword.Text
+        SeqData.dhdConnection.DatabaseName = "master"
+        SeqData.dhdConnection.DataLocation = txtDataLocation.Text
+        SeqData.dhdConnection.DataProvider = cbxDataProvider.SelectedItem
+        SeqData.dhdConnection.LoginMethod = cbxLoginMethod.SelectedItem
+        SeqData.dhdConnection.LoginName = txtLoginName.Text
+        SeqData.dhdConnection.Password = txtPassword.Text
 
-        If CheckSqlVersion(dhdConnection) = False Then Exit Sub
+        If CheckSqlVersion(SeqData.dhdConnection) = False Then Exit Sub
 
         strQuery = "SELECT name FROM sys.databases WHERE database_id <> 2"
-        Dim dtsData As DataSet = QueryDb(dhdConnection, strQuery, True)
+        Dim dtsData As DataSet = QueryDb(SeqData.dhdConnection, strQuery, True)
 
 
         If dtsData Is Nothing Then
@@ -308,7 +308,7 @@ Public Class frmConfiguration
         End If
 
         If txtConnectionName.Text.Length < 2 Or txtDataLocation.Text.Length < 2 Or txtDataBaseName.Text.Length < 2 Or txtTableSetsFile.Text.Length < 2 Then
-            lblStatus.Text = Core.Messages.strAllData
+            lblStatus.Text = Core.Message.strAllData
             Exit Sub
         End If
 
@@ -373,7 +373,7 @@ Public Class frmConfiguration
         If strSelection.Length = 0 Then Exit Sub
         Dim xNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlConnections, "Connection", "ConnectionName", strSelection)
         If Not xNode Is Nothing Then
-            If MessageBox.Show("This will permanently remove the Item: " & strSelection & Environment.NewLine & Core.Messages.strContinue, Core.Messages.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Exit Sub
+            If MessageBox.Show("This will permanently remove the Item: " & strSelection & Environment.NewLine & Core.Message.strContinue, Core.Message.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Exit Sub
             xNode.ParentNode.RemoveChild(xNode)
 
             SeqData.curStatus.ConnectionChanged = True
@@ -549,7 +549,7 @@ Public Class frmConfiguration
     Private Sub TableSetAddOrUpdate()
         'dhdText.RemoveNode(xmlConnections, "Connections", "ConnectionName", txtConnectionName.Text)
         If txtTableSetName.Text.Length < 2 Or txtTablesFile.Text.Length < 2 Then
-            lblStatus.Text = Core.Messages.strAllData
+            lblStatus.Text = Core.Message.strAllData
             Exit Sub
         End If
 
@@ -599,7 +599,7 @@ Public Class frmConfiguration
         If strSelection.Length = 0 Then Exit Sub
         Dim xNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlTableSets, "TableSet", "TableSetName", strSelection)
         If Not xNode Is Nothing Then
-            If MessageBox.Show("This will permanently remove the Item: " & strSelection & Environment.NewLine & Core.Messages.strContinue, Core.Messages.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Exit Sub
+            If MessageBox.Show("This will permanently remove the Item: " & strSelection & Environment.NewLine & Core.Message.strContinue, Core.Message.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Exit Sub
             xNode.ParentNode.RemoveChild(xNode)
 
             SeqData.curStatus.TableSetChanged = True
@@ -667,9 +667,9 @@ Public Class frmConfiguration
         CursorControl("Wait")
         'Application.DoEvents()
 
-        If CheckSqlVersion(dhdConnection) = False Then Exit Sub
+        If CheckSqlVersion(SeqData.dhdConnection) = False Then Exit Sub
 
-        Dim lstNewTables As List(Of String) = LoadTablesList(dhdConnection)
+        Dim lstNewTables As List(Of String) = LoadTablesList(SeqData.dhdConnection)
 
         If lstNewTables Is Nothing Then
             CursorControl()
@@ -710,7 +710,7 @@ Public Class frmConfiguration
     Private Sub btnColumnsImport_Click(sender As Object, e As EventArgs) Handles btnColumnsImport.Click
         CursorControl("Wait")
 
-        If CheckSqlVersion(dhdConnection) = False Then Exit Sub
+        If CheckSqlVersion(SeqData.dhdConnection) = False Then Exit Sub
 
         If txtTableName.Text.Length < 2 And chkImportAllTables.Checked = False Then
             lblStatus.Text = "Please enter a schema name with a table name first"
@@ -738,7 +738,7 @@ Public Class frmConfiguration
     End Sub
 
     Private Sub ImportAllTables()
-        Dim lstNewTables As List(Of String) = LoadTablesList(dhdConnection)
+        Dim lstNewTables As List(Of String) = LoadTablesList(SeqData.dhdConnection)
 
         If lstNewTables Is Nothing Then
             lblStatus.Text = "No tables found"
@@ -767,7 +767,7 @@ Public Class frmConfiguration
         strQuery &= " WHERE obj.name = '" & strTableName & "'"
         strQuery &= " AND scm.name = '" & strSchemaName & "'"
 
-        Dim dtsData As DataSet = QueryDb(dhdConnection, strQuery, True)
+        Dim dtsData As DataSet = QueryDb(SeqData.dhdConnection, strQuery, True)
         If dtsData Is Nothing Then
             lblStatus.Text = "No columns found for table " & strSchemaName & "." & strTableName
             Exit Sub
@@ -786,7 +786,7 @@ Public Class frmConfiguration
         strQuery &= " WHERE i1.CONSTRAINT_TYPE = 'PRIMARY KEY') PT ON PT.TABLE_NAME = PK.TABLE_NAME"
         strQuery &= " WHERE FK.TABLE_SCHEMA = '" & strSchemaName & "' AND FK.TABLE_NAME = '" & strTableName & "'"
 
-        Dim dtsRelations As DataSet = QueryDb(dhdConnection, strQuery, True)
+        Dim dtsRelations As DataSet = QueryDb(SeqData.dhdConnection, strQuery, True)
 
         strQuery = " SELECT KU.TABLE_SCHEMA as SchemaName, KU.TABLE_NAME as TableName,KU.COLUMN_NAME as PrimaryKeyColumn"
         strQuery &= " FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS AS TC"
@@ -797,7 +797,7 @@ Public Class frmConfiguration
         strQuery &= " AND KU.TABLE_NAME = '" & strTableName & "'"
         strQuery &= " ORDER BY KU.TABLE_NAME, KU.ORDINAL_POSITION;"
 
-        Dim dtsPrimaryKeys As DataSet = QueryDb(dhdConnection, strQuery, True)
+        Dim dtsPrimaryKeys As DataSet = QueryDb(SeqData.dhdConnection, strQuery, True)
 
         Dim blnReload As Boolean = False
         Dim strDataType As String = ""
@@ -965,7 +965,7 @@ Public Class frmConfiguration
         If strSelection.Length = 0 Then Exit Sub
         Dim xNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlTables, "Table", "Name", strSelection)
         If Not xNode Is Nothing Then
-            If MessageBox.Show("This will permanently remove the Item: " & strSelection & Environment.NewLine & Core.Messages.strContinue, Core.Messages.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Exit Sub
+            If MessageBox.Show("This will permanently remove the Item: " & strSelection & Environment.NewLine & Core.Message.strContinue, Core.Message.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Exit Sub
             xNode.ParentNode.RemoveChild(xNode)
 
             SeqData.curStatus.TableChanged = True
@@ -1224,7 +1224,7 @@ Public Class frmConfiguration
         If strSelection.Length = 0 Then Exit Sub
         Dim xNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlTables, "Field", "FldName", strSelection)
         If Not xNode Is Nothing Then
-            If MessageBox.Show("This will permanently remove the Item: " & strSelection & Environment.NewLine & Core.Messages.strContinue, Core.Messages.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Exit Sub
+            If MessageBox.Show("This will permanently remove the Item: " & strSelection & Environment.NewLine & Core.Message.strContinue, Core.Message.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Exit Sub
             xNode.ParentNode.RemoveChild(xNode)
 
             SeqData.curStatus.TableChanged = True
@@ -1266,7 +1266,7 @@ Public Class frmConfiguration
                 End If
             Next
         Catch ex As Exception
-            WriteLog(ex.Message, 1)
+            SeqData.WriteLog(ex.Message, 1)
         End Try
 
     End Sub
@@ -1340,13 +1340,13 @@ Public Class frmConfiguration
         Dim strFormat As String = "yyyyMMdd_HHmm"
         Dim strDateTime As String = dtmNow.ToString(strFormat)
 
-        strQuery = "BACKUP DATABASE [" & dhdConnection.DatabaseName & "] TO  DISK = N'" & strPath & "\" & dhdConnection.DatabaseName & "_" & strDateTime & ".bak' WITH NOFORMAT, NOINIT,  NAME = N'" & dhdConnection.DatabaseName & "-Full Database Backup', SKIP, NOREWIND, NOUNLOAD,  STATS = 10"
+        strQuery = "BACKUP DATABASE [" & SeqData.dhdConnection.DatabaseName & "] TO  DISK = N'" & strPath & "\" & SeqData.dhdConnection.DatabaseName & "_" & strDateTime & ".bak' WITH NOFORMAT, NOINIT,  NAME = N'" & SeqData.dhdConnection.DatabaseName & "-Full Database Backup', SKIP, NOREWIND, NOUNLOAD,  STATS = 10"
 
         If SeqData.curVar.DebugMode Then MessageBox.Show(strQuery)
         Try
-            QueryDb(dhdConnection, strQuery, False)
+            QueryDb(SeqData.dhdConnection, strQuery, False)
         Catch ex As Exception
-            WriteLog(ex.Message, 1)
+            SeqData.WriteLog(ex.Message, 1)
             MessageBox.Show(ex.Message)
         End Try
     End Sub
@@ -1371,7 +1371,7 @@ Public Class frmConfiguration
         Dim xRNode As XmlNode = SeqData.dhdText.FindXmlChildNode(xCNode, "Relation", "Relation", strSelection)
 
         If Not xRNode Is Nothing Then
-            If MessageBox.Show("This will permanently remove the Item: " & strSelection & Environment.NewLine & Core.Messages.strContinue, Core.Messages.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Exit Sub
+            If MessageBox.Show("This will permanently remove the Item: " & strSelection & Environment.NewLine & Core.Message.strContinue, Core.Message.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Exit Sub
             xRNode.ParentNode.RemoveChild(xRNode)
 
             tvwTable.Nodes.Clear()

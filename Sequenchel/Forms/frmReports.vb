@@ -21,7 +21,7 @@ Public Class frmReports
 
     Private Sub frmReports_Activated(sender As Object, e As EventArgs) Handles Me.Activated
         SeqData.curStatus.Connection = cbxConnection.SelectedItem
-        LoadConnection(SeqData.curStatus.Connection)
+        SeqData.LoadConnection(xmlConnections, SeqData.curStatus.Connection)
         SeqData.curStatus.TableSet = cbxTableSet.SelectedItem
         LoadTableSet(SeqData.curStatus.TableSet)
     End Sub
@@ -60,7 +60,7 @@ Public Class frmReports
     Private Sub cbxConnection_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbxConnection.SelectedIndexChanged
         If cbxConnection.SelectedIndex >= -1 Then
             SeqData.curStatus.Connection = cbxConnection.SelectedItem
-            LoadConnection(SeqData.curStatus.Connection)
+            SeqData.LoadConnection(xmlConnections, SeqData.curStatus.Connection)
             LoadTableSets()
             'dhdText.FindXmlNode(xmlConnections, "Connection", "DatabasdeName", strConnection)
             'Dim xmlConnNode As xmlnode = xmlConnections.SelectSingleNode("\\Connection", "descendant::Connection[DataBaseName='" & strConnection & "']")
@@ -223,8 +223,17 @@ Public Class frmReports
 
     Private Sub LoadConnections()
         AllClear(4)
-        Dim lstConnections As List(Of String) = LoadConnectionsXml()
-        If lstConnections Is Nothing Then Exit Sub
+        Dim lstConnections As List(Of String) = SeqData.LoadConnectionsXml(xmlConnections)
+        If lstConnections Is Nothing Then
+            xmlConnections.RemoveAll()
+            xmlTableSets.RemoveAll()
+            SeqData.curVar.TableSetsFile = ""
+            xmlTables.RemoveAll()
+            SeqData.curVar.TablesFile = ""
+            TableClear()
+            SeqData.dhdConnection = SeqData.dhdMainDB
+            Exit Sub
+        End If
         For Each lstItem As String In lstConnections
             cbxConnection.Items.Add(lstItem)
         Next
@@ -864,7 +873,7 @@ Public Class frmReports
         tmrElapsedTime.Enabled = True
         tmrElapsedTime.Start()
         dtsReport = Nothing
-        dtsReport = QueryDb(dhdConnection, strQuery, True)
+        dtsReport = QueryDb(SeqData.dhdConnection, strQuery, True)
         ReportShow(dtsReport)
         tmrElapsedTime.Stop()
         tmrElapsedTime.Enabled = False
@@ -902,7 +911,7 @@ Public Class frmReports
     End Sub
 
     Private Sub btnReportDelete_Click(sender As Object, e As EventArgs) Handles btnReportDelete.Click
-        If MessageBox.Show("This will permanently remove the Item: " & cbxReportName.Text & Environment.NewLine & Core.Messages.strContinue, Core.Messages.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Exit Sub
+        If MessageBox.Show("This will permanently remove the Item: " & cbxReportName.Text & Environment.NewLine & Core.Message.strContinue, Core.Message.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Exit Sub
         CursorControl("Wait")
         ReportDelete(cbxReportName.Text)
         If cbxReportName.Items.Contains(cbxReportName.Text) Then cbxReportName.Items.Remove(cbxReportName.Text)
@@ -1328,7 +1337,7 @@ Public Class frmReports
             If pnlInput.Parent Is pnlSelectedFields Then
                 Dim lblTarget As Label = GetLabel(pnlReportLabel, strFieldName)
                 If lblTarget Is Nothing Then
-                    WriteLog("unable to add extra Filtercriterium for: " & strFieldName, 1)
+                    SeqData.WriteLog("unable to add extra Filtercriterium for: " & strFieldName, 1)
                 Else
                     lblShowField_DoubleClick(lblTarget, Nothing)
                     SetCtrText(pnlInput, strFieldName, strValue, intControlNumber)
@@ -1336,13 +1345,13 @@ Public Class frmReports
             ElseIf pnlInput.Parent Is pnlRelations Then
                 Dim lblTarget As Label = GetLabel(pnlRelationsLabel, strFieldName)
                 If lblTarget Is Nothing Then
-                    WriteLog("unable to add extra Relationcriterium for: " & strFieldName, 1)
+                    SeqData.WriteLog("unable to add extra Relationcriterium for: " & strFieldName, 1)
                 Else
                     lblShowRelation_DoubleClick(lblTarget, Nothing)
                     SetCtrText(pnlInput, strFieldName, strValue, intControlNumber)
                 End If
             Else
-                WriteLog("The Field: " & strFieldName & " on Panel: " & pnlInput.Name & " was not found." & "Unable to load the Value: " & strValue, 1)
+                SeqData.WriteLog("The Field: " & strFieldName & " on Panel: " & pnlInput.Name & " was not found." & "Unable to load the Value: " & strValue, 1)
             End If
         End If
     End Sub
@@ -1581,7 +1590,7 @@ Public Class frmReports
             End Using
 
         Catch ex As Exception
-            WriteLog(ex.Message, 1)
+            SeqData.WriteLog(ex.Message, 1)
         End Try
     End Sub
 
@@ -1682,7 +1691,7 @@ Public Class frmReports
                     Excel.CreateExcelDocument(dtsReport, strTargetName)
                 Case "XML"
                     strTargetName &= ".xml"
-                    SeqData.dhdText.ExportDataSetToXML(dhdDatabase.ConvertToText(dtsReport), strTargetName)
+                    SeqData.dhdText.ExportDataSetToXML(SeqData.dhdMainDB.ConvertToText(dtsReport), strTargetName)
                 Case "CSV"
                     strTargetName &= ".csv"
                     SeqData.dhdText.DataSetToCsv(dtsReport.Tables(0), strTargetName, True, ",", False)

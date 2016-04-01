@@ -3,10 +3,12 @@
 Public Class Data
 
     Public dhdText As New DataHandler.txt
+    Public dhdMainDB As New DataHandler.db
     Public dhdConnection As New DataHandler.db
     Public curVar As New Variables
     Public curStatus As New CurrentStatus
     Public Excel As New Excel
+    Private Core As New Core
 
 #Region "General"
     Public Sub SetDefaults()
@@ -28,6 +30,26 @@ Public Class Data
         Else
             curStatus.Status = SeqCore.CurrentStatus.StatusList.Search
         End If
+    End Sub
+
+    Public Sub WriteLog(ByVal strLogtext As String, ByVal intLogLevel As Integer)
+        Try
+            If dhdText.LogLocation.ToLower = "database" Then
+                dhdMainDB.WriteLog(strLogtext, intLogLevel, dhdText.LogLevel)
+            Else
+                dhdText.WriteLog(strLogtext, intLogLevel)
+                'If DevMode Then MessageBox.Show(dhdText.LogFileName & Environment.NewLine & dhdText.LogLocation & Environment.NewLine & dhdText.LogLevel)
+            End If
+        Catch ex As Exception
+            Dim strMyDir As String
+            strMyDir = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+
+            If dhdText.CheckDir(strMyDir & "\Sequenchel", True) = False Then dhdText.CreateDir(strMyDir & "\Sequenchel")
+            If dhdText.CheckDir(strMyDir & "\Sequenchel\LOG", True) = False Then dhdText.CreateDir(strMyDir & "\Sequenchel\LOG")
+            dhdText.LogFileName = "Sequenchel.Log"
+            dhdText.LogLocation = strMyDir & "\Sequenchel\LOG"
+            'MessageBox.Show("there was an error writing to the logfile: " & Environment.NewLine & ex.Message)
+        End Try
     End Sub
 
 #End Region
@@ -484,30 +506,30 @@ Public Class Data
 #End Region
 
 #Region "XML"
-    Public Function LoadXml(strPathFile As String) As XmlDocument
-        Dim xmlDoc As XmlDocument = dhdText.CreateRootDocument(Nothing, Nothing, Nothing)
-        If dhdText.CheckFile(dhdText.PathConvert(CheckFilePath(strPathFile))) = True Then
-            Try
-                xmlDoc.Load(dhdText.PathConvert(CheckFilePath(strPathFile)))
-            Catch ex As Exception
-                Return Nothing
-            End Try
-        End If
-        Return xmlDoc
-    End Function
+    'Public Function LoadXml(strPathFile As String) As XmlDocument
+    '    Dim xmlDoc As XmlDocument = dhdText.CreateRootDocument(Nothing, Nothing, Nothing)
+    '    If dhdText.CheckFile(dhdText.PathConvert(CheckFilePath(strPathFile))) = True Then
+    '        Try
+    '            xmlDoc.Load(dhdText.PathConvert(CheckFilePath(strPathFile)))
+    '        Catch ex As Exception
+    '            Return Nothing
+    '        End Try
+    '    End If
+    '    Return xmlDoc
+    'End Function
 
-    Public Function XmlToDataset(xmlDoc As XmlDocument) As DataSet
-        Dim rdrXml As New XmlNodeReader(xmlDoc)
-        Dim dtsOutput As New DataSet
-        dtsOutput.ReadXml(rdrXml)
-        Return dtsOutput
-    End Function
+    'Public Function XmlToDataset(xmlDoc As XmlDocument) As DataSet
+    '    Dim rdrXml As New XmlNodeReader(xmlDoc)
+    '    Dim dtsOutput As New DataSet
+    '    dtsOutput.ReadXml(rdrXml)
+    '    Return dtsOutput
+    'End Function
 
-    Public Function LoadXmlToDataset(strPathFile As String) As DataSet
-        Dim xmlDoc As XmlDocument = LoadXml(strPathFile)
-        Dim dtsOutput As DataSet = XmlToDataset(xmlDoc)
-        Return dtsOutput
-    End Function
+    'Public Function LoadXmlToDataset(strPathFile As String) As DataSet
+    '    Dim xmlDoc As XmlDocument = LoadXml(strPathFile)
+    '    Dim dtsOutput As DataSet = XmlToDataset(xmlDoc)
+    '    Return dtsOutput
+    'End Function
 
     Public Function LoadSDBASettingsXml(xmlLoadDoc As XmlDocument) As String
         If dhdText.CheckFile(System.AppDomain.CurrentDomain.BaseDirectory & dhdText.InputFile) = True Then
@@ -543,16 +565,16 @@ Public Class Data
     End Function
 
     Public Function LoadGeneralSettingsXml(xmlLoadDoc As XmlDocument) As String
-        If dhdText.CheckFile(CheckFilePath(curVar.GeneralSettings)) = True Then
+        If dhdText.CheckFile(dhdText.PathConvert(CheckFilePath(curVar.GeneralSettings))) = True Then
             'LoadXmlFile
             Try
                 xmlLoadDoc.Load(dhdText.PathConvert(CheckFilePath(curVar.GeneralSettings)))
-                'If dhdText.CheckElement(xmlLoadDoc, "DataLocation") Then dhdDatabase.DataLocation = xmlLoadDoc.Item("Sequenchel").Item("DataBase").Item("DataLocation").InnerText
-                'If dhdText.CheckElement(xmlLoadDoc, "DatabaseName") Then dhdDatabase.DatabaseName = xmlLoadDoc.Item("Sequenchel").Item("DataBase").Item("DatabaseName").InnerText
-                'If dhdText.CheckElement(xmlLoadDoc, "DataProvider") Then dhdDatabase.DataProvider = xmlLoadDoc.Item("Sequenchel").Item("DataBase").Item("DataProvider").InnerText
-                'If dhdText.CheckElement(xmlLoadDoc, "LoginMethod") Then dhdDatabase.LoginMethod = xmlLoadDoc.Item("Sequenchel").Item("DataBase").Item("LoginMethod").InnerText
-                'If dhdText.CheckElement(xmlLoadDoc, "LoginName") Then dhdDatabase.LoginName = xmlLoadDoc.Item("Sequenchel").Item("DataBase").Item("LoginName").InnerText
-                'If dhdText.CheckElement(xmlLoadDoc, "Password") Then dhdDatabase.Password = xmlLoadDoc.Item("Sequenchel").Item("DataBase").Item("Password").InnerText
+                If dhdText.CheckElement(xmlLoadDoc, "DataLocation") Then dhdMainDB.DataLocation = xmlLoadDoc.Item("Sequenchel").Item("DataBase").Item("DataLocation").InnerText
+                If dhdText.CheckElement(xmlLoadDoc, "DatabaseName") Then dhdMainDB.DatabaseName = xmlLoadDoc.Item("Sequenchel").Item("DataBase").Item("DatabaseName").InnerText
+                If dhdText.CheckElement(xmlLoadDoc, "DataProvider") Then dhdMainDB.DataProvider = xmlLoadDoc.Item("Sequenchel").Item("DataBase").Item("DataProvider").InnerText
+                If dhdText.CheckElement(xmlLoadDoc, "LoginMethod") Then dhdMainDB.LoginMethod = xmlLoadDoc.Item("Sequenchel").Item("DataBase").Item("LoginMethod").InnerText
+                If dhdText.CheckElement(xmlLoadDoc, "LoginName") Then dhdMainDB.LoginName = xmlLoadDoc.Item("Sequenchel").Item("DataBase").Item("LoginName").InnerText
+                If dhdText.CheckElement(xmlLoadDoc, "Password") Then dhdMainDB.Password = xmlLoadDoc.Item("Sequenchel").Item("DataBase").Item("Password").InnerText
 
                 If dhdText.CheckElement(xmlLoadDoc, "LogFileName") Then dhdText.LogFileName = xmlLoadDoc.Item("Sequenchel").Item("LogSettings").Item("LogFileName").InnerText
                 If dhdText.CheckElement(xmlLoadDoc, "LogLevel") Then dhdText.LogLevel = xmlLoadDoc.Item("Sequenchel").Item("LogSettings").Item("LogLevel").InnerText
@@ -567,14 +589,77 @@ Public Class Data
                 If dhdText.CheckElement(xmlLoadDoc, "DateTimeStyle") Then curVar.DateTimeStyle = xmlLoadDoc.Item("Sequenchel").Item("Settings").Item("DateTimeStyle").InnerText
                 If dhdText.CheckElement(xmlLoadDoc, "IncludeDate") Then curVar.IncludeDate = xmlLoadDoc.Item("Sequenchel").Item("Settings").Item("IncludeDate").InnerText
 
+                If dhdText.CheckElement(xmlLoadDoc, "SmtpServer") Then dhdText.SmtpServer = xmlLoadDoc.Item("Sequenchel").Item("Email").Item("SmtpServer").InnerText
+                If dhdText.CheckElement(xmlLoadDoc, "SmtpCredentials") Then dhdText.SmtpCredentials = xmlLoadDoc.Item("Sequenchel").Item("Email").Item("SmtpCredentials").InnerText
+                If dhdText.CheckElement(xmlLoadDoc, "SmtpServerUsername") Then dhdText.SmtpUser = xmlLoadDoc.Item("Sequenchel").Item("Email").Item("SmtpServerUsername").InnerText
+                If dhdText.CheckElement(xmlLoadDoc, "SmtpServerPassword") Then dhdText.SmtpPassword = xmlLoadDoc.Item("Sequenchel").Item("Email").Item("SmtpServerPassword").InnerText
+                If dhdText.CheckElement(xmlLoadDoc, "SmtpReply") Then dhdText.SmtpReply = xmlLoadDoc.Item("Sequenchel").Item("Email").Item("SmtpReply").InnerText
+                If dhdText.CheckElement(xmlLoadDoc, "SmtpPort") Then dhdText.SmtpPort = xmlLoadDoc.Item("Sequenchel").Item("Email").Item("SmtpPort").InnerText
+                If dhdText.CheckElement(xmlLoadDoc, "SmtpSsl") Then dhdText.SmtpSsl = xmlLoadDoc.Item("Sequenchel").Item("Email").Item("SmtpSsl").InnerText
+
             Catch ex As Exception
                 Return "There was an error reading the XML file. Please check the file" & Environment.NewLine & curVar.GeneralSettings & Environment.NewLine & ex.Message
                 'WriteLog("There was an error reading the XML file. Please check the file" & Environment.NewLine & CurVar.GeneralSettings & Environment.NewLine & ex.Message, 1)
             End Try
         Else
+            If SaveGeneralSettingsXml(xmlLoadDoc) = False Then
+                'WriteLog(Core.Message.strXmlError, 1)
+            End If
             Return "The XML file was not found. Please check the file" & Environment.NewLine & curVar.GeneralSettings
         End If
         Return ""
+
+    End Function
+
+    Public Function SaveGeneralSettingsXml(xmlSaveDoc As XmlDocument) As Boolean
+        '** Create or update the xml inputdata.
+        Dim strXmlText As String
+        strXmlText = "<?xml version=""1.0"" standalone=""yes""?>" & Environment.NewLine
+        strXmlText &= "<Sequenchel>" & Environment.NewLine
+        strXmlText &= "	<DataBase>" & Environment.NewLine
+        strXmlText &= "		<DataLocation>" & dhdMainDB.DataLocation & "</DataLocation>" & Environment.NewLine
+        strXmlText &= "		<DatabaseName>" & dhdMainDB.DatabaseName & "</DatabaseName>" & Environment.NewLine
+        strXmlText &= "		<DataProvider>" & dhdMainDB.DataProvider & "</DataProvider>" & Environment.NewLine
+        strXmlText &= "		<LoginMethod>" & dhdMainDB.LoginMethod & "</LoginMethod>" & Environment.NewLine
+        strXmlText &= "		<LoginName>" & dhdMainDB.LoginName & "</LoginName>" & Environment.NewLine
+        strXmlText &= "		<Password>" & dhdMainDB.Password & "</Password>" & Environment.NewLine
+        strXmlText &= "	</DataBase>" & Environment.NewLine
+        strXmlText &= "	<LogSettings>" & Environment.NewLine
+        strXmlText &= "		<LogFileName>" & dhdText.LogFileName & "</LogFileName>" & Environment.NewLine
+        strXmlText &= "		<LogLevel>" & dhdText.LogLevel & "</LogLevel>" & Environment.NewLine
+        strXmlText &= "		<LogLocation>" & dhdText.LogLocation & "</LogLocation>" & Environment.NewLine
+        strXmlText &= "		<Retenion>" & dhdText.Retenion & "</Retenion>" & Environment.NewLine
+        strXmlText &= "		<AutoDelete>" & dhdText.AutoDelete & "</AutoDelete>" & Environment.NewLine
+        strXmlText &= "		<Language>EN</Language>" & Environment.NewLine
+        strXmlText &= "		<LanguageOverride>False</LanguageOverride>" & Environment.NewLine
+        strXmlText &= "	</LogSettings>" & Environment.NewLine
+        strXmlText &= "	<Settings>" & Environment.NewLine
+        strXmlText &= "		<Connections>" & curVar.ConnectionsFile & "</Connections>" & Environment.NewLine
+        strXmlText &= "		<UsersetLocation>REGISTRY</UsersetLocation>" & Environment.NewLine
+        strXmlText &= "		<LimitLookupLists>" & curVar.LimitLookupLists & "</LimitLookupLists>" & Environment.NewLine
+        strXmlText &= "		<LimitLookupListsCount>" & curVar.LimitLookupListsCount & "</LimitLookupListsCount>" & Environment.NewLine
+        strXmlText &= "		<DateTimeStyle>" & curVar.DateTimeStyle & "</DateTimeStyle>" & Environment.NewLine
+        strXmlText &= "		<IncludeDate>" & curVar.IncludeDate & "</IncludeDate>" & Environment.NewLine
+        strXmlText &= "	</Settings>" & Environment.NewLine
+        strXmlText &= "	<Email>" & Environment.NewLine
+        strXmlText &= "		<SmtpServer>" & dhdText.SmtpServer & "</SmtpServer>" & Environment.NewLine
+        strXmlText &= "		<SmtpCredentials>" & dhdText.SmtpCredentials & "</SmtpCredentials>" & Environment.NewLine
+        strXmlText &= "		<SmtpServerUsername>" & dhdText.SmtpUser & "</SmtpServerUsername>" & Environment.NewLine
+        strXmlText &= "		<SmtpServerPassword>" & dhdText.SmtpPassword & "</SmtpServerPassword>" & Environment.NewLine
+        strXmlText &= "		<SmtpReply>" & dhdText.SmtpReply & "</SmtpReply>" & Environment.NewLine
+        strXmlText &= "		<SmtpPort>" & dhdText.SmtpPort & "</SmtpPort>" & Environment.NewLine
+        strXmlText &= "		<SmtpSsl>" & dhdText.SmtpSsl & "</SmtpSsl>" & Environment.NewLine
+        strXmlText &= "	</Email>" & Environment.NewLine
+        strXmlText &= "</Sequenchel>" & Environment.NewLine
+
+        Try
+            xmlSaveDoc.LoadXml(strXmlText)
+            SaveGeneralSettingsXml = dhdText.CreateFile(strXmlText, dhdText.PathConvert(CheckFilePath(curVar.GeneralSettings)))
+            If SaveGeneralSettingsXml = False Then WriteLog("There was an error saving the General Settings file" & Environment.NewLine & dhdText.Errormessage, 1)
+        Catch ex As Exception
+            WriteLog(Core.Message.strXmlError & Environment.NewLine & ex.Message, 1)
+            SaveGeneralSettingsXml = Nothing
+        End Try
     End Function
 
     Public Function CheckFilePath(strFilePathName As String, Optional blnPersonal As Boolean = False) As String
@@ -590,7 +675,7 @@ Public Class Data
     End Function
 
     Public Function LoadConnectionsXml(xmlConnections As XmlDocument) As List(Of String)
-        If dhdText.CheckFile(CheckFilePath(curVar.ConnectionsFile)) = True Then
+        If dhdText.CheckFile(dhdText.PathConvert(CheckFilePath(curVar.ConnectionsFile))) = True Then
             'LoadXmlFile
             'Dim lstXml As XmlNodeList
             Try
@@ -610,12 +695,12 @@ Public Class Data
                 If blnConnectionExists = False Then curStatus.Connection = curVar.ConnectionDefault
                 Return ReturnValue
             Catch ex As Exception
+                WriteLog("There was an error reading the XML file. Please check the file" & Environment.NewLine & dhdText.PathConvert(curVar.ConnectionsFile) & Environment.NewLine & ex.Message, 1)
                 Return Nothing
-                '"There was an error reading the XML file. Please check the file" & Environment.NewLine & dhdText.PathConvert(curVar.ConnectionsFile) & Environment.NewLine & ex.Message)
-                'WriteLog("There was an error reading the XML file. Please check the file" & Environment.NewLine & dhdText.PathConvert(curVar.ConnectionsFile) & Environment.NewLine & ex.Message, 1)
             End Try
         End If
         Return Nothing
+
     End Function
 
     Public Sub LoadConnection(xmlConnections As XmlDocument, strConnection As String)
@@ -998,7 +1083,7 @@ Public Class Data
         Dim dtsImport As DataSet
         Select Case strExtension.ToLower
             Case "xml"
-                dtsImport = LoadXmlToDataset(strFileName)
+                dtsImport = dhdText.LoadXmlToDataset(strFileName)
             Case "xls", "xlsx"
                 dtsImport = Excel.ImportExcelFile(strFileName)
             Case "csv", "txt"

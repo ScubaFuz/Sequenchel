@@ -27,7 +27,7 @@ Public Class frmSequenchel
 
         LoadSDBASettingsXml()
         SecuritySet()
-        LoadGeneralSettingsXml()
+        SeqData.LoadGeneralSettingsXml(xmlGeneralSettings)
         'Core.DeleteOldLogs()
         LoadConnections()
 
@@ -52,7 +52,7 @@ Public Class frmSequenchel
         Else
             If Not cbxConnection.SelectedItem Is Nothing Then
                 SeqData.CurStatus.Connection = cbxConnection.SelectedItem
-                LoadConnection(SeqData.curStatus.Connection)
+                SeqData.LoadConnection(xmlConnections, SeqData.curStatus.Connection)
             End If
         End If
         If SeqData.CurStatus.TableSetReload = True Then
@@ -198,7 +198,7 @@ Public Class frmSequenchel
     Private Sub cbxConnection_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbxConnection.SelectedIndexChanged
         If cbxConnection.SelectedIndex >= -1 Then
             SeqData.CurStatus.Connection = cbxConnection.SelectedItem
-            LoadConnection(SeqData.CurStatus.Connection)
+            SeqData.LoadConnection(xmlConnections, SeqData.curStatus.Connection)
             LoadTableSets()
             'dhdText.FindXmlNode(xmlConnections, "Connection", "DatabasdeName", strConnection)
             'Dim xmlConnNode As xmlnode = xmlConnections.SelectSingleNode("\\Connection", "descendant::Connection[DataBaseName='" & strConnection & "']")
@@ -305,8 +305,17 @@ Public Class frmSequenchel
 
     Private Sub LoadConnections()
         AllClear(4)
-        Dim lstConnections As List(Of String) = LoadConnectionsXml()
-        If lstConnections Is Nothing Then Exit Sub
+        Dim lstConnections As List(Of String) = SeqData.LoadConnectionsXml(xmlConnections)
+        If lstConnections Is Nothing Then
+            xmlConnections.RemoveAll()
+            xmlTableSets.RemoveAll()
+            SeqData.curVar.TableSetsFile = ""
+            xmlTables.RemoveAll()
+            SeqData.curVar.TablesFile = ""
+            TableClear()
+            SeqData.dhdConnection = SeqData.dhdMainDB
+            Exit Sub
+        End If
         For Each lstItem As String In lstConnections
             cbxConnection.Items.Add(lstItem)
         Next
@@ -383,12 +392,12 @@ Public Class frmSequenchel
                         End If
 
                         If fldField.FieldCategory = 5 Then
-                            fldField.DataConn.DataLocation = dhdConnection.DataLocation
-                            fldField.DataConn.DatabaseName = dhdConnection.DatabaseName
-                            fldField.DataConn.DataProvider = dhdConnection.DataProvider
-                            fldField.DataConn.LoginMethod = dhdConnection.LoginMethod
-                            fldField.DataConn.LoginName = dhdConnection.LoginName
-                            fldField.DataConn.Password = dhdConnection.Password
+                            fldField.DataConn.DataLocation = SeqData.dhdConnection.DataLocation
+                            fldField.DataConn.DatabaseName = SeqData.dhdConnection.DatabaseName
+                            fldField.DataConn.DataProvider = SeqData.dhdConnection.DataProvider
+                            fldField.DataConn.LoginMethod = SeqData.dhdConnection.LoginMethod
+                            fldField.DataConn.LoginName = SeqData.dhdConnection.LoginName
+                            fldField.DataConn.Password = SeqData.dhdConnection.Password
                             fldField.Table = tblTable.TableName
                             fldField.SearchField = fldField.FieldName
                         End If
@@ -413,7 +422,7 @@ Public Class frmSequenchel
                                 fldField.DefaultValue = xNode.Item("DefaultButton").Attributes("DefaultValue").Value
                             Catch ex As Exception
                                 fldField.DefaultValue = ""
-                                WriteLog("there was an error setting the value for DefaultValue: " & Environment.NewLine & ex.Message, 1)
+                                SeqData.WriteLog("there was an error setting the value for DefaultValue: " & Environment.NewLine & ex.Message, 1)
                             End Try
                         End If
 
@@ -425,7 +434,7 @@ Public Class frmSequenchel
                             Catch ex As Exception
                                 fldField.FieldListOrder = 0
                                 fldField.FieldListWidth = 0
-                                WriteLog("there was an error setting the value for ListOrder or ListWidth: " & Environment.NewLine & ex.Message, 1)
+                                SeqData.WriteLog("there was an error setting the value for ListOrder or ListWidth: " & Environment.NewLine & ex.Message, 1)
                             End Try
                         End If
                         If SeqData.dhdText.CheckNodeElement(xNode, "FldSearch") Then fldField.FieldSearch = xNode.Item("FldSearch").InnerText
@@ -507,12 +516,12 @@ Public Class frmSequenchel
                                 msfRelatedField.ControlUpdate = fldField.ControlUpdate
                                 msfRelatedField.ControlMode = fldField.ControlMode
 
-                                msfRelatedField.DataConn.DataLocation = dhdConnection.DataLocation
-                                msfRelatedField.DataConn.DatabaseName = dhdConnection.DatabaseName
-                                msfRelatedField.DataConn.DataProvider = dhdConnection.DataProvider
-                                msfRelatedField.DataConn.LoginMethod = dhdConnection.LoginMethod
-                                msfRelatedField.DataConn.LoginName = dhdConnection.LoginName
-                                msfRelatedField.DataConn.Password = dhdConnection.Password
+                                msfRelatedField.DataConn.DataLocation = SeqData.dhdConnection.DataLocation
+                                msfRelatedField.DataConn.DatabaseName = SeqData.dhdConnection.DatabaseName
+                                msfRelatedField.DataConn.DataProvider = SeqData.dhdConnection.DataProvider
+                                msfRelatedField.DataConn.LoginMethod = SeqData.dhdConnection.LoginMethod
+                                msfRelatedField.DataConn.LoginName = SeqData.dhdConnection.LoginName
+                                msfRelatedField.DataConn.Password = SeqData.dhdConnection.Password
                                 msfRelatedField.Table = fldField.FieldRelation.Substring(0, fldField.FieldRelation.LastIndexOf("."))
                                 msfRelatedField.SearchField = fldField.FieldRelatedField
                                 msfRelatedField.IdentifierField = fldField.FieldRelation.Substring(fldField.FieldRelation.LastIndexOf(".") + 1, fldField.FieldRelation.length - (fldField.FieldRelation.LastIndexOf(".") + 1))
@@ -577,7 +586,7 @@ Public Class frmSequenchel
             ButtonHandle()
         Catch ex As Exception
             MessageBox.Show("There was an error reading the Table file. Please check the file for Table: " & Environment.NewLine & strTable & Environment.NewLine & ex.Message)
-            WriteLog("There was an error reading the Table file. Please check the file for Table: " & Environment.NewLine & strTable & Environment.NewLine & ex.Message, 1)
+            SeqData.WriteLog("There was an error reading the Table file. Please check the file for Table: " & Environment.NewLine & strTable & Environment.NewLine & ex.Message, 1)
         End Try
 
     End Sub
@@ -699,7 +708,7 @@ Public Class frmSequenchel
             WriteStatus("You need to select 1 item from the list to use this function", 1, lblStatusText)
             Exit Sub
         End If
-        If MessageBox.Show("This will permanently delete the selected Item from the database." & Environment.NewLine & Core.Messages.strContinue, Core.Messages.strAreYouSure, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.No Then
+        If MessageBox.Show("This will permanently delete the selected Item from the database." & Environment.NewLine & Core.Message.strContinue, Core.Message.strAreYouSure, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.No Then
             WriteStatus("Delete cancelled", 5, lblStatusText)
             Exit Sub
         End If
@@ -924,7 +933,7 @@ Public Class frmSequenchel
         If strQueryOrder.Length > 0 Then strQuery = strQuery & " " & strQueryOrder
 
         dtsTable = Nothing
-        dtsTable = QueryDb(dhdConnection, strQuery, True)
+        dtsTable = QueryDb(SeqData.dhdConnection, strQuery, True)
         If DatasetCheck(dtsTable) = False Then Exit Sub
         If DataSet2DataGridView(dtsTable, 0, dgvTable1, False) = False Then Exit Sub
 
@@ -1037,7 +1046,7 @@ Public Class frmSequenchel
         strQuery = strQuery.Replace(",,", " ")
         'If SeqData.CurVar.DebugMode Then MessageBox.Show(strQuery)
 
-        Dim objData As DataSet = QueryDb(dhdConnection, strQuery, True)
+        Dim objData As DataSet = QueryDb(SeqData.dhdConnection, strQuery, True)
         If objData Is Nothing Then Exit Sub
         If objData.Tables.Count = 0 Then Exit Sub
         If objData.Tables(0).Rows.Count = 0 Then Exit Sub
@@ -1071,7 +1080,7 @@ Public Class frmSequenchel
 
         Catch ex As Exception
             MessageBox.Show("There was an error loading the data." & Environment.NewLine & ex.Message)
-            WriteLog("There was an error loading the data." & Environment.NewLine & ex.Message, 1)
+            SeqData.WriteLog("There was an error loading the data." & Environment.NewLine & ex.Message, 1)
 
             SeqData.curStatus.SuspendActions = False
         End Try
@@ -1086,7 +1095,7 @@ Public Class frmSequenchel
     End Sub
 
     Private Sub LoadSearchCriteria(Optional strCriterium As String = "")
-        If dhdConnection.DataBaseOnline = True Then
+        If SeqData.dhdConnection.DataBaseOnline = True Then
             Dim strQuery2 As String = " WHERE 1=1 ", strQuery3 As String = ""
             For intField As Integer = 0 To tblTable.Count - 1
                 strQuery = ""
@@ -1317,7 +1326,7 @@ Public Class frmSequenchel
         strQuery = Replace(strQuery, "(,", "(")
 
         If SeqData.curVar.DebugMode Then
-            If MessageBox.Show("The query to be executed is: " & Environment.NewLine & strQuery & Environment.NewLine & Core.Messages.strContinue, Core.Messages.strAreYouSure, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.No Then
+            If MessageBox.Show("The query to be executed is: " & Environment.NewLine & strQuery & Environment.NewLine & Core.Message.strContinue, Core.Message.strAreYouSure, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.No Then
                 lblStatusText.Text = "Insert cancelled"
                 Exit Sub
             End If
@@ -1326,11 +1335,11 @@ Public Class frmSequenchel
 
         Try
             Dim dtsData As DataSet
-            dtsData = QueryDb(dhdConnection, strQuery, 0)
+            dtsData = QueryDb(SeqData.dhdConnection, strQuery, 0)
             lblStatusText.Text = "Record Inserted"
         Catch ex As Exception
             MessageBox.Show("There was an error inserting the record: " & Environment.NewLine & ex.Message)
-            WriteLog("There was an error inserting the record: " & Environment.NewLine & ex.Message, 1)
+            SeqData.WriteLog("There was an error inserting the record: " & Environment.NewLine & ex.Message, 1)
         End Try
 
         If SeqData.curStatus.Status > 3 Then
@@ -1392,7 +1401,7 @@ Public Class frmSequenchel
         strQuery = Replace(strQuery, ",,", "")
 
         If SeqData.curVar.DebugMode Then
-            If MessageBox.Show("The query to be executed is: " & Environment.NewLine & strQuery & Environment.NewLine & Core.Messages.strContinue, Core.Messages.strAreYouSure, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.No Then
+            If MessageBox.Show("The query to be executed is: " & Environment.NewLine & strQuery & Environment.NewLine & Core.Message.strContinue, Core.Message.strAreYouSure, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.No Then
                 lblStatusText.Text = "Update cancelled"
                 Exit Sub
             End If
@@ -1401,11 +1410,11 @@ Public Class frmSequenchel
 
         Try
             Dim dtsData As DataSet
-            dtsData = QueryDb(dhdConnection, strQuery, 0)
+            dtsData = QueryDb(SeqData.dhdConnection, strQuery, 0)
             lblStatusText.Text = "Record Updated"
         Catch ex As Exception
             MessageBox.Show("There was an error updating the record: " & Environment.NewLine & ex.Message)
-            WriteLog("There was an error updating the record: " & Environment.NewLine & ex.Message, 1)
+            SeqData.WriteLog("There was an error updating the record: " & Environment.NewLine & ex.Message, 1)
         End Try
 
         ColorReset()
@@ -1439,7 +1448,7 @@ Public Class frmSequenchel
         strQuery = strQuery & strQueryWhere
 
         If SeqData.curVar.DebugMode Then
-            If MessageBox.Show("The query to be executed is: " & Environment.NewLine & strQuery & Environment.NewLine & Core.Messages.strContinue, Core.Messages.strAreYouSure, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.No Then
+            If MessageBox.Show("The query to be executed is: " & Environment.NewLine & strQuery & Environment.NewLine & Core.Message.strContinue, Core.Message.strAreYouSure, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.No Then
                 WriteStatus("Delete cancelled", 0, lblStatusText)
                 Exit Sub
             End If
@@ -1448,11 +1457,11 @@ Public Class frmSequenchel
 
         Try
             Dim dtsData As DataSet
-            dtsData = QueryDb(dhdConnection, strQuery, 0)
+            dtsData = QueryDb(SeqData.dhdConnection, strQuery, 0)
             WriteStatus("Record Deleted", 0, lblStatusText)
         Catch ex As Exception
             MessageBox.Show("There was an error deleting the record: " & Environment.NewLine & ex.Message)
-            WriteLog("There was an error deleting the record: " & Environment.NewLine & ex.Message, 1)
+            SeqData.WriteLog("There was an error deleting the record: " & Environment.NewLine & ex.Message, 1)
         End Try
 
         If SeqData.curStatus.Status > 3 Then
@@ -1517,7 +1526,7 @@ Public Class frmSequenchel
         Dim xNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlSearch, "Search", "SearchName", strSelection)
         If Not xNode Is Nothing Then
             If UpdateMode = False Then
-                If MessageBox.Show("This will permanently remove the Item: " & strSelection & Environment.NewLine & Core.Messages.strContinue, Core.Messages.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Exit Sub
+                If MessageBox.Show("This will permanently remove the Item: " & strSelection & Environment.NewLine & Core.Message.strContinue, Core.Message.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Exit Sub
             End If
             xNode.ParentNode.RemoveChild(xNode)
         End If

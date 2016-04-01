@@ -57,7 +57,7 @@ Module SeqCmd
                     ImportFiles(SeqData.dhdText.ImportFile)
                 End If
             Else
-                dtsInput = ImportFile(SeqData.dhdText.ImportFile)
+                dtsInput = ImportFile(SeqData.CheckFilePath(SeqData.dhdText.ImportFile))
                 Dim intRecords As Integer = 0
                 If ImportTable <> "" And ImportTable = SeqData.curStatus.Table Then
                     intRecords = UploadFile(dtsInput)
@@ -85,38 +85,6 @@ Module SeqCmd
             End If
         End If
     End Sub
-
-    Public Function GetVersion(strPart As String) As String
-        If (System.Deployment.Application.ApplicationDeployment.IsNetworkDeployed) Then
-            Dim ver As Version
-            ver = System.Deployment.Application.ApplicationDeployment.CurrentDeployment.CurrentVersion
-            Select Case strPart
-                Case "M"
-                    Return String.Format("{0}", ver.Major)
-                Case "m"
-                    Return String.Format("{0}.{1}", ver.Major, ver.Minor)
-                Case "B"
-                    Return String.Format("{0}.{1}.{2}", ver.Major, ver.Minor, ver.Build)
-                Case "R"
-                    Return String.Format("{0}.{1}.{2}.{3}", ver.Major, ver.Minor, ver.Build, ver.Revision)
-                Case Else
-                    Return String.Format("{0}.{1}.{2}.{3}", ver.Major, ver.Minor, ver.Build, ver.Revision)
-            End Select
-        Else
-            Select Case strPart
-                Case "M"
-                    Return My.Application.Info.Version.Major
-                Case "m"
-                    Return My.Application.Info.Version.Major & "." & My.Application.Info.Version.Minor
-                Case "B"
-                    Return My.Application.Info.Version.Major & "." & My.Application.Info.Version.Minor & "." & My.Application.Info.Version.Build
-                Case "R"
-                    Return My.Application.Info.Version.Major & "." & My.Application.Info.Version.Minor & "." & My.Application.Info.Version.Build & "." & My.Application.Info.Version.Revision
-                Case Else
-                    Return My.Application.Info.Version.Major & "." & My.Application.Info.Version.Minor & "." & My.Application.Info.Version.Build & "." & My.Application.Info.Version.Revision
-            End Select
-        End If
-    End Function
 
     Friend Sub ParseCommands()
         Dim intLength As Integer = 0
@@ -244,7 +212,7 @@ Module SeqCmd
         Dim FilesArray As ArrayList = SeqData.dhdText.GetFiles(strFolder, strFileFilter)
         For Each strFile As String In FilesArray
             Console.WriteLine(strFile)
-            Dim dtsInput As DataSet = ImportFile(strFile)
+            Dim dtsInput As DataSet = ImportFile(SeqData.CheckFilePath(strFile))
             Dim intRecords As Integer = UploadFile(dtsInput)
             Console.WriteLine(intRecords & " Records Uploaded")
         Next
