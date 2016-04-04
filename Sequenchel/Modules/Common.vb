@@ -278,216 +278,6 @@ Module Common
         tblTable.TableDelete = False
     End Sub
 
-#Region "XML"
-    Friend Sub LoadSDBASettingsXml()
-        If SeqData.dhdText.CheckFile(Application.StartupPath & "\" & SeqData.dhdText.InputFile) = True Then
-            'LoadXmlFile
-            Try
-                xmlSDBASettings.Load(Application.StartupPath & "\" & SeqData.dhdText.InputFile)
-                If SeqData.dhdText.CheckElement(xmlSDBASettings, "DefaultConfigFilePath") Then SeqData.curVar.DefaultConfigFilePath = xmlSDBASettings.Item("Sequenchel").Item("Settings").Item("DefaultConfigFilePath").InnerText
-                If SeqData.dhdText.CheckElement(xmlSDBASettings, "SettingsFile") Then SeqData.curVar.GeneralSettings = xmlSDBASettings.Item("Sequenchel").Item("Settings").Item("SettingsFile").InnerText
-                If SeqData.dhdText.CheckElement(xmlSDBASettings, "AllowSettingsChange") Then SeqData.curVar.AllowSettingsChange = xmlSDBASettings.Item("Sequenchel").Item("Settings").Item("AllowSettingsChange").InnerText
-                If SeqData.dhdText.CheckElement(xmlSDBASettings, "AllowConfigurationChange") Then SeqData.curVar.AllowConfiguration = xmlSDBASettings.Item("Sequenchel").Item("Settings").Item("AllowConfigurationChange").InnerText
-                If SeqData.dhdText.CheckElement(xmlSDBASettings, "AllowLinkedServersChange") Then SeqData.curVar.AllowLinkedServers = xmlSDBASettings.Item("Sequenchel").Item("Settings").Item("AllowLinkedServersChange").InnerText
-                If SeqData.dhdText.CheckElement(xmlSDBASettings, "AllowReportQueryEdit") Then SeqData.curVar.AllowQueryEdit = xmlSDBASettings.Item("Sequenchel").Item("Settings").Item("AllowReportQueryEdit").InnerText
-                If SeqData.dhdText.CheckElement(xmlSDBASettings, "AllowDataImport") Then SeqData.curVar.AllowDataImport = xmlSDBASettings.Item("Sequenchel").Item("Settings").Item("AllowDataImport").InnerText
-                If SeqData.dhdText.CheckElement(xmlSDBASettings, "AllowSmartUpdate") Then SeqData.curVar.AllowSmartUpdate = xmlSDBASettings.Item("Sequenchel").Item("Settings").Item("AllowSmartUpdate").InnerText
-                If SeqData.dhdText.CheckElement(xmlSDBASettings, "AllowUpdate") Then SeqData.curVar.AllowUpdate = xmlSDBASettings.Item("Sequenchel").Item("Settings").Item("AllowUpdate").InnerText
-                If SeqData.dhdText.CheckElement(xmlSDBASettings, "AllowInsert") Then SeqData.curVar.AllowInsert = xmlSDBASettings.Item("Sequenchel").Item("Settings").Item("AllowInsert").InnerText
-                If SeqData.dhdText.CheckElement(xmlSDBASettings, "AllowDelete") Then SeqData.curVar.AllowDelete = xmlSDBASettings.Item("Sequenchel").Item("Settings").Item("AllowDelete").InnerText
-                If SeqData.dhdText.CheckElement(xmlSDBASettings, "OverridePassword") Then
-                    If xmlSDBASettings.Item("Sequenchel").Item("Settings").Item("OverridePassword").InnerText.Length > 0 Then
-                        If SeqData.curVar.OverridePassword = xmlSDBASettings.Item("Sequenchel").Item("Settings").Item("OverridePassword").InnerText Then
-                            SeqData.curVar.SecurityOverride = True
-                        End If
-                    End If
-                End If
-            Catch ex As Exception
-                MessageBox.Show("There was an error reading the XML file. Please check the file" & Environment.NewLine & Application.StartupPath & "\" & SeqData.dhdText.InputFile & Environment.NewLine & Environment.NewLine & ex.Message)
-                SeqData.WriteLog("There was an error reading the XML file. Please check the file" & Environment.NewLine & Application.StartupPath & "\" & SeqData.dhdText.InputFile & Environment.NewLine & Environment.NewLine & ex.Message, 1)
-            End Try
-        Else
-            If SaveSDBASettingsXml() = False Then
-                SeqData.WriteLog(Core.Message.strXmlError, 1)
-                MessageBox.Show(Core.Message.strXmlError)
-            End If
-        End If
-
-    End Sub
-
-    Friend Function SaveSDBASettingsXml() As Boolean
-        '** Create or update the xml inputdata.
-        Dim strXmlText As String
-        strXmlText = "<?xml version=""1.0"" standalone=""yes""?>" & Environment.NewLine
-        strXmlText &= "<Sequenchel>" & Environment.NewLine
-        strXmlText &= "	<Settings>" & Environment.NewLine
-        strXmlText &= "		<DefaultConfigFilePath>" & SeqData.curVar.DefaultConfigFilePath & "</DefaultConfigFilePath>" & Environment.NewLine
-        strXmlText &= "		<SettingsFile>" & SeqData.curVar.GeneralSettings & "</SettingsFile>" & Environment.NewLine
-        strXmlText &= "		<AllowSettingsChange>" & SeqData.curVar.AllowSettingsChange & "</AllowSettingsChange>" & Environment.NewLine
-        strXmlText &= "		<AllowConfigurationChange>" & SeqData.curVar.AllowConfiguration & "</AllowConfigurationChange>" & Environment.NewLine
-        strXmlText &= "		<AllowLinkedServersChange>" & SeqData.curVar.AllowLinkedServers & "</AllowLinkedServersChange>" & Environment.NewLine
-        strXmlText &= "		<AllowReportQueryEdit>" & SeqData.curVar.AllowQueryEdit & "</AllowReportQueryEdit>" & Environment.NewLine
-        strXmlText &= "		<AllowDataImport>" & SeqData.curVar.AllowDataImport & "</AllowDataImport>" & Environment.NewLine
-        strXmlText &= "		<AllowSmartUpdate>" & SeqData.curVar.AllowSmartUpdate & "</AllowSmartUpdate>" & Environment.NewLine
-        strXmlText &= "		<AllowUpdate>" & SeqData.curVar.AllowUpdate & "</AllowUpdate>" & Environment.NewLine
-        strXmlText &= "		<AllowInsert>" & SeqData.curVar.AllowInsert & "</AllowInsert>" & Environment.NewLine
-        strXmlText &= "		<AllowDelete>" & SeqData.curVar.AllowDelete & "</AllowDelete>" & Environment.NewLine
-        strXmlText &= "		<OverridePassword>" & SeqData.curVar.OverridePassword & "</OverridePassword>" & Environment.NewLine
-        strXmlText &= "	</Settings>" & Environment.NewLine
-        strXmlText &= "</Sequenchel>" & Environment.NewLine
-        Try
-            xmlSDBASettings.LoadXml(strXmlText)
-            SaveSDBASettingsXml = SeqData.dhdText.CreateFile(strXmlText, Application.StartupPath & "\" & SeqData.dhdText.InputFile)
-            If SaveSDBASettingsXml = False Then SeqData.WriteLog("There was an error saving the Settings file" & Environment.NewLine & SeqData.dhdText.Errormessage, 1)
-        Catch ex As Exception
-            SeqData.WriteLog(Core.Message.strXmlError & Environment.NewLine & ex.Message, 1)
-            SaveSDBASettingsXml = Nothing
-        End Try
-    End Function
-
-    Friend Function LoadTableSetsXml() As List(Of String)
-        If SeqData.dhdText.CheckFile(SeqData.CheckFilePath(SeqData.curVar.TableSetsFile)) = True Then
-
-            'LoadXmlFile
-            'Dim lstXml As XmlNodeList
-            Try
-                xmlTableSets.Load(SeqData.dhdText.PathConvert(SeqData.CheckFilePath(SeqData.curVar.TableSetsFile)))
-                SeqData.curVar.TableSetDefault = ""
-                Dim blnTableSetExists As Boolean = False
-
-                Dim TableSetNode As XmlNode
-                Dim ReturnValue As New List(Of String)
-                For Each TableSetNode In xmlTableSets.SelectNodes("//TableSet")
-                    If TableSetNode.Item("TableSetName").InnerText = SeqData.curStatus.TableSet Then blnTableSetExists = True
-                    ReturnValue.Add(TableSetNode.Item("TableSetName").InnerText)
-                    If TableSetNode.Attributes("Default").Value = "True" Then
-                        SeqData.curVar.TableSetDefault = TableSetNode.Item("TableSetName").InnerText
-                    End If
-                Next
-                If blnTableSetExists = False Then SeqData.curStatus.TableSet = SeqData.curVar.TableSetDefault
-                Return ReturnValue
-            Catch ex As Exception
-                MessageBox.Show("There was an error reading the XML file. Please check the file" & Environment.NewLine & SeqData.dhdText.PathConvert(SeqData.curVar.TableSetsFile) & Environment.NewLine & ex.Message)
-                SeqData.WriteLog("There was an error reading the XML file. Please check the file" & Environment.NewLine & SeqData.dhdText.PathConvert(SeqData.curVar.TableSetsFile) & Environment.NewLine & ex.Message, 1)
-            End Try
-        Else
-            xmlTableSets.RemoveAll()
-            xmlTables.RemoveAll()
-            SeqData.curVar.TablesFile = ""
-            TableClear()
-        End If
-        Return Nothing
-    End Function
-
-    Friend Sub LoadTableSet(strTableSet As String)
-        Dim xmlTSNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlTableSets, "TableSet", "TableSetName", strTableSet)
-        If xmlTSNode Is Nothing Then Exit Sub
-        SeqData.curStatus.TableSet = xmlTSNode.Item("TableSetName").InnerText
-        SeqData.curVar.TablesFile = xmlTSNode.Item("TablesFile").InnerText
-        SeqData.dhdText.OutputFile = xmlTSNode.Item("OutputPath").InnerText
-        SeqData.curVar.ReportSetFile = xmlTSNode.Item("ReportSet").InnerText
-        If SeqData.dhdText.CheckNodeElement(xmlTSNode, "Search") Then SeqData.curVar.SearchFile = xmlTSNode.Item("Search").InnerText
-
-        'If CurVar.DebugMode Then
-        '    MessageBox.Show(xmlTSNode.OuterXml & Environment.NewLine & _
-        '        CurVar.TableSet & Environment.NewLine & _
-        '        CurVar.TablesFile & Environment.NewLine & _
-        '        dhdText.OutputFile & Environment.NewLine & _
-        '        CurVar.ReportSet)
-        'End If
-
-    End Sub
-
-    Friend Function LoadTablesXml() As List(Of String)
-        If SeqData.dhdText.CheckFile(SeqData.CheckFilePath(SeqData.curVar.TablesFile)) = True Then
-
-            'LoadXmlFile
-            'Dim lstXml As XmlNodeList
-            Try
-                xmlTables.Load(SeqData.dhdText.PathConvert(SeqData.CheckFilePath(SeqData.curVar.TablesFile)))
-                Dim blnTableExists As Boolean = False
-                SeqData.curVar.TableDefault = ""
-
-                Dim TableNode As XmlNode
-                Dim ReturnValue As New List(Of String)
-                For Each TableNode In xmlTables.SelectNodes("//Table")
-                    If TableNode.Item("Name").InnerText = SeqData.curStatus.Table Then blnTableExists = True
-                    ReturnValue.Add(TableNode.Item("Alias").InnerText)
-                    If TableNode.Attributes("Default").Value = "True" Then
-                        SeqData.curVar.TableDefault = TableNode.Item("Alias").InnerText
-                    End If
-                Next
-                If blnTableExists = False Then SeqData.curStatus.Table = SeqData.curVar.TableDefault
-                Return ReturnValue
-            Catch ex As Exception
-                MessageBox.Show("There was an error reading the XML file. Please check the file" & Environment.NewLine & SeqData.dhdText.PathConvert(SeqData.curVar.TablesFile) & Environment.NewLine & ex.Message)
-                SeqData.WriteLog("There was an error reading the XML file. Please check the file" & Environment.NewLine & SeqData.dhdText.PathConvert(SeqData.curVar.TablesFile) & Environment.NewLine & ex.Message, 1)
-            End Try
-        Else
-            xmlTables.RemoveAll()
-            Dim root As XmlElement = xmlTables.DocumentElement
-            If root Is Nothing Then
-                xmlTables = SeqData.dhdText.CreateRootDocument(xmlTables, "Sequenchel", "Tables", True)
-            End If
-        End If
-        Return Nothing
-    End Function
-
-    Friend Function LoadReportsXml() As List(Of String)
-        If SeqData.dhdText.CheckFile(SeqData.CheckFilePath(SeqData.curVar.ReportSetFile)) = True Then
-            'LoadXmlFile
-            'Dim lstXml As XmlNodeList
-            Try
-                xmlReports.Load(SeqData.dhdText.PathConvert(SeqData.CheckFilePath(SeqData.curVar.ReportSetFile)))
-                'Dim blnConnectionExists As Boolean = False
-                'CurVar.ConnectionDefault = ""
-
-                Dim xNode As XmlNode
-                Dim ReturnValue As New List(Of String)
-                For Each xNode In xmlReports.SelectNodes("//Report")
-                    'If xNode.Item("ReportName").InnerText = CurStatus.Connection Then blnConnectionExists = True
-                    ReturnValue.Add(xNode.Item("ReportName").InnerText)
-                    'If xNode.Attributes("Default").Value = "True" Then
-                    '    CurVar.ConnectionDefault = xNode.Item("ConnectionName").InnerText
-                    'End If
-                Next
-                ' If blnConnectionExists = False Then CurStatus.Connection = CurVar.ConnectionDefault
-                Return ReturnValue
-            Catch ex As Exception
-                MessageBox.Show("There was an error reading the XML file. Please check the file" & Environment.NewLine & SeqData.dhdText.PathConvert(SeqData.curVar.ReportSetFile) & Environment.NewLine & ex.Message)
-                SeqData.WriteLog("There was an error reading the XML file. Please check the file" & Environment.NewLine & SeqData.dhdText.PathConvert(SeqData.curVar.ReportSetFile) & Environment.NewLine & ex.Message, 1)
-            End Try
-        Else
-            xmlReports.RemoveAll()
-        End If
-        Return Nothing
-    End Function
-
-    Friend Function LoadSearchXml(strTable As String) As List(Of String)
-        If SeqData.dhdText.CheckFile(SeqData.CheckFilePath(SeqData.curVar.SearchFile)) = True Then
-            'LoadXmlFile
-            'Dim lstXml As XmlNodeList
-            Try
-                xmlSearch.Load(SeqData.dhdText.PathConvert(SeqData.CheckFilePath(SeqData.curVar.SearchFile)))
-                'Dim blnConnectionExists As Boolean = False
-                'CurVar.ConnectionDefault = ""
-
-                Dim xNode As XmlNode
-                Dim ReturnValue As New List(Of String)
-                For Each xNode In SeqData.dhdText.FindXmlNodes(xmlSearch, "Searches/Search", "TableName", strTable)
-                    ReturnValue.Add(xNode.Item("SearchName").InnerText)
-                Next
-                Return ReturnValue
-            Catch ex As Exception
-                MessageBox.Show("There was an error reading the XML file. Please check the file" & Environment.NewLine & SeqData.dhdText.PathConvert(SeqData.curVar.SearchFile) & Environment.NewLine & ex.Message)
-                SeqData.WriteLog("There was an error reading the XML file. Please check the file" & Environment.NewLine & SeqData.dhdText.PathConvert(SeqData.curVar.SearchFile) & Environment.NewLine & ex.Message, 1)
-            End Try
-        Else
-            xmlSearch.RemoveAll()
-        End If
-        Return Nothing
-    End Function
-
     Friend Function GetSaveFileName(strFileName As String) As String
         If SeqData.curVar.IncludeDate = True Then
             strFileName = strFileName & "_" & SeqData.FormatFileDate(Now)
@@ -533,11 +323,12 @@ Module Common
             SeqData.ExportFile(dtsInput, strFileName, SeqData.curVar.ConvertToText, SeqData.curVar.ConvertToNull, SeqData.curVar.ShowFile, SeqData.curVar.HasHeaders, SeqData.curVar.Delimiter, SeqData.curVar.QuoteValues, SeqData.curVar.CreateDir)
         Catch ex As Exception
             SeqData.curVar.ShowFile = False
-            SeqData.WriteLog("An error occured while creating the file." & Environment.NewLine & +ex.Message, 1)
+            SeqData.WriteLog("An error occured while creating the file." & Environment.NewLine & ex.Message, 1)
         End Try
         CursorControl()
     End Sub
 
+#Region "XML"
     Friend Sub DisplayXmlFile(ByVal xmlDoc As Xml.XmlDocument, ByVal tvw As TreeView)
         tvw.Nodes.Clear()
         DisplayXmlNode(xmlDoc, tvw.Nodes)
@@ -580,34 +371,28 @@ Module Common
         Loop
     End Sub
 
+    Friend Function SaveXmlFile(xmlDoc As XmlDocument, FilePathName As String, CreateDir As Boolean) As Boolean
+        If SeqData.dhdText.CheckDir(SeqData.dhdText.PathConvert(SeqData.CheckFilePath(FilePathName)).Substring(0, SeqData.dhdText.PathConvert(SeqData.CheckFilePath(FilePathName)).LastIndexOf("\")), False) = False Then
+            If CreateDir = True Then
+                If MessageBox.Show("The folder " & SeqData.dhdText.PathConvert(SeqData.CheckFilePath(SeqData.curVar.ReportSetFile)).Substring(0, SeqData.dhdText.PathConvert(SeqData.CheckFilePath(SeqData.curVar.ReportSetFile)).LastIndexOf("\")) & " does not exist." & Environment.NewLine & "do you wish to create it?", "Folder does not exist", MessageBoxButtons.YesNo, MessageBoxIcon.Hand, MessageBoxDefaultButton.Button1) = DialogResult.No Then
+                    Return False
+                End If
+            Else
+                Return False
+            End If
+        End If
+        Try
+            SeqData.dhdText.SaveXmlFile(xmlReports, SeqData.dhdText.PathConvert(SeqData.CheckFilePath(SeqData.curVar.ReportSetFile)), True)
+        Catch ex As Exception
+            Return False
+        End Try
+        Return True
+    End Function
+
+
 #End Region
 
 #Region "Database"
-
-    Friend Function QueryDb(ByVal dhdConnect As DataHandler.db, ByVal strQueryData As String, ByVal ReturnValue As Boolean, Optional ByVal LogLevel As Integer = 5) As DataSet
-        SeqData.WriteLog(strQueryData, LogLevel)
-        strErrorMessage = ""
-        dhdConnect.CheckDB()
-        If dhdConnect.DataBaseOnline = False Then
-            MessageBox.Show("The database was not found." & Environment.NewLine & "Please check your settings")
-            strErrorMessage = "The database was not found. Please check your settings"
-            Return Nothing
-        End If
-        Dim dtsData As DataSet
-        Try
-            dtsData = dhdConnect.QueryDatabase(strQueryData, ReturnValue)
-            If dhdConnect.DataBaseOnline = False Then
-                MessageBox.Show("There was a problem processing your query" & Environment.NewLine & "Please check your settings")
-                strErrorMessage = "There was a problem processing your query. Please check your settings"
-                Return dtsData
-            End If
-            Return dtsData
-        Catch ex As Exception
-            SeqData.WriteLog(ex.Message, 1)
-            strErrorMessage = ex.Message
-            Return Nothing
-        End Try
-    End Function
 
     Friend Function DatabaseTest(dhdConnect As DataHandler.db) As Boolean
         If SeqData.curVar.DebugMode Then
@@ -657,15 +442,6 @@ Module Common
         End Try
     End Function
 
-    'Friend Function GetSqlVersion(dhdConnect As DataHandler.db) As Integer
-    '    Dim strDatabase As String = dhdConnect.DatabaseName
-    '    dhdConnect.DatabaseName = "master"
-    '    Dim intSqlVersion As Integer = dhdConnect.GetSqlVersion()
-    '    dhdConnect.DatabaseName = strDatabase
-
-    '    Return intSqlVersion
-    'End Function
-
     Friend Sub BackupDatabase(ByVal dhdConnect As DataHandler.db, ByVal strPath As String)
 
         Dim strDateTime As String
@@ -678,7 +454,7 @@ Module Common
                                             "strDateTime = " & strDateTime & Environment.NewLine & _
                                             strQuery)
         Try
-            QueryDb(dhdConnect, strQuery, False)
+            SeqData.QueryDb(dhdConnect, strQuery, False)
         Catch ex As Exception
             SeqData.dhdText.LogLocation = ""
             SeqData.WriteLog(ex.Message, 1)
@@ -693,13 +469,13 @@ Module Common
         Else
             strQuery &= ",'" & strRemarks & "'"
         End If
-        QueryDb(SeqData.dhdMainDB, strQuery, False)
+        SeqData.QueryDb(SeqData.dhdMainDB, strQuery, False)
     End Sub
 
     Friend Function LoadConfigSetting(ByVal strCategory As String, ByVal strConfigName As String) As String
         strQuery = "exec usp_ConfigHandle 'Get','" & strCategory & "',NULL,'" & strConfigName & "'"
         Dim objData As DataSet
-        objData = QueryDb(SeqData.dhdMainDB, strQuery, True)
+        objData = SeqData.QueryDb(SeqData.dhdMainDB, strQuery, True)
         Dim strReturn As String = Nothing
 
         If objData Is Nothing Then
@@ -723,54 +499,12 @@ Module Common
         Return strReturn
     End Function
 
-    Friend Sub DisplayData(ByVal table As DataTable)
-        Dim strResult As String = ""
-        For Each row As DataRow In table.Rows
-            For Each col As DataColumn In table.Columns
-                strResult &= col.ColumnName & " = " & row(col) & Environment.NewLine
-            Next
-            'Console.WriteLine("============================")
-        Next
-        MessageBox.Show(strResult)
-    End Sub
-
-    Public Sub GetServerList()
-        Dim strResult As String = String.Empty
-        Dim Server As String = String.Empty
-        Dim instance As Sql.SqlDataSourceEnumerator = Sql.SqlDataSourceEnumerator.Instance
-        Dim table As System.Data.DataTable = instance.GetDataSources()
-        For Each row As System.Data.DataRow In table.Rows
-            Server = String.Empty
-            Server = row("ServerName")
-            If row("InstanceName").ToString.Length > 0 Then
-                Server = Server & "\" & row("InstanceName")
-            End If
-            strResult &= Server & Environment.NewLine
-        Next
-        MessageBox.Show(strResult)
-
-    End Sub
-
-    Friend Sub WriteDBLog(ByVal strLogText As String)
-        strQuery = ""
-        strLogText = Replace(strLogText, "'", "~")
-        strQuery = "exec usp_LoggingHandle 'Ins',NULL,'" & strLogText & "','" & Environment.MachineName.ToString & "'"
-
-        Try
-            SeqData.dhdMainDB.QueryDatabase(strQuery, False)
-        Catch ex As Exception
-            SeqData.dhdText.LogLocation = ""
-            SeqData.WriteLog(ex.Message, 1)
-            MessageBox.Show(ex.Message)
-        End Try
-    End Sub
-
     Friend Sub ClearDBLog(ByVal dtmDate As Date)
         strQuery = ""
         strQuery = "exec usp_LoggingHandle 'Del','" & FormatDate(dtmDate) & "'"
 
         Try
-            QueryDb(SeqData.dhdMainDB, strQuery, False)
+            SeqData.QueryDb(SeqData.dhdMainDB, strQuery, False)
         Catch ex As Exception
             SeqData.dhdText.LogLocation = ""
             SeqData.WriteLog(ex.Message, 1)
@@ -794,24 +528,13 @@ Module Common
         strQuery &= " ORDER BY TableName"
 
         CursorControl("Wait")
-        'Application.DoEvents()
 
-        Dim dtsData As DataSet = QueryDb(dhdConnect, strQuery, True)
-        If DatasetCheck(dtsData) = False Then Return Nothing
-
-        'If dtsData Is Nothing Then
-        '    Return Nothing
-        'End If
-        'If dtsData.Tables.Count = 0 Then Return Nothing
-        'If dtsData.Tables(0).Rows.Count = 0 Then Return Nothing
+        Dim dtsData As DataSet = SeqData.QueryDb(dhdConnect, strQuery, True)
+        If SeqData.dhdText.DatasetCheck(dtsData) = False Then Return Nothing
 
         Dim ReturnValue As New List(Of String)
         For intRowCount = 0 To dtsData.Tables(0).Rows.Count - 1
-            'If dtsData.Tables.Item(0).Rows(intRowCount).Item(0).GetType().ToString = "System.DBNull" Then
-            'MessageBox.Show("Cell Must be empty")
-            'Else
             ReturnValue.Add(dtsData.Tables.Item(0).Rows(intRowCount).Item("TableName"))
-            'End If
         Next
         Return ReturnValue
     End Function
@@ -835,17 +558,17 @@ Module Common
         strQuery &= ",@StartTime = " & StartTime
         strQuery &= ",@EndTime = " & EndTime
 
-        QueryDb(SeqData.dhdMainDB, strQuery, False)
+        SeqData.QueryDb(SeqData.dhdMainDB, strQuery, False)
     End Sub
 
     Friend Function GetDefaultLogPath(dhdConnect As DataHandler.db) As String
         strQuery = "SELECT coalesce(serverproperty('InstanceDefaultLogPath'),LEFT(physical_name,LEN(physical_name) - charindex('\',reverse(physical_name)))) AS InstanceDefaultLogPath FROM sys.master_files where name = 'mastlog' "
 
         Dim objData As DataSet
-        objData = QueryDb(dhdConnect, strQuery, True)
+        objData = SeqData.QueryDb(dhdConnect, strQuery, True)
         Dim strReturn As String = ""
 
-        If DatasetCheck(objData) = False Then
+        If SeqData.dhdText.DatasetCheck(objData) = False Then
             strReturn = ""
         Else
             strReturn = objData.Tables.Item(0).Rows(0).Item("InstanceDefaultLogPath")
@@ -859,10 +582,10 @@ Module Common
         strQuery = "select [name] AS JobName from msdb.dbo.sysjobs where name like '%" & strPattern & "%'"
 
         Dim objData As DataSet
-        objData = QueryDb(dhdConnect, strQuery, True)
+        objData = SeqData.QueryDb(dhdConnect, strQuery, True)
         Dim strReturn As String = ""
 
-        If DatasetCheck(objData) = False Then
+        If SeqData.dhdText.DatasetCheck(objData) = False Then
             strReturn = ""
         Else
             strReturn = objData.Tables.Item(0).Rows(0).Item("JobName")
@@ -876,9 +599,9 @@ Module Common
         Try
             strQuery = "select COUNT(*) AS StepsCount FROM [msdb].[dbo].[sysjobs] AS [job] INNER JOIN [msdb].[dbo].[sysjobsteps] AS [stp] ON [job].[job_id] = [stp].[job_id] WHERE [job].name = 'Sequenchel SmartUpdate'"
             Dim objData As DataSet
-            objData = QueryDb(dhdConnect, strQuery, True)
+            objData = SeqData.QueryDb(dhdConnect, strQuery, True)
 
-            If DatasetCheck(objData) = False Then
+            If SeqData.dhdText.DatasetCheck(objData) = False Then
                 intReturn = -1
             Else
                 intReturn = objData.Tables.Item(0).Rows(0).Item("StepsCount")
@@ -894,256 +617,6 @@ Module Common
 #End Region
 
 #Region "DataTypes"
-
-    'Friend Function GetDataType(strInput As String) As String
-    '    Select Case strInput
-    '        Case "varchar"
-    '            Return "CHAR"
-    '        Case "char"
-    '            Return "CHAR"
-    '        Case "nvarchar"
-    '            Return "CHAR"
-    '        Case "nchar"
-    '            Return "CHAR"
-    '        Case "bit"
-    '            Return "BIT"
-    '        Case "tinyint"
-    '            Return "INTEGER"
-    '        Case "smallint"
-    '            Return "INTEGER"
-    '        Case "int"
-    '            Return "INTEGER"
-    '        Case "bigint"
-    '            Return "INTEGER"
-    '        Case "date"
-    '            Return "DATETIME"
-    '        Case "time"
-    '            Return "TIME"
-    '        Case "datetime"
-    '            Return "DATETIME"
-    '        Case "smalldatetime"
-    '            Return "DATETIME"
-    '        Case "datetime2"
-    '            Return "DATETIME"
-    '        Case "datetimeoffset"
-    '            Return "CHAR"
-    '        Case "timestamp"
-    '            Return "TIMESTAMP"
-    '        Case "decimal"
-    '            Return "INTEGER"
-    '        Case "numeric"
-    '            Return "INTEGER"
-    '        Case "real"
-    '            Return "INTEGER"
-    '        Case "float"
-    '            Return "INTEGER"
-    '        Case "smallmoney"
-    '            Return "INTEGER"
-    '        Case "money"
-    '            Return "INTEGER"
-    '        Case "uniqueidentifier"
-    '            Return "GUID"
-    '        Case "image"
-    '            Return "IMAGE"
-    '        Case "sql_variant"
-    '            Return "BINARY"
-    '        Case "hierarchyid"
-    '            Return "CHAR"
-    '        Case "geometry"
-    '            Return "GEO"
-    '        Case "geography"
-    '            Return "GEO"
-    '        Case "varbinary"
-    '            Return "BINARY"
-    '        Case "binary"
-    '            Return "BINARY"
-    '        Case "text"
-    '            Return "TEXT"
-    '        Case "ntext"
-    '            Return "TEXT"
-    '        Case "xml"
-    '            Return "XML"
-    '        Case "sysname"
-    '            Return "CHAR"
-    '    End Select
-    '    Return ""
-    'End Function
-
-    'Friend Function GetDataTypes()
-    '    Dim ReturnValue As New List(Of String)
-    '    ReturnValue.Add("CHAR")
-    '    ReturnValue.Add("INTEGER")
-    '    ReturnValue.Add("BIT")
-    '    ReturnValue.Add("BINARY")
-    '    ReturnValue.Add("GUID")
-    '    ReturnValue.Add("IMAGE")
-    '    ReturnValue.Add("TEXT")
-    '    ReturnValue.Add("DATETIME")
-    '    ReturnValue.Add("TIME")
-    '    ReturnValue.Add("TIMESTAMP")
-    '    ReturnValue.Add("XML")
-    '    ReturnValue.Add("GEO")
-    '    Return ReturnValue
-    'End Function
-
-    'Friend Function SetDelimiters(strInput As String, strDataType As String, strCompare As String) As String
-    '    If strInput.Length > 2 Then
-    '        If strInput.Substring(0, 2) = "f:" Then
-    '            Return "(" & strInput.Replace("f:", "") & ")"
-    '        End If
-    '        If strInput.Substring(0, 2) = "v:" Then
-    '            strInput = strInput.Replace("v:", "")
-    '            strInput = ProcessDefaultValue(strInput)
-    '        End If
-    '    End If
-    '    If strCompare = "IS" Or strCompare = "IS NOT" Then
-    '        Return strInput
-    '    End If
-    '    If strDataType = "CHAR" Or _
-    '            strDataType = "BINARY" Or _
-    '            strDataType = "GUID" Or _
-    '            strDataType = "TEXT" Or _
-    '            strDataType = "IMAGE" Or _
-    '            strDataType = "DATETIME" Or _
-    '            strDataType = "TIME" Or _
-    '            strDataType = "TIMESTAMP" Or _
-    '            strDataType = "XML" Or _
-    '            strDataType = "GEO" Then
-    '        strInput = strInput.Replace("'", "''")
-    '        strInput = "N'" & strInput & "'"
-    '        If (strCompare = "IN" Or strCompare = "NOT IN") Then
-    '            strInput = strInput.Replace(",", "','")
-    '        End If
-    '    End If
-    '    If (strCompare = "IN" Or strCompare = "NOT IN") Then
-    '        strInput = "(" & strInput & ")"
-    '    End If
-    '    Return strInput
-    'End Function
-
-    'Friend Function GetWidth(strDataType As String, intMaxLength As Integer) As Integer
-    '    Select Case strDataType
-    '        Case "CHAR", "BINARY"
-    '            If intMaxLength < 50 Then
-    '                Return 50
-    '            ElseIf intMaxLength < 100 Then
-    '                Return 100
-    '            ElseIf intMaxLength < 150 Then
-    '                Return 150
-    '            Else
-    '                Return 200
-    '            End If
-    '        Case "INTEGER"
-    '            Return intMaxLength * 10
-    '        Case "BIT"
-    '            Return 25
-    '        Case "GUID", "XML", "TEXT", "IMAGE"
-    '            Return 200
-    '        Case "TIMESTAMP", "GEO", "DATETIME", "TIME"
-    '            Return 100
-    '        Case Else
-    '            Return 50
-    '    End Select
-    'End Function
-
-    'Friend Function CompareDataType(strDataType As String) As Boolean
-    '    Select Case strDataType.ToLower
-    '        Case "text", "ntext", "image"
-    '            Return False
-    '        Case Else
-    '            Return True
-    '    End Select
-    'End Function
-
-    Friend Function GetFieldDataType(strFullFieldName As String) As String
-        Dim strTableName As String = strFullFieldName.Substring(0, strFullFieldName.LastIndexOf("."))
-        Dim strFieldName As String = strFullFieldName.Substring(strFullFieldName.LastIndexOf(".") + 1, strFullFieldName.Length - (strFullFieldName.LastIndexOf(".") + 1))
-        Dim xNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlTables, "Table", "Name", strTableName)
-        Dim xCNode As XmlNode = SeqData.dhdText.FindXmlChildNode(xNode, "Fields/Field", "FldName", strFieldName)
-        Dim strFieldDataType As String = xCNode.Item("DataType").InnerText
-        Return strFieldDataType
-    End Function
-
-    Friend Function FormatFieldXML(strFullFieldName As String, strShowMode As String, blnUseAlias As Boolean, blnSelect As Boolean) As String
-        Dim strOutput As String = ""
-        Dim strTableName As String = strFullFieldName.Substring(0, strFullFieldName.LastIndexOf("."))
-        Dim strFieldName As String = strFullFieldName.Substring(strFullFieldName.LastIndexOf(".") + 1, strFullFieldName.Length - (strFullFieldName.LastIndexOf(".") + 1))
-        Dim xNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlTables, "Table", "Name", strTableName)
-        Dim xCNode As XmlNode = SeqData.dhdText.FindXmlChildNode(xNode, "Fields/Field", "FldName", strFieldName)
-        Dim strFieldType As String = xCNode.Item("DataType").InnerText
-        Dim strFieldWidth As String = xCNode.Item("FldWidth").InnerText
-        Dim strFieldAlias As String = xCNode.Item("FldAlias").InnerText
-        If blnUseAlias = False Then strFieldAlias = Nothing
-
-        strOutput = FormatField(strFieldName, strTableName, strFieldWidth, strFieldType, strFieldAlias, strShowMode, blnSelect)
-        Return strOutput
-    End Function
-
-    Friend Function FormatField(strFieldName As String, strTableName As String, strFieldWidth As String, strFieldType As String, strFieldAlias As String, strShowMode As String, blnSelect As Boolean) As String
-        Dim strOutput As String = ""
-        Dim strFQDN As String = "[" & strTableName.Replace(".", "].[") & "].[" & strFieldName & "]"
-
-        If Not strShowMode Is Nothing Then
-            Select Case strShowMode.ToUpper
-                Case "SUM", "AVG", "COUNT"
-                    strFQDN = strShowMode & "(" & strFQDN & ")"
-                    strFieldType = "INTEGER"
-                Case "MIN", "MAX"
-                    strFQDN = strShowMode & "(" & strFQDN & ")"
-                Case "YEAR", "MONTH", "DAY", "HOUR", "MINUTE", "SECOND"
-                    strFQDN = "DATEPART(" & strShowMode & "," & strFQDN & ")"
-                    strFieldType = "INTEGER"
-                Case "DATE"
-                    strFQDN = "CAST(" & strFQDN & " AS DATE)"
-                    strFieldType = "DATETIME"
-                Case "TIME"
-                    strFQDN = "CAST(" & strFQDN & " AS TIME)"
-                    strFieldType = "TIME"
-                Case Else
-                    'Do Nothing
-            End Select
-            If Not strFieldAlias Is Nothing Then
-                strFieldAlias = strShowMode.ToLower & strFieldAlias
-            Else
-                strFieldAlias = strShowMode.ToLower & strFieldName
-            End If
-        End If
-
-        Select Case strFieldType.ToUpper
-            Case "IMAGE"
-                strOutput = "(CONVERT([varchar](" & strFieldWidth & "), " & strFQDN & "))"
-            Case "BINARY", "GEO", "TEXT", "GUID"
-                strOutput = "(CONVERT([nvarchar](" & strFieldWidth & "), " & strFQDN & "))"
-            Case "TIME", "TIMESTAMP"
-                Dim intFieldWidth As Integer = 8
-                If IsNumeric(strFieldWidth) = 1 And strFieldWidth < intFieldWidth Then intFieldWidth = strFieldWidth
-                Select Case SeqData.curVar.DateTimeStyle
-                    Case 101, 100
-                        strOutput = "(CONVERT([nvarchar](7), " & strFQDN & ", 100))"
-                    Case 105, 102
-                        strOutput = "(CONVERT([nvarchar](8), " & strFQDN & ", 120))"
-                    Case Else
-                        strOutput = "(CONVERT([nvarchar](13), " & strFQDN & ", " & SeqData.curVar.DateTimeStyle & "))"
-                End Select
-            Case "XML"
-                strOutput = "(CONVERT([nvarchar](max), " & strFQDN & "))"
-            Case "DATETIME"
-                strOutput = "(CONVERT([nvarchar](" & strFieldWidth & "), " & strFQDN & ", " & SeqData.curVar.DateTimeStyle & "))"
-            Case Else
-                'CHAR: no need to convert char or int values to char.
-                strOutput = strFQDN
-        End Select
-
-        If blnSelect = True Then
-            If Not strFieldAlias Is Nothing Then
-                If strFieldAlias.Length > 0 Then
-                    strOutput &= " AS [" & strFieldAlias & "]"
-                End If
-            End If
-        End If
-
-        Return strOutput
-    End Function
 
     Friend Function FormatFieldWhere(strFieldName As String, strTableName As String, strFieldWidth As String, strFieldType As String, strFieldValue As String) As String
         Dim strOutput As String = ""
@@ -1338,32 +811,6 @@ Module Common
         End If
     End Function
 
-    'Friend Function FormatFileDate(ByVal dtmInput As Date, Optional strFormatStyle As String = Nothing) As String
-    '    If dtmInput = Nothing Then
-    '        FormatFileDate = ""
-    '    Else
-    '        If strFormatStyle = Nothing Then strFormatStyle = CurVar.DateTimeStyle
-    '        FormatFileDate = dtmInput.ToString("yyyy-MM-dd")
-    '        Select Case strFormatStyle
-    '            Case 120
-    '                FormatFileDate = dtmInput.ToString("yyyy-MM-dd")
-    '            Case 100
-    '                FormatFileDate = dtmInput.ToString("MMM dd yyyy")
-    '            Case 101
-    '                FormatFileDate = dtmInput.ToString("MM/dd/yyyy")
-    '            Case 105
-    '                FormatFileDate = dtmInput.ToString("dd-MM-yyyy")
-    '            Case 109
-    '                FormatFileDate = dtmInput.ToString("MMM dd yyyy")
-    '            Case 113
-    '                FormatFileDate = dtmInput.ToString("dd MMM yyyy")
-    '            Case Else
-    '                FormatFileDate = dtmInput.ToString("yyyy-MM-dd")
-    '        End Select
-    '    End If
-    '    Return FormatFileDate
-    'End Function
-
     Friend Sub CursorControl(Optional strStyle As String = "Default")
         Select Case strStyle
             Case "Default"
@@ -1374,63 +821,6 @@ Module Common
                 Cursor.Current = Cursors.Default
         End Select
     End Sub
-
-    Private Function AlterDate(dtmInput As DateTime, strInput As String, strDefault As String) As DateTime
-        Dim intComma As Integer = 0
-        Dim strStep As String = ""
-        Dim intStep As Integer = 0
-
-        strInput = strInput.Trim(",")
-
-        If strInput.Contains(",") Then
-            Try
-                intComma = strInput.IndexOf(",")
-            Catch ex As Exception
-                SeqData.WriteLog("An error occured processing the date enhancer" & strInput & ": " & ex.Message, 1)
-            End Try
-        End If
-
-        If intComma > 0 Then
-            Try
-                strStep = strInput.Substring(0, intComma)
-                intStep = strInput.Substring(intComma + 1, strInput.Length - (intComma + 1))
-            Catch ex As Exception
-                SeqData.WriteLog("Unable to get the identifiers for the date enhancer" & strInput & ": " & ex.Message, 1)
-            End Try
-        End If
-
-        If IsNumeric(strInput) Then
-            intStep = strInput
-            strStep = strDefault
-        End If
-
-        Try
-            If intStep <> 0 Then
-                Select Case strStep.ToUpper
-                    Case "MILLISECOND"
-                        dtmInput = dtmInput.AddMilliseconds(intStep)
-                    Case "SECOND"
-                        dtmInput = dtmInput.AddSeconds(intStep)
-                    Case "MINUTE"
-                        dtmInput = dtmInput.AddMinutes(intStep)
-                    Case "HOUR"
-                        dtmInput = dtmInput.AddHours(intStep)
-                    Case "DAY"
-                        dtmInput = dtmInput.AddDays(intStep)
-                    Case "WEEK"
-                        dtmInput = dtmInput.AddDays(intStep * 7)
-                    Case "MONTH"
-                        dtmInput = dtmInput.AddMonths(intStep)
-                    Case "YEAR"
-                        dtmInput = dtmInput.AddYears(intStep)
-                End Select
-            End If
-        Catch ex As Exception
-            SeqData.WriteLog("An error occured applying the date enhancer" & strInput & ": " & ex.Message, 1)
-        End Try
-
-        Return dtmInput
-    End Function
 
 #End Region
 
@@ -1463,21 +853,6 @@ Module Common
         If RebuildColumns = True Then DataGridViewColumnSize(dgvTarget)
         blnSucces = True
         Return blnSucces
-    End Function
-
-    Friend Function DatasetCheck(dtsInput As DataSet, Optional intTable As Integer = 0) As Boolean
-        Dim blnOK As Boolean = True
-
-        Try
-            If dtsInput Is Nothing Then Return False
-            If dtsInput.Tables.Count = 0 Then Return False
-            If dtsInput.Tables.Count < intTable + 1 Then Return False
-            If dtsInput.Tables(intTable).Rows.Count = 0 Then Return False
-        Catch ex As Exception
-            Return False
-        End Try
-
-        Return blnOK
     End Function
 
     Friend Sub DataGridViewColumnSize(dgvTarget As DataGridView)

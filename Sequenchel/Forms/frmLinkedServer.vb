@@ -147,10 +147,12 @@
         Dim intInstance As Integer = 0, intInstanceLength As Integer = 0
         Dim intPort As Integer = 0, intPortLength As Integer = 0
 
-        Dim objData As DataSet = QueryDb(SeqData.dhdConnection, strQuery, True)
-        If objData Is Nothing Then Exit Sub
-        If objData.Tables.Count = 0 Then Exit Sub
-        If objData.Tables(0).Rows.Count = 0 Then Exit Sub
+        Dim objData As DataSet = SeqData.QueryDb(SeqData.dhdConnection, strQuery, True)
+        If SeqData.dhdText.DatasetCheck(objData) = False Then
+            SeqData.WriteLog("No Linked Servers were found. Please check your settings. Connection:" & strDataSource, 1)
+            MessageBox.Show("No Linked Servers were found. Please check your settings." & Environment.NewLine & strDataSource)
+            Exit Sub
+        End If
         lvwLinkedServers.Items.Clear()
         For intRowCount1 As Integer = 0 To objData.Tables(0).Rows.Count - 1
             Try
@@ -236,7 +238,7 @@
             strQuery &= " AND server_id = " & lvwLinkedServers.SelectedItems(0).Tag
             strQuery &= " ORDER BY [name] ASC"
 
-            Dim objData As DataSet = QueryDb(SeqData.dhdConnection, strQuery, True)
+            Dim objData As DataSet = SeqData.QueryDb(SeqData.dhdConnection, strQuery, True)
             If objData Is Nothing Then Exit Sub
             If objData.Tables.Count = 0 Then Exit Sub
             If objData.Tables(0).Rows.Count = 0 Then Exit Sub
@@ -321,7 +323,7 @@
         strQuery &= " EXEC master.dbo.sp_serveroption @server=@LinkedServerName, @optname=N'use remote collation', @optvalue=N'" & chkRemoteCollation.Checked & "';" & Environment.NewLine
         strQuery &= " EXEC master.dbo.sp_serveroption @server=@LinkedServerName, @optname=N'remote proc transaction promotion', @optvalue=N'" & chkRPTPromotion.Checked & "';" & Environment.NewLine
 
-        QueryDb(SeqData.dhdConnection, strQuery, False)
+        SeqData.QueryDb(SeqData.dhdConnection, strQuery, False)
         LinkedServersLoad()
     End Sub
 
@@ -335,7 +337,7 @@
         If MessageBox.Show("This will permanently remove the Item: " & strSelection & Environment.NewLine & Core.Message.strContinue, Core.Message.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Exit Sub
 
         strQuery = "master.dbo.sp_dropserver @server=N'" & strSelection & "', @droplogins='droplogins'"
-        QueryDb(SeqData.dhdConnection, strQuery, False)
+        SeqData.QueryDb(SeqData.dhdConnection, strQuery, False)
         txtLinkedServerName.Text = ""
         LinkedServersLoad()
     End Sub

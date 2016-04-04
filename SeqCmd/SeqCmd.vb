@@ -26,14 +26,14 @@ Module SeqCmd
         ParseCommands()
         SeqData.SetDefaults()
         Dim strReturn As String = SeqData.LoadSDBASettingsXml(xmlSDBASettings)
-        If strReturn.Length > 0 Then
-            Console.WriteLine(strReturn)
+        If strReturn = False Then
+            Console.WriteLine(SeqData.ErrorMessage)
             Console.ReadLine()
             Exit Sub
         End If
         Dim strReturnGen As String = SeqData.LoadGeneralSettingsXml(xmlGeneralSettings)
-        If strReturnGen.Length > 0 Then
-            Console.WriteLine(strReturnGen)
+        If strReturnGen = False Then
+            Console.WriteLine(SeqData.ErrorMessage)
             Console.ReadLine()
             Exit Sub
         End If
@@ -44,7 +44,7 @@ Module SeqCmd
         SeqData.LoadTableSet(xmlTableSets, SeqData.curStatus.TableSet)
         LoadTables()
 
-        If RunImport = True And SeqData.dhdText.ImportFile.Length > 0 And SeqData.curStatus.Table.Length > 0 Then
+        If RunImport = True AndAlso SeqData.dhdText.ImportFile.Length > 0 AndAlso SeqData.curStatus.Table.Length > 0 Then
             'Import file
             If SeqData.dhdText.ImportFile.Contains("\") = False Then
                 Console.WriteLine("You need to provide a valid filepath and filename")
@@ -54,6 +54,7 @@ Module SeqCmd
             Dim dtsInput As DataSet = Nothing
             If SeqData.dhdText.ImportFile.Contains("*") Then
                 If ImportTable <> "" And ImportTable = SeqData.curStatus.Table Then
+                    Console.WriteLine("Importing multiple files")
                     ImportFiles(SeqData.dhdText.ImportFile)
                 End If
             Else
@@ -71,17 +72,20 @@ Module SeqCmd
         End If
         If Not SeqData.dhdText.ExportFile Is Nothing AndAlso RunReport = True AndAlso SeqData.dhdText.ExportFile.Length > 0 Then
             'Export Report
+            Dim strExportFile As String = SeqData.GetExportFileName(SeqData.dhdText.ExportFile)
+            Console.WriteLine("Exporting Report: " & SeqData.curStatus.Report & " to " & strExportFile)
             LoadReports()
             Dim strQuery As String = SeqData.ReportQueryBuild(xmlReports, xmlTables, SeqData.curStatus.Report, SeqData.curVar.DateTimeStyle)
             Dim dtsData As DataSet = SeqData.QueryDb(SeqData.dhdConnection, strQuery, True, 5)
-            If dtsData Is Nothing Then Environment.Exit(0)
-            SeqData.ExportFile(dtsData, SeqData.dhdText.ExportFile, SeqData.curVar.ConvertToText, SeqData.curVar.ConvertToNull, SeqData.curVar.ShowFile, SeqData.curVar.HasHeaders, SeqData.curVar.Delimiter, SeqData.curVar.QuoteValues, SeqData.curVar.CreateDir)
+            'If dtsData Is Nothing Then Environment.Exit(0)
+            SeqData.ExportFile(dtsData, strExportFile, SeqData.curVar.ConvertToText, SeqData.curVar.ConvertToNull, SeqData.curVar.ShowFile, SeqData.curVar.HasHeaders, SeqData.curVar.Delimiter, SeqData.curVar.QuoteValues, SeqData.curVar.CreateDir)
             If SeqData.dhdText.SmtpRecipient.Length > 0 AndAlso SeqData.dhdText.SmtpRecipient.Contains("@") Then
                 'Email Report
+                Console.WriteLine("Emailing Report: " & SeqData.curStatus.Report & " to " & SeqData.dhdText.SmtpRecipient)
                 Dim strRecepientName As String = SeqData.dhdText.SmtpRecipient.Substring(0, SeqData.dhdText.SmtpRecipient.IndexOf("@"))
                 Dim strSenderName As String = SeqData.dhdText.SmtpReply.Substring(0, SeqData.dhdText.SmtpReply.IndexOf("@"))
                 Dim strBody As String = "Sequenchel Report: " & SeqData.curStatus.Report
-                SeqData.dhdText.SendSMTP(SeqData.dhdText.SmtpReply, strSenderName, SeqData.dhdText.SmtpRecipient, strRecepientName, SeqData.dhdText.SmtpReply, strSenderName, SeqData.curStatus.Report, strBody, SeqData.dhdText.ExportFile)
+                SeqData.dhdText.SendSMTP(SeqData.dhdText.SmtpReply, strSenderName, SeqData.dhdText.SmtpRecipient, strRecepientName, SeqData.dhdText.SmtpReply, strSenderName, SeqData.curStatus.Report, strBody, strExportFile)
             End If
         End If
     End Sub
@@ -150,7 +154,7 @@ Module SeqCmd
                 Case "/delimiter"
                     'Export the report to the chosen file
                     SeqData.curVar.Delimiter = strInput
-                Case "/EmailRecepient"
+                Case "/emailrecipient"
                     'Export the report to the chosen file
                     SeqData.dhdText.SmtpRecipient = strInput
             End Select
@@ -159,11 +163,13 @@ Module SeqCmd
     End Sub
 
     Friend Sub LoadConnections()
+        Console.WriteLine("Loading Connection: " & SeqData.curStatus.Connection)
         lstConnections = SeqData.LoadConnectionsXml(xmlConnections)
         If lstConnections Is Nothing Then Environment.Exit(0)
         If lstConnections.Contains(SeqData.curStatus.Connection) = False Or SeqData.curStatus.Connection = "" Then
             If SeqData.curVar.ConnectionDefault.Length > 0 Then
                 SeqData.curStatus.Connection = SeqData.curVar.ConnectionDefault
+                Console.WriteLine("Connection Loaded: " & SeqData.curStatus.Connection)
             Else
                 Console.WriteLine("The specified Connection was not found. please check your settings")
                 Console.ReadLine()
@@ -173,11 +179,13 @@ Module SeqCmd
     End Sub
 
     Friend Sub LoadTableSets()
+        Console.WriteLine("Loading TableSet: " & SeqData.curStatus.TableSet)
         lstTableSets = SeqData.LoadTableSetsXml(xmlTableSets)
         If lstTableSets Is Nothing Then Exit Sub
         If lstTableSets.Contains(SeqData.curStatus.TableSet) = False Or SeqData.curStatus.TableSet = "" Then
             If SeqData.curVar.TableSetDefault.Length > 0 Then
                 SeqData.curStatus.TableSet = SeqData.curVar.TableSetDefault
+                Console.WriteLine("TableSet Loaded: " & SeqData.curStatus.TableSet)
             Else
                 Console.WriteLine("The specified TableSet was not found. please check your settings")
                 Console.ReadLine()
@@ -187,6 +195,7 @@ Module SeqCmd
     End Sub
 
     Friend Sub LoadTables()
+        Console.WriteLine("Loading Table: " & SeqData.curStatus.Table)
         lstTables = SeqData.LoadTablesXml(xmlTables)
         If lstTables Is Nothing Then Exit Sub
         If SeqData.curVar.TableDefault = SeqData.curStatus.Table And ImportTable <> SeqData.curStatus.Table And ImportTable <> "" Then
@@ -211,14 +220,13 @@ Module SeqCmd
         Dim strFileFilter As String = strImportFiles.Substring(strImportFiles.LastIndexOf("\") + 1, strImportFiles.Length - (strImportFiles.LastIndexOf("\") + 1))
         Dim FilesArray As ArrayList = SeqData.dhdText.GetFiles(strFolder, strFileFilter)
         For Each strFile As String In FilesArray
-            Console.WriteLine(strFile)
             Dim dtsInput As DataSet = ImportFile(SeqData.CheckFilePath(strFile))
             Dim intRecords As Integer = UploadFile(dtsInput)
-            Console.WriteLine(intRecords & " Records Uploaded")
         Next
     End Sub
 
     Friend Function ImportFile(strImportFile As String) As DataSet
+        Console.WriteLine("Importing file: " & strImportFile)
         Dim dtsImport As DataSet = SeqData.ImportFile(strImportFile, SeqData.curVar.HasHeaders, SeqData.curVar.Delimiter)
         Return dtsImport
     End Function
@@ -241,6 +249,7 @@ Module SeqCmd
                 Console.ReadLine()
                 Environment.Exit(0)
             End If
+            Console.WriteLine(intRecords & " Records Uploaded")
             Return intRecords
         Catch ex As Exception
             Console.WriteLine(ex.Message)
@@ -248,6 +257,5 @@ Module SeqCmd
             Environment.Exit(0)
             Return 0
         End Try
-
     End Function
 End Module

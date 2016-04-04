@@ -2,13 +2,16 @@
 
 Public Class Data
 
+    Private Core As New Core
+
     Public dhdText As New DataHandler.txt
     Public dhdMainDB As New DataHandler.db
     Public dhdConnection As New DataHandler.db
     Public curVar As New Variables
     Public curStatus As New CurrentStatus
     Public Excel As New Excel
-    Private Core As New Core
+
+    Public ErrorMessage As String
 
 #Region "General"
     Public Sub SetDefaults()
@@ -56,21 +59,24 @@ Public Class Data
 
 #Region "DataBase"
     Public Function QueryDb(ByVal dhdConnect As DataHandler.db, ByVal strQueryData As String, ByVal ReturnValue As Boolean, Optional ByVal LogLevel As Integer = 5) As DataSet
-        'WriteLog(strQueryData, LogLevel)
-        'strErrorMessage = ""
+        WriteLog(strQueryData, LogLevel)
+        ErrorMessage = ""
         dhdConnect.CheckDB()
         If dhdConnect.DataBaseOnline = False Then
-            'MessageBox.Show("The database was not found." & Environment.NewLine & "Please check your settings")
-            'strErrorMessage = "The database was not found. Please check your settings"
+            ErrorMessage = "The database was not found. Please check your settings"
             Return Nothing
         End If
         Dim dtsData As DataSet
         Try
             dtsData = dhdConnect.QueryDatabase(strQueryData, ReturnValue)
+            If dhdConnect.DataBaseOnline = False Then
+                ErrorMessage = dhdConnect.ErrorMessage
+                Return Nothing
+            End If
             Return dtsData
         Catch ex As Exception
-            'WriteLog(ex.Message, 1)
-            'strErrorMessage = ex.Message
+            WriteLog(ex.Message, 1)
+            ErrorMessage = ex.Message
             Return Nothing
         End Try
     End Function
@@ -506,32 +512,19 @@ Public Class Data
 #End Region
 
 #Region "XML"
-    'Public Function LoadXml(strPathFile As String) As XmlDocument
-    '    Dim xmlDoc As XmlDocument = dhdText.CreateRootDocument(Nothing, Nothing, Nothing)
-    '    If dhdText.CheckFile(dhdText.PathConvert(CheckFilePath(strPathFile))) = True Then
-    '        Try
-    '            xmlDoc.Load(dhdText.PathConvert(CheckFilePath(strPathFile)))
-    '        Catch ex As Exception
-    '            Return Nothing
-    '        End Try
-    '    End If
-    '    Return xmlDoc
-    'End Function
+    Public Function CheckFilePath(strFilePathName As String, Optional blnPersonal As Boolean = False) As String
+        If strFilePathName.Contains("\") Then
+            Return strFilePathName
+        ElseIf blnPersonal = True Then
+            Return dhdText.PathConvert("%Documents%\" & strFilePathName)
+        ElseIf curVar.DefaultConfigFilePath.Length > 0 Then
+            Return curVar.DefaultConfigFilePath & "\" & strFilePathName
+        Else
+            Return System.AppDomain.CurrentDomain.BaseDirectory & strFilePathName
+        End If
+    End Function
 
-    'Public Function XmlToDataset(xmlDoc As XmlDocument) As DataSet
-    '    Dim rdrXml As New XmlNodeReader(xmlDoc)
-    '    Dim dtsOutput As New DataSet
-    '    dtsOutput.ReadXml(rdrXml)
-    '    Return dtsOutput
-    'End Function
-
-    'Public Function LoadXmlToDataset(strPathFile As String) As DataSet
-    '    Dim xmlDoc As XmlDocument = LoadXml(strPathFile)
-    '    Dim dtsOutput As DataSet = XmlToDataset(xmlDoc)
-    '    Return dtsOutput
-    'End Function
-
-    Public Function LoadSDBASettingsXml(xmlLoadDoc As XmlDocument) As String
+    Public Function LoadSDBASettingsXml(xmlLoadDoc As XmlDocument) As Boolean
         If dhdText.CheckFile(System.AppDomain.CurrentDomain.BaseDirectory & dhdText.InputFile) = True Then
             'LoadXmlFile
             Try
@@ -555,16 +548,55 @@ Public Class Data
                     End If
                 End If
             Catch ex As Exception
-                Return "There was an error reading the XML file. Please check the file" & Environment.NewLine & System.AppDomain.CurrentDomain.BaseDirectory & dhdText.InputFile & Environment.NewLine & Environment.NewLine & ex.Message
-                'WriteLog("There was an error reading the XML file. Please check the file" & Environment.NewLine & Application.StartupPath & "\" & dhdText.InputFile & Environment.NewLine & Environment.NewLine & ex.Message, 1)
+                ErrorMessage = "There was an error reading the XML file. Please check the file" & Environment.NewLine & System.AppDomain.CurrentDomain.BaseDirectory & dhdText.InputFile & Environment.NewLine & Environment.NewLine & ex.Message
+                WriteLog("There was an error reading the XML file. Please check the file" & Environment.NewLine & System.AppDomain.CurrentDomain.BaseDirectory & dhdText.InputFile & Environment.NewLine & Environment.NewLine & ex.Message, 1)
+                Return False
             End Try
         Else
-            Return "The XML file was not found. Please check the file" & Environment.NewLine & System.AppDomain.CurrentDomain.BaseDirectory & dhdText.InputFile
+            ErrorMessage = "The XML file was not found. Please check the file" & Environment.NewLine & System.AppDomain.CurrentDomain.BaseDirectory & dhdText.InputFile
+            WriteLog("The XML file was not found. Please check the file: " & System.AppDomain.CurrentDomain.BaseDirectory & dhdText.InputFile, 1)
+            Return False
         End If
-        Return ""
+        Return True
+
     End Function
 
-    Public Function LoadGeneralSettingsXml(xmlLoadDoc As XmlDocument) As String
+    Public Function SaveSDBASettingsXml(xmlSDBASettings As XmlDocument) As Boolean
+        '** Create or update the xml inputdata.
+        Dim strXmlText As String
+        strXmlText = "<?xml version=""1.0"" standalone=""yes""?>" & Environment.NewLine
+        strXmlText &= "<Sequenchel>" & Environment.NewLine
+        strXmlText &= "	<Settings>" & Environment.NewLine
+        strXmlText &= "		<DefaultConfigFilePath>" & curVar.DefaultConfigFilePath & "</DefaultConfigFilePath>" & Environment.NewLine
+        strXmlText &= "		<SettingsFile>" & curVar.GeneralSettings & "</SettingsFile>" & Environment.NewLine
+        strXmlText &= "		<AllowSettingsChange>" & curVar.AllowSettingsChange & "</AllowSettingsChange>" & Environment.NewLine
+        strXmlText &= "		<AllowConfigurationChange>" & curVar.AllowConfiguration & "</AllowConfigurationChange>" & Environment.NewLine
+        strXmlText &= "		<AllowLinkedServersChange>" & curVar.AllowLinkedServers & "</AllowLinkedServersChange>" & Environment.NewLine
+        strXmlText &= "		<AllowReportQueryEdit>" & curVar.AllowQueryEdit & "</AllowReportQueryEdit>" & Environment.NewLine
+        strXmlText &= "		<AllowDataImport>" & curVar.AllowDataImport & "</AllowDataImport>" & Environment.NewLine
+        strXmlText &= "		<AllowSmartUpdate>" & curVar.AllowSmartUpdate & "</AllowSmartUpdate>" & Environment.NewLine
+        strXmlText &= "		<AllowUpdate>" & curVar.AllowUpdate & "</AllowUpdate>" & Environment.NewLine
+        strXmlText &= "		<AllowInsert>" & curVar.AllowInsert & "</AllowInsert>" & Environment.NewLine
+        strXmlText &= "		<AllowDelete>" & curVar.AllowDelete & "</AllowDelete>" & Environment.NewLine
+        strXmlText &= "		<OverridePassword>" & curVar.OverridePassword & "</OverridePassword>" & Environment.NewLine
+        strXmlText &= "	</Settings>" & Environment.NewLine
+        strXmlText &= "</Sequenchel>" & Environment.NewLine
+        Try
+            xmlSDBASettings.LoadXml(strXmlText)
+            If dhdText.CreateFile(strXmlText, System.AppDomain.CurrentDomain.BaseDirectory & dhdText.InputFile) = False Then
+                WriteLog("There was an error creating or saving the Settings file" & dhdText.Errormessage, 1)
+                ErrorMessage = "There was an error creating or saving the Settings file: " & dhdText.Errormessage
+                Return False
+            End If
+        Catch ex As Exception
+            WriteLog(Core.Message.strXmlError & " " & ex.Message, 1)
+            ErrorMessage = Core.Message.strXmlError & " " & ex.Message
+            Return False
+        End Try
+        Return True
+    End Function
+
+    Public Function LoadGeneralSettingsXml(xmlLoadDoc As XmlDocument) As Boolean
         If dhdText.CheckFile(dhdText.PathConvert(CheckFilePath(curVar.GeneralSettings))) = True Then
             'LoadXmlFile
             Try
@@ -598,16 +630,16 @@ Public Class Data
                 If dhdText.CheckElement(xmlLoadDoc, "SmtpSsl") Then dhdText.SmtpSsl = xmlLoadDoc.Item("Sequenchel").Item("Email").Item("SmtpSsl").InnerText
 
             Catch ex As Exception
-                Return "There was an error reading the XML file. Please check the file" & Environment.NewLine & curVar.GeneralSettings & Environment.NewLine & ex.Message
-                'WriteLog("There was an error reading the XML file. Please check the file" & Environment.NewLine & CurVar.GeneralSettings & Environment.NewLine & ex.Message, 1)
+                ErrorMessage = "There was an error reading the XML file. Please check the file: " & curVar.GeneralSettings & " " & ex.Message
+                WriteLog("There was an error reading the XML file. Please check the file" & Environment.NewLine & curVar.GeneralSettings & Environment.NewLine & ex.Message, 1)
+                Return False
             End Try
         Else
             If SaveGeneralSettingsXml(xmlLoadDoc) = False Then
-                'WriteLog(Core.Message.strXmlError, 1)
+                Return False
             End If
-            Return "The XML file was not found. Please check the file" & Environment.NewLine & curVar.GeneralSettings
         End If
-        Return ""
+        Return True
 
     End Function
 
@@ -662,18 +694,6 @@ Public Class Data
         End Try
     End Function
 
-    Public Function CheckFilePath(strFilePathName As String, Optional blnPersonal As Boolean = False) As String
-        If strFilePathName.Contains("\") Then
-            Return strFilePathName
-        ElseIf blnPersonal = True Then
-            Return dhdText.PathConvert("%Documents%\" & strFilePathName)
-        ElseIf curVar.DefaultConfigFilePath.Length > 0 Then
-            Return curVar.DefaultConfigFilePath & "\" & strFilePathName
-        Else
-            Return System.AppDomain.CurrentDomain.BaseDirectory & strFilePathName
-        End If
-    End Function
-
     Public Function LoadConnectionsXml(xmlConnections As XmlDocument) As List(Of String)
         If dhdText.CheckFile(dhdText.PathConvert(CheckFilePath(curVar.ConnectionsFile))) = True Then
             'LoadXmlFile
@@ -692,7 +712,7 @@ Public Class Data
                         curVar.ConnectionDefault = xNode.Item("ConnectionName").InnerText
                     End If
                 Next
-                If blnConnectionExists = False Then curStatus.Connection = curVar.ConnectionDefault
+                If blnConnectionExists = False And curStatus.Connection = "" Then curStatus.Connection = curVar.ConnectionDefault
                 Return ReturnValue
             Catch ex As Exception
                 WriteLog("There was an error reading the XML file. Please check the file" & Environment.NewLine & dhdText.PathConvert(curVar.ConnectionsFile) & Environment.NewLine & ex.Message, 1)
@@ -736,12 +756,12 @@ Public Class Data
                         curVar.TableSetDefault = TableSetNode.Item("TableSetName").InnerText
                     End If
                 Next
-                If blnTableSetExists = False Then curStatus.TableSet = curVar.TableSetDefault
+                If blnTableSetExists = False And curStatus.TableSet = "" Then curStatus.TableSet = curVar.TableSetDefault
                 Return ReturnValue
             Catch ex As Exception
                 Return Nothing
-                'MessageBox.Show("There was an error reading the XML file. Please check the file" & Environment.NewLine & dhdText.PathConvert(curVar.TableSetsFile) & Environment.NewLine & ex.Message)
-                'WriteLog("There was an error reading the XML file. Please check the file" & Environment.NewLine & dhdText.PathConvert(curVar.TableSetsFile) & Environment.NewLine & ex.Message, 1)
+                ErrorMessage = "There was an error reading the XML file. Please check the file" & Environment.NewLine & dhdText.PathConvert(curVar.TableSetsFile) & Environment.NewLine & ex.Message
+                WriteLog("There was an error reading the XML file. Please check the file" & Environment.NewLine & dhdText.PathConvert(curVar.TableSetsFile) & Environment.NewLine & ex.Message, 1)
             End Try
         End If
         Return Nothing
@@ -773,12 +793,12 @@ Public Class Data
                         curVar.TableDefault = TableNode.Item("Alias").InnerText
                     End If
                 Next
-                If blnTableExists = False Then curStatus.Table = curVar.TableDefault
+                If blnTableExists = False And curStatus.Table = "" Then curStatus.Table = curVar.TableDefault
                 Return ReturnValue
             Catch ex As Exception
                 Return Nothing
-                'MessageBox.Show("There was an error reading the XML file. Please check the file" & Environment.NewLine & dhdText.PathConvert(curVar.TablesFile) & Environment.NewLine & ex.Message)
-                'WriteLog("There was an error reading the XML file. Please check the file" & Environment.NewLine & dhdText.PathConvert(curVar.TablesFile) & Environment.NewLine & ex.Message, 1)
+                ErrorMessage = "There was an error reading the XML file. Please check the file" & Environment.NewLine & dhdText.PathConvert(curVar.TablesFile) & Environment.NewLine & ex.Message
+                WriteLog("There was an error reading the XML file. Please check the file" & Environment.NewLine & dhdText.PathConvert(curVar.TablesFile) & Environment.NewLine & ex.Message, 1)
             End Try
         End If
         Return Nothing
@@ -797,9 +817,34 @@ Public Class Data
                 Return ReturnValue
             Catch ex As Exception
                 Return Nothing
-                'MessageBox.Show("There was an error reading the XML file. Please check the file" & Environment.NewLine & dhdText.PathConvert(curVar.ReportSetFile) & Environment.NewLine & ex.Message)
-                'WriteLog("There was an error reading the XML file. Please check the file" & Environment.NewLine & dhdText.PathConvert(curVar.ReportSetFile) & Environment.NewLine & ex.Message, 1)
+                ErrorMessage = "There was an error reading the XML file. Please check the file" & Environment.NewLine & dhdText.PathConvert(curVar.ReportSetFile) & Environment.NewLine & ex.Message
+                WriteLog("There was an error reading the XML file. Please check the file" & Environment.NewLine & dhdText.PathConvert(curVar.ReportSetFile) & Environment.NewLine & ex.Message, 1)
             End Try
+        End If
+        Return Nothing
+    End Function
+
+    Public Function LoadSearchXml(xmlSearch As XmlDocument, strTable As String) As List(Of String)
+        If dhdText.CheckFile(CheckFilePath(curVar.SearchFile)) = True Then
+            'LoadXmlFile
+            'Dim lstXml As XmlNodeList
+            Try
+                xmlSearch.Load(dhdText.PathConvert(CheckFilePath(curVar.SearchFile)))
+                'Dim blnConnectionExists As Boolean = False
+                'CurVar.ConnectionDefault = ""
+
+                Dim xNode As XmlNode
+                Dim ReturnValue As New List(Of String)
+                For Each xNode In dhdText.FindXmlNodes(xmlSearch, "Searches/Search", "TableName", strTable)
+                    ReturnValue.Add(xNode.Item("SearchName").InnerText)
+                Next
+                Return ReturnValue
+            Catch ex As Exception
+                ErrorMessage = "There was an error reading the XML file. Please check the file" & Environment.NewLine & dhdText.PathConvert(curVar.SearchFile) & Environment.NewLine & ex.Message
+                WriteLog("There was an error reading the XML file. Please check the file" & Environment.NewLine & dhdText.PathConvert(curVar.SearchFile) & Environment.NewLine & ex.Message, 1)
+            End Try
+        Else
+            xmlSearch.RemoveAll()
         End If
         Return Nothing
     End Function
@@ -1016,7 +1061,7 @@ Public Class Data
         Return strQuery
     End Function
 
-    Public Function FromClauseGet(XNode As XmlNode) As String
+    Private Function FromClauseGet(XNode As XmlNode) As String
         Dim strFromClause As String = "FROM "
         Dim strFromSource As String = Nothing, strFromType As String = Nothing, strFromRelation As String = Nothing, strTargetTable As String = Nothing
 
@@ -1097,14 +1142,19 @@ Public Class Data
         Return dtsImport
     End Function
 
-    Public Function ExportFile(dtsInput As DataSet, strFileName As String, Optional blnConvertToText As Boolean = False, Optional blnConvertToNull As Boolean = False, Optional blnShowFile As Boolean = False, Optional blnHasHeaders As Boolean = True, Optional Delimiter As String = ",", Optional QuoteValues As Boolean = False, Optional CreateDir As Boolean = False) As Boolean
+    Public Function GetExportFileName(strFileName As String) As String
+        Dim strExtension As String = strFileName.Substring(strFileName.LastIndexOf(".") + 1, strFileName.Length - (strFileName.LastIndexOf(".") + 1))
         Dim strTargetFile As String = strFileName.Substring(0, strFileName.LastIndexOf("."))
         If curVar.IncludeDate = True Then
             strTargetFile = strTargetFile & "_" & FormatFileDate(Now)
         End If
-
-        Dim strExtension As String = strFileName.Substring(strFileName.LastIndexOf(".") + 1, strFileName.Length - (strFileName.LastIndexOf(".") + 1))
         Dim strExportFile As String = strTargetFile & "." & strExtension
+        Return strExportFile
+    End Function
+
+    Public Function ExportFile(dtsInput As DataSet, strFileName As String, Optional blnConvertToText As Boolean = False, Optional blnConvertToNull As Boolean = False, Optional blnShowFile As Boolean = False, Optional blnHasHeaders As Boolean = True, Optional Delimiter As String = ",", Optional QuoteValues As Boolean = False, Optional CreateDir As Boolean = False) As Boolean
+        Dim strExtension As String = strFileName.Substring(strFileName.LastIndexOf(".") + 1, strFileName.Length - (strFileName.LastIndexOf(".") + 1))
+
         Try
             If blnConvertToText = True Then dtsInput = dhdConnection.ConvertToText(dtsInput)
             If blnConvertToNull = True Then dtsInput = dhdConnection.EmptyToNull(dtsInput)
@@ -1112,12 +1162,12 @@ Public Class Data
             Select Case strExtension.ToLower
                 Case "xml"
                     dtsInput = dhdConnection.ConvertToText(dtsInput)
-                    dhdText.ExportDataSetToXML(dtsInput, strExportFile, CreateDir)
+                    dhdText.ExportDataSetToXML(dtsInput, strFileName, CreateDir)
                 Case "xlsx", "xls"
-                    Excel.CreateExcelDocument(dtsInput, strExportFile)
+                    Excel.CreateExcelDocument(dtsInput, strFileName)
                 Case "txt", "csv"
                     dtsInput = dhdConnection.ConvertToText(dtsInput)
-                    dhdText.DataSetToCsv(dtsInput.Tables(0), strExportFile, blnHasHeaders, Delimiter, QuoteValues)
+                    dhdText.DataSetToCsv(dtsInput.Tables(0), strFileName, blnHasHeaders, Delimiter, QuoteValues)
                 Case Else
                     'unknown filetype, do nothing
                     blnShowFile = False
@@ -1130,7 +1180,7 @@ Public Class Data
 
         If blnShowFile = True Then
             Dim p As New Process
-            p.StartInfo = New ProcessStartInfo(strExportFile)
+            p.StartInfo = New ProcessStartInfo(strFileName)
             p.Start()
         End If
 

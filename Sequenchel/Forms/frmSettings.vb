@@ -342,7 +342,7 @@
         End If
 
         If blnSettingsChanged = True Then
-            SaveSDBASettingsXml()
+            SeqData.SaveSDBASettingsXml(xmlSDBASettings)
             blnSettingsChanged = False
         End If
         If blnGeneralSettingsChanged = True Then
@@ -706,7 +706,7 @@
             strSQL = strSQL.Replace("Sequenchel", strDBName)
             If SeqData.CurVar.Encryption = False Then strSQL = strSQL.Replace("WITH ENCRYPTION", "")
             If SeqData.CurVar.DevMode Then MessageBox.Show(strSQL)
-            QueryDb(SeqData.dhdMainDB, strSQL, False, 10)
+            SeqData.QueryDb(SeqData.dhdMainDB, strSQL, False, 10)
             SeqData.dhdMainDB.DatabaseName = strDBName
             txtJobNamePrefix.Text = SeqData.dhdMainDB.DatabaseName
             prbCreateDatabase.PerformStep()
@@ -719,7 +719,7 @@
                     If SeqData.CurVar.Encryption = False Then strSQL = strSQL.Replace("WITH ENCRYPTION", "")
                     If blnIncludeTables = False Then strSQL = Replace(strSQL, "CREATE", "ALTER", 1, 1)
                     If SeqData.CurVar.DevMode Then MessageBox.Show(strSQL)
-                    QueryDb(SeqData.dhdMainDB, strSQL, False, 5)
+                    SeqData.QueryDb(SeqData.dhdMainDB, strSQL, False, 5)
                 Else
                     If SeqData.CurVar.DebugMode Then MessageBox.Show("The script: " & arrScripts(i) & " returned: " & strSQL)
                 End If
@@ -872,7 +872,7 @@
             strSQL = Replace(strSQL, "Sequenchel", SeqData.dhdMainDB.DatabaseName)
             If SeqData.CurVar.Encryption = False Then strSQL = strSQL.Replace("WITH ENCRYPTION", "")
             If strMode = "ALTER" Then strSQL = Replace(strSQL, "CREATE", "ALTER", 1, 1)
-            QueryDb(SeqData.dhdMainDB, strSQL, False)
+            SeqData.QueryDb(SeqData.dhdMainDB, strSQL, False)
 
             For i = 1 To arrScripts.GetUpperBound(1)
                 strSQL = MydbRef.GetScript(arrScripts(0, i))
@@ -880,7 +880,7 @@
                     strSQL = Replace(strSQL, "Sequenchel", SeqData.dhdMainDB.DatabaseName)
                     strMode = arrScripts(1, i)
                     If strMode = "ALTER" Then strSQL = Replace(strSQL, "CREATE", "ALTER", 1, 1)
-                    QueryDb(SeqData.dhdMainDB, strSQL, False)
+                    SeqData.QueryDb(SeqData.dhdMainDB, strSQL, False)
                 Else
                     MessageBox.Show("Error retrieving SQL Script " & arrScripts(0, 0) & ", please contact your vendor")
                     Exit Sub
@@ -921,7 +921,7 @@
             strSQL = strSQL.Replace("Sequenchel", SeqData.dhdMainDB.DatabaseName)
             If SeqData.CurVar.Encryption = False Then strSQL = strSQL.Replace("WITH ENCRYPTION", "")
             If SeqData.CurVar.DevMode Then MessageBox.Show(strSQL)
-            QueryDb(SeqData.dhdMainDB, strSQL, False, 10)
+            SeqData.QueryDb(SeqData.dhdMainDB, strSQL, False, 10)
             prbCreateDatabase.PerformStep()
 
             For i = 1 To arrScripts.GetUpperBound(0)
@@ -931,7 +931,7 @@
                     strSQL = strSQL.Replace("Sequenchel", SeqData.dhdMainDB.DatabaseName)
                     If SeqData.CurVar.Encryption = False Then strSQL = strSQL.Replace("WITH ENCRYPTION", "")
                     'If SeqData.CurVar.DevMode Then MessageBox.Show(strSQL)
-                    QueryDb(SeqData.dhdMainDB, strSQL, False, 10)
+                    SeqData.QueryDb(SeqData.dhdMainDB, strSQL, False, 10)
                 Else
                     If SeqData.CurVar.DevMode Then MessageBox.Show("The script: " & arrScripts(i) & " returned: " & strSQL)
                 End If
@@ -1303,7 +1303,7 @@
                 strSQL = strSQL.Replace("--reconfigure", "reconfigure")
             End If
             Try
-                QueryDb(SeqData.dhdMainDB, strSQL, False, 10)
+                SeqData.QueryDb(SeqData.dhdMainDB, strSQL, False, 10)
                 lblFtpStatus.Text = "Procedure PutFTPfiles was created succesfully"
             Catch ex As Exception
                 MessageBox.Show("There was an error creating the procedure" & Environment.NewLine & ex.Message)
@@ -1334,7 +1334,7 @@
                 strSQL = strSQL.Replace("--reconfigure", "reconfigure")
             End If
             Try
-                QueryDb(SeqData.dhdMainDB, strSQL, False, 10)
+                SeqData.QueryDb(SeqData.dhdMainDB, strSQL, False, 10)
                 lblFtpStatus.Text = "Procedure GetFTPfiles was created succesfully"
             Catch ex As Exception
                 MessageBox.Show("There was an error creating the procedure" & Environment.NewLine & ex.Message)

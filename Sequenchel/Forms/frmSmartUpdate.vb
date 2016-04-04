@@ -58,7 +58,7 @@
             strSQL = strSQL.Replace("Sequenchel", SeqData.dhdConnection.DatabaseName)
             If SeqData.curVar.Encryption = False Then strSQL = strSQL.Replace("WITH ENCRYPTION", "")
             If SeqData.curVar.DevMode Then MessageBox.Show(strSQL)
-            QueryDb(SeqData.dhdConnection, strSQL, False, 10)
+            SeqData.QueryDb(SeqData.dhdConnection, strSQL, False, 10)
             lblStatusText.Text = "SmartUpdate Table created succesfully"
         Catch ex As Exception
             MessageBox.Show("There was an error while creating the SmartUpdate Table" & Environment.NewLine & ex.Message, "Error Creating Table", MessageBoxButtons.OK)
@@ -75,7 +75,7 @@
             strSQL = strSQL.Replace("Sequenchel", SeqData.dhdConnection.DatabaseName)
             If SeqData.curVar.Encryption = False Then strSQL = strSQL.Replace("WITH ENCRYPTION", "")
             If SeqData.curVar.DevMode Then MessageBox.Show(strSQL)
-            QueryDb(SeqData.dhdConnection, strSQL, False, 10)
+            SeqData.QueryDb(SeqData.dhdConnection, strSQL, False, 10)
             lblStatusText.Text = "SmartUpdate Procedure created succesfully"
         Catch ex As Exception
             MessageBox.Show("There was an error while creating the SmartUpdate Procedure" & Environment.NewLine & ex.Message, "Error Creating Procedure", MessageBoxButtons.OK)
@@ -138,8 +138,8 @@
         'check for table dbo.SmartUpdate
         'Dim strSQL As String = "IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.TABLES  WHERE TABLE_NAME = 'SmartUpdate') SELECT 1 AS TableExists ELSE SELECT 0 AS TableExists"
         Dim strSQL As String = "SELECT 1 AS TableExists FROM INFORMATION_SCHEMA.TABLES  WHERE TABLE_NAME = 'SmartUpdate'"
-        Dim dtsData As DataSet = QueryDb(SeqData.dhdConnection, strSQL, True, 5)
-        If DatasetCheck(dtsData) = False Then
+        Dim dtsData As DataSet = SeqData.QueryDb(SeqData.dhdConnection, strSQL, True, 5)
+        If SeqData.dhdText.DatasetCheck(dtsData) = False Then
             lblStatusText.Text = "The SmartUpdate table was not found. Please create the table first."
             Exit Sub
         End If
@@ -184,9 +184,9 @@
 
         'save to table dbo.SmartUpdate
         Try
-            QueryDb(SeqData.dhdConnection, strUpdate, 0)
-            QueryDb(SeqData.dhdConnection, strDelete, 0)
-            QueryDb(SeqData.dhdConnection, strInsert, 0)
+            SeqData.QueryDb(SeqData.dhdConnection, strUpdate, 0)
+            SeqData.QueryDb(SeqData.dhdConnection, strDelete, 0)
+            SeqData.QueryDb(SeqData.dhdConnection, strInsert, 0)
             lblStatusText.Text = "Configuration Saved to SmartUpdate Table on connection: " & SeqData.curStatus.Connection
         Catch ex As Exception
             lblStatusText.Text = "There was an error saving the configuration. Check the log for more details"
@@ -258,7 +258,7 @@
         strQuery &= " @output_file_name='" & strLogPath & "\SmartUpdate.log',"
         strQuery &= " @flags=" & intFlags & ";"
 
-        QueryDb(SeqData.dhdConnection, strQuery, 0)
+        SeqData.QueryDb(SeqData.dhdConnection, strQuery, 0)
         lblStatusText.Text = "Jobstep added to job: " & strJobName & " on database: " & SeqData.dhdConnection.DatabaseName
     End Sub
 
@@ -410,8 +410,8 @@
 
         Dim dtsTables As New DataSet
         Dim blnSourceOnly As Boolean = False
-        dtsTables = QueryDb(SeqData.dhdConnection, strSQL, True, 5)
-        If DatasetCheck(dtsTables) = False Then Exit Sub
+        dtsTables = SeqData.QueryDb(SeqData.dhdConnection, strSQL, True, 5)
+        If SeqData.dhdText.DatasetCheck(dtsTables) = False Then Exit Sub
         PanelsClear()
         For intRowCount1 As Integer = 0 To dtsTables.Tables(0).Rows.Count - 1
             If dtsTables.Tables.Item(0).Rows(intRowCount1).Item("tgtSchemaName").GetType().ToString = "System.DBNull" Then

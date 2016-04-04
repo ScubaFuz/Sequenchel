@@ -43,17 +43,17 @@ Public Class frmConfiguration
     Private Sub ConfigurationSave()
         If SeqData.curStatus.ConnectionChanged = True Then
             SeqData.curStatus.ConnectionReload = True
-            SeqData.dhdText.SaveXmlFile(xmlConnections, SeqData.CheckFilePath(SeqData.curVar.ConnectionsFile), True)
+            SeqData.dhdText.SaveXmlFile(xmlConnections, SeqData.dhdText.PathConvert(SeqData.CheckFilePath(SeqData.curVar.ConnectionsFile)), True)
             SeqData.curStatus.ConnectionChanged = False
         End If
         If SeqData.curStatus.TableSetChanged = True Then
             SeqData.curStatus.TableSetReload = True
-            SeqData.dhdText.SaveXmlFile(xmlTableSets, SeqData.CheckFilePath(SeqData.curVar.TableSetsFile), True)
+            SeqData.dhdText.SaveXmlFile(xmlTableSets, SeqData.dhdText.PathConvert(SeqData.CheckFilePath(SeqData.curVar.TableSetsFile)), True)
             SeqData.curStatus.TableSetChanged = False
         End If
         If SeqData.curStatus.TableChanged = True Then
             SeqData.curStatus.TableReload = True
-            SeqData.dhdText.SaveXmlFile(xmlTables, SeqData.CheckFilePath(SeqData.curVar.TablesFile), True)
+            SeqData.dhdText.SaveXmlFile(xmlTables, SeqData.dhdText.PathConvert(SeqData.CheckFilePath(SeqData.curVar.TablesFile)), True)
             SeqData.curStatus.TableChanged = False
         End If
     End Sub
@@ -113,10 +113,17 @@ Public Class frmConfiguration
             SeqData.curStatus.Connection = lvwConnections.SelectedItems.Item(0).Tag
             SeqData.LoadConnection(xmlConnections, SeqData.curStatus.Connection)
             TableSetClear()
-            LoadTableSetsXml()
-            LoadTableSet(SeqData.curStatus.TableSet)
+            SeqData.LoadTableSetsXml(xmlTableSets)
+            'If lstTableSets Is Nothing Then
+            '    xmlTableSets.RemoveAll()
+            '    xmlTables.RemoveAll()
+            '    SeqData.curVar.TablesFile = ""
+            '    TableClear()
+            '    Exit Sub
+            'End If
+            SeqData.LoadTableSet(xmlTableSets, SeqData.curStatus.TableSet)
             TableSetsLoad()
-            LoadTablesXml()
+            SeqData.LoadTablesXml(xmlTables)
             TablesLoad()
             'End If
 
@@ -233,12 +240,11 @@ Public Class frmConfiguration
         If CheckSqlVersion(SeqData.dhdConnection) = False Then Exit Sub
 
         strQuery = "SELECT name FROM sys.databases WHERE database_id <> 2"
-        Dim dtsData As DataSet = QueryDb(SeqData.dhdConnection, strQuery, True)
-
+        Dim dtsData As DataSet = SeqData.QueryDb(SeqData.dhdConnection, strQuery, True)
 
         If dtsData Is Nothing Then
             CursorControl()
-            lblStatus.Text = "No databases found"
+            lblStatus.Text = SeqData.ErrorMessage
             Exit Sub
         End If
         If dtsData.Tables.Count = 0 Then Exit Sub
@@ -432,8 +438,8 @@ Public Class frmConfiguration
             If SeqData.curStatus.TableSet <> lvwTableSets.SelectedItems.Item(0).Tag Then
                 SeqData.curStatus.TableSetReload = True
                 SeqData.curStatus.TableSet = lvwTableSets.SelectedItems.Item(0).Tag
-                LoadTableSet(SeqData.curStatus.TableSet)
-                LoadTablesXml()
+                SeqData.LoadTableSet(xmlTableSets, SeqData.curStatus.TableSet)
+                SeqData.LoadTablesXml(xmlTables)
                 TablesLoad()
             End If
             Dim xNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlTableSets, "TableSet", "TableSetName", SeqData.curStatus.TableSet)
@@ -767,7 +773,7 @@ Public Class frmConfiguration
         strQuery &= " WHERE obj.name = '" & strTableName & "'"
         strQuery &= " AND scm.name = '" & strSchemaName & "'"
 
-        Dim dtsData As DataSet = QueryDb(SeqData.dhdConnection, strQuery, True)
+        Dim dtsData As DataSet = SeqData.QueryDb(SeqData.dhdConnection, strQuery, True)
         If dtsData Is Nothing Then
             lblStatus.Text = "No columns found for table " & strSchemaName & "." & strTableName
             Exit Sub
@@ -786,7 +792,7 @@ Public Class frmConfiguration
         strQuery &= " WHERE i1.CONSTRAINT_TYPE = 'PRIMARY KEY') PT ON PT.TABLE_NAME = PK.TABLE_NAME"
         strQuery &= " WHERE FK.TABLE_SCHEMA = '" & strSchemaName & "' AND FK.TABLE_NAME = '" & strTableName & "'"
 
-        Dim dtsRelations As DataSet = QueryDb(SeqData.dhdConnection, strQuery, True)
+        Dim dtsRelations As DataSet = SeqData.QueryDb(SeqData.dhdConnection, strQuery, True)
 
         strQuery = " SELECT KU.TABLE_SCHEMA as SchemaName, KU.TABLE_NAME as TableName,KU.COLUMN_NAME as PrimaryKeyColumn"
         strQuery &= " FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS AS TC"
@@ -797,7 +803,7 @@ Public Class frmConfiguration
         strQuery &= " AND KU.TABLE_NAME = '" & strTableName & "'"
         strQuery &= " ORDER BY KU.TABLE_NAME, KU.ORDINAL_POSITION;"
 
-        Dim dtsPrimaryKeys As DataSet = QueryDb(SeqData.dhdConnection, strQuery, True)
+        Dim dtsPrimaryKeys As DataSet = SeqData.QueryDb(SeqData.dhdConnection, strQuery, True)
 
         Dim blnReload As Boolean = False
         Dim strDataType As String = ""
@@ -1344,7 +1350,7 @@ Public Class frmConfiguration
 
         If SeqData.curVar.DebugMode Then MessageBox.Show(strQuery)
         Try
-            QueryDb(SeqData.dhdConnection, strQuery, False)
+            SeqData.QueryDb(SeqData.dhdConnection, strQuery, False)
         Catch ex As Exception
             SeqData.WriteLog(ex.Message, 1)
             MessageBox.Show(ex.Message)

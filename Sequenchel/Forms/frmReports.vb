@@ -23,7 +23,7 @@ Public Class frmReports
         SeqData.curStatus.Connection = cbxConnection.SelectedItem
         SeqData.LoadConnection(xmlConnections, SeqData.curStatus.Connection)
         SeqData.curStatus.TableSet = cbxTableSet.SelectedItem
-        LoadTableSet(SeqData.curStatus.TableSet)
+        SeqData.LoadTableSet(xmlTableSets, SeqData.curStatus.TableSet)
     End Sub
 
     Private Sub btnClose_Click(sender As Object, e As EventArgs) Handles btnClose.Click
@@ -75,7 +75,7 @@ Public Class frmReports
     Private Sub cbxTableSet_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbxTableSet.SelectedIndexChanged
         If cbxTableSet.SelectedIndex >= -1 Then
             SeqData.curStatus.TableSet = cbxTableSet.SelectedItem
-            LoadTableSet(SeqData.curStatus.TableSet)
+            SeqData.LoadTableSet(xmlTableSets, SeqData.curStatus.TableSet)
             LoadTables()
             LoadTableFields()
             ReportsLoad()
@@ -242,8 +242,14 @@ Public Class frmReports
 
     Private Sub LoadTableSets()
         AllClear(3)
-        Dim lstTableSets As List(Of String) = LoadTableSetsXml()
-        If lstTableSets Is Nothing Then Exit Sub
+        Dim lstTableSets As List(Of String) = SeqData.LoadTableSetsXml(xmlTableSets)
+        If lstTableSets Is Nothing Then
+            xmlTableSets.RemoveAll()
+            xmlTables.RemoveAll()
+            SeqData.curVar.TablesFile = ""
+            TableClear()
+            Exit Sub
+        End If
         For Each lstItem As String In lstTableSets
             cbxTableSet.Items.Add(lstItem)
         Next
@@ -252,8 +258,11 @@ Public Class frmReports
 
     Private Sub LoadTables()
         AllClear(2)
-        Dim lstTables As List(Of String) = LoadTablesXml()
-        If lstTables Is Nothing Then Exit Sub
+        Dim lstTables As List(Of String) = SeqData.LoadTablesXml(xmlTables)
+        If lstTables Is Nothing Then
+            xmlTables.RemoveAll()
+            Exit Sub
+        End If
         For Each lstItem As String In lstTables
             cbxTable.Items.Add(lstItem)
         Next
@@ -873,7 +882,7 @@ Public Class frmReports
         tmrElapsedTime.Enabled = True
         tmrElapsedTime.Start()
         dtsReport = Nothing
-        dtsReport = QueryDb(SeqData.dhdConnection, strQuery, True)
+        dtsReport = SeqData.QueryDb(SeqData.dhdConnection, strQuery, True)
         ReportShow(dtsReport)
         tmrElapsedTime.Stop()
         tmrElapsedTime.Enabled = False
@@ -900,13 +909,9 @@ Public Class frmReports
         'ReportAdd(xmlReports, cbxReportName.Text)
         If Not cbxReportName.Items.Contains(cbxReportName.Text) Then cbxReportName.Items.Add(cbxReportName.Text)
 
-        If SeqData.dhdText.CheckDir(SeqData.CheckFilePath(SeqData.CurVar.ReportSetFile).Substring(0, SeqData.CheckFilePath(SeqData.CurVar.ReportSetFile).LastIndexOf("\")), False) = False Then
-            If MessageBox.Show("The folder " & SeqData.CheckFilePath(SeqData.CurVar.ReportSetFile).Substring(0, SeqData.CheckFilePath(SeqData.CurVar.ReportSetFile).LastIndexOf("\")) & " does not exist." & Environment.NewLine & "do you wish to create it?", "Folder does not exist", MessageBoxButtons.YesNo, MessageBoxIcon.Hand, MessageBoxDefaultButton.Button1) = Windows.Forms.DialogResult.No Then
-                Exit Sub
-            End If
+        If SaveXmlFile(xmlReports, SeqData.curVar.ReportSetFile, True) = False Then
+            MessageBox.Show("The file " & SeqData.curVar.ReportSetFile & " was not saved.")
         End If
-
-        SeqData.dhdText.SaveXmlFile(xmlReports, SeqData.CheckFilePath(SeqData.CurVar.ReportSetFile), True)
         CursorControl()
     End Sub
 
@@ -919,12 +924,9 @@ Public Class frmReports
         cbxReportName.Text = ""
         ReportFieldsDispose(False)
 
-        If SeqData.dhdText.CheckDir(SeqData.CurVar.ReportSetFile.Substring(0, SeqData.CurVar.ReportSetFile.LastIndexOf("\")), False) = False Then
-            If MessageBox.Show("The folder " & SeqData.CurVar.SearchFile.Substring(0, SeqData.CurVar.ReportSetFile.LastIndexOf("\")) & " does not exist." & Environment.NewLine & "do you wish to create it?", "Folder does not exist", MessageBoxButtons.YesNo, MessageBoxIcon.Hand, MessageBoxDefaultButton.Button1) = Windows.Forms.DialogResult.No Then
-                Exit Sub
-            End If
+        If SaveXmlFile(xmlReports, SeqData.curVar.ReportSetFile, True) = False Then
+            MessageBox.Show("The file " & SeqData.curVar.ReportSetFile & " was not saved.")
         End If
-        SeqData.dhdText.SaveXmlFile(xmlReports, SeqData.CheckFilePath(SeqData.CurVar.ReportSetFile), True)
         CursorControl()
     End Sub
 
@@ -961,8 +963,11 @@ Public Class frmReports
     Private Sub ReportsLoad()
         cbxReportName.Items.Clear()
         cbxReportName.Text = ""
-        Dim lstReports As List(Of String) = LoadReportsXml()
-        If lstReports Is Nothing Then Exit Sub
+        Dim lstReports As List(Of String) = SeqData.LoadReportsXml(xmlReports)
+        If lstReports Is Nothing Then
+            xmlReports.RemoveAll()
+            Exit Sub
+        End If
         For Each lstItem As String In lstReports
             cbxReportName.Items.Add(lstItem)
         Next
@@ -1368,7 +1373,7 @@ Public Class frmReports
         'strReportText &= vbCrLf
         lblListCountNumber.Text = "0"
         lblErrorMessage.Text = strErrorMessage
-        If DatasetCheck(dtsData) = False Then Exit Sub
+        If SeqData.dhdText.DatasetCheck(dtsData) = False Then Exit Sub
 
         Try
             If DataSet2DataGridView(dtsData, 0, dgvReport, True) = False Then

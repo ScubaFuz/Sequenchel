@@ -25,7 +25,13 @@ Public Class frmSequenchel
         lblLicense.Text = "Licensed to: " & Core.LicenseName
         lblLicense.Left = Me.Width - lblLicense.Width - (SeqData.CurVar.BuildMargin * 5)
 
-        LoadSDBASettingsXml()
+        If SeqData.LoadSDBASettingsXml(xmlSDBASettings) = False Then
+            If SeqData.SaveSDBASettingsXml(xmlSDBASettings) = False Then
+                SeqData.WriteLog(Core.Message.strXmlError, 1)
+                MessageBox.Show(Core.Message.strXmlError)
+            End If
+
+        End If
         SecuritySet()
         SeqData.LoadGeneralSettingsXml(xmlGeneralSettings)
         'Core.DeleteOldLogs()
@@ -62,7 +68,7 @@ Public Class frmSequenchel
         Else
             If Not cbxTableSet.SelectedItem Is Nothing Then
                 SeqData.CurStatus.TableSet = cbxTableSet.SelectedItem
-                LoadTableSet(SeqData.CurStatus.TableSet)
+                SeqData.LoadTableSet(xmlTableSets, SeqData.curStatus.TableSet)
             End If
         End If
         If SeqData.CurStatus.TableReload = True Then
@@ -213,7 +219,7 @@ Public Class frmSequenchel
     Private Sub cbxTableSet_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbxTableSet.SelectedIndexChanged
         If cbxTableSet.SelectedIndex >= -1 Then
             SeqData.CurStatus.TableSet = cbxTableSet.SelectedItem
-            LoadTableSet(SeqData.CurStatus.TableSet)
+            SeqData.LoadTableSet(xmlTableSets, SeqData.curStatus.TableSet)
             LoadTables()
         End If
 
@@ -324,8 +330,14 @@ Public Class frmSequenchel
 
     Private Sub LoadTableSets()
         AllClear(3)
-        Dim lstTableSets As List(Of String) = LoadTableSetsXml()
-        If lstTableSets Is Nothing Then Exit Sub
+        Dim lstTableSets As List(Of String) = SeqData.LoadTableSetsXml(xmlTableSets)
+        If lstTableSets Is Nothing Then
+            xmlTableSets.RemoveAll()
+            xmlTables.RemoveAll()
+            SeqData.curVar.TablesFile = ""
+            TableClear()
+            Exit Sub
+        End If
         For Each lstItem As String In lstTableSets
             cbxTableSet.Items.Add(lstItem)
         Next
@@ -334,8 +346,11 @@ Public Class frmSequenchel
 
     Private Sub LoadTables()
         AllClear(2)
-        Dim lstTables As List(Of String) = LoadTablesXml()
-        If lstTables Is Nothing Then Exit Sub
+        Dim lstTables As List(Of String) = SeqData.LoadTablesXml(xmlTables)
+        If lstTables Is Nothing Then
+            xmlTables.RemoveAll()
+            Exit Sub
+        End If
         For Each lstItem As String In lstTables
             cbxTable.Items.Add(lstItem)
         Next
@@ -723,13 +738,10 @@ Public Class frmSequenchel
         End If
         SearchDelete(True)
         SearchAdd()
-        If SeqData.dhdText.CheckDir(SeqData.CurVar.SearchFile.Substring(0, SeqData.CurVar.SearchFile.LastIndexOf("\")), False) = False Then
-            If MessageBox.Show("The folder " & SeqData.CurVar.SearchFile.Substring(0, SeqData.CurVar.SearchFile.LastIndexOf("\")) & " does not exist." & Environment.NewLine & "do you wish to create it?", "Folder does not exist", MessageBoxButtons.YesNo, MessageBoxIcon.Hand, MessageBoxDefaultButton.Button1) = Windows.Forms.DialogResult.No Then
-                lblStatusText.Text = "File Save Aborted"
-                Exit Sub
-            End If
+        If SaveXmlFile(xmlSearch, SeqData.curVar.SearchFile, True) = False Then
+            MessageBox.Show("The file " & SeqData.curVar.SearchFile & " was not saved.")
         End If
-        SeqData.dhdText.SaveXmlFile(xmlSearch, SeqData.CheckFilePath(SeqData.CurVar.SearchFile), True)
+
         cbxSearch.Items.Add(cbxSearch.Text)
         lblStatusText.Text = "Search saved"
         'SearchListLoad(tblTable.TableName)
@@ -742,13 +754,9 @@ Public Class frmSequenchel
             Exit Sub
         End If
         SearchDelete(False)
-        If SeqData.dhdText.CheckDir(SeqData.CurVar.SearchFile.Substring(0, SeqData.CurVar.SearchFile.LastIndexOf("\")), False) = False Then
-            If MessageBox.Show("The folder " & SeqData.CurVar.SearchFile.Substring(0, SeqData.CurVar.SearchFile.LastIndexOf("\")) & " does not exist." & Environment.NewLine & "do you wish to create it?", "Folder does not exist", MessageBoxButtons.YesNo, MessageBoxIcon.Hand, MessageBoxDefaultButton.Button1) = Windows.Forms.DialogResult.No Then
-                lblStatusText.Text = "File Save Aborted"
-                Exit Sub
-            End If
+        If SaveXmlFile(xmlSearch, SeqData.curVar.SearchFile, True) = False Then
+            MessageBox.Show("The file " & SeqData.curVar.SearchFile & " was not saved.")
         End If
-        SeqData.dhdText.SaveXmlFile(xmlSearch, SeqData.CheckFilePath(SeqData.CurVar.SearchFile), True)
         SearchListLoad(tblTable.TableName)
         btnClear_Click(Nothing, Nothing)
         cbxSearch.SelectedIndex = -1
@@ -933,8 +941,8 @@ Public Class frmSequenchel
         If strQueryOrder.Length > 0 Then strQuery = strQuery & " " & strQueryOrder
 
         dtsTable = Nothing
-        dtsTable = QueryDb(SeqData.dhdConnection, strQuery, True)
-        If DatasetCheck(dtsTable) = False Then Exit Sub
+        dtsTable = SeqData.QueryDb(SeqData.dhdConnection, strQuery, True)
+        If SeqData.dhdText.DatasetCheck(dtsTable) = False Then Exit Sub
         If DataSet2DataGridView(dtsTable, 0, dgvTable1, False) = False Then Exit Sub
 
         dgvTable1.ClearSelection()
@@ -952,7 +960,7 @@ Public Class frmSequenchel
                 If intOrder = column.displayindex Then
                     For intField As Integer = 0 To tblTable.Count - 1
                         If tblTable.Item(intField).FieldName = column.Name Then
-                            strQuery &= ", " & FormatField(tblTable.Item(intField).FieldName, tblTable.TableName, tblTable.Item(intField).Width, tblTable.Item(intField).FieldDataType, tblTable.Item(intField).FieldName, Nothing, True)
+                            strQuery &= ", " & SeqData.FormatField(tblTable.Item(intField).FieldName, tblTable.TableName, tblTable.Item(intField).Width, tblTable.Item(intField).FieldDataType, tblTable.Item(intField).FieldName, Nothing, True, True, SeqData.curVar.DateTimeStyle)
                             Exit For
                         End If
                     Next
@@ -980,7 +988,7 @@ Public Class frmSequenchel
                                 Case "BINARY", "XML", "GEO", "TEXT", "IMAGE"
                                     'No sort order
                                 Case Else
-                                    strQuery &= ", " & FormatField(tblTable.Item(intField).FieldName, tblTable.TableName, tblTable.Item(intField).Width, tblTable.Item(intField).FieldDataType, Nothing, Nothing, False)
+                                    strQuery &= ", " & SeqData.FormatField(tblTable.Item(intField).FieldName, tblTable.TableName, tblTable.Item(intField).Width, tblTable.Item(intField).FieldDataType, Nothing, Nothing, False, False, SeqData.curVar.DateTimeStyle)
                                     If chkReversedSortOrder.Checked = True Then
                                         strQuery &= " DESC "
                                     End If
@@ -1016,7 +1024,7 @@ Public Class frmSequenchel
             'strQuery &= ",COALESCE([" & tblTable.Item(intField).FieldName & "],'') AS [" & tblTable.Item(intField).FieldName & "]"
             If tblTable.Item(intField).Name.Substring(0, tblTable.Item(intField).Name.LastIndexOf(".")) = tblTable.TableName Then
 
-                strQuery &= ", " & FormatField(tblTable.Item(intField).FieldName, tblTable.TableName, tblTable.Item(intField).Width, tblTable.Item(intField).FieldDataType, tblTable.Item(intField).FieldName, Nothing, True)
+                strQuery &= ", " & SeqData.FormatField(tblTable.Item(intField).FieldName, tblTable.TableName, tblTable.Item(intField).Width, tblTable.Item(intField).FieldDataType, tblTable.Item(intField).FieldName, Nothing, True, True, SeqData.curVar.DateTimeStyle)
 
                 If tblTable.Item(intField).FieldRelatedField.Length > 0 Then
                     Dim strRelation As String = tblTable.Item(intField).FieldRelation
@@ -1029,11 +1037,11 @@ Public Class frmSequenchel
                         If Not cell.Value Is Nothing Then
                             If tblTable.Item(intField).Identity = True Or tblTable.Item(intField).PrimaryKey = True Then
                                 'strQueryWhere &= " AND [" & tblTable.TableName.Replace(".", "].[") & "].[" & tblTable.Item(intField).FieldName & "] = " & SetDelimiters(cell.Value.ToString, tblTable.Item(intField).FieldDataType, "=")
-                                strQueryWhere &= " AND " & FormatField(tblTable.Item(intField).FieldName, tblTable.TableName, tblTable.Item(intField).Width, tblTable.Item(intField).FieldDataType, Nothing, Nothing, False) & " = " & SeqData.SetDelimiters(cell.Value.ToString, tblTable.Item(intField).FieldDataType, "=")
+                                strQueryWhere &= " AND " & SeqData.FormatField(tblTable.Item(intField).FieldName, tblTable.TableName, tblTable.Item(intField).Width, tblTable.Item(intField).FieldDataType, Nothing, Nothing, False, False, SeqData.curVar.DateTimeStyle) & " = " & SeqData.SetDelimiters(cell.Value.ToString, tblTable.Item(intField).FieldDataType, "=")
 
                             End If
                             'strQueryWhere2 &= " AND [" & tblTable.TableName.Replace(".", "].[") & "].[" & tblTable.Item(intField).FieldName & "] = " & SetDelimiters(cell.Value.ToString, tblTable.Item(intField).FieldDataType, "=")
-                            strQueryWhere2 &= " AND " & FormatField(tblTable.Item(intField).FieldName, tblTable.TableName, tblTable.Item(intField).Width, tblTable.Item(intField).FieldDataType, Nothing, Nothing, False) & " = " & SeqData.SetDelimiters(cell.Value.ToString, tblTable.Item(intField).FieldDataType, "=")
+                            strQueryWhere2 &= " AND " & SeqData.FormatField(tblTable.Item(intField).FieldName, tblTable.TableName, tblTable.Item(intField).Width, tblTable.Item(intField).FieldDataType, Nothing, Nothing, False, False, SeqData.curVar.DateTimeStyle) & " = " & SeqData.SetDelimiters(cell.Value.ToString, tblTable.Item(intField).FieldDataType, "=")
                         End If
                     End If
                 Next
@@ -1046,7 +1054,7 @@ Public Class frmSequenchel
         strQuery = strQuery.Replace(",,", " ")
         'If SeqData.CurVar.DebugMode Then MessageBox.Show(strQuery)
 
-        Dim objData As DataSet = QueryDb(SeqData.dhdConnection, strQuery, True)
+        Dim objData As DataSet = SeqData.QueryDb(SeqData.dhdConnection, strQuery, True)
         If objData Is Nothing Then Exit Sub
         If objData.Tables.Count = 0 Then Exit Sub
         If objData.Tables(0).Rows.Count = 0 Then Exit Sub
@@ -1335,7 +1343,7 @@ Public Class frmSequenchel
 
         Try
             Dim dtsData As DataSet
-            dtsData = QueryDb(SeqData.dhdConnection, strQuery, 0)
+            dtsData = SeqData.QueryDb(SeqData.dhdConnection, strQuery, 0)
             lblStatusText.Text = "Record Inserted"
         Catch ex As Exception
             MessageBox.Show("There was an error inserting the record: " & Environment.NewLine & ex.Message)
@@ -1410,7 +1418,7 @@ Public Class frmSequenchel
 
         Try
             Dim dtsData As DataSet
-            dtsData = QueryDb(SeqData.dhdConnection, strQuery, 0)
+            dtsData = SeqData.QueryDb(SeqData.dhdConnection, strQuery, 0)
             lblStatusText.Text = "Record Updated"
         Catch ex As Exception
             MessageBox.Show("There was an error updating the record: " & Environment.NewLine & ex.Message)
@@ -1457,7 +1465,7 @@ Public Class frmSequenchel
 
         Try
             Dim dtsData As DataSet
-            dtsData = QueryDb(SeqData.dhdConnection, strQuery, 0)
+            dtsData = SeqData.QueryDb(SeqData.dhdConnection, strQuery, 0)
             WriteStatus("Record Deleted", 0, lblStatusText)
         Catch ex As Exception
             MessageBox.Show("There was an error deleting the record: " & Environment.NewLine & ex.Message)
@@ -1512,7 +1520,7 @@ Public Class frmSequenchel
     Private Sub SearchListLoad(strTable As String)
         cbxSearch.Text = ""
         cbxSearch.Items.Clear()
-        Dim lstTables As List(Of String) = LoadSearchXml(strTable)
+        Dim lstTables As List(Of String) = SeqData.LoadSearchXml(xmlSearch, strTable)
         If lstTables Is Nothing Then Exit Sub
         For Each lstItem As String In lstTables
             cbxSearch.Items.Add(lstItem)
