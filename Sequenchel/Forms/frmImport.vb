@@ -18,11 +18,13 @@ Public Class frmImport
     End Sub
 
     Private Sub btnUploadFile_Click(sender As Object, e As EventArgs) Handles btnUploadFile.Click
+        If SeqData.dhdText.DatasetCheck(dtsImport) = False Then Exit Sub
         UploadFile(dtsImport)
     End Sub
 
     Private Sub btnUploadTable_Click(sender As Object, e As EventArgs) Handles btnUploadTable.Click
         Try
+            If dgvImport.DataSource Is Nothing Then Exit Sub
             Dim dtsUpload As New DataSet
             dtsUpload.Tables.Add(dgvImport.DataSource.Copy)
             UploadFile(dtsUpload)
@@ -65,9 +67,13 @@ Public Class frmImport
     End Sub
 
     Private Sub ImportFile()
-        dtsImport = SeqData.ImportFile(SeqData.CheckFilePath(SeqData.dhdText.ImportFile), chkHasHeaders.Checked, txtDelimiter.Text)
+        If SeqData.dhdText.PathConvert(SeqData.CheckFilePath(SeqData.dhdText.ImportFile)) = False Then
+            MessageBox.Show("The file was not found. Check the file path and name")
+            Exit Sub
+        End If
+        dtsImport = SeqData.ImportFile(SeqData.dhdText.PathConvert(SeqData.CheckFilePath(SeqData.dhdText.ImportFile)), chkHasHeaders.Checked, txtDelimiter.Text)
 
-        If dtsImport Is Nothing Then
+        If SeqData.dhdText.DatasetCheck(dtsImport) = False Then
             MessageBox.Show("File extension or delimiter not recognised." & Environment.NewLine & "Please try again or select a different file.")
             Exit Sub
         End If
@@ -87,6 +93,7 @@ Public Class frmImport
     End Sub
 
     Private Sub DisplayData(Optional intTable As Integer = 0)
+        If SeqData.dhdText.DatasetCheck(dtsImport) = False Then Exit Sub
         dgvImport.DataSource = Nothing
         If SeqData.curVar.ConvertToText = True Then
             Dim dttConvert As DataTable = SeqData.dhdMainDB.ConvertToText(dtsImport.Tables(intTable))
@@ -216,6 +223,7 @@ Public Class frmImport
     End Sub
 
     Private Sub DataTableSetExtendedProperty(dttInput As DataTable, blnExportTable As Boolean)
+        If dttInput Is Nothing Then Exit Sub
         If dttInput.ExtendedProperties.Count = 0 Then
             dttInput.ExtendedProperties.Add("ExportTable", blnExportTable.ToString)
         Else

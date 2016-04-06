@@ -109,9 +109,11 @@ Module Common
 
     End Sub
 
-    Friend Sub LoadLicense()
+    Friend Sub LoadLicense(lblTarget As Label)
         If Core.LoadLicense = False Then
-            MessageBox.Show(Core.Message.ErrorMessage, "Error loading license", MessageBoxButtons.OK)
+            WriteStatus(Core.Message.ErrorMessage, 4, lblTarget)
+        Else
+            WriteStatus("License loaded succesfully", 0, lblTarget)
         End If
         strReport = "Sequenchel " & vbTab & " version: " & Core.GetVersion("B") & vbTab & "  Licensed to: " & Core.LicenseName
 
@@ -382,7 +384,7 @@ Module Common
             End If
         End If
         Try
-            SeqData.dhdText.SaveXmlFile(xmlReports, SeqData.dhdText.PathConvert(SeqData.CheckFilePath(SeqData.curVar.ReportSetFile)), True)
+            SeqData.dhdText.SaveXmlFile(xmlDoc, SeqData.dhdText.PathConvert(SeqData.CheckFilePath(FilePathName)), True)
         Catch ex As Exception
             Return False
         End Try

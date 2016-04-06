@@ -216,7 +216,7 @@
     End Sub
 
     Private Sub txtLimitLookupLists_TextChanged(sender As Object, e As EventArgs) Handles txtLimitLookupLists.TextChanged
-        If txtLimitLookupLists.Text = txtLimitLookupLists.Tag Then
+        If txtLimitLookupLists.Text = txtLimitLookupLists.Tag And txtLimitLookupLists.Text <> "" And txtLimitLookupLists.Text <> 0 Then
             txtLimitLookupLists.BackColor = clrOriginal
         Else
             txtLimitLookupLists.BackColor = clrMarked
@@ -1199,21 +1199,45 @@
     End Sub
 
     Private Sub btnMonitorDataSpacesSave_Click(sender As Object, e As EventArgs) Handles btnMonitorDataSpacesSave.Click
-        If IsNumeric(txtMinPercGrowth.Text) Then SeqData.CurVar.MinPercGrowth = txtMinPercGrowth.Text
-        If IsNumeric(txtMinFreeSpace.Text) Then SeqData.CurVar.MinFreeSpace = txtMinFreeSpace.Text
-        If IsNumeric(txtLowerLimit.Text) Then SeqData.CurVar.LowerLimit = txtLowerLimit.Text
-        If IsNumeric(txtUpperLimit.Text) Then SeqData.CurVar.UpperLimit = txtUpperLimit.Text
-        If IsNumeric(txtSmallGrowth.Text) Then SeqData.CurVar.SmallGrowth = txtSmallGrowth.Text
-        If IsNumeric(txtMediumGrowth.Text) Then SeqData.CurVar.MediumGrowth = txtMediumGrowth.Text
-        If IsNumeric(txtLargeGrowth.Text) Then SeqData.CurVar.LargeGrowth = txtLargeGrowth.Text
+        Dim intMinPercGrowth As Integer = SeqData.curVar.MinPercGrowth
+        Dim intMinFreeSpace As Integer = SeqData.curVar.MinFreeSpace
+        Dim intLowerLimit As Integer = SeqData.curVar.LowerLimit
+        Dim intUpperlimit As Integer = SeqData.curVar.UpperLimit
+        Dim intSmallGrowth As Integer = SeqData.curVar.SmallGrowth
+        Dim intMediumGrowth As Integer = SeqData.curVar.MediumGrowth
+        Dim intLargeGrowth As Integer = SeqData.curVar.LargeGrowth
 
-        SaveConfigSetting("MonitorDataspaces", "MinPercGrowth", SeqData.CurVar.MinPercGrowth)
-        SaveConfigSetting("MonitorDataspaces", "MinFreeSpace", SeqData.CurVar.MinFreeSpace)
-        SaveConfigSetting("MonitorDataspaces", "LowerLimit", SeqData.CurVar.LowerLimit)
-        SaveConfigSetting("MonitorDataspaces", "UpperLimit", SeqData.CurVar.UpperLimit)
-        SaveConfigSetting("MonitorDataspaces", "SmallGrowth", SeqData.CurVar.SmallGrowth)
-        SaveConfigSetting("MonitorDataspaces", "MediumGrowth", SeqData.CurVar.MediumGrowth)
-        SaveConfigSetting("MonitorDataspaces", "LargeGrowth", SeqData.CurVar.LargeGrowth)
+        If IsNumeric(txtMinPercGrowth.Text) Then intMinPercGrowth = txtMinPercGrowth.Text
+        If IsNumeric(txtMinFreeSpace.Text) Then intMinFreeSpace = txtMinFreeSpace.Text
+        If IsNumeric(txtLowerLimit.Text) Then intLowerLimit = txtLowerLimit.Text
+        If IsNumeric(txtUpperLimit.Text) Then intUpperlimit = txtUpperLimit.Text
+        If IsNumeric(txtSmallGrowth.Text) Then intSmallGrowth = txtSmallGrowth.Text
+        If IsNumeric(txtMediumGrowth.Text) Then intMediumGrowth = txtMediumGrowth.Text
+        If IsNumeric(txtLargeGrowth.Text) Then intLargeGrowth = txtLargeGrowth.Text
+
+        If Not intLowerLimit < intUpperlimit Then
+            MessageBox.Show("The Lower Limit should be smaller than the Upper Limit")
+            Exit Sub
+        End If
+        If Not (intSmallGrowth < intMediumGrowth And intMediumGrowth < intLargeGrowth And intLargeGrowth < intUpperlimit) Then
+            MessageBox.Show("Small growth should be smaller than Medium Growth." & Environment.NewLine & "Medium Growth should be smaller than Large Growth" & Environment.NewLine & "Large Growth should be smaller than Upper Growth")
+            Exit Sub
+        End If
+        SeqData.curVar.MinPercGrowth = intMinPercGrowth
+        SeqData.curVar.MinFreeSpace = intMinFreeSpace
+        SeqData.curVar.LowerLimit = intLowerLimit
+        SeqData.curVar.UpperLimit = intUpperlimit
+        SeqData.curVar.SmallGrowth = intSmallGrowth
+        SeqData.curVar.MediumGrowth = intMediumGrowth
+        SeqData.curVar.LargeGrowth = intLargeGrowth
+
+        SaveConfigSetting("MonitorDataspaces", "MinPercGrowth", SeqData.curVar.MinPercGrowth)
+        SaveConfigSetting("MonitorDataspaces", "MinFreeSpace", SeqData.curVar.MinFreeSpace)
+        SaveConfigSetting("MonitorDataspaces", "LowerLimit", SeqData.curVar.LowerLimit)
+        SaveConfigSetting("MonitorDataspaces", "UpperLimit", SeqData.curVar.UpperLimit)
+        SaveConfigSetting("MonitorDataspaces", "SmallGrowth", SeqData.curVar.SmallGrowth)
+        SaveConfigSetting("MonitorDataspaces", "MediumGrowth", SeqData.curVar.MediumGrowth)
+        SaveConfigSetting("MonitorDataspaces", "LargeGrowth", SeqData.curVar.LargeGrowth)
 
     End Sub
 

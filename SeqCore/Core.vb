@@ -48,7 +48,7 @@ Public Class Core
             strLicense = dhdReg.ReadAnyRegKey("LicenseName", dhdReg.RegistryPath)
             If strLicense = "-1" Then
                 Message.ErrorLevel = 1
-                Message.ErrorMessage = dhdReg.RegMessage
+                Message.ErrorMessage = "The licensename was not found"
                 _LicenseValidated = False
                 Return False
             End If
@@ -56,7 +56,7 @@ Public Class Core
             LicenseKey = dhdReg.ReadAnyRegKey("LicenseKey", dhdReg.RegistryPath)
             If LicenseKey = "-1" Then
                 Message.ErrorLevel = 1
-                Message.ErrorMessage = dhdReg.RegMessage
+                Message.ErrorMessage = "The Licencenumber was not found"
                 _LicenseValidated = False
                 Return False
             End If

@@ -850,7 +850,7 @@ Public Class frmReports
     Private Sub btnExecuteQuery_Click(sender As Object, e As EventArgs) Handles btnExecuteQuery.Click
         CursorControl("Wait")
         strQuery = rtbQuery.Text
-        QueryExecute()
+        If strQuery.Length > 0 Then QueryExecute()
         CursorControl()
     End Sub
 
@@ -870,7 +870,11 @@ Public Class frmReports
         If strReportName = "" Then strReportName = "TempReport"
         'ReportAdd(xmlReportShow, strReportName)
         ReportToXML(xmlReportShow, strReportName)
-        strQuery = SeqData.ReportQueryBuild(xmlReportShow, xmlTables, strReportName, SeqData.CurVar.DateTimeStyle)
+        strQuery = SeqData.ReportQueryBuild(xmlReportShow, xmlTables, strReportName, SeqData.curVar.DateTimeStyle)
+        If strQuery = Nothing Then
+            MessageBox.Show("No fields were selected. Select at least 1 field to be shown in your report")
+            Exit Sub
+        End If
         'strQuery = ReportQueryBuild2()
         rtbQuery.Text = strQuery
         tabReports.SelectedTab = tpgReportResult
@@ -902,6 +906,10 @@ Public Class frmReports
         CursorControl("Wait")
         If cbxReportName.Text.Length < 3 Then
             MessageBox.Show("Report Name must be at least 3 characters long")
+            Exit Sub
+        End If
+        If lvwSelectedFields.Items.Count = 0 Then
+            MessageBox.Show("No fields have been selected for this report. Aborting save.", "No fields selected", MessageBoxButtons.OK, MessageBoxIcon.Hand)
             Exit Sub
         End If
         ReportDelete(cbxReportName.Text)
@@ -947,7 +955,7 @@ Public Class frmReports
     End Sub
 
     Private Sub btnExportToFile_Click(sender As Object, e As EventArgs) Handles btnExportToFile.Click
-
+        If dgvReport.RowCount = 0 Then Exit Sub
         Dim strReportName As String = ""
         If cbxReportName.Text.Length > 0 Then
             strReportName = cbxReportName.Text
@@ -1530,6 +1538,7 @@ Public Class frmReports
     End Sub
 
     Private Sub SaveQuery()
+        If rtbQuery.Text.Length = 0 Then Exit Sub
         Dim saveFile1 As New SaveFileDialog()
 
         saveFile1.DefaultExt = "*.sql"
@@ -1610,6 +1619,7 @@ Public Class frmReports
         If (loadFile1.ShowDialog() = System.Windows.Forms.DialogResult.OK) And (loadFile1.FileName.Length) > 0 Then
             xmlImport.Load(loadFile1.FileName)
         End If
+        If loadFile1.FileName = "" Then Exit Sub
         Dim xNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlImport, "ReportName")
         strReportName = xNode.InnerText
         ReportFieldsDispose(False)
@@ -1666,6 +1676,7 @@ Public Class frmReports
     End Sub
 
     Private Sub btnEmailResults_Click(sender As Object, e As EventArgs) Handles btnEmailResults.Click
+        If dgvReport.RowCount = 0 Then Exit Sub
         SeqData.dhdText.SmtpRecipient = InputBox("Please enter a valid Email Address", "Email", SeqData.dhdText.SmtpRecipient)
         If SeqData.dhdText.SmtpRecipient = "" Then
             'SetStatus("Email not send")
@@ -1678,10 +1689,10 @@ Public Class frmReports
         If cbxReportName.Text.Length > 0 Then
             strReportName = cbxReportName.Text
         Else
-            strReportName = SeqData.CurStatus.Connection
+            strReportName = SeqData.curStatus.Connection
         End If
         strTargetName = strReportName
-        If SeqData.CurVar.IncludeDate = True Then
+        If SeqData.curVar.IncludeDate = True Then
             strTargetName = strTargetName & "_" & SeqData.FormatFileDate(Now)
         End If
 

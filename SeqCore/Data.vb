@@ -11,7 +11,27 @@ Public Class Data
     Public curStatus As New CurrentStatus
     Public Excel As New Excel
 
-    Public ErrorMessage As String
+    Private _ErrorLevel As Integer = 0
+    Private _ErrorMessage As String = ""
+
+    Public Property ErrorLevel() As Integer
+        Get
+            Return _ErrorLevel
+        End Get
+        Set(ByVal Value As Integer)
+            _ErrorLevel = Value
+        End Set
+    End Property
+
+    Public Property ErrorMessage() As String
+        Get
+            Return _ErrorMessage
+        End Get
+        Set(ByVal Value As String)
+            _ErrorMessage = Value
+        End Set
+    End Property
+
 
 #Region "General"
     Public Sub SetDefaults()
@@ -182,6 +202,7 @@ Public Class Data
     End Function
 
     Public Function SetDelimiters(strInput As String, strDataType As String, strCompare As String, Optional strShowMode As String = Nothing) As String
+        If strInput = Nothing Then Return Nothing
         If strInput.Length > 2 Then
             If strInput.Substring(0, 2) = "f:" Then
                 Return "(" & strInput.Replace("f:", "") & ")"
@@ -191,28 +212,33 @@ Public Class Data
                 strInput = ProcessDefaultValue(strInput)
             End If
         End If
+        If strCompare = Nothing Then Return strInput
         If strCompare = "IS" Or strCompare = "IS NOT" Then
             Return strInput
         End If
-        If strShowMode = "COUNT" Or _
-            strShowMode = "SUM" Or _
-            strShowMode = "AVG" Then
-            strDataType = "INTEGER"
+        If Not strShowMode = Nothing Then
+            If strShowMode = "COUNT" Or _
+                strShowMode = "SUM" Or _
+                strShowMode = "AVG" Then
+                strDataType = "INTEGER"
+            End If
         End If
-        If strDataType = "CHAR" Or _
-                strDataType = "BINARY" Or _
-                strDataType = "GUID" Or _
-                strDataType = "TEXT" Or _
-                strDataType = "IMAGE" Or _
-                strDataType = "DATETIME" Or _
-                strDataType = "TIME" Or _
-                strDataType = "TIMESTAMP" Or _
-                strDataType = "XML" Or _
-                strDataType = "GEO" Then
-            strInput = strInput.Replace("'", "''")
-            strInput = "N'" & strInput & "'"
-            If (strCompare = "IN" Or strCompare = "NOT IN") Then
-                strInput = strInput.Replace(",", "','")
+        If Not strDataType = Nothing Then
+            If strDataType = "CHAR" Or _
+                                strDataType = "BINARY" Or _
+                                strDataType = "GUID" Or _
+                                strDataType = "TEXT" Or _
+                                strDataType = "IMAGE" Or _
+                                strDataType = "DATETIME" Or _
+                                strDataType = "TIME" Or _
+                                strDataType = "TIMESTAMP" Or _
+                                strDataType = "XML" Or _
+                                strDataType = "GEO" Then
+                strInput = strInput.Replace("'", "''")
+                strInput = "N'" & strInput & "'"
+                If (strCompare = "IN" Or strCompare = "NOT IN") Then
+                    strInput = strInput.Replace(",", "','")
+                End If
             End If
         End If
         If (strCompare = "IN" Or strCompare = "NOT IN") Then
@@ -735,6 +761,9 @@ Public Class Data
         curVar.TableSetsFile = xmlConnNode.Item("TableSets").InnerText
 
         dhdConnection.CheckDB()
+        If dhdConnection.DataBaseOnline = False Then
+
+        End If
     End Sub
 
     Public Function LoadTableSetsXml(xmlTableSets As XmlDocument) As List(Of String)
@@ -1124,21 +1153,28 @@ Public Class Data
 
 #Region "Import & Export"
     Public Function ImportFile(strFileName As String, Optional blnHasHeaders As Boolean = True, Optional Delimiter As String = ",") As DataSet
-        Dim strExtension As String = strFileName.Substring(strFileName.LastIndexOf(".") + 1, strFileName.Length - (strFileName.LastIndexOf(".") + 1))
-        Dim dtsImport As DataSet
-        Select Case strExtension.ToLower
-            Case "xml"
-                dtsImport = dhdText.LoadXmlToDataset(strFileName)
-            Case "xls", "xlsx"
-                dtsImport = Excel.ImportExcelFile(strFileName)
-            Case "csv", "txt"
-                If Delimiter.Length = 0 Then
+        Dim dtsImport As New DataSet
+        Try
+            Dim strExtension As String = strFileName.Substring(strFileName.LastIndexOf(".") + 1, strFileName.Length - (strFileName.LastIndexOf(".") + 1))
+            Select Case strExtension.ToLower
+                Case "xml"
+                    dtsImport = dhdText.LoadXmlToDataset(strFileName)
+                Case "xls", "xlsx"
+                    dtsImport = Excel.ImportExcelFile(strFileName)
+                Case "csv", "txt"
+                    If Delimiter.Length = 0 Then
+                        Return Nothing
+                    End If
+                    dtsImport = dhdText.CsvToDataSet(strFileName, blnHasHeaders, Delimiter)
+                Case Else
                     Return Nothing
-                End If
-                dtsImport = dhdText.CsvToDataSet(strFileName, blnHasHeaders, Delimiter)
-            Case Else
-                Return Nothing
-        End Select
+            End Select
+        Catch ex As Exception
+            'Error importing file
+            ErrorLevel = -1
+            ErrorMessage = "The file import failed. Check the file and try again."
+            dtsImport = Nothing
+        End Try
         Return dtsImport
     End Function
 

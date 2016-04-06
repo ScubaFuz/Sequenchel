@@ -53,7 +53,6 @@ Partial Class frmImport
         Me.lblTableName = New System.Windows.Forms.Label()
         Me.lblTableNameText = New System.Windows.Forms.Label()
         Me.chkUploadTable = New System.Windows.Forms.CheckBox()
-        Me.dgvImport = New Sequenchel.usrDataGridView()
         Me.btnUploadTable = New System.Windows.Forms.Button()
         Me.chkCovertToText = New System.Windows.Forms.CheckBox()
         Me.chkCovertToNull = New System.Windows.Forms.CheckBox()
@@ -61,6 +60,7 @@ Partial Class frmImport
         Me.lblTextDelimiter = New System.Windows.Forms.Label()
         Me.txtDelimiter = New System.Windows.Forms.TextBox()
         Me.txtDelimiterShow = New System.Windows.Forms.TextBox()
+        Me.dgvImport = New Sequenchel.usrDataGridView()
         CType(Me.dgvImport, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -357,21 +357,6 @@ Partial Class frmImport
         Me.chkUploadTable.Text = "Upload This Table to Database"
         Me.chkUploadTable.UseVisualStyleBackColor = True
         '
-        'dgvImport
-        '
-        Me.dgvImport.AllowUserToOrderColumns = True
-        Me.dgvImport.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.dgvImport.BackgroundColor = System.Drawing.SystemColors.Control
-        Me.dgvImport.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
-        Me.dgvImport.BackImage = CType(resources.GetObject("dgvImport.BackImage"), System.Drawing.Image)
-        Me.dgvImport.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvImport.Location = New System.Drawing.Point(29, 239)
-        Me.dgvImport.Name = "dgvImport"
-        Me.dgvImport.Size = New System.Drawing.Size(713, 473)
-        Me.dgvImport.TabIndex = 1
-        '
         'btnUploadTable
         '
         Me.btnUploadTable.Location = New System.Drawing.Point(571, 210)
@@ -450,6 +435,22 @@ Partial Class frmImport
         Me.txtDelimiterShow.Text = ","
         Me.txtDelimiterShow.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         Me.txtDelimiterShow.Visible = False
+        '
+        'dgvImport
+        '
+        Me.dgvImport.AllowUserToAddRows = False
+        Me.dgvImport.AllowUserToOrderColumns = True
+        Me.dgvImport.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.dgvImport.BackgroundColor = System.Drawing.SystemColors.Control
+        Me.dgvImport.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
+        Me.dgvImport.BackImage = CType(resources.GetObject("dgvImport.BackImage"), System.Drawing.Image)
+        Me.dgvImport.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dgvImport.Location = New System.Drawing.Point(29, 239)
+        Me.dgvImport.Name = "dgvImport"
+        Me.dgvImport.Size = New System.Drawing.Size(713, 473)
+        Me.dgvImport.TabIndex = 1
         '
         'frmImport
         '

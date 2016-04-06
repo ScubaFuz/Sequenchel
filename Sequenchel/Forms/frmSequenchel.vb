@@ -17,7 +17,7 @@ Public Class frmSequenchel
         DebugSettings()
         Core.SetDefaults()
         SeqData.SetDefaults()
-        LoadLicense()
+        LoadLicense(lblStatusText)
         Me.Hide()
         frmAbout.Show()
         frmAbout.Refresh()
@@ -57,8 +57,10 @@ Public Class frmSequenchel
             SeqData.CurStatus.TableReload = False
         Else
             If Not cbxConnection.SelectedItem Is Nothing Then
-                SeqData.CurStatus.Connection = cbxConnection.SelectedItem
-                SeqData.LoadConnection(xmlConnections, SeqData.curStatus.Connection)
+                If SeqData.curStatus.Connection <> cbxConnection.SelectedItem Then
+                    SeqData.curStatus.Connection = cbxConnection.SelectedItem
+                    SeqData.LoadConnection(xmlConnections, SeqData.curStatus.Connection)
+                End If
             End If
         End If
         If SeqData.CurStatus.TableSetReload = True Then
@@ -67,8 +69,10 @@ Public Class frmSequenchel
             SeqData.CurStatus.TableReload = False
         Else
             If Not cbxTableSet.SelectedItem Is Nothing Then
-                SeqData.CurStatus.TableSet = cbxTableSet.SelectedItem
-                SeqData.LoadTableSet(xmlTableSets, SeqData.curStatus.TableSet)
+                If SeqData.curStatus.TableSet <> cbxTableSet.SelectedItem Then
+                    SeqData.curStatus.TableSet = cbxTableSet.SelectedItem
+                    SeqData.LoadTableSet(xmlTableSets, SeqData.curStatus.TableSet)
+                End If
             End If
         End If
         If SeqData.CurStatus.TableReload = True Then
@@ -553,7 +557,7 @@ Public Class frmSequenchel
                                 msfRelatedField.Width = sptFields1.Panel2.Width - msfRelatedField.Left - (SeqData.CurVar.BuildMargin * 3) - SystemInformation.VerticalScrollBarWidth
                                 msfRelatedField.Anchor = AnchorStyles.Top Or AnchorStyles.Left Or AnchorStyles.Right
                                 msfRelatedField.Visible = True
-                                msfRelatedField.RunSearch()
+                                If SeqData.dhdConnection.DataBaseOnline = True Then msfRelatedField.RunSearch()
                             End If
                         End If
                         FieldEnableHandler(fldField, fldField.FieldSearch)
@@ -668,13 +672,14 @@ Public Class frmSequenchel
     End Sub
 
     Private Sub btnExportList_Click(sender As Object, e As EventArgs) Handles btnExportList.Click
+        If SeqData.dhdText.DatasetCheck(dtsTable) = False Then Exit Sub
         Dim strReportName As String = ""
         If cbxSearch.Text.Length > 0 Then
             strReportName = cbxSearch.Text
         ElseIf cbxTable.Text.Length > 0 Then
             strReportName = cbxTable.Text
         Else
-            strReportName = SeqData.CurStatus.Table
+            strReportName = SeqData.curStatus.Table
         End If
         Dim strFileName As String = GetSaveFileName(strReportName)
         ExportFile(dtsTable, strFileName)
@@ -699,9 +704,8 @@ Public Class frmSequenchel
             TagsClear()
             ColorSet()
             btnAdd.Text = "Save Item"
-            btnAdd.BackColor = clrWarning
+            btnAdd.BackColor = clrMarked
         ElseIf btnAdd.Text = "Save Item" Then
-            ItemAdd()
             btnAdd.Text = "New Item"
             btnAdd.BackColor = clrControl
             If SeqData.CurStatus.Status > 3 Then
@@ -709,6 +713,7 @@ Public Class frmSequenchel
             Else
                 SeqData.CurStatus.Status = SeqCore.CurrentStatus.StatusList.Edit
             End If
+            ItemAdd()
             FieldsEnable()
             ButtonHandle()
         End If
@@ -719,6 +724,7 @@ Public Class frmSequenchel
     End Sub
 
     Private Sub btnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
+        If dgvTable1.RowCount = 0 Then Exit Sub
         If dgvTable1.SelectedRows.Count <> 1 Then
             WriteStatus("You need to select 1 item from the list to use this function", 1, lblStatusText)
             Exit Sub
@@ -740,10 +746,11 @@ Public Class frmSequenchel
         SearchAdd()
         If SaveXmlFile(xmlSearch, SeqData.curVar.SearchFile, True) = False Then
             MessageBox.Show("The file " & SeqData.curVar.SearchFile & " was not saved.")
+        Else
+            cbxSearch.Items.Add(cbxSearch.Text)
+            lblStatusText.Text = "Search saved"
         End If
 
-        cbxSearch.Items.Add(cbxSearch.Text)
-        lblStatusText.Text = "Search saved"
         'SearchListLoad(tblTable.TableName)
     End Sub
 
@@ -782,23 +789,25 @@ Public Class frmSequenchel
         btnAdd.Enabled = False
         btnDelete.Enabled = False
 
-        If SeqData.CurStatus.Status = SeqCore.CurrentStatus.StatusList.Search And tblTable.TableSearch = True Then
-            btnSearch.Enabled = True
-        End If
-        If SeqData.CurStatus.Status = SeqCore.CurrentStatus.StatusList.Edit And tblTable.TableUpdate = True And (SeqData.CurVar.AllowUpdate = True Or SeqData.CurVar.SecurityOverride = True) Then
-            btnUpdate.Enabled = True
-        End If
-        If tblTable.TableInsert = True And (SeqData.CurVar.AllowInsert = True Or SeqData.CurVar.SecurityOverride = True) Then
-            btnAdd.Enabled = True
-        End If
-        If SeqData.CurStatus.Status = SeqCore.CurrentStatus.StatusList.ControlSearch Then
-            btnSearch.Enabled = True
-        End If
-        If SeqData.CurStatus.Status = SeqCore.CurrentStatus.StatusList.ControlEdit And (SeqData.CurVar.AllowUpdate = True Or SeqData.CurVar.SecurityOverride = True) Then
-            btnUpdate.Enabled = True
-        End If
-        If tblTable.TableDelete = True And (SeqData.CurVar.AllowDelete = True Or SeqData.CurVar.SecurityOverride = True) Then
-            btnDelete.Enabled = True
+        If SeqData.dhdConnection.DataBaseOnline = True Then
+            If SeqData.curStatus.Status = SeqCore.CurrentStatus.StatusList.Search And tblTable.TableSearch = True Then
+                btnSearch.Enabled = True
+            End If
+            If SeqData.curStatus.Status = SeqCore.CurrentStatus.StatusList.Edit And tblTable.TableUpdate = True And (SeqData.curVar.AllowUpdate = True Or SeqData.curVar.SecurityOverride = True) Then
+                btnUpdate.Enabled = True
+            End If
+            If tblTable.TableInsert = True And (SeqData.curVar.AllowInsert = True Or SeqData.curVar.SecurityOverride = True) Then
+                btnAdd.Enabled = True
+            End If
+            If SeqData.curStatus.Status = SeqCore.CurrentStatus.StatusList.ControlSearch Then
+                btnSearch.Enabled = True
+            End If
+            If SeqData.curStatus.Status = SeqCore.CurrentStatus.StatusList.ControlEdit And (SeqData.curVar.AllowUpdate = True Or SeqData.curVar.SecurityOverride = True) Then
+                btnUpdate.Enabled = True
+            End If
+            If tblTable.TableDelete = True And (SeqData.curVar.AllowDelete = True Or SeqData.curVar.SecurityOverride = True) Then
+                btnDelete.Enabled = True
+            End If
         End If
     End Sub
 
@@ -910,6 +919,7 @@ Public Class frmSequenchel
     End Sub
 
     Friend Sub LoadList(blnRefine As Boolean)
+        If SeqData.dhdConnection.DataBaseOnline = False Then Exit Sub
         If tblTable.TableName.Length < 1 Then Exit Sub
         SeqData.curStatus.SuspendActions = True
         Dim strQuerySelect As String = SelectBuild()
@@ -1344,7 +1354,13 @@ Public Class frmSequenchel
         Try
             Dim dtsData As DataSet
             dtsData = SeqData.QueryDb(SeqData.dhdConnection, strQuery, 0)
-            lblStatusText.Text = "Record Inserted"
+            MessageBox.Show(SeqData.dhdConnection.DataBaseOnline)
+            If SeqData.dhdConnection.ErrorLevel = -1 Then
+                MessageBox.Show("There was an error adding the data" & Environment.NewLine & SeqData.dhdConnection.ErrorMessage)
+                lblStatusText.Text = "Error inserting data"
+            Else
+                lblStatusText.Text = "Record Inserted"
+            End If
         Catch ex As Exception
             MessageBox.Show("There was an error inserting the record: " & Environment.NewLine & ex.Message)
             SeqData.WriteLog("There was an error inserting the record: " & Environment.NewLine & ex.Message, 1)
