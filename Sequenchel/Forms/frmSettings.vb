@@ -71,6 +71,8 @@
         chkIncludeDateInExportFiles.Tag = SeqData.curVar.IncludeDate
         chkIncludeDateInExportFiles.Checked = SeqData.curVar.IncludeDate
 
+        SetDefaultText(txtOverridePassword)
+        PasswordCharSet(txtOverridePassword)
     End Sub
 
     Private Sub btnDefaultConfigFilePath_Click(sender As Object, e As EventArgs) Handles btnDefaultConfigFilePath.Click
@@ -108,12 +110,12 @@
             txtDefaultConfigFilePath.BackColor = clrMarked
         End If
         If txtDefaultConfigFilePath.Text.Length > 0 Then
-            txtSettingsFile.Text = txtDefaultConfigFilePath.Text & "\" & SeqData.curVar.GeneralSettings.Substring(SeqData.CurVar.GeneralSettings.LastIndexOf("\") + 1, SeqData.curVar.GeneralSettings.Length - (SeqData.CurVar.GeneralSettings.LastIndexOf("\") + 1))
-            txtConnectionsFile.Text = txtDefaultConfigFilePath.Text & "\" & SeqData.curVar.ConnectionsFile.Substring(SeqData.CurVar.ConnectionsFile.LastIndexOf("\") + 1, SeqData.curVar.ConnectionsFile.Length - (SeqData.CurVar.ConnectionsFile.LastIndexOf("\") + 1))
+            txtSettingsFile.Text = txtDefaultConfigFilePath.Text & "\" & SeqData.curVar.GeneralSettings.Substring(SeqData.curVar.GeneralSettings.LastIndexOf("\") + 1, SeqData.curVar.GeneralSettings.Length - (SeqData.curVar.GeneralSettings.LastIndexOf("\") + 1))
+            txtConnectionsFile.Text = txtDefaultConfigFilePath.Text & "\" & SeqData.curVar.ConnectionsFile.Substring(SeqData.curVar.ConnectionsFile.LastIndexOf("\") + 1, SeqData.curVar.ConnectionsFile.Length - (SeqData.curVar.ConnectionsFile.LastIndexOf("\") + 1))
             txtErrorlogPath.Text = txtDefaultConfigFilePath.Text
         Else
-            txtSettingsFile.Text = SeqData.CurVar.GeneralSettings.Substring(SeqData.CurVar.GeneralSettings.LastIndexOf("\") + 1, SeqData.CurVar.GeneralSettings.Length - (SeqData.CurVar.GeneralSettings.LastIndexOf("\") + 1))
-            txtConnectionsFile.Text = SeqData.CurVar.ConnectionsFile.Substring(SeqData.CurVar.ConnectionsFile.LastIndexOf("\") + 1, SeqData.CurVar.ConnectionsFile.Length - (SeqData.CurVar.ConnectionsFile.LastIndexOf("\") + 1))
+            txtSettingsFile.Text = SeqData.curVar.GeneralSettings.Substring(SeqData.curVar.GeneralSettings.LastIndexOf("\") + 1, SeqData.curVar.GeneralSettings.Length - (SeqData.curVar.GeneralSettings.LastIndexOf("\") + 1))
+            txtConnectionsFile.Text = SeqData.curVar.ConnectionsFile.Substring(SeqData.curVar.ConnectionsFile.LastIndexOf("\") + 1, SeqData.curVar.ConnectionsFile.Length - (SeqData.curVar.ConnectionsFile.LastIndexOf("\") + 1))
             txtErrorlogPath.Text = SeqData.dhdText.LogLocation
         End If
 
@@ -231,112 +233,111 @@
         End If
     End Sub
 
-
     Private Sub btnSettingsGeneralSave_Click(sender As Object, e As EventArgs) Handles btnSettingsGeneralSave.Click
         Dim blnSettingsChanged As Boolean = False
         Dim blnGeneralSettingsChanged As Boolean = False
 
         If txtDefaultConfigFilePath.BackColor = clrMarked Then
-            SeqData.CurVar.DefaultConfigFilePath = txtDefaultConfigFilePath.Text
-            txtDefaultConfigFilePath.Tag = SeqData.CurVar.DefaultConfigFilePath
+            SeqData.curVar.DefaultConfigFilePath = txtDefaultConfigFilePath.Text
+            txtDefaultConfigFilePath.Tag = SeqData.curVar.DefaultConfigFilePath
             txtDefaultConfigFilePath.BackColor = clrOriginal
-            SeqData.dhdText.CheckDir(SeqData.CurVar.DefaultConfigFilePath, True)
+            SeqData.dhdText.CheckDir(SeqData.curVar.DefaultConfigFilePath, True)
             blnSettingsChanged = True
         End If
         If txtSettingsFile.BackColor = clrMarked Then
-            SeqData.CurVar.GeneralSettings = txtSettingsFile.Text
-            txtSettingsFile.Tag = SeqData.CurVar.GeneralSettings
+            SeqData.curVar.GeneralSettings = txtSettingsFile.Text
+            txtSettingsFile.Tag = SeqData.curVar.GeneralSettings
             txtSettingsFile.BackColor = clrOriginal
             'dhdText.CheckDir(SeqData.CurVar.GeneralSettings, True)
             blnSettingsChanged = True
         End If
         If chkAllowSettingsChange.BackColor = clrMarked Then
-            SeqData.CurVar.AllowSettingsChange = chkAllowSettingsChange.Checked
-            chkAllowSettingsChange.Tag = SeqData.CurVar.AllowSettingsChange
+            SeqData.curVar.AllowSettingsChange = chkAllowSettingsChange.Checked
+            chkAllowSettingsChange.Tag = SeqData.curVar.AllowSettingsChange
             chkAllowSettingsChange.BackColor = clrOriginal
             blnSettingsChanged = True
         End If
         If chkAllowConfiguration.BackColor = clrMarked Then
-            SeqData.CurVar.AllowConfiguration = chkAllowConfiguration.Checked
-            chkAllowConfiguration.Tag = SeqData.CurVar.AllowConfiguration
+            SeqData.curVar.AllowConfiguration = chkAllowConfiguration.Checked
+            chkAllowConfiguration.Tag = SeqData.curVar.AllowConfiguration
             chkAllowConfiguration.BackColor = clrOriginal
             blnSettingsChanged = True
         End If
         If chkAllowLinkedServers.BackColor = clrMarked Then
-            SeqData.CurVar.AllowLinkedServers = chkAllowLinkedServers.Checked
-            chkAllowLinkedServers.Tag = SeqData.CurVar.AllowLinkedServers
+            SeqData.curVar.AllowLinkedServers = chkAllowLinkedServers.Checked
+            chkAllowLinkedServers.Tag = SeqData.curVar.AllowLinkedServers
             chkAllowLinkedServers.BackColor = clrOriginal
             blnSettingsChanged = True
         End If
         If chkAllowQueryEdit.BackColor = clrMarked Then
-            SeqData.CurVar.AllowQueryEdit = chkAllowQueryEdit.Checked
-            chkAllowQueryEdit.Tag = SeqData.CurVar.AllowQueryEdit
+            SeqData.curVar.AllowQueryEdit = chkAllowQueryEdit.Checked
+            chkAllowQueryEdit.Tag = SeqData.curVar.AllowQueryEdit
             chkAllowQueryEdit.BackColor = clrOriginal
             blnSettingsChanged = True
         End If
         If chkAllowDataImport.BackColor = clrMarked Then
-            SeqData.CurVar.AllowDataImport = chkAllowDataImport.Checked
-            chkAllowDataImport.Tag = SeqData.CurVar.AllowDataImport
+            SeqData.curVar.AllowDataImport = chkAllowDataImport.Checked
+            chkAllowDataImport.Tag = SeqData.curVar.AllowDataImport
             chkAllowDataImport.BackColor = clrOriginal
             blnSettingsChanged = True
         End If
         If chkAllowSmartUpdate.BackColor = clrMarked Then
-            SeqData.CurVar.AllowSmartUpdate = chkAllowSmartUpdate.Checked
-            chkAllowSmartUpdate.Tag = SeqData.CurVar.AllowSmartUpdate
+            SeqData.curVar.AllowSmartUpdate = chkAllowSmartUpdate.Checked
+            chkAllowSmartUpdate.Tag = SeqData.curVar.AllowSmartUpdate
             chkAllowSmartUpdate.BackColor = clrOriginal
             blnSettingsChanged = True
         End If
         If chkAllowUpdate.BackColor = clrMarked Then
-            SeqData.CurVar.AllowUpdate = chkAllowUpdate.Checked
-            chkAllowUpdate.Tag = SeqData.CurVar.AllowUpdate
+            SeqData.curVar.AllowUpdate = chkAllowUpdate.Checked
+            chkAllowUpdate.Tag = SeqData.curVar.AllowUpdate
             chkAllowUpdate.BackColor = clrOriginal
             blnSettingsChanged = True
         End If
         If chkAllowInsert.BackColor = clrMarked Then
-            SeqData.CurVar.AllowInsert = chkAllowInsert.Checked
-            chkAllowInsert.Tag = SeqData.CurVar.AllowInsert
+            SeqData.curVar.AllowInsert = chkAllowInsert.Checked
+            chkAllowInsert.Tag = SeqData.curVar.AllowInsert
             chkAllowInsert.BackColor = clrOriginal
             blnSettingsChanged = True
         End If
         If chkAllowDelete.BackColor = clrMarked Then
-            SeqData.CurVar.AllowDelete = chkAllowDelete.Checked
-            chkAllowDelete.Tag = SeqData.CurVar.AllowDelete
+            SeqData.curVar.AllowDelete = chkAllowDelete.Checked
+            chkAllowDelete.Tag = SeqData.curVar.AllowDelete
             chkAllowDelete.BackColor = clrOriginal
             blnSettingsChanged = True
         End If
-        If txtOverridePassword.Text.Length > 0 Then
+        If txtOverridePassword.Text.Length > 0 And txtOverridePassword.Text <> txtOverridePassword.Tag Then
             SeqData.curVar.OverridePassword = SeqData.dhdText.MD5Encrypt(txtOverridePassword.Text)
             blnSettingsChanged = True
         End If
 
         If chkLimitLookupLists.BackColor = clrMarked Then
-            SeqData.CurVar.LimitLookupLists = chkLimitLookupLists.Checked
-            chkLimitLookupLists.Tag = SeqData.CurVar.LimitLookupLists
+            SeqData.curVar.LimitLookupLists = chkLimitLookupLists.Checked
+            chkLimitLookupLists.Tag = SeqData.curVar.LimitLookupLists
             chkLimitLookupLists.BackColor = clrOriginal
             blnGeneralSettingsChanged = True
         End If
         If txtLimitLookupLists.BackColor = clrMarked Then
-            SeqData.CurVar.LimitLookupListsCount = txtLimitLookupLists.Text
-            txtLimitLookupLists.Tag = SeqData.CurVar.LimitLookupListsCount
+            SeqData.curVar.LimitLookupListsCount = txtLimitLookupLists.Text
+            txtLimitLookupLists.Tag = SeqData.curVar.LimitLookupListsCount
             txtLimitLookupLists.BackColor = clrOriginal
             blnSettingsChanged = True
         End If
 
         If txtConnectionsFile.BackColor = clrMarked Then
-            SeqData.CurVar.ConnectionsFile = txtConnectionsFile.Text
-            txtConnectionsFile.Tag = SeqData.CurVar.ConnectionsFile
+            SeqData.curVar.ConnectionsFile = txtConnectionsFile.Text
+            txtConnectionsFile.Tag = SeqData.curVar.ConnectionsFile
             blnGeneralSettingsChanged = True
             txtConnectionsFile.BackColor = clrOriginal
             'dhdText.CheckDir(SeqData.CurVar.ConnectionsFile, True)
         End If
         If cbxDateFormats.BackColor = clrMarked Then
-            SeqData.CurVar.DateTimeStyle = cbxDateFormats.SelectedValue.ToString
+            SeqData.curVar.DateTimeStyle = cbxDateFormats.SelectedValue.ToString
             blnGeneralSettingsChanged = True
             cbxDateFormats.BackColor = clrOriginal
         End If
         If chkIncludeDateInExportFiles.BackColor = clrMarked Then
-            SeqData.CurVar.IncludeDate = chkIncludeDateInExportFiles.Checked
-            chkIncludeDateInExportFiles.Tag = SeqData.CurVar.IncludeDate
+            SeqData.curVar.IncludeDate = chkIncludeDateInExportFiles.Checked
+            chkIncludeDateInExportFiles.Tag = SeqData.curVar.IncludeDate
             chkIncludeDateInExportFiles.BackColor = clrOriginal
             blnGeneralSettingsChanged = True
         End If
@@ -407,7 +408,7 @@
         Me.cbxDateFormats.DrawMode = DrawMode.OwnerDrawFixed
         ' Handle the DrawItem event to draw the items.
 
-        cbxDateFormats.SelectedValue = SeqData.CurVar.DateTimeStyle
+        cbxDateFormats.SelectedValue = SeqData.curVar.DateTimeStyle
     End Sub
 
     Private Sub cbxDateFormats_DrawItem(ByVal sender As System.Object, _
@@ -467,7 +468,7 @@
     End Sub
 
     Private Sub cbxDateFormats_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbxDateFormats.SelectedIndexChanged
-        If cbxDateFormats.SelectedValue.ToString = SeqData.CurVar.DateTimeStyle Then
+        If cbxDateFormats.SelectedValue.ToString = SeqData.curVar.DateTimeStyle Then
             cbxDateFormats.BackColor = clrOriginal
         Else
             cbxDateFormats.BackColor = clrMarked
@@ -479,6 +480,28 @@
         txtSettingsFile.BackColor = clrOriginal
         txtConnectionsFile.BackColor = clrOriginal
 
+    End Sub
+
+    Private Sub txtOverridePassword_GotFocus(sender As Object, e As EventArgs) Handles txtOverridePassword.GotFocus
+        RemoveDefaultText(txtOverridePassword)
+        PasswordCharSet(txtOverridePassword)
+    End Sub
+
+    Private Sub txtOverridePassword_LostFocus(sender As Object, e As EventArgs) Handles txtOverridePassword.LostFocus
+        SetDefaultText(txtOverridePassword)
+        PasswordCharSet(txtOverridePassword)
+    End Sub
+
+    Private Sub btnShowOverridePassword_MouseDown(sender As Object, e As MouseEventArgs) Handles btnShowOverridePassword.MouseDown
+        txtOverridePassword.PasswordChar = Nothing
+    End Sub
+
+    Private Sub btnShowOverridePassword_MouseLeave(sender As Object, e As EventArgs) Handles btnShowOverridePassword.MouseLeave
+        PasswordCharSet(txtOverridePassword)
+    End Sub
+
+    Private Sub btnShowOverridePassword_MouseUp(sender As Object, e As MouseEventArgs) Handles btnShowOverridePassword.MouseUp
+        PasswordCharSet(txtOverridePassword)
     End Sub
 
 #End Region
@@ -667,7 +690,7 @@
             SeqData.dhdMainDB.DataLocation = txtDatabaseLocation.Text
             SeqData.dhdMainDB.LoginMethod = cbxLoginMethod.SelectedItem
             SeqData.dhdMainDB.LoginName = txtLoginName.Text
-            SeqData.dhdMainDB.Password = txtPassword.Text
+            If txtPassword.Text.Length > 0 And txtPassword.Text <> txtPassword.Tag Then SeqData.dhdMainDB.Password = txtPassword.Text
             SeqData.dhdMainDB.DatabaseName = "master"
             strDBName = txtDatabaseName.Text
             If SeqData.CurVar.DebugMode Then
@@ -777,7 +800,7 @@
         cbxDataProvider.SelectedItem = "SQL"
         cbxLoginMethod.SelectedItem = "WINDOWS"
         txtLoginName.Text = ""
-        txtPassword.Text = ""
+        SetDefaultText(txtPassword)
     End Sub
 
     Private Sub btnSaveSettingsDatabase_Click(sender As Object, e As EventArgs) Handles btnSaveSettingsDatabase.Click
@@ -795,7 +818,7 @@
         SeqData.dhdMainDB.DataProvider = cbxDataProvider.SelectedItem
         SeqData.dhdMainDB.LoginMethod = cbxLoginMethod.SelectedItem
         SeqData.dhdMainDB.LoginName = txtLoginName.Text
-        SeqData.dhdMainDB.Password = txtPassword.Text
+        If txtPassword.Text.Length > 0 And txtPassword.Text <> txtPassword.Tag Then SeqData.dhdMainDB.Password = txtPassword.Text
         DatabaseTest(SeqData.dhdMainDB)
         Try
             If SeqData.dhdMainDB.DataBaseOnline = False Then
@@ -827,12 +850,14 @@
     End Sub
 
     Private Sub DatabaseShow()
+        SetDefaultText(txtPassword)
+        PasswordCharSet(txtPassword)
         cbxDataProvider.SelectedItem = SeqData.dhdMainDB.DataProvider
         txtDatabaseLocation.Text = SeqData.dhdMainDB.DataLocation
         txtDatabaseName.Text = SeqData.dhdMainDB.DatabaseName
         cbxLoginMethod.SelectedItem = SeqData.dhdMainDB.LoginMethod
         txtLoginName.Text = SeqData.dhdMainDB.LoginName
-        txtPassword.Text = SeqData.dhdMainDB.Password
+        'txtPassword.Text = SeqData.dhdMainDB.Password
         cbxLoginMethod_SelectedIndexChanged(Nothing, Nothing)
     End Sub
 
@@ -841,12 +866,15 @@
             txtLoginName.Enabled = True
             txtPassword.Enabled = True
             txtLoginName.Text = SeqData.dhdMainDB.LoginName
-            txtPassword.Text = SeqData.dhdMainDB.Password
+            'txtPassword.Text = SeqData.dhdMainDB.Password
+            SetDefaultText(txtPassword)
+            btnShowDatabasePassword.Enabled = True
         ElseIf cbxLoginMethod.SelectedItem = "Windows" Then
             txtLoginName.Enabled = False
             txtPassword.Enabled = False
             txtLoginName.Text = ""
-            txtPassword.Text = ""
+            RemoveDefaultText(txtPassword)
+            btnShowDatabasePassword.Enabled = False
         End If
     End Sub
 
@@ -943,6 +971,28 @@
         End Try
         MessageBox.Show("Procedures added successfully")
 
+    End Sub
+
+    Private Sub txtPassword_GotFocus(sender As Object, e As EventArgs) Handles txtPassword.GotFocus
+        RemoveDefaultText(txtPassword)
+        PasswordCharSet(txtPassword)
+    End Sub
+
+    Private Sub txtPassword_LostFocus(sender As Object, e As EventArgs) Handles txtPassword.LostFocus
+        SetDefaultText(txtPassword)
+        PasswordCharSet(txtPassword)
+    End Sub
+
+    Private Sub btnShowDatabasePassword_MouseDown(sender As Object, e As MouseEventArgs) Handles btnShowDatabasePassword.MouseDown
+        txtPassword.PasswordChar = Nothing
+    End Sub
+
+    Private Sub btnShowDatabasePassword_MouseLeave(sender As Object, e As EventArgs) Handles btnShowDatabasePassword.MouseLeave
+        PasswordCharSet(txtPassword)
+    End Sub
+
+    Private Sub btnShowDatabasePassword_MouseUp(sender As Object, e As MouseEventArgs) Handles btnShowDatabasePassword.MouseUp
+        PasswordCharSet(txtPassword)
     End Sub
 
 #End Region
@@ -1285,20 +1335,6 @@
         SetDefaultText(sender)
     End Sub
 
-    Private Sub SetDefaultText(objTextBox As TextBox)
-        If objTextBox.Text = "" Then
-            objTextBox.Text = objTextBox.Tag
-            objTextBox.ForeColor = Color.Gray
-        End If
-    End Sub
-
-    Private Sub RemoveDefaultText(objTextBox As TextBox)
-        If objTextBox.Text = objTextBox.Tag Then
-            objTextBox.Text = ""
-            objTextBox.ForeColor = SystemColors.WindowText
-        End If
-    End Sub
-
     Private Sub SetFtpDefaults()
         SetDefaultText(txtFtpServer)
         SetDefaultText(txtUploadSource)
@@ -1407,7 +1443,7 @@
             txtSmtpServerUsername.Text = SeqData.dhdText.SmtpUser
             txtSmtpServerPassword.Enabled = True
             'txtSmtpServerPassword.Text = SeqData.dhdText.SmtpPassword
-            btnShowPassword.Enabled = True
+            btnShowEmailPassword.Enabled = True
         End If
     End Sub
 
@@ -1425,28 +1461,41 @@
         PasswordCharSet(txtSmtpServerPassword)
     End Sub
 
-    Private Sub btnShowPassword_Click(sender As Object, e As EventArgs) Handles btnShowPassword.MouseDown
+    Private Sub btnShowPassword_Click(sender As Object, e As EventArgs) Handles btnShowEmailPassword.MouseDown
         txtSmtpServerPassword.PasswordChar = Nothing
     End Sub
 
-    Private Sub btnShowPassword_MouseLeave(sender As Object, e As EventArgs) Handles btnShowPassword.MouseLeave
+    Private Sub btnShowPassword_MouseLeave(sender As Object, e As EventArgs) Handles btnShowEmailPassword.MouseLeave
         PasswordCharSet(txtSmtpServerPassword)
     End Sub
 
-    Private Sub btnShowPassword_MouseUp(sender As Object, e As MouseEventArgs) Handles btnShowPassword.MouseUp
+    Private Sub btnShowPassword_MouseUp(sender As Object, e As MouseEventArgs) Handles btnShowEmailPassword.MouseUp
         PasswordCharSet(txtSmtpServerPassword)
+    End Sub
+
+#End Region
+    Private Sub SetDefaultText(objTextBox As TextBox)
+        If objTextBox.Text = "" Then
+            objTextBox.Text = objTextBox.Tag
+            objTextBox.ForeColor = Color.Gray
+        End If
+    End Sub
+
+    Private Sub RemoveDefaultText(objTextBox As TextBox)
+        If objTextBox.Text = objTextBox.Tag Then
+            objTextBox.Text = ""
+            objTextBox.ForeColor = SystemColors.WindowText
+        End If
     End Sub
 
     Private Sub PasswordCharSet(objTextBox As TextBox)
         If objTextBox.Text.Length = 0 Then
-            objTextBox.PasswordChar = Nothing
+            objTextBox.PasswordChar = "*"
         ElseIf objTextBox.Text = objTextBox.Tag Then
             objTextBox.PasswordChar = Nothing
         Else
             objTextBox.PasswordChar = "*"
         End If
     End Sub
-
-#End Region
 
 End Class

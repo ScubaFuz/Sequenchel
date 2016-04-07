@@ -278,7 +278,7 @@ Partial Class frmSmartUpdate
         Me.lblStatusText.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.lblStatusText.AutoSize = True
         Me.lblStatusText.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblStatusText.Location = New System.Drawing.Point(103, 556)
+        Me.lblStatusText.Location = New System.Drawing.Point(103, 532)
         Me.lblStatusText.Name = "lblStatusText"
         Me.lblStatusText.Size = New System.Drawing.Size(0, 16)
         Me.lblStatusText.TabIndex = 148
@@ -383,7 +383,7 @@ Partial Class frmSmartUpdate
         Me.pnlMain.Controls.Add(Me.pnlSourceDataType)
         Me.pnlMain.Location = New System.Drawing.Point(12, 147)
         Me.pnlMain.Name = "pnlMain"
-        Me.pnlMain.Size = New System.Drawing.Size(750, 376)
+        Me.pnlMain.Size = New System.Drawing.Size(750, 352)
         Me.pnlMain.TabIndex = 158
         '
         'rbnSourceConfig
@@ -423,7 +423,7 @@ Partial Class frmSmartUpdate
         Me.lblStatusTitle.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.lblStatusTitle.AutoSize = True
         Me.lblStatusTitle.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblStatusTitle.Location = New System.Drawing.Point(36, 556)
+        Me.lblStatusTitle.Location = New System.Drawing.Point(36, 532)
         Me.lblStatusTitle.Name = "lblStatusTitle"
         Me.lblStatusTitle.Size = New System.Drawing.Size(55, 16)
         Me.lblStatusTitle.TabIndex = 162
@@ -501,7 +501,7 @@ Partial Class frmSmartUpdate
         Me.lblSmartUpdateCommand.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.lblSmartUpdateCommand.AutoSize = True
         Me.lblSmartUpdateCommand.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblSmartUpdateCommand.Location = New System.Drawing.Point(9, 533)
+        Me.lblSmartUpdateCommand.Location = New System.Drawing.Point(9, 509)
         Me.lblSmartUpdateCommand.Name = "lblSmartUpdateCommand"
         Me.lblSmartUpdateCommand.Size = New System.Drawing.Size(122, 13)
         Me.lblSmartUpdateCommand.TabIndex = 171
@@ -510,7 +510,7 @@ Partial Class frmSmartUpdate
         'txtSmartUpdateCommand
         '
         Me.txtSmartUpdateCommand.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.txtSmartUpdateCommand.Location = New System.Drawing.Point(137, 530)
+        Me.txtSmartUpdateCommand.Location = New System.Drawing.Point(137, 506)
         Me.txtSmartUpdateCommand.Name = "txtSmartUpdateCommand"
         Me.txtSmartUpdateCommand.ReadOnly = True
         Me.txtSmartUpdateCommand.Size = New System.Drawing.Size(625, 20)
@@ -547,7 +547,7 @@ Partial Class frmSmartUpdate
         Me.grpConfiguration.Controls.Add(Me.dtpEndDate)
         Me.grpConfiguration.Location = New System.Drawing.Point(768, 169)
         Me.grpConfiguration.Name = "grpConfiguration"
-        Me.grpConfiguration.Size = New System.Drawing.Size(220, 196)
+        Me.grpConfiguration.Size = New System.Drawing.Size(226, 196)
         Me.grpConfiguration.TabIndex = 175
         Me.grpConfiguration.TabStop = False
         Me.grpConfiguration.Text = "Configuration"
@@ -570,9 +570,9 @@ Partial Class frmSmartUpdate
         Me.grpCommand.Controls.Add(Me.chkUseAuditing)
         Me.grpCommand.Controls.Add(Me.chkRemoveNonSourceData)
         Me.grpCommand.Controls.Add(Me.chkUseTargetCollation)
-        Me.grpCommand.Location = New System.Drawing.Point(768, 397)
+        Me.grpCommand.Location = New System.Drawing.Point(768, 373)
         Me.grpCommand.Name = "grpCommand"
-        Me.grpCommand.Size = New System.Drawing.Size(220, 163)
+        Me.grpCommand.Size = New System.Drawing.Size(226, 163)
         Me.grpCommand.TabIndex = 176
         Me.grpCommand.TabStop = False
         Me.grpCommand.Text = "SmartUpdateCommand"
@@ -584,7 +584,7 @@ Partial Class frmSmartUpdate
         Me.grpCreateSQL.Controls.Add(Me.lblLicenseRequired)
         Me.grpCreateSQL.Location = New System.Drawing.Point(768, 58)
         Me.grpCreateSQL.Name = "grpCreateSQL"
-        Me.grpCreateSQL.Size = New System.Drawing.Size(220, 105)
+        Me.grpCreateSQL.Size = New System.Drawing.Size(226, 105)
         Me.grpCreateSQL.TabIndex = 177
         Me.grpCreateSQL.TabStop = False
         Me.grpCreateSQL.Text = "Create SQL Components"
@@ -593,7 +593,7 @@ Partial Class frmSmartUpdate
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1002, 581)
+        Me.ClientSize = New System.Drawing.Size(1004, 557)
         Me.Controls.Add(Me.grpCreateSQL)
         Me.Controls.Add(Me.grpCommand)
         Me.Controls.Add(Me.grpConfiguration)
@@ -614,6 +614,7 @@ Partial Class frmSmartUpdate
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.Label1)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
+        Me.MinimumSize = New System.Drawing.Size(1020, 595)
         Me.Name = "frmSmartUpdate"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
         Me.Text = "SmartUpdate"

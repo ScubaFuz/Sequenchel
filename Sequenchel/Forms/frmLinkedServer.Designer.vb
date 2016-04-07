@@ -674,7 +674,7 @@ Partial Class frmLinkedServer
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(741, 605)
+        Me.ClientSize = New System.Drawing.Size(741, 606)
         Me.Controls.Add(Me.lblLinkedServerName)
         Me.Controls.Add(Me.txtLinkedServerName)
         Me.Controls.Add(Me.grpUpdatable)

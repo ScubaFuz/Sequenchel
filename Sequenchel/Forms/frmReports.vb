@@ -20,10 +20,18 @@ Public Class frmReports
     End Sub
 
     Private Sub frmReports_Activated(sender As Object, e As EventArgs) Handles Me.Activated
-        SeqData.curStatus.Connection = cbxConnection.SelectedItem
-        SeqData.LoadConnection(xmlConnections, SeqData.curStatus.Connection)
-        SeqData.curStatus.TableSet = cbxTableSet.SelectedItem
-        SeqData.LoadTableSet(xmlTableSets, SeqData.curStatus.TableSet)
+        If cbxConnection.SelectedIndex <> -1 Then
+            SeqData.curStatus.Connection = cbxConnection.SelectedItem
+            If Not SeqData.curStatus.Connection = Nothing Then
+                SeqData.LoadConnection(xmlConnections, SeqData.curStatus.Connection)
+                If cbxTableSet.SelectedIndex <> -1 Then
+                    SeqData.curStatus.TableSet = cbxTableSet.SelectedItem
+                    If Not SeqData.curStatus.TableSet = Nothing Then
+                        SeqData.LoadTableSet(xmlTableSets, SeqData.curStatus.TableSet)
+                    End If
+                End If
+            End If
+        End If
     End Sub
 
     Private Sub btnClose_Click(sender As Object, e As EventArgs) Handles btnClose.Click
@@ -1676,10 +1684,14 @@ Public Class frmReports
     End Sub
 
     Private Sub btnEmailResults_Click(sender As Object, e As EventArgs) Handles btnEmailResults.Click
+        If SeqData.dhdText.SmtpServer.Length = 0 Then
+            WriteStatus("Email is not configured. No email was sent", 0, lblErrorMessage)
+            Exit Sub
+        End If
         If dgvReport.RowCount = 0 Then Exit Sub
         SeqData.dhdText.SmtpRecipient = InputBox("Please enter a valid Email Address", "Email", SeqData.dhdText.SmtpRecipient)
-        If SeqData.dhdText.SmtpRecipient = "" Then
-            'SetStatus("Email not send")
+        If SeqData.dhdText.SmtpRecipient = "" Or SeqData.dhdText.EmailAddressCheck(SeqData.dhdText.SmtpRecipient) = False Then
+            WriteStatus("Email address not valid. No email was sent", 0, lblErrorMessage)
             Exit Sub
         End If
         Dim strRecepientName As String = SeqData.dhdText.SmtpRecipient.Substring(0, SeqData.dhdText.SmtpRecipient.IndexOf("@"))

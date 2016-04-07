@@ -1,5 +1,7 @@
 ﻿Public Class frmLinkedServer
 
+#Region "Controls"
+
     Private Sub frmLinkedServer_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         txtHostServer.Text = SeqData.dhdConnection.DataLocation
     End Sub
@@ -7,35 +9,6 @@
     Private Sub txtServer_TextChanged(sender As Object, e As EventArgs) Handles txtServer.TextChanged
         SetLinkedServer()
         SetDataSource()
-    End Sub
-
-    Private Sub SetLinkedServer()
-        Dim strLinkedServer As String = ""
-        If chkLinkedServer.Checked = False Then
-            strLinkedServer = txtServer.Text
-            If chkInstance.Checked = True And txtInstance.Text.Length > 0 Then
-                strLinkedServer &= "\" & txtInstance.Text
-            End If
-            txtLinkedServer.Text = strLinkedServer
-        End If
-    End Sub
-
-    Private Sub SetDataSource()
-        Dim strDataSource As String = ""
-        If chkDataSource.Checked = False Then
-            strDataSource = txtServer.Text
-            If chkDomain.Checked = True And txtDomain.Text.Length > 0 Then
-                strDataSource &= "." & txtDomain.Text
-            End If
-            If chkInstance.Checked = True And txtInstance.Text.Length > 0 Then
-                strDataSource &= "\" & txtInstance.Text
-            End If
-            If chkTcpPort.Checked = True And txtTcpPort.Text.Length > 0 Then
-                strDataSource &= "," & txtTcpPort.Text
-            End If
-            txtDataSource.Text = strDataSource
-        End If
-
     End Sub
 
     Private Sub chkLinkedServer_CheckedChanged(sender As Object, e As EventArgs) Handles chkLinkedServer.CheckedChanged
@@ -96,7 +69,69 @@
     End Sub
 
     Private Sub btnLinkedServerClear_Click(sender As Object, e As EventArgs) Handles btnLinkedServerClear.Click
+        CursorControl("Wait")
         ClearAll()
+        CursorControl()
+    End Sub
+
+    Private Sub btnColumnsImport_Click(sender As Object, e As EventArgs) Handles btnColumnsImport.Click
+        CursorControl("Wait")
+        LinkedServersLoad()
+        CursorControl()
+    End Sub
+
+    Private Sub lvwLinkedServers_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lvwLinkedServers.SelectedIndexChanged
+        CursorControl("Wait")
+        LinkedServerSelect()
+        CursorControl()
+    End Sub
+
+    Private Sub btnLinkedServerAdd_Click(sender As Object, e As EventArgs) Handles btnLinkedServerAdd.Click
+        CursorControl("Wait")
+        LinkedServerAdd(True)
+        CursorControl()
+    End Sub
+
+    Private Sub btnLinkedServerDelete_Click(sender As Object, e As EventArgs) Handles btnLinkedServerDelete.Click
+        CursorControl("Wait")
+        LinkedServerDelete()
+        CursorControl()
+    End Sub
+
+    Private Sub btnLinkedServerUpdate_Click(sender As Object, e As EventArgs) Handles btnLinkedServerUpdate.Click
+        CursorControl("Wait")
+        LinkedServerAdd(False)
+        CursorControl()
+    End Sub
+
+#End Region
+
+    Private Sub SetLinkedServer()
+        Dim strLinkedServer As String = ""
+        If chkLinkedServer.Checked = False Then
+            strLinkedServer = txtServer.Text
+            If chkInstance.Checked = True And txtInstance.Text.Length > 0 Then
+                strLinkedServer &= "\" & txtInstance.Text
+            End If
+            txtLinkedServer.Text = strLinkedServer
+        End If
+    End Sub
+
+    Private Sub SetDataSource()
+        Dim strDataSource As String = ""
+        If chkDataSource.Checked = False Then
+            strDataSource = txtServer.Text
+            If chkDomain.Checked = True And txtDomain.Text.Length > 0 Then
+                strDataSource &= "." & txtDomain.Text
+            End If
+            If chkInstance.Checked = True And txtInstance.Text.Length > 0 Then
+                strDataSource &= "\" & txtInstance.Text
+            End If
+            If chkTcpPort.Checked = True And txtTcpPort.Text.Length > 0 Then
+                strDataSource &= "," & txtTcpPort.Text
+            End If
+            txtDataSource.Text = strDataSource
+        End If
     End Sub
 
     Private Sub ClearAll()
@@ -131,11 +166,8 @@
         chkRpcOut.Checked = True
     End Sub
 
-    Private Sub btnColumnsImport_Click(sender As Object, e As EventArgs) Handles btnColumnsImport.Click
-        LinkedServersLoad()
-    End Sub
-
     Private Sub LinkedServersLoad()
+        If txtHostServer.Text.Length = 0 Then Exit Sub
         strQuery = "SELECT server_id,[name] COLLATE DATABASE_DEFAULT as [Name],product,provider,data_source,location,provider_string,[catalog]"
         strQuery &= ",connect_timeout,query_timeout,is_linked,is_remote_login_enabled,is_rpc_out_enabled,is_data_access_enabled,is_collation_compatible"
         strQuery &= ",uses_remote_collation,collation_name,lazy_schema_validation,is_system,is_publisher,is_subscriber,is_distributor"
@@ -222,10 +254,64 @@
                 MessageBox.Show("There was a problem processing the Linked Server with datasource:" & Environment.NewLine & strDataSource & Environment.NewLine & Environment.NewLine & ex.Message)
             End Try
         Next
-
     End Sub
 
-    Private Sub lvwLinkedServers_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lvwLinkedServers.SelectedIndexChanged
+    Private Sub LinkedServerAdd(Optional blnCreate As Boolean = True)
+        If txtDataSource.Text.Length = 0 Then Exit Sub
+        strQuery = "USE [master]; " & Environment.NewLine
+        strQuery &= " DECLARE      @ServerName nvarchar(100),@LinkedServerName nvarchar(255),@DataSource nvarchar(255),@Instance nvarchar(100),@Domain nvarchar(100),@Port nvarchar(10)" & Environment.NewLine
+
+        strQuery &= " SET @ServerName = '" & txtServer.Text & "'" & Environment.NewLine
+        If txtInstance.Text.Length > 0 Then strQuery &= " SET @Instance = '" & txtInstance.Text & "'" & Environment.NewLine
+        If txtDomain.Text.Length > 0 Then strQuery &= " SET @Domain = '" & txtDomain.Text & "'" & Environment.NewLine
+        If txtTcpPort.Text.Length > 0 Then strQuery &= " SET @Port = '" & txtTcpPort.Text & "'" & Environment.NewLine
+
+        strQuery &= " SET @LinkedServerName = UPPER(@ServerName + COALESCE('\' + @Instance,''));" & Environment.NewLine
+        strQuery &= " SET @DataSource = LOWER(@ServerName + COALESCE('.' + @Domain,'')  + COALESCE('\' + @Instance,'')) + COALESCE(',' + @Port,'');" & Environment.NewLine
+
+        If blnCreate = True Then
+            strQuery &= " EXEC master.dbo.sp_addlinkedserver @server = @LinkedServerName, @srvproduct=N'SQL_Server', @provider=N'SQLNCLI', @datasrc=@DataSource;" & Environment.NewLine
+            strQuery &= " EXEC master.dbo.sp_addlinkedsrvlogin @rmtsrvname=@LinkedServerName,@useself=N'True',@locallogin=NULL,@rmtuser=NULL,@rmtpassword=NULL;" & Environment.NewLine
+        End If
+
+
+        strQuery &= " EXEC master.dbo.sp_serveroption @server=@LinkedServerName, @optname=N'collation compatible', @optvalue=N'" & chkCollationCompatible.Checked & "';" & Environment.NewLine
+        strQuery &= " EXEC master.dbo.sp_serveroption @server=@LinkedServerName, @optname=N'data access', @optvalue=N'" & chkDataAccess.Checked & "';" & Environment.NewLine
+        strQuery &= " EXEC master.dbo.sp_serveroption @server=@LinkedServerName, @optname=N'dist', @optvalue=N'" & chkDistributor.Checked & "';" & Environment.NewLine
+        strQuery &= " EXEC master.dbo.sp_serveroption @server=@LinkedServerName, @optname=N'pub', @optvalue=N'" & chkPublisher.Checked & "';" & Environment.NewLine
+        strQuery &= " EXEC master.dbo.sp_serveroption @server=@LinkedServerName, @optname=N'rpc', @optvalue=N'" & chkRpc.Checked & "';" & Environment.NewLine
+        strQuery &= " EXEC master.dbo.sp_serveroption @server=@LinkedServerName, @optname=N'rpc out', @optvalue=N'" & chkRpcOut.Checked & "';" & Environment.NewLine
+        strQuery &= " EXEC master.dbo.sp_serveroption @server=@LinkedServerName, @optname=N'sub', @optvalue=N'" & chkSubscriber.Checked & "';" & Environment.NewLine
+        strQuery &= " EXEC master.dbo.sp_serveroption @server=@LinkedServerName, @optname=N'connect timeout', @optvalue=N'" & txtConnectionTimeout.Text & "';" & Environment.NewLine
+        strQuery &= " EXEC master.dbo.sp_serveroption @server=@LinkedServerName, @optname=N'collation name', @optvalue="
+        If txtCollationName.Text.Length = 0 Then
+            strQuery &= "NULL"
+        Else
+            strQuery &= txtCollationName.Text.Length
+        End If
+        strQuery &= ";" & Environment.NewLine
+        strQuery &= " EXEC master.dbo.sp_serveroption @server=@LinkedServerName, @optname=N'lazy schema validation', @optvalue=N'" & chkLazySchema.Checked & "';" & Environment.NewLine
+        strQuery &= " EXEC master.dbo.sp_serveroption @server=@LinkedServerName, @optname=N'query timeout', @optvalue=N'" & txtQueryTimeout.Text & "';" & Environment.NewLine
+        strQuery &= " EXEC master.dbo.sp_serveroption @server=@LinkedServerName, @optname=N'use remote collation', @optvalue=N'" & chkRemoteCollation.Checked & "';" & Environment.NewLine
+        strQuery &= " EXEC master.dbo.sp_serveroption @server=@LinkedServerName, @optname=N'remote proc transaction promotion', @optvalue=N'" & chkRPTPromotion.Checked & "';" & Environment.NewLine
+
+        SeqData.QueryDb(SeqData.dhdConnection, strQuery, False)
+        LinkedServersLoad()
+    End Sub
+
+    Private Sub LinkedServerDelete()
+        Dim strSelection As String = txtLinkedServerName.Text
+        If strSelection.Length = 0 Then Exit Sub
+        'If txtInstance.Text.Length > 0 Then strSelection &= "\" & txtInstance.Text
+        If MessageBox.Show("This will permanently remove the Item: " & strSelection & Environment.NewLine & Core.Message.strContinue, Core.Message.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Exit Sub
+
+        strQuery = "master.dbo.sp_dropserver @server=N'" & strSelection & "', @droplogins='droplogins'"
+        SeqData.QueryDb(SeqData.dhdConnection, strQuery, False)
+        txtLinkedServerName.Text = ""
+        LinkedServersLoad()
+    End Sub
+
+    Private Sub LinkedServerSelect()
         If lvwLinkedServers.SelectedItems.Count = 1 Then
             strQuery = "SELECT srv.server_id,srv.[name] COLLATE DATABASE_DEFAULT as [Name],srv.product,srv.provider,srv.data_source,srv.[catalog]"
             strQuery &= ",srv.connect_timeout,srv.query_timeout,srv.is_remote_login_enabled,srv.is_rpc_out_enabled,srv.is_data_access_enabled,srv.is_collation_compatible"
@@ -276,74 +362,5 @@
                 'End If
             Next
         End If
-
     End Sub
-
-
-    Private Sub btnLinkedServerAdd_Click(sender As Object, e As EventArgs) Handles btnLinkedServerAdd.Click
-        LinkedServerAdd(True)
-    End Sub
-
-    Private Sub LinkedServerAdd(Optional blnCreate As Boolean = True)
-
-        strQuery = "USE [master]; " & Environment.NewLine
-        strQuery &= " DECLARE      @ServerName nvarchar(100),@LinkedServerName nvarchar(255),@DataSource nvarchar(255),@Instance nvarchar(100),@Domain nvarchar(100),@Port nvarchar(10)" & Environment.NewLine
-
-        strQuery &= " SET @ServerName = '" & txtServer.Text & "'" & Environment.NewLine
-        If txtInstance.Text.Length > 0 Then strQuery &= " SET @Instance = '" & txtInstance.Text & "'" & Environment.NewLine
-        If txtDomain.Text.Length > 0 Then strQuery &= " SET @Domain = '" & txtDomain.Text & "'" & Environment.NewLine
-        If txtTcpPort.Text.Length > 0 Then strQuery &= " SET @Port = '" & txtTcpPort.Text & "'" & Environment.NewLine
-
-        strQuery &= " SET @LinkedServerName = UPPER(@ServerName + COALESCE('\' + @Instance,''));" & Environment.NewLine
-        strQuery &= " SET @DataSource = LOWER(@ServerName + COALESCE('.' + @Domain,'')  + COALESCE('\' + @Instance,'')) + COALESCE(',' + @Port,'');" & Environment.NewLine
-
-        If blnCreate = True Then
-            strQuery &= " EXEC master.dbo.sp_addlinkedserver @server = @LinkedServerName, @srvproduct=N'SQL_Server', @provider=N'SQLNCLI', @datasrc=@DataSource;" & Environment.NewLine
-            strQuery &= " EXEC master.dbo.sp_addlinkedsrvlogin @rmtsrvname=@LinkedServerName,@useself=N'True',@locallogin=NULL,@rmtuser=NULL,@rmtpassword=NULL;" & Environment.NewLine
-        End If
-
-
-        strQuery &= " EXEC master.dbo.sp_serveroption @server=@LinkedServerName, @optname=N'collation compatible', @optvalue=N'" & chkCollationCompatible.Checked & "';" & Environment.NewLine
-        strQuery &= " EXEC master.dbo.sp_serveroption @server=@LinkedServerName, @optname=N'data access', @optvalue=N'" & chkDataAccess.Checked & "';" & Environment.NewLine
-        strQuery &= " EXEC master.dbo.sp_serveroption @server=@LinkedServerName, @optname=N'dist', @optvalue=N'" & chkDistributor.Checked & "';" & Environment.NewLine
-        strQuery &= " EXEC master.dbo.sp_serveroption @server=@LinkedServerName, @optname=N'pub', @optvalue=N'" & chkPublisher.Checked & "';" & Environment.NewLine
-        strQuery &= " EXEC master.dbo.sp_serveroption @server=@LinkedServerName, @optname=N'rpc', @optvalue=N'" & chkRpc.Checked & "';" & Environment.NewLine
-        strQuery &= " EXEC master.dbo.sp_serveroption @server=@LinkedServerName, @optname=N'rpc out', @optvalue=N'" & chkRpcOut.Checked & "';" & Environment.NewLine
-        strQuery &= " EXEC master.dbo.sp_serveroption @server=@LinkedServerName, @optname=N'sub', @optvalue=N'" & chkSubscriber.Checked & "';" & Environment.NewLine
-        strQuery &= " EXEC master.dbo.sp_serveroption @server=@LinkedServerName, @optname=N'connect timeout', @optvalue=N'" & txtConnectionTimeout.Text & "';" & Environment.NewLine
-        strQuery &= " EXEC master.dbo.sp_serveroption @server=@LinkedServerName, @optname=N'collation name', @optvalue="
-        If txtCollationName.Text.Length = 0 Then
-            strQuery &= "NULL"
-        Else
-            strQuery &= txtCollationName.Text.Length
-        End If
-        strQuery &= ";" & Environment.NewLine
-        strQuery &= " EXEC master.dbo.sp_serveroption @server=@LinkedServerName, @optname=N'lazy schema validation', @optvalue=N'" & chkLazySchema.Checked & "';" & Environment.NewLine
-        strQuery &= " EXEC master.dbo.sp_serveroption @server=@LinkedServerName, @optname=N'query timeout', @optvalue=N'" & txtQueryTimeout.Text & "';" & Environment.NewLine
-        strQuery &= " EXEC master.dbo.sp_serveroption @server=@LinkedServerName, @optname=N'use remote collation', @optvalue=N'" & chkRemoteCollation.Checked & "';" & Environment.NewLine
-        strQuery &= " EXEC master.dbo.sp_serveroption @server=@LinkedServerName, @optname=N'remote proc transaction promotion', @optvalue=N'" & chkRPTPromotion.Checked & "';" & Environment.NewLine
-
-        SeqData.QueryDb(SeqData.dhdConnection, strQuery, False)
-        LinkedServersLoad()
-    End Sub
-
-    Private Sub btnLinkedServerDelete_Click(sender As Object, e As EventArgs) Handles btnLinkedServerDelete.Click
-        LinkedServerDelete()
-    End Sub
-
-    Private Sub LinkedServerDelete()
-        Dim strSelection As String = txtLinkedServerName.Text
-        'If txtInstance.Text.Length > 0 Then strSelection &= "\" & txtInstance.Text
-        If MessageBox.Show("This will permanently remove the Item: " & strSelection & Environment.NewLine & Core.Message.strContinue, Core.Message.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Exit Sub
-
-        strQuery = "master.dbo.sp_dropserver @server=N'" & strSelection & "', @droplogins='droplogins'"
-        SeqData.QueryDb(SeqData.dhdConnection, strQuery, False)
-        txtLinkedServerName.Text = ""
-        LinkedServersLoad()
-    End Sub
-
-    Private Sub btnLinkedServerUpdate_Click(sender As Object, e As EventArgs) Handles btnLinkedServerUpdate.Click
-        LinkedServerAdd(False)
-    End Sub
-
 End Class

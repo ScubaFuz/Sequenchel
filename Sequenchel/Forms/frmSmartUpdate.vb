@@ -11,7 +11,9 @@
             lblLicenseRequired.Visible = False
         End If
         LoadConnections()
-        LoadTables()
+        If cbxConnection.SelectedIndex <> -1 Then
+            LoadTables()
+        End If
         dtpStartDate.Value = Today()
     End Sub
 
@@ -52,8 +54,16 @@
         Dim strSQL As String = ""
 
         Try
+            'check if table exists
+            strSQL = "Select TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'SmartUpdate'"
+            Dim dtsdata As DataSet = SeqData.QueryDb(SeqData.dhdConnection, strSQL, True, 5)
+            If SeqData.dhdText.DatasetCheck(dtsdata) = True Then
+                lblStatusText.Text = "SmartUpdate table already exists. Please delete the table before (re)creating it."
+                Exit Sub
+            End If
+            'create table
+            strSQL = ""
             Dim MydbRef As New SDBA.DBRef
-
             strSQL = MydbRef.GetScript("01 dbo.SmartUpdate.sql")
             strSQL = strSQL.Replace("Sequenchel", SeqData.dhdConnection.DatabaseName)
             If SeqData.curVar.Encryption = False Then strSQL = strSQL.Replace("WITH ENCRYPTION", "")
@@ -67,13 +77,19 @@
 
     Private Sub btnCreateSmartUpdateProcedure_Click(sender As Object, e As EventArgs) Handles btnCreateSmartUpdateProcedure.Click
         Dim strSQL As String = ""
-
+        Dim blnExists As Boolean = False
         Try
+            'Check for procedure
+            strSQL = "SELECT ROUTINE_NAME FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_NAME = 'usp_SmartUpdate' AND ROUTINE_SCHEMA = 'dbo' AND ROUTINE_TYPE = 'PROCEDURE'"
+            Dim dtsdata As DataSet = SeqData.QueryDb(SeqData.dhdConnection, strSQL, True, 5)
+            If SeqData.dhdText.DatasetCheck(dtsdata) = True Then blnExists = True
+            
+            'create procedure
             Dim MydbRef As New SDBA.DBRef
-
             strSQL = MydbRef.GetScript("01 dbo.usp_SmartUpdate.sql")
             strSQL = strSQL.Replace("Sequenchel", SeqData.dhdConnection.DatabaseName)
             If SeqData.curVar.Encryption = False Then strSQL = strSQL.Replace("WITH ENCRYPTION", "")
+            If blnExists = True Then strSQL = strSQL.Replace("CREATE PROCEDURE", "ALTER PROCEDURE")
             If SeqData.curVar.DevMode Then MessageBox.Show(strSQL)
             SeqData.QueryDb(SeqData.dhdConnection, strSQL, False, 10)
             lblStatusText.Text = "SmartUpdate Procedure created succesfully"
@@ -135,9 +151,20 @@
     End Sub
 
     Private Sub btnSaveConfiguration_Click(sender As Object, e As EventArgs) Handles btnSaveConfiguration.Click
+        If pnlCompareColumn.Controls.Count = 0 Then
+            lblStatusText.Text = "There is no configuration to save."
+            Exit Sub
+        End If
+        Dim blnCheckFound As Boolean = False
+        For Each ctrl As CheckBox In pnlCompareColumn.Controls
+            If ctrl.Checked = True Then blnCheckFound = True
+        Next
+        If blnCheckFound = False Then
+            lblStatusText.Text = "Nothing has been selected for comparison. Nothing is saved."
+            Exit Sub
+        End If
         'check for table dbo.SmartUpdate
-        'Dim strSQL As String = "IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.TABLES  WHERE TABLE_NAME = 'SmartUpdate') SELECT 1 AS TableExists ELSE SELECT 0 AS TableExists"
-        Dim strSQL As String = "SELECT 1 AS TableExists FROM INFORMATION_SCHEMA.TABLES  WHERE TABLE_NAME = 'SmartUpdate'"
+        Dim strSQL As String = "Select TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'SmartUpdate'"
         Dim dtsData As DataSet = SeqData.QueryDb(SeqData.dhdConnection, strSQL, True, 5)
         If SeqData.dhdText.DatasetCheck(dtsData) = False Then
             lblStatusText.Text = "The SmartUpdate table was not found. Please create the table first."
@@ -227,7 +254,10 @@
 
     Private Sub btnAddSmartUpdateSchedule_Click(sender As Object, e As EventArgs) Handles btnAddSmartUpdateSchedule.Click
         'MessageBox.Show("The Scheduler is not yet operational. Please schedule the SmartUpdate Command manually.")
-
+        If txtSmartUpdateCommand.Text.Length = 0 Then
+            lblStatusText.Text = "There is no command to schedule, aborting action"
+            Exit Sub
+        End If
         'get logpath
         Dim strLogPath As String = GetDefaultLogPath(SeqData.dhdConnection)
         'get jobname

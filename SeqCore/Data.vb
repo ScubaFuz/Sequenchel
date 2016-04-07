@@ -41,6 +41,13 @@ Public Class Data
         dhdText.LogLocation = System.AppDomain.CurrentDomain.BaseDirectory & "LOG"
         dhdText.OutputFile = Environment.SpecialFolder.MyDocuments
 
+        dhdMainDB.LoginMethod = "WINDOWS"
+        dhdMainDB.LoginName = "SDBAUser"
+        dhdMainDB.Password = "SDBAPassword"
+        dhdMainDB.DataLocation = Environment.MachineName & "\SQLEXPRESS"
+        dhdMainDB.DatabaseName = "Sequenchel"
+        dhdMainDB.DataProvider = "SQL"
+
         dhdConnection.LoginMethod = "WINDOWS"
         dhdConnection.LoginName = "SDBAUser"
         dhdConnection.Password = "SDBAPassword"
@@ -632,7 +639,7 @@ Public Class Data
                 If dhdText.CheckElement(xmlLoadDoc, "DataProvider") Then dhdMainDB.DataProvider = xmlLoadDoc.Item("Sequenchel").Item("DataBase").Item("DataProvider").InnerText
                 If dhdText.CheckElement(xmlLoadDoc, "LoginMethod") Then dhdMainDB.LoginMethod = xmlLoadDoc.Item("Sequenchel").Item("DataBase").Item("LoginMethod").InnerText
                 If dhdText.CheckElement(xmlLoadDoc, "LoginName") Then dhdMainDB.LoginName = xmlLoadDoc.Item("Sequenchel").Item("DataBase").Item("LoginName").InnerText
-                If dhdText.CheckElement(xmlLoadDoc, "Password") Then dhdMainDB.Password = xmlLoadDoc.Item("Sequenchel").Item("DataBase").Item("Password").InnerText
+                If dhdText.CheckElement(xmlLoadDoc, "Password") Then dhdMainDB.Password = DataHandler.txt.DecryptText(xmlLoadDoc.Item("Sequenchel").Item("DataBase").Item("Password").InnerText)
 
                 If dhdText.CheckElement(xmlLoadDoc, "LogFileName") Then dhdText.LogFileName = xmlLoadDoc.Item("Sequenchel").Item("LogSettings").Item("LogFileName").InnerText
                 If dhdText.CheckElement(xmlLoadDoc, "LogLevel") Then dhdText.LogLevel = xmlLoadDoc.Item("Sequenchel").Item("LogSettings").Item("LogLevel").InnerText
@@ -680,7 +687,7 @@ Public Class Data
         strXmlText &= "		<DataProvider>" & dhdMainDB.DataProvider & "</DataProvider>" & Environment.NewLine
         strXmlText &= "		<LoginMethod>" & dhdMainDB.LoginMethod & "</LoginMethod>" & Environment.NewLine
         strXmlText &= "		<LoginName>" & dhdMainDB.LoginName & "</LoginName>" & Environment.NewLine
-        strXmlText &= "		<Password>" & dhdMainDB.Password & "</Password>" & Environment.NewLine
+        strXmlText &= "		<Password>" & DataHandler.txt.EncryptText(dhdMainDB.Password) & "</Password>" & Environment.NewLine
         strXmlText &= "	</DataBase>" & Environment.NewLine
         strXmlText &= "	<LogSettings>" & Environment.NewLine
         strXmlText &= "		<LogFileName>" & dhdText.LogFileName & "</LogFileName>" & Environment.NewLine

@@ -35,6 +35,7 @@ Partial Class frmSettings
         Me.btnConnectionsFileSystem = New System.Windows.Forms.Button()
         Me.btnSettingsFileSystem = New System.Windows.Forms.Button()
         Me.grpSecurity = New System.Windows.Forms.GroupBox()
+        Me.btnShowOverridePassword = New System.Windows.Forms.Button()
         Me.chkAllowSmartUpdate = New System.Windows.Forms.CheckBox()
         Me.chkAllowDataImport = New System.Windows.Forms.CheckBox()
         Me.chkAllowQueryEdit = New System.Windows.Forms.CheckBox()
@@ -93,6 +94,7 @@ Partial Class frmSettings
         Me.rbtLoggingLevel4 = New System.Windows.Forms.RadioButton()
         Me.rbtLoggingLevel0 = New System.Windows.Forms.RadioButton()
         Me.tpgDatabase = New System.Windows.Forms.TabPage()
+        Me.btnShowDatabasePassword = New System.Windows.Forms.Button()
         Me.btnRefreshDatabase = New System.Windows.Forms.Button()
         Me.btnTestConnection = New System.Windows.Forms.Button()
         Me.lblBackupPath = New System.Windows.Forms.Label()
@@ -219,20 +221,20 @@ Partial Class frmSettings
         Me.lblUploadSource = New System.Windows.Forms.Label()
         Me.txtUploadSource = New System.Windows.Forms.TextBox()
         Me.tpgEmail = New System.Windows.Forms.TabPage()
+        Me.btnShowEmailPassword = New System.Windows.Forms.Button()
         Me.btnSettingsEmailSave = New System.Windows.Forms.Button()
-        Me.btnShowPassword = New System.Windows.Forms.Button()
         Me.lblSmtpPortNumber = New System.Windows.Forms.Label()
         Me.txtSmtpPortNumber = New System.Windows.Forms.TextBox()
-        Me.chkUseSslEncryption = New System.Windows.Forms.CheckBox()
-        Me.lblSmtpReply = New System.Windows.Forms.Label()
-        Me.txtSmtpReply = New System.Windows.Forms.TextBox()
-        Me.chkSmtpCredentials = New System.Windows.Forms.CheckBox()
-        Me.lblSmtpServerPassword = New System.Windows.Forms.Label()
-        Me.txtSmtpServerPassword = New System.Windows.Forms.TextBox()
-        Me.lblSmtpServerUsername = New System.Windows.Forms.Label()
-        Me.txtSmtpServerUsername = New System.Windows.Forms.TextBox()
         Me.lblSmtpServer = New System.Windows.Forms.Label()
+        Me.chkUseSslEncryption = New System.Windows.Forms.CheckBox()
         Me.txtSmtpServer = New System.Windows.Forms.TextBox()
+        Me.lblSmtpReply = New System.Windows.Forms.Label()
+        Me.txtSmtpServerUsername = New System.Windows.Forms.TextBox()
+        Me.txtSmtpReply = New System.Windows.Forms.TextBox()
+        Me.lblSmtpServerUsername = New System.Windows.Forms.Label()
+        Me.chkSmtpCredentials = New System.Windows.Forms.CheckBox()
+        Me.txtSmtpServerPassword = New System.Windows.Forms.TextBox()
+        Me.lblSmtpServerPassword = New System.Windows.Forms.Label()
         Me.btnClose = New System.Windows.Forms.Button()
         Me.ttpDefaultLogLocation = New System.Windows.Forms.ToolTip(Me.components)
         Me.tabSettings.SuspendLayout()
@@ -372,6 +374,7 @@ Partial Class frmSettings
         '
         'grpSecurity
         '
+        Me.grpSecurity.Controls.Add(Me.btnShowOverridePassword)
         Me.grpSecurity.Controls.Add(Me.chkAllowSmartUpdate)
         Me.grpSecurity.Controls.Add(Me.chkAllowDataImport)
         Me.grpSecurity.Controls.Add(Me.chkAllowQueryEdit)
@@ -391,6 +394,15 @@ Partial Class frmSettings
         Me.grpSecurity.TabIndex = 108
         Me.grpSecurity.TabStop = False
         Me.grpSecurity.Text = "Security"
+        '
+        'btnShowOverridePassword
+        '
+        Me.btnShowOverridePassword.Image = Global.Sequenchel.My.Resources.Resources.eye
+        Me.btnShowOverridePassword.Location = New System.Drawing.Point(333, 96)
+        Me.btnShowOverridePassword.Name = "btnShowOverridePassword"
+        Me.btnShowOverridePassword.Size = New System.Drawing.Size(23, 23)
+        Me.btnShowOverridePassword.TabIndex = 110
+        Me.btnShowOverridePassword.UseVisualStyleBackColor = True
         '
         'chkAllowSmartUpdate
         '
@@ -465,8 +477,9 @@ Partial Class frmSettings
         Me.txtOverridePassword.Location = New System.Drawing.Point(150, 98)
         Me.txtOverridePassword.Name = "txtOverridePassword"
         Me.txtOverridePassword.PasswordChar = Global.Microsoft.VisualBasic.ChrW(42)
-        Me.txtOverridePassword.Size = New System.Drawing.Size(179, 20)
+        Me.txtOverridePassword.Size = New System.Drawing.Size(180, 20)
         Me.txtOverridePassword.TabIndex = 105
+        Me.txtOverridePassword.Tag = "<Keep Current Password>"
         '
         'chkAllowLinkedServers
         '
@@ -966,6 +979,7 @@ Partial Class frmSettings
         '
         'tpgDatabase
         '
+        Me.tpgDatabase.Controls.Add(Me.btnShowDatabasePassword)
         Me.tpgDatabase.Controls.Add(Me.btnRefreshDatabase)
         Me.tpgDatabase.Controls.Add(Me.btnTestConnection)
         Me.tpgDatabase.Controls.Add(Me.lblBackupPath)
@@ -1000,6 +1014,16 @@ Partial Class frmSettings
         Me.tpgDatabase.Tag = "tpgDatabase"
         Me.tpgDatabase.Text = "Database"
         Me.tpgDatabase.UseVisualStyleBackColor = True
+        '
+        'btnShowDatabasePassword
+        '
+        Me.btnShowDatabasePassword.Enabled = False
+        Me.btnShowDatabasePassword.Image = Global.Sequenchel.My.Resources.Resources.eye
+        Me.btnShowDatabasePassword.Location = New System.Drawing.Point(331, 151)
+        Me.btnShowDatabasePassword.Name = "btnShowDatabasePassword"
+        Me.btnShowDatabasePassword.Size = New System.Drawing.Size(23, 23)
+        Me.btnShowDatabasePassword.TabIndex = 89
+        Me.btnShowDatabasePassword.UseVisualStyleBackColor = True
         '
         'btnRefreshDatabase
         '
@@ -1161,8 +1185,9 @@ Partial Class frmSettings
         Me.txtPassword.Location = New System.Drawing.Point(165, 153)
         Me.txtPassword.Name = "txtPassword"
         Me.txtPassword.PasswordChar = Global.Microsoft.VisualBasic.ChrW(42)
-        Me.txtPassword.Size = New System.Drawing.Size(100, 20)
+        Me.txtPassword.Size = New System.Drawing.Size(163, 20)
         Me.txtPassword.TabIndex = 73
+        Me.txtPassword.Tag = "<Keep Current Password>"
         '
         'cbxLoginMethod
         '
@@ -1179,7 +1204,7 @@ Partial Class frmSettings
         Me.txtLoginName.Enabled = False
         Me.txtLoginName.Location = New System.Drawing.Point(165, 127)
         Me.txtLoginName.Name = "txtLoginName"
-        Me.txtLoginName.Size = New System.Drawing.Size(100, 20)
+        Me.txtLoginName.Size = New System.Drawing.Size(189, 20)
         Me.txtLoginName.TabIndex = 72
         '
         'lblDatabaseName
@@ -1195,7 +1220,7 @@ Partial Class frmSettings
         '
         Me.txtDatabaseName.Location = New System.Drawing.Point(165, 74)
         Me.txtDatabaseName.Name = "txtDatabaseName"
-        Me.txtDatabaseName.Size = New System.Drawing.Size(100, 20)
+        Me.txtDatabaseName.Size = New System.Drawing.Size(189, 20)
         Me.txtDatabaseName.TabIndex = 70
         '
         'lblDatabaseLocation
@@ -2220,7 +2245,7 @@ Partial Class frmSettings
         '
         'tpgEmail
         '
-        Me.tpgEmail.Controls.Add(Me.btnShowPassword)
+        Me.tpgEmail.Controls.Add(Me.btnShowEmailPassword)
         Me.tpgEmail.Controls.Add(Me.btnSettingsEmailSave)
         Me.tpgEmail.Controls.Add(Me.lblSmtpPortNumber)
         Me.tpgEmail.Controls.Add(Me.txtSmtpPortNumber)
@@ -2241,6 +2266,16 @@ Partial Class frmSettings
         Me.tpgEmail.Text = "Email"
         Me.tpgEmail.UseVisualStyleBackColor = True
         '
+        'btnShowEmailPassword
+        '
+        Me.btnShowEmailPassword.Enabled = False
+        Me.btnShowEmailPassword.Image = Global.Sequenchel.My.Resources.Resources.eye
+        Me.btnShowEmailPassword.Location = New System.Drawing.Point(369, 137)
+        Me.btnShowEmailPassword.Name = "btnShowEmailPassword"
+        Me.btnShowEmailPassword.Size = New System.Drawing.Size(23, 23)
+        Me.btnShowEmailPassword.TabIndex = 88
+        Me.btnShowEmailPassword.UseVisualStyleBackColor = True
+        '
         'btnSettingsEmailSave
         '
         Me.btnSettingsEmailSave.Location = New System.Drawing.Point(427, 19)
@@ -2249,16 +2284,6 @@ Partial Class frmSettings
         Me.btnSettingsEmailSave.TabIndex = 87
         Me.btnSettingsEmailSave.Text = "Save Email Settings"
         Me.btnSettingsEmailSave.UseVisualStyleBackColor = True
-        '
-        'btnShowPassword
-        '
-        Me.btnShowPassword.Enabled = False
-        Me.btnShowPassword.Image = Global.Sequenchel.My.Resources.Resources.eye
-        Me.btnShowPassword.Location = New System.Drawing.Point(369, 137)
-        Me.btnShowPassword.Name = "btnShowPassword"
-        Me.btnShowPassword.Size = New System.Drawing.Size(23, 23)
-        Me.btnShowPassword.TabIndex = 88
-        Me.btnShowPassword.UseVisualStyleBackColor = True
         '
         'lblSmtpPortNumber
         '
@@ -2276,6 +2301,15 @@ Partial Class frmSettings
         Me.txtSmtpPortNumber.Size = New System.Drawing.Size(43, 20)
         Me.txtSmtpPortNumber.TabIndex = 94
         '
+        'lblSmtpServer
+        '
+        Me.lblSmtpServer.AutoSize = True
+        Me.lblSmtpServer.Location = New System.Drawing.Point(61, 68)
+        Me.lblSmtpServer.Name = "lblSmtpServer"
+        Me.lblSmtpServer.Size = New System.Drawing.Size(71, 13)
+        Me.lblSmtpServer.TabIndex = 83
+        Me.lblSmtpServer.Text = "SMTP Server"
+        '
         'chkUseSslEncryption
         '
         Me.chkUseSslEncryption.AutoSize = True
@@ -2286,6 +2320,13 @@ Partial Class frmSettings
         Me.chkUseSslEncryption.Text = "Use SSL/TLS Encryption"
         Me.chkUseSslEncryption.UseVisualStyleBackColor = True
         '
+        'txtSmtpServer
+        '
+        Me.txtSmtpServer.Location = New System.Drawing.Point(202, 65)
+        Me.txtSmtpServer.Name = "txtSmtpServer"
+        Me.txtSmtpServer.Size = New System.Drawing.Size(190, 20)
+        Me.txtSmtpServer.TabIndex = 84
+        '
         'lblSmtpReply
         '
         Me.lblSmtpReply.AutoSize = True
@@ -2295,12 +2336,29 @@ Partial Class frmSettings
         Me.lblSmtpReply.TabIndex = 90
         Me.lblSmtpReply.Text = "Reply To Address"
         '
+        'txtSmtpServerUsername
+        '
+        Me.txtSmtpServerUsername.Enabled = False
+        Me.txtSmtpServerUsername.Location = New System.Drawing.Point(202, 115)
+        Me.txtSmtpServerUsername.Name = "txtSmtpServerUsername"
+        Me.txtSmtpServerUsername.Size = New System.Drawing.Size(190, 20)
+        Me.txtSmtpServerUsername.TabIndex = 86
+        '
         'txtSmtpReply
         '
         Me.txtSmtpReply.Location = New System.Drawing.Point(202, 220)
         Me.txtSmtpReply.Name = "txtSmtpReply"
         Me.txtSmtpReply.Size = New System.Drawing.Size(190, 20)
         Me.txtSmtpReply.TabIndex = 91
+        '
+        'lblSmtpServerUsername
+        '
+        Me.lblSmtpServerUsername.AutoSize = True
+        Me.lblSmtpServerUsername.Location = New System.Drawing.Point(61, 118)
+        Me.lblSmtpServerUsername.Name = "lblSmtpServerUsername"
+        Me.lblSmtpServerUsername.Size = New System.Drawing.Size(122, 13)
+        Me.lblSmtpServerUsername.TabIndex = 85
+        Me.lblSmtpServerUsername.Text = "SMTP Server Username"
         '
         'chkSmtpCredentials
         '
@@ -2314,15 +2372,6 @@ Partial Class frmSettings
         Me.chkSmtpCredentials.Text = "use Network Credentials"
         Me.chkSmtpCredentials.UseVisualStyleBackColor = True
         '
-        'lblSmtpServerPassword
-        '
-        Me.lblSmtpServerPassword.AutoSize = True
-        Me.lblSmtpServerPassword.Location = New System.Drawing.Point(61, 142)
-        Me.lblSmtpServerPassword.Name = "lblSmtpServerPassword"
-        Me.lblSmtpServerPassword.Size = New System.Drawing.Size(120, 13)
-        Me.lblSmtpServerPassword.TabIndex = 87
-        Me.lblSmtpServerPassword.Text = "SMTP Server Password"
-        '
         'txtSmtpServerPassword
         '
         Me.txtSmtpServerPassword.Enabled = False
@@ -2332,38 +2381,14 @@ Partial Class frmSettings
         Me.txtSmtpServerPassword.TabIndex = 88
         Me.txtSmtpServerPassword.Tag = "<Keep Current Password>"
         '
-        'lblSmtpServerUsername
+        'lblSmtpServerPassword
         '
-        Me.lblSmtpServerUsername.AutoSize = True
-        Me.lblSmtpServerUsername.Location = New System.Drawing.Point(61, 118)
-        Me.lblSmtpServerUsername.Name = "lblSmtpServerUsername"
-        Me.lblSmtpServerUsername.Size = New System.Drawing.Size(122, 13)
-        Me.lblSmtpServerUsername.TabIndex = 85
-        Me.lblSmtpServerUsername.Text = "SMTP Server Username"
-        '
-        'txtSmtpServerUsername
-        '
-        Me.txtSmtpServerUsername.Enabled = False
-        Me.txtSmtpServerUsername.Location = New System.Drawing.Point(202, 115)
-        Me.txtSmtpServerUsername.Name = "txtSmtpServerUsername"
-        Me.txtSmtpServerUsername.Size = New System.Drawing.Size(190, 20)
-        Me.txtSmtpServerUsername.TabIndex = 86
-        '
-        'lblSmtpServer
-        '
-        Me.lblSmtpServer.AutoSize = True
-        Me.lblSmtpServer.Location = New System.Drawing.Point(61, 68)
-        Me.lblSmtpServer.Name = "lblSmtpServer"
-        Me.lblSmtpServer.Size = New System.Drawing.Size(71, 13)
-        Me.lblSmtpServer.TabIndex = 83
-        Me.lblSmtpServer.Text = "SMTP Server"
-        '
-        'txtSmtpServer
-        '
-        Me.txtSmtpServer.Location = New System.Drawing.Point(202, 65)
-        Me.txtSmtpServer.Name = "txtSmtpServer"
-        Me.txtSmtpServer.Size = New System.Drawing.Size(190, 20)
-        Me.txtSmtpServer.TabIndex = 84
+        Me.lblSmtpServerPassword.AutoSize = True
+        Me.lblSmtpServerPassword.Location = New System.Drawing.Point(61, 142)
+        Me.lblSmtpServerPassword.Name = "lblSmtpServerPassword"
+        Me.lblSmtpServerPassword.Size = New System.Drawing.Size(120, 13)
+        Me.lblSmtpServerPassword.TabIndex = 87
+        Me.lblSmtpServerPassword.Text = "SMTP Server Password"
         '
         'btnClose
         '
@@ -2626,5 +2651,7 @@ Partial Class frmSettings
     Friend WithEvents txtSmtpServerUsername As System.Windows.Forms.TextBox
     Friend WithEvents lblSmtpServer As System.Windows.Forms.Label
     Friend WithEvents txtSmtpServer As System.Windows.Forms.TextBox
-    Friend WithEvents btnShowPassword As System.Windows.Forms.Button
+    Friend WithEvents btnShowEmailPassword As System.Windows.Forms.Button
+    Friend WithEvents btnShowOverridePassword As System.Windows.Forms.Button
+    Friend WithEvents btnShowDatabasePassword As System.Windows.Forms.Button
 End Class
