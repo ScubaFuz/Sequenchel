@@ -839,13 +839,15 @@ Public Class frmReports
         End If
         cbxReportName.SelectedIndex = -1
         cbxReportName.Text = ""
+        lblStatus.Text = ""
         CursorControl()
     End Sub
 
     Private Sub btnReportCreate_Click(sender As Object, e As EventArgs) Handles btnReportCreate.Click
         CursorControl("Wait")
-        QueryShow()
-        QueryExecute()
+        If QueryShow() = True Then
+            QueryExecute()
+        End If
         CursorControl()
     End Sub
 
@@ -871,7 +873,7 @@ Public Class frmReports
         End If
     End Sub
 
-    Private Sub QueryShow()
+    Private Function QueryShow() As Boolean
         ReportClear(True)
         Dim xmlReportShow As XmlDocument = SeqData.dhdText.CreateRootDocument(Nothing, Nothing, Nothing)
         Dim strReportName As String = cbxReportName.Text
@@ -880,13 +882,14 @@ Public Class frmReports
         ReportToXML(xmlReportShow, strReportName)
         strQuery = SeqData.ReportQueryBuild(xmlReportShow, xmlTables, strReportName, SeqData.curVar.DateTimeStyle)
         If strQuery = Nothing Then
-            MessageBox.Show("No fields were selected. Select at least 1 field to be shown in your report")
-            Exit Sub
+            WriteStatus("No fields were selected. Select at least 1 field to be shown in your report", 0, lblStatus)
+            Return False
         End If
         'strQuery = ReportQueryBuild2()
         rtbQuery.Text = strQuery
         tabReports.SelectedTab = tpgReportResult
-    End Sub
+        Return True
+    End Function
 
     Private Sub QueryExecute()
         ReportClear(False)
@@ -913,11 +916,13 @@ Public Class frmReports
     Private Sub btnReportAddOrUpdate_Click(sender As Object, e As EventArgs) Handles btnReportAddOrUpdate.Click
         CursorControl("Wait")
         If cbxReportName.Text.Length < 3 Then
-            MessageBox.Show("Report Name must be at least 3 characters long")
+            'MessageBox.Show("Report Name must be at least 3 characters long")
+            WriteStatus("Report Name must be at least 3 characters long.", 0, lblStatus)
             Exit Sub
         End If
         If lvwSelectedFields.Items.Count = 0 Then
-            MessageBox.Show("No fields have been selected for this report. Aborting save.", "No fields selected", MessageBoxButtons.OK, MessageBoxIcon.Hand)
+            WriteStatus("No fields have been selected for this report. Aborting save.", 0, lblStatus)
+            'MessageBox.Show("No fields have been selected for this report. Aborting save.", "No fields selected", MessageBoxButtons.OK, MessageBoxIcon.Hand)
             Exit Sub
         End If
         ReportDelete(cbxReportName.Text)
@@ -926,7 +931,8 @@ Public Class frmReports
         If Not cbxReportName.Items.Contains(cbxReportName.Text) Then cbxReportName.Items.Add(cbxReportName.Text)
 
         If SaveXmlFile(xmlReports, SeqData.curVar.ReportSetFile, True) = False Then
-            MessageBox.Show("The file " & SeqData.curVar.ReportSetFile & " was not saved.")
+            WriteStatus("The file " & SeqData.curVar.ReportSetFile & " was not saved.", 0, lblStatus)
+            'MessageBox.Show("The file " & SeqData.curVar.ReportSetFile & " was not saved.")
         End If
         CursorControl()
     End Sub

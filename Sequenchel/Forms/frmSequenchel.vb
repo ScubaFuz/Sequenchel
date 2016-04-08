@@ -700,6 +700,12 @@ Public Class frmSequenchel
             End If
             FieldsClear(True)
             FieldsEnable(False)
+
+            SeqData.curStatus.SuspendActions = True
+            dgvTable1.ClearSelection()
+            dgvTable1.CurrentCell = Nothing
+            SeqData.curStatus.SuspendActions = False
+
             ButtonHandle()
             TagsClear()
             ColorSet()
@@ -708,10 +714,10 @@ Public Class frmSequenchel
         ElseIf btnAdd.Text = "Save Item" Then
             btnAdd.Text = "New Item"
             btnAdd.BackColor = clrControl
-            If SeqData.CurStatus.Status > 3 Then
-                SeqData.CurStatus.Status = SeqCore.CurrentStatus.StatusList.ControlEdit
+            If SeqData.curStatus.Status > 3 Then
+                SeqData.curStatus.Status = SeqCore.CurrentStatus.StatusList.ControlEdit
             Else
-                SeqData.CurStatus.Status = SeqCore.CurrentStatus.StatusList.Edit
+                SeqData.curStatus.Status = SeqCore.CurrentStatus.StatusList.Edit
             End If
             ItemAdd()
             FieldsEnable()
@@ -726,7 +732,7 @@ Public Class frmSequenchel
     Private Sub btnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
         If dgvTable1.RowCount = 0 Then Exit Sub
         If dgvTable1.SelectedRows.Count <> 1 Then
-            WriteStatus("You need to select 1 item from the list to use this function", 1, lblStatusText)
+            WriteStatus("You need to select 1 item from the list to use this function", 0, lblStatusText)
             Exit Sub
         End If
         If MessageBox.Show("This will permanently delete the selected Item from the database." & Environment.NewLine & Core.Message.strContinue, Core.Message.strAreYouSure, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.No Then
@@ -739,7 +745,7 @@ Public Class frmSequenchel
     Private Sub btnSearchAddOrUpdate_Click(sender As Object, e As EventArgs) Handles btnSearchAddOrUpdate.Click
         If tblTable.TableName.Length < 1 Then Exit Sub
         If cbxSearch.Text.Length < 1 Then
-            MessageBox.Show("The Name of the Search must be at least 1 character long")
+            WriteStatus("The Name of the Search must be at least 1 character long", 0, lblStatusText)
             Exit Sub
         End If
         SearchDelete(True)
@@ -748,7 +754,7 @@ Public Class frmSequenchel
             MessageBox.Show("The file " & SeqData.curVar.SearchFile & " was not saved.")
         Else
             cbxSearch.Items.Add(cbxSearch.Text)
-            lblStatusText.Text = "Search saved"
+            WriteStatus("Search saved", 0, lblStatusText)
         End If
 
         'SearchListLoad(tblTable.TableName)
@@ -768,7 +774,7 @@ Public Class frmSequenchel
         btnClear_Click(Nothing, Nothing)
         cbxSearch.SelectedIndex = -1
         cbxSearch.Text = ""
-        lblStatusText.Text = "Search deleted"
+        WriteStatus("Search deleted", 0, lblStatusText)
     End Sub
 
     Private Sub cbxSearch_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbxSearch.SelectedIndexChanged
@@ -793,7 +799,7 @@ Public Class frmSequenchel
             If SeqData.curStatus.Status = SeqCore.CurrentStatus.StatusList.Search And tblTable.TableSearch = True Then
                 btnSearch.Enabled = True
             End If
-            If SeqData.curStatus.Status = SeqCore.CurrentStatus.StatusList.Edit And tblTable.TableUpdate = True And (SeqData.curVar.AllowUpdate = True Or SeqData.curVar.SecurityOverride = True) Then
+            If dgvTable1.SelectedRows.Count = 1 And SeqData.curStatus.Status = SeqCore.CurrentStatus.StatusList.Edit And tblTable.TableUpdate = True And (SeqData.curVar.AllowUpdate = True Or SeqData.curVar.SecurityOverride = True) Then
                 btnUpdate.Enabled = True
             End If
             If tblTable.TableInsert = True And (SeqData.curVar.AllowInsert = True Or SeqData.curVar.SecurityOverride = True) Then
@@ -802,10 +808,10 @@ Public Class frmSequenchel
             If SeqData.curStatus.Status = SeqCore.CurrentStatus.StatusList.ControlSearch Then
                 btnSearch.Enabled = True
             End If
-            If SeqData.curStatus.Status = SeqCore.CurrentStatus.StatusList.ControlEdit And (SeqData.curVar.AllowUpdate = True Or SeqData.curVar.SecurityOverride = True) Then
+            If dgvTable1.SelectedRows.Count = 1 And SeqData.curStatus.Status = SeqCore.CurrentStatus.StatusList.ControlEdit And (SeqData.curVar.AllowUpdate = True Or SeqData.curVar.SecurityOverride = True) Then
                 btnUpdate.Enabled = True
             End If
-            If tblTable.TableDelete = True And (SeqData.curVar.AllowDelete = True Or SeqData.curVar.SecurityOverride = True) Then
+            If dgvTable1.SelectedRows.Count = 1 And tblTable.TableDelete = True And (SeqData.curVar.AllowDelete = True Or SeqData.curVar.SecurityOverride = True) Then
                 btnDelete.Enabled = True
             End If
         End If
@@ -1337,7 +1343,7 @@ Public Class frmSequenchel
             End If
         Next
         If strQuery1.Length = 0 Then
-            lblStatusText.Text = "Nothing to Insert"
+            WriteStatus("Nothing to Insert", 0, lblStatusText)
             Exit Sub
         End If
         strQuery = strQuery & strQuery1 & ") VALUES (" & strQuery2 & ")"
@@ -1345,21 +1351,21 @@ Public Class frmSequenchel
 
         If SeqData.curVar.DebugMode Then
             If MessageBox.Show("The query to be executed is: " & Environment.NewLine & strQuery & Environment.NewLine & Core.Message.strContinue, Core.Message.strAreYouSure, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.No Then
-                lblStatusText.Text = "Insert cancelled"
+                WriteStatus("Insert cancelled", 0, lblStatusText)
                 Exit Sub
             End If
         End If
-        lblStatusText.Text = "Inserting Record"
+        WriteStatus("Inserting Record", 0, lblStatusText)
 
         Try
             Dim dtsData As DataSet
             dtsData = SeqData.QueryDb(SeqData.dhdConnection, strQuery, 0)
             MessageBox.Show(SeqData.dhdConnection.DataBaseOnline)
+
             If SeqData.dhdConnection.ErrorLevel = -1 Then
-                MessageBox.Show("There was an error adding the data" & Environment.NewLine & SeqData.dhdConnection.ErrorMessage)
-                lblStatusText.Text = "Error inserting data"
+                WriteStatus(SeqData.dhdConnection.ErrorMessage, 1, lblStatusText)
             Else
-                lblStatusText.Text = "Record Inserted"
+                WriteStatus(SeqData.dhdConnection.RowsAffected & " Record(s) Inserted.", 0, lblStatusText)
             End If
         Catch ex As Exception
             MessageBox.Show("There was an error inserting the record: " & Environment.NewLine & ex.Message)
@@ -1377,6 +1383,7 @@ Public Class frmSequenchel
     End Sub
 
     Private Sub ItemUpdate()
+        If dgvTable1.SelectedRows.Count <> 1 Then Exit Sub
         strQuery = ""
         Dim strQueryUpdate As String = ""
         Dim strQueryWhere As String = " WHERE 1=1 "
@@ -1414,11 +1421,11 @@ Public Class frmSequenchel
 
         Next
         If strQueryUpdate.Length = 0 Then
-            lblStatusText.Text = "Nothing to Update"
+            WriteStatus("Nothing to Update", 0, lblStatusText)
             Exit Sub
         End If
         If strQueryWhere = " WHERE 1=1 " Then
-            lblStatusText.Text = "Item to update not found"
+            WriteStatus("Item to update not found", 0, lblStatusText)
             Exit Sub
         End If
         strQuery = strQuery & strQueryUpdate & strQueryWhere
@@ -1426,16 +1433,20 @@ Public Class frmSequenchel
 
         If SeqData.curVar.DebugMode Then
             If MessageBox.Show("The query to be executed is: " & Environment.NewLine & strQuery & Environment.NewLine & Core.Message.strContinue, Core.Message.strAreYouSure, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.No Then
-                lblStatusText.Text = "Update cancelled"
+                WriteStatus("Update cancelled", 0, lblStatusText)
                 Exit Sub
             End If
         End If
-        lblStatusText.Text = "Updating Record"
+        WriteStatus("Updating Record", 0, lblStatusText)
 
         Try
             Dim dtsData As DataSet
             dtsData = SeqData.QueryDb(SeqData.dhdConnection, strQuery, 0)
-            lblStatusText.Text = "Record Updated"
+            If SeqData.dhdConnection.ErrorLevel = -1 Then
+                WriteStatus(SeqData.dhdConnection.ErrorMessage, 1, lblStatusText)
+            Else
+                WriteStatus(SeqData.dhdConnection.RowsAffected & " Record(s) Updated.", 0, lblStatusText)
+            End If
         Catch ex As Exception
             MessageBox.Show("There was an error updating the record: " & Environment.NewLine & ex.Message)
             SeqData.WriteLog("There was an error updating the record: " & Environment.NewLine & ex.Message, 1)

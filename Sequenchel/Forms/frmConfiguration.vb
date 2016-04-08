@@ -10,12 +10,13 @@ Public Class frmConfiguration
         cbxLoginMethod.SelectedItem = "Windows"
         SecuritySet()
         DataTypesLoad()
+        'SetDefaultText(txtPassword)
         ConnectionsLoad()
         TableSetsLoad()
         TablesLoad()
         txtDefaultPath.Text = SeqData.curVar.DefaultConfigFilePath
         txtTableSetName.Text = SeqData.curVar.TableSetName
-
+        If lvwConnections.Items.Count = 0 Then ConnectionEdit()
     End Sub
 
     Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
@@ -89,7 +90,7 @@ Public Class frmConfiguration
                 SeqData.dhdConnection.DataProvider = xNode.Item("DataProvider").InnerText
                 SeqData.dhdConnection.LoginMethod = xNode.Item("LoginMethod").InnerText
                 SeqData.dhdConnection.LoginName = xNode.Item("LoginName").InnerText
-                SeqData.dhdConnection.Password = xNode.Item("Password").InnerText
+                If SeqData.dhdText.CheckNodeElement(xNode, "Password") Then SeqData.dhdConnection.Password = DataHandler.txt.DecryptText(xNode.Item("Password").InnerText)
             End If
         Next
         For Each lstItem In lvwConnections.Items
@@ -156,24 +157,6 @@ Public Class frmConfiguration
         End If
     End Sub
 
-    'Private Sub AddNode(ByVal inXmlNode As XmlNode, ByVal inTreeNode As TreeNode)
-    '    Dim xNode As XmlNode
-    '    Dim tNode As TreeNode
-    '    Dim nodeList As XmlNodeList
-    '    Dim i As Integer
-    '    If inXmlNode.HasChildNodes Then
-    '        nodeList = inXmlNode.ChildNodes
-    '        For i = 0 To nodeList.Count - 1
-    '            xNode = inXmlNode.ChildNodes(i)
-    '            inTreeNode.Nodes.Add(New TreeNode(xNode.Name))
-    '            tNode = inTreeNode.Nodes(i)
-    '            AddNode(xNode, tNode)
-    '        Next
-    '    Else
-    '        inTreeNode.Text = inXmlNode.InnerText.ToString
-    '    End If
-    'End Sub
-
     Private Sub btnCrawlServers_Click(sender As Object, e As EventArgs) Handles btnCrawlServers.Click
         CursorControl("Wait")
         GetSqlInstances()
@@ -207,13 +190,17 @@ Public Class frmConfiguration
         If cbxLoginMethod.SelectedItem = "SQL" Then
             txtLoginName.Enabled = True
             txtPassword.Enabled = True
-            txtLoginName.Text = SeqData.dhdMainDB.LoginName
-            txtPassword.Text = SeqData.dhdMainDB.Password
+            txtLoginName.Text = txtLoginName.Tag
+            'txtPassword.Text = SeqData.dhdMainDB.Password
+            SetDefaultText(txtPassword)
+            PasswordCharSet(txtPassword)
         ElseIf cbxLoginMethod.SelectedItem = "Windows" Then
             txtLoginName.Enabled = False
             txtPassword.Enabled = False
             txtLoginName.Text = ""
-            txtPassword.Text = ""
+            'txtPassword.Text = ""
+            RemoveDefaultText(txtPassword)
+            PasswordCharSet(txtPassword)
         End If
     End Sub
 
@@ -291,12 +278,25 @@ Public Class frmConfiguration
             txtConnectionName.Tag = xNode.Item("ConnectionName").InnerText
             txtDataBaseName.Text = xNode.Item("DataBaseName").InnerText
             txtDataLocation.Text = xNode.Item("DataLocation").InnerText
+            txtLoginName.Tag = xNode.Item("LoginName").InnerText
             txtLoginName.Text = xNode.Item("LoginName").InnerText
-            txtPassword.Text = DataHandler.txt.DecryptText(xNode.Item("Password").InnerText)
+            'txtPassword.Text = DataHandler.txt.DecryptText(xNode.Item("Password").InnerText)
             cbxDataProvider.Text = xNode.Item("DataProvider").InnerText
             cbxLoginMethod.Text = xNode.Item("LoginMethod").InnerText
             txtTimeOut.Text = xNode.Item("Timeout").InnerText
             txtTableSetsFile.Text = xNode.Item("TableSets").InnerText
+        ElseIf lvwConnections.Items.Count = 0 Then
+            txtConnectionName.Text = SeqData.dhdConnection.DatabaseName
+            txtConnectionName.Tag = SeqData.dhdConnection.DatabaseName
+            txtDataBaseName.Text = SeqData.dhdConnection.DatabaseName
+            txtDataLocation.Text = SeqData.dhdConnection.DataLocation
+            txtLoginName.Tag = SeqData.dhdConnection.LoginName
+            txtLoginName.Text = SeqData.dhdConnection.LoginName
+            'txtPassword.Text = DataHandler.txt.DecryptText(xNode.Item("Password").InnerText)
+            cbxDataProvider.Text = SeqData.dhdConnection.DataProvider
+            cbxLoginMethod.Text = SeqData.dhdConnection.LoginMethod
+            txtTimeOut.Text = SeqData.dhdConnection.ConnectionTimeout
+            txtTableSetsFile.Text = SeqData.curVar.DefaultConfigFilePath & "\" & txtConnectionName.Text.Replace(" ", "_") & "TableSets.xml"
         End If
     End Sub
 
@@ -328,7 +328,7 @@ Public Class frmConfiguration
         SeqData.dhdText.CreateAppendElement(xCNode, "DataBaseName", txtDataBaseName.Text, True)
         SeqData.dhdText.CreateAppendElement(xCNode, "DataLocation", txtDataLocation.Text, True)
         SeqData.dhdText.CreateAppendElement(xCNode, "LoginName", txtLoginName.Text, True)
-        SeqData.dhdText.CreateAppendElement(xCNode, "Password", DataHandler.txt.EncryptText(txtPassword.Text), True)
+        If txtPassword.Text <> txtPassword.Tag Then SeqData.dhdText.CreateAppendElement(xCNode, "Password", DataHandler.txt.EncryptText(txtPassword.Text), True)
         SeqData.dhdText.CreateAppendElement(xCNode, "DataProvider", cbxDataProvider.Text, True)
         SeqData.dhdText.CreateAppendElement(xCNode, "LoginMethod", cbxLoginMethod.Text, True)
         SeqData.dhdText.CreateAppendElement(xCNode, "Timeout", txtTimeOut.Text, True)
@@ -400,6 +400,29 @@ Public Class frmConfiguration
         txtTimeOut.Text = ""
         txtTableSetsFile.Text = ""
     End Sub
+
+    Private Sub txtPassword_GotFocus(sender As Object, e As EventArgs) Handles txtPassword.GotFocus
+        RemoveDefaultText(sender)
+        PasswordCharSet(sender)
+    End Sub
+
+    Private Sub txtPassword_LostFocus(sender As Object, e As EventArgs) Handles txtPassword.LostFocus
+        SetDefaultText(sender)
+        PasswordCharSet(sender)
+    End Sub
+
+    Private Sub btnShowDatabasePassword_MouseDown(sender As Object, e As MouseEventArgs) Handles btnShowDatabasePassword.MouseDown
+        txtPassword.PasswordChar = Nothing
+    End Sub
+
+    Private Sub btnShowDatabasePassword_MouseLeave(sender As Object, e As EventArgs) Handles btnShowDatabasePassword.MouseLeave
+        PasswordCharSet(txtPassword)
+    End Sub
+
+    Private Sub btnShowDatabasePassword_MouseUp(sender As Object, e As MouseEventArgs) Handles btnShowDatabasePassword.MouseUp
+        PasswordCharSet(txtPassword)
+    End Sub
+
 #End Region
 
 #Region "TableSets"

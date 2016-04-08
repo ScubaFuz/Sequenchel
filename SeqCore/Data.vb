@@ -83,9 +83,14 @@ Public Class Data
     End Sub
 
 #End Region
+    Public DataBaseOnline As Boolean = False
 
 #Region "DataBase"
     Public Function QueryDb(ByVal dhdConnect As DataHandler.db, ByVal strQueryData As String, ByVal ReturnValue As Boolean, Optional ByVal LogLevel As Integer = 5) As DataSet
+        If String.IsNullOrWhiteSpace(strQueryData) Then
+            WriteLog("No query was created, aborting querying database", LogLevel)
+            Return Nothing
+        End If
         WriteLog(strQueryData, LogLevel)
         ErrorMessage = ""
         dhdConnect.CheckDB()
@@ -764,7 +769,7 @@ Public Class Data
         dhdConnection.DataProvider = xmlConnNode.Item("DataProvider").InnerText
         dhdConnection.LoginMethod = xmlConnNode.Item("LoginMethod").InnerText
         dhdConnection.LoginName = xmlConnNode.Item("LoginName").InnerText
-        dhdConnection.Password = DataHandler.txt.DecryptText(xmlConnNode.Item("Password").InnerText)
+        If dhdText.CheckNodeElement(xmlConnNode, "Password") Then dhdConnection.Password = DataHandler.txt.DecryptText(xmlConnNode.Item("Password").InnerText)
         curVar.TableSetsFile = xmlConnNode.Item("TableSets").InnerText
 
         dhdConnection.CheckDB()

@@ -878,5 +878,28 @@ Module Common
         Next
     End Sub
 
+    Friend Sub SetDefaultText(objTextBox As TextBox)
+        If objTextBox.Text = "" Then
+            objTextBox.Text = objTextBox.Tag
+            objTextBox.ForeColor = Color.Gray
+        End If
+    End Sub
+
+    Friend Sub RemoveDefaultText(objTextBox As TextBox)
+        If objTextBox.Text = objTextBox.Tag Then
+            objTextBox.Text = ""
+            objTextBox.ForeColor = SystemColors.WindowText
+        End If
+    End Sub
+
+    Friend Sub PasswordCharSet(objTextBox As TextBox)
+        If objTextBox.Text.Length = 0 Then
+            objTextBox.PasswordChar = "*"
+        ElseIf objTextBox.Text = objTextBox.Tag Then
+            objTextBox.PasswordChar = Nothing
+        Else
+            objTextBox.PasswordChar = "*"
+        End If
+    End Sub
 
 End Module
