@@ -67,7 +67,7 @@ Public Class frmImport
     End Sub
 
     Private Sub ImportFile()
-        If SeqData.dhdText.PathConvert(SeqData.CheckFilePath(SeqData.dhdText.ImportFile)) = False Then
+        If SeqData.dhdText.CheckFile(SeqData.dhdText.PathConvert(SeqData.CheckFilePath(SeqData.dhdText.ImportFile))) = False Then
             MessageBox.Show("The file was not found. Check the file path and name")
             Exit Sub
         End If

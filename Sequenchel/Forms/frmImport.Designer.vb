@@ -445,7 +445,6 @@ Partial Class frmImport
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.dgvImport.BackgroundColor = System.Drawing.SystemColors.Control
         Me.dgvImport.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
-        Me.dgvImport.BackImage = CType(resources.GetObject("dgvImport.BackImage"), System.Drawing.Image)
         Me.dgvImport.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgvImport.Location = New System.Drawing.Point(29, 239)
         Me.dgvImport.Name = "dgvImport"

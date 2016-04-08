@@ -1360,8 +1360,6 @@ Public Class frmSequenchel
         Try
             Dim dtsData As DataSet
             dtsData = SeqData.QueryDb(SeqData.dhdConnection, strQuery, 0)
-            MessageBox.Show(SeqData.dhdConnection.DataBaseOnline)
-
             If SeqData.dhdConnection.ErrorLevel = -1 Then
                 WriteStatus(SeqData.dhdConnection.ErrorMessage, 1, lblStatusText)
             Else
