@@ -512,8 +512,9 @@ Public Class Data
             'intRecordsAffected = dhdDB.UploadSqlData(dgvImport.DataSource)
             Return intRecordsAffected
         Catch ex As Exception
-            dhdConnect.dbMessage = "Export to database failed. Check if the columns match and try again. If you are importing more than 1 table, make sure they have identical columns" & ex.Message
-            Return -1
+            ErrorLevel = -1
+            ErrorMessage = "Export to database failed. Check if the columns match and try again. If you are importing more than 1 table, make sure they have identical columns" & ex.Message
+            Return ErrorLevel
         End Try
         Return intRecordsAffected
     End Function
@@ -530,15 +531,12 @@ Public Class Data
                 If ConvertToNull = True Then dttInput = dhdConnect.EmptyToNull(dttInput)
                 Dim reader As DataTableReader = dttInput.CreateDataReader()
                 bcp.WriteToServer(reader)
-                bcp.Close()
-
             End Using
         Catch ex As Exception
             dhdConnect.ErrorMessage = ex.Message
             dhdConnect.ErrorLevel = -1
             intRecordsAffected = -1
         End Try
-        'bcp.Close()
         'Try
         '    'If dhdConnect.SqlConnection.State = ConnectionState.Open Then dhdConnect.SqlConnection.Close()
         'Catch ex As Exception
