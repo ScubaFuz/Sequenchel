@@ -237,15 +237,15 @@ Public Class Data
         End If
         If Not strDataType = Nothing Then
             If strDataType = "CHAR" Or _
-                                strDataType = "BINARY" Or _
-                                strDataType = "GUID" Or _
-                                strDataType = "TEXT" Or _
-                                strDataType = "IMAGE" Or _
-                                strDataType = "DATETIME" Or _
-                                strDataType = "TIME" Or _
-                                strDataType = "TIMESTAMP" Or _
-                                strDataType = "XML" Or _
-                                strDataType = "GEO" Then
+                    strDataType = "BINARY" Or _
+                    strDataType = "GUID" Or _
+                    strDataType = "TEXT" Or _
+                    strDataType = "IMAGE" Or _
+                    strDataType = "DATETIME" Or _
+                    strDataType = "TIME" Or _
+                    strDataType = "TIMESTAMP" Or _
+                    strDataType = "XML" Or _
+                    strDataType = "GEO" Then
                 strInput = strInput.Replace("'", "''")
                 strInput = "N'" & strInput & "'"
                 If (strCompare = "IN" Or strCompare = "NOT IN") Then

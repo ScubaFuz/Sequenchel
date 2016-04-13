@@ -601,15 +601,15 @@ Public Class frmReports
         lblRelationUse.Left = pnlRelationsUse.Left
 
         pnlRelationsField.Left = pnlRelationsUse.Left + pnlRelationsUse.Width
-        lblSourceField.Left = pnlRelationsField.Left
+        lblSourceField.Left = pnlRelationsField.Left + SeqData.curVar.BuildMargin
 
         pnlRelationsRelation.Left = pnlRelationsField.Left + pnlRelationsField.Width
-        lblRelationsRelation.Left = pnlRelationsRelation.Left
+        lblRelationsRelation.Left = pnlRelationsRelation.Left + SeqData.curVar.BuildMargin
 
         pnlRelationsJoinType.Left = pnlRelationsRelation.Left + pnlRelationsRelation.Width
-        lblRelationsJoinType.Left = pnlRelationsJoinType.Left
+        lblRelationsJoinType.Left = pnlRelationsJoinType.Left + SeqData.curVar.BuildMargin
 
-        If pnlRelationsJoinType.Left + pnlRelationsJoinType.Width + (SeqData.CurVar.BuildMargin * 2) > pnlRelations.Width Then pnlRelations.Width = pnlRelationsJoinType.Left + pnlRelationsJoinType.Width + (SeqData.CurVar.BuildMargin * 2)
+        pnlRelations.Width = pnlRelationsJoinType.Left + pnlRelationsJoinType.Width + (SeqData.curVar.BuildMargin * 2)
     End Sub
 
     Private Sub PanelFieldHeightSet()
@@ -773,7 +773,7 @@ Public Class frmReports
         Dim txtNewFilter As New TextField
         txtNewFilter.Name = pnlRelationsRelation.Name & intCount.ToString & strTableName
         txtNewFilter.Tag = strTableName
-        txtNewFilter.Width = 140
+        txtNewFilter.Width = 200
         pnlRelationsRelation.Controls.Add(txtNewFilter)
         txtNewFilter.Top = ((lvwSelectedTables.Items.Count - 1) * SeqData.CurVar.FieldHeight) + ((lvwSelectedTables.Items.Count - 1) * SeqData.CurVar.BuildMargin)
         txtNewFilter.Left = SeqData.CurVar.BuildMargin
@@ -1739,4 +1739,5 @@ Public Class frmReports
         End Try
 
     End Sub
+
 End Class
