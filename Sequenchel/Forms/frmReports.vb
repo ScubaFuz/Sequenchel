@@ -1099,64 +1099,6 @@ Public Class frmReports
         End If
     End Sub
 
-    'Private Sub ReportQueryBuild()
-    '    Dim strFieldName As String = ""
-    '    Dim strShowMode As String = Nothing
-    '    Dim strHavingMode As String = Nothing
-    '    Dim strQueryFrom As String = ""
-    '    Dim strQueryWhere As String = ""
-    '    Dim strQueryGroup As String = "GROUP BY ", blnGroup As Boolean = False
-    '    Dim strQueryHaving As String = ""
-    '    Dim strQueryOrder As String = ""
-
-    '    strQuery = "SELECT "
-    '    For incCount As Integer = 0 To lvwSelectedFields.Items.Count - 1
-    '        strFieldName = lvwSelectedFields.Items.Item(incCount).Name
-    '        'intMaxNumber = 0
-
-    '        For Each ctrSelect In pnlReportDisplay.Controls
-    '            strHavingMode = GetCtrText(pnlReportFilter, strFieldName)
-    '            If strHavingMode = 2 Then blnGroup = True
-    '            If ctrSelect.Checked = True Then
-    '                If strFieldName = ctrSelect.Tag Then
-    '                    strShowMode = GetCtrText(pnlReportShowMode, strFieldName)
-
-    '                    strQuery &= ", " & FormatFieldXML(strFieldName, strShowMode, True, True)
-    '                    Select Case strShowMode
-    '                        Case Nothing
-    '                            strQueryGroup &= ", " & strFieldName
-    '                        Case "DATE", "YEAR", "MONTH", "DAY", "TIME", "HOUR", "MINUTE", "SECOND"
-    '                            strQueryGroup &= ", " & strFieldName
-    '                        Case Else
-    '                            blnGroup = True
-    '                    End Select
-    '                End If
-    '            End If
-    '        Next
-    '    Next
-
-    '    If strQuery = "SELECT " Then
-    '        MessageBox.Show("You need to select at least 1 Field for display")
-    '        Exit Sub
-    '    End If
-    '    strQuery = strQuery.Replace("SELECT ,", "SELECT ")
-    '    If chkTop.Checked = True And IsNumeric(txtTop.Text) = True Then strQuery = strQuery.Replace("SELECT ", "SELECT TOP " & txtTop.Text & " ")
-    '    If chkDistinct.Checked = True Then strQuery = strQuery.Replace("SELECT ", "SELECT DISTINCT ")
-    '    strQueryGroup = strQueryGroup.Replace("GROUP BY ,", "GROUP BY ")
-    '    If strQueryGroup = "GROUP BY " Then blnGroup = False
-    '    strQueryFrom = FromClauseGet()
-    '    strQuery &= Environment.NewLine & strQueryFrom
-    '    strQueryWhere = WhereClauseGet()
-    '    If strQueryWhere.Length > 10 Then strQuery &= Environment.NewLine & strQueryWhere
-    '    If blnGroup = True Then strQuery &= Environment.NewLine & strQueryGroup
-    '    strQueryHaving = HavingClauseGet()
-    '    If strQueryHaving.Length > 11 Then strQuery &= Environment.NewLine & strQueryHaving
-    '    strQueryOrder = OrderClauseGet()
-    '    If strQueryOrder.Length > 10 Then strQuery &= Environment.NewLine & strQueryOrder
-
-    '    'MessageBox.Show(strQuery)
-    'End Sub
-
     Private Function FieldAliasGet(strFieldName As String) As String
         Dim strAliasName As String = ""
         For Each lvwItem In lvwSelectedFields.Items
@@ -1167,155 +1109,6 @@ Public Class frmReports
         If strAliasName = "" Then strAliasName = strFieldName
         Return strAliasName
     End Function
-
-    'Private Function FromClauseGet() As String
-    '    Dim strTableName As String = ""
-    '    Dim intControlNumber As Integer = 0
-    '    Dim strFromClause As String = "FROM "
-    '    Dim strFromSource As String = Nothing, strFromType As String = Nothing, strFromRelation As String = Nothing, strTargetTable As String = Nothing
-
-    '    For incCount As Integer = 0 To lvwSelectedTables.Items.Count - 1
-    '        strTableName = lvwSelectedTables.Items.Item(incCount).Name
-    '        If incCount = 0 Then strFromClause &= strTableName
-    '        For Each ctrFrom In pnlRelationsUse.Controls
-    '            If ctrFrom.Checked = True Then
-    '                If strTableName = ctrFrom.Tag Then
-    '                    intControlNumber = ctrFrom.Name.ToString.Substring(ctrFrom.Name.ToString.Length - strTableName.Length - 1, 1)
-    '                    strFromSource = GetCtrText(pnlRelationsField, strTableName, intControlNumber)
-    '                    strFromRelation = GetCtrText(pnlRelationsRelation, strTableName, intControlNumber)
-    '                    strFromType = GetCtrText(pnlRelationsJoinType, strTableName, intControlNumber)
-    '                    strTargetTable = strFromRelation.Substring(0, strFromRelation.LastIndexOf("."))
-    '                    strTargetTable = strTargetTable.Substring(strTargetTable.LastIndexOf("(") + 1, strTargetTable.Length - (strTargetTable.LastIndexOf("(") + 1))
-    '                    If strFromClause.Contains(strTargetTable) = True And strFromClause.Contains(strTableName) = False Then
-    '                        strFromClause &= Environment.NewLine & strFromType & " JOIN " & strTableName & " ON " & strTableName & "." & strFromSource & " = " & strFromRelation
-    '                    ElseIf strFromClause.Contains(strTargetTable) = True And strFromClause.Contains(strTableName) = True Then
-    '                        strFromClause &= Environment.NewLine & " AND " & strTableName & "." & strFromSource & " = " & strFromRelation
-    '                    ElseIf strFromClause.Contains(strTargetTable) = False And strFromClause.Contains(strTableName) = False Then
-    '                        strFromClause &= Environment.NewLine & strFromType & " JOIN " & strTargetTable & " ON " & strTableName & "." & strFromSource & " = " & strFromRelation
-    '                    ElseIf strFromClause.Contains(strTargetTable) = False And strFromClause.Contains(strTableName) = True Then
-    '                        strFromClause &= Environment.NewLine & strFromType & " JOIN " & strTargetTable & " ON " & strTableName & "." & strFromSource & " = " & strFromRelation
-    '                    End If
-    '                End If
-    '            End If
-    '        Next
-    '    Next
-    '    Return strFromClause
-    'End Function
-
-    'Private Function WhereClauseGet() As String
-    '    Dim strFieldName As String = ""
-    '    Dim intControlNumber As Integer = 0
-    '    Dim strQueryWhere As String = "WHERE "
-    '    Dim strWhereMode As String = Nothing, strWhereType As String = Nothing, strWhereClause As String = Nothing
-
-    '    For incCount As Integer = 0 To lvwSelectedFields.Items.Count - 1
-    '        strFieldName = lvwSelectedFields.Items.Item(incCount).Name
-    '        For Each ctrWhere As CheckField In pnlReportFilter.Controls
-    '            If ctrWhere.Checked = True And ctrWhere.CheckState = CheckState.Checked Then
-    '                If strFieldName = ctrWhere.Tag Then
-    '                    intControlNumber = ctrWhere.Name.ToString.Substring(ctrWhere.Name.ToString.Length - strFieldName.Length - 1, 1)
-    '                    strWhereMode = GetCtrText(pnlReportFilterMode, strFieldName, intControlNumber)
-    '                    If strWhereMode = "" Then strWhereMode = "AND"
-    '                    If strWhereMode.Contains("AND") Then strWhereMode = ") " & strWhereMode & " ("
-    '                    'If strWhereMode = "AND NOT" Then strWhereMode = ") AND NOT ("
-    '                    strWhereType = GetCtrText(pnlReportFilterType, strFieldName, intControlNumber)
-    '                    strWhereClause = GetCtrText(pnlReportFilterText, strFieldName, intControlNumber)
-    '                    'If IsNumeric(strWhereClause) = False Then strWhereClause = "'" & strWhereClause & "'"
-    '                    strWhereClause = CoreData.SetDelimiters(strWhereClause, ctrWhere.FieldDataType, strWhereType)
-
-    '                    If strWhereType = "LIKE" And strWhereClause.Contains("*") Then strWhereClause = strWhereClause.Replace("*", "%")
-    '                    If strWhereType <> Nothing And strWhereClause <> Nothing Then
-    '                        If strWhereMode = Nothing Then
-    '                            strQueryWhere &= " " & strFieldName & " " & strWhereType & " " & strWhereClause
-    '                        Else
-    '                            strQueryWhere &= " " & strWhereMode & " " & strFieldName & " " & strWhereType & " " & strWhereClause
-    '                        End If
-    '                    End If
-    '                End If
-    '            End If
-    '        Next
-    '    Next
-    '    strQueryWhere &= ")"
-    '    strQueryWhere = strQueryWhere.Replace("WHERE  ) AND", "WHERE ").Replace("WHERE  OR", "WHERE (").Replace("WHERE  ) AND NOT", "WHERE NOT (")
-
-    '    Return strQueryWhere
-    'End Function
-
-    'Private Function HavingClauseGet() As String
-    '    Dim strFieldName As String = ""
-    '    Dim strHavingField As String = ""
-    '    Dim strShowMode As String = Nothing
-    '    Dim intControlNumber As Integer = 0
-    '    Dim strQueryHaving As String = "HAVING "
-    '    Dim strHavingMode As String = Nothing, strHavingType As String = Nothing, strHavingClause As String = Nothing
-
-    '    For incCount As Integer = 0 To lvwSelectedFields.Items.Count - 1
-    '        strFieldName = lvwSelectedFields.Items.Item(incCount).Name
-    '        For Each ctrHaving As CheckField In pnlReportFilter.Controls
-    '            If ctrHaving.Checked = True And ctrHaving.CheckState = CheckState.Indeterminate Then
-    '                If strFieldName = ctrHaving.Tag Then
-    '                    intControlNumber = ctrHaving.Name.ToString.Substring(ctrHaving.Name.ToString.Length - strFieldName.Length - 1, 1)
-    '                    strHavingMode = GetCtrText(pnlReportFilterMode, strFieldName, intControlNumber)
-    '                    If strHavingMode = "" Then strHavingMode = "AND"
-    '                    If strHavingMode.Contains("AND") Then strHavingMode = ") " & strHavingMode & " ("
-    '                    'If strHavingMode = "AND NOT" Then strHavingMode = ") AND NOT ("
-    '                    strHavingType = GetCtrText(pnlReportFilterType, strFieldName, intControlNumber)
-
-    '                    strHavingClause = GetCtrText(pnlReportFilterText, strFieldName, intControlNumber)
-
-    '                    strShowMode = GetCtrText(pnlReportShowMode, strFieldName)
-    '                    strHavingField &= ", " & FormatFieldXML(strFieldName, strShowMode, False, False)
-
-    '                    'If IsNumeric(strHavingClause) = False Then strHavingClause = "'" & strHavingClause & "'"
-    '                    strHavingClause = CoreData.SetDelimiters(strHavingClause, ctrHaving.FieldDataType, strHavingType)
-    '                    If strHavingType <> Nothing And strHavingClause <> Nothing Then
-    '                        If strHavingMode = Nothing Then
-    '                            strQueryHaving &= " " & strHavingField & " " & strHavingType & " " & strHavingClause
-    '                        Else
-    '                            strQueryHaving &= " " & strHavingMode & " " & strHavingField & " " & strHavingType & " " & strHavingClause
-    '                        End If
-    '                    End If
-    '                End If
-    '            End If
-    '        Next
-    '    Next
-    '    strQueryHaving &= ")"
-    '    'strQueryHaving = strQueryHaving.Replace("HAVING  ) AND", "HAVING ").Replace("HAVING  OR", "HAVING (").Replace("HAVING  ) AND NOT", "HAVING NOT (")
-    '    strQueryHaving = strQueryHaving.Replace("HAVING  ) AND", "HAVING ").Replace("HAVING  ) OR", "HAVING ")
-    '    strQueryHaving = strQueryHaving.Replace("HAVING  ( ,", "HAVING (").Replace("HAVING  NOT ( ,", "HAVING NOT (")
-
-    '    Return strQueryHaving
-    'End Function
-
-    'Private Function OrderClauseGet() As String
-    '    Dim strQueryOrder As String = "ORDER BY "
-
-    '    For intCount = 1 To pnlReportSortOrder.Controls.Count + 1
-    '        For Each ctrOrder In pnlReportSortOrder.Controls
-    '            If ctrOrder.Text = intCount.ToString Then
-    '                strQueryOrder &= ", " & ctrOrder.Tag
-    '                For Each ctrSort In pnlReportSort.Controls
-    '                    If ctrOrder.Tag = ctrSort.Tag And ctrSort.Text.Length > 0 Then
-    '                        strQueryOrder &= " " & ctrSort.Text
-    '                    End If
-    '                Next
-    '            End If
-    '            If intCount > pnlReportSortOrder.Controls.Count And IsNumeric(ctrOrder.Text) = True Then
-    '                If ctrOrder.text > pnlReportSortOrder.Controls.Count Then
-    '                    strQueryOrder &= ", " & ctrOrder.Tag
-    '                    For Each ctrSort In pnlReportSort.Controls
-    '                        If ctrOrder.Tag = ctrSort.Tag And ctrSort.Text.Length > 0 Then
-    '                            strQueryOrder &= " " & ctrSort.Text
-    '                        End If
-    '                    Next
-    '                End If
-    '            End If
-    '        Next
-    '    Next
-
-    '    strQueryOrder = strQueryOrder.Replace("ORDER BY ,", "ORDER BY ")
-    '    Return strQueryOrder
-    'End Function
 
     Private Function GetCtrText(pnlInput As Panel, strFieldName As String, Optional intControlNumber As Integer = 0) As String
         For Each ctrControl In pnlInput.Controls
@@ -1740,4 +1533,161 @@ Public Class frmReports
 
     End Sub
 
+    Private Sub sptReports_MouseHover(sender As Object, e As EventArgs) Handles sptReports.MouseHover
+        sptReports.BackColor = Color.LightGray
+    End Sub
+
+    Private Sub sptReports_MouseLeave(sender As Object, e As EventArgs) Handles sptReports.MouseLeave
+        sptReports.BackColor = clrControl
+    End Sub
+
+    Private Sub pnlSplitFields_MouseHover(sender As Object, e As EventArgs) Handles pnlSplitFields.MouseHover
+        sptReports.BackColor = Color.LightGray
+    End Sub
+
+    Private Sub pnlSplitFields_MouseLeave(sender As Object, e As EventArgs) Handles pnlSplitFields.MouseLeave
+        sptReports.BackColor = clrControl
+    End Sub
+
+    Private Sub pnlSplitFields2_MouseHover(sender As Object, e As EventArgs) Handles pnlSplitFields2.MouseHover
+        sptReports.BackColor = Color.LightGray
+    End Sub
+
+    Private Sub pnlSplitFields2_MouseLeave(sender As Object, e As EventArgs) Handles pnlSplitFields2.MouseLeave
+        sptReports.BackColor = clrControl
+    End Sub
+
+
+    Private Sub sptReportFields_MouseHover(sender As Object, e As EventArgs) Handles sptReportFields.MouseHover
+        sptReportFields.BackColor = Color.LightGray
+    End Sub
+
+    Private Sub sptReportFields_MouseLeave(sender As Object, e As EventArgs) Handles sptReportFields.MouseLeave
+        sptReportFields.BackColor = clrControl
+    End Sub
+
+    Private Sub pnlSplitSelectedFields_MouseHover(sender As Object, e As EventArgs) Handles pnlSplitSelectedFields.MouseHover
+        sptReportFields.BackColor = Color.LightGray
+    End Sub
+
+    Private Sub pnlSplitSelectedFields_MouseLeave(sender As Object, e As EventArgs) Handles pnlSplitSelectedFields.MouseLeave
+        sptReportFields.BackColor = clrControl
+    End Sub
+
+    Private Sub pnlSplitSelectedTables_MouseHover(sender As Object, e As EventArgs) Handles pnlSplitSelectedTables.MouseHover
+        sptReportFields.BackColor = Color.LightGray
+    End Sub
+
+    Private Sub pnlSplitSelectedTables_MouseLeave(sender As Object, e As EventArgs) Handles pnlSplitSelectedTables.MouseLeave
+        sptReportFields.BackColor = clrControl
+    End Sub
+
+
+    Private Sub sptReport_SplitterMoved(sender As Object, e As SplitterEventArgs) Handles sptReport.SplitterMoved
+        sptReportTables.SplitterDistance = sptReport.SplitterDistance
+    End Sub
+
+    Private Sub sptReport_MouseHover(sender As Object, e As EventArgs) Handles sptReport.MouseHover
+        sptReport.BackColor = Color.LightGray
+        sptReportTables.BackColor = Color.LightGray
+    End Sub
+
+    Private Sub sptReport_MouseLeave(sender As Object, e As EventArgs) Handles sptReport.MouseLeave
+        sptReport.BackColor = clrControl
+        sptReportTables.BackColor = clrControl
+    End Sub
+
+    Private Sub pnlRelationHeaders_MouseHover(sender As Object, e As EventArgs) Handles pnlRelationHeaders.MouseHover
+        sptReport.BackColor = Color.LightGray
+        sptReportTables.BackColor = Color.LightGray
+    End Sub
+
+    Private Sub pnlRelationHeaders_MouseLeave(sender As Object, e As EventArgs) Handles pnlRelationHeaders.MouseLeave
+        sptReport.BackColor = clrControl
+        sptReportTables.BackColor = clrControl
+    End Sub
+
+    Private Sub sptReportTables_SplitterMoved(sender As Object, e As SplitterEventArgs) Handles sptReportTables.SplitterMoved
+        sptReport.SplitterDistance = sptReportTables.SplitterDistance
+    End Sub
+
+    Private Sub sptReportTables_MouseHover(sender As Object, e As EventArgs) Handles sptReportTables.MouseHover
+        sptReport.BackColor = Color.LightGray
+        sptReportTables.BackColor = Color.LightGray
+    End Sub
+
+    Private Sub sptReportTables_MouseLeave(sender As Object, e As EventArgs) Handles sptReportTables.MouseLeave
+        sptReport.BackColor = clrControl
+        sptReportTables.BackColor = clrControl
+    End Sub
+
+    Private Sub lblRelationsSelectedTable_MouseHover(sender As Object, e As EventArgs) Handles lblRelationsSelectedTable.MouseHover
+        sptReport.BackColor = Color.LightGray
+        sptReportTables.BackColor = Color.LightGray
+    End Sub
+
+    Private Sub lblRelationsSelectedTable_MouseLeave(sender As Object, e As EventArgs) Handles lblRelationsSelectedTable.MouseLeave
+        sptReport.BackColor = clrControl
+        sptReportTables.BackColor = clrControl
+    End Sub
+
+    Private Sub lblRelationUse_MouseHover(sender As Object, e As EventArgs) Handles lblRelationUse.MouseHover
+        sptReport.BackColor = Color.LightGray
+        sptReportTables.BackColor = Color.LightGray
+    End Sub
+
+    Private Sub lblRelationUse_MouseLeave(sender As Object, e As EventArgs) Handles lblRelationUse.MouseLeave
+        sptReport.BackColor = clrControl
+        sptReportTables.BackColor = clrControl
+    End Sub
+
+    Private Sub lblSourceField_MouseHover(sender As Object, e As EventArgs) Handles lblSourceField.MouseHover
+        sptReport.BackColor = Color.LightGray
+        sptReportTables.BackColor = Color.LightGray
+    End Sub
+
+    Private Sub lblSourceField_MouseLeave(sender As Object, e As EventArgs) Handles lblSourceField.MouseLeave
+        sptReport.BackColor = clrControl
+        sptReportTables.BackColor = clrControl
+    End Sub
+
+    Private Sub lblRelationsRelation_MouseHover(sender As Object, e As EventArgs) Handles lblRelationsRelation.MouseHover
+        sptReport.BackColor = Color.LightGray
+        sptReportTables.BackColor = Color.LightGray
+    End Sub
+
+    Private Sub lblRelationsRelation_MouseLeave(sender As Object, e As EventArgs) Handles lblRelationsRelation.MouseLeave
+        sptReport.BackColor = clrControl
+        sptReportTables.BackColor = clrControl
+    End Sub
+
+    Private Sub lblRelationsJoinType_MouseHover(sender As Object, e As EventArgs) Handles lblRelationsJoinType.MouseHover
+        sptReport.BackColor = Color.LightGray
+        sptReportTables.BackColor = Color.LightGray
+    End Sub
+
+    Private Sub lblRelationsJoinType_MouseLeave(sender As Object, e As EventArgs) Handles lblRelationsJoinType.MouseLeave
+        sptReport.BackColor = clrControl
+        sptReportTables.BackColor = clrControl
+    End Sub
+
+    Private Sub pnlSplitTables_MouseHover(sender As Object, e As EventArgs) Handles pnlSplitTables.MouseHover
+        sptReport.BackColor = Color.LightGray
+        sptReportTables.BackColor = Color.LightGray
+    End Sub
+
+    Private Sub pnlSplitTables_MouseLeave(sender As Object, e As EventArgs) Handles pnlSplitTables.MouseLeave
+        sptReport.BackColor = clrControl
+        sptReportTables.BackColor = clrControl
+    End Sub
+
+    Private Sub lblSelectedTables_MouseHover(sender As Object, e As EventArgs) Handles lblSelectedTables.MouseHover
+        sptReport.BackColor = Color.LightGray
+        sptReportTables.BackColor = Color.LightGray
+    End Sub
+
+    Private Sub lblSelectedTables_MouseLeave(sender As Object, e As EventArgs) Handles lblSelectedTables.MouseLeave
+        sptReport.BackColor = clrControl
+        sptReportTables.BackColor = clrControl
+    End Sub
 End Class

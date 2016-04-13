@@ -214,7 +214,7 @@ Public Class Data
     End Function
 
     Public Function SetDelimiters(strInput As String, strDataType As String, strCompare As String, Optional strShowMode As String = Nothing) As String
-        If strInput = Nothing Then Return Nothing
+        If strInput = Nothing Then strInput = ""
         If strInput.Length > 2 Then
             If strInput.Substring(0, 2) = "f:" Then
                 Return "(" & strInput.Replace("f:", "") & ")"
