@@ -942,7 +942,7 @@ Public Class Data
             End If
         End If
 
-        If blnConvert = True Then
+        If blnConvert = True Or (strFieldType.ToUpper = "DATETIME" And Not DateTimeStyle = Nothing) Then
             Select Case strFieldType.ToUpper
                 Case "IMAGE"
                     strOutput = "(CONVERT([varchar](" & strFieldWidth & "), " & strFQDN & "))"

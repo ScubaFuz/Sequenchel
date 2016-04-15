@@ -163,7 +163,7 @@ Public Class frmSequenchel
 
     Private Sub ShowReportsForm()
         Dim frmReportsForm As New frmReports
-        frmReportsForm.Show(Me)
+        frmReportsForm.Show()
     End Sub
 
     Private Sub ShowImportForm()
@@ -641,6 +641,16 @@ Public Class frmSequenchel
 #Region "Data Load"
 
 #Region "Controls"
+
+    Private Sub dgvTable1_DoubleClick(sender As Object, e As MouseEventArgs) Handles dgvTable1.DoubleClick
+        Dim args As MouseEventArgs = e
+        Dim dgv As DataGridView = sender
+        Dim hit As DataGridView.HitTestInfo = dgv.HitTest(args.X, args.Y)
+        If (hit.Type = DataGridViewHitTestType.TopLeftHeader) Then
+            DataGridViewColumnSize(sender)
+        End If
+    End Sub
+
     Private Sub dgvTable1_SelectionChanged(sender As Object, e As EventArgs) Handles dgvTable1.SelectionChanged
         ItemSelect()
     End Sub
@@ -693,10 +703,10 @@ Public Class frmSequenchel
                                "Click 'Clear' to cancel the operation" & Environment.NewLine & _
                                "Click 'Save' to save the new item to the database" _
                                , "How it works", MessageBoxButtons.OK, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1)
-            If SeqData.CurStatus.Status > 3 Then
-                SeqData.CurStatus.Status = SeqCore.CurrentStatus.StatusList.ControlAdd
+            If SeqData.curStatus.Status > 3 Then
+                SeqData.curStatus.Status = SeqCore.CurrentStatus.StatusList.ControlAdd
             Else
-                SeqData.CurStatus.Status = SeqCore.CurrentStatus.StatusList.Add
+                SeqData.curStatus.Status = SeqCore.CurrentStatus.StatusList.Add
             End If
             FieldsClear(True)
             FieldsEnable(False)
@@ -778,7 +788,7 @@ Public Class frmSequenchel
     End Sub
 
     Private Sub cbxSearch_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbxSearch.SelectedIndexChanged
-        If SeqData.CurStatus.SuspendActions = False Then
+        If SeqData.curStatus.SuspendActions = False Then
             CursorControl("Wait")
             FieldsClearAll()
             SearchLoad()

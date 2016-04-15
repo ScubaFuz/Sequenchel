@@ -376,7 +376,7 @@ Module Common
     Friend Function SaveXmlFile(xmlDoc As XmlDocument, FilePathName As String, CreateDir As Boolean) As Boolean
         If SeqData.dhdText.CheckDir(SeqData.dhdText.PathConvert(SeqData.CheckFilePath(FilePathName)).Substring(0, SeqData.dhdText.PathConvert(SeqData.CheckFilePath(FilePathName)).LastIndexOf("\")), False) = False Then
             If CreateDir = True Then
-                If MessageBox.Show("The folder " & SeqData.dhdText.PathConvert(SeqData.CheckFilePath(SeqData.curVar.ReportSetFile)).Substring(0, SeqData.dhdText.PathConvert(SeqData.CheckFilePath(SeqData.curVar.ReportSetFile)).LastIndexOf("\")) & " does not exist." & Environment.NewLine & "do you wish to create it?", "Folder does not exist", MessageBoxButtons.YesNo, MessageBoxIcon.Hand, MessageBoxDefaultButton.Button1) = DialogResult.No Then
+                If MessageBox.Show("The folder " & SeqData.dhdText.PathConvert(SeqData.CheckFilePath(FilePathName)).Substring(0, SeqData.dhdText.PathConvert(SeqData.CheckFilePath(FilePathName)).LastIndexOf("\")) & " does not exist." & Environment.NewLine & "do you wish to create it?", "Folder does not exist", MessageBoxButtons.YesNo, MessageBoxIcon.Hand, MessageBoxDefaultButton.Button1) = DialogResult.No Then
                     Return False
                 End If
             Else

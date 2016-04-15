@@ -1467,14 +1467,14 @@ Public Class frmReports
 
     End Sub
 
-    Private Sub tpgReportDefinition_Resize(sender As Object, e As EventArgs) Handles tpgReportDefinition.Resize
-        If tpgReportDefinition.Width < 1200 Then
-            pnlReportName.Anchor = AnchorStyles.Top Or AnchorStyles.Left
-            pnlReportName.Left = cbxTable.Left + cbxTable.Width + SeqData.CurVar.BuildMargin
-        Else
-            pnlReportName.Anchor = AnchorStyles.Top Or AnchorStyles.Right
-        End If
-    End Sub
+    'Private Sub tpgReportDefinition_Resize(sender As Object, e As EventArgs) Handles tpgReportDefinition.Resize
+    '    If tpgReportDefinition.Width < 1200 Then
+    '        pnlReportName.Anchor = AnchorStyles.Top Or AnchorStyles.Left
+    '        pnlReportName.Left = cbxTable.Left + cbxTable.Width + SeqData.CurVar.BuildMargin
+    '    Else
+    '        pnlReportName.Anchor = AnchorStyles.Top Or AnchorStyles.Right
+    '    End If
+    'End Sub
 
     Private Sub chkShow_CheckedChanged(sender As Object, e As EventArgs) Handles chkReportShow.CheckedChanged
         For Each chkBox As CheckBox In pnlReportDisplay.Controls
