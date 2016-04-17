@@ -5,8 +5,8 @@ Public Class frmReports
     Private fontSize As Integer = 20
 
     Private Sub frmReports_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        lblLicense.Text = "Licensed to: " & strLicenseName
-        lblLicense.Left = Me.Width - lblLicense.Width - (CurVar.BuildMargin * 5)
+        lblLicense.Text = "Licensed to: " & Core.LicenseName
+        lblLicense.Left = Me.Width - lblLicense.Width - (SeqData.curVar.BuildMargin * 5)
 
         mousePath = New System.Drawing.Drawing2D.GraphicsPath()
 
@@ -14,15 +14,24 @@ Public Class frmReports
         SecuritySet()
         'ReportFieldsDispose(True)
         LoadConnections()
+        cbxEmailResults.SelectedIndex = 0
         'LoadTableFields()
         'ReportsLoad()
     End Sub
 
     Private Sub frmReports_Activated(sender As Object, e As EventArgs) Handles Me.Activated
-        CurStatus.Connection = cbxConnection.SelectedItem
-        LoadConnection(CurStatus.Connection)
-        CurStatus.TableSet = cbxTableSet.SelectedItem
-        LoadTableSet(CurStatus.TableSet)
+        If cbxConnection.SelectedIndex <> -1 Then
+            SeqData.curStatus.Connection = cbxConnection.SelectedItem
+            If Not SeqData.curStatus.Connection = Nothing Then
+                SeqData.LoadConnection(xmlConnections, SeqData.curStatus.Connection)
+                If cbxTableSet.SelectedIndex <> -1 Then
+                    SeqData.curStatus.TableSet = cbxTableSet.SelectedItem
+                    If Not SeqData.curStatus.TableSet = Nothing Then
+                        SeqData.LoadTableSet(xmlTableSets, SeqData.curStatus.TableSet)
+                    End If
+                End If
+            End If
+        End If
     End Sub
 
     Private Sub btnClose_Click(sender As Object, e As EventArgs) Handles btnClose.Click
@@ -34,16 +43,16 @@ Public Class frmReports
     End Sub
 
     Private Sub DebugSettings()
-        If DebugMode Then
+        If SeqData.curVar.DebugMode Then
             btnTest.Visible = True
         End If
-        If DevMode Then
+        If SeqData.curVar.DevMode Then
             'mnuMain.Visible = True
         End If
     End Sub
 
     Private Sub SecuritySet()
-        If CurVar.AllowQueryEdit = False And CurVar.SecurityOverride = False Then
+        If SeqData.curVar.AllowQueryEdit = False And SeqData.curVar.SecurityOverride = False Then
             btnLoadQuery.Enabled = False
             rtbQuery.ReadOnly = True
         End If
@@ -58,8 +67,8 @@ Public Class frmReports
 
     Private Sub cbxConnection_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbxConnection.SelectedIndexChanged
         If cbxConnection.SelectedIndex >= -1 Then
-            CurStatus.Connection = cbxConnection.SelectedItem
-            LoadConnection(CurStatus.Connection)
+            SeqData.curStatus.Connection = cbxConnection.SelectedItem
+            SeqData.LoadConnection(xmlConnections, SeqData.curStatus.Connection)
             LoadTableSets()
             'dhdText.FindXmlNode(xmlConnections, "Connection", "DatabasdeName", strConnection)
             'Dim xmlConnNode As xmlnode = xmlConnections.SelectSingleNode("\\Connection", "descendant::Connection[DataBaseName='" & strConnection & "']")
@@ -73,8 +82,8 @@ Public Class frmReports
 
     Private Sub cbxTableSet_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbxTableSet.SelectedIndexChanged
         If cbxTableSet.SelectedIndex >= -1 Then
-            CurStatus.TableSet = cbxTableSet.SelectedItem
-            LoadTableSet(CurStatus.TableSet)
+            SeqData.curStatus.TableSet = cbxTableSet.SelectedItem
+            SeqData.LoadTableSet(xmlTableSets, SeqData.curStatus.TableSet)
             LoadTables()
             LoadTableFields()
             ReportsLoad()
@@ -154,8 +163,8 @@ Public Class frmReports
         Dim strFieldName As String = Nothing
         strFieldName = sender.Tag
 
-        Dim xNode As XmlNode = dhdText.FindXmlNode(xmlTables, "Table", "Name", strFieldName.Substring(0, strFieldName.LastIndexOf(".")))
-        Dim xCNode As XmlNode = dhdText.FindXmlChildNode(xNode, "Fields/Field", "FldName", strFieldName.Substring(strFieldName.LastIndexOf(".") + 1, strFieldName.Length - (strFieldName.LastIndexOf(".") + 1)))
+        Dim xNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlTables, "Table", "Name", strFieldName.Substring(0, strFieldName.LastIndexOf(".")))
+        Dim xCNode As XmlNode = SeqData.dhdText.FindXmlChildNode(xNode, "Fields/Field", "FldName", strFieldName.Substring(strFieldName.LastIndexOf(".") + 1, strFieldName.Length - (strFieldName.LastIndexOf(".") + 1)))
         Dim strFieldType As String = xCNode.Item("DataType").InnerText
 
         FieldCheckFilterAdd(strFieldName, strFieldType, Nothing)
@@ -222,32 +231,50 @@ Public Class frmReports
 
     Private Sub LoadConnections()
         AllClear(4)
-        Dim lstConnections As List(Of String) = LoadConnectionsXml()
-        If lstConnections Is Nothing Then Exit Sub
+        Dim lstConnections As List(Of String) = SeqData.LoadConnectionsXml(xmlConnections)
+        If lstConnections Is Nothing Then
+            xmlConnections.RemoveAll()
+            xmlTableSets.RemoveAll()
+            SeqData.curVar.TableSetsFile = ""
+            xmlTables.RemoveAll()
+            SeqData.curVar.TablesFile = ""
+            TableClear()
+            SeqData.dhdConnection = SeqData.dhdMainDB
+            Exit Sub
+        End If
         For Each lstItem As String In lstConnections
             cbxConnection.Items.Add(lstItem)
         Next
-        cbxConnection.SelectedItem = CurStatus.Connection
+        cbxConnection.SelectedItem = SeqData.CurStatus.Connection
     End Sub
 
     Private Sub LoadTableSets()
         AllClear(3)
-        Dim lstTableSets As List(Of String) = LoadTableSetsXml()
-        If lstTableSets Is Nothing Then Exit Sub
+        Dim lstTableSets As List(Of String) = SeqData.LoadTableSetsXml(xmlTableSets)
+        If lstTableSets Is Nothing Then
+            xmlTableSets.RemoveAll()
+            xmlTables.RemoveAll()
+            SeqData.curVar.TablesFile = ""
+            TableClear()
+            Exit Sub
+        End If
         For Each lstItem As String In lstTableSets
             cbxTableSet.Items.Add(lstItem)
         Next
-        cbxTableSet.SelectedItem = CurStatus.TableSet
+        cbxTableSet.SelectedItem = SeqData.curStatus.TableSet
     End Sub
 
     Private Sub LoadTables()
         AllClear(2)
-        Dim lstTables As List(Of String) = LoadTablesXml()
-        If lstTables Is Nothing Then Exit Sub
+        Dim lstTables As List(Of String) = SeqData.LoadTablesXml(xmlTables)
+        If lstTables Is Nothing Then
+            xmlTables.RemoveAll()
+            Exit Sub
+        End If
         For Each lstItem As String In lstTables
             cbxTable.Items.Add(lstItem)
         Next
-        'cbxTable.SelectedItem = CurStatus.Table
+        'cbxTable.SelectedItem = SeqData.CurStatus.Table
     End Sub
 
     Private Sub LoadTableFields()
@@ -307,9 +334,47 @@ Public Class frmReports
         End If
     End Sub
 
+    Friend Sub PanelsSuspendLayout()
+        pnlReportLabel.SuspendLayout()
+        pnlReportDisplay.SuspendLayout()
+        pnlReportShowMode.SuspendLayout()
+        pnlReportSort.SuspendLayout()
+        pnlReportSortOrder.SuspendLayout()
+        pnlReportFilter.SuspendLayout()
+        pnlReportFilterMode.SuspendLayout()
+        pnlReportFilterType.SuspendLayout()
+        pnlReportFilterText.SuspendLayout()
+
+        pnlRelationsLabel.SuspendLayout()
+        pnlRelationsUse.SuspendLayout()
+        pnlRelationsField.SuspendLayout()
+        pnlRelationsRelation.SuspendLayout()
+        pnlRelationsJoinType.SuspendLayout()
+        pnlSelectedFieldsMain.SuspendLayout()
+    End Sub
+
+    Friend Sub PanelsResumeLayout()
+        pnlReportLabel.ResumeLayout()
+        pnlReportDisplay.ResumeLayout()
+        pnlReportShowMode.ResumeLayout()
+        pnlReportSort.ResumeLayout()
+        pnlReportSortOrder.ResumeLayout()
+        pnlReportFilter.ResumeLayout()
+        pnlReportFilterMode.ResumeLayout()
+        pnlReportFilterType.ResumeLayout()
+        pnlReportFilterText.ResumeLayout()
+
+        pnlRelationsLabel.ResumeLayout()
+        pnlRelationsUse.ResumeLayout()
+        pnlRelationsField.ResumeLayout()
+        pnlRelationsRelation.ResumeLayout()
+        pnlRelationsJoinType.ResumeLayout()
+        pnlSelectedFieldsMain.ResumeLayout()
+    End Sub
+
     Private Sub FieldAdd(strFieldName As String, strFieldAlias As String, strTableAlias As String)
-        Dim xNode As XmlNode = dhdText.FindXmlNode(xmlTables, "Table", "Name", strFieldName.Substring(0, strFieldName.LastIndexOf(".")))
-        Dim xCNode As XmlNode = dhdText.FindXmlChildNode(xNode, "Fields/Field", "FldName", strFieldName.Substring(strFieldName.LastIndexOf(".") + 1, strFieldName.Length - (strFieldName.LastIndexOf(".") + 1)))
+        Dim xNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlTables, "Table", "Name", strFieldName.Substring(0, strFieldName.LastIndexOf(".")))
+        Dim xCNode As XmlNode = SeqData.dhdText.FindXmlChildNode(xNode, "Fields/Field", "FldName", strFieldName.Substring(strFieldName.LastIndexOf(".") + 1, strFieldName.Length - (strFieldName.LastIndexOf(".") + 1)))
         Dim strFieldType As String = xCNode.Item("DataType").InnerText
 
         FieldLabelAdd(strFieldName, strFieldAlias, strTableAlias)
@@ -327,10 +392,10 @@ Public Class frmReports
         AddHandler lblNew.Click, AddressOf Me.lblShowField_Click
         AddHandler lblNew.DoubleClick, AddressOf Me.lblShowField_DoubleClick
         lblNew.AutoSize = True
-        lblNew.Top = ((lvwSelectedFields.Items.Count - 1) * CurVar.FieldHeight) + ((lvwSelectedFields.Items.Count) * CurVar.BuildMargin)
+        lblNew.Top = ((lvwSelectedFields.Items.Count - 1) * SeqData.CurVar.FieldHeight) + ((lvwSelectedFields.Items.Count) * SeqData.curVar.BuildMargin)
 
-        If lblNew.Width > CurStatus.ReportLabelWidth Then
-            CurStatus.ReportLabelWidth = lblNew.Width
+        If lblNew.Width > SeqData.CurStatus.ReportLabelWidth Then
+            SeqData.CurStatus.ReportLabelWidth = lblNew.Width
         End If
 
         Dim cbxNewSort As New ComboField
@@ -338,8 +403,8 @@ Public Class frmReports
         cbxNewSort.Tag = strFieldName
         cbxNewSort.Width = 50
         pnlReportSort.Controls.Add(cbxNewSort)
-        cbxNewSort.Top = ((lvwSelectedFields.Items.Count - 1) * CurVar.FieldHeight) + ((lvwSelectedFields.Items.Count - 1) * CurVar.BuildMargin)
-        cbxNewSort.Left = CurVar.BuildMargin
+        cbxNewSort.Top = ((lvwSelectedFields.Items.Count - 1) * SeqData.CurVar.FieldHeight) + ((lvwSelectedFields.Items.Count - 1) * SeqData.CurVar.BuildMargin)
+        cbxNewSort.Left = SeqData.CurVar.BuildMargin
         ComboBoxFill(cbxNewSort, "Sort")
 
         Dim txtNewSortOrder As New TextField
@@ -347,8 +412,8 @@ Public Class frmReports
         txtNewSortOrder.Tag = strFieldName
         txtNewSortOrder.Width = 20
         pnlReportSortOrder.Controls.Add(txtNewSortOrder)
-        txtNewSortOrder.Top = ((lvwSelectedFields.Items.Count - 1) * CurVar.FieldHeight) + ((lvwSelectedFields.Items.Count - 1) * CurVar.BuildMargin)
-        txtNewSortOrder.Left = CurVar.BuildMargin
+        txtNewSortOrder.Top = ((lvwSelectedFields.Items.Count - 1) * SeqData.CurVar.FieldHeight) + ((lvwSelectedFields.Items.Count - 1) * SeqData.CurVar.BuildMargin)
+        txtNewSortOrder.Left = SeqData.CurVar.BuildMargin
 
     End Sub
 
@@ -358,8 +423,8 @@ Public Class frmReports
         chkNewShow.Tag = strFieldName
         'chkNewShow.ThreeState = True
         pnlReportDisplay.Controls.Add(chkNewShow)
-        chkNewShow.Top = ((lvwSelectedFields.Items.Count - 1) * CurVar.FieldHeight) + ((lvwSelectedFields.Items.Count - 1) * CurVar.BuildMargin)
-        chkNewShow.Left = CurVar.BuildMargin
+        chkNewShow.Top = ((lvwSelectedFields.Items.Count - 1) * SeqData.CurVar.FieldHeight) + ((lvwSelectedFields.Items.Count - 1) * SeqData.CurVar.BuildMargin)
+        chkNewShow.Left = SeqData.CurVar.BuildMargin
 
         Dim cbxNewShowMode As New ComboField
         cbxNewShowMode.Name = pnlReportShowMode.Name & "1" & strFieldName
@@ -367,16 +432,16 @@ Public Class frmReports
         cbxNewShowMode.Tag = strFieldName
         cbxNewShowMode.Width = 75
         pnlReportShowMode.Controls.Add(cbxNewShowMode)
-        cbxNewShowMode.Top = ((lvwSelectedFields.Items.Count - 1) * CurVar.FieldHeight) + ((lvwSelectedFields.Items.Count - 1) * CurVar.BuildMargin)
-        cbxNewShowMode.Left = CurVar.BuildMargin
+        cbxNewShowMode.Top = ((lvwSelectedFields.Items.Count - 1) * SeqData.CurVar.FieldHeight) + ((lvwSelectedFields.Items.Count - 1) * SeqData.CurVar.BuildMargin)
+        cbxNewShowMode.Left = SeqData.CurVar.BuildMargin
         'Dim strDataType As String = 
         ComboBoxFill(cbxNewShowMode, "ShowMode")
     End Sub
 
     Private Sub FieldCheckFilterAdd(strFieldName As String, strFieldType As String, Optional intCount As Integer = 0)
 
-        'Dim xNode As XmlNode = dhdText.FindXmlNode(xmlTables, "Table", "Name", strFieldName.Substring(0, strFieldName.LastIndexOf(".")))
-        'Dim xCNode As XmlNode = dhdText.FindXmlChildNode(xNode, "Fields/Field", "FldName", strFieldName.Substring(strFieldName.LastIndexOf(".") + 1, strFieldName.Length - (strFieldName.LastIndexOf(".") + 1)))
+        'Dim xNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlTables, "Table", "Name", strFieldName.Substring(0, strFieldName.LastIndexOf(".")))
+        'Dim xCNode As XmlNode = SeqData.dhdText.FindXmlChildNode(xNode, "Fields/Field", "FldName", strFieldName.Substring(strFieldName.LastIndexOf(".") + 1, strFieldName.Length - (strFieldName.LastIndexOf(".") + 1)))
         'Dim strFieldType As String = xCNode.Item("DataType").InnerText
 
         If intCount = 0 Then
@@ -398,18 +463,18 @@ Public Class frmReports
         chkNewFilter.Tag = strFieldName
         chkNewFilter.ThreeState = True
         pnlReportFilter.Controls.Add(chkNewFilter)
-        'chkNewFilter.Top = ((lstSelectedFields.Items.Count - 1) * CurVar.FieldHeight) + ((lstSelectedFields.Items.Count - 1) * CurVar.BuildMargin)
-        chkNewFilter.Top = ((lvwSelectedFields.Items.Count - 1) * CurVar.FieldHeight) + ((lvwSelectedFields.Items.Count - 1) * CurVar.BuildMargin)
-        chkNewFilter.Left = CurVar.BuildMargin
+        'chkNewFilter.Top = ((lstSelectedFields.Items.Count - 1) * SeqData.CurVar.FieldHeight) + ((lstSelectedFields.Items.Count - 1) * SeqData.CurVar.BuildMargin)
+        chkNewFilter.Top = ((lvwSelectedFields.Items.Count - 1) * SeqData.CurVar.FieldHeight) + ((lvwSelectedFields.Items.Count - 1) * SeqData.CurVar.BuildMargin)
+        chkNewFilter.Left = SeqData.CurVar.BuildMargin
 
         Dim cbxNewFilterMode As New ComboField
         cbxNewFilterMode.Name = pnlReportFilterMode.Name & intCount.ToString & strFieldName
         cbxNewFilterMode.Tag = strFieldName
         cbxNewFilterMode.Width = 75
         pnlReportFilterMode.Controls.Add(cbxNewFilterMode)
-        'cbxNewFilterMode.Top = ((lstSelectedFields.Items.Count - 1) * CurVar.FieldHeight) + ((lstSelectedFields.Items.Count - 1) * CurVar.BuildMargin)
-        cbxNewFilterMode.Top = ((lvwSelectedFields.Items.Count - 1) * CurVar.FieldHeight) + ((lvwSelectedFields.Items.Count - 1) * CurVar.BuildMargin)
-        cbxNewFilterMode.Left = CurVar.BuildMargin
+        'cbxNewFilterMode.Top = ((lstSelectedFields.Items.Count - 1) * SeqData.CurVar.FieldHeight) + ((lstSelectedFields.Items.Count - 1) * SeqData.CurVar.BuildMargin)
+        cbxNewFilterMode.Top = ((lvwSelectedFields.Items.Count - 1) * SeqData.CurVar.FieldHeight) + ((lvwSelectedFields.Items.Count - 1) * SeqData.CurVar.BuildMargin)
+        cbxNewFilterMode.Left = SeqData.CurVar.BuildMargin
         ComboBoxFill(cbxNewFilterMode, "FilterMode")
 
         Dim cbxNewFilterType As New ComboField
@@ -417,9 +482,9 @@ Public Class frmReports
         cbxNewFilterType.Tag = strFieldName
         cbxNewFilterType.Width = 75
         pnlReportFilterType.Controls.Add(cbxNewFilterType)
-        'cbxNewFilterType.Top = ((lstSelectedFields.Items.Count - 1) * CurVar.FieldHeight) + ((lstSelectedFields.Items.Count - 1) * CurVar.BuildMargin)
-        cbxNewFilterType.Top = ((lvwSelectedFields.Items.Count - 1) * CurVar.FieldHeight) + ((lvwSelectedFields.Items.Count - 1) * CurVar.BuildMargin)
-        cbxNewFilterType.Left = CurVar.BuildMargin
+        'cbxNewFilterType.Top = ((lstSelectedFields.Items.Count - 1) * SeqData.CurVar.FieldHeight) + ((lstSelectedFields.Items.Count - 1) * SeqData.CurVar.BuildMargin)
+        cbxNewFilterType.Top = ((lvwSelectedFields.Items.Count - 1) * SeqData.CurVar.FieldHeight) + ((lvwSelectedFields.Items.Count - 1) * SeqData.CurVar.BuildMargin)
+        cbxNewFilterType.Left = SeqData.CurVar.BuildMargin
         ComboBoxFill(cbxNewFilterType, "FilterType")
 
         Dim txtNewFilter As New TextField
@@ -428,9 +493,9 @@ Public Class frmReports
         txtNewFilter.Tag = strFieldName
         txtNewFilter.Width = 190
         pnlReportFilterText.Controls.Add(txtNewFilter)
-        'txtNewFilter.Top = ((lstSelectedFields.Items.Count - 1) * CurVar.FieldHeight) + ((lstSelectedFields.Items.Count - 1) * CurVar.BuildMargin)
-        txtNewFilter.Top = ((lvwSelectedFields.Items.Count - 1) * CurVar.FieldHeight) + ((lvwSelectedFields.Items.Count - 1) * CurVar.BuildMargin)
-        txtNewFilter.Left = CurVar.BuildMargin
+        'txtNewFilter.Top = ((lstSelectedFields.Items.Count - 1) * SeqData.CurVar.FieldHeight) + ((lstSelectedFields.Items.Count - 1) * SeqData.CurVar.BuildMargin)
+        txtNewFilter.Top = ((lvwSelectedFields.Items.Count - 1) * SeqData.CurVar.FieldHeight) + ((lvwSelectedFields.Items.Count - 1) * SeqData.CurVar.BuildMargin)
+        txtNewFilter.Left = SeqData.CurVar.BuildMargin
 
         PanelsFieldSort()
     End Sub
@@ -485,7 +550,7 @@ Public Class frmReports
                 cbxTarget.Items.Add("OR")
                 cbxTarget.Items.Add("OR NOT")
             Case "RelationField"
-                Dim lstFields As List(Of String) = LoadItemList(xmlTables, "Table", "Name", strSource, "Field", "FldName")
+                Dim lstFields As List(Of String) = SeqData.dhdText.LoadItemList(xmlTables, "Table", "Name", strSource, "Field", "FldName")
                 If lstFields Is Nothing Then Exit Sub
                 For Each lstItem As String In lstFields
                     cbxTarget.Items.Add(lstItem)
@@ -503,53 +568,53 @@ Public Class frmReports
     End Sub
 
     Private Sub PanelFieldWidthSet()
-        pnlReportLabel.Width = CurStatus.ReportLabelWidth + CurVar.BuildMargin
+        pnlReportLabel.Width = SeqData.CurStatus.ReportLabelWidth + SeqData.CurVar.BuildMargin
         pnlReportDisplay.Left = pnlReportLabel.Left + pnlReportLabel.Width
-        chkReportShow.Left = pnlReportDisplay.Left + CurVar.BuildMargin - 20
+        chkReportShow.Left = pnlReportDisplay.Left + SeqData.CurVar.BuildMargin - 20
 
         pnlReportShowMode.Left = pnlReportDisplay.Left + pnlReportDisplay.Width
-        lblReportShowMode.Left = pnlReportShowMode.Left + CurVar.BuildMargin
+        lblReportShowMode.Left = pnlReportShowMode.Left + SeqData.CurVar.BuildMargin
 
         pnlReportSort.Left = pnlReportShowMode.Left + pnlReportShowMode.Width
-        lblReportSort.Left = pnlReportSort.Left + CurVar.BuildMargin
+        lblReportSort.Left = pnlReportSort.Left + SeqData.CurVar.BuildMargin
 
         pnlReportSortOrder.Left = pnlReportSort.Left + pnlReportSort.Width
-        lblReportSortOrder.Left = pnlReportSortOrder.Left + CurVar.BuildMargin
+        lblReportSortOrder.Left = pnlReportSortOrder.Left + SeqData.CurVar.BuildMargin
 
         pnlReportFilter.Left = pnlReportSortOrder.Left + pnlReportSortOrder.Width
-        lblReportFilter.Left = pnlReportFilter.Left + CurVar.BuildMargin
+        lblReportFilter.Left = pnlReportFilter.Left + SeqData.CurVar.BuildMargin
 
         pnlReportFilterMode.Left = pnlReportFilter.Left + pnlReportFilter.Width
-        lblReportFilterMode.Left = pnlReportFilterMode.Left + CurVar.BuildMargin
+        lblReportFilterMode.Left = pnlReportFilterMode.Left + SeqData.CurVar.BuildMargin
 
         pnlReportFilterType.Left = pnlReportFilterMode.Left + pnlReportFilterMode.Width
-        lblReportFilterType.Left = pnlReportFilterType.Left + CurVar.BuildMargin
+        lblReportFilterType.Left = pnlReportFilterType.Left + SeqData.CurVar.BuildMargin
 
         pnlReportFilterText.Left = pnlReportFilterType.Left + pnlReportFilterType.Width
-        lblReportFilterText.Left = pnlReportFilterText.Left + CurVar.BuildMargin
-        If pnlReportFilterText.Left + pnlReportFilterText.Width + (CurVar.BuildMargin * 2) > pnlSelectedFields.Width Then pnlSelectedFields.Width = pnlReportFilterText.Left + pnlReportFilterText.Width + (CurVar.BuildMargin * 2)
+        lblReportFilterText.Left = pnlReportFilterText.Left + SeqData.CurVar.BuildMargin
+        If pnlReportFilterText.Left + pnlReportFilterText.Width + (SeqData.CurVar.BuildMargin * 2) > pnlSelectedFields.Width Then pnlSelectedFields.Width = pnlReportFilterText.Left + pnlReportFilterText.Width + (SeqData.CurVar.BuildMargin * 2)
     End Sub
 
     Private Sub PanelRelationWidthSet()
-        pnlRelationsLabel.Width = CurStatus.RelationLabelWidth + CurVar.BuildMargin
+        pnlRelationsLabel.Width = SeqData.CurStatus.RelationLabelWidth + SeqData.CurVar.BuildMargin
         pnlRelationsUse.Left = pnlRelationsLabel.Left + pnlRelationsLabel.Width
         lblRelationUse.Left = pnlRelationsUse.Left
 
         pnlRelationsField.Left = pnlRelationsUse.Left + pnlRelationsUse.Width
-        lblSourceField.Left = pnlRelationsField.Left
+        lblSourceField.Left = pnlRelationsField.Left + SeqData.curVar.BuildMargin
 
         pnlRelationsRelation.Left = pnlRelationsField.Left + pnlRelationsField.Width
-        lblRelationsRelation.Left = pnlRelationsRelation.Left
+        lblRelationsRelation.Left = pnlRelationsRelation.Left + SeqData.curVar.BuildMargin
 
         pnlRelationsJoinType.Left = pnlRelationsRelation.Left + pnlRelationsRelation.Width
-        lblRelationsJoinType.Left = pnlRelationsJoinType.Left
+        lblRelationsJoinType.Left = pnlRelationsJoinType.Left + SeqData.curVar.BuildMargin
 
-        If pnlRelationsJoinType.Left + pnlRelationsJoinType.Width + (CurVar.BuildMargin * 2) > pnlRelations.Width Then pnlRelations.Width = pnlRelationsJoinType.Left + pnlRelationsJoinType.Width + (CurVar.BuildMargin * 2)
+        pnlRelations.Width = pnlRelationsJoinType.Left + pnlRelationsJoinType.Width + (SeqData.curVar.BuildMargin * 2)
     End Sub
 
     Private Sub PanelFieldHeightSet()
-        If (pnlReportFilterText.Controls.Count + 1) * (CurVar.BuildMargin + CurVar.FieldHeight) > pnlReportFilterText.Height Then
-            pnlReportFilterText.Height = (pnlReportFilterText.Controls.Count + 1) * (CurVar.BuildMargin + CurVar.FieldHeight)
+        If (pnlReportFilterText.Controls.Count + 1) * (SeqData.CurVar.BuildMargin + SeqData.CurVar.FieldHeight) > pnlReportFilterText.Height Then
+            pnlReportFilterText.Height = (pnlReportFilterText.Controls.Count + 1) * (SeqData.CurVar.BuildMargin + SeqData.CurVar.FieldHeight)
         End If
         pnlReportLabel.Height = pnlReportFilterText.Height
         pnlReportDisplay.Height = pnlReportFilterText.Height
@@ -563,8 +628,8 @@ Public Class frmReports
     End Sub
 
     Private Sub PanelRelationHeightSet()
-        If (pnlRelationsUse.Controls.Count + 1) * (CurVar.BuildMargin + CurVar.FieldHeight) > pnlRelationsUse.Height Then
-            pnlRelationsUse.Height = (pnlRelationsUse.Controls.Count + 1) * (CurVar.BuildMargin + CurVar.FieldHeight)
+        If (pnlRelationsUse.Controls.Count + 1) * (SeqData.CurVar.BuildMargin + SeqData.CurVar.FieldHeight) > pnlRelationsUse.Height Then
+            pnlRelationsUse.Height = (pnlRelationsUse.Controls.Count + 1) * (SeqData.CurVar.BuildMargin + SeqData.CurVar.FieldHeight)
         End If
         pnlRelationsField.Height = pnlRelationsUse.Height
         pnlRelationsRelation.Height = pnlRelationsUse.Height
@@ -599,7 +664,7 @@ Public Class frmReports
         Dim strFieldName As String = Nothing
         Dim intControlNumber As Integer = 0
         Dim intMaxNumber As Integer = 0
-        CurStatus.ReportMaxTop = CurVar.BuildMargin
+        SeqData.CurStatus.ReportMaxTop = SeqData.CurVar.BuildMargin
         For incCount As Integer = 0 To lstSource.Items.Count - 1
             strFieldName = lstSource.Items.Item(incCount).Name
             intMaxNumber = 0
@@ -616,13 +681,13 @@ Public Class frmReports
                         Next
                     Else
                         If intControlNumber > intMaxNumber Then intMaxNumber = intControlNumber
-                        'MessageBox.Show(CurStatus.ReportMaxTop & Environment.NewLine & ((intControlNumber - 1) * CurVar.FieldHeight) & Environment.NewLine & ((intControlNumber - 1) * CurVar.BuildMargin))
-                        ctrControl.Top = CurStatus.ReportMaxTop + ((intControlNumber - 1) * CurVar.FieldHeight) + ((intControlNumber - 1) * CurVar.BuildMargin)
+                        'MessageBox.Show(CurStatus.ReportMaxTop & Environment.NewLine & ((intControlNumber - 1) * SeqData.CurVar.FieldHeight) & Environment.NewLine & ((intControlNumber - 1) * SeqData.CurVar.BuildMargin))
+                        ctrControl.Top = SeqData.CurStatus.ReportMaxTop + ((intControlNumber - 1) * SeqData.CurVar.FieldHeight) + ((intControlNumber - 1) * SeqData.CurVar.BuildMargin)
                     End If
 
                 End If
             Next
-            CurStatus.ReportMaxTop += intMaxNumber * CurVar.FieldHeight + intMaxNumber * CurVar.BuildMargin
+            SeqData.CurStatus.ReportMaxTop += intMaxNumber * SeqData.CurVar.FieldHeight + intMaxNumber * SeqData.CurVar.BuildMargin
         Next
     End Sub
 
@@ -673,10 +738,10 @@ Public Class frmReports
         pnlRelationsLabel.Controls.Add(lblNew)
         AddHandler lblNew.DoubleClick, AddressOf Me.lblShowRelation_DoubleClick
         lblNew.AutoSize = True
-        lblNew.Top = ((lvwSelectedTables.Items.Count - 1) * CurVar.FieldHeight) + ((lvwSelectedTables.Items.Count) * CurVar.BuildMargin)
+        lblNew.Top = ((lvwSelectedTables.Items.Count - 1) * SeqData.CurVar.FieldHeight) + ((lvwSelectedTables.Items.Count) * SeqData.CurVar.BuildMargin)
 
-        If lblNew.Width > CurStatus.RelationLabelWidth Then
-            CurStatus.RelationLabelWidth = lblNew.Width
+        If lblNew.Width > SeqData.CurStatus.RelationLabelWidth Then
+            SeqData.CurStatus.RelationLabelWidth = lblNew.Width
         End If
 
     End Sub
@@ -693,44 +758,44 @@ Public Class frmReports
         chkNewShow.Name = pnlRelationsUse.Name & intCount.ToString & strTableName
         chkNewShow.Tag = strTableName
         pnlRelationsUse.Controls.Add(chkNewShow)
-        chkNewShow.Top = ((lvwSelectedTables.Items.Count - 1) * CurVar.FieldHeight) + ((lvwSelectedTables.Items.Count - 1) * CurVar.BuildMargin)
-        chkNewShow.Left = CurVar.BuildMargin
+        chkNewShow.Top = ((lvwSelectedTables.Items.Count - 1) * SeqData.CurVar.FieldHeight) + ((lvwSelectedTables.Items.Count - 1) * SeqData.CurVar.BuildMargin)
+        chkNewShow.Left = SeqData.CurVar.BuildMargin
 
         Dim cbxNewField As New ComboField
         cbxNewField.Name = pnlRelationsField.Name & intCount.ToString & strTableName
         cbxNewField.Tag = strTableName
         cbxNewField.Width = 140
         pnlRelationsField.Controls.Add(cbxNewField)
-        cbxNewField.Top = ((lvwSelectedTables.Items.Count - 1) * CurVar.FieldHeight) + ((lvwSelectedTables.Items.Count - 1) * CurVar.BuildMargin)
-        cbxNewField.Left = CurVar.BuildMargin
+        cbxNewField.Top = ((lvwSelectedTables.Items.Count - 1) * SeqData.CurVar.FieldHeight) + ((lvwSelectedTables.Items.Count - 1) * SeqData.CurVar.BuildMargin)
+        cbxNewField.Left = SeqData.CurVar.BuildMargin
         ComboBoxFill(cbxNewField, "RelationField", strTableName)
 
         Dim txtNewFilter As New TextField
         txtNewFilter.Name = pnlRelationsRelation.Name & intCount.ToString & strTableName
         txtNewFilter.Tag = strTableName
-        txtNewFilter.Width = 140
+        txtNewFilter.Width = 200
         pnlRelationsRelation.Controls.Add(txtNewFilter)
-        txtNewFilter.Top = ((lvwSelectedTables.Items.Count - 1) * CurVar.FieldHeight) + ((lvwSelectedTables.Items.Count - 1) * CurVar.BuildMargin)
-        txtNewFilter.Left = CurVar.BuildMargin
+        txtNewFilter.Top = ((lvwSelectedTables.Items.Count - 1) * SeqData.CurVar.FieldHeight) + ((lvwSelectedTables.Items.Count - 1) * SeqData.CurVar.BuildMargin)
+        txtNewFilter.Left = SeqData.CurVar.BuildMargin
 
         Dim cbxNewJoinType As New ComboField
         cbxNewJoinType.Name = pnlRelationsJoinType.Name & intCount.ToString & strTableName
         cbxNewJoinType.Tag = strTableName
         cbxNewJoinType.Width = 110
         pnlRelationsJoinType.Controls.Add(cbxNewJoinType)
-        cbxNewJoinType.Top = ((lvwSelectedTables.Items.Count - 1) * CurVar.FieldHeight) + ((lvwSelectedTables.Items.Count - 1) * CurVar.BuildMargin)
-        cbxNewJoinType.Left = CurVar.BuildMargin
+        cbxNewJoinType.Top = ((lvwSelectedTables.Items.Count - 1) * SeqData.CurVar.FieldHeight) + ((lvwSelectedTables.Items.Count - 1) * SeqData.CurVar.BuildMargin)
+        cbxNewJoinType.Left = SeqData.CurVar.BuildMargin
         ComboBoxFill(cbxNewJoinType, "JoinType")
 
         PanelsRelationSort()
     End Sub
 
     Private Sub RelationsLoad(strTable As String)
-        Dim xPNode As System.Xml.XmlNode = dhdText.FindXmlNode(xmlTables, "Table", "Name", strTable)
-        Dim xmlFieldList As System.Xml.XmlNodeList = dhdText.FindXmlChildNodes(xPNode, "Fields/Field/Relations", "Relation")
+        Dim xPNode As System.Xml.XmlNode = SeqData.dhdText.FindXmlNode(xmlTables, "Table", "Name", strTable)
+        Dim xmlFieldList As System.Xml.XmlNodeList = SeqData.dhdText.FindXmlChildNodes(xPNode, "Fields/Field/Relations", "Relation")
         Dim intCount As Integer = 0
         For Each xmlCNode As System.Xml.XmlNode In xmlFieldList
-            Dim xmlRelationList As System.Xml.XmlNodeList = dhdText.FindXmlChildNodes(xmlCNode, "Relation")
+            Dim xmlRelationList As System.Xml.XmlNodeList = SeqData.dhdText.FindXmlChildNodes(xmlCNode, "Relation")
             For Each xmlRNode As System.Xml.XmlNode In xmlRelationList
                 'MessageBox.Show(xmlCNode("Relations").Value)
                 If xmlRNode.InnerText.Length > 0 Then
@@ -774,13 +839,15 @@ Public Class frmReports
         End If
         cbxReportName.SelectedIndex = -1
         cbxReportName.Text = ""
+        lblStatus.Text = ""
         CursorControl()
     End Sub
 
     Private Sub btnReportCreate_Click(sender As Object, e As EventArgs) Handles btnReportCreate.Click
         CursorControl("Wait")
-        QueryShow()
-        QueryExecute()
+        If QueryShow() = True Then
+            QueryExecute()
+        End If
         CursorControl()
     End Sub
 
@@ -793,7 +860,7 @@ Public Class frmReports
     Private Sub btnExecuteQuery_Click(sender As Object, e As EventArgs) Handles btnExecuteQuery.Click
         CursorControl("Wait")
         strQuery = rtbQuery.Text
-        QueryExecute()
+        If strQuery.Length > 0 Then QueryExecute()
         CursorControl()
     End Sub
 
@@ -806,12 +873,23 @@ Public Class frmReports
         End If
     End Sub
 
-    Private Sub QueryShow()
+    Private Function QueryShow() As Boolean
         ReportClear(True)
-        ReportQueryBuild()
+        Dim xmlReportShow As XmlDocument = SeqData.dhdText.CreateRootDocument(Nothing, Nothing, Nothing)
+        Dim strReportName As String = cbxReportName.Text
+        If strReportName = "" Then strReportName = "TempReport"
+        'ReportAdd(xmlReportShow, strReportName)
+        ReportToXML(xmlReportShow, strReportName)
+        strQuery = SeqData.ReportQueryBuild(xmlReportShow, xmlTables, strReportName, SeqData.curVar.DateTimeStyle)
+        If strQuery = Nothing Then
+            WriteStatus("No fields were selected. Select at least 1 field to be shown in your report", 0, lblStatus)
+            Return False
+        End If
+        'strQuery = ReportQueryBuild2()
         rtbQuery.Text = strQuery
         tabReports.SelectedTab = tpgReportResult
-    End Sub
+        Return True
+    End Function
 
     Private Sub QueryExecute()
         ReportClear(False)
@@ -819,7 +897,7 @@ Public Class frmReports
         tmrElapsedTime.Enabled = True
         tmrElapsedTime.Start()
         dtsReport = Nothing
-        dtsReport = QueryDb(dhdConnection, strQuery, True)
+        dtsReport = SeqData.QueryDb(SeqData.dhdConnection, strQuery, True)
         ReportShow(dtsReport)
         tmrElapsedTime.Stop()
         tmrElapsedTime.Enabled = False
@@ -838,49 +916,51 @@ Public Class frmReports
     Private Sub btnReportAddOrUpdate_Click(sender As Object, e As EventArgs) Handles btnReportAddOrUpdate.Click
         CursorControl("Wait")
         If cbxReportName.Text.Length < 3 Then
-            MessageBox.Show("Report Name must be at least 3 characters long")
+            'MessageBox.Show("Report Name must be at least 3 characters long")
+            WriteStatus("Report Name must be at least 3 characters long.", 0, lblStatus)
             Exit Sub
         End If
-        ReportDelete()
-        ReportAdd(xmlReports)
+        If lvwSelectedFields.Items.Count = 0 Then
+            WriteStatus("No fields have been selected for this report. Aborting save.", 0, lblStatus)
+            'MessageBox.Show("No fields have been selected for this report. Aborting save.", "No fields selected", MessageBoxButtons.OK, MessageBoxIcon.Hand)
+            Exit Sub
+        End If
+        ReportDelete(cbxReportName.Text)
+        ReportToXML(xmlReports, cbxReportName.Text)
+        'ReportAdd(xmlReports, cbxReportName.Text)
         If Not cbxReportName.Items.Contains(cbxReportName.Text) Then cbxReportName.Items.Add(cbxReportName.Text)
 
-        If dhdText.CheckDir(CurVar.ReportSetFile.Substring(0, CurVar.ReportSetFile.LastIndexOf("\")), False) = False Then
-            If MessageBox.Show("The folder " & CurVar.SearchFile.Substring(0, CurVar.ReportSetFile.LastIndexOf("\")) & " does not exist." & Environment.NewLine & "do you wish to create it?", "Folder does not exist", MessageBoxButtons.YesNo, MessageBoxIcon.Hand, MessageBoxDefaultButton.Button1) = Windows.Forms.DialogResult.No Then
-                Exit Sub
-            End If
+        If SaveXmlFile(xmlReports, SeqData.curVar.ReportSetFile, True) = False Then
+            WriteStatus("The file " & SeqData.curVar.ReportSetFile & " was not saved.", 0, lblStatus)
+            'MessageBox.Show("The file " & SeqData.curVar.ReportSetFile & " was not saved.")
         End If
-
-        dhdText.SaveXmlFile(xmlReports, CheckFilePath(CurVar.ReportSetFile), True)
         CursorControl()
     End Sub
 
     Private Sub btnReportDelete_Click(sender As Object, e As EventArgs) Handles btnReportDelete.Click
-        If MessageBox.Show("This will permanently remove the Item: " & cbxReportName.Text & Environment.NewLine & strMessages.strContinue, strMessages.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Exit Sub
+        If MessageBox.Show("This will permanently remove the Item: " & cbxReportName.Text & Environment.NewLine & Core.Message.strContinue, Core.Message.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Exit Sub
         CursorControl("Wait")
-        ReportDelete()
+        ReportDelete(cbxReportName.Text)
         If cbxReportName.Items.Contains(cbxReportName.Text) Then cbxReportName.Items.Remove(cbxReportName.Text)
         cbxReportName.SelectedIndex = -1
         cbxReportName.Text = ""
         ReportFieldsDispose(False)
 
-        If dhdText.CheckDir(CurVar.ReportSetFile.Substring(0, CurVar.ReportSetFile.LastIndexOf("\")), False) = False Then
-            If MessageBox.Show("The folder " & CurVar.SearchFile.Substring(0, CurVar.ReportSetFile.LastIndexOf("\")) & " does not exist." & Environment.NewLine & "do you wish to create it?", "Folder does not exist", MessageBoxButtons.YesNo, MessageBoxIcon.Hand, MessageBoxDefaultButton.Button1) = Windows.Forms.DialogResult.No Then
-                Exit Sub
-            End If
+        If SaveXmlFile(xmlReports, SeqData.curVar.ReportSetFile, True) = False Then
+            MessageBox.Show("The file " & SeqData.curVar.ReportSetFile & " was not saved.")
         End If
-        dhdText.SaveXmlFile(xmlReports, CheckFilePath(CurVar.ReportSetFile), True)
         CursorControl()
     End Sub
 
     Private Sub cbxReportName_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbxReportName.SelectedIndexChanged
+        PanelsSuspendLayout()
         If cbxReportName.SelectedIndex >= 0 Then
             ReportFieldsDispose(False)
             ReportLoad(xmlReports, cbxReportName.Text)
         End If
         pnlSelectedFieldsMain.Focus()
         pnlSelectedFieldsMain.Invalidate()
-
+        PanelsResumeLayout()
     End Sub
 
     Private Sub btnRevertChanges_Click(sender As Object, e As EventArgs) Handles btnRevertChanges.Click
@@ -889,45 +969,54 @@ Public Class frmReports
     End Sub
 
     Private Sub btnExportToFile_Click(sender As Object, e As EventArgs) Handles btnExportToFile.Click
-
+        If dgvReport.RowCount = 0 Then Exit Sub
         Dim strReportName As String = ""
         If cbxReportName.Text.Length > 0 Then
             strReportName = cbxReportName.Text
         Else
-            strReportName = CurStatus.Connection
+            strReportName = SeqData.curStatus.Connection
         End If
-        ExportFile(dtsReport, strReportName, False)
-        'XmlExportDatagridView(dgvReport, "Sequenchel", CurStatus.Connection, strReportName)
+        Dim strFileName As String = GetSaveFileName(strReportName)
+        ExportFile(dtsReport, strFileName)
     End Sub
-
-    'Private Sub btnExportToExcel_Click(sender As Object, e As EventArgs) Handles btnExportToExcel.Click
-    '    If Not dtsReport Is Nothing Then
-    '        ExcelExportDatagridView(dtsReport)
-    '    End If
-    'End Sub
 
 #End Region
 
     Private Sub ReportsLoad()
         cbxReportName.Items.Clear()
         cbxReportName.Text = ""
-        Dim lstReports As List(Of String) = LoadReportsXml()
-        If lstReports Is Nothing Then Exit Sub
+        Dim lstReports As List(Of String) = SeqData.LoadReportsXml(xmlReports)
+        If lstReports Is Nothing Then
+            xmlReports.RemoveAll()
+            Exit Sub
+        End If
         For Each lstItem As String In lstReports
             cbxReportName.Items.Add(lstItem)
         Next
     End Sub
 
     Private Sub ReportLoad(xmlReports As XmlDocument, strReportName As String)
-        Dim xNode As XmlNode = dhdText.FindXmlNode(xmlReports, "Report", "ReportName", strReportName)
+        Dim xNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlReports, "Report", "ReportName", strReportName)
+        If Not xNode Is Nothing Then
+            Dim xFNode As XmlNode = SeqData.dhdText.FindXmlChildNode(xNode, "Tables/Table")
+            If xFNode Is Nothing Then
+                XmlToReport(xmlReports, strReportName)
+            Else
+                XmlToReport_old(xmlReports, strReportName)
+            End If
+        End If
+    End Sub
+
+    Private Sub XmlToReport_old(xmlReports As XmlDocument, strReportName As String)
+        Dim xNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlReports, "Report", "ReportName", strReportName)
         Dim strTable As String = "", strField As String = "", intRelationNumber As Integer = 0
 
         If Not xNode Is Nothing Then
-            If dhdText.CheckNodeElement(xNode, "Description") Then txtDescription.Text = xNode.Item("Description").InnerText
+            If SeqData.dhdText.CheckNodeElement(xNode, "Description") Then txtDescription.Text = xNode.Item("Description").InnerText
             chkTop.Checked = xNode.Item("UseTop").InnerText
             txtTop.Text = xNode.Item("UseTopNumber").InnerText
             chkDistinct.Checked = xNode.Item("UseDistinct").InnerText
-            For Each xCNode As XmlNode In dhdText.FindXmlChildNodes(xNode, "Tables/Table/Fields/Field")
+            For Each xCNode As XmlNode In SeqData.dhdText.FindXmlChildNodes(xNode, "Tables/Table/Fields/Field")
                 strTable = xCNode.ParentNode.ParentNode.Item("TableName").InnerText
                 If strTable.IndexOf(".") = -1 Then strTable = "dbo." & strTable
                 strField = xCNode.Item("FieldName").InnerText
@@ -939,7 +1028,7 @@ Public Class frmReports
                     SetCtrText(pnlReportSort, strTable & "." & strField, xCNode.Item("FieldSort").InnerText)
                     SetCtrText(pnlReportSortOrder, strTable & "." & strField, xCNode.Item("FieldSortOrder").InnerText)
 
-                    For Each xFnode In dhdText.FindXmlChildNodes(xCNode, "Filters/Filter")
+                    For Each xFnode In SeqData.dhdText.FindXmlChildNodes(xCNode, "Filters/Filter")
                         SetCtrText(pnlReportFilter, strTable & "." & strField, xFnode.Item("FilterEnabled").InnerText, xFnode.Item("FilterNumber").InnerText)
                         SetCtrText(pnlReportFilterMode, strTable & "." & strField, xFnode.Item("FilterMode").InnerText, xFnode.Item("FilterNumber").InnerText)
                         SetCtrText(pnlReportFilterType, strTable & "." & strField, xFnode.Item("FilterType").InnerText, xFnode.Item("FilterNumber").InnerText)
@@ -950,7 +1039,7 @@ Public Class frmReports
                 End Try
             Next
 
-            For Each xRNode As XmlNode In dhdText.FindXmlChildNodes(xNode, "Tables/Table/Relations/Relation")
+            For Each xRNode As XmlNode In SeqData.dhdText.FindXmlChildNodes(xNode, "Tables/Table/Relations/Relation")
                 strTable = xRNode.ParentNode.ParentNode.Item("TableName").InnerText
                 intRelationNumber = xRNode.Item("RelationNumber").InnerText
                 'lstAvailableFields.SelectedItem = strTable & "." & strField
@@ -964,62 +1053,50 @@ Public Class frmReports
         End If
     End Sub
 
-    Private Sub ReportQueryBuild()
-        Dim strFieldName As String = ""
-        Dim strShowMode As String = Nothing
-        Dim strHavingMode As String = Nothing
-        Dim strQueryFrom As String = ""
-        Dim strQueryWhere As String = ""
-        Dim strQueryGroup As String = "GROUP BY ", blnGroup As Boolean = False
-        Dim strQueryHaving As String = ""
-        Dim strQueryOrder As String = ""
+    Private Sub XmlToReport(xmlReports As XmlDocument, strReportName As String)
+        Dim xNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlReports, "Report", "ReportName", strReportName)
+        Dim strTable As String = "", strField As String = "", intRelationNumber As Integer = 0
 
-        strQuery = "SELECT "
-        For incCount As Integer = 0 To lvwSelectedFields.Items.Count - 1
-            strFieldName = lvwSelectedFields.Items.Item(incCount).Name
-            'intMaxNumber = 0
+        If Not xNode Is Nothing Then
+            If SeqData.dhdText.CheckNodeElement(xNode, "Description") Then txtDescription.Text = xNode.Item("Description").InnerText
+            chkTop.Checked = xNode.Item("UseTop").InnerText
+            txtTop.Text = xNode.Item("UseTopNumber").InnerText
+            chkDistinct.Checked = xNode.Item("UseDistinct").InnerText
+            For Each xCNode As XmlNode In SeqData.dhdText.FindXmlChildNodes(xNode, "Fields/Field")
+                strTable = xCNode.Item("TableName").InnerText
+                If strTable.IndexOf(".") = -1 Then strTable = "dbo." & strTable
+                strField = xCNode.Item("FieldName").InnerText
+                Try
+                    lvwAvailableFields.Items(strTable & "." & strField).Selected = True
+                    btnReportFieldAdd_Click(Nothing, Nothing)
+                    SetCtrText(pnlReportDisplay, strTable & "." & strField, xCNode.Item("FieldShow").InnerText)
+                    SetCtrText(pnlReportShowMode, strTable & "." & strField, xCNode.Item("FieldShowMode").InnerText)
+                    SetCtrText(pnlReportSort, strTable & "." & strField, xCNode.Item("FieldSort").InnerText)
+                    SetCtrText(pnlReportSortOrder, strTable & "." & strField, xCNode.Item("FieldSortOrder").InnerText)
 
-            For Each ctrSelect In pnlReportDisplay.Controls
-                strHavingMode = GetCtrText(pnlReportFilter, strFieldName)
-                If strHavingMode = 2 Then blnGroup = True
-                If ctrSelect.Checked = True Then
-                    If strFieldName = ctrSelect.Tag Then
-                        strShowMode = GetCtrText(pnlReportShowMode, strFieldName)
-
-                        strQuery &= ", " & FormatFieldXML(strFieldName, strShowMode, True, True)
-                        Select Case strShowMode
-                            Case Nothing
-                                strQueryGroup &= ", " & strFieldName
-                            Case "DATE", "YEAR", "MONTH", "DAY", "TIME", "HOUR", "MINUTE", "SECOND"
-                                strQueryGroup &= ", " & strFieldName
-                            Case Else
-                                blnGroup = True
-                        End Select
-                    End If
-                End If
+                    For Each xFnode In SeqData.dhdText.FindXmlChildNodes(xCNode, "Filters/Filter")
+                        SetCtrText(pnlReportFilter, strTable & "." & strField, xFnode.Item("FilterEnabled").InnerText, xFnode.Item("FilterNumber").InnerText)
+                        SetCtrText(pnlReportFilterMode, strTable & "." & strField, xFnode.Item("FilterMode").InnerText, xFnode.Item("FilterNumber").InnerText)
+                        SetCtrText(pnlReportFilterType, strTable & "." & strField, xFnode.Item("FilterType").InnerText, xFnode.Item("FilterNumber").InnerText)
+                        SetCtrText(pnlReportFilterText, strTable & "." & strField, xFnode.Item("FilterText").InnerText, xFnode.Item("FilterNumber").InnerText)
+                    Next
+                Catch ex As Exception
+                    If MessageBox.Show("Unable to load the Field " & strTable & "." & strField & Environment.NewLine & "Do you wish to keep loading the report?", "Error Loading Report", MessageBoxButtons.YesNo, MessageBoxIcon.Error, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.No Then Exit Sub
+                End Try
             Next
-        Next
 
-        If strQuery = "SELECT " Then
-            MessageBox.Show("You need to select at least 1 Field for display")
-            Exit Sub
+            For Each xRNode As XmlNode In SeqData.dhdText.FindXmlChildNodes(xNode, "Relations/Relation")
+                strTable = xRNode.Item("TableName").InnerText
+                intRelationNumber = xRNode.Item("RelationNumber").InnerText
+                'lstAvailableFields.SelectedItem = strTable & "." & strField
+                'btnReportFieldAdd_Click(Nothing, Nothing)
+                SetCtrText(pnlRelationsUse, strTable, xRNode.Item("RelationEnabled").InnerText, intRelationNumber)
+                SetCtrText(pnlRelationsField, strTable, xRNode.Item("RelationSource").InnerText, intRelationNumber)
+                SetCtrText(pnlRelationsRelation, strTable, xRNode.Item("RelationTarget").InnerText, intRelationNumber)
+                SetCtrText(pnlRelationsJoinType, strTable, xRNode.Item("RelationJoinType").InnerText, intRelationNumber)
+
+            Next
         End If
-        strQuery = strQuery.Replace("SELECT ,", "SELECT ")
-        If chkTop.Checked = True And IsNumeric(txtTop.Text) = True Then strQuery = strQuery.Replace("SELECT ", "SELECT TOP " & txtTop.Text & " ")
-        If chkDistinct.Checked = True Then strQuery = strQuery.Replace("SELECT ", "SELECT DISTINCT ")
-        strQueryGroup = strQueryGroup.Replace("GROUP BY ,", "GROUP BY ")
-        If strQueryGroup = "GROUP BY " Then blnGroup = False
-        strQueryFrom = FromClauseGet()
-        strQuery &= Environment.NewLine & strQueryFrom
-        strQueryWhere = WhereClauseGet()
-        If strQueryWhere.Length > 10 Then strQuery &= Environment.NewLine & strQueryWhere
-        If blnGroup = True Then strQuery &= Environment.NewLine & strQueryGroup
-        strQueryHaving = HavingClauseGet()
-        If strQueryHaving.Length > 11 Then strQuery &= Environment.NewLine & strQueryHaving
-        strQueryOrder = OrderClauseGet()
-        If strQueryOrder.Length > 10 Then strQuery &= Environment.NewLine & strQueryOrder
-
-        'MessageBox.Show(strQuery)
     End Sub
 
     Private Function FieldAliasGet(strFieldName As String) As String
@@ -1031,155 +1108,6 @@ Public Class frmReports
         Next
         If strAliasName = "" Then strAliasName = strFieldName
         Return strAliasName
-    End Function
-
-    Private Function FromClauseGet() As String
-        Dim strTableName As String = ""
-        Dim intControlNumber As Integer = 0
-        Dim strFromClause As String = "FROM "
-        Dim strFromSource As String = Nothing, strFromType As String = Nothing, strFromRelation As String = Nothing, strTargetTable As String = Nothing
-
-        For incCount As Integer = 0 To lvwSelectedTables.Items.Count - 1
-            strTableName = lvwSelectedTables.Items.Item(incCount).Name
-            If incCount = 0 Then strFromClause &= strTableName
-            For Each ctrFrom In pnlRelationsUse.Controls
-                If ctrFrom.Checked = True Then
-                    If strTableName = ctrFrom.Tag Then
-                        intControlNumber = ctrFrom.Name.ToString.Substring(ctrFrom.Name.ToString.Length - strTableName.Length - 1, 1)
-                        strFromSource = GetCtrText(pnlRelationsField, strTableName, intControlNumber)
-                        strFromRelation = GetCtrText(pnlRelationsRelation, strTableName, intControlNumber)
-                        strFromType = GetCtrText(pnlRelationsJoinType, strTableName, intControlNumber)
-                        strTargetTable = strFromRelation.Substring(0, strFromRelation.LastIndexOf("."))
-                        strTargetTable = strTargetTable.Substring(strTargetTable.LastIndexOf("(") + 1, strTargetTable.Length - (strTargetTable.LastIndexOf("(") + 1))
-                        If strFromClause.Contains(strTargetTable) = True And strFromClause.Contains(strTableName) = False Then
-                            strFromClause &= Environment.NewLine & strFromType & " JOIN " & strTableName & " ON " & strTableName & "." & strFromSource & " = " & strFromRelation
-                        ElseIf strFromClause.Contains(strTargetTable) = True And strFromClause.Contains(strTableName) = True Then
-                            strFromClause &= Environment.NewLine & " AND " & strTableName & "." & strFromSource & " = " & strFromRelation
-                        ElseIf strFromClause.Contains(strTargetTable) = False And strFromClause.Contains(strTableName) = False Then
-                            strFromClause &= Environment.NewLine & strFromType & " JOIN " & strTargetTable & " ON " & strTableName & "." & strFromSource & " = " & strFromRelation
-                        ElseIf strFromClause.Contains(strTargetTable) = False And strFromClause.Contains(strTableName) = True Then
-                            strFromClause &= Environment.NewLine & strFromType & " JOIN " & strTargetTable & " ON " & strTableName & "." & strFromSource & " = " & strFromRelation
-                        End If
-                    End If
-                End If
-            Next
-        Next
-        Return strFromClause
-    End Function
-
-    Private Function WhereClauseGet() As String
-        Dim strFieldName As String = ""
-        Dim intControlNumber As Integer = 0
-        Dim strQueryWhere As String = "WHERE "
-        Dim strWhereMode As String = Nothing, strWhereType As String = Nothing, strWhereClause As String = Nothing
-
-        For incCount As Integer = 0 To lvwSelectedFields.Items.Count - 1
-            strFieldName = lvwSelectedFields.Items.Item(incCount).Name
-            For Each ctrWhere As CheckField In pnlReportFilter.Controls
-                If ctrWhere.Checked = True And ctrWhere.CheckState = CheckState.Checked Then
-                    If strFieldName = ctrWhere.Tag Then
-                        intControlNumber = ctrWhere.Name.ToString.Substring(ctrWhere.Name.ToString.Length - strFieldName.Length - 1, 1)
-                        strWhereMode = GetCtrText(pnlReportFilterMode, strFieldName, intControlNumber)
-                        If strWhereMode = "" Then strWhereMode = "AND"
-                        If strWhereMode.Contains("AND") Then strWhereMode = ") " & strWhereMode & " ("
-                        'If strWhereMode = "AND NOT" Then strWhereMode = ") AND NOT ("
-                        strWhereType = GetCtrText(pnlReportFilterType, strFieldName, intControlNumber)
-                        strWhereClause = GetCtrText(pnlReportFilterText, strFieldName, intControlNumber)
-                        'If IsNumeric(strWhereClause) = False Then strWhereClause = "'" & strWhereClause & "'"
-                        strWhereClause = SetDelimiters(strWhereClause, ctrWhere.FieldDataType, strWhereType)
-
-                        If strWhereType = "LIKE" And strWhereClause.Contains("*") Then strWhereClause = strWhereClause.Replace("*", "%")
-                        If strWhereType <> Nothing And strWhereClause <> Nothing Then
-                            If strWhereMode = Nothing Then
-                                strQueryWhere &= " " & strFieldName & " " & strWhereType & " " & strWhereClause
-                            Else
-                                strQueryWhere &= " " & strWhereMode & " " & strFieldName & " " & strWhereType & " " & strWhereClause
-                            End If
-                        End If
-                    End If
-                End If
-            Next
-        Next
-        strQueryWhere &= ")"
-        strQueryWhere = strQueryWhere.Replace("WHERE  ) AND", "WHERE ").Replace("WHERE  OR", "WHERE (").Replace("WHERE  ) AND NOT", "WHERE NOT (")
-
-        Return strQueryWhere
-    End Function
-
-    Private Function HavingClauseGet() As String
-        Dim strFieldName As String = ""
-        Dim strHavingField As String = ""
-        Dim strShowMode As String = Nothing
-        Dim intControlNumber As Integer = 0
-        Dim strQueryHaving As String = "HAVING "
-        Dim strHavingMode As String = Nothing, strHavingType As String = Nothing, strHavingClause As String = Nothing
-
-        For incCount As Integer = 0 To lvwSelectedFields.Items.Count - 1
-            strFieldName = lvwSelectedFields.Items.Item(incCount).Name
-            For Each ctrHaving As CheckField In pnlReportFilter.Controls
-                If ctrHaving.Checked = True And ctrHaving.CheckState = CheckState.Indeterminate Then
-                    If strFieldName = ctrHaving.Tag Then
-                        intControlNumber = ctrHaving.Name.ToString.Substring(ctrHaving.Name.ToString.Length - strFieldName.Length - 1, 1)
-                        strHavingMode = GetCtrText(pnlReportFilterMode, strFieldName, intControlNumber)
-                        If strHavingMode = "" Then strHavingMode = "AND"
-                        If strHavingMode.Contains("AND") Then strHavingMode = ") " & strHavingMode & " ("
-                        'If strHavingMode = "AND NOT" Then strHavingMode = ") AND NOT ("
-                        strHavingType = GetCtrText(pnlReportFilterType, strFieldName, intControlNumber)
-
-                        strHavingClause = GetCtrText(pnlReportFilterText, strFieldName, intControlNumber)
-
-                        strShowMode = GetCtrText(pnlReportShowMode, strFieldName)
-                        strHavingField &= ", " & FormatFieldXML(strFieldName, strShowMode, False, False)
-
-                        'If IsNumeric(strHavingClause) = False Then strHavingClause = "'" & strHavingClause & "'"
-                        strHavingClause = SetDelimiters(strHavingClause, ctrHaving.FieldDataType, strHavingType)
-                        If strHavingType <> Nothing And strHavingClause <> Nothing Then
-                            If strHavingMode = Nothing Then
-                                strQueryHaving &= " " & strHavingField & " " & strHavingType & " " & strHavingClause
-                            Else
-                                strQueryHaving &= " " & strHavingMode & " " & strHavingField & " " & strHavingType & " " & strHavingClause
-                            End If
-                        End If
-                    End If
-                End If
-            Next
-        Next
-        strQueryHaving &= ")"
-        'strQueryHaving = strQueryHaving.Replace("HAVING  ) AND", "HAVING ").Replace("HAVING  OR", "HAVING (").Replace("HAVING  ) AND NOT", "HAVING NOT (")
-        strQueryHaving = strQueryHaving.Replace("HAVING  ) AND", "HAVING ").Replace("HAVING  ) OR", "HAVING ")
-        strQueryHaving = strQueryHaving.Replace("HAVING  ( ,", "HAVING (").Replace("HAVING  NOT ( ,", "HAVING NOT (")
-
-        Return strQueryHaving
-    End Function
-
-    Private Function OrderClauseGet() As String
-        Dim strQueryOrder As String = "ORDER BY "
-
-        For intCount = 1 To pnlReportSortOrder.Controls.Count + 1
-            For Each ctrOrder In pnlReportSortOrder.Controls
-                If ctrOrder.Text = intCount.ToString Then
-                    strQueryOrder &= ", " & ctrOrder.Tag
-                    For Each ctrSort In pnlReportSort.Controls
-                        If ctrOrder.Tag = ctrSort.Tag And ctrSort.Text.Length > 0 Then
-                            strQueryOrder &= " " & ctrSort.Text
-                        End If
-                    Next
-                End If
-                If intCount > pnlReportSortOrder.Controls.Count And IsNumeric(ctrOrder.Text) = True Then
-                    If ctrOrder.text > pnlReportSortOrder.Controls.Count Then
-                        strQueryOrder &= ", " & ctrOrder.Tag
-                        For Each ctrSort In pnlReportSort.Controls
-                            If ctrOrder.Tag = ctrSort.Tag And ctrSort.Text.Length > 0 Then
-                                strQueryOrder &= " " & ctrSort.Text
-                            End If
-                        Next
-                    End If
-                End If
-            Next
-        Next
-
-        strQueryOrder = strQueryOrder.Replace("ORDER BY ,", "ORDER BY ")
-        Return strQueryOrder
     End Function
 
     Private Function GetCtrText(pnlInput As Panel, strFieldName As String, Optional intControlNumber As Integer = 0) As String
@@ -1229,7 +1157,7 @@ Public Class frmReports
             If pnlInput.Parent Is pnlSelectedFields Then
                 Dim lblTarget As Label = GetLabel(pnlReportLabel, strFieldName)
                 If lblTarget Is Nothing Then
-                    WriteLog("unable to add extra Filtercriterium for: " & strFieldName, 1)
+                    SeqData.WriteLog("unable to add extra Filtercriterium for: " & strFieldName, 1)
                 Else
                     lblShowField_DoubleClick(lblTarget, Nothing)
                     SetCtrText(pnlInput, strFieldName, strValue, intControlNumber)
@@ -1237,13 +1165,13 @@ Public Class frmReports
             ElseIf pnlInput.Parent Is pnlRelations Then
                 Dim lblTarget As Label = GetLabel(pnlRelationsLabel, strFieldName)
                 If lblTarget Is Nothing Then
-                    WriteLog("unable to add extra Relationcriterium for: " & strFieldName, 1)
+                    SeqData.WriteLog("unable to add extra Relationcriterium for: " & strFieldName, 1)
                 Else
                     lblShowRelation_DoubleClick(lblTarget, Nothing)
                     SetCtrText(pnlInput, strFieldName, strValue, intControlNumber)
                 End If
             Else
-                WriteLog("The Field: " & strFieldName & " on Panel: " & pnlInput.Name & " was not found." & "Unable to load the Value: " & strValue, 1)
+                SeqData.WriteLog("The Field: " & strFieldName & " on Panel: " & pnlInput.Name & " was not found." & "Unable to load the Value: " & strValue, 1)
             End If
         End If
     End Sub
@@ -1260,7 +1188,7 @@ Public Class frmReports
         'strReportText &= vbCrLf
         lblListCountNumber.Text = "0"
         lblErrorMessage.Text = strErrorMessage
-        If DatasetCheck(dtsData) = False Then Exit Sub
+        If SeqData.dhdText.DatasetCheck(dtsData) = False Then Exit Sub
 
         Try
             If DataSet2DataGridView(dtsData, 0, dgvReport, True) = False Then
@@ -1279,81 +1207,145 @@ Public Class frmReports
 
     End Sub
 
-    Private Sub ReportAdd(xmlDocReport As XmlDocument)
+    'Private Sub ReportAdd(xmlDocReport As XmlDocument, strReportName As String)
+    '    Dim strTable As String = ""
+    '    Dim strField As String = ""
+    '    Dim intControlNumber As Integer = 0
+
+    '    Dim root As XmlElement = xmlDocReport.DocumentElement
+    '    If root Is Nothing Then
+    '        xmlDocReport = SeqData.dhdText.CreateRootDocument(xmlDocReport, "Sequenchel", "Reports", True)
+    '    End If
+
+    '    Dim NewReportNode As XmlNode = SeqData.dhdText.CreateAppendElement(xmlDocReport.Item("Sequenchel").Item("Reports"), "Report")
+    '    SeqData.dhdText.CreateAppendElement(NewReportNode, "ReportName", strReportName)
+    '    SeqData.dhdText.CreateAppendElement(NewReportNode, "Description", txtDescription.Text)
+    '    SeqData.dhdText.CreateAppendElement(NewReportNode, "UseTop", chkTop.Checked.ToString)
+    '    SeqData.dhdText.CreateAppendElement(NewReportNode, "UseTopNumber", txtTop.Text)
+    '    SeqData.dhdText.CreateAppendElement(NewReportNode, "UseDistinct", chkDistinct.Checked.ToString)
+    '    Dim NewTablesNode As XmlNode = SeqData.dhdText.CreateAppendElement(NewReportNode, "Tables")
+    '    For intTableCount As Integer = 0 To lvwSelectedTables.Items.Count - 1
+    '        strTable = lvwSelectedTables.Items.Item(intTableCount).Name
+    '        Dim NewTableNode As XmlNode = SeqData.dhdText.CreateAppendElement(NewTablesNode, "Table")
+    '        SeqData.dhdText.CreateAppendElement(NewTableNode, "TableName", strTable)
+    '        Dim NewFieldsNode As XmlNode = SeqData.dhdText.CreateAppendElement(NewTableNode, "Fields")
+    '        For intFieldCount As Integer = 0 To lvwSelectedFields.Items.Count - 1
+    '            strField = lvwSelectedFields.Items.Item(intFieldCount).Name
+    '            If strField.Length > strTable.Length Then
+    '                If strField.Substring(0, strField.LastIndexOf(".")) = strTable Then
+    '                    Dim strFieldName As String = strField.Substring(strField.LastIndexOf(".") + 1, strField.Length - strField.LastIndexOf(".") - 1)
+    '                    Dim NewFieldNode As XmlNode = SeqData.dhdText.CreateAppendElement(NewFieldsNode, "Field")
+    '                    SeqData.dhdText.CreateAppendElement(NewFieldNode, "FieldName", strFieldName)
+    '                    SeqData.dhdText.CreateAppendElement(NewFieldNode, "FieldShow", GetCtrText(pnlReportDisplay, strField))
+    '                    SeqData.dhdText.CreateAppendElement(NewFieldNode, "FieldShowMode", GetCtrText(pnlReportShowMode, strField))
+    '                    SeqData.dhdText.CreateAppendElement(NewFieldNode, "FieldSort", GetCtrText(pnlReportSort, strField))
+    '                    SeqData.dhdText.CreateAppendElement(NewFieldNode, "FieldSortOrder", GetCtrText(pnlReportSortOrder, strField))
+
+    '                    Dim NewFiltersNode As XmlNode = SeqData.dhdText.CreateAppendElement(NewFieldNode, "Filters")
+    '                    For Each ctrFilter In pnlReportFilter.Controls
+    '                        If ctrFilter.Tag = strField Then
+    '                            intControlNumber = ctrFilter.Name.ToString.Substring(ctrFilter.Name.ToString.Length - strField.Length - 1, 1)
+    '                            Dim NewFilterNode As XmlNode = SeqData.dhdText.CreateAppendElement(NewFiltersNode, "Filter")
+    '                            SeqData.dhdText.CreateAppendElement(NewFilterNode, "FilterNumber", intControlNumber)
+    '                            SeqData.dhdText.CreateAppendElement(NewFilterNode, "FilterEnabled", ctrFilter.Checkstate.ToString)
+    '                            SeqData.dhdText.CreateAppendElement(NewFilterNode, "FilterMode", GetCtrText(pnlReportFilterMode, strField, intControlNumber))
+    '                            SeqData.dhdText.CreateAppendElement(NewFilterNode, "FilterType", GetCtrText(pnlReportFilterType, strField, intControlNumber))
+    '                            SeqData.dhdText.CreateAppendElement(NewFilterNode, "FilterText", GetCtrText(pnlReportFilterText, strField, intControlNumber))
+    '                        End If
+    '                    Next
+    '                End If
+    '            End If
+    '        Next
+    '        Dim NewRelationsNode As XmlNode = SeqData.dhdText.CreateAppendElement(NewTableNode, "Relations")
+    '        For Each ctrRelation In pnlRelationsUse.Controls
+    '            If ctrRelation.Tag = strTable Then
+    '                Dim NewRelationNode As XmlNode = SeqData.dhdText.CreateAppendElement(NewRelationsNode, "Relation")
+    '                intControlNumber = ctrRelation.Name.ToString.Substring(ctrRelation.Name.ToString.Length - strTable.Length - 1, 1)
+    '                SeqData.dhdText.CreateAppendElement(NewRelationNode, "RelationNumber", intControlNumber)
+    '                SeqData.dhdText.CreateAppendElement(NewRelationNode, "RelationEnabled", ctrRelation.Checked.ToString)
+    '                SeqData.dhdText.CreateAppendElement(NewRelationNode, "RelationSource", GetCtrText(pnlRelationsField, strTable, intControlNumber))
+    '                SeqData.dhdText.CreateAppendElement(NewRelationNode, "RelationTarget", GetCtrText(pnlRelationsRelation, strTable, intControlNumber))
+    '                SeqData.dhdText.CreateAppendElement(NewRelationNode, "RelationJoinType", GetCtrText(pnlRelationsJoinType, strTable, intControlNumber))
+    '            End If
+    '        Next
+
+    '    Next
+    'End Sub
+
+    Private Function ReportToXML(xmlReport As XmlDocument, strReportName As String) As XmlDocument
         Dim strTable As String = ""
         Dim strField As String = ""
         Dim intControlNumber As Integer = 0
 
-        Dim root As XmlElement = xmlDocReport.DocumentElement
+        Dim root As XmlElement = xmlReport.DocumentElement
         If root Is Nothing Then
-            xmlDocReport = dhdText.CreateRootDocument(xmlDocReport, "Sequenchel", "Reports", True)
+            xmlReport = SeqData.dhdText.CreateRootDocument(xmlReport, "Sequenchel", "Reports", True)
         End If
+        Dim NewReportNode As XmlNode = SeqData.dhdText.CreateAppendElement(xmlReport.Item("Sequenchel").Item("Reports"), "Report")
+        SeqData.dhdText.CreateAppendElement(NewReportNode, "ReportName", strReportName)
+        SeqData.dhdText.CreateAppendElement(NewReportNode, "Description", txtDescription.Text)
+        SeqData.dhdText.CreateAppendElement(NewReportNode, "UseTop", chkTop.Checked.ToString)
+        SeqData.dhdText.CreateAppendElement(NewReportNode, "UseTopNumber", txtTop.Text)
+        SeqData.dhdText.CreateAppendElement(NewReportNode, "UseDistinct", chkDistinct.Checked.ToString)
 
-        Dim NewReportNode As XmlNode = dhdText.CreateAppendElement(xmlDocReport.Item("Sequenchel").Item("Reports"), "Report")
-        dhdText.CreateAppendElement(NewReportNode, "ReportName", cbxReportName.Text)
-        dhdText.CreateAppendElement(NewReportNode, "Description", txtDescription.Text)
-        dhdText.CreateAppendElement(NewReportNode, "UseTop", chkTop.Checked.ToString)
-        dhdText.CreateAppendElement(NewReportNode, "UseTopNumber", txtTop.Text)
-        dhdText.CreateAppendElement(NewReportNode, "UseDistinct", chkDistinct.Checked.ToString)
-        Dim NewTablesNode As XmlNode = dhdText.CreateAppendElement(NewReportNode, "Tables")
+        Dim NewFieldsNode As XmlNode = SeqData.dhdText.CreateAppendElement(NewReportNode, "Fields")
+        For intFieldCount As Integer = 0 To lvwSelectedFields.Items.Count - 1
+            strField = lvwSelectedFields.Items.Item(intFieldCount).Name
+            strTable = strField.Substring(0, strField.LastIndexOf("."))
+            'If strField.Length > strTable.Length Then
+
+            Dim strFieldName As String = strField.Substring(strField.LastIndexOf(".") + 1, strField.Length - strField.LastIndexOf(".") - 1)
+            Dim NewFieldNode As XmlNode = SeqData.dhdText.CreateAppendElement(NewFieldsNode, "Field")
+            SeqData.dhdText.CreateAppendElement(NewFieldNode, "FieldName", strFieldName)
+            SeqData.dhdText.CreateAppendElement(NewFieldNode, "TableName", strTable)
+            SeqData.dhdText.CreateAppendElement(NewFieldNode, "FieldShow", GetCtrText(pnlReportDisplay, strField))
+            SeqData.dhdText.CreateAppendElement(NewFieldNode, "FieldShowMode", GetCtrText(pnlReportShowMode, strField))
+            SeqData.dhdText.CreateAppendElement(NewFieldNode, "FieldSort", GetCtrText(pnlReportSort, strField))
+            SeqData.dhdText.CreateAppendElement(NewFieldNode, "FieldSortOrder", GetCtrText(pnlReportSortOrder, strField))
+
+            Dim NewFiltersNode As XmlNode = SeqData.dhdText.CreateAppendElement(NewFieldNode, "Filters")
+            For Each ctrFilter In pnlReportFilter.Controls
+                If ctrFilter.Tag = strField Then
+                    intControlNumber = ctrFilter.Name.ToString.Substring(ctrFilter.Name.ToString.Length - strField.Length - 1, 1)
+                    Dim NewFilterNode As XmlNode = SeqData.dhdText.CreateAppendElement(NewFiltersNode, "Filter")
+                    SeqData.dhdText.CreateAppendElement(NewFilterNode, "FilterNumber", intControlNumber)
+                    SeqData.dhdText.CreateAppendElement(NewFilterNode, "FilterEnabled", ctrFilter.Checkstate.ToString)
+                    SeqData.dhdText.CreateAppendElement(NewFilterNode, "FilterMode", GetCtrText(pnlReportFilterMode, strField, intControlNumber))
+                    SeqData.dhdText.CreateAppendElement(NewFilterNode, "FilterType", GetCtrText(pnlReportFilterType, strField, intControlNumber))
+                    SeqData.dhdText.CreateAppendElement(NewFilterNode, "FilterText", GetCtrText(pnlReportFilterText, strField, intControlNumber))
+                End If
+            Next
+
+            'End If
+        Next
+
+        intControlNumber = 0
+        Dim NewRelationsNode As XmlNode = SeqData.dhdText.CreateAppendElement(NewReportNode, "Relations")
         For intTableCount As Integer = 0 To lvwSelectedTables.Items.Count - 1
             strTable = lvwSelectedTables.Items.Item(intTableCount).Name
-            Dim NewTableNode As XmlNode = dhdText.CreateAppendElement(NewTablesNode, "Table")
-            dhdText.CreateAppendElement(NewTableNode, "TableName", strTable)
-            Dim NewFieldsNode As XmlNode = dhdText.CreateAppendElement(NewTableNode, "Fields")
-            For intFieldCount As Integer = 0 To lvwSelectedFields.Items.Count - 1
-                strField = lvwSelectedFields.Items.Item(intFieldCount).Name
-                If strField.Length > strTable.Length Then
-                    If strField.Substring(0, strField.LastIndexOf(".")) = strTable Then
-                        Dim strFieldName As String = strField.Substring(strField.LastIndexOf(".") + 1, strField.Length - strField.LastIndexOf(".") - 1)
-                        Dim NewFieldNode As XmlNode = dhdText.CreateAppendElement(NewFieldsNode, "Field")
-                        dhdText.CreateAppendElement(NewFieldNode, "FieldName", strFieldName)
-                        dhdText.CreateAppendElement(NewFieldNode, "FieldShow", GetCtrText(pnlReportDisplay, strField))
-                        dhdText.CreateAppendElement(NewFieldNode, "FieldShowMode", GetCtrText(pnlReportShowMode, strField))
-                        dhdText.CreateAppendElement(NewFieldNode, "FieldSort", GetCtrText(pnlReportSort, strField))
-                        dhdText.CreateAppendElement(NewFieldNode, "FieldSortOrder", GetCtrText(pnlReportSortOrder, strField))
 
-                        Dim NewFiltersNode As XmlNode = dhdText.CreateAppendElement(NewFieldNode, "Filters")
-                        For Each ctrFilter In pnlReportFilter.Controls
-                            If ctrFilter.Tag = strField Then
-                                intControlNumber = ctrFilter.Name.ToString.Substring(ctrFilter.Name.ToString.Length - strField.Length - 1, 1)
-                                Dim NewFilterNode As XmlNode = dhdText.CreateAppendElement(NewFiltersNode, "Filter")
-                                dhdText.CreateAppendElement(NewFilterNode, "FilterNumber", intControlNumber)
-                                dhdText.CreateAppendElement(NewFilterNode, "FilterEnabled", ctrFilter.Checkstate.ToString)
-                                dhdText.CreateAppendElement(NewFilterNode, "FilterMode", GetCtrText(pnlReportFilterMode, strField, intControlNumber))
-                                dhdText.CreateAppendElement(NewFilterNode, "FilterType", GetCtrText(pnlReportFilterType, strField, intControlNumber))
-                                dhdText.CreateAppendElement(NewFilterNode, "FilterText", GetCtrText(pnlReportFilterText, strField, intControlNumber))
-                            End If
-                        Next
-                    End If
-                End If
-            Next
-            Dim NewRelationsNode As XmlNode = dhdText.CreateAppendElement(NewTableNode, "Relations")
             For Each ctrRelation In pnlRelationsUse.Controls
                 If ctrRelation.Tag = strTable Then
-                    Dim NewRelationNode As XmlNode = dhdText.CreateAppendElement(NewRelationsNode, "Relation")
+                    Dim NewRelationNode As XmlNode = SeqData.dhdText.CreateAppendElement(NewRelationsNode, "Relation")
                     intControlNumber = ctrRelation.Name.ToString.Substring(ctrRelation.Name.ToString.Length - strTable.Length - 1, 1)
-                    dhdText.CreateAppendElement(NewRelationNode, "RelationNumber", intControlNumber)
-                    dhdText.CreateAppendElement(NewRelationNode, "RelationEnabled", ctrRelation.Checked.ToString)
-                    dhdText.CreateAppendElement(NewRelationNode, "RelationSource", GetCtrText(pnlRelationsField, strTable, intControlNumber))
-                    dhdText.CreateAppendElement(NewRelationNode, "RelationTarget", GetCtrText(pnlRelationsRelation, strTable, intControlNumber))
-                    dhdText.CreateAppendElement(NewRelationNode, "RelationJoinType", GetCtrText(pnlRelationsJoinType, strTable, intControlNumber))
+                    SeqData.dhdText.CreateAppendElement(NewRelationNode, "TableName", strTable)
+                    SeqData.dhdText.CreateAppendElement(NewRelationNode, "RelationNumber", intControlNumber)
+                    SeqData.dhdText.CreateAppendElement(NewRelationNode, "RelationEnabled", ctrRelation.Checked.ToString)
+                    SeqData.dhdText.CreateAppendElement(NewRelationNode, "RelationSource", GetCtrText(pnlRelationsField, strTable, intControlNumber))
+                    SeqData.dhdText.CreateAppendElement(NewRelationNode, "RelationTarget", GetCtrText(pnlRelationsRelation, strTable, intControlNumber))
+                    SeqData.dhdText.CreateAppendElement(NewRelationNode, "RelationJoinType", GetCtrText(pnlRelationsJoinType, strTable, intControlNumber))
                 End If
             Next
-
         Next
-    End Sub
+        Return xmlReport
+    End Function
 
-    Private Sub ReportDelete()
-        Dim strSelection As String = cbxReportName.Text
-        Dim xNode As XmlNode = dhdText.FindXmlNode(xmlReports, "Report", "ReportName", strSelection)
-
-        If Not xNode Is Nothing Then
-            xNode.ParentNode.RemoveChild(xNode)
-        End If
+    Private Sub ReportDelete(strSelection As String)
+        SeqData.dhdText.RemoveNode(xmlReports, "Report", "ReportName", strSelection)
     End Sub
 
     Private Sub SaveQuery()
+        If rtbQuery.Text.Length = 0 Then Exit Sub
         Dim saveFile1 As New SaveFileDialog()
 
         saveFile1.DefaultExt = "*.sql"
@@ -1387,10 +1379,9 @@ Public Class frmReports
     End Sub
 
     Private Sub btnReportExport_Click(sender As Object, e As EventArgs) Handles btnReportExport.Click
-        Dim xmlExport As New XmlDocument
-        Dim xmlDec As XmlDeclaration = xmlExport.CreateXmlDeclaration("1.0", "utf-8", "yes")
-        xmlExport.InsertBefore(xmlDec, xmlExport.DocumentElement)
-        ReportAdd(xmlExport)
+        Dim xmlExport As XmlDocument = SeqData.dhdText.CreateRootDocument(Nothing, Nothing, Nothing)
+        'ReportAdd(xmlExport, cbxReportName.Text)
+        ReportToXML(xmlExport, cbxReportName.Text)
 
         Dim sfdFile As New SaveFileDialog
         sfdFile.FileName = cbxReportName.Text
@@ -1415,12 +1406,12 @@ Public Class frmReports
                     xml_writer.Flush()
 
                     'Write the XML to disk
-                    dhdText.CreateFile(sw.ToString(), strTargetFile)
+                    SeqData.dhdText.CreateFile(sw.ToString(), strTargetFile)
                 End Using
             End Using
 
         Catch ex As Exception
-            WriteLog(ex.Message, 1)
+            SeqData.WriteLog(ex.Message, 1)
         End Try
     End Sub
 
@@ -1435,10 +1426,12 @@ Public Class frmReports
         If (loadFile1.ShowDialog() = System.Windows.Forms.DialogResult.OK) And (loadFile1.FileName.Length) > 0 Then
             xmlImport.Load(loadFile1.FileName)
         End If
-        Dim xNode As XmlNode = dhdText.FindXmlNode(xmlImport, "ReportName")
+        If loadFile1.FileName = "" Then Exit Sub
+        Dim xNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlImport, "ReportName")
         strReportName = xNode.InnerText
         ReportFieldsDispose(False)
         ReportLoad(xmlImport, strReportName)
+        'XmlToReport(xmlImport, strReportName)
         If cbxReportName.Items.Contains(strReportName) Then
             strReportName &= "_" & FormatDateTime(Now())
         End If
@@ -1474,18 +1467,227 @@ Public Class frmReports
 
     End Sub
 
-    Private Sub tpgReportDefinition_Resize(sender As Object, e As EventArgs) Handles tpgReportDefinition.Resize
-        If tpgReportDefinition.Width < 1200 Then
-            pnlReportName.Anchor = AnchorStyles.Top Or AnchorStyles.Left
-            pnlReportName.Left = cbxTable.Left + cbxTable.Width + CurVar.BuildMargin
-        Else
-            pnlReportName.Anchor = AnchorStyles.Top Or AnchorStyles.Right
-        End If
-    End Sub
+    'Private Sub tpgReportDefinition_Resize(sender As Object, e As EventArgs) Handles tpgReportDefinition.Resize
+    '    If tpgReportDefinition.Width < 1200 Then
+    '        pnlReportName.Anchor = AnchorStyles.Top Or AnchorStyles.Left
+    '        pnlReportName.Left = cbxTable.Left + cbxTable.Width + SeqData.CurVar.BuildMargin
+    '    Else
+    '        pnlReportName.Anchor = AnchorStyles.Top Or AnchorStyles.Right
+    '    End If
+    'End Sub
 
     Private Sub chkShow_CheckedChanged(sender As Object, e As EventArgs) Handles chkReportShow.CheckedChanged
         For Each chkBox As CheckBox In pnlReportDisplay.Controls
             chkBox.Checked = chkReportShow.Checked
         Next
+    End Sub
+
+    Private Sub btnEmailResults_Click(sender As Object, e As EventArgs) Handles btnEmailResults.Click
+        If SeqData.dhdText.SmtpServer.Length = 0 Then
+            WriteStatus("Email is not configured. No email was sent", 0, lblErrorMessage)
+            Exit Sub
+        End If
+        If dgvReport.RowCount = 0 Then Exit Sub
+        SeqData.dhdText.SmtpRecipient = InputBox("Please enter a valid Email Address", "Email", SeqData.dhdText.SmtpRecipient)
+        If SeqData.dhdText.SmtpRecipient = "" Or SeqData.dhdText.EmailAddressCheck(SeqData.dhdText.SmtpRecipient) = False Then
+            WriteStatus("Email address not valid. No email was sent", 0, lblErrorMessage)
+            Exit Sub
+        End If
+        Dim strRecepientName As String = SeqData.dhdText.SmtpRecipient.Substring(0, SeqData.dhdText.SmtpRecipient.IndexOf("@"))
+        Dim strSenderName As String = SeqData.dhdText.SmtpReply.Substring(0, SeqData.dhdText.SmtpReply.IndexOf("@"))
+
+        Dim strReportName As String = "", strTargetName As String
+        If cbxReportName.Text.Length > 0 Then
+            strReportName = cbxReportName.Text
+        Else
+            strReportName = SeqData.curStatus.Connection
+        End If
+        strTargetName = strReportName
+        If SeqData.curVar.IncludeDate = True Then
+            strTargetName = strTargetName & "_" & SeqData.FormatFileDate(Now)
+        End If
+
+        Dim strBody As String = "Sequenchel Report: " & strReportName
+        Try
+            Select Case cbxEmailResults.SelectedItem
+                Case "HTML"
+                    strTargetName = Nothing
+                    strBody &= Environment.NewLine & SeqData.dhdText.DataSetToHtml(dtsReport)
+                Case "Excel"
+                    strTargetName &= ".xlsx"
+                    Excel.CreateExcelDocument(dtsReport, strTargetName)
+                Case "XML"
+                    strTargetName &= ".xml"
+                    SeqData.dhdText.ExportDataSetToXML(SeqData.dhdMainDB.ConvertToText(dtsReport), strTargetName)
+                Case "CSV"
+                    strTargetName &= ".csv"
+                    SeqData.dhdText.DataSetToCsv(dtsReport.Tables(0), strTargetName, True, ",", False)
+                Case Else
+                    'unknown filetype, do nothing
+            End Select
+            SeqData.dhdText.SendSMTP(SeqData.dhdText.SmtpReply, strSenderName, SeqData.dhdText.SmtpRecipient, strRecepientName, SeqData.dhdText.SmtpReply, strSenderName, strReportName, strBody, strTargetName)
+            SeqData.dhdText.DeleteFile(strTargetName)
+        Catch ex As Exception
+            MessageBox.Show("An error occured sending your email" & Environment.NewLine & Environment.NewLine & ex.Message)
+        End Try
+
+    End Sub
+
+    Private Sub sptReports_MouseHover(sender As Object, e As EventArgs) Handles sptReports.MouseHover
+        sptReports.BackColor = Color.LightGray
+    End Sub
+
+    Private Sub sptReports_MouseLeave(sender As Object, e As EventArgs) Handles sptReports.MouseLeave
+        sptReports.BackColor = clrControl
+    End Sub
+
+    Private Sub pnlSplitFields_MouseHover(sender As Object, e As EventArgs) Handles pnlSplitFields.MouseHover
+        sptReports.BackColor = Color.LightGray
+    End Sub
+
+    Private Sub pnlSplitFields_MouseLeave(sender As Object, e As EventArgs) Handles pnlSplitFields.MouseLeave
+        sptReports.BackColor = clrControl
+    End Sub
+
+    Private Sub pnlSplitFields2_MouseHover(sender As Object, e As EventArgs) Handles pnlSplitFields2.MouseHover
+        sptReports.BackColor = Color.LightGray
+    End Sub
+
+    Private Sub pnlSplitFields2_MouseLeave(sender As Object, e As EventArgs) Handles pnlSplitFields2.MouseLeave
+        sptReports.BackColor = clrControl
+    End Sub
+
+
+    Private Sub sptReportFields_MouseHover(sender As Object, e As EventArgs) Handles sptReportFields.MouseHover
+        sptReportFields.BackColor = Color.LightGray
+    End Sub
+
+    Private Sub sptReportFields_MouseLeave(sender As Object, e As EventArgs) Handles sptReportFields.MouseLeave
+        sptReportFields.BackColor = clrControl
+    End Sub
+
+    Private Sub pnlSplitSelectedFields_MouseHover(sender As Object, e As EventArgs) Handles pnlSplitSelectedFields.MouseHover
+        sptReportFields.BackColor = Color.LightGray
+    End Sub
+
+    Private Sub pnlSplitSelectedFields_MouseLeave(sender As Object, e As EventArgs) Handles pnlSplitSelectedFields.MouseLeave
+        sptReportFields.BackColor = clrControl
+    End Sub
+
+    Private Sub pnlSplitSelectedTables_MouseHover(sender As Object, e As EventArgs) Handles pnlSplitSelectedTables.MouseHover
+        sptReportFields.BackColor = Color.LightGray
+    End Sub
+
+    Private Sub pnlSplitSelectedTables_MouseLeave(sender As Object, e As EventArgs) Handles pnlSplitSelectedTables.MouseLeave
+        sptReportFields.BackColor = clrControl
+    End Sub
+
+
+    Private Sub sptReport_SplitterMoved(sender As Object, e As SplitterEventArgs) Handles sptReport.SplitterMoved
+        sptReportTables.SplitterDistance = sptReport.SplitterDistance
+    End Sub
+
+    Private Sub sptReport_MouseHover(sender As Object, e As EventArgs) Handles sptReport.MouseHover
+        sptReport.BackColor = Color.LightGray
+        sptReportTables.BackColor = Color.LightGray
+    End Sub
+
+    Private Sub sptReport_MouseLeave(sender As Object, e As EventArgs) Handles sptReport.MouseLeave
+        sptReport.BackColor = clrControl
+        sptReportTables.BackColor = clrControl
+    End Sub
+
+    Private Sub pnlRelationHeaders_MouseHover(sender As Object, e As EventArgs) Handles pnlRelationHeaders.MouseHover
+        sptReport.BackColor = Color.LightGray
+        sptReportTables.BackColor = Color.LightGray
+    End Sub
+
+    Private Sub pnlRelationHeaders_MouseLeave(sender As Object, e As EventArgs) Handles pnlRelationHeaders.MouseLeave
+        sptReport.BackColor = clrControl
+        sptReportTables.BackColor = clrControl
+    End Sub
+
+    Private Sub sptReportTables_SplitterMoved(sender As Object, e As SplitterEventArgs) Handles sptReportTables.SplitterMoved
+        sptReport.SplitterDistance = sptReportTables.SplitterDistance
+    End Sub
+
+    Private Sub sptReportTables_MouseHover(sender As Object, e As EventArgs) Handles sptReportTables.MouseHover
+        sptReport.BackColor = Color.LightGray
+        sptReportTables.BackColor = Color.LightGray
+    End Sub
+
+    Private Sub sptReportTables_MouseLeave(sender As Object, e As EventArgs) Handles sptReportTables.MouseLeave
+        sptReport.BackColor = clrControl
+        sptReportTables.BackColor = clrControl
+    End Sub
+
+    Private Sub lblRelationsSelectedTable_MouseHover(sender As Object, e As EventArgs) Handles lblRelationsSelectedTable.MouseHover
+        sptReport.BackColor = Color.LightGray
+        sptReportTables.BackColor = Color.LightGray
+    End Sub
+
+    Private Sub lblRelationsSelectedTable_MouseLeave(sender As Object, e As EventArgs) Handles lblRelationsSelectedTable.MouseLeave
+        sptReport.BackColor = clrControl
+        sptReportTables.BackColor = clrControl
+    End Sub
+
+    Private Sub lblRelationUse_MouseHover(sender As Object, e As EventArgs) Handles lblRelationUse.MouseHover
+        sptReport.BackColor = Color.LightGray
+        sptReportTables.BackColor = Color.LightGray
+    End Sub
+
+    Private Sub lblRelationUse_MouseLeave(sender As Object, e As EventArgs) Handles lblRelationUse.MouseLeave
+        sptReport.BackColor = clrControl
+        sptReportTables.BackColor = clrControl
+    End Sub
+
+    Private Sub lblSourceField_MouseHover(sender As Object, e As EventArgs) Handles lblSourceField.MouseHover
+        sptReport.BackColor = Color.LightGray
+        sptReportTables.BackColor = Color.LightGray
+    End Sub
+
+    Private Sub lblSourceField_MouseLeave(sender As Object, e As EventArgs) Handles lblSourceField.MouseLeave
+        sptReport.BackColor = clrControl
+        sptReportTables.BackColor = clrControl
+    End Sub
+
+    Private Sub lblRelationsRelation_MouseHover(sender As Object, e As EventArgs) Handles lblRelationsRelation.MouseHover
+        sptReport.BackColor = Color.LightGray
+        sptReportTables.BackColor = Color.LightGray
+    End Sub
+
+    Private Sub lblRelationsRelation_MouseLeave(sender As Object, e As EventArgs) Handles lblRelationsRelation.MouseLeave
+        sptReport.BackColor = clrControl
+        sptReportTables.BackColor = clrControl
+    End Sub
+
+    Private Sub lblRelationsJoinType_MouseHover(sender As Object, e As EventArgs) Handles lblRelationsJoinType.MouseHover
+        sptReport.BackColor = Color.LightGray
+        sptReportTables.BackColor = Color.LightGray
+    End Sub
+
+    Private Sub lblRelationsJoinType_MouseLeave(sender As Object, e As EventArgs) Handles lblRelationsJoinType.MouseLeave
+        sptReport.BackColor = clrControl
+        sptReportTables.BackColor = clrControl
+    End Sub
+
+    Private Sub pnlSplitTables_MouseHover(sender As Object, e As EventArgs) Handles pnlSplitTables.MouseHover
+        sptReport.BackColor = Color.LightGray
+        sptReportTables.BackColor = Color.LightGray
+    End Sub
+
+    Private Sub pnlSplitTables_MouseLeave(sender As Object, e As EventArgs) Handles pnlSplitTables.MouseLeave
+        sptReport.BackColor = clrControl
+        sptReportTables.BackColor = clrControl
+    End Sub
+
+    Private Sub lblSelectedTables_MouseHover(sender As Object, e As EventArgs) Handles lblSelectedTables.MouseHover
+        sptReport.BackColor = Color.LightGray
+        sptReportTables.BackColor = Color.LightGray
+    End Sub
+
+    Private Sub lblSelectedTables_MouseLeave(sender As Object, e As EventArgs) Handles lblSelectedTables.MouseLeave
+        sptReport.BackColor = clrControl
+        sptReportTables.BackColor = clrControl
     End Sub
 End Class

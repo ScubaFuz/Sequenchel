@@ -25,6 +25,7 @@ Partial Class frmConfiguration
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmConfiguration))
         Me.tabConfiguration = New System.Windows.Forms.TabControl()
         Me.tpgConnections = New System.Windows.Forms.TabPage()
+        Me.btnShowDatabasePassword = New System.Windows.Forms.Button()
         Me.btnDefaultTableSetFile = New System.Windows.Forms.Button()
         Me.btnTableSetFileBrowse = New System.Windows.Forms.Button()
         Me.lblBackupPath = New System.Windows.Forms.Label()
@@ -64,8 +65,8 @@ Partial Class frmConfiguration
         Me.lblConnections = New System.Windows.Forms.Label()
         Me.lvwConnections = New System.Windows.Forms.ListView()
         Me.colConnectionName = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.colDataLocation = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.colDataBaseName = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.colDataLocation = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.tpgTableSets = New System.Windows.Forms.TabPage()
         Me.btnDefaultPathSet = New System.Windows.Forms.Button()
         Me.btnDefaultPathBrowse = New System.Windows.Forms.Button()
@@ -215,6 +216,7 @@ Partial Class frmConfiguration
         '
         'tpgConnections
         '
+        Me.tpgConnections.Controls.Add(Me.btnShowDatabasePassword)
         Me.tpgConnections.Controls.Add(Me.btnDefaultTableSetFile)
         Me.tpgConnections.Controls.Add(Me.btnTableSetFileBrowse)
         Me.tpgConnections.Controls.Add(Me.lblBackupPath)
@@ -260,6 +262,15 @@ Partial Class frmConfiguration
         Me.tpgConnections.TabIndex = 0
         Me.tpgConnections.Text = "Connections"
         Me.tpgConnections.UseVisualStyleBackColor = True
+        '
+        'btnShowDatabasePassword
+        '
+        Me.btnShowDatabasePassword.Image = Global.Sequenchel.My.Resources.Resources.eye
+        Me.btnShowDatabasePassword.Location = New System.Drawing.Point(714, 155)
+        Me.btnShowDatabasePassword.Name = "btnShowDatabasePassword"
+        Me.btnShowDatabasePassword.Size = New System.Drawing.Size(23, 23)
+        Me.btnShowDatabasePassword.TabIndex = 111
+        Me.btnShowDatabasePassword.UseVisualStyleBackColor = True
         '
         'btnDefaultTableSetFile
         '
@@ -557,8 +568,9 @@ Partial Class frmConfiguration
         Me.txtPassword.Location = New System.Drawing.Point(554, 157)
         Me.txtPassword.Name = "txtPassword"
         Me.txtPassword.PasswordChar = Global.Microsoft.VisualBasic.ChrW(42)
-        Me.txtPassword.Size = New System.Drawing.Size(183, 20)
+        Me.txtPassword.Size = New System.Drawing.Size(157, 20)
         Me.txtPassword.TabIndex = 11
+        Me.txtPassword.Tag = "<Keep Current Password>"
         '
         'txtTimeOut
         '
@@ -635,15 +647,15 @@ Partial Class frmConfiguration
         Me.colConnectionName.Text = "Connection"
         Me.colConnectionName.Width = 99
         '
-        'colDataLocation
-        '
-        Me.colDataLocation.Text = "Data location"
-        Me.colDataLocation.Width = 145
-        '
         'colDataBaseName
         '
         Me.colDataBaseName.Text = "Database"
         Me.colDataBaseName.Width = 140
+        '
+        'colDataLocation
+        '
+        Me.colDataLocation.Text = "Data location"
+        Me.colDataLocation.Width = 145
         '
         'tpgTableSets
         '
@@ -2101,4 +2113,5 @@ Partial Class frmConfiguration
     Friend WithEvents pnlFieldSettings As System.Windows.Forms.Panel
     Friend WithEvents btnCancel As System.Windows.Forms.Button
     Friend WithEvents chkRelatedField As System.Windows.Forms.CheckBox
+    Friend WithEvents btnShowDatabasePassword As System.Windows.Forms.Button
 End Class

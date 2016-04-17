@@ -2,18 +2,17 @@
 
     Private Sub frmSettings_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         System.Windows.Forms.Application.CurrentCulture = New System.Globalization.CultureInfo("EN-US")
-        txtLicenseName.Text = strLicenseName
+        txtLicenseName.Text = Core.LicenseName
         DatabaseShow()
-        dhdDatabase.CheckDB()
-        blnDatabaseOnLine = dhdDatabase.DataBaseOnline
-        If blnDatabaseOnLine = True Then
+        SeqData.dhdMainDB.CheckDB()
+        If SeqData.dhdMainDB.DataBaseOnline = True Then
             If VersionLoad() = True Then
                 tabSettings.SelectTab(tpgDatabase)
                 btnUpgradeDatabase.BackColor = clrMarked
             End If
             MonitorDataspacesLoad()
         End If
-        If blnDatabaseOnLine = False Then
+        If SeqData.dhdMainDB.DataBaseOnline = False Then
             tabSettings.SelectTab(tpgDatabase)
         End If
         LogSettingsShow()
@@ -22,9 +21,11 @@
         HoursLoad()
         MinutesLoad()
         DateFormatsLoad()
-        txtErrorlogPath.Text = dhdText.LogLocation
+        txtErrorlogPath.Text = SeqData.dhdText.LogLocation
         ResetColors()
         SetFtpDefaults()
+        SetEmailDefaults()
+        EmailSettingsShow()
     End Sub
 
     Private Sub btnClose_Click(sender As Object, e As EventArgs) Handles btnClose.Click
@@ -34,42 +35,44 @@
 #Region "General"
 
     Private Sub GeneralSettingsShow()
-        txtDefaultConfigFilePath.Tag = CurVar.DefaultConfigFilePath
-        txtDefaultConfigFilePath.Text = CurVar.DefaultConfigFilePath
-        txtSettingsFile.Tag = CurVar.GeneralSettings
-        txtSettingsFile.Text = CurVar.GeneralSettings
-        txtConnectionsFile.Tag = CurVar.ConnectionsFile
-        txtConnectionsFile.Text = CurVar.ConnectionsFile
+        txtDefaultConfigFilePath.Tag = SeqData.curVar.DefaultConfigFilePath
+        txtDefaultConfigFilePath.Text = SeqData.curVar.DefaultConfigFilePath
+        txtSettingsFile.Tag = SeqData.curVar.GeneralSettings
+        txtSettingsFile.Text = SeqData.curVar.GeneralSettings
+        txtConnectionsFile.Tag = SeqData.curVar.ConnectionsFile
+        txtConnectionsFile.Text = SeqData.curVar.ConnectionsFile
 
-        chkAllowSettingsChange.Tag = CurVar.AllowSettingsChange
-        chkAllowSettingsChange.Checked = CurVar.AllowSettingsChange
-        chkAllowConfiguration.Tag = CurVar.AllowConfiguration
-        chkAllowConfiguration.Checked = CurVar.AllowConfiguration
-        chkAllowLinkedServers.Tag = CurVar.AllowLinkedServers
-        chkAllowLinkedServers.Checked = CurVar.AllowLinkedServers
+        chkAllowSettingsChange.Tag = SeqData.curVar.AllowSettingsChange
+        chkAllowSettingsChange.Checked = SeqData.curVar.AllowSettingsChange
+        chkAllowConfiguration.Tag = SeqData.curVar.AllowConfiguration
+        chkAllowConfiguration.Checked = SeqData.curVar.AllowConfiguration
+        chkAllowLinkedServers.Tag = SeqData.curVar.AllowLinkedServers
+        chkAllowLinkedServers.Checked = SeqData.curVar.AllowLinkedServers
 
-        chkAllowQueryEdit.Tag = CurVar.AllowQueryEdit
-        chkAllowQueryEdit.Checked = CurVar.AllowQueryEdit
-        chkAllowDataImport.Tag = CurVar.AllowDataImport
-        chkAllowDataImport.Checked = CurVar.AllowDataImport
-        chkAllowSmartUpdate.Tag = CurVar.AllowSmartUpdate
-        chkAllowSmartUpdate.Checked = CurVar.AllowSmartUpdate
+        chkAllowQueryEdit.Tag = SeqData.curVar.AllowQueryEdit
+        chkAllowQueryEdit.Checked = SeqData.curVar.AllowQueryEdit
+        chkAllowDataImport.Tag = SeqData.curVar.AllowDataImport
+        chkAllowDataImport.Checked = SeqData.curVar.AllowDataImport
+        chkAllowSmartUpdate.Tag = SeqData.curVar.AllowSmartUpdate
+        chkAllowSmartUpdate.Checked = SeqData.curVar.AllowSmartUpdate
 
-        chkAllowUpdate.Tag = CurVar.AllowUpdate
-        chkAllowUpdate.Checked = CurVar.AllowUpdate
-        chkAllowInsert.Tag = CurVar.AllowInsert
-        chkAllowInsert.Checked = CurVar.AllowInsert
-        chkAllowDelete.Tag = CurVar.AllowDelete
-        chkAllowDelete.Checked = CurVar.AllowDelete
+        chkAllowUpdate.Tag = SeqData.curVar.AllowUpdate
+        chkAllowUpdate.Checked = SeqData.curVar.AllowUpdate
+        chkAllowInsert.Tag = SeqData.curVar.AllowInsert
+        chkAllowInsert.Checked = SeqData.curVar.AllowInsert
+        chkAllowDelete.Tag = SeqData.curVar.AllowDelete
+        chkAllowDelete.Checked = SeqData.curVar.AllowDelete
 
-        chkLimitLookupLists.Tag = CurVar.LimitLookupLists
-        chkLimitLookupLists.Checked = CurVar.LimitLookupLists
-        txtLimitLookupLists.Tag = CurVar.LimitLookupListsCount
-        txtLimitLookupLists.Text = CurVar.LimitLookupListsCount
+        chkLimitLookupLists.Tag = SeqData.curVar.LimitLookupLists
+        chkLimitLookupLists.Checked = SeqData.curVar.LimitLookupLists
+        txtLimitLookupLists.Tag = SeqData.curVar.LimitLookupListsCount
+        txtLimitLookupLists.Text = SeqData.curVar.LimitLookupListsCount
 
-        chkIncludeDateInExportFiles.Tag = CurVar.IncludeDate
-        chkIncludeDateInExportFiles.Checked = CurVar.IncludeDate
+        chkIncludeDateInExportFiles.Tag = SeqData.curVar.IncludeDate
+        chkIncludeDateInExportFiles.Checked = SeqData.curVar.IncludeDate
 
+        SetDefaultText(txtOverridePassword)
+        PasswordCharSet(txtOverridePassword)
     End Sub
 
     Private Sub btnDefaultConfigFilePath_Click(sender As Object, e As EventArgs) Handles btnDefaultConfigFilePath.Click
@@ -77,26 +80,26 @@
     End Sub
 
     Private Sub btnSettingsFileSystem_Click(sender As Object, e As EventArgs) Handles btnSettingsFileSystem.Click
-        txtSettingsFile.Text = Application.StartupPath & "\" & CurVar.MainSettingsFile
+        txtSettingsFile.Text = Application.StartupPath & "\" & SeqData.curVar.MainSettingsFile
     End Sub
 
     Private Sub btnSettingsFileDefault_Click(sender As Object, e As EventArgs) Handles btnSettingsFileDefault.Click
         If txtDefaultConfigFilePath.Text.Length > 0 Then
-            txtSettingsFile.Text = txtDefaultConfigFilePath.Text & "\" & CurVar.MainSettingsFile
+            txtSettingsFile.Text = txtDefaultConfigFilePath.Text & "\" & SeqData.curVar.MainSettingsFile
         Else
-            txtSettingsFile.Text = CurVar.MainSettingsFile
+            txtSettingsFile.Text = SeqData.curVar.MainSettingsFile
         End If
     End Sub
 
     Private Sub btnConnectionsFileSystem_Click(sender As Object, e As EventArgs) Handles btnConnectionsFileSystem.Click
-        txtConnectionsFile.Text = CurVar.ConnectionsFile
+        txtConnectionsFile.Text = SeqData.curVar.ConnectionsFile
     End Sub
 
     Private Sub btnConnectionsFileDefault_Click(sender As Object, e As EventArgs) Handles btnConnectionsFileDefault.Click
         If txtDefaultConfigFilePath.Text.Length > 0 Then
-            txtConnectionsFile.Text = txtDefaultConfigFilePath.Text & "\" & CurVar.ConnectionsFileName
+            txtConnectionsFile.Text = txtDefaultConfigFilePath.Text & "\" & SeqData.curVar.ConnectionsFileName
         Else
-            txtConnectionsFile.Text = CurVar.ConnectionsFileName
+            txtConnectionsFile.Text = SeqData.curVar.ConnectionsFileName
         End If
     End Sub
 
@@ -107,13 +110,13 @@
             txtDefaultConfigFilePath.BackColor = clrMarked
         End If
         If txtDefaultConfigFilePath.Text.Length > 0 Then
-            txtSettingsFile.Text = txtDefaultConfigFilePath.Text & "\" & CurVar.GeneralSettings.Substring(CurVar.GeneralSettings.LastIndexOf("\") + 1, CurVar.GeneralSettings.Length - (CurVar.GeneralSettings.LastIndexOf("\") + 1))
-            txtConnectionsFile.Text = txtDefaultConfigFilePath.Text & "\" & CurVar.ConnectionsFile.Substring(CurVar.ConnectionsFile.LastIndexOf("\") + 1, CurVar.ConnectionsFile.Length - (CurVar.ConnectionsFile.LastIndexOf("\") + 1))
+            txtSettingsFile.Text = txtDefaultConfigFilePath.Text & "\" & SeqData.curVar.GeneralSettings.Substring(SeqData.curVar.GeneralSettings.LastIndexOf("\") + 1, SeqData.curVar.GeneralSettings.Length - (SeqData.curVar.GeneralSettings.LastIndexOf("\") + 1))
+            txtConnectionsFile.Text = txtDefaultConfigFilePath.Text & "\" & SeqData.curVar.ConnectionsFile.Substring(SeqData.curVar.ConnectionsFile.LastIndexOf("\") + 1, SeqData.curVar.ConnectionsFile.Length - (SeqData.curVar.ConnectionsFile.LastIndexOf("\") + 1))
             txtErrorlogPath.Text = txtDefaultConfigFilePath.Text
         Else
-            txtSettingsFile.Text = CurVar.GeneralSettings.Substring(CurVar.GeneralSettings.LastIndexOf("\") + 1, CurVar.GeneralSettings.Length - (CurVar.GeneralSettings.LastIndexOf("\") + 1))
-            txtConnectionsFile.Text = CurVar.ConnectionsFile.Substring(CurVar.ConnectionsFile.LastIndexOf("\") + 1, CurVar.ConnectionsFile.Length - (CurVar.ConnectionsFile.LastIndexOf("\") + 1))
-            txtErrorlogPath.Text = dhdText.LogLocation
+            txtSettingsFile.Text = SeqData.curVar.GeneralSettings.Substring(SeqData.curVar.GeneralSettings.LastIndexOf("\") + 1, SeqData.curVar.GeneralSettings.Length - (SeqData.curVar.GeneralSettings.LastIndexOf("\") + 1))
+            txtConnectionsFile.Text = SeqData.curVar.ConnectionsFile.Substring(SeqData.curVar.ConnectionsFile.LastIndexOf("\") + 1, SeqData.curVar.ConnectionsFile.Length - (SeqData.curVar.ConnectionsFile.LastIndexOf("\") + 1))
+            txtErrorlogPath.Text = SeqData.dhdText.LogLocation
         End If
 
     End Sub
@@ -215,7 +218,7 @@
     End Sub
 
     Private Sub txtLimitLookupLists_TextChanged(sender As Object, e As EventArgs) Handles txtLimitLookupLists.TextChanged
-        If txtLimitLookupLists.Text = txtLimitLookupLists.Tag Then
+        If txtLimitLookupLists.Text = txtLimitLookupLists.Tag And txtLimitLookupLists.Text <> "" And txtLimitLookupLists.Text <> 0 Then
             txtLimitLookupLists.BackColor = clrOriginal
         Else
             txtLimitLookupLists.BackColor = clrMarked
@@ -230,122 +233,121 @@
         End If
     End Sub
 
-
     Private Sub btnSettingsGeneralSave_Click(sender As Object, e As EventArgs) Handles btnSettingsGeneralSave.Click
         Dim blnSettingsChanged As Boolean = False
         Dim blnGeneralSettingsChanged As Boolean = False
 
         If txtDefaultConfigFilePath.BackColor = clrMarked Then
-            CurVar.DefaultConfigFilePath = txtDefaultConfigFilePath.Text
-            txtDefaultConfigFilePath.Tag = CurVar.DefaultConfigFilePath
+            SeqData.curVar.DefaultConfigFilePath = txtDefaultConfigFilePath.Text
+            txtDefaultConfigFilePath.Tag = SeqData.curVar.DefaultConfigFilePath
             txtDefaultConfigFilePath.BackColor = clrOriginal
-            dhdText.CheckDir(CurVar.DefaultConfigFilePath, True)
+            SeqData.dhdText.CheckDir(SeqData.curVar.DefaultConfigFilePath, True)
             blnSettingsChanged = True
         End If
         If txtSettingsFile.BackColor = clrMarked Then
-            CurVar.GeneralSettings = txtSettingsFile.Text
-            txtSettingsFile.Tag = CurVar.GeneralSettings
+            SeqData.curVar.GeneralSettings = txtSettingsFile.Text
+            txtSettingsFile.Tag = SeqData.curVar.GeneralSettings
             txtSettingsFile.BackColor = clrOriginal
-            'dhdText.CheckDir(CurVar.GeneralSettings, True)
+            'dhdText.CheckDir(SeqData.CurVar.GeneralSettings, True)
             blnSettingsChanged = True
         End If
         If chkAllowSettingsChange.BackColor = clrMarked Then
-            CurVar.AllowSettingsChange = chkAllowSettingsChange.Checked
-            chkAllowSettingsChange.Tag = CurVar.AllowSettingsChange
+            SeqData.curVar.AllowSettingsChange = chkAllowSettingsChange.Checked
+            chkAllowSettingsChange.Tag = SeqData.curVar.AllowSettingsChange
             chkAllowSettingsChange.BackColor = clrOriginal
             blnSettingsChanged = True
         End If
         If chkAllowConfiguration.BackColor = clrMarked Then
-            CurVar.AllowConfiguration = chkAllowConfiguration.Checked
-            chkAllowConfiguration.Tag = CurVar.AllowConfiguration
+            SeqData.curVar.AllowConfiguration = chkAllowConfiguration.Checked
+            chkAllowConfiguration.Tag = SeqData.curVar.AllowConfiguration
             chkAllowConfiguration.BackColor = clrOriginal
             blnSettingsChanged = True
         End If
         If chkAllowLinkedServers.BackColor = clrMarked Then
-            CurVar.AllowLinkedServers = chkAllowLinkedServers.Checked
-            chkAllowLinkedServers.Tag = CurVar.AllowLinkedServers
+            SeqData.curVar.AllowLinkedServers = chkAllowLinkedServers.Checked
+            chkAllowLinkedServers.Tag = SeqData.curVar.AllowLinkedServers
             chkAllowLinkedServers.BackColor = clrOriginal
             blnSettingsChanged = True
         End If
         If chkAllowQueryEdit.BackColor = clrMarked Then
-            CurVar.AllowQueryEdit = chkAllowQueryEdit.Checked
-            chkAllowQueryEdit.Tag = CurVar.AllowQueryEdit
+            SeqData.curVar.AllowQueryEdit = chkAllowQueryEdit.Checked
+            chkAllowQueryEdit.Tag = SeqData.curVar.AllowQueryEdit
             chkAllowQueryEdit.BackColor = clrOriginal
             blnSettingsChanged = True
         End If
         If chkAllowDataImport.BackColor = clrMarked Then
-            CurVar.AllowDataImport = chkAllowDataImport.Checked
-            chkAllowDataImport.Tag = CurVar.AllowDataImport
+            SeqData.curVar.AllowDataImport = chkAllowDataImport.Checked
+            chkAllowDataImport.Tag = SeqData.curVar.AllowDataImport
             chkAllowDataImport.BackColor = clrOriginal
             blnSettingsChanged = True
         End If
         If chkAllowSmartUpdate.BackColor = clrMarked Then
-            CurVar.AllowSmartUpdate = chkAllowSmartUpdate.Checked
-            chkAllowSmartUpdate.Tag = CurVar.AllowSmartUpdate
+            SeqData.curVar.AllowSmartUpdate = chkAllowSmartUpdate.Checked
+            chkAllowSmartUpdate.Tag = SeqData.curVar.AllowSmartUpdate
             chkAllowSmartUpdate.BackColor = clrOriginal
             blnSettingsChanged = True
         End If
         If chkAllowUpdate.BackColor = clrMarked Then
-            CurVar.AllowUpdate = chkAllowUpdate.Checked
-            chkAllowUpdate.Tag = CurVar.AllowUpdate
+            SeqData.curVar.AllowUpdate = chkAllowUpdate.Checked
+            chkAllowUpdate.Tag = SeqData.curVar.AllowUpdate
             chkAllowUpdate.BackColor = clrOriginal
             blnSettingsChanged = True
         End If
         If chkAllowInsert.BackColor = clrMarked Then
-            CurVar.AllowInsert = chkAllowInsert.Checked
-            chkAllowInsert.Tag = CurVar.AllowInsert
+            SeqData.curVar.AllowInsert = chkAllowInsert.Checked
+            chkAllowInsert.Tag = SeqData.curVar.AllowInsert
             chkAllowInsert.BackColor = clrOriginal
             blnSettingsChanged = True
         End If
         If chkAllowDelete.BackColor = clrMarked Then
-            CurVar.AllowDelete = chkAllowDelete.Checked
-            chkAllowDelete.Tag = CurVar.AllowDelete
+            SeqData.curVar.AllowDelete = chkAllowDelete.Checked
+            chkAllowDelete.Tag = SeqData.curVar.AllowDelete
             chkAllowDelete.BackColor = clrOriginal
             blnSettingsChanged = True
         End If
-        If txtOverridePassword.Text.Length > 0 Then
-            CurVar.OverridePassword = Encrypt(txtOverridePassword.Text)
+        If txtOverridePassword.Text.Length > 0 And txtOverridePassword.Text <> txtOverridePassword.Tag Then
+            SeqData.curVar.OverridePassword = SeqData.dhdText.MD5Encrypt(txtOverridePassword.Text)
             blnSettingsChanged = True
         End If
 
         If chkLimitLookupLists.BackColor = clrMarked Then
-            CurVar.LimitLookupLists = chkLimitLookupLists.Checked
-            chkLimitLookupLists.Tag = CurVar.LimitLookupLists
+            SeqData.curVar.LimitLookupLists = chkLimitLookupLists.Checked
+            chkLimitLookupLists.Tag = SeqData.curVar.LimitLookupLists
             chkLimitLookupLists.BackColor = clrOriginal
             blnGeneralSettingsChanged = True
         End If
         If txtLimitLookupLists.BackColor = clrMarked Then
-            CurVar.LimitLookupListsCount = txtLimitLookupLists.Text
-            txtLimitLookupLists.Tag = CurVar.LimitLookupListsCount
+            SeqData.curVar.LimitLookupListsCount = txtLimitLookupLists.Text
+            txtLimitLookupLists.Tag = SeqData.curVar.LimitLookupListsCount
             txtLimitLookupLists.BackColor = clrOriginal
             blnSettingsChanged = True
         End If
 
         If txtConnectionsFile.BackColor = clrMarked Then
-            CurVar.ConnectionsFile = txtConnectionsFile.Text
-            txtConnectionsFile.Tag = CurVar.ConnectionsFile
+            SeqData.curVar.ConnectionsFile = txtConnectionsFile.Text
+            txtConnectionsFile.Tag = SeqData.curVar.ConnectionsFile
             blnGeneralSettingsChanged = True
             txtConnectionsFile.BackColor = clrOriginal
-            'dhdText.CheckDir(CurVar.ConnectionsFile, True)
+            'dhdText.CheckDir(SeqData.CurVar.ConnectionsFile, True)
         End If
         If cbxDateFormats.BackColor = clrMarked Then
-            CurVar.DateTimeStyle = cbxDateFormats.SelectedValue.ToString
+            SeqData.curVar.DateTimeStyle = cbxDateFormats.SelectedValue.ToString
             blnGeneralSettingsChanged = True
             cbxDateFormats.BackColor = clrOriginal
         End If
         If chkIncludeDateInExportFiles.BackColor = clrMarked Then
-            CurVar.IncludeDate = chkIncludeDateInExportFiles.Checked
-            chkIncludeDateInExportFiles.Tag = CurVar.IncludeDate
+            SeqData.curVar.IncludeDate = chkIncludeDateInExportFiles.Checked
+            chkIncludeDateInExportFiles.Tag = SeqData.curVar.IncludeDate
             chkIncludeDateInExportFiles.BackColor = clrOriginal
             blnGeneralSettingsChanged = True
         End If
 
         If blnSettingsChanged = True Then
-            SaveSDBASettingsXml()
+            SeqData.SaveSDBASettingsXml(xmlSDBASettings)
             blnSettingsChanged = False
         End If
         If blnGeneralSettingsChanged = True Then
-            SaveGeneralSettingsXml()
+            SeqData.SaveGeneralSettingsXml(xmlGeneralSettings)
             blnGeneralSettingsChanged = False
         End If
     End Sub
@@ -406,7 +408,7 @@
         Me.cbxDateFormats.DrawMode = DrawMode.OwnerDrawFixed
         ' Handle the DrawItem event to draw the items.
 
-        cbxDateFormats.SelectedValue = CurVar.DateTimeStyle
+        cbxDateFormats.SelectedValue = SeqData.curVar.DateTimeStyle
     End Sub
 
     Private Sub cbxDateFormats_DrawItem(ByVal sender As System.Object, _
@@ -466,7 +468,7 @@
     End Sub
 
     Private Sub cbxDateFormats_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbxDateFormats.SelectedIndexChanged
-        If cbxDateFormats.SelectedValue.ToString = CurVar.DateTimeStyle Then
+        If cbxDateFormats.SelectedValue.ToString = SeqData.curVar.DateTimeStyle Then
             cbxDateFormats.BackColor = clrOriginal
         Else
             cbxDateFormats.BackColor = clrMarked
@@ -480,38 +482,56 @@
 
     End Sub
 
+    Private Sub txtOverridePassword_GotFocus(sender As Object, e As EventArgs) Handles txtOverridePassword.GotFocus
+        RemoveDefaultText(txtOverridePassword)
+        PasswordCharSet(txtOverridePassword)
+    End Sub
+
+    Private Sub txtOverridePassword_LostFocus(sender As Object, e As EventArgs) Handles txtOverridePassword.LostFocus
+        SetDefaultText(txtOverridePassword)
+        PasswordCharSet(txtOverridePassword)
+    End Sub
+
+    Private Sub btnShowOverridePassword_MouseDown(sender As Object, e As MouseEventArgs) Handles btnShowOverridePassword.MouseDown
+        txtOverridePassword.PasswordChar = Nothing
+    End Sub
+
+    Private Sub btnShowOverridePassword_MouseLeave(sender As Object, e As EventArgs) Handles btnShowOverridePassword.MouseLeave
+        PasswordCharSet(txtOverridePassword)
+    End Sub
+
+    Private Sub btnShowOverridePassword_MouseUp(sender As Object, e As MouseEventArgs) Handles btnShowOverridePassword.MouseUp
+        PasswordCharSet(txtOverridePassword)
+    End Sub
+
 #End Region
 
 #Region "License"
 
     Private Sub btnSaveLicense_Click(sender As Object, e As EventArgs) Handles btnSaveLicense.Click
         Dim strLocation As String = ""
-        If CheckLicenseKey(txtLicenseKey.Text, txtLicenseName.Text, GetVersion("M"), Nothing) = False Then
+        If Core.CheckLicense(txtLicenseKey.Text, txtLicenseName.Text, Core.GetVersion("M"), Nothing) = False Then
             'MessageBox.Show(strMessages.strLicenseError)
-            blnLicenseValidated = False
-            MessageBox.Show("Your license validated: " & blnLicenseValidated)
-        Else
-            blnLicenseValidated = True
-            'If DebugMode Then MessageBox.Show(lanStrings.strLicenseValidated)
+            MessageBox.Show("Your license validated: " & Core.LicenseValidated)
         End If
-        If blnLicenseValidated = True Then
+        If Core.LicenseValidated = True Then
             Try
-                dhdReg.AddLMRegKey("LicenseName", txtLicenseName.Text)
-                If dhdReg.ErrorLevel = -1 Then
-                    dhdReg.AddCURRegKey("LicenseName", txtLicenseName.Text)
+                Core.dhdReg.AddLMRegKey("LicenseName", txtLicenseName.Text)
+                If Core.dhdReg.ErrorLevel = -1 Then
+                    Core.dhdReg.AddCURRegKey("LicenseName", txtLicenseName.Text)
                     strLocation = "HK Current User"
                 Else
                     strLocation = "HKLM"
                 End If
-                If DebugMode And dhdReg.ErrorLevel = -1 Then MessageBox.Show(dhdReg.RegMessage)
-                dhdReg.AddLMRegKey("LicenseKey", txtLicenseKey.Text)
-                If dhdReg.ErrorLevel = -1 Then
-                    dhdReg.AddCURRegKey("LicenseKey", txtLicenseKey.Text)
+                If SeqData.curVar.DebugMode And Core.dhdReg.ErrorLevel = -1 Then MessageBox.Show(Core.dhdReg.RegMessage)
+                Core.dhdReg.AddLMRegKey("LicenseKey", txtLicenseKey.Text)
+                If Core.dhdReg.ErrorLevel = -1 Then
+                    Core.dhdReg.AddCURRegKey("LicenseKey", txtLicenseKey.Text)
                     strLocation = "HK Current User"
                 Else
                     strLocation = "HKLM"
                 End If
-                If DebugMode And dhdReg.ErrorLevel = -1 Then MessageBox.Show(dhdReg.RegMessage)
+                If SeqData.curVar.DebugMode And Core.dhdReg.ErrorLevel = -1 Then MessageBox.Show(Core.dhdReg.RegMessage)
                 MessageBox.Show("Your License information has been saved to " & strLocation)
             Catch ex As Exception
                 MessageBox.Show("There ws an errror saving you license information" & Environment.NewLine & ex.Message)
@@ -520,14 +540,8 @@
     End Sub
 
     Private Sub btnValidateLicense_Click(sender As Object, e As EventArgs) Handles btnValidateLicense.Click
-        If CheckLicenseKey(txtLicenseKey.Text, txtLicenseName.Text, GetVersion("M"), Nothing) = False Then
-            'MessageBox.Show(strMessages.strLicenseError)
-            blnLicenseValidated = False
-        Else
-            blnLicenseValidated = True
-            'If DebugMode Then MessageBox.Show(lanStrings.strLicenseValidated)
-        End If
-        MessageBox.Show("Your license validated: " & blnLicenseValidated)
+        Core.CheckLicense(txtLicenseKey.Text, txtLicenseName.Text, Core.GetVersion("M"), Nothing)
+        MessageBox.Show("Your license validated: " & Core.LicenseValidated)
     End Sub
 
 #End Region
@@ -535,7 +549,7 @@
 #Region "Logging"
 
     Private Sub LogSettingsShow()
-        Select Case dhdText.LogLevel
+        Select Case SeqData.dhdText.LogLevel
             Case 0
                 rbtLoggingLevel0.Checked = True
             Case 1
@@ -549,12 +563,12 @@
             Case 5
                 rbtLoggingLevel5.Checked = True
         End Select
-        txtLogfileName.Text = dhdText.LogFileName
-        txtLogfileLocation.Text = dhdText.LogLocation
+        txtLogfileName.Text = SeqData.dhdText.LogFileName
+        txtLogfileLocation.Text = SeqData.dhdText.LogLocation
         'If TxtHandle.LogLocation.ToLower = "database" Then grpLogsToKeep.Visible = True
 
-        chkAutoDeleteOldLogs.Checked = dhdText.AutoDelete
-        Select Case dhdText.Retenion
+        chkAutoDeleteOldLogs.Checked = SeqData.dhdText.AutoDelete
+        Select Case SeqData.dhdText.Retenion
             Case "Day"
                 rbtKeepLogDay.Checked = True
             Case "Week"
@@ -567,45 +581,45 @@
     End Sub
 
     Private Sub btnSaveSettingsLog_Click(sender As Object, e As EventArgs) Handles btnSaveSettingsLog.Click
-        dhdText.LogFileName = txtLogfileName.Text
-        dhdText.LogLevel = 1
-        dhdText.LogLocation = txtLogfileLocation.Text
-        dhdText.CheckDir(dhdText.LogLocation, True)
+        SeqData.dhdText.LogFileName = txtLogfileName.Text
+        SeqData.dhdText.LogLevel = 1
+        SeqData.dhdText.LogLocation = txtLogfileLocation.Text
+        SeqData.dhdText.CheckDir(SeqData.dhdText.LogLocation, True)
 
         If rbtLoggingLevel0.Checked Then
-            dhdText.LogLevel = 0
+            SeqData.dhdText.LogLevel = 0
         ElseIf rbtLoggingLevel1.Checked Then
-            dhdText.LogLevel = 1
+            SeqData.dhdText.LogLevel = 1
         ElseIf rbtLoggingLevel2.Checked Then
-            dhdText.LogLevel = 2
+            SeqData.dhdText.LogLevel = 2
         ElseIf rbtLoggingLevel3.Checked Then
-            dhdText.LogLevel = 3
+            SeqData.dhdText.LogLevel = 3
         ElseIf rbtLoggingLevel4.Checked Then
-            dhdText.LogLevel = 4
+            SeqData.dhdText.LogLevel = 4
         ElseIf rbtLoggingLevel5.Checked Then
-            dhdText.LogLevel = 5
+            SeqData.dhdText.LogLevel = 5
         End If
 
         If chkAutoDeleteOldLogs.Checked = True Then
-            dhdText.AutoDelete = True
-            If rbtKeepLogDay.Checked = True Then dhdText.Retenion = "Day"
-            If rbtKeepLogWeek.Checked = True Then dhdText.Retenion = "Week"
-            If rbtKeepLogMonth.Checked = True Then dhdText.Retenion = "Month"
+            SeqData.dhdText.AutoDelete = True
+            If rbtKeepLogDay.Checked = True Then SeqData.dhdText.Retenion = "Day"
+            If rbtKeepLogWeek.Checked = True Then SeqData.dhdText.Retenion = "Week"
+            If rbtKeepLogMonth.Checked = True Then SeqData.dhdText.Retenion = "Month"
         Else
-            dhdText.AutoDelete = False
+            SeqData.dhdText.AutoDelete = False
         End If
-        SaveGeneralSettingsXml()
+        SeqData.SaveGeneralSettingsXml(xmlGeneralSettings)
     End Sub
 
     Private Sub btnClearOldLogs_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnClearOldLogs.Click
-        If dhdText.LogLocation.ToLower = "database" Then
+        If SeqData.dhdText.LogLocation.ToLower = "database" Then
             Dim dtmDate As Date = Today
 
             If rbtKeepLogDay.Checked = True Then dtmDate = dtmDate.AddDays(-1)
             If rbtKeepLogWeek.Checked = True Then dtmDate = dtmDate.AddDays(-7)
             If rbtKeepLogMonth.Checked = True Then dtmDate = dtmDate.AddMonths(-1)
-            If DebugMode = True Then MessageBox.Show(dtmDate.ToString)
-            If dhdText.LogLocation.ToLower = "database" Then
+            If SeqData.CurVar.DebugMode = True Then MessageBox.Show(dtmDate.ToString)
+            If SeqData.dhdText.LogLocation.ToLower = "database" Then
                 ClearDBLog(dtmDate)
             Else
                 MessageBox.Show("You can only delete database logging as of yet.")
@@ -626,12 +640,12 @@
     End Sub
 
     Private Sub btnLogLocationDefault_Click(sender As Object, e As EventArgs) Handles btnLogLocationDefault.Click
-        txtLogfileLocation.Text = CurVar.DefaultConfigFilePath & "\LOG"
+        txtLogfileLocation.Text = SeqData.CurVar.DefaultConfigFilePath & "\LOG"
     End Sub
 
     Private Sub btnLogLocationBrowse_Click(sender As Object, e As EventArgs) Handles btnLogLocationBrowse.Click
         Dim DefaultFolder As New FolderBrowserDialog
-        DefaultFolder.SelectedPath = CurVar.DefaultConfigFilePath
+        DefaultFolder.SelectedPath = SeqData.CurVar.DefaultConfigFilePath
 
         If (DefaultFolder.ShowDialog() = System.Windows.Forms.DialogResult.OK) And (DefaultFolder.SelectedPath.Length) > 0 Then
             txtLogfileLocation.Text = DefaultFolder.SelectedPath
@@ -657,7 +671,7 @@
     Private Sub btnRefreshDatabase_Click(sender As Object, e As EventArgs) Handles btnRefreshDatabase.Click
         If MessageBox.Show("This will update all standard Sequenchel Views, Stored Procedures and Functions to their latest version. " & Environment.NewLine _
             & "Your Tables will not be changed." & Environment.NewLine _
-            & strMessages.strAreYouSure, strMessages.strWarning, MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.No Then Exit Sub
+            & Core.Message.strAreYouSure, Core.Message.strWarning, MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.No Then Exit Sub
         CreateDatabase(False)
     End Sub
 
@@ -665,43 +679,43 @@
         Dim strDBName As String
         Dim strSQL As String
         Dim intLogLevel As Integer = 6
-        If CurVar.Encryption = False Then intLogLevel = 5
+        If SeqData.CurVar.Encryption = False Then intLogLevel = 5
 
         btnCreateExtraProcs.Visible = False
         lblStatusDatabase.Visible = True
         prbCreateDatabase.Visible = True
 
         If blnIncludeTables = True Then
-            dhdDatabase.DataProvider = cbxDataProvider.SelectedItem
-            dhdDatabase.DataLocation = txtDatabaseLocation.Text
-            dhdDatabase.LoginMethod = cbxLoginMethod.SelectedItem
-            dhdDatabase.LoginName = txtLoginName.Text
-            dhdDatabase.Password = txtPassword.Text
-            dhdDatabase.DatabaseName = "master"
+            SeqData.dhdMainDB.DataProvider = cbxDataProvider.SelectedItem
+            SeqData.dhdMainDB.DataLocation = txtDatabaseLocation.Text
+            SeqData.dhdMainDB.LoginMethod = cbxLoginMethod.SelectedItem
+            SeqData.dhdMainDB.LoginName = txtLoginName.Text
+            If txtPassword.Text.Length > 0 And txtPassword.Text <> txtPassword.Tag Then SeqData.dhdMainDB.Password = txtPassword.Text
+            SeqData.dhdMainDB.DatabaseName = "master"
             strDBName = txtDatabaseName.Text
-            If DebugMode Then
+            If SeqData.CurVar.DebugMode Then
                 MessageBox.Show("Sequenchel v " & Application.ProductVersion & " Database Creation" & Environment.NewLine _
-                 & "   DatabaseServer = " & dhdDatabase.DataLocation & Environment.NewLine _
-                 & "   Database Context = " & dhdDatabase.DatabaseName & Environment.NewLine _
+                 & "   DatabaseServer = " & SeqData.dhdMainDB.DataLocation & Environment.NewLine _
+                 & "   Database Context = " & SeqData.dhdMainDB.DatabaseName & Environment.NewLine _
                  & "   Database to create: = " & strDBName & Environment.NewLine _
-                 & "   DataProvider = " & dhdDatabase.DataProvider & Environment.NewLine _
-                 & "   LoginMethod = " & dhdDatabase.LoginMethod & Environment.NewLine _
+                 & "   DataProvider = " & SeqData.dhdMainDB.DataProvider & Environment.NewLine _
+                 & "   LoginMethod = " & SeqData.dhdMainDB.LoginMethod & Environment.NewLine _
                  & "   Running in Debug Mode")
             End If
         Else
-            strDBName = dhdDatabase.DatabaseName
+            strDBName = SeqData.dhdMainDB.DatabaseName
         End If
 
         Try
-            dhdDatabase.CheckDB()
-            If dhdDatabase.DataBaseOnline = False Then
+            SeqData.dhdMainDB.CheckDB()
+            If SeqData.dhdMainDB.DataBaseOnline = False Then
                 MessageBox.Show("The server was not found. Please check your settings")
-                dhdDatabase.DatabaseName = strDBName
+                SeqData.dhdMainDB.DatabaseName = strDBName
                 Exit Sub
             End If
         Catch ex As Exception
             MessageBox.Show("There was an error connecting to the server. please check your settings")
-            dhdDatabase.DatabaseName = strDBName
+            SeqData.dhdMainDB.DatabaseName = strDBName
             Exit Sub
         End Try
 
@@ -713,11 +727,11 @@
 
             strSQL = MydbRef.GetScript(arrScripts(0))
             strSQL = strSQL.Replace("Sequenchel", strDBName)
-            If CurVar.Encryption = False Then strSQL = strSQL.Replace("WITH ENCRYPTION", "")
-            If DevMode Then MessageBox.Show(strSQL)
-            QueryDb(dhdDatabase, strSQL, False, 10)
-            dhdDatabase.DatabaseName = strDBName
-            txtJobNamePrefix.Text = dhdDatabase.DatabaseName
+            If SeqData.CurVar.Encryption = False Then strSQL = strSQL.Replace("WITH ENCRYPTION", "")
+            If SeqData.CurVar.DevMode Then MessageBox.Show(strSQL)
+            SeqData.QueryDb(SeqData.dhdMainDB, strSQL, False, 10)
+            SeqData.dhdMainDB.DatabaseName = strDBName
+            txtJobNamePrefix.Text = SeqData.dhdMainDB.DatabaseName
             prbCreateDatabase.PerformStep()
 
             For i = 1 To arrScripts.GetUpperBound(0)
@@ -725,12 +739,12 @@
                 If Not strSQL = "-1" Then
                     'strSQL = Replace(strSQL, "Sequenchel", strDBName)
                     strSQL = strSQL.Replace("Sequenchel", strDBName)
-                    If CurVar.Encryption = False Then strSQL = strSQL.Replace("WITH ENCRYPTION", "")
+                    If SeqData.CurVar.Encryption = False Then strSQL = strSQL.Replace("WITH ENCRYPTION", "")
                     If blnIncludeTables = False Then strSQL = Replace(strSQL, "CREATE", "ALTER", 1, 1)
-                    If DevMode Then MessageBox.Show(strSQL)
-                    QueryDb(dhdDatabase, strSQL, False, 5)
+                    If SeqData.CurVar.DevMode Then MessageBox.Show(strSQL)
+                    SeqData.QueryDb(SeqData.dhdMainDB, strSQL, False, 5)
                 Else
-                    If DebugMode Then MessageBox.Show("The script: " & arrScripts(i) & " returned: " & strSQL)
+                    If SeqData.CurVar.DebugMode Then MessageBox.Show("The script: " & arrScripts(i) & " returned: " & strSQL)
                 End If
                 prbCreateDatabase.PerformStep()
             Next
@@ -740,8 +754,8 @@
             'btnCreateDemoData.Visible = True
 
         Catch ex As Exception
-            dhdDatabase.DatabaseName = strDBName
-            txtJobNamePrefix.Text = dhdDatabase.DatabaseName
+            SeqData.dhdMainDB.DatabaseName = strDBName
+            txtJobNamePrefix.Text = SeqData.dhdMainDB.DatabaseName
         End Try
 
         lblStatusDatabase.Visible = False
@@ -771,7 +785,7 @@
             txtUpgradeDatabase.Tag = strTarget
             tabSettings.SelectTab(tpgDatabase)
             btnUpgradeDatabase.BackColor = clrWarning
-            MessageBox.Show(strMessages.strUpdateDatabase)
+            MessageBox.Show(Core.Message.strUpdateDatabase)
             Return True
         Else
             btnUpgradeDatabase.Enabled = False
@@ -786,62 +800,64 @@
         cbxDataProvider.SelectedItem = "SQL"
         cbxLoginMethod.SelectedItem = "WINDOWS"
         txtLoginName.Text = ""
-        txtPassword.Text = ""
+        SetDefaultText(txtPassword)
     End Sub
 
     Private Sub btnSaveSettingsDatabase_Click(sender As Object, e As EventArgs) Handles btnSaveSettingsDatabase.Click
         If cbxDataProvider.Items.Contains(cbxDataProvider.Text) = False Or cbxLoginMethod.Items.Contains(cbxLoginMethod.Text) = False Then
-            MessageBox.Show(strMessages.strPreconfigured & Environment.NewLine & strMessages.strCheckSettings)
+            MessageBox.Show(Core.Message.strPreconfigured & Environment.NewLine & Core.Message.strCheckSettings)
             Exit Sub
         End If
-        'If dhdDatabase.DataLocation <> txtDatabaseLocation.Text Or _
-        ' dhdDatabase.DatabaseName <> txtDatabaseName.Text Or _
-        ' dhdDatabase.DataProvider <> cbxDataProvider.SelectedItem Then
+        'If SeqData.dhdMainDB.DataLocation <> txtDatabaseLocation.Text Or _
+        ' SeqData.dhdMainDB.DatabaseName <> txtDatabaseName.Text Or _
+        ' SeqData.dhdMainDB.DataProvider <> cbxDataProvider.SelectedItem Then
         '    If MessageBox.Show(strMessages.strSettingReload & Environment.NewLine & strMessages.strContinue, strMessages.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Exit Sub
         'End If
-        dhdDatabase.DataLocation = txtDatabaseLocation.Text
-        dhdDatabase.DatabaseName = txtDatabaseName.Text
-        dhdDatabase.DataProvider = cbxDataProvider.SelectedItem
-        dhdDatabase.LoginMethod = cbxLoginMethod.SelectedItem
-        dhdDatabase.LoginName = txtLoginName.Text
-        dhdDatabase.Password = txtPassword.Text
-        DatabaseTest(dhdDatabase)
+        SeqData.dhdMainDB.DataLocation = txtDatabaseLocation.Text
+        SeqData.dhdMainDB.DatabaseName = txtDatabaseName.Text
+        SeqData.dhdMainDB.DataProvider = cbxDataProvider.SelectedItem
+        SeqData.dhdMainDB.LoginMethod = cbxLoginMethod.SelectedItem
+        SeqData.dhdMainDB.LoginName = txtLoginName.Text
+        If txtPassword.Text.Length > 0 And txtPassword.Text <> txtPassword.Tag Then SeqData.dhdMainDB.Password = txtPassword.Text
+        DatabaseTest(SeqData.dhdMainDB)
         Try
-            If blnDatabaseOnLine = False Then
+            If SeqData.dhdMainDB.DataBaseOnline = False Then
                 If MessageBox.Show("The database specified was not found." & Environment.NewLine & "Do you wish to save anyway?", "Database not found", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.No Then
                     Exit Sub
                 End If
             End If
-            SaveGeneralSettingsXml()
-            txtJobNamePrefix.Text = dhdDatabase.DatabaseName
+            SeqData.SaveGeneralSettingsXml(xmlGeneralSettings)
+            txtJobNamePrefix.Text = SeqData.dhdMainDB.DatabaseName
             'btnSaveSettingsDatabase.BackColor = clrOriginal
         Catch ex As Exception
-            MessageBox.Show(strMessages.strDataError & Environment.NewLine & strMessages.strCheckSettings)
-            LoadGeneralSettingsXml()
+            MessageBox.Show(Core.Message.strDataError & Environment.NewLine & Core.Message.strCheckSettings)
+            SeqData.LoadGeneralSettingsXml(xmlGeneralSettings)
             DatabaseShow()
         End Try
 
     End Sub
 
     Private Sub btnTestConnection_Click(sender As Object, e As EventArgs) Handles btnTestConnection.Click
-        dhdDatabase.DataProvider = cbxDataProvider.SelectedItem
-        dhdDatabase.DataLocation = txtDatabaseLocation.Text
-        dhdDatabase.LoginMethod = cbxLoginMethod.SelectedItem
-        dhdDatabase.LoginName = txtLoginName.Text
-        dhdDatabase.Password = txtPassword.Text
-        dhdDatabase.DatabaseName = txtDatabaseName.Text
+        SeqData.dhdMainDB.DataProvider = cbxDataProvider.SelectedItem
+        SeqData.dhdMainDB.DataLocation = txtDatabaseLocation.Text
+        SeqData.dhdMainDB.LoginMethod = cbxLoginMethod.SelectedItem
+        SeqData.dhdMainDB.LoginName = txtLoginName.Text
+        SeqData.dhdMainDB.Password = txtPassword.Text
+        SeqData.dhdMainDB.DatabaseName = txtDatabaseName.Text
 
-        DatabaseTest(dhdDatabase)
-        MessageBox.Show("Database Connection tested: " & blnDatabaseOnLine)
+        DatabaseTest(SeqData.dhdMainDB)
+        MessageBox.Show("Database Connection tested: " & SeqData.dhdMainDB.DataBaseOnline)
     End Sub
 
     Private Sub DatabaseShow()
-        cbxDataProvider.SelectedItem = dhdDatabase.DataProvider
-        txtDatabaseLocation.Text = dhdDatabase.DataLocation
-        txtDatabaseName.Text = dhdDatabase.DatabaseName
-        cbxLoginMethod.SelectedItem = dhdDatabase.LoginMethod
-        txtLoginName.Text = dhdDatabase.LoginName
-        txtPassword.Text = dhdDatabase.Password
+        SetDefaultText(txtPassword)
+        PasswordCharSet(txtPassword)
+        cbxDataProvider.SelectedItem = SeqData.dhdMainDB.DataProvider
+        txtDatabaseLocation.Text = SeqData.dhdMainDB.DataLocation
+        txtDatabaseName.Text = SeqData.dhdMainDB.DatabaseName
+        cbxLoginMethod.SelectedItem = SeqData.dhdMainDB.LoginMethod
+        txtLoginName.Text = SeqData.dhdMainDB.LoginName
+        'txtPassword.Text = SeqData.dhdMainDB.Password
         cbxLoginMethod_SelectedIndexChanged(Nothing, Nothing)
     End Sub
 
@@ -849,13 +865,16 @@
         If cbxLoginMethod.SelectedItem = "SQL" Then
             txtLoginName.Enabled = True
             txtPassword.Enabled = True
-            txtLoginName.Text = dhdDatabase.LoginName
-            txtPassword.Text = dhdDatabase.Password
+            txtLoginName.Text = SeqData.dhdMainDB.LoginName
+            'txtPassword.Text = SeqData.dhdMainDB.Password
+            SetDefaultText(txtPassword)
+            btnShowDatabasePassword.Enabled = True
         ElseIf cbxLoginMethod.SelectedItem = "Windows" Then
             txtLoginName.Enabled = False
             txtPassword.Enabled = False
             txtLoginName.Text = ""
-            txtPassword.Text = ""
+            RemoveDefaultText(txtPassword)
+            btnShowDatabasePassword.Enabled = False
         End If
     End Sub
 
@@ -871,25 +890,25 @@
             arrScripts = MydbRef.GetNewList(txtUpgradeDatabase.Tag)
 
             strSQL = MydbRef.GetScript(arrScripts(0, 0))
-            If DebugMode Then MessageBox.Show("<debug>Number of Scripts: " & arrScripts.GetUpperBound(1) + 1)
+            If SeqData.CurVar.DebugMode Then MessageBox.Show("<debug>Number of Scripts: " & arrScripts.GetUpperBound(1) + 1)
 
             strMode = arrScripts(1, 0)
             If strSQL = "-1" Then
                 MessageBox.Show("Error retrieving SQL Script " & arrScripts(0, 0) & ", please contact your vendor")
                 Exit Sub
             End If
-            strSQL = Replace(strSQL, "Sequenchel", dhdDatabase.DatabaseName)
-            If CurVar.Encryption = False Then strSQL = strSQL.Replace("WITH ENCRYPTION", "")
+            strSQL = Replace(strSQL, "Sequenchel", SeqData.dhdMainDB.DatabaseName)
+            If SeqData.CurVar.Encryption = False Then strSQL = strSQL.Replace("WITH ENCRYPTION", "")
             If strMode = "ALTER" Then strSQL = Replace(strSQL, "CREATE", "ALTER", 1, 1)
-            QueryDb(dhdDatabase, strSQL, False)
+            SeqData.QueryDb(SeqData.dhdMainDB, strSQL, False)
 
             For i = 1 To arrScripts.GetUpperBound(1)
                 strSQL = MydbRef.GetScript(arrScripts(0, i))
                 If Not strSQL = "-1" Then
-                    strSQL = Replace(strSQL, "Sequenchel", dhdDatabase.DatabaseName)
+                    strSQL = Replace(strSQL, "Sequenchel", SeqData.dhdMainDB.DatabaseName)
                     strMode = arrScripts(1, i)
                     If strMode = "ALTER" Then strSQL = Replace(strSQL, "CREATE", "ALTER", 1, 1)
-                    QueryDb(dhdDatabase, strSQL, False)
+                    SeqData.QueryDb(SeqData.dhdMainDB, strSQL, False)
                 Else
                     MessageBox.Show("Error retrieving SQL Script " & arrScripts(0, 0) & ", please contact your vendor")
                     Exit Sub
@@ -909,7 +928,7 @@
 
     Private Sub btnBackupDatabase_Click(sender As Object, e As EventArgs) Handles btnBackupDatabase.Click
         Try
-            BackupDatabase(dhdDatabase, txtBackupDatabase.Text)
+            BackupDatabase(SeqData.dhdMainDB, txtBackupDatabase.Text)
             SaveConfigSetting("Database", "BackupLocation", txtBackupDatabase.Text, "A valid location on the server")
         Catch ex As Exception
             MessageBox.Show("While saving the database, the following error occured: " & Environment.NewLine & ex.Message)
@@ -917,7 +936,7 @@
     End Sub
 
     Private Sub btnCreateExtraProcs_Click(sender As Object, e As EventArgs) Handles btnCreateExtraProcs.Click
-        If MessageBox.Show("This will create extra procedures with the power to damage your data or database. Create these procedures in a secure database." & Environment.NewLine & strMessages.strContinue, strMessages.strWarning, MessageBoxButtons.YesNo, MessageBoxIcon.Hand, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.No Then Exit Sub
+        If MessageBox.Show("This will create extra procedures with the power to damage your data or database. Create these procedures in a secure database." & Environment.NewLine & Core.Message.strContinue, Core.Message.strWarning, MessageBoxButtons.YesNo, MessageBoxIcon.Hand, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.No Then Exit Sub
 
         Dim strSQL As String
         Dim MydbRef As New SDBA.DBRef
@@ -927,22 +946,22 @@
             arrScripts = MydbRef.GetDBAList()
 
             strSQL = MydbRef.GetScript(arrScripts(0))
-            strSQL = strSQL.Replace("Sequenchel", dhdDatabase.DatabaseName)
-            If CurVar.Encryption = False Then strSQL = strSQL.Replace("WITH ENCRYPTION", "")
-            If DevMode Then MessageBox.Show(strSQL)
-            QueryDb(dhdDatabase, strSQL, False, 10)
+            strSQL = strSQL.Replace("Sequenchel", SeqData.dhdMainDB.DatabaseName)
+            If SeqData.CurVar.Encryption = False Then strSQL = strSQL.Replace("WITH ENCRYPTION", "")
+            If SeqData.CurVar.DevMode Then MessageBox.Show(strSQL)
+            SeqData.QueryDb(SeqData.dhdMainDB, strSQL, False, 10)
             prbCreateDatabase.PerformStep()
 
             For i = 1 To arrScripts.GetUpperBound(0)
                 strSQL = MydbRef.GetScript(arrScripts(i))
                 If Not strSQL = "-1" Then
                     'strSQL = Replace(strSQL, "Sequenchel", strDBName)
-                    strSQL = strSQL.Replace("Sequenchel", dhdDatabase.DatabaseName)
-                    If CurVar.Encryption = False Then strSQL = strSQL.Replace("WITH ENCRYPTION", "")
-                    'If DevMode Then MessageBox.Show(strSQL)
-                    QueryDb(dhdDatabase, strSQL, False, 10)
+                    strSQL = strSQL.Replace("Sequenchel", SeqData.dhdMainDB.DatabaseName)
+                    If SeqData.CurVar.Encryption = False Then strSQL = strSQL.Replace("WITH ENCRYPTION", "")
+                    'If SeqData.CurVar.DevMode Then MessageBox.Show(strSQL)
+                    SeqData.QueryDb(SeqData.dhdMainDB, strSQL, False, 10)
                 Else
-                    If DevMode Then MessageBox.Show("The script: " & arrScripts(i) & " returned: " & strSQL)
+                    If SeqData.CurVar.DevMode Then MessageBox.Show("The script: " & arrScripts(i) & " returned: " & strSQL)
                 End If
             Next
 
@@ -952,6 +971,28 @@
         End Try
         MessageBox.Show("Procedures added successfully")
 
+    End Sub
+
+    Private Sub txtPassword_GotFocus(sender As Object, e As EventArgs) Handles txtPassword.GotFocus
+        RemoveDefaultText(txtPassword)
+        PasswordCharSet(txtPassword)
+    End Sub
+
+    Private Sub txtPassword_LostFocus(sender As Object, e As EventArgs) Handles txtPassword.LostFocus
+        SetDefaultText(txtPassword)
+        PasswordCharSet(txtPassword)
+    End Sub
+
+    Private Sub btnShowDatabasePassword_MouseDown(sender As Object, e As MouseEventArgs) Handles btnShowDatabasePassword.MouseDown
+        txtPassword.PasswordChar = Nothing
+    End Sub
+
+    Private Sub btnShowDatabasePassword_MouseLeave(sender As Object, e As EventArgs) Handles btnShowDatabasePassword.MouseLeave
+        PasswordCharSet(txtPassword)
+    End Sub
+
+    Private Sub btnShowDatabasePassword_MouseUp(sender As Object, e As MouseEventArgs) Handles btnShowDatabasePassword.MouseUp
+        PasswordCharSet(txtPassword)
     End Sub
 
 #End Region
@@ -971,7 +1012,7 @@
         cbxProcedures.Items.Add("Cycle Error logs")
         cbxProcedures.Items.Add("Defragment Indexes")
         cbxProcedures.Items.Add("SmartUpdate")
-        txtJobNamePrefix.Text = dhdDatabase.DatabaseName
+        txtJobNamePrefix.Text = SeqData.dhdMainDB.DatabaseName
     End Sub
 
     Private Sub HoursLoad()
@@ -1007,7 +1048,7 @@
     End Sub
 
     Private Sub btnErrorlogPathDatabase_Click(sender As Object, e As EventArgs) Handles btnErrorlogPathDatabase.Click
-        txtErrorlogPath.Text = GetDefaultLogPath(dhdDatabase)
+        txtErrorlogPath.Text = GetDefaultLogPath(SeqData.dhdMainDB)
     End Sub
 
     Private Sub btnErrorlogPathSystem_Click(sender As Object, e As EventArgs) Handles btnErrorlogPathSystem.Click
@@ -1015,12 +1056,12 @@
     End Sub
 
     Private Sub btnErrorlogPathDefault_Click(sender As Object, e As EventArgs) Handles btnErrorlogPathDefault.Click
-        txtErrorlogPath.Text = CurVar.DefaultConfigFilePath & "\" & "LOG"
+        txtErrorlogPath.Text = SeqData.CurVar.DefaultConfigFilePath & "\" & "LOG"
     End Sub
 
     Private Sub btnErrorlogPathBrowse_Click(sender As Object, e As EventArgs) Handles btnErrorlogPathBrowse.Click
         Dim DefaultFolder As New FolderBrowserDialog
-        DefaultFolder.SelectedPath = CurVar.DefaultConfigFilePath
+        DefaultFolder.SelectedPath = SeqData.CurVar.DefaultConfigFilePath
 
         If (DefaultFolder.ShowDialog() = System.Windows.Forms.DialogResult.OK) And (DefaultFolder.SelectedPath.Length) > 0 Then
             txtLogfileLocation.Text = DefaultFolder.SelectedPath
@@ -1043,7 +1084,7 @@
         Dim strSqlCommand As String = ScheduleCommandBuild(strJobName)
         Dim strSTartTime As String = cbxStartHour.Text & cbxStartMinute.Text & "00"
         Dim strEndTime As String = cbxEndHour.Text & cbxEndMinute.Text & "00"
-        Dim strErrorlogPath As String = dhdText.LogLocation
+        Dim strErrorlogPath As String = SeqData.dhdText.LogLocation
 
         Dim FreqInterval As Integer = 0
         Dim FreqType As Integer = 0
@@ -1169,35 +1210,35 @@
         Dim strValue As String = 0
 
         strValue = LoadConfigSetting("MonitorDataspaces", "MinPercGrowth")
-        If strValue.Length > 0 And IsNumeric(strValue) Then CurVar.MinPercGrowth = strValue
+        If strValue.Length > 0 And IsNumeric(strValue) Then SeqData.CurVar.MinPercGrowth = strValue
         strValue = ""
         strValue = LoadConfigSetting("MonitorDataspaces", "MinFreeSpace")
-        If strValue.Length > 0 Then CurVar.MinFreeSpace = strValue
+        If strValue.Length > 0 Then SeqData.CurVar.MinFreeSpace = strValue
         strValue = ""
         strValue = LoadConfigSetting("MonitorDataspaces", "LowerLimit")
-        If strValue.Length > 0 Then CurVar.LowerLimit = strValue
+        If strValue.Length > 0 Then SeqData.CurVar.LowerLimit = strValue
         strValue = ""
         strValue = LoadConfigSetting("MonitorDataspaces", "UpperLimit")
-        If strValue.Length > 0 Then CurVar.UpperLimit = strValue
+        If strValue.Length > 0 Then SeqData.CurVar.UpperLimit = strValue
         strValue = ""
         strValue = LoadConfigSetting("MonitorDataspaces", "SmallGrowth")
-        If strValue.Length > 0 Then CurVar.SmallGrowth = strValue
+        If strValue.Length > 0 Then SeqData.CurVar.SmallGrowth = strValue
         strValue = ""
         strValue = LoadConfigSetting("MonitorDataspaces", "MediumGrowth")
-        If strValue.Length > 0 Then CurVar.MediumGrowth = strValue
+        If strValue.Length > 0 Then SeqData.CurVar.MediumGrowth = strValue
         strValue = ""
         strValue = LoadConfigSetting("MonitorDataspaces", "LargeGrowth")
-        If strValue.Length > 0 Then CurVar.LargeGrowth = strValue
+        If strValue.Length > 0 Then SeqData.CurVar.LargeGrowth = strValue
     End Sub
 
     Private Sub MonitorDataspacesShow()
-        txtMinPercGrowth.Text = CurVar.MinPercGrowth
-        txtMinFreeSpace.Text = CurVar.MinFreeSpace
-        txtLowerLimit.Text = CurVar.LowerLimit
-        txtUpperLimit.Text = CurVar.UpperLimit
-        txtSmallGrowth.Text = CurVar.SmallGrowth
-        txtMediumGrowth.Text = CurVar.MediumGrowth
-        txtLargeGrowth.Text = CurVar.LargeGrowth
+        txtMinPercGrowth.Text = SeqData.CurVar.MinPercGrowth
+        txtMinFreeSpace.Text = SeqData.CurVar.MinFreeSpace
+        txtLowerLimit.Text = SeqData.CurVar.LowerLimit
+        txtUpperLimit.Text = SeqData.CurVar.UpperLimit
+        txtSmallGrowth.Text = SeqData.CurVar.SmallGrowth
+        txtMediumGrowth.Text = SeqData.CurVar.MediumGrowth
+        txtLargeGrowth.Text = SeqData.CurVar.LargeGrowth
     End Sub
 
     Private Sub btnMonitorDataSpacesLoad_Click(sender As Object, e As EventArgs) Handles btnMonitorDataSpacesLoad.Click
@@ -1208,21 +1249,45 @@
     End Sub
 
     Private Sub btnMonitorDataSpacesSave_Click(sender As Object, e As EventArgs) Handles btnMonitorDataSpacesSave.Click
-        If IsNumeric(txtMinPercGrowth.Text) Then CurVar.MinPercGrowth = txtMinPercGrowth.Text
-        If IsNumeric(txtMinFreeSpace.Text) Then CurVar.MinFreeSpace = txtMinFreeSpace.Text
-        If IsNumeric(txtLowerLimit.Text) Then CurVar.LowerLimit = txtLowerLimit.Text
-        If IsNumeric(txtUpperLimit.Text) Then CurVar.UpperLimit = txtUpperLimit.Text
-        If IsNumeric(txtSmallGrowth.Text) Then CurVar.SmallGrowth = txtSmallGrowth.Text
-        If IsNumeric(txtMediumGrowth.Text) Then CurVar.MediumGrowth = txtMediumGrowth.Text
-        If IsNumeric(txtLargeGrowth.Text) Then CurVar.LargeGrowth = txtLargeGrowth.Text
+        Dim intMinPercGrowth As Integer = SeqData.curVar.MinPercGrowth
+        Dim intMinFreeSpace As Integer = SeqData.curVar.MinFreeSpace
+        Dim intLowerLimit As Integer = SeqData.curVar.LowerLimit
+        Dim intUpperlimit As Integer = SeqData.curVar.UpperLimit
+        Dim intSmallGrowth As Integer = SeqData.curVar.SmallGrowth
+        Dim intMediumGrowth As Integer = SeqData.curVar.MediumGrowth
+        Dim intLargeGrowth As Integer = SeqData.curVar.LargeGrowth
 
-        SaveConfigSetting("MonitorDataspaces", "MinPercGrowth", CurVar.MinPercGrowth)
-        SaveConfigSetting("MonitorDataspaces", "MinFreeSpace", CurVar.MinFreeSpace)
-        SaveConfigSetting("MonitorDataspaces", "LowerLimit", CurVar.LowerLimit)
-        SaveConfigSetting("MonitorDataspaces", "UpperLimit", CurVar.UpperLimit)
-        SaveConfigSetting("MonitorDataspaces", "SmallGrowth", CurVar.SmallGrowth)
-        SaveConfigSetting("MonitorDataspaces", "MediumGrowth", CurVar.MediumGrowth)
-        SaveConfigSetting("MonitorDataspaces", "LargeGrowth", CurVar.LargeGrowth)
+        If IsNumeric(txtMinPercGrowth.Text) Then intMinPercGrowth = txtMinPercGrowth.Text
+        If IsNumeric(txtMinFreeSpace.Text) Then intMinFreeSpace = txtMinFreeSpace.Text
+        If IsNumeric(txtLowerLimit.Text) Then intLowerLimit = txtLowerLimit.Text
+        If IsNumeric(txtUpperLimit.Text) Then intUpperlimit = txtUpperLimit.Text
+        If IsNumeric(txtSmallGrowth.Text) Then intSmallGrowth = txtSmallGrowth.Text
+        If IsNumeric(txtMediumGrowth.Text) Then intMediumGrowth = txtMediumGrowth.Text
+        If IsNumeric(txtLargeGrowth.Text) Then intLargeGrowth = txtLargeGrowth.Text
+
+        If Not intLowerLimit < intUpperlimit Then
+            MessageBox.Show("The Lower Limit should be smaller than the Upper Limit")
+            Exit Sub
+        End If
+        If Not (intSmallGrowth < intMediumGrowth And intMediumGrowth < intLargeGrowth And intLargeGrowth < intUpperlimit) Then
+            MessageBox.Show("Small growth should be smaller than Medium Growth." & Environment.NewLine & "Medium Growth should be smaller than Large Growth" & Environment.NewLine & "Large Growth should be smaller than Upper Growth")
+            Exit Sub
+        End If
+        SeqData.curVar.MinPercGrowth = intMinPercGrowth
+        SeqData.curVar.MinFreeSpace = intMinFreeSpace
+        SeqData.curVar.LowerLimit = intLowerLimit
+        SeqData.curVar.UpperLimit = intUpperlimit
+        SeqData.curVar.SmallGrowth = intSmallGrowth
+        SeqData.curVar.MediumGrowth = intMediumGrowth
+        SeqData.curVar.LargeGrowth = intLargeGrowth
+
+        SaveConfigSetting("MonitorDataspaces", "MinPercGrowth", SeqData.curVar.MinPercGrowth)
+        SaveConfigSetting("MonitorDataspaces", "MinFreeSpace", SeqData.curVar.MinFreeSpace)
+        SaveConfigSetting("MonitorDataspaces", "LowerLimit", SeqData.curVar.LowerLimit)
+        SaveConfigSetting("MonitorDataspaces", "UpperLimit", SeqData.curVar.UpperLimit)
+        SaveConfigSetting("MonitorDataspaces", "SmallGrowth", SeqData.curVar.SmallGrowth)
+        SaveConfigSetting("MonitorDataspaces", "MediumGrowth", SeqData.curVar.MediumGrowth)
+        SaveConfigSetting("MonitorDataspaces", "LargeGrowth", SeqData.curVar.LargeGrowth)
 
     End Sub
 
@@ -1270,20 +1335,6 @@
         SetDefaultText(sender)
     End Sub
 
-    Private Sub SetDefaultText(objTextBox As TextBox)
-        If objTextBox.Text = "" Then
-            objTextBox.Text = objTextBox.Tag
-            objTextBox.ForeColor = Color.Gray
-        End If
-    End Sub
-
-    Private Sub RemoveDefaultText(objTextBox As TextBox)
-        If objTextBox.Text = objTextBox.Tag Then
-            objTextBox.Text = ""
-            objTextBox.ForeColor = SystemColors.WindowText
-        End If
-    End Sub
-
     Private Sub SetFtpDefaults()
         SetDefaultText(txtFtpServer)
         SetDefaultText(txtUploadSource)
@@ -1312,13 +1363,13 @@
                 strSQL = strSQL.Replace("--reconfigure", "reconfigure")
             End If
             Try
-                QueryDb(dhdDatabase, strSQL, False, 10)
+                SeqData.QueryDb(SeqData.dhdMainDB, strSQL, False, 10)
                 lblFtpStatus.Text = "Procedure PutFTPfiles was created succesfully"
             Catch ex As Exception
                 MessageBox.Show("There was an error creating the procedure" & Environment.NewLine & ex.Message)
             End Try
         Else
-            If DebugMode Then MessageBox.Show("The script: 01 dbo.usp_PutFTPfiles.sql returned: " & strSQL)
+            If SeqData.CurVar.DebugMode Then MessageBox.Show("The script: 01 dbo.usp_PutFTPfiles.sql returned: " & strSQL)
         End If
 
     End Sub
@@ -1343,16 +1394,86 @@
                 strSQL = strSQL.Replace("--reconfigure", "reconfigure")
             End If
             Try
-                QueryDb(dhdDatabase, strSQL, False, 10)
+                SeqData.QueryDb(SeqData.dhdMainDB, strSQL, False, 10)
                 lblFtpStatus.Text = "Procedure GetFTPfiles was created succesfully"
             Catch ex As Exception
                 MessageBox.Show("There was an error creating the procedure" & Environment.NewLine & ex.Message)
             End Try
         Else
-            If DebugMode Then MessageBox.Show("The script: 01 dbo.usp_GetFTPfiles.sql returned: " & strSQL)
+            If SeqData.CurVar.DebugMode Then MessageBox.Show("The script: 01 dbo.usp_GetFTPfiles.sql returned: " & strSQL)
         End If
     End Sub
 
 #End Region
+
+#Region "Email"
+    Private Sub SetEmailDefaults()
+        SetDefaultText(txtSmtpServerPassword)
+    End Sub
+
+    Private Sub EmailSettingsShow()
+        txtSmtpServer.Text = SeqData.dhdText.SmtpServer
+        chkSmtpCredentials.Checked = SeqData.dhdText.SmtpCredentials
+        txtSmtpServerUsername.Text = SeqData.dhdText.SmtpUser
+        'DataHandler.txt.EncryptText(txtSmtpServerPassword.Text) = SeqData.dhdText.SmtpPassword
+        txtSmtpReply.Text = SeqData.dhdText.SmtpReply
+        txtSmtpPortNumber.Text = SeqData.dhdText.SmtpPort
+        chkUseSslEncryption.Checked = SeqData.dhdText.SmtpSsl
+    End Sub
+
+    Private Sub btnSettingsEmailSave_Click(sender As Object, e As EventArgs) Handles btnSettingsEmailSave.Click
+        SeqData.dhdText.SmtpServer = txtSmtpServer.Text
+        SeqData.dhdText.SmtpCredentials = chkSmtpCredentials.Checked
+        SeqData.dhdText.SmtpUser = txtSmtpServerUsername.Text
+        If txtSmtpServerPassword.Text.Length > 0 And txtSmtpServerPassword.Text <> txtSmtpServerPassword.Tag Then SeqData.dhdText.SmtpPassword = DataHandler.txt.EncryptText(txtSmtpServerPassword.Text)
+        SeqData.dhdText.SmtpReply = txtSmtpReply.Text
+        SeqData.dhdText.SmtpPort = txtSmtpPortNumber.Text
+        SeqData.dhdText.SmtpSsl = chkUseSslEncryption.Checked
+        SeqData.SaveGeneralSettingsXml(xmlGeneralSettings)
+    End Sub
+
+    Private Sub chkSmtpCredentials_CheckedChanged(sender As Object, e As EventArgs) Handles chkSmtpCredentials.CheckedChanged
+        If chkSmtpCredentials.Checked = True Then
+            txtSmtpServerUsername.Enabled = False
+            txtSmtpServerUsername.Text = ""
+            txtSmtpServerPassword.Enabled = False
+            txtSmtpServerPassword.Text = ""
+        Else
+            txtSmtpServerUsername.Enabled = True
+            txtSmtpServerUsername.Text = SeqData.dhdText.SmtpUser
+            txtSmtpServerPassword.Enabled = True
+            'txtSmtpServerPassword.Text = SeqData.dhdText.SmtpPassword
+            btnShowEmailPassword.Enabled = True
+        End If
+    End Sub
+
+    Private Sub txtSmtpServerPassword_GotFocus(sender As Object, e As EventArgs) Handles txtSmtpServerPassword.GotFocus
+        RemoveDefaultText(sender)
+        PasswordCharSet(txtSmtpServerPassword)
+    End Sub
+
+    Private Sub txtSmtpServerPassword_LostFocus(sender As Object, e As EventArgs) Handles txtSmtpServerPassword.LostFocus
+        SetDefaultText(sender)
+        PasswordCharSet(txtSmtpServerPassword)
+    End Sub
+
+    Private Sub txtSmtpServerPassword_TextChanged(sender As Object, e As EventArgs) Handles txtSmtpServerPassword.TextChanged
+        PasswordCharSet(txtSmtpServerPassword)
+    End Sub
+
+    Private Sub btnShowPassword_Click(sender As Object, e As EventArgs) Handles btnShowEmailPassword.MouseDown
+        txtSmtpServerPassword.PasswordChar = Nothing
+    End Sub
+
+    Private Sub btnShowPassword_MouseLeave(sender As Object, e As EventArgs) Handles btnShowEmailPassword.MouseLeave
+        PasswordCharSet(txtSmtpServerPassword)
+    End Sub
+
+    Private Sub btnShowPassword_MouseUp(sender As Object, e As MouseEventArgs) Handles btnShowEmailPassword.MouseUp
+        PasswordCharSet(txtSmtpServerPassword)
+    End Sub
+
+#End Region
+
 
 End Class

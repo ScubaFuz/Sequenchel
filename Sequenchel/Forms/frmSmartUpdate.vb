@@ -6,29 +6,40 @@
     Dim strTargetTable As String = ""
 
     Private Sub frmSmartUpdate_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        If blnLicenseValidated = True Then
+        If Core.LicenseValidated = True Then
             btnCreateSmartUpdateProcedure.Enabled = True
             lblLicenseRequired.Visible = False
         End If
         LoadConnections()
-        LoadTables()
+        If cbxConnection.SelectedIndex <> -1 Then
+            LoadTables()
+        End If
         dtpStartDate.Value = Today()
     End Sub
 
     Private Sub LoadConnections()
         'AllClear(4)
-        Dim lstConnections As List(Of String) = LoadConnectionsXml()
-        If lstConnections Is Nothing Then Exit Sub
+        Dim lstConnections As List(Of String) = SeqData.LoadConnectionsXml(xmlConnections)
+        If lstConnections Is Nothing Then
+            xmlConnections.RemoveAll()
+            xmlTableSets.RemoveAll()
+            SeqData.curVar.TableSetsFile = ""
+            xmlTables.RemoveAll()
+            SeqData.curVar.TablesFile = ""
+            TableClear()
+            SeqData.dhdConnection = SeqData.dhdMainDB
+            Exit Sub
+        End If
         For Each lstItem As String In lstConnections
             cbxConnection.Items.Add(lstItem)
         Next
-        cbxConnection.SelectedItem = CurStatus.Connection
+        cbxConnection.SelectedItem = SeqData.curStatus.Connection
     End Sub
 
     Private Sub cbxConnection_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbxConnection.SelectedIndexChanged
         If cbxConnection.SelectedIndex >= -1 Then
-            CurStatus.Connection = cbxConnection.SelectedItem
-            LoadConnection(CurStatus.Connection)
+            SeqData.curStatus.Connection = cbxConnection.SelectedItem
+            SeqData.LoadConnection(xmlConnections, SeqData.curStatus.Connection)
             LoadTables()
             PanelsClear()
             txtSourceTable.Text = ""
@@ -43,13 +54,21 @@
         Dim strSQL As String = ""
 
         Try
+            'check if table exists
+            strSQL = "Select TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'SmartUpdate'"
+            Dim dtsdata As DataSet = SeqData.QueryDb(SeqData.dhdConnection, strSQL, True, 5)
+            If SeqData.dhdText.DatasetCheck(dtsdata) = True Then
+                lblStatusText.Text = "SmartUpdate table already exists. Please delete the table before (re)creating it."
+                Exit Sub
+            End If
+            'create table
+            strSQL = ""
             Dim MydbRef As New SDBA.DBRef
-
             strSQL = MydbRef.GetScript("01 dbo.SmartUpdate.sql")
-            strSQL = strSQL.Replace("Sequenchel", dhdConnection.DatabaseName)
-            If CurVar.Encryption = False Then strSQL = strSQL.Replace("WITH ENCRYPTION", "")
-            If DevMode Then MessageBox.Show(strSQL)
-            QueryDb(dhdConnection, strSQL, False, 10)
+            strSQL = strSQL.Replace("Sequenchel", SeqData.dhdConnection.DatabaseName)
+            If SeqData.curVar.Encryption = False Then strSQL = strSQL.Replace("WITH ENCRYPTION", "")
+            If SeqData.curVar.DevMode Then MessageBox.Show(strSQL)
+            SeqData.QueryDb(SeqData.dhdConnection, strSQL, False, 10)
             lblStatusText.Text = "SmartUpdate Table created succesfully"
         Catch ex As Exception
             MessageBox.Show("There was an error while creating the SmartUpdate Table" & Environment.NewLine & ex.Message, "Error Creating Table", MessageBoxButtons.OK)
@@ -58,15 +77,21 @@
 
     Private Sub btnCreateSmartUpdateProcedure_Click(sender As Object, e As EventArgs) Handles btnCreateSmartUpdateProcedure.Click
         Dim strSQL As String = ""
-
+        Dim blnExists As Boolean = False
         Try
+            'Check for procedure
+            strSQL = "SELECT ROUTINE_NAME FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_NAME = 'usp_SmartUpdate' AND ROUTINE_SCHEMA = 'dbo' AND ROUTINE_TYPE = 'PROCEDURE'"
+            Dim dtsdata As DataSet = SeqData.QueryDb(SeqData.dhdConnection, strSQL, True, 5)
+            If SeqData.dhdText.DatasetCheck(dtsdata) = True Then blnExists = True
+            
+            'create procedure
             Dim MydbRef As New SDBA.DBRef
-
             strSQL = MydbRef.GetScript("01 dbo.usp_SmartUpdate.sql")
-            strSQL = strSQL.Replace("Sequenchel", dhdConnection.DatabaseName)
-            If CurVar.Encryption = False Then strSQL = strSQL.Replace("WITH ENCRYPTION", "")
-            If DevMode Then MessageBox.Show(strSQL)
-            QueryDb(dhdConnection, strSQL, False, 10)
+            strSQL = strSQL.Replace("Sequenchel", SeqData.dhdConnection.DatabaseName)
+            If SeqData.curVar.Encryption = False Then strSQL = strSQL.Replace("WITH ENCRYPTION", "")
+            If blnExists = True Then strSQL = strSQL.Replace("CREATE PROCEDURE", "ALTER PROCEDURE")
+            If SeqData.curVar.DevMode Then MessageBox.Show(strSQL)
+            SeqData.QueryDb(SeqData.dhdConnection, strSQL, False, 10)
             lblStatusText.Text = "SmartUpdate Procedure created succesfully"
         Catch ex As Exception
             MessageBox.Show("There was an error while creating the SmartUpdate Procedure" & Environment.NewLine & ex.Message, "Error Creating Procedure", MessageBoxButtons.OK)
@@ -126,11 +151,22 @@
     End Sub
 
     Private Sub btnSaveConfiguration_Click(sender As Object, e As EventArgs) Handles btnSaveConfiguration.Click
+        If pnlCompareColumn.Controls.Count = 0 Then
+            lblStatusText.Text = "There is no configuration to save."
+            Exit Sub
+        End If
+        Dim blnCheckFound As Boolean = False
+        For Each ctrl As CheckBox In pnlCompareColumn.Controls
+            If ctrl.Checked = True Then blnCheckFound = True
+        Next
+        If blnCheckFound = False Then
+            lblStatusText.Text = "Nothing has been selected for comparison. Nothing is saved."
+            Exit Sub
+        End If
         'check for table dbo.SmartUpdate
-        'Dim strSQL As String = "IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.TABLES  WHERE TABLE_NAME = 'SmartUpdate') SELECT 1 AS TableExists ELSE SELECT 0 AS TableExists"
-        Dim strSQL As String = "SELECT 1 AS TableExists FROM INFORMATION_SCHEMA.TABLES  WHERE TABLE_NAME = 'SmartUpdate'"
-        Dim dtsData As DataSet = QueryDb(dhdConnection, strSQL, True, 5)
-        If DatasetCheck(dtsData) = False Then
+        Dim strSQL As String = "Select TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'SmartUpdate'"
+        Dim dtsData As DataSet = SeqData.QueryDb(SeqData.dhdConnection, strSQL, True, 5)
+        If SeqData.dhdText.DatasetCheck(dtsData) = False Then
             lblStatusText.Text = "The SmartUpdate table was not found. Please create the table first."
             Exit Sub
         End If
@@ -164,9 +200,9 @@
             pnlPrimaryKey = pnlTargetPrimaryKey
         End If
         strInsert = InsertString(strSchemaName, strTableName, pnlTable, pnlDataType, pnlPrimaryKey, pnlCompareColumn, dtmStartDate, dtmEndDate)
-        strUpdate = "UPDATE dbo.SmartUpdate SET [DateStop] = '" & dtmStartDate.AddDays(-1).ToString("yyyy-MM-dd") & "' WHERE [DataBaseName] = '" & dhdConnection.DatabaseName & "' AND [SchemaName] = '" & strSchemaName & "' AND [TableName] = '" & strTableName & "' 	AND [DateStart] < '" & dtmStartDate.ToString("yyyy-MM-dd") & "' AND COALESCE([DateStop],'2999-12-31') > '" & dtmStartDate.ToString("yyyy-MM-dd") & "' AND [Active] = 1"
+        strUpdate = "UPDATE dbo.SmartUpdate SET [DateStop] = '" & dtmStartDate.AddDays(-1).ToString("yyyy-MM-dd") & "' WHERE [DataBaseName] = '" & SeqData.dhdConnection.DatabaseName & "' AND [SchemaName] = '" & strSchemaName & "' AND [TableName] = '" & strTableName & "' 	AND [DateStart] < '" & dtmStartDate.ToString("yyyy-MM-dd") & "' AND COALESCE([DateStop],'2999-12-31') > '" & dtmStartDate.ToString("yyyy-MM-dd") & "' AND [Active] = 1"
         If dtmEndDate = Nothing Then dtmEndDate = "2999-12-31"
-        strDelete = "UPDATE dbo.SmartUpdate SET [Active] = 0 WHERE [DataBaseName] = '" & dhdConnection.DatabaseName & "' AND [SchemaName] = '" & strSchemaName & "' AND [TableName] = '" & strTableName & "' AND [DateStart] BETWEEN '" & dtmStartDate.ToString("yyyy-MM-dd") & "' AND '" & dtmEndDate.ToString("yyyy-MM-dd") & "' AND [Active] = 1"
+        strDelete = "UPDATE dbo.SmartUpdate SET [Active] = 0 WHERE [DataBaseName] = '" & SeqData.dhdConnection.DatabaseName & "' AND [SchemaName] = '" & strSchemaName & "' AND [TableName] = '" & strTableName & "' AND [DateStart] BETWEEN '" & dtmStartDate.ToString("yyyy-MM-dd") & "' AND '" & dtmEndDate.ToString("yyyy-MM-dd") & "' AND [Active] = 1"
         'strDelete = "DELETE FROM dbo.SmartUpdate WHERE [DataBaseName] = '" & dhdConnection.DatabaseName & "' AND [SchemaName] = '" & strSchemaName & "' AND [TableName] = '" & strTableName & "'"
 
         'get compare columns & PK columns
@@ -175,14 +211,14 @@
 
         'save to table dbo.SmartUpdate
         Try
-            QueryDb(dhdConnection, strUpdate, 0)
-            QueryDb(dhdConnection, strDelete, 0)
-            QueryDb(dhdConnection, strInsert, 0)
-            lblStatusText.Text = "Configuration Saved to SmartUpdate Table on connection: " & CurStatus.Connection
+            SeqData.QueryDb(SeqData.dhdConnection, strUpdate, 0)
+            SeqData.QueryDb(SeqData.dhdConnection, strDelete, 0)
+            SeqData.QueryDb(SeqData.dhdConnection, strInsert, 0)
+            lblStatusText.Text = "Configuration Saved to SmartUpdate Table on connection: " & SeqData.curStatus.Connection
         Catch ex As Exception
             lblStatusText.Text = "There was an error saving the configuration. Check the log for more details"
             MessageBox.Show("There was an error saving the configuration: " & Environment.NewLine & ex.Message)
-            WriteLog("There was an error saving the configuration: " & Environment.NewLine & ex.Message, 1)
+            SeqData.WriteLog("There was an error saving the configuration: " & Environment.NewLine & ex.Message, 1)
         End Try
 
 
@@ -218,17 +254,20 @@
 
     Private Sub btnAddSmartUpdateSchedule_Click(sender As Object, e As EventArgs) Handles btnAddSmartUpdateSchedule.Click
         'MessageBox.Show("The Scheduler is not yet operational. Please schedule the SmartUpdate Command manually.")
-
+        If txtSmartUpdateCommand.Text.Length = 0 Then
+            lblStatusText.Text = "There is no command to schedule, aborting action"
+            Exit Sub
+        End If
         'get logpath
-        Dim strLogPath As String = GetDefaultLogPath(dhdConnection)
+        Dim strLogPath As String = GetDefaultLogPath(SeqData.dhdConnection)
         'get jobname
-        Dim strJobName As String = GetJobName(dhdConnection, "SmartUpdate")
+        Dim strJobName As String = GetJobName(SeqData.dhdConnection, "SmartUpdate")
         If strJobName = "" Then
             lblStatusText.Text = "Job SmartUpdate was not found on the server. Create the job first with the scheduler (Settings)"
             Exit Sub
         End If
         'get JobStepCount
-        Dim intJobStepCount As Integer = GetJobStepCount(dhdConnection, strJobName)
+        Dim intJobStepCount As Integer = GetJobStepCount(SeqData.dhdConnection, strJobName)
         If intJobStepCount = -1 Then
             lblStatusText.Text = "There was an error retrieving information about the SmartUpdate Job, aborting action"
             Exit Sub
@@ -245,12 +284,12 @@
         strQuery &= " @step_name='SU_" & txtSourceTable.Text & "_" & txtTargetTable.Text & "',"
         strQuery &= " @subsystem=N'TSQL',"
         strQuery &= " @command='" & strSQL & "',"
-        strQuery &= " @database_name='" & dhdConnection.DatabaseName & "',"
+        strQuery &= " @database_name='" & SeqData.dhdConnection.DatabaseName & "',"
         strQuery &= " @output_file_name='" & strLogPath & "\SmartUpdate.log',"
         strQuery &= " @flags=" & intFlags & ";"
 
-        QueryDb(dhdConnection, strQuery, 0)
-        lblStatusText.Text = "Jobstep added to job: " & strJobName & " on database: " & dhdConnection.DatabaseName
+        SeqData.QueryDb(SeqData.dhdConnection, strQuery, 0)
+        lblStatusText.Text = "Jobstep added to job: " & strJobName & " on database: " & SeqData.dhdConnection.DatabaseName
     End Sub
 
     Private Sub LoadTables()
@@ -259,9 +298,9 @@
     End Sub
 
     Private Sub CrawlTables(blnCrawlViews As Boolean, lstTarget As ListBox)
-        If CheckSqlVersion(dhdConnection) = False Then Exit Sub
+        If CheckSqlVersion(SeqData.dhdConnection) = False Then Exit Sub
 
-        Dim lstNewTables As List(Of String) = LoadTablesList(dhdConnection, blnCrawlViews)
+        Dim lstNewTables As List(Of String) = LoadTablesList(SeqData.dhdConnection, blnCrawlViews)
 
         If lstNewTables Is Nothing Then
             CursorControl()
@@ -401,8 +440,8 @@
 
         Dim dtsTables As New DataSet
         Dim blnSourceOnly As Boolean = False
-        dtsTables = QueryDb(dhdConnection, strSQL, True, 5)
-        If DatasetCheck(dtsTables) = False Then Exit Sub
+        dtsTables = SeqData.QueryDb(SeqData.dhdConnection, strSQL, True, 5)
+        If SeqData.dhdText.DatasetCheck(dtsTables) = False Then Exit Sub
         PanelsClear()
         For intRowCount1 As Integer = 0 To dtsTables.Tables(0).Rows.Count - 1
             If dtsTables.Tables.Item(0).Rows(intRowCount1).Item("tgtSchemaName").GetType().ToString = "System.DBNull" Then
@@ -412,7 +451,7 @@
                 SourceDataTypeAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("srcColName"), dtsTables.Tables(0).Rows(intRowCount1).Item("srcDataType"), blnSourceOnly)
                 SourcePkAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("srcColName"), dtsTables.Tables(0).Rows(intRowCount1).Item("srcPK"), dtsTables.Tables(0).Rows(intRowCount1).Item("srcIdentity"), blnSourceOnly)
                 If blnSourceOnly = True Then
-                    CompareColumnAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("srcColName"), CompareDataType(dtsTables.Tables(0).Rows(intRowCount1).Item("srcDataType")))
+                    CompareColumnAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("srcColName"), SeqData.CompareDataType(dtsTables.Tables(0).Rows(intRowCount1).Item("srcDataType")))
                     chkCreateTargetTable.Checked = True
                 Else
                     chkCreateTargetTable.Checked = False
@@ -432,7 +471,7 @@
                 TargetDataTypeAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("tgtColName"), dtsTables.Tables(0).Rows(intRowCount1).Item("tgtDataType"), True)
                 SourcePkAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("srcColName"), dtsTables.Tables(0).Rows(intRowCount1).Item("srcPK"), dtsTables.Tables(0).Rows(intRowCount1).Item("srcIdentity"), True)
                 TargetPkAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("tgtColName"), dtsTables.Tables(0).Rows(intRowCount1).Item("tgtPK"), dtsTables.Tables(0).Rows(intRowCount1).Item("tgtIdentity"), True)
-                CompareColumnAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("srcColName"), CompareDataType(dtsTables.Tables(0).Rows(intRowCount1).Item("srcDataType")))
+                CompareColumnAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("srcColName"), SeqData.CompareDataType(dtsTables.Tables(0).Rows(intRowCount1).Item("srcDataType")))
             End If
 
         Next
@@ -483,9 +522,9 @@
         txtNew.Enabled = blnEnableCC
         txtNew.Width = 166
         pnlSourceTable.Controls.Add(txtNew)
-        txtNew.Top = ((pnlSourceTable.Controls.Count - 1) * CurVar.FieldHeight)
+        txtNew.Top = ((pnlSourceTable.Controls.Count - 1) * SeqData.curVar.FieldHeight)
         If pnlSourceTable.Height < txtNew.Top + txtNew.Height Then pnlSourceTable.Height = txtNew.Top + txtNew.Height
-        txtNew.Left = CurVar.BuildMargin
+        txtNew.Left = SeqData.curVar.BuildMargin
     End Sub
 
     Private Sub SourceDataTypeAdd(strFieldName As String, strDataType As String, blnEnableCC As Boolean)
@@ -496,9 +535,9 @@
         txtNew.Enabled = blnEnableCC
         txtNew.Width = 117
         pnlSourceDataType.Controls.Add(txtNew)
-        txtNew.Top = ((pnlSourceTable.Controls.Count - 1) * CurVar.FieldHeight)
+        txtNew.Top = ((pnlSourceTable.Controls.Count - 1) * SeqData.curVar.FieldHeight)
         pnlSourceDataType.Height = pnlSourceTable.Height
-        txtNew.Left = CurVar.BuildMargin
+        txtNew.Left = SeqData.curVar.BuildMargin
     End Sub
 
     Private Sub SourcePkAdd(strFieldName As String, blnFieldPK As Boolean, blnFieldIdentity As Boolean, blnEnableCC As Boolean)
@@ -508,9 +547,9 @@
         chkNew.Tag = blnFieldIdentity
         chkNew.Enabled = blnEnableCC
         pnlSourcePrimaryKey.Controls.Add(chkNew)
-        chkNew.Top = ((pnlSourceTable.Controls.Count - 1) * CurVar.FieldHeight)
+        chkNew.Top = ((pnlSourceTable.Controls.Count - 1) * SeqData.curVar.FieldHeight)
         pnlSourcePrimaryKey.Height = pnlSourceTable.Height
-        chkNew.Left = CurVar.BuildMargin
+        chkNew.Left = SeqData.curVar.BuildMargin
     End Sub
 
     Private Sub TargetFieldAdd(strFieldName As String, blnEnableCC As Boolean)
@@ -521,9 +560,9 @@
         txtNew.Enabled = blnEnableCC
         txtNew.Width = 166
         pnlTargetTable.Controls.Add(txtNew)
-        txtNew.Top = ((pnlTargetTable.Controls.Count - 1) * CurVar.FieldHeight)
+        txtNew.Top = ((pnlTargetTable.Controls.Count - 1) * SeqData.curVar.FieldHeight)
         If pnlTargetTable.Height < txtNew.Top + txtNew.Height Then pnlTargetTable.Height = txtNew.Top + txtNew.Height
-        txtNew.Left = CurVar.BuildMargin
+        txtNew.Left = SeqData.curVar.BuildMargin
 
     End Sub
 
@@ -535,9 +574,9 @@
         txtNew.Enabled = blnEnableCC
         txtNew.Width = 117
         pnlTargetDataType.Controls.Add(txtNew)
-        txtNew.Top = ((pnlTargetDataType.Controls.Count - 1) * CurVar.FieldHeight)
+        txtNew.Top = ((pnlTargetDataType.Controls.Count - 1) * SeqData.curVar.FieldHeight)
         pnlTargetDataType.Height = pnlTargetTable.Height
-        txtNew.Left = CurVar.BuildMargin
+        txtNew.Left = SeqData.curVar.BuildMargin
     End Sub
 
     Private Sub TargetPkAdd(strFieldName As String, blnFieldPK As Boolean, blnFieldIdentity As Boolean, blnEnableCC As Boolean)
@@ -547,9 +586,9 @@
         chkNew.Tag = blnFieldIdentity
         chkNew.Enabled = blnEnableCC
         pnlTargetPrimaryKey.Controls.Add(chkNew)
-        chkNew.Top = ((pnlTargetTable.Controls.Count - 1) * CurVar.FieldHeight)
+        chkNew.Top = ((pnlTargetTable.Controls.Count - 1) * SeqData.curVar.FieldHeight)
         pnlTargetPrimaryKey.Height = pnlTargetTable.Height
-        chkNew.Left = CurVar.BuildMargin
+        chkNew.Left = SeqData.curVar.BuildMargin
     End Sub
 
     Private Sub CompareColumnAdd(strFieldName As String, blnEnableCC As Boolean)
@@ -559,9 +598,9 @@
         chkNew.Tag = blnEnableCC
         chkNew.Enabled = blnEnableCC
         pnlCompareColumn.Controls.Add(chkNew)
-        chkNew.Top = ((pnlSourceTable.Controls.Count - 1) * CurVar.FieldHeight)
+        chkNew.Top = ((pnlSourceTable.Controls.Count - 1) * SeqData.curVar.FieldHeight)
         pnlCompareColumn.Height = pnlSourceTable.Height
-        chkNew.Left = CurVar.BuildMargin
+        chkNew.Left = SeqData.curVar.BuildMargin
     End Sub
 
     Private Sub CheckPrimaryKey(pnlInput As Panel)
@@ -620,7 +659,7 @@
                 End If
             Next
             If strPrmaryKey = "True" Or strCompare = "True" Then
-                strQuery &= "UNION SELECT '" & dhdConnection.DatabaseName & "', '" & strSchema & "', '" & strTable & "', '" & strColumnName & "', '" & strDataType & "', '" & strPrmaryKey & "', '" & strCompare & "', '" & dtmStart.ToString("yyyy-MM-dd") & "', " & If(chkNoEndDate.Checked = True, "NULL", "'" & dtmEnd.ToString("yyyy-MM-dd") & "'") & ",1" & Environment.NewLine
+                strQuery &= "UNION SELECT '" & SeqData.dhdConnection.DatabaseName & "', '" & strSchema & "', '" & strTable & "', '" & strColumnName & "', '" & strDataType & "', '" & strPrmaryKey & "', '" & strCompare & "', '" & dtmStart.ToString("yyyy-MM-dd") & "', " & If(chkNoEndDate.Checked = True, "NULL", "'" & dtmEnd.ToString("yyyy-MM-dd") & "'") & ",1" & Environment.NewLine
             End If
         Next
 

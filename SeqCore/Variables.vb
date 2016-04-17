@@ -1,6 +1,8 @@
 ﻿Public Class Variables
 
 #Region "General"
+    Private _DebugMode As Boolean = False
+    Private _DevMode As Boolean = False
     Private _UsersetLocation As String = "REGISTRY"
     Private _BuildMargin As Integer = 5
     Private _FieldHeight As Integer = 20
@@ -12,6 +14,24 @@
     Private _LimitLookupLists As Boolean = True
     Private _LimitLookupListsCount As Integer = 100
     Private _IncludeDate As Boolean = False
+
+    Public Property DebugMode() As Boolean
+        Get
+            Return _DebugMode
+        End Get
+        Set(ByVal Value As Boolean)
+            _DebugMode = Value
+        End Set
+    End Property
+
+    Public Property DevMode() As Boolean
+        Get
+            Return _DevMode
+        End Get
+        Set(ByVal Value As Boolean)
+            _DevMode = Value
+        End Set
+    End Property
 
     Public Property UsersetLocation() As String
         Get
@@ -112,6 +132,79 @@
         End Set
     End Property
 
+#End Region
+
+#Region "Export Data"
+    Private _ConvertToText As Boolean = False
+    Private _ConvertToNull As Boolean = False
+    Private _ShowFile As Boolean = False
+    Private _HasHeaders As Boolean = True
+    Private _Delimiter As String = ","
+    Private _QuoteValues As Boolean = False
+    Private _CreateDir As Boolean = False
+
+    Public Property ConvertToText() As Boolean
+        Get
+            Return _ConvertToText
+        End Get
+        Set(ByVal Value As Boolean)
+            _ConvertToText = Value
+        End Set
+    End Property
+
+    Public Property ConvertToNull() As Boolean
+        Get
+            Return _ConvertToNull
+        End Get
+        Set(ByVal Value As Boolean)
+            _ConvertToNull = Value
+        End Set
+    End Property
+
+    Public Property ShowFile() As Boolean
+        Get
+            Return _ShowFile
+        End Get
+        Set(ByVal Value As Boolean)
+            _ShowFile = Value
+        End Set
+    End Property
+
+    Public Property HasHeaders() As Boolean
+        Get
+            Return _HasHeaders
+        End Get
+        Set(ByVal Value As Boolean)
+            _HasHeaders = Value
+        End Set
+    End Property
+
+    Public Property Delimiter() As String
+        Get
+            Return _Delimiter
+        End Get
+        Set(ByVal Value As String)
+            _Delimiter = Value
+        End Set
+    End Property
+
+    Public Property QuoteValues() As String
+        Get
+            Return _QuoteValues
+        End Get
+        Set(ByVal Value As String)
+            _QuoteValues = Value
+        End Set
+    End Property
+
+    Public Property CreateDir() As String
+        Get
+            Return _CreateDir
+        End Get
+        Set(ByVal Value As String)
+            _CreateDir = Value
+        End Set
+    End Property
 
 #End Region
 
@@ -242,7 +335,7 @@
 #End Region
 
 #Region "XML"
-    Private _DefaultConfigFilePath As String = Application.StartupPath & "\Config"
+    Private _DefaultConfigFilePath As String = System.AppDomain.CurrentDomain.BaseDirectory & "Config"
     Private _GeneralSettings As String = _DefaultConfigFilePath & "\" & "SequenchelSettings.xml"
     Private _ConnectionsFile As String = _DefaultConfigFilePath & "\" & "SDBAConnections.xml"
     Private _ConnectionDefault As String = ""

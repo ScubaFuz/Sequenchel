@@ -6,7 +6,7 @@
     Friend blnLicensedName As Boolean = True
     Friend blnMajorVersion As Boolean = True
     Friend blnExpiryDate As Boolean = False
-    Friend blnLicenseValidated = False
+    'Friend blnLicenseValidated = False
 
     Private ReadOnly _strKeyCharacters As String = "AB5CDE3FGHJK9LM65NPQRSTUV74W2XY8Z"
 

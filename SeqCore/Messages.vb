@@ -1,5 +1,8 @@
 ﻿Public Class Messages
 
+    Private _ErrorLevel As Integer = 0
+    Private _ErrorMessage As String = ""
+
     Private _strGeneralError As String = "There was an undefined error."
     Private _strCheckLog As String = "Check the logfile for more information."
     Private _strCheckSettings As String = "please check your settings."
@@ -37,6 +40,23 @@
     Private _strEnterEmailAddress As String = "Please enter a valid Email Address"
     Private _strinvalidEmailAddress As String = "The Email Address is not valid"
 
+    Public Property ErrorLevel() As Integer
+        Get
+            Return _ErrorLevel
+        End Get
+        Set(ByVal Value As Integer)
+            _ErrorLevel = Value
+        End Set
+    End Property
+
+    Public Property ErrorMessage() As String
+        Get
+            Return _ErrorMessage
+        End Get
+        Set(ByVal Value As String)
+            _ErrorMessage = Value
+        End Set
+    End Property
 
     Public Property strGeneralError() As String
         Get

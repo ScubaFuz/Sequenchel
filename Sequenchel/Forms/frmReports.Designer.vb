@@ -27,7 +27,7 @@ Partial Class frmReports
         Me.lblLicense = New System.Windows.Forms.Label()
         Me.tabReports = New System.Windows.Forms.TabControl()
         Me.tpgReportDefinition = New System.Windows.Forms.TabPage()
-        Me.pnlReportName = New System.Windows.Forms.Panel()
+        Me.pnlReportConnection = New System.Windows.Forms.Panel()
         Me.lblReport = New System.Windows.Forms.Label()
         Me.cbxReportName = New System.Windows.Forms.ComboBox()
         Me.btnReportAddOrUpdate = New System.Windows.Forms.Button()
@@ -41,21 +41,22 @@ Partial Class frmReports
         Me.colAvTableName = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.colAvFieldAlias = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.lblAvailableFields = New System.Windows.Forms.Label()
-        Me.sptReport = New System.Windows.Forms.SplitContainer()
+        Me.sptReportFields = New System.Windows.Forms.SplitContainer()
+        Me.sptReportTables = New System.Windows.Forms.SplitContainer()
+        Me.pnlSplitFields = New System.Windows.Forms.Panel()
+        Me.btnReportFieldAdd = New System.Windows.Forms.Button()
+        Me.btnReportFieldRemove = New System.Windows.Forms.Button()
         Me.lvwSelectedFields = New System.Windows.Forms.ListView()
         Me.colSeltableName = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.colSelFieldAlias = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.pnlReportHeaders = New System.Windows.Forms.Panel()
-        Me.lblReportSortOrder = New System.Windows.Forms.Label()
-        Me.lblReportSort = New System.Windows.Forms.Label()
-        Me.lblReportShowMode = New System.Windows.Forms.Label()
-        Me.lblReportFilterMode = New System.Windows.Forms.Label()
-        Me.lblReportFilterText = New System.Windows.Forms.Label()
-        Me.lblReportFilterType = New System.Windows.Forms.Label()
-        Me.lblReportFilter = New System.Windows.Forms.Label()
-        Me.lblReportSelectedFields = New System.Windows.Forms.Label()
-        Me.btnReportFieldRemove = New System.Windows.Forms.Button()
-        Me.btnReportFieldAdd = New System.Windows.Forms.Button()
+        Me.lblSelectedFields = New System.Windows.Forms.Label()
+        Me.pnlSplitTables = New System.Windows.Forms.Panel()
+        Me.lblSelectedTables = New System.Windows.Forms.Label()
+        Me.pnlSplitFields2 = New System.Windows.Forms.Panel()
+        Me.lvwSelectedTables = New System.Windows.Forms.ListView()
+        Me.colTable = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.sptReport = New System.Windows.Forms.SplitContainer()
+        Me.pnlSplitSelectedFields = New System.Windows.Forms.Panel()
         Me.btnReportFieldDown = New System.Windows.Forms.Button()
         Me.btnReportFieldUp = New System.Windows.Forms.Button()
         Me.pnlSelectedFieldsMain = New System.Windows.Forms.Panel()
@@ -69,25 +70,32 @@ Partial Class frmReports
         Me.pnlReportShowMode = New System.Windows.Forms.Panel()
         Me.pnlReportDisplay = New System.Windows.Forms.Panel()
         Me.pnlReportLabel = New System.Windows.Forms.Panel()
-        Me.lblSelectedFields = New System.Windows.Forms.Label()
-        Me.lvwSelectedTables = New System.Windows.Forms.ListView()
-        Me.colTable = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.pnlReportHeaders = New System.Windows.Forms.Panel()
+        Me.chkReportShow = New System.Windows.Forms.CheckBox()
+        Me.lblReportSortOrder = New System.Windows.Forms.Label()
+        Me.lblReportSort = New System.Windows.Forms.Label()
+        Me.lblReportShowMode = New System.Windows.Forms.Label()
+        Me.lblReportFilterMode = New System.Windows.Forms.Label()
+        Me.lblReportFilterText = New System.Windows.Forms.Label()
+        Me.lblReportFilterType = New System.Windows.Forms.Label()
+        Me.lblReportFilter = New System.Windows.Forms.Label()
+        Me.lblReportSelectedFields = New System.Windows.Forms.Label()
+        Me.pnlSplitSelectedTables = New System.Windows.Forms.Panel()
+        Me.btnReportTableUp = New System.Windows.Forms.Button()
         Me.btnReportTableDown = New System.Windows.Forms.Button()
         Me.pnlRelationsMain = New System.Windows.Forms.Panel()
         Me.pnlRelations = New System.Windows.Forms.Panel()
-        Me.pnlRelationsField = New System.Windows.Forms.Panel()
         Me.pnlRelationsJoinType = New System.Windows.Forms.Panel()
+        Me.pnlRelationsField = New System.Windows.Forms.Panel()
         Me.pnlRelationsRelation = New System.Windows.Forms.Panel()
         Me.pnlRelationsUse = New System.Windows.Forms.Panel()
         Me.pnlRelationsLabel = New System.Windows.Forms.Panel()
-        Me.btnReportTableUp = New System.Windows.Forms.Button()
         Me.pnlRelationHeaders = New System.Windows.Forms.Panel()
         Me.lblSourceField = New System.Windows.Forms.Label()
         Me.lblRelationUse = New System.Windows.Forms.Label()
         Me.lblRelationsJoinType = New System.Windows.Forms.Label()
         Me.lblRelationsRelation = New System.Windows.Forms.Label()
         Me.lblRelationsSelectedTable = New System.Windows.Forms.Label()
-        Me.lblSelectedTables = New System.Windows.Forms.Label()
         Me.btnRevertChanges = New System.Windows.Forms.Button()
         Me.btnQueryShow = New System.Windows.Forms.Button()
         Me.txtTop = New System.Windows.Forms.TextBox()
@@ -105,6 +113,8 @@ Partial Class frmReports
         Me.lblConnection = New System.Windows.Forms.Label()
         Me.cbxConnection = New System.Windows.Forms.ComboBox()
         Me.tpgReportResult = New System.Windows.Forms.TabPage()
+        Me.cbxEmailResults = New System.Windows.Forms.ComboBox()
+        Me.btnEmailResults = New System.Windows.Forms.Button()
         Me.lblElapsedTime = New System.Windows.Forms.Label()
         Me.btnDefinition = New System.Windows.Forms.Button()
         Me.btnExportToFile = New System.Windows.Forms.Button()
@@ -119,26 +129,40 @@ Partial Class frmReports
         Me.btnTest = New System.Windows.Forms.Button()
         Me.btnClose = New System.Windows.Forms.Button()
         Me.tmrElapsedTime = New System.Windows.Forms.Timer(Me.components)
-        Me.chkReportShow = New System.Windows.Forms.CheckBox()
+        Me.lblStatus = New System.Windows.Forms.Label()
+        Me.pnlReportButtons = New System.Windows.Forms.Panel()
         Me.tabReports.SuspendLayout()
         Me.tpgReportDefinition.SuspendLayout()
-        Me.pnlReportName.SuspendLayout()
+        Me.pnlReportConnection.SuspendLayout()
         CType(Me.sptReports, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.sptReports.Panel1.SuspendLayout()
         Me.sptReports.Panel2.SuspendLayout()
         Me.sptReports.SuspendLayout()
+        CType(Me.sptReportFields, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.sptReportFields.Panel1.SuspendLayout()
+        Me.sptReportFields.Panel2.SuspendLayout()
+        Me.sptReportFields.SuspendLayout()
+        CType(Me.sptReportTables, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.sptReportTables.Panel1.SuspendLayout()
+        Me.sptReportTables.Panel2.SuspendLayout()
+        Me.sptReportTables.SuspendLayout()
+        Me.pnlSplitFields.SuspendLayout()
+        Me.pnlSplitTables.SuspendLayout()
         CType(Me.sptReport, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.sptReport.Panel1.SuspendLayout()
         Me.sptReport.Panel2.SuspendLayout()
         Me.sptReport.SuspendLayout()
-        Me.pnlReportHeaders.SuspendLayout()
+        Me.pnlSplitSelectedFields.SuspendLayout()
         Me.pnlSelectedFieldsMain.SuspendLayout()
         Me.pnlSelectedFields.SuspendLayout()
+        Me.pnlReportHeaders.SuspendLayout()
+        Me.pnlSplitSelectedTables.SuspendLayout()
         Me.pnlRelationsMain.SuspendLayout()
         Me.pnlRelations.SuspendLayout()
         Me.pnlRelationHeaders.SuspendLayout()
         Me.tpgReportResult.SuspendLayout()
         CType(Me.dgvReport, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.pnlReportButtons.SuspendLayout()
         Me.SuspendLayout()
         '
         'lblLicense
@@ -167,28 +191,9 @@ Partial Class frmReports
         '
         'tpgReportDefinition
         '
-        Me.tpgReportDefinition.Controls.Add(Me.pnlReportName)
-        Me.tpgReportDefinition.Controls.Add(Me.lblDescription)
-        Me.tpgReportDefinition.Controls.Add(Me.txtDescription)
-        Me.tpgReportDefinition.Controls.Add(Me.btnReportExport)
-        Me.tpgReportDefinition.Controls.Add(Me.btnReportImport)
         Me.tpgReportDefinition.Controls.Add(Me.sptReports)
-        Me.tpgReportDefinition.Controls.Add(Me.btnRevertChanges)
-        Me.tpgReportDefinition.Controls.Add(Me.btnQueryShow)
-        Me.tpgReportDefinition.Controls.Add(Me.txtTop)
-        Me.tpgReportDefinition.Controls.Add(Me.chkTop)
-        Me.tpgReportDefinition.Controls.Add(Me.chkDistinct)
-        Me.tpgReportDefinition.Controls.Add(Me.btnReportCreate)
-        Me.tpgReportDefinition.Controls.Add(Me.btnReportClear)
-        Me.tpgReportDefinition.Controls.Add(Me.btnTablesReload)
-        Me.tpgReportDefinition.Controls.Add(Me.btnTableSetsReload)
-        Me.tpgReportDefinition.Controls.Add(Me.btnConnectionsReload)
-        Me.tpgReportDefinition.Controls.Add(Me.lblTable)
-        Me.tpgReportDefinition.Controls.Add(Me.cbxTable)
-        Me.tpgReportDefinition.Controls.Add(Me.lblTableSet)
-        Me.tpgReportDefinition.Controls.Add(Me.cbxTableSet)
-        Me.tpgReportDefinition.Controls.Add(Me.lblConnection)
-        Me.tpgReportDefinition.Controls.Add(Me.cbxConnection)
+        Me.tpgReportDefinition.Controls.Add(Me.pnlReportButtons)
+        Me.tpgReportDefinition.Controls.Add(Me.pnlReportConnection)
         Me.tpgReportDefinition.Location = New System.Drawing.Point(4, 22)
         Me.tpgReportDefinition.Name = "tpgReportDefinition"
         Me.tpgReportDefinition.Padding = New System.Windows.Forms.Padding(3)
@@ -197,21 +202,32 @@ Partial Class frmReports
         Me.tpgReportDefinition.Text = "Report Definition"
         Me.tpgReportDefinition.UseVisualStyleBackColor = True
         '
-        'pnlReportName
+        'pnlReportConnection
         '
-        Me.pnlReportName.Controls.Add(Me.lblReport)
-        Me.pnlReportName.Controls.Add(Me.cbxReportName)
-        Me.pnlReportName.Controls.Add(Me.btnReportAddOrUpdate)
-        Me.pnlReportName.Controls.Add(Me.btnReportDelete)
-        Me.pnlReportName.Location = New System.Drawing.Point(760, 10)
-        Me.pnlReportName.Name = "pnlReportName"
-        Me.pnlReportName.Size = New System.Drawing.Size(486, 45)
-        Me.pnlReportName.TabIndex = 197
+        Me.pnlReportConnection.Controls.Add(Me.lblReport)
+        Me.pnlReportConnection.Controls.Add(Me.cbxReportName)
+        Me.pnlReportConnection.Controls.Add(Me.btnReportAddOrUpdate)
+        Me.pnlReportConnection.Controls.Add(Me.btnTablesReload)
+        Me.pnlReportConnection.Controls.Add(Me.btnReportDelete)
+        Me.pnlReportConnection.Controls.Add(Me.btnTableSetsReload)
+        Me.pnlReportConnection.Controls.Add(Me.lblConnection)
+        Me.pnlReportConnection.Controls.Add(Me.btnConnectionsReload)
+        Me.pnlReportConnection.Controls.Add(Me.cbxConnection)
+        Me.pnlReportConnection.Controls.Add(Me.lblTable)
+        Me.pnlReportConnection.Controls.Add(Me.cbxTableSet)
+        Me.pnlReportConnection.Controls.Add(Me.cbxTable)
+        Me.pnlReportConnection.Controls.Add(Me.lblTableSet)
+        Me.pnlReportConnection.Dock = System.Windows.Forms.DockStyle.Top
+        Me.pnlReportConnection.Location = New System.Drawing.Point(3, 3)
+        Me.pnlReportConnection.Name = "pnlReportConnection"
+        Me.pnlReportConnection.Size = New System.Drawing.Size(1246, 51)
+        Me.pnlReportConnection.TabIndex = 197
         '
         'lblReport
         '
+        Me.lblReport.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblReport.AutoSize = True
-        Me.lblReport.Location = New System.Drawing.Point(7, 0)
+        Me.lblReport.Location = New System.Drawing.Point(767, 4)
         Me.lblReport.Name = "lblReport"
         Me.lblReport.Size = New System.Drawing.Size(39, 13)
         Me.lblReport.TabIndex = 171
@@ -219,8 +235,9 @@ Partial Class frmReports
         '
         'cbxReportName
         '
+        Me.cbxReportName.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.cbxReportName.FormattingEnabled = True
-        Me.cbxReportName.Location = New System.Drawing.Point(8, 16)
+        Me.cbxReportName.Location = New System.Drawing.Point(768, 20)
         Me.cbxReportName.Name = "cbxReportName"
         Me.cbxReportName.Size = New System.Drawing.Size(197, 21)
         Me.cbxReportName.Sorted = True
@@ -228,7 +245,8 @@ Partial Class frmReports
         '
         'btnReportAddOrUpdate
         '
-        Me.btnReportAddOrUpdate.Location = New System.Drawing.Point(211, 15)
+        Me.btnReportAddOrUpdate.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnReportAddOrUpdate.Location = New System.Drawing.Point(971, 19)
         Me.btnReportAddOrUpdate.Name = "btnReportAddOrUpdate"
         Me.btnReportAddOrUpdate.Size = New System.Drawing.Size(131, 20)
         Me.btnReportAddOrUpdate.TabIndex = 4
@@ -236,7 +254,8 @@ Partial Class frmReports
         '
         'btnReportDelete
         '
-        Me.btnReportDelete.Location = New System.Drawing.Point(348, 15)
+        Me.btnReportDelete.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnReportDelete.Location = New System.Drawing.Point(1108, 19)
         Me.btnReportDelete.Name = "btnReportDelete"
         Me.btnReportDelete.Size = New System.Drawing.Size(131, 20)
         Me.btnReportDelete.TabIndex = 5
@@ -246,7 +265,7 @@ Partial Class frmReports
         '
         Me.lblDescription.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.lblDescription.AutoSize = True
-        Me.lblDescription.Location = New System.Drawing.Point(186, 664)
+        Me.lblDescription.Location = New System.Drawing.Point(185, 7)
         Me.lblDescription.Name = "lblDescription"
         Me.lblDescription.Size = New System.Drawing.Size(95, 13)
         Me.lblDescription.TabIndex = 168
@@ -256,16 +275,16 @@ Partial Class frmReports
         '
         Me.txtDescription.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.txtDescription.Location = New System.Drawing.Point(189, 677)
+        Me.txtDescription.Location = New System.Drawing.Point(186, 21)
         Me.txtDescription.Multiline = True
         Me.txtDescription.Name = "txtDescription"
-        Me.txtDescription.Size = New System.Drawing.Size(541, 46)
+        Me.txtDescription.Size = New System.Drawing.Size(541, 32)
         Me.txtDescription.TabIndex = 196
         '
         'btnReportExport
         '
         Me.btnReportExport.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.btnReportExport.Location = New System.Drawing.Point(9, 677)
+        Me.btnReportExport.Location = New System.Drawing.Point(6, 7)
         Me.btnReportExport.Name = "btnReportExport"
         Me.btnReportExport.Size = New System.Drawing.Size(164, 20)
         Me.btnReportExport.TabIndex = 194
@@ -274,7 +293,7 @@ Partial Class frmReports
         'btnReportImport
         '
         Me.btnReportImport.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.btnReportImport.Location = New System.Drawing.Point(9, 703)
+        Me.btnReportImport.Location = New System.Drawing.Point(6, 33)
         Me.btnReportImport.Name = "btnReportImport"
         Me.btnReportImport.Size = New System.Drawing.Size(164, 20)
         Me.btnReportImport.TabIndex = 195
@@ -282,22 +301,25 @@ Partial Class frmReports
         '
         'sptReports
         '
-        Me.sptReports.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.sptReports.Location = New System.Drawing.Point(6, 54)
+        Me.sptReports.BackColor = System.Drawing.SystemColors.Control
+        Me.sptReports.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.sptReports.Location = New System.Drawing.Point(3, 54)
         Me.sptReports.Name = "sptReports"
         '
         'sptReports.Panel1
         '
+        Me.sptReports.Panel1.BackColor = System.Drawing.SystemColors.Control
         Me.sptReports.Panel1.Controls.Add(Me.lvwAvailableFields)
         Me.sptReports.Panel1.Controls.Add(Me.lblAvailableFields)
+        Me.sptReports.Panel1MinSize = 175
         '
         'sptReports.Panel2
         '
-        Me.sptReports.Panel2.Controls.Add(Me.sptReport)
-        Me.sptReports.Size = New System.Drawing.Size(1240, 605)
-        Me.sptReports.SplitterDistance = 176
+        Me.sptReports.Panel2.BackColor = System.Drawing.SystemColors.Control
+        Me.sptReports.Panel2.Controls.Add(Me.sptReportFields)
+        Me.sptReports.Panel2MinSize = 175
+        Me.sptReports.Size = New System.Drawing.Size(1246, 622)
+        Me.sptReports.SplitterDistance = 175
         Me.sptReports.TabIndex = 193
         '
         'lvwAvailableFields
@@ -307,9 +329,9 @@ Partial Class frmReports
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lvwAvailableFields.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.colAvTableName, Me.colAvFieldAlias})
         Me.lvwAvailableFields.FullRowSelect = True
-        Me.lvwAvailableFields.Location = New System.Drawing.Point(3, 27)
+        Me.lvwAvailableFields.Location = New System.Drawing.Point(0, 25)
         Me.lvwAvailableFields.Name = "lvwAvailableFields"
-        Me.lvwAvailableFields.Size = New System.Drawing.Size(170, 575)
+        Me.lvwAvailableFields.Size = New System.Drawing.Size(174, 596)
         Me.lvwAvailableFields.TabIndex = 0
         Me.lvwAvailableFields.UseCompatibleStateImageBehavior = False
         Me.lvwAvailableFields.View = System.Windows.Forms.View.Details
@@ -333,47 +355,95 @@ Partial Class frmReports
         Me.lblAvailableFields.TabIndex = 167
         Me.lblAvailableFields.Text = "Available Fields"
         '
-        'sptReport
+        'sptReportFields
         '
-        Me.sptReport.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.sptReport.Location = New System.Drawing.Point(0, 0)
-        Me.sptReport.Name = "sptReport"
-        Me.sptReport.Orientation = System.Windows.Forms.Orientation.Horizontal
+        Me.sptReportFields.BackColor = System.Drawing.SystemColors.Control
+        Me.sptReportFields.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.sptReportFields.Location = New System.Drawing.Point(0, 0)
+        Me.sptReportFields.Name = "sptReportFields"
         '
-        'sptReport.Panel1
+        'sptReportFields.Panel1
         '
-        Me.sptReport.Panel1.Controls.Add(Me.lvwSelectedFields)
-        Me.sptReport.Panel1.Controls.Add(Me.pnlReportHeaders)
-        Me.sptReport.Panel1.Controls.Add(Me.btnReportFieldRemove)
-        Me.sptReport.Panel1.Controls.Add(Me.btnReportFieldAdd)
-        Me.sptReport.Panel1.Controls.Add(Me.btnReportFieldDown)
-        Me.sptReport.Panel1.Controls.Add(Me.btnReportFieldUp)
-        Me.sptReport.Panel1.Controls.Add(Me.pnlSelectedFieldsMain)
-        Me.sptReport.Panel1.Controls.Add(Me.lblSelectedFields)
+        Me.sptReportFields.Panel1.BackColor = System.Drawing.SystemColors.Control
+        Me.sptReportFields.Panel1.Controls.Add(Me.sptReportTables)
+        Me.sptReportFields.Panel1MinSize = 200
         '
-        'sptReport.Panel2
+        'sptReportFields.Panel2
         '
-        Me.sptReport.Panel2.Controls.Add(Me.lvwSelectedTables)
-        Me.sptReport.Panel2.Controls.Add(Me.btnReportTableDown)
-        Me.sptReport.Panel2.Controls.Add(Me.pnlRelationsMain)
-        Me.sptReport.Panel2.Controls.Add(Me.btnReportTableUp)
-        Me.sptReport.Panel2.Controls.Add(Me.pnlRelationHeaders)
-        Me.sptReport.Panel2.Controls.Add(Me.lblSelectedTables)
-        Me.sptReport.Size = New System.Drawing.Size(1060, 602)
-        Me.sptReport.SplitterDistance = 428
-        Me.sptReport.TabIndex = 181
+        Me.sptReportFields.Panel2.BackColor = System.Drawing.SystemColors.Control
+        Me.sptReportFields.Panel2.Controls.Add(Me.sptReport)
+        Me.sptReportFields.Panel2MinSize = 200
+        Me.sptReportFields.Size = New System.Drawing.Size(1067, 622)
+        Me.sptReportFields.SplitterDistance = 201
+        Me.sptReportFields.TabIndex = 182
+        '
+        'sptReportTables
+        '
+        Me.sptReportTables.BackColor = System.Drawing.SystemColors.Control
+        Me.sptReportTables.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.sptReportTables.Location = New System.Drawing.Point(0, 0)
+        Me.sptReportTables.Name = "sptReportTables"
+        Me.sptReportTables.Orientation = System.Windows.Forms.Orientation.Horizontal
+        '
+        'sptReportTables.Panel1
+        '
+        Me.sptReportTables.Panel1.BackColor = System.Drawing.SystemColors.Control
+        Me.sptReportTables.Panel1.Controls.Add(Me.pnlSplitFields)
+        Me.sptReportTables.Panel1.Controls.Add(Me.lvwSelectedFields)
+        Me.sptReportTables.Panel1.Controls.Add(Me.lblSelectedFields)
+        Me.sptReportTables.Panel1MinSize = 200
+        '
+        'sptReportTables.Panel2
+        '
+        Me.sptReportTables.Panel2.BackColor = System.Drawing.SystemColors.Control
+        Me.sptReportTables.Panel2.Controls.Add(Me.pnlSplitTables)
+        Me.sptReportTables.Panel2.Controls.Add(Me.pnlSplitFields2)
+        Me.sptReportTables.Panel2.Controls.Add(Me.lvwSelectedTables)
+        Me.sptReportTables.Panel2MinSize = 200
+        Me.sptReportTables.Size = New System.Drawing.Size(201, 622)
+        Me.sptReportTables.SplitterDistance = 418
+        Me.sptReportTables.TabIndex = 0
+        '
+        'pnlSplitFields
+        '
+        Me.pnlSplitFields.Controls.Add(Me.btnReportFieldAdd)
+        Me.pnlSplitFields.Controls.Add(Me.btnReportFieldRemove)
+        Me.pnlSplitFields.Dock = System.Windows.Forms.DockStyle.Left
+        Me.pnlSplitFields.Location = New System.Drawing.Point(0, 0)
+        Me.pnlSplitFields.Name = "pnlSplitFields"
+        Me.pnlSplitFields.Size = New System.Drawing.Size(38, 418)
+        Me.pnlSplitFields.TabIndex = 152
+        '
+        'btnReportFieldAdd
+        '
+        Me.btnReportFieldAdd.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnReportFieldAdd.Image = Global.Sequenchel.My.Resources.Resources.button_right
+        Me.btnReportFieldAdd.Location = New System.Drawing.Point(3, 113)
+        Me.btnReportFieldAdd.Name = "btnReportFieldAdd"
+        Me.btnReportFieldAdd.Size = New System.Drawing.Size(30, 23)
+        Me.btnReportFieldAdd.TabIndex = 1
+        Me.btnReportFieldAdd.UseVisualStyleBackColor = True
+        '
+        'btnReportFieldRemove
+        '
+        Me.btnReportFieldRemove.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnReportFieldRemove.Image = Global.Sequenchel.My.Resources.Resources.button_leftt
+        Me.btnReportFieldRemove.Location = New System.Drawing.Point(3, 142)
+        Me.btnReportFieldRemove.Name = "btnReportFieldRemove"
+        Me.btnReportFieldRemove.Size = New System.Drawing.Size(30, 23)
+        Me.btnReportFieldRemove.TabIndex = 2
+        Me.btnReportFieldRemove.UseVisualStyleBackColor = True
         '
         'lvwSelectedFields
         '
-        Me.lvwSelectedFields.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.lvwSelectedFields.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lvwSelectedFields.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.colSeltableName, Me.colSelFieldAlias})
         Me.lvwSelectedFields.FullRowSelect = True
         Me.lvwSelectedFields.Location = New System.Drawing.Point(38, 25)
         Me.lvwSelectedFields.Name = "lvwSelectedFields"
-        Me.lvwSelectedFields.Size = New System.Drawing.Size(169, 400)
+        Me.lvwSelectedFields.Size = New System.Drawing.Size(162, 392)
         Me.lvwSelectedFields.TabIndex = 0
         Me.lvwSelectedFields.UseCompatibleStateImageBehavior = False
         Me.lvwSelectedFields.View = System.Windows.Forms.View.Details
@@ -388,6 +458,208 @@ Partial Class frmReports
         Me.colSelFieldAlias.Text = "Field"
         Me.colSelFieldAlias.Width = 50
         '
+        'lblSelectedFields
+        '
+        Me.lblSelectedFields.AutoSize = True
+        Me.lblSelectedFields.Location = New System.Drawing.Point(45, 5)
+        Me.lblSelectedFields.Name = "lblSelectedFields"
+        Me.lblSelectedFields.Size = New System.Drawing.Size(79, 13)
+        Me.lblSelectedFields.TabIndex = 150
+        Me.lblSelectedFields.Text = "Selected Fields"
+        '
+        'pnlSplitTables
+        '
+        Me.pnlSplitTables.Controls.Add(Me.lblSelectedTables)
+        Me.pnlSplitTables.Location = New System.Drawing.Point(38, 0)
+        Me.pnlSplitTables.Name = "pnlSplitTables"
+        Me.pnlSplitTables.Size = New System.Drawing.Size(170, 23)
+        Me.pnlSplitTables.TabIndex = 155
+        '
+        'lblSelectedTables
+        '
+        Me.lblSelectedTables.AutoSize = True
+        Me.lblSelectedTables.Location = New System.Drawing.Point(7, 7)
+        Me.lblSelectedTables.Name = "lblSelectedTables"
+        Me.lblSelectedTables.Size = New System.Drawing.Size(84, 13)
+        Me.lblSelectedTables.TabIndex = 153
+        Me.lblSelectedTables.Text = "Selected Tables"
+        '
+        'pnlSplitFields2
+        '
+        Me.pnlSplitFields2.Dock = System.Windows.Forms.DockStyle.Left
+        Me.pnlSplitFields2.Location = New System.Drawing.Point(0, 0)
+        Me.pnlSplitFields2.Name = "pnlSplitFields2"
+        Me.pnlSplitFields2.Size = New System.Drawing.Size(38, 200)
+        Me.pnlSplitFields2.TabIndex = 154
+        '
+        'lvwSelectedTables
+        '
+        Me.lvwSelectedTables.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lvwSelectedTables.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.colTable})
+        Me.lvwSelectedTables.FullRowSelect = True
+        Me.lvwSelectedTables.Location = New System.Drawing.Point(38, 24)
+        Me.lvwSelectedTables.Name = "lvwSelectedTables"
+        Me.lvwSelectedTables.Size = New System.Drawing.Size(162, 175)
+        Me.lvwSelectedTables.TabIndex = 0
+        Me.lvwSelectedTables.UseCompatibleStateImageBehavior = False
+        Me.lvwSelectedTables.View = System.Windows.Forms.View.Details
+        '
+        'colTable
+        '
+        Me.colTable.Text = "Table"
+        Me.colTable.Width = 50
+        '
+        'sptReport
+        '
+        Me.sptReport.BackColor = System.Drawing.SystemColors.Control
+        Me.sptReport.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.sptReport.Location = New System.Drawing.Point(0, 0)
+        Me.sptReport.Name = "sptReport"
+        Me.sptReport.Orientation = System.Windows.Forms.Orientation.Horizontal
+        '
+        'sptReport.Panel1
+        '
+        Me.sptReport.Panel1.BackColor = System.Drawing.SystemColors.Control
+        Me.sptReport.Panel1.Controls.Add(Me.pnlSelectedFieldsMain)
+        Me.sptReport.Panel1.Controls.Add(Me.pnlSplitSelectedFields)
+        Me.sptReport.Panel1MinSize = 200
+        '
+        'sptReport.Panel2
+        '
+        Me.sptReport.Panel2.BackColor = System.Drawing.SystemColors.Control
+        Me.sptReport.Panel2.Controls.Add(Me.pnlRelationsMain)
+        Me.sptReport.Panel2.Controls.Add(Me.pnlSplitSelectedTables)
+        Me.sptReport.Panel2MinSize = 200
+        Me.sptReport.Size = New System.Drawing.Size(862, 622)
+        Me.sptReport.SplitterDistance = 418
+        Me.sptReport.TabIndex = 181
+        '
+        'pnlSplitSelectedFields
+        '
+        Me.pnlSplitSelectedFields.Controls.Add(Me.btnReportFieldDown)
+        Me.pnlSplitSelectedFields.Controls.Add(Me.btnReportFieldUp)
+        Me.pnlSplitSelectedFields.Dock = System.Windows.Forms.DockStyle.Left
+        Me.pnlSplitSelectedFields.Location = New System.Drawing.Point(0, 0)
+        Me.pnlSplitSelectedFields.Name = "pnlSplitSelectedFields"
+        Me.pnlSplitSelectedFields.Size = New System.Drawing.Size(38, 418)
+        Me.pnlSplitSelectedFields.TabIndex = 153
+        '
+        'btnReportFieldDown
+        '
+        Me.btnReportFieldDown.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnReportFieldDown.Image = Global.Sequenchel.My.Resources.Resources.button_down
+        Me.btnReportFieldDown.Location = New System.Drawing.Point(3, 142)
+        Me.btnReportFieldDown.Name = "btnReportFieldDown"
+        Me.btnReportFieldDown.Size = New System.Drawing.Size(30, 23)
+        Me.btnReportFieldDown.TabIndex = 2
+        Me.btnReportFieldDown.UseVisualStyleBackColor = True
+        '
+        'btnReportFieldUp
+        '
+        Me.btnReportFieldUp.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnReportFieldUp.Image = Global.Sequenchel.My.Resources.Resources.button_up
+        Me.btnReportFieldUp.Location = New System.Drawing.Point(3, 113)
+        Me.btnReportFieldUp.Name = "btnReportFieldUp"
+        Me.btnReportFieldUp.Size = New System.Drawing.Size(30, 23)
+        Me.btnReportFieldUp.TabIndex = 1
+        Me.btnReportFieldUp.UseVisualStyleBackColor = True
+        '
+        'pnlSelectedFieldsMain
+        '
+        Me.pnlSelectedFieldsMain.AutoScroll = True
+        Me.pnlSelectedFieldsMain.AutoScrollMargin = New System.Drawing.Size(5, 5)
+        Me.pnlSelectedFieldsMain.BackgroundImage = Global.Sequenchel.My.Resources.Resources.Background_Sequenchel_reliefsquaretransparant30down
+        Me.pnlSelectedFieldsMain.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
+        Me.pnlSelectedFieldsMain.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.pnlSelectedFieldsMain.Controls.Add(Me.pnlSelectedFields)
+        Me.pnlSelectedFieldsMain.Controls.Add(Me.pnlReportHeaders)
+        Me.pnlSelectedFieldsMain.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.pnlSelectedFieldsMain.Location = New System.Drawing.Point(38, 0)
+        Me.pnlSelectedFieldsMain.Name = "pnlSelectedFieldsMain"
+        Me.pnlSelectedFieldsMain.Size = New System.Drawing.Size(824, 418)
+        Me.pnlSelectedFieldsMain.TabIndex = 151
+        '
+        'pnlSelectedFields
+        '
+        Me.pnlSelectedFields.Controls.Add(Me.pnlReportFilterText)
+        Me.pnlSelectedFields.Controls.Add(Me.pnlReportFilterType)
+        Me.pnlSelectedFields.Controls.Add(Me.pnlReportFilterMode)
+        Me.pnlSelectedFields.Controls.Add(Me.pnlReportFilter)
+        Me.pnlSelectedFields.Controls.Add(Me.pnlReportSortOrder)
+        Me.pnlSelectedFields.Controls.Add(Me.pnlReportSort)
+        Me.pnlSelectedFields.Controls.Add(Me.pnlReportShowMode)
+        Me.pnlSelectedFields.Controls.Add(Me.pnlReportDisplay)
+        Me.pnlSelectedFields.Controls.Add(Me.pnlReportLabel)
+        Me.pnlSelectedFields.Location = New System.Drawing.Point(0, 24)
+        Me.pnlSelectedFields.Name = "pnlSelectedFields"
+        Me.pnlSelectedFields.Size = New System.Drawing.Size(800, 31)
+        Me.pnlSelectedFields.TabIndex = 5
+        '
+        'pnlReportFilterText
+        '
+        Me.pnlReportFilterText.Location = New System.Drawing.Point(578, 0)
+        Me.pnlReportFilterText.Name = "pnlReportFilterText"
+        Me.pnlReportFilterText.Size = New System.Drawing.Size(222, 30)
+        Me.pnlReportFilterText.TabIndex = 10
+        '
+        'pnlReportFilterType
+        '
+        Me.pnlReportFilterType.Location = New System.Drawing.Point(493, 0)
+        Me.pnlReportFilterType.Name = "pnlReportFilterType"
+        Me.pnlReportFilterType.Size = New System.Drawing.Size(85, 30)
+        Me.pnlReportFilterType.TabIndex = 9
+        '
+        'pnlReportFilterMode
+        '
+        Me.pnlReportFilterMode.Location = New System.Drawing.Point(408, 0)
+        Me.pnlReportFilterMode.Name = "pnlReportFilterMode"
+        Me.pnlReportFilterMode.Size = New System.Drawing.Size(85, 30)
+        Me.pnlReportFilterMode.TabIndex = 10
+        '
+        'pnlReportFilter
+        '
+        Me.pnlReportFilter.Location = New System.Drawing.Point(378, 0)
+        Me.pnlReportFilter.Name = "pnlReportFilter"
+        Me.pnlReportFilter.Size = New System.Drawing.Size(30, 30)
+        Me.pnlReportFilter.TabIndex = 8
+        '
+        'pnlReportSortOrder
+        '
+        Me.pnlReportSortOrder.Location = New System.Drawing.Point(348, 0)
+        Me.pnlReportSortOrder.Name = "pnlReportSortOrder"
+        Me.pnlReportSortOrder.Size = New System.Drawing.Size(30, 30)
+        Me.pnlReportSortOrder.TabIndex = 9
+        '
+        'pnlReportSort
+        '
+        Me.pnlReportSort.Location = New System.Drawing.Point(288, 0)
+        Me.pnlReportSort.Name = "pnlReportSort"
+        Me.pnlReportSort.Size = New System.Drawing.Size(60, 30)
+        Me.pnlReportSort.TabIndex = 12
+        '
+        'pnlReportShowMode
+        '
+        Me.pnlReportShowMode.Location = New System.Drawing.Point(203, 0)
+        Me.pnlReportShowMode.Name = "pnlReportShowMode"
+        Me.pnlReportShowMode.Size = New System.Drawing.Size(85, 30)
+        Me.pnlReportShowMode.TabIndex = 11
+        '
+        'pnlReportDisplay
+        '
+        Me.pnlReportDisplay.Location = New System.Drawing.Point(173, 0)
+        Me.pnlReportDisplay.Name = "pnlReportDisplay"
+        Me.pnlReportDisplay.Size = New System.Drawing.Size(30, 30)
+        Me.pnlReportDisplay.TabIndex = 7
+        '
+        'pnlReportLabel
+        '
+        Me.pnlReportLabel.Location = New System.Drawing.Point(0, 0)
+        Me.pnlReportLabel.Name = "pnlReportLabel"
+        Me.pnlReportLabel.Size = New System.Drawing.Size(173, 30)
+        Me.pnlReportLabel.TabIndex = 6
+        '
         'pnlReportHeaders
         '
         Me.pnlReportHeaders.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
@@ -401,10 +673,20 @@ Partial Class frmReports
         Me.pnlReportHeaders.Controls.Add(Me.lblReportFilterType)
         Me.pnlReportHeaders.Controls.Add(Me.lblReportFilter)
         Me.pnlReportHeaders.Controls.Add(Me.lblReportSelectedFields)
-        Me.pnlReportHeaders.Location = New System.Drawing.Point(245, -3)
+        Me.pnlReportHeaders.Location = New System.Drawing.Point(0, 0)
         Me.pnlReportHeaders.Name = "pnlReportHeaders"
-        Me.pnlReportHeaders.Size = New System.Drawing.Size(810, 24)
+        Me.pnlReportHeaders.Size = New System.Drawing.Size(816, 24)
         Me.pnlReportHeaders.TabIndex = 154
+        '
+        'chkReportShow
+        '
+        Me.chkReportShow.AutoSize = True
+        Me.chkReportShow.Location = New System.Drawing.Point(155, 6)
+        Me.chkReportShow.Name = "chkReportShow"
+        Me.chkReportShow.Size = New System.Drawing.Size(53, 17)
+        Me.chkReportShow.TabIndex = 126
+        Me.chkReportShow.Text = "Show"
+        Me.chkReportShow.UseVisualStyleBackColor = True
         '
         'lblReportSortOrder
         '
@@ -478,173 +760,31 @@ Partial Class frmReports
         Me.lblReportSelectedFields.TabIndex = 117
         Me.lblReportSelectedFields.Text = "Selected Fields"
         '
-        'btnReportFieldRemove
+        'pnlSplitSelectedTables
         '
-        Me.btnReportFieldRemove.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnReportFieldRemove.Image = Global.Sequenchel.My.Resources.Resources.button_leftt
-        Me.btnReportFieldRemove.Location = New System.Drawing.Point(3, 142)
-        Me.btnReportFieldRemove.Name = "btnReportFieldRemove"
-        Me.btnReportFieldRemove.Size = New System.Drawing.Size(30, 23)
-        Me.btnReportFieldRemove.TabIndex = 2
-        Me.btnReportFieldRemove.UseVisualStyleBackColor = True
+        Me.pnlSplitSelectedTables.Controls.Add(Me.btnReportTableUp)
+        Me.pnlSplitSelectedTables.Controls.Add(Me.btnReportTableDown)
+        Me.pnlSplitSelectedTables.Dock = System.Windows.Forms.DockStyle.Left
+        Me.pnlSplitSelectedTables.Location = New System.Drawing.Point(0, 0)
+        Me.pnlSplitSelectedTables.Name = "pnlSplitSelectedTables"
+        Me.pnlSplitSelectedTables.Size = New System.Drawing.Size(38, 200)
+        Me.pnlSplitSelectedTables.TabIndex = 155
         '
-        'btnReportFieldAdd
+        'btnReportTableUp
         '
-        Me.btnReportFieldAdd.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnReportFieldAdd.Image = Global.Sequenchel.My.Resources.Resources.button_right
-        Me.btnReportFieldAdd.Location = New System.Drawing.Point(3, 113)
-        Me.btnReportFieldAdd.Name = "btnReportFieldAdd"
-        Me.btnReportFieldAdd.Size = New System.Drawing.Size(30, 23)
-        Me.btnReportFieldAdd.TabIndex = 1
-        Me.btnReportFieldAdd.UseVisualStyleBackColor = True
-        '
-        'btnReportFieldDown
-        '
-        Me.btnReportFieldDown.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnReportFieldDown.Image = Global.Sequenchel.My.Resources.Resources.button_down
-        Me.btnReportFieldDown.Location = New System.Drawing.Point(213, 142)
-        Me.btnReportFieldDown.Name = "btnReportFieldDown"
-        Me.btnReportFieldDown.Size = New System.Drawing.Size(30, 23)
-        Me.btnReportFieldDown.TabIndex = 2
-        Me.btnReportFieldDown.UseVisualStyleBackColor = True
-        '
-        'btnReportFieldUp
-        '
-        Me.btnReportFieldUp.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnReportFieldUp.Image = Global.Sequenchel.My.Resources.Resources.button_up
-        Me.btnReportFieldUp.Location = New System.Drawing.Point(213, 113)
-        Me.btnReportFieldUp.Name = "btnReportFieldUp"
-        Me.btnReportFieldUp.Size = New System.Drawing.Size(30, 23)
-        Me.btnReportFieldUp.TabIndex = 1
-        Me.btnReportFieldUp.UseVisualStyleBackColor = True
-        '
-        'pnlSelectedFieldsMain
-        '
-        Me.pnlSelectedFieldsMain.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.pnlSelectedFieldsMain.AutoScroll = True
-        Me.pnlSelectedFieldsMain.AutoScrollMargin = New System.Drawing.Size(5, 5)
-        Me.pnlSelectedFieldsMain.BackgroundImage = Global.Sequenchel.My.Resources.Resources.Background_Sequenchel_reliefsquaretransparant30down
-        Me.pnlSelectedFieldsMain.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
-        Me.pnlSelectedFieldsMain.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.pnlSelectedFieldsMain.Controls.Add(Me.pnlSelectedFields)
-        Me.pnlSelectedFieldsMain.Location = New System.Drawing.Point(246, 21)
-        Me.pnlSelectedFieldsMain.Name = "pnlSelectedFieldsMain"
-        Me.pnlSelectedFieldsMain.Size = New System.Drawing.Size(809, 405)
-        Me.pnlSelectedFieldsMain.TabIndex = 151
-        '
-        'pnlSelectedFields
-        '
-        Me.pnlSelectedFields.Controls.Add(Me.pnlReportFilterText)
-        Me.pnlSelectedFields.Controls.Add(Me.pnlReportFilterType)
-        Me.pnlSelectedFields.Controls.Add(Me.pnlReportFilterMode)
-        Me.pnlSelectedFields.Controls.Add(Me.pnlReportFilter)
-        Me.pnlSelectedFields.Controls.Add(Me.pnlReportSortOrder)
-        Me.pnlSelectedFields.Controls.Add(Me.pnlReportSort)
-        Me.pnlSelectedFields.Controls.Add(Me.pnlReportShowMode)
-        Me.pnlSelectedFields.Controls.Add(Me.pnlReportDisplay)
-        Me.pnlSelectedFields.Controls.Add(Me.pnlReportLabel)
-        Me.pnlSelectedFields.Location = New System.Drawing.Point(0, 0)
-        Me.pnlSelectedFields.Name = "pnlSelectedFields"
-        Me.pnlSelectedFields.Size = New System.Drawing.Size(804, 31)
-        Me.pnlSelectedFields.TabIndex = 5
-        '
-        'pnlReportFilterText
-        '
-        Me.pnlReportFilterText.Location = New System.Drawing.Point(578, 0)
-        Me.pnlReportFilterText.Name = "pnlReportFilterText"
-        Me.pnlReportFilterText.Size = New System.Drawing.Size(223, 30)
-        Me.pnlReportFilterText.TabIndex = 10
-        '
-        'pnlReportFilterType
-        '
-        Me.pnlReportFilterType.Location = New System.Drawing.Point(493, 0)
-        Me.pnlReportFilterType.Name = "pnlReportFilterType"
-        Me.pnlReportFilterType.Size = New System.Drawing.Size(85, 30)
-        Me.pnlReportFilterType.TabIndex = 9
-        '
-        'pnlReportFilterMode
-        '
-        Me.pnlReportFilterMode.Location = New System.Drawing.Point(408, 0)
-        Me.pnlReportFilterMode.Name = "pnlReportFilterMode"
-        Me.pnlReportFilterMode.Size = New System.Drawing.Size(85, 30)
-        Me.pnlReportFilterMode.TabIndex = 10
-        '
-        'pnlReportFilter
-        '
-        Me.pnlReportFilter.Location = New System.Drawing.Point(378, 0)
-        Me.pnlReportFilter.Name = "pnlReportFilter"
-        Me.pnlReportFilter.Size = New System.Drawing.Size(30, 30)
-        Me.pnlReportFilter.TabIndex = 8
-        '
-        'pnlReportSortOrder
-        '
-        Me.pnlReportSortOrder.Location = New System.Drawing.Point(348, 0)
-        Me.pnlReportSortOrder.Name = "pnlReportSortOrder"
-        Me.pnlReportSortOrder.Size = New System.Drawing.Size(30, 30)
-        Me.pnlReportSortOrder.TabIndex = 9
-        '
-        'pnlReportSort
-        '
-        Me.pnlReportSort.Location = New System.Drawing.Point(288, 0)
-        Me.pnlReportSort.Name = "pnlReportSort"
-        Me.pnlReportSort.Size = New System.Drawing.Size(60, 30)
-        Me.pnlReportSort.TabIndex = 12
-        '
-        'pnlReportShowMode
-        '
-        Me.pnlReportShowMode.Location = New System.Drawing.Point(203, 0)
-        Me.pnlReportShowMode.Name = "pnlReportShowMode"
-        Me.pnlReportShowMode.Size = New System.Drawing.Size(85, 30)
-        Me.pnlReportShowMode.TabIndex = 11
-        '
-        'pnlReportDisplay
-        '
-        Me.pnlReportDisplay.Location = New System.Drawing.Point(173, 0)
-        Me.pnlReportDisplay.Name = "pnlReportDisplay"
-        Me.pnlReportDisplay.Size = New System.Drawing.Size(30, 30)
-        Me.pnlReportDisplay.TabIndex = 7
-        '
-        'pnlReportLabel
-        '
-        Me.pnlReportLabel.Location = New System.Drawing.Point(0, 0)
-        Me.pnlReportLabel.Name = "pnlReportLabel"
-        Me.pnlReportLabel.Size = New System.Drawing.Size(173, 30)
-        Me.pnlReportLabel.TabIndex = 6
-        '
-        'lblSelectedFields
-        '
-        Me.lblSelectedFields.AutoSize = True
-        Me.lblSelectedFields.Location = New System.Drawing.Point(45, 5)
-        Me.lblSelectedFields.Name = "lblSelectedFields"
-        Me.lblSelectedFields.Size = New System.Drawing.Size(79, 13)
-        Me.lblSelectedFields.TabIndex = 150
-        Me.lblSelectedFields.Text = "Selected Fields"
-        '
-        'lvwSelectedTables
-        '
-        Me.lvwSelectedTables.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.lvwSelectedTables.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.colTable})
-        Me.lvwSelectedTables.FullRowSelect = True
-        Me.lvwSelectedTables.Location = New System.Drawing.Point(38, 22)
-        Me.lvwSelectedTables.Name = "lvwSelectedTables"
-        Me.lvwSelectedTables.Size = New System.Drawing.Size(169, 140)
-        Me.lvwSelectedTables.TabIndex = 0
-        Me.lvwSelectedTables.UseCompatibleStateImageBehavior = False
-        Me.lvwSelectedTables.View = System.Windows.Forms.View.Details
-        '
-        'colTable
-        '
-        Me.colTable.Text = "Table"
-        Me.colTable.Width = 50
+        Me.btnReportTableUp.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnReportTableUp.Image = Global.Sequenchel.My.Resources.Resources.button_up
+        Me.btnReportTableUp.Location = New System.Drawing.Point(3, 70)
+        Me.btnReportTableUp.Name = "btnReportTableUp"
+        Me.btnReportTableUp.Size = New System.Drawing.Size(30, 23)
+        Me.btnReportTableUp.TabIndex = 155
+        Me.btnReportTableUp.UseVisualStyleBackColor = True
         '
         'btnReportTableDown
         '
         Me.btnReportTableDown.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btnReportTableDown.Image = Global.Sequenchel.My.Resources.Resources.button_down
-        Me.btnReportTableDown.Location = New System.Drawing.Point(213, 76)
+        Me.btnReportTableDown.Location = New System.Drawing.Point(3, 99)
         Me.btnReportTableDown.Name = "btnReportTableDown"
         Me.btnReportTableDown.Size = New System.Drawing.Size(30, 23)
         Me.btnReportTableDown.TabIndex = 156
@@ -652,60 +792,51 @@ Partial Class frmReports
         '
         'pnlRelationsMain
         '
-        Me.pnlRelationsMain.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.pnlRelationsMain.AutoScroll = True
         Me.pnlRelationsMain.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.pnlRelationsMain.Controls.Add(Me.pnlRelations)
-        Me.pnlRelationsMain.Location = New System.Drawing.Point(245, 21)
+        Me.pnlRelationsMain.Controls.Add(Me.pnlRelationHeaders)
+        Me.pnlRelationsMain.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.pnlRelationsMain.Location = New System.Drawing.Point(38, 0)
         Me.pnlRelationsMain.Name = "pnlRelationsMain"
-        Me.pnlRelationsMain.Size = New System.Drawing.Size(809, 141)
+        Me.pnlRelationsMain.Size = New System.Drawing.Size(824, 200)
         Me.pnlRelationsMain.TabIndex = 156
         '
         'pnlRelations
         '
-        Me.pnlRelations.Controls.Add(Me.pnlRelationsField)
         Me.pnlRelations.Controls.Add(Me.pnlRelationsJoinType)
+        Me.pnlRelations.Controls.Add(Me.pnlRelationsField)
         Me.pnlRelations.Controls.Add(Me.pnlRelationsRelation)
         Me.pnlRelations.Controls.Add(Me.pnlRelationsUse)
         Me.pnlRelations.Controls.Add(Me.pnlRelationsLabel)
-        Me.pnlRelations.Location = New System.Drawing.Point(0, 0)
+        Me.pnlRelations.Location = New System.Drawing.Point(0, 24)
         Me.pnlRelations.Name = "pnlRelations"
-        Me.pnlRelations.Size = New System.Drawing.Size(706, 48)
+        Me.pnlRelations.Size = New System.Drawing.Size(689, 48)
         Me.pnlRelations.TabIndex = 7
+        '
+        'pnlRelationsJoinType
+        '
+        Me.pnlRelationsJoinType.Location = New System.Drawing.Point(563, 0)
+        Me.pnlRelationsJoinType.Name = "pnlRelationsJoinType"
+        Me.pnlRelationsJoinType.Size = New System.Drawing.Size(120, 48)
+        Me.pnlRelationsJoinType.TabIndex = 9
         '
         'pnlRelationsField
         '
-        Me.pnlRelationsField.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.pnlRelationsField.Location = New System.Drawing.Point(203, 0)
         Me.pnlRelationsField.Name = "pnlRelationsField"
         Me.pnlRelationsField.Size = New System.Drawing.Size(150, 48)
         Me.pnlRelationsField.TabIndex = 10
         '
-        'pnlRelationsJoinType
-        '
-        Me.pnlRelationsJoinType.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.pnlRelationsJoinType.Location = New System.Drawing.Point(504, 0)
-        Me.pnlRelationsJoinType.Name = "pnlRelationsJoinType"
-        Me.pnlRelationsJoinType.Size = New System.Drawing.Size(120, 48)
-        Me.pnlRelationsJoinType.TabIndex = 9
-        '
         'pnlRelationsRelation
         '
-        Me.pnlRelationsRelation.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.pnlRelationsRelation.Location = New System.Drawing.Point(353, 0)
         Me.pnlRelationsRelation.Name = "pnlRelationsRelation"
-        Me.pnlRelationsRelation.Size = New System.Drawing.Size(150, 48)
+        Me.pnlRelationsRelation.Size = New System.Drawing.Size(210, 48)
         Me.pnlRelationsRelation.TabIndex = 9
         '
         'pnlRelationsUse
         '
-        Me.pnlRelationsUse.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.pnlRelationsUse.Location = New System.Drawing.Point(173, 0)
         Me.pnlRelationsUse.Name = "pnlRelationsUse"
         Me.pnlRelationsUse.Size = New System.Drawing.Size(30, 48)
@@ -713,23 +844,10 @@ Partial Class frmReports
         '
         'pnlRelationsLabel
         '
-        Me.pnlRelationsLabel.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.pnlRelationsLabel.Location = New System.Drawing.Point(0, 0)
         Me.pnlRelationsLabel.Name = "pnlRelationsLabel"
         Me.pnlRelationsLabel.Size = New System.Drawing.Size(173, 48)
         Me.pnlRelationsLabel.TabIndex = 8
-        '
-        'btnReportTableUp
-        '
-        Me.btnReportTableUp.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnReportTableUp.Image = Global.Sequenchel.My.Resources.Resources.button_up
-        Me.btnReportTableUp.Location = New System.Drawing.Point(213, 47)
-        Me.btnReportTableUp.Name = "btnReportTableUp"
-        Me.btnReportTableUp.Size = New System.Drawing.Size(30, 23)
-        Me.btnReportTableUp.TabIndex = 155
-        Me.btnReportTableUp.UseVisualStyleBackColor = True
         '
         'pnlRelationHeaders
         '
@@ -740,15 +858,15 @@ Partial Class frmReports
         Me.pnlRelationHeaders.Controls.Add(Me.lblRelationsJoinType)
         Me.pnlRelationHeaders.Controls.Add(Me.lblRelationsRelation)
         Me.pnlRelationHeaders.Controls.Add(Me.lblRelationsSelectedTable)
-        Me.pnlRelationHeaders.Location = New System.Drawing.Point(245, -4)
+        Me.pnlRelationHeaders.Location = New System.Drawing.Point(0, 0)
         Me.pnlRelationHeaders.Name = "pnlRelationHeaders"
-        Me.pnlRelationHeaders.Size = New System.Drawing.Size(809, 24)
+        Me.pnlRelationHeaders.Size = New System.Drawing.Size(843, 24)
         Me.pnlRelationHeaders.TabIndex = 155
         '
         'lblSourceField
         '
         Me.lblSourceField.AutoSize = True
-        Me.lblSourceField.Location = New System.Drawing.Point(203, 8)
+        Me.lblSourceField.Location = New System.Drawing.Point(206, 8)
         Me.lblSourceField.Name = "lblSourceField"
         Me.lblSourceField.Size = New System.Drawing.Size(66, 13)
         Me.lblSourceField.TabIndex = 121
@@ -757,7 +875,7 @@ Partial Class frmReports
         'lblRelationUse
         '
         Me.lblRelationUse.AutoSize = True
-        Me.lblRelationUse.Location = New System.Drawing.Point(171, 8)
+        Me.lblRelationUse.Location = New System.Drawing.Point(174, 8)
         Me.lblRelationUse.Name = "lblRelationUse"
         Me.lblRelationUse.Size = New System.Drawing.Size(26, 13)
         Me.lblRelationUse.TabIndex = 120
@@ -766,7 +884,7 @@ Partial Class frmReports
         'lblRelationsJoinType
         '
         Me.lblRelationsJoinType.AutoSize = True
-        Me.lblRelationsJoinType.Location = New System.Drawing.Point(501, 7)
+        Me.lblRelationsJoinType.Location = New System.Drawing.Point(564, 8)
         Me.lblRelationsJoinType.Name = "lblRelationsJoinType"
         Me.lblRelationsJoinType.Size = New System.Drawing.Size(53, 13)
         Me.lblRelationsJoinType.TabIndex = 119
@@ -775,7 +893,7 @@ Partial Class frmReports
         'lblRelationsRelation
         '
         Me.lblRelationsRelation.AutoSize = True
-        Me.lblRelationsRelation.Location = New System.Drawing.Point(351, 8)
+        Me.lblRelationsRelation.Location = New System.Drawing.Point(354, 8)
         Me.lblRelationsRelation.Name = "lblRelationsRelation"
         Me.lblRelationsRelation.Size = New System.Drawing.Size(46, 13)
         Me.lblRelationsRelation.TabIndex = 118
@@ -790,19 +908,10 @@ Partial Class frmReports
         Me.lblRelationsSelectedTable.TabIndex = 117
         Me.lblRelationsSelectedTable.Text = "Selected Tables"
         '
-        'lblSelectedTables
-        '
-        Me.lblSelectedTables.AutoSize = True
-        Me.lblSelectedTables.Location = New System.Drawing.Point(45, 4)
-        Me.lblSelectedTables.Name = "lblSelectedTables"
-        Me.lblSelectedTables.Size = New System.Drawing.Size(84, 13)
-        Me.lblSelectedTables.TabIndex = 153
-        Me.lblSelectedTables.Text = "Selected Tables"
-        '
         'btnRevertChanges
         '
         Me.btnRevertChanges.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnRevertChanges.Location = New System.Drawing.Point(1076, 703)
+        Me.btnRevertChanges.Location = New System.Drawing.Point(1073, 33)
         Me.btnRevertChanges.Name = "btnRevertChanges"
         Me.btnRevertChanges.Size = New System.Drawing.Size(164, 20)
         Me.btnRevertChanges.TabIndex = 12
@@ -811,7 +920,7 @@ Partial Class frmReports
         'btnQueryShow
         '
         Me.btnQueryShow.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnQueryShow.Location = New System.Drawing.Point(1076, 677)
+        Me.btnQueryShow.Location = New System.Drawing.Point(1073, 7)
         Me.btnQueryShow.Name = "btnQueryShow"
         Me.btnQueryShow.Size = New System.Drawing.Size(164, 20)
         Me.btnQueryShow.TabIndex = 10
@@ -820,7 +929,7 @@ Partial Class frmReports
         'txtTop
         '
         Me.txtTop.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.txtTop.Location = New System.Drawing.Point(822, 704)
+        Me.txtTop.Location = New System.Drawing.Point(819, 34)
         Me.txtTop.Name = "txtTop"
         Me.txtTop.Size = New System.Drawing.Size(39, 20)
         Me.txtTop.TabIndex = 8
@@ -832,7 +941,7 @@ Partial Class frmReports
         Me.chkTop.AutoSize = True
         Me.chkTop.Checked = True
         Me.chkTop.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.chkTop.Location = New System.Drawing.Point(746, 706)
+        Me.chkTop.Location = New System.Drawing.Point(743, 36)
         Me.chkTop.Name = "chkTop"
         Me.chkTop.Size = New System.Drawing.Size(70, 17)
         Me.chkTop.TabIndex = 7
@@ -843,7 +952,7 @@ Partial Class frmReports
         '
         Me.chkDistinct.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.chkDistinct.AutoSize = True
-        Me.chkDistinct.Location = New System.Drawing.Point(746, 680)
+        Me.chkDistinct.Location = New System.Drawing.Point(743, 10)
         Me.chkDistinct.Name = "chkDistinct"
         Me.chkDistinct.Size = New System.Drawing.Size(98, 17)
         Me.chkDistinct.TabIndex = 6
@@ -853,7 +962,7 @@ Partial Class frmReports
         'btnReportCreate
         '
         Me.btnReportCreate.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnReportCreate.Location = New System.Drawing.Point(906, 677)
+        Me.btnReportCreate.Location = New System.Drawing.Point(903, 7)
         Me.btnReportCreate.Name = "btnReportCreate"
         Me.btnReportCreate.Size = New System.Drawing.Size(164, 20)
         Me.btnReportCreate.TabIndex = 9
@@ -862,7 +971,7 @@ Partial Class frmReports
         'btnReportClear
         '
         Me.btnReportClear.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnReportClear.Location = New System.Drawing.Point(906, 703)
+        Me.btnReportClear.Location = New System.Drawing.Point(903, 33)
         Me.btnReportClear.Name = "btnReportClear"
         Me.btnReportClear.Size = New System.Drawing.Size(164, 20)
         Me.btnReportClear.TabIndex = 11
@@ -872,7 +981,7 @@ Partial Class frmReports
         '
         Me.btnTablesReload.Enabled = False
         Me.btnTablesReload.Image = CType(resources.GetObject("btnTablesReload.Image"), System.Drawing.Image)
-        Me.btnTablesReload.Location = New System.Drawing.Point(480, 23)
+        Me.btnTablesReload.Location = New System.Drawing.Point(471, 17)
         Me.btnTablesReload.Name = "btnTablesReload"
         Me.btnTablesReload.Size = New System.Drawing.Size(25, 25)
         Me.btnTablesReload.TabIndex = 180
@@ -881,7 +990,7 @@ Partial Class frmReports
         'btnTableSetsReload
         '
         Me.btnTableSetsReload.Image = CType(resources.GetObject("btnTableSetsReload.Image"), System.Drawing.Image)
-        Me.btnTableSetsReload.Location = New System.Drawing.Point(247, 23)
+        Me.btnTableSetsReload.Location = New System.Drawing.Point(238, 17)
         Me.btnTableSetsReload.Name = "btnTableSetsReload"
         Me.btnTableSetsReload.Size = New System.Drawing.Size(25, 25)
         Me.btnTableSetsReload.TabIndex = 179
@@ -890,7 +999,7 @@ Partial Class frmReports
         'btnConnectionsReload
         '
         Me.btnConnectionsReload.Image = CType(resources.GetObject("btnConnectionsReload.Image"), System.Drawing.Image)
-        Me.btnConnectionsReload.Location = New System.Drawing.Point(14, 23)
+        Me.btnConnectionsReload.Location = New System.Drawing.Point(5, 17)
         Me.btnConnectionsReload.Name = "btnConnectionsReload"
         Me.btnConnectionsReload.Size = New System.Drawing.Size(25, 25)
         Me.btnConnectionsReload.TabIndex = 178
@@ -899,7 +1008,7 @@ Partial Class frmReports
         'lblTable
         '
         Me.lblTable.AutoSize = True
-        Me.lblTable.Location = New System.Drawing.Point(508, 11)
+        Me.lblTable.Location = New System.Drawing.Point(499, 5)
         Me.lblTable.Name = "lblTable"
         Me.lblTable.Size = New System.Drawing.Size(34, 13)
         Me.lblTable.TabIndex = 177
@@ -909,7 +1018,7 @@ Partial Class frmReports
         '
         Me.cbxTable.Enabled = False
         Me.cbxTable.FormattingEnabled = True
-        Me.cbxTable.Location = New System.Drawing.Point(507, 27)
+        Me.cbxTable.Location = New System.Drawing.Point(498, 21)
         Me.cbxTable.Name = "cbxTable"
         Me.cbxTable.Size = New System.Drawing.Size(200, 21)
         Me.cbxTable.Sorted = True
@@ -918,7 +1027,7 @@ Partial Class frmReports
         'lblTableSet
         '
         Me.lblTableSet.AutoSize = True
-        Me.lblTableSet.Location = New System.Drawing.Point(272, 11)
+        Me.lblTableSet.Location = New System.Drawing.Point(263, 5)
         Me.lblTableSet.Name = "lblTableSet"
         Me.lblTableSet.Size = New System.Drawing.Size(50, 13)
         Me.lblTableSet.TabIndex = 175
@@ -927,7 +1036,7 @@ Partial Class frmReports
         'cbxTableSet
         '
         Me.cbxTableSet.FormattingEnabled = True
-        Me.cbxTableSet.Location = New System.Drawing.Point(274, 27)
+        Me.cbxTableSet.Location = New System.Drawing.Point(265, 21)
         Me.cbxTableSet.Name = "cbxTableSet"
         Me.cbxTableSet.Size = New System.Drawing.Size(200, 21)
         Me.cbxTableSet.Sorted = True
@@ -936,7 +1045,7 @@ Partial Class frmReports
         'lblConnection
         '
         Me.lblConnection.AutoSize = True
-        Me.lblConnection.Location = New System.Drawing.Point(41, 11)
+        Me.lblConnection.Location = New System.Drawing.Point(32, 5)
         Me.lblConnection.Name = "lblConnection"
         Me.lblConnection.Size = New System.Drawing.Size(61, 13)
         Me.lblConnection.TabIndex = 173
@@ -945,7 +1054,7 @@ Partial Class frmReports
         'cbxConnection
         '
         Me.cbxConnection.FormattingEnabled = True
-        Me.cbxConnection.Location = New System.Drawing.Point(41, 27)
+        Me.cbxConnection.Location = New System.Drawing.Point(32, 21)
         Me.cbxConnection.Name = "cbxConnection"
         Me.cbxConnection.Size = New System.Drawing.Size(200, 21)
         Me.cbxConnection.Sorted = True
@@ -953,6 +1062,8 @@ Partial Class frmReports
         '
         'tpgReportResult
         '
+        Me.tpgReportResult.Controls.Add(Me.cbxEmailResults)
+        Me.tpgReportResult.Controls.Add(Me.btnEmailResults)
         Me.tpgReportResult.Controls.Add(Me.lblElapsedTime)
         Me.tpgReportResult.Controls.Add(Me.btnDefinition)
         Me.tpgReportResult.Controls.Add(Me.btnExportToFile)
@@ -971,6 +1082,27 @@ Partial Class frmReports
         Me.tpgReportResult.TabIndex = 1
         Me.tpgReportResult.Text = "Report Result"
         Me.tpgReportResult.UseVisualStyleBackColor = True
+        '
+        'cbxEmailResults
+        '
+        Me.cbxEmailResults.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.cbxEmailResults.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cbxEmailResults.FormattingEnabled = True
+        Me.cbxEmailResults.Items.AddRange(New Object() {"HTML", "Excel", "XML", "CSV"})
+        Me.cbxEmailResults.Location = New System.Drawing.Point(738, 704)
+        Me.cbxEmailResults.Name = "cbxEmailResults"
+        Me.cbxEmailResults.Size = New System.Drawing.Size(60, 21)
+        Me.cbxEmailResults.TabIndex = 180
+        '
+        'btnEmailResults
+        '
+        Me.btnEmailResults.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.btnEmailResults.Location = New System.Drawing.Point(602, 703)
+        Me.btnEmailResults.Name = "btnEmailResults"
+        Me.btnEmailResults.Size = New System.Drawing.Size(135, 23)
+        Me.btnEmailResults.TabIndex = 179
+        Me.btnEmailResults.Text = "Email Results as:"
+        Me.btnEmailResults.UseVisualStyleBackColor = True
         '
         'lblElapsedTime
         '
@@ -1072,6 +1204,8 @@ Partial Class frmReports
         '
         'dgvReport
         '
+        Me.dgvReport.AllowUserToAddRows = False
+        Me.dgvReport.AllowUserToDeleteRows = False
         Me.dgvReport.AllowUserToOrderColumns = True
         Me.dgvReport.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
@@ -1088,7 +1222,7 @@ Partial Class frmReports
         'btnTest
         '
         Me.btnTest.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnTest.Location = New System.Drawing.Point(12, 778)
+        Me.btnTest.Location = New System.Drawing.Point(980, 778)
         Me.btnTest.Name = "btnTest"
         Me.btnTest.Size = New System.Drawing.Size(135, 23)
         Me.btnTest.TabIndex = 170
@@ -1111,21 +1245,40 @@ Partial Class frmReports
         '
         Me.tmrElapsedTime.Interval = 1000
         '
-        'chkReportShow
+        'lblStatus
         '
-        Me.chkReportShow.AutoSize = True
-        Me.chkReportShow.Location = New System.Drawing.Point(155, 6)
-        Me.chkReportShow.Name = "chkReportShow"
-        Me.chkReportShow.Size = New System.Drawing.Size(53, 17)
-        Me.chkReportShow.TabIndex = 126
-        Me.chkReportShow.Text = "Show"
-        Me.chkReportShow.UseVisualStyleBackColor = True
+        Me.lblStatus.AutoSize = True
+        Me.lblStatus.Font = New System.Drawing.Font("Microsoft Sans Serif", 11.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblStatus.Location = New System.Drawing.Point(22, 783)
+        Me.lblStatus.Name = "lblStatus"
+        Me.lblStatus.Size = New System.Drawing.Size(0, 18)
+        Me.lblStatus.TabIndex = 171
+        '
+        'pnlReportButtons
+        '
+        Me.pnlReportButtons.Controls.Add(Me.btnQueryShow)
+        Me.pnlReportButtons.Controls.Add(Me.btnReportClear)
+        Me.pnlReportButtons.Controls.Add(Me.lblDescription)
+        Me.pnlReportButtons.Controls.Add(Me.btnReportCreate)
+        Me.pnlReportButtons.Controls.Add(Me.txtDescription)
+        Me.pnlReportButtons.Controls.Add(Me.chkDistinct)
+        Me.pnlReportButtons.Controls.Add(Me.btnReportExport)
+        Me.pnlReportButtons.Controls.Add(Me.chkTop)
+        Me.pnlReportButtons.Controls.Add(Me.btnReportImport)
+        Me.pnlReportButtons.Controls.Add(Me.txtTop)
+        Me.pnlReportButtons.Controls.Add(Me.btnRevertChanges)
+        Me.pnlReportButtons.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.pnlReportButtons.Location = New System.Drawing.Point(3, 676)
+        Me.pnlReportButtons.Name = "pnlReportButtons"
+        Me.pnlReportButtons.Size = New System.Drawing.Size(1246, 58)
+        Me.pnlReportButtons.TabIndex = 198
         '
         'frmReports
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(1284, 812)
+        Me.Controls.Add(Me.lblStatus)
         Me.Controls.Add(Me.btnClose)
         Me.Controls.Add(Me.btnTest)
         Me.Controls.Add(Me.lblLicense)
@@ -1137,24 +1290,35 @@ Partial Class frmReports
         Me.Text = "Reports"
         Me.tabReports.ResumeLayout(False)
         Me.tpgReportDefinition.ResumeLayout(False)
-        Me.tpgReportDefinition.PerformLayout()
-        Me.pnlReportName.ResumeLayout(False)
-        Me.pnlReportName.PerformLayout()
+        Me.pnlReportConnection.ResumeLayout(False)
+        Me.pnlReportConnection.PerformLayout()
         Me.sptReports.Panel1.ResumeLayout(False)
         Me.sptReports.Panel1.PerformLayout()
         Me.sptReports.Panel2.ResumeLayout(False)
         CType(Me.sptReports, System.ComponentModel.ISupportInitialize).EndInit()
         Me.sptReports.ResumeLayout(False)
+        Me.sptReportFields.Panel1.ResumeLayout(False)
+        Me.sptReportFields.Panel2.ResumeLayout(False)
+        CType(Me.sptReportFields, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.sptReportFields.ResumeLayout(False)
+        Me.sptReportTables.Panel1.ResumeLayout(False)
+        Me.sptReportTables.Panel1.PerformLayout()
+        Me.sptReportTables.Panel2.ResumeLayout(False)
+        CType(Me.sptReportTables, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.sptReportTables.ResumeLayout(False)
+        Me.pnlSplitFields.ResumeLayout(False)
+        Me.pnlSplitTables.ResumeLayout(False)
+        Me.pnlSplitTables.PerformLayout()
         Me.sptReport.Panel1.ResumeLayout(False)
-        Me.sptReport.Panel1.PerformLayout()
         Me.sptReport.Panel2.ResumeLayout(False)
-        Me.sptReport.Panel2.PerformLayout()
         CType(Me.sptReport, System.ComponentModel.ISupportInitialize).EndInit()
         Me.sptReport.ResumeLayout(False)
-        Me.pnlReportHeaders.ResumeLayout(False)
-        Me.pnlReportHeaders.PerformLayout()
+        Me.pnlSplitSelectedFields.ResumeLayout(False)
         Me.pnlSelectedFieldsMain.ResumeLayout(False)
         Me.pnlSelectedFields.ResumeLayout(False)
+        Me.pnlReportHeaders.ResumeLayout(False)
+        Me.pnlReportHeaders.PerformLayout()
+        Me.pnlSplitSelectedTables.ResumeLayout(False)
         Me.pnlRelationsMain.ResumeLayout(False)
         Me.pnlRelations.ResumeLayout(False)
         Me.pnlRelationHeaders.ResumeLayout(False)
@@ -1162,6 +1326,8 @@ Partial Class frmReports
         Me.tpgReportResult.ResumeLayout(False)
         Me.tpgReportResult.PerformLayout()
         CType(Me.dgvReport, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.pnlReportButtons.ResumeLayout(False)
+        Me.pnlReportButtons.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -1260,6 +1426,17 @@ Partial Class frmReports
     Friend WithEvents btnReportImport As System.Windows.Forms.Button
     Friend WithEvents lblDescription As System.Windows.Forms.Label
     Friend WithEvents txtDescription As System.Windows.Forms.TextBox
-    Friend WithEvents pnlReportName As System.Windows.Forms.Panel
+    Friend WithEvents pnlReportConnection As System.Windows.Forms.Panel
     Friend WithEvents chkReportShow As System.Windows.Forms.CheckBox
+    Friend WithEvents cbxEmailResults As System.Windows.Forms.ComboBox
+    Friend WithEvents btnEmailResults As System.Windows.Forms.Button
+    Friend WithEvents lblStatus As System.Windows.Forms.Label
+    Friend WithEvents pnlSplitFields As System.Windows.Forms.Panel
+    Friend WithEvents sptReportFields As System.Windows.Forms.SplitContainer
+    Friend WithEvents sptReportTables As System.Windows.Forms.SplitContainer
+    Friend WithEvents pnlSplitFields2 As System.Windows.Forms.Panel
+    Friend WithEvents pnlSplitSelectedFields As System.Windows.Forms.Panel
+    Friend WithEvents pnlSplitSelectedTables As System.Windows.Forms.Panel
+    Friend WithEvents pnlSplitTables As System.Windows.Forms.Panel
+    Friend WithEvents pnlReportButtons As System.Windows.Forms.Panel
 End Class

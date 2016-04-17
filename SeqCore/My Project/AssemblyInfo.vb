@@ -8,11 +8,11 @@ Imports System.Runtime.InteropServices
 
 ' Review the values of the assembly attributes
 
-<Assembly: AssemblyTitle("Sequenchel")> 
-<Assembly: AssemblyDescription("Sequenchel Digital Bonus Application SQL.[DBA]")> 
-<Assembly: AssemblyProduct("Sequenchel")> 
+<Assembly: AssemblyTitle("SeqCore")> 
+<Assembly: AssemblyDescription("")> 
+<Assembly: AssemblyProduct("SeqCore")> 
 
-<Assembly: ComVisible(False)> 
+<Assembly: ComVisible(False)>
 
 'The following GUID is for the ID of the typelib if this project is exposed to COM
-<Assembly: Guid("03d03e4f-a4e5-4fba-bc91-d178d1e0795f")> 
+<Assembly: Guid("5647cfd2-1139-4e04-8a90-6aca4b1f3a7f")> 

@@ -1,10 +1,4 @@
 ﻿
-Imports System.IO
-Imports System.Data
-Imports DocumentFormat.OpenXml.Packaging
-Imports DocumentFormat.OpenXml.Spreadsheet
-Imports System.Data.OleDb
-
 Public Class frmImport
 
     Private Sub frmImport_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -16,49 +10,49 @@ Public Class frmImport
     End Sub
 
     Private Sub btnImportFile_Click(sender As Object, e As EventArgs) Handles btnImportFile.Click
-        ImportFile()
+        If txtCurrentFile.Text.Length > 3 And txtCurrentFile.Text.Contains(".") Then
+            ImportFile()
+        Else
+            MessageBox.Show("Please enter a valid path and filename before pressing this button")
+        End If
     End Sub
 
     Private Sub btnUploadFile_Click(sender As Object, e As EventArgs) Handles btnUploadFile.Click
-        UploadFile()
+        If SeqData.dhdText.DatasetCheck(dtsImport) = False Then Exit Sub
+        UploadFile(dtsImport)
     End Sub
 
     Private Sub btnUploadTable_Click(sender As Object, e As EventArgs) Handles btnUploadTable.Click
-        Dim intRecordsAffected As Integer = 0
         Try
-            intRecordsAffected = UploadTable(dgvImport.DataSource)
-            If intRecordsAffected = -1 Then
-                MessageBox.Show("Export to database failed. Check if the columns match and try again")
-                lblStatusText.Text = "0 rows uploaded"
-                Exit Sub
-            End If
+            If dgvImport.DataSource Is Nothing Then Exit Sub
+            Dim dtsUpload As New DataSet
+            dtsUpload.Tables.Add(dgvImport.DataSource.Copy)
+            UploadFile(dtsUpload)
         Catch ex As Exception
-            MessageBox.Show("Export to database failed. Check if the columns match and try again" & Environment.NewLine & ex.Message)
+            MessageBox.Show("Table Upload failed. Check if the columns match and try again" & Environment.NewLine & ex.Message)
             lblStatusText.Text = "0 rows uploaded"
             Exit Sub
         End Try
-        lblStatusText.Text = intRecordsAffected & " rows uploaded"
-
     End Sub
 
     Private Sub LoadDefaults()
-        txtServer.Text = dhdConnection.DataLocation
-        txtDatabase.Text = dhdConnection.DatabaseName
-        txtTable.Text = CurStatus.Table
-        If dhdConnection.LoginMethod = "Windows" Then
+        txtServer.Text = SeqData.dhdConnection.DataLocation
+        txtDatabase.Text = SeqData.dhdConnection.DatabaseName
+        txtTable.Text = SeqData.curStatus.Table
+        If SeqData.dhdConnection.LoginMethod = "Windows" Then
             chkWinAuth.Checked = True
         Else
             chkWinAuth.Checked = False
         End If
-        txtUser.Text = dhdConnection.LoginName
-        txtPassword.Text = dhdConnection.Password
+        txtUser.Text = SeqData.dhdConnection.LoginName
+        txtPassword.Text = SeqData.dhdConnection.Password
     End Sub
 
     Private Sub SelectFile()
         Dim ofdFile As New OpenFileDialog
         'sfdFile.FileName = strFileName
-        'sfdFile.Filter = "XML File (*.xml)|*.xml|XML Text File(*.xml)|*.xml|Excel 2007 file (*.xlsx)|*.xlsx|Excel 2007 Text file(*.xlsx)|*.xlsx"
-        ofdFile.Filter = "Excel file (*.xls, *.xlsx)|*.xls;*.xlsx"
+        'sfdFile.Filter = "XML File (*.xml)|*.xml|Excel 2007 file (*.xlsx)|*.xlsx|"
+        ofdFile.Filter = "All supported file types (*.xls, *.xlsx, *.xml, *.csv, *.txt)|*.xls;*.xlsx;*.xml;*.csv;*.txt|Excel file (*.xls, *.xlsx)|*.xls;*.xlsx|XML File (*.xml)|*.xml|Text File (*.csv, *.txt)|*.csv;*.txt"
         ofdFile.FilterIndex = 1
         ofdFile.RestoreDirectory = True
         'sfdFile.OverwritePrompt = True
@@ -67,278 +61,114 @@ Public Class frmImport
             Return
         End If
 
-        txtCurrentFile.Text = ofdFile.FileName
+        SeqData.dhdText.ImportFile = ofdFile.FileName
+        txtCurrentFile.Text = SeqData.dhdText.ImportFile
         ImportFile()
     End Sub
 
     Private Sub ImportFile()
-        Dim Ext As String = txtCurrentFile.Text.Substring(txtCurrentFile.Text.LastIndexOf(".") + 1)
-        Dim strFilePath As String = txtCurrentFile.Text
-        If dstImport.Tables.Count > 0 Then
-            For i = dstImport.Tables.Count To 1 Step -1
-                dstImport.Tables.Remove(dstImport.Tables(i - 1).TableName)
-            Next
+        If SeqData.dhdText.CheckFile(SeqData.dhdText.PathConvert(SeqData.CheckFilePath(SeqData.dhdText.ImportFile))) = False Then
+            MessageBox.Show("The file was not found. Check the file path and name")
+            Exit Sub
+        End If
+        dtsImport = SeqData.ImportFile(SeqData.dhdText.PathConvert(SeqData.CheckFilePath(SeqData.dhdText.ImportFile)), chkHasHeaders.Checked, txtDelimiter.Text)
+
+        If SeqData.dhdText.DatasetCheck(dtsImport) = False Then
+            MessageBox.Show("File extension or delimiter not recognised." & Environment.NewLine & "Please try again or select a different file.")
+            Exit Sub
         End If
 
         Try
-            If Ext = "xls" Then
-                'ImportExcel2003(strFilePath)
-                dstImport = ReadExcelFile(strFilePath)
-            ElseIf Ext = "xlsx" Then
-                dstImport = ImportExcel(strFilePath)
-            End If
-
-            If dstImport.Tables.Count > 0 Then
+            If dtsImport.Tables.Count > 0 Then
                 If chkScreen.Checked Then
                     DisplayData(0)
                 End If
-                UploadFile()
+                UploadFile(dtsImport)
+            Else
+                MessageBox.Show("No data was loaded from the file." & Environment.NewLine & "Please check the file before trying again.")
             End If
         Catch ex As Exception
-            MessageBox.Show("there was an error importing the file" & Environment.NewLine & ex.Message)
+            MessageBox.Show("There was an error displaying or uploading the file." & Environment.NewLine & ex.Message)
         End Try
     End Sub
 
     Private Sub DisplayData(Optional intTable As Integer = 0)
-        dgvImport.DataSource = dstImport.Tables(intTable)
-        lblTableNameText.Text = dstImport.Tables(intTable).TableName
+        If SeqData.dhdText.DatasetCheck(dtsImport) = False Then Exit Sub
+        dgvImport.DataSource = Nothing
+        If SeqData.curVar.ConvertToText = True Then
+            Dim dttConvert As DataTable = SeqData.dhdMainDB.ConvertToText(dtsImport.Tables(intTable))
+            dgvImport.DataSource = dttConvert
+        Else
+            dgvImport.DataSource = dtsImport.Tables(intTable)
+        End If
+        lblTableNameText.Text = dtsImport.Tables(intTable).TableName
         If intTable > 0 Then
             btnPreviousTable.Tag = intTable - 1
             btnPreviousTable.Enabled = True
         Else
             btnPreviousTable.Enabled = False
         End If
-        If intTable < dstImport.Tables.Count - 1 Then
+        If intTable < dtsImport.Tables.Count - 1 Then
             btnNextTable.Tag = intTable + 1
             btnNextTable.Enabled = True
         Else
             btnNextTable.Enabled = False
         End If
-        lblTableNumber.Text = "Table " & intTable + 1 & " of " & dstImport.Tables.Count
-        chkUploadTable.Checked = DataTableGetExtendedPorperty(dstImport.Tables(intTable))
+        lblTableNumber.Text = "Table " & intTable + 1 & " of " & dtsImport.Tables.Count
+        chkUploadTable.Checked = DataTableGetExtendedProperty(dtsImport.Tables(intTable))
     End Sub
 
-    Private Sub UploadFile()
+    Private Sub UploadFile(dtsUpload As DataSet)
         If chkFile.Checked = True Then
-            Try
-                Dim strExtension As String = txtFileName.Text.Substring(txtFileName.Text.LastIndexOf(".") + 1, txtFileName.Text.Length - (txtFileName.Text.LastIndexOf(".") + 1))
-                If strExtension.ToLower = "xml" Then
-                    Dim xmlDoc As New StreamWriter(txtFileName.Text, False)
-                    dstImport.WriteXml(xmlDoc)
-                    xmlDoc.Close()
-                Else
-                    MessageBox.Show("Only files with XML extension are allowed at this time.")
-                End If
-            Catch ex As Exception
-                MessageBox.Show("There was an error writng to " & txtFileName.Text & Environment.NewLine & ex.Message)
-            End Try
+            ExportToFile(dtsUpload)
         End If
         If chkDatabase.Checked = True Then
-            SaveToDatabase(dstImport)
+            UploadToDatabase(dtsUpload)
         End If
     End Sub
 
-    Protected Function ImportExcel(strFilePath As String) As DataSet
-        Dim dstOutput As New DataSet
-
-        'Open the Excel file in Read Mode using OpenXml.
-        Using doc As SpreadsheetDocument = SpreadsheetDocument.Open(strFilePath, False)
-            'Read the first Sheet from Excel file.
-            For Each excelSheet As Sheet In doc.WorkbookPart.Workbook.Sheets
-
-                'Dim sheet As Sheet = doc.WorkbookPart.Workbook.Sheets.GetFirstChild(Of Sheet)()
-
-                'Get the Worksheet instance.
-                Dim worksheet As Worksheet = TryCast(doc.WorkbookPart.GetPartById(excelSheet.Id.Value), WorksheetPart).Worksheet
-
-                'Fetch all the rows present in the Worksheet.
-                Dim rows As IEnumerable(Of Row) = worksheet.GetFirstChild(Of SheetData)().Descendants(Of Row)()
-
-                'Create a new DataTable.
-                Dim dt As New DataTable()
-                dt.TableName = excelSheet.Name
-                'Loop through the Worksheet rows.
-                For Each row As Row In rows
-                    'Use the first row to add columns to DataTable.
-                    If row.RowIndex.Value = 1 Then
-                        For Each cell As Cell In row.Descendants(Of Cell)()
-                            dt.Columns.Add(GetValue(doc, cell))
-                        Next
-                    Else
-                        'Add rows to DataTable.
-                        dt.Rows.Add()
-                        Dim i As Integer = 0
-                        For Each cell As Cell In row.Descendants(Of Cell)()
-                            dt.Rows(dt.Rows.Count - 1)(i) = GetValue(doc, cell)
-                            i += 1
-                        Next
-                    End If
-                Next
-                dstOutput.Tables.Add(dt)
-            Next
-
-        End Using
-
-        Return dstOutput
-    End Function
-
-    Private Function ImportExcel2003(ByVal StrFilePath As String) As DataSet
-        Dim dstOutput As New DataSet
-
-        Dim objExcel As New Microsoft.Office.Interop.Excel.Application
-        'Dim objWorkbook As New Microsoft.Office.Interop.Excel.Workbook
-
+    Private Sub ExportToFile(dtsUpload As DataSet)
         Try
-            'objExcel = objExcel.Workbooks.Open(StrFilePath, 0, True, 5, "", "", True, Microsoft.Office.Interop.Excel.XlPlatform.xlWindows, "\t", False, False, 0, True, 1, 0)
-            objExcel = objExcel.Workbooks.Open(StrFilePath)
-            Dim sheet As Sheet = objExcel.WorkbookPart.Workbook.Sheets.GetFirstChild(Of Sheet)()
-
-            'Get the Worksheet instance.
-            Dim worksheet As Worksheet = TryCast(objExcel.WorkbookPart.GetPartById(sheet.Id.Value), WorksheetPart).Worksheet
-
-            'Fetch all the rows present in the Worksheet.
-            Dim rows As IEnumerable(Of Row) = worksheet.GetFirstChild(Of SheetData)().Descendants(Of Row)()
-
-            'Create a new DataTable.
-            Dim dt As New DataTable()
-
-            'Loop through the Worksheet rows.
-            For Each row As Row In rows
-                'Use the first row to add columns to DataTable.
-                If row.RowIndex.Value = 1 Then
-                    For Each cell As Cell In row.Descendants(Of Cell)()
-                        dt.Columns.Add(GetValue(objExcel, cell))
-                    Next
-                Else
-                    'Add rows to DataTable.
-                    dt.Rows.Add()
-                    Dim i As Integer = 0
-                    For Each cell As Cell In row.Descendants(Of Cell)()
-                        dt.Rows(dt.Rows.Count - 1)(i) = GetValue(objExcel, cell)
-                        i += 1
-                    Next
-                End If
-            Next
-            dstOutput.Tables.Add(dt)
-            Return dstOutput
-        Catch ex As Exception
-            MessageBox.Show("An error has occured importing the data" & Environment.NewLine & ex.Message)
-            Return Nothing
-        End Try
-    End Function
-
-    Private Function ReadExcelFile(ByVal StrFilePath As String) As DataSet
-        Dim ExcelCon As New OleDbConnection
-        Dim ExcelAdp As OleDbDataAdapter
-        Dim ExcelComm As OleDbCommand
-        'Dim Col1 As DataColumn
-        Dim StrSql As String
-        Dim dstOutput As New DataSet
-
-        Try
-            ExcelCon.ConnectionString = "Provider=Microsoft.Jet.OLEDB.4.0;" & _
-                "Data Source= " & StrFilePath & _
-                ";Extended Properties=""Excel 8.0;"""
-            ExcelCon.Open()
-
-            Dim dtSheets As DataTable =
-              ExcelCon.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, Nothing)
-            Dim listSheet As New List(Of String)
-            Dim drSheet As DataRow
-
-            For Each drSheet In dtSheets.Rows
-                listSheet.Add(drSheet("TABLE_NAME").ToString())
-            Next
-
-            '//show sheetname in textbox where multiline is true
-            For Each sheet As String In listSheet
-                StrSql = "Select * From [" & sheet & "]"
-                ExcelComm = New OleDbCommand(StrSql, ExcelCon)
-                ExcelAdp = New OleDbDataAdapter(ExcelComm)
-                Dim objdt = New DataTable()
-                ExcelAdp.Fill(objdt)
-                dstOutput.Tables.Add(objdt)
-            Next
-
-            ExcelCon.Close()
-            Return dstOutput
-        Catch ex As Exception
-            MessageBox.Show("An error has occured importing the data" & Environment.NewLine & ex.Message)
-            Return Nothing
-        Finally
-            ExcelCon = Nothing
-            ExcelAdp = Nothing
-            ExcelComm = Nothing
-        End Try
-    End Function
-
-    Private Function GetValue(doc As SpreadsheetDocument, cell As Cell) As String
-        Dim value As String = Nothing
-        If cell.CellValue IsNot Nothing Then
-            value = cell.CellValue.InnerText
-            If cell.DataType IsNot Nothing AndAlso cell.DataType.Value = CellValues.SharedString Then
-                Return doc.WorkbookPart.SharedStringTablePart.SharedStringTable.ChildElements.GetItem(Integer.Parse(value)).InnerText
-            End If
-        End If
-        Return value
-    End Function
-
-    Private Sub SaveToDatabase(dtsInput As DataSet)
-        Dim intRecordsAffected As Integer = 0
-        Dim intReturn As Integer = 0
-
-        Try
-            For Each Table In dtsInput.Tables
-                Dim blnExport As Boolean = True
-                If Table.ExtendedProperties.Count > 0 Then
-                    If Table.ExtendedProperties.ContainsKey("ExportTable") = True Then
-                        If Table.ExtendedProperties("ExportTable") = "False" Then
-                            blnExport = False
+            For intCount As Integer = dtsUpload.Tables.Count - 1 To 0 Step -1
+                If dtsUpload.Tables(intCount).ExtendedProperties.Count > 0 Then
+                    If dtsUpload.Tables(intCount).ExtendedProperties.ContainsKey("ExportTable") = True Then
+                        If dtsUpload.Tables(intCount).ExtendedProperties("ExportTable") = "False" Then
+                            dtsUpload.Tables.Remove(dtsUpload.Tables(intCount))
                         End If
                     End If
                 End If
-                If blnExport = True Then
-                    intReturn = UploadTable(Table)
-                    If intReturn = -1 Then
-                        MessageBox.Show("Export to database failed. Check if the columns match and try again" & Environment.NewLine & "If you are importing more than 1 table, make sure they have identical columns")
-                        Exit Sub
-                    Else
-                        intRecordsAffected += intReturn
-                    End If
-                End If
             Next
-            'intRecordsAffected = dhdDB.UploadSqlData(dgvImport.DataSource)
-            lblStatusText.Text = intRecordsAffected & " rows uploaded"
+            If dtsUpload.Tables.Count > 0 Then
+                SeqData.ExportFile(dtsUpload, SeqData.CheckFilePath(txtFileName.Text, True), SeqData.curVar.ConvertToText, SeqData.curVar.ConvertToNull, SeqData.curVar.ShowFile, chkHasHeaders.Checked, txtDelimiter.Text, SeqData.curVar.QuoteValues, SeqData.curVar.CreateDir)
+            End If
         Catch ex As Exception
-            MessageBox.Show("Export to database failed. Check if the columns match and try again" & Environment.NewLine & "If you are importing more than 1 table, make sure they have identical columns" & Environment.NewLine & ex.Message)
+            MessageBox.Show("There was an error writng to " & txtFileName.Text & Environment.NewLine & ex.Message)
         End Try
     End Sub
 
-    Private Function UploadTable(dttInput As DataTable) As Integer
+    Private Sub UploadToDatabase(dtsUpload As DataSet)
         Dim dhdDB As New DataHandler.db
         Dim intRecordsAffected As Integer = 0
 
-        Try
-            dhdDB.DataLocation = txtServer.Text
-            dhdDB.DatabaseName = txtDatabase.Text
-            dhdDB.DataTableName = txtTable.Text
-            dhdDB.DataProvider = "SQL"
-            If chkWinAuth.Checked = True Then
-                dhdDB.LoginMethod = "Windows"
-            Else
-                dhdDB.LoginMethod = "SQL"
-            End If
-            dhdDB.LoginName = txtUser.Text
-            dhdDB.Password = txtPassword.Text
-
-            intRecordsAffected = dhdDB.UploadSqlData(dttInput)
-
-        Catch ex As Exception
-            WriteLog("Uploading Table failed. " & ex.Message, 1)
-            Return -1
-        End Try
-        Return intRecordsAffected
-    End Function
+        dhdDB.DataLocation = txtServer.Text
+        dhdDB.DatabaseName = txtDatabase.Text
+        dhdDB.DataTableName = txtTable.Text
+        dhdDB.DataProvider = "SQL"
+        If chkWinAuth.Checked = True Then
+            dhdDB.LoginMethod = "Windows"
+        Else
+            dhdDB.LoginMethod = "SQL"
+        End If
+        dhdDB.LoginName = txtUser.Text
+        dhdDB.Password = txtPassword.Text
+        intRecordsAffected = SeqData.SaveToDatabase(dhdDB, dtsUpload, SeqData.curVar.ConvertToText, SeqData.curVar.ConvertToNull)
+        If intRecordsAffected = -1 Then
+            MessageBox.Show("Export to database failed. Check if the columns match and try again" & Environment.NewLine & "If you are importing more than 1 table, make sure they have identical columns" & Environment.NewLine & dhdDB.ErrorMessage)
+            Exit Sub
+        Else
+            lblStatusText.Text = intRecordsAffected & " rows uploaded"
+        End If
+    End Sub
 
     Private Sub Checkfields()
         If chkDatabase.Checked = True Then
@@ -389,10 +219,11 @@ Public Class frmImport
     End Sub
 
     Private Sub chkImportTable_CheckedChanged(sender As Object, e As EventArgs) Handles chkUploadTable.CheckedChanged
-        DataTableSetExtendedPorperty(dgvImport.DataSource, chkUploadTable.Checked)
+        DataTableSetExtendedProperty(dgvImport.DataSource, chkUploadTable.Checked)
     End Sub
 
-    Private Sub DataTableSetExtendedPorperty(dttInput As DataTable, blnExportTable As Boolean)
+    Private Sub DataTableSetExtendedProperty(dttInput As DataTable, blnExportTable As Boolean)
+        If dttInput Is Nothing Then Exit Sub
         If dttInput.ExtendedProperties.Count = 0 Then
             dttInput.ExtendedProperties.Add("ExportTable", blnExportTable.ToString)
         Else
@@ -406,7 +237,7 @@ Public Class frmImport
         End If
     End Sub
 
-    Private Function DataTableGetExtendedPorperty(dttInput As DataTable) As Boolean
+    Private Function DataTableGetExtendedProperty(dttInput As DataTable) As Boolean
         If dttInput.ExtendedProperties.Count > 0 Then
             If dttInput.ExtendedProperties.ContainsKey("ExportTable") = True Then
                 Return dttInput.ExtendedProperties("ExportTable")
@@ -418,4 +249,24 @@ Public Class frmImport
         End If
     End Function
 
+    Private Sub chkCovertToText_CheckedChanged(sender As Object, e As EventArgs) Handles chkCovertToText.CheckedChanged
+        SeqData.curVar.ConvertToText = chkCovertToText.Checked
+    End Sub
+
+    Private Sub chkCovertToNull_CheckedChanged(sender As Object, e As EventArgs) Handles chkCovertToNull.CheckedChanged
+        SeqData.curVar.ConvertToNull = chkCovertToNull.Checked
+    End Sub
+
+    Private Sub txtDelimiter_MouseHover(sender As Object, e As EventArgs) Handles txtDelimiter.MouseHover
+        txtDelimiterShow.Text = txtDelimiter.Text
+        txtDelimiterShow.Visible = True
+    End Sub
+
+    Private Sub txtDelimiter_MouseLeave(sender As Object, e As EventArgs) Handles txtDelimiter.MouseLeave
+        txtDelimiterShow.Visible = False
+    End Sub
+
+    Private Sub txtDelimiter_TextChanged(sender As Object, e As EventArgs) Handles txtDelimiter.TextChanged
+        txtDelimiterShow.Text = txtDelimiter.Text
+    End Sub
 End Class

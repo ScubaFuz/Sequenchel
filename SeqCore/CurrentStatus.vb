@@ -2,9 +2,10 @@
     Private _Connection As String = ""
     Private _TableSet As String = ""
     Private _Table As String = ""
+    Private _Report As String = ""
     Private _Status As Short
     Private _SuspendActions As Boolean = False
-    Private _SelectedItem As DataGridViewRow
+    'Private _SelectedItem As DataGridViewRow
     Private _SelectedValue As String = ""
     Private _ConnectionChanged As Boolean = False
     Private _ConnectionReload As Boolean = False
@@ -55,6 +56,15 @@
         End Set
     End Property
 
+    Public Property Report() As String
+        Get
+            Return _Report
+        End Get
+        Set(ByVal Value As String)
+            _Report = Value
+        End Set
+    End Property
+
     Property Status() As StatusList
 
         Get
@@ -75,14 +85,14 @@
         End Set
     End Property
 
-    Public Property SelectedItem() As DataGridViewRow
-        Get
-            Return _SelectedItem
-        End Get
-        Set(ByVal Value As DataGridViewRow)
-            _SelectedItem = Value
-        End Set
-    End Property
+    'Public Property SelectedItem() As System.Windows.forms.DataGridViewRow
+    '    Get
+    '        Return _SelectedItem
+    '    End Get
+    '    Set(ByVal Value As System.Windows.forms.DataGridViewRow)
+    '        _SelectedItem = Value
+    '    End Set
+    'End Property
 
     Public Property SelectedValue() As String
         Get

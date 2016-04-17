@@ -1,3 +1,12 @@
+Version 3.7.0
+New: Added Commandline options to export a report or import a file without user intervention.
+New: Export to CSV (txt) option.
+New: Import XML files option.
+New: Import CSV (txt) files option.
+New: Added the option to email reports.
+Enhanced: Sequenchel has been rewritten for better performance and to facilitate adding new options
+Fixed: Importing Excel sheets with empty values now works correctly.
+
 Version 3.6.0
 New: Added SmartUpdate for easy Datawarehouse building.
 New: Import file can import multiple sheets from 1 Excel file at once. Upload to database per sheet is possible.

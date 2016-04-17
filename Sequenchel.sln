@@ -5,6 +5,15 @@ Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Sequenchel", "Sequenchel\Se
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "SDBA", "SDBA\SDBA.vbproj", "{03D663F2-7098-4085-9B75-31A322B4CC26}"
 EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "SeqCore", "SeqCore\SeqCore.vbproj", "{029272AF-B66D-4873-B2F0-C0ADA5AEC85C}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "SeqCmd", "SeqCmd\SeqCmd.vbproj", "{E3178A6E-4726-48AE-A20F-40EAEB1C2E2B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{259837B0-E19D-406A-9B7B-BCF8A5DABE51}"
+	ProjectSection(SolutionItems) = preProject
+		Version.vb = Version.vb
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +28,14 @@ Global
 		{03D663F2-7098-4085-9B75-31A322B4CC26}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{03D663F2-7098-4085-9B75-31A322B4CC26}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{03D663F2-7098-4085-9B75-31A322B4CC26}.Release|Any CPU.Build.0 = Release|Any CPU
+		{029272AF-B66D-4873-B2F0-C0ADA5AEC85C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{029272AF-B66D-4873-B2F0-C0ADA5AEC85C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{029272AF-B66D-4873-B2F0-C0ADA5AEC85C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{029272AF-B66D-4873-B2F0-C0ADA5AEC85C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E3178A6E-4726-48AE-A20F-40EAEB1C2E2B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E3178A6E-4726-48AE-A20F-40EAEB1C2E2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E3178A6E-4726-48AE-A20F-40EAEB1C2E2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E3178A6E-4726-48AE-A20F-40EAEB1C2E2B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

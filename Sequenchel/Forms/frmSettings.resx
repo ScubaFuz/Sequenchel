@@ -117,17 +117,17 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <metadata name="ttpDefaultLogLocation.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
-  <data name="RichTextBox1.Text" xml:space="preserve">
-    <value>These values determine how the procedure "Monitor Dataspaces" will report data sizes. Only databases that do not comply with these rules will be reported. Make sure you save this to your main monitoring database.</value>
-  </data>
   <data name="rtbFtpCmdshell.Text" xml:space="preserve">
     <value>cmdshell is required for FTP procedures. If you select this option Sequenchel will turn Advanced Settings and cmdshell ON before running and OFF after completion, regardless of the settings of your server.</value>
   </data>
   <data name="rtbFtpDefaultValues.Text" xml:space="preserve">
     <value>Set the default values for your environment and create FTP Upload and Download Stored Procedures in your main Sequenchel database.  All values can also be inserted as variables when calling the procedures.</value>
+  </data>
+  <metadata name="ttpDefaultLogLocation.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
+  <data name="RichTextBox1.Text" xml:space="preserve">
+    <value>These values determine how the procedure "Monitor Dataspaces" will report data sizes. Only databases that do not comply with these rules will be reported. Make sure you save this to your main monitoring database.</value>
   </data>
   <metadata name="ttpDefaultLogLocation.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
