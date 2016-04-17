@@ -4,6 +4,7 @@ New: Export to CSV (txt) option.
 New: Import XML files option.
 New: Import CSV (txt) files option.
 New: Added the option to email reports.
+Enhanced: Sequenchel has been rewritten for better performance and to facilitate adding new options
 Fixed: Importing Excel sheets with empty values now works correctly.
 
 Version 3.6.0
