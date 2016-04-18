@@ -583,6 +583,7 @@ Public Class Data
                         End If
                     End If
                 End If
+                If dhdText.CheckElement(xmlLoadDoc, "TimedShutdown") Then curVar.TimedShutdown = xmlLoadDoc.Item("Sequenchel").Item("Settings").Item("TimedShutdown").InnerText
             Catch ex As Exception
                 ErrorMessage = "There was an error reading the XML file. Please check the file" & Environment.NewLine & System.AppDomain.CurrentDomain.BaseDirectory & dhdText.InputFile & Environment.NewLine & Environment.NewLine & ex.Message
                 WriteLog("There was an error reading the XML file. Please check the file" & Environment.NewLine & System.AppDomain.CurrentDomain.BaseDirectory & dhdText.InputFile & Environment.NewLine & Environment.NewLine & ex.Message, 1)
@@ -615,6 +616,7 @@ Public Class Data
         strXmlText &= "		<AllowInsert>" & curVar.AllowInsert & "</AllowInsert>" & Environment.NewLine
         strXmlText &= "		<AllowDelete>" & curVar.AllowDelete & "</AllowDelete>" & Environment.NewLine
         strXmlText &= "		<OverridePassword>" & curVar.OverridePassword & "</OverridePassword>" & Environment.NewLine
+        strXmlText &= "		<TimedShutdown>" & curVar.TimedShutdown & "</TimedShutdown>" & Environment.NewLine
         strXmlText &= "	</Settings>" & Environment.NewLine
         strXmlText &= "</Sequenchel>" & Environment.NewLine
         Try

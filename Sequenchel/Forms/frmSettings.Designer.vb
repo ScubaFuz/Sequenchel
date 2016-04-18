@@ -26,6 +26,9 @@ Partial Class frmSettings
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmSettings))
         Me.tabSettings = New System.Windows.Forms.TabControl()
         Me.tpgGeneral = New System.Windows.Forms.TabPage()
+        Me.txtTimerHours = New System.Windows.Forms.TextBox()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.Label3 = New System.Windows.Forms.Label()
         Me.lblLimitLookupLists = New System.Windows.Forms.Label()
         Me.txtLimitLookupLists = New System.Windows.Forms.TextBox()
         Me.chkLimitLookupLists = New System.Windows.Forms.CheckBox()
@@ -270,6 +273,9 @@ Partial Class frmSettings
         '
         'tpgGeneral
         '
+        Me.tpgGeneral.Controls.Add(Me.txtTimerHours)
+        Me.tpgGeneral.Controls.Add(Me.Label4)
+        Me.tpgGeneral.Controls.Add(Me.Label3)
         Me.tpgGeneral.Controls.Add(Me.lblLimitLookupLists)
         Me.tpgGeneral.Controls.Add(Me.txtLimitLookupLists)
         Me.tpgGeneral.Controls.Add(Me.chkLimitLookupLists)
@@ -299,10 +305,35 @@ Partial Class frmSettings
         Me.tpgGeneral.Text = "General"
         Me.tpgGeneral.UseVisualStyleBackColor = True
         '
+        'txtTimerHours
+        '
+        Me.txtTimerHours.Location = New System.Drawing.Point(156, 286)
+        Me.txtTimerHours.Name = "txtTimerHours"
+        Me.txtTimerHours.Size = New System.Drawing.Size(31, 20)
+        Me.txtTimerHours.TabIndex = 118
+        '
+        'Label4
+        '
+        Me.Label4.AutoSize = True
+        Me.Label4.Location = New System.Drawing.Point(193, 289)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(157, 13)
+        Me.Label4.TabIndex = 117
+        Me.Label4.Text = "hours of inactivity (0 = unlimited)"
+        '
+        'Label3
+        '
+        Me.Label3.AutoSize = True
+        Me.Label3.Location = New System.Drawing.Point(33, 289)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(117, 13)
+        Me.Label3.TabIndex = 116
+        Me.Label3.Text = "Close Sequenchel after"
+        '
         'lblLimitLookupLists
         '
         Me.lblLimitLookupLists.AutoSize = True
-        Me.lblLimitLookupLists.Location = New System.Drawing.Point(198, 288)
+        Me.lblLimitLookupLists.Location = New System.Drawing.Point(502, 342)
         Me.lblLimitLookupLists.Name = "lblLimitLookupLists"
         Me.lblLimitLookupLists.Size = New System.Drawing.Size(31, 13)
         Me.lblLimitLookupLists.TabIndex = 115
@@ -310,7 +341,7 @@ Partial Class frmSettings
         '
         'txtLimitLookupLists
         '
-        Me.txtLimitLookupLists.Location = New System.Drawing.Point(151, 285)
+        Me.txtLimitLookupLists.Location = New System.Drawing.Point(455, 339)
         Me.txtLimitLookupLists.Name = "txtLimitLookupLists"
         Me.txtLimitLookupLists.Size = New System.Drawing.Size(41, 20)
         Me.txtLimitLookupLists.TabIndex = 114
@@ -318,7 +349,7 @@ Partial Class frmSettings
         'chkLimitLookupLists
         '
         Me.chkLimitLookupLists.AutoSize = True
-        Me.chkLimitLookupLists.Location = New System.Drawing.Point(36, 287)
+        Me.chkLimitLookupLists.Location = New System.Drawing.Point(340, 341)
         Me.chkLimitLookupLists.Name = "chkLimitLookupLists"
         Me.chkLimitLookupLists.Size = New System.Drawing.Size(121, 17)
         Me.chkLimitLookupLists.TabIndex = 113
@@ -2654,4 +2685,7 @@ Partial Class frmSettings
     Friend WithEvents btnShowEmailPassword As System.Windows.Forms.Button
     Friend WithEvents btnShowOverridePassword As System.Windows.Forms.Button
     Friend WithEvents btnShowDatabasePassword As System.Windows.Forms.Button
+    Friend WithEvents txtTimerHours As System.Windows.Forms.TextBox
+    Friend WithEvents Label4 As System.Windows.Forms.Label
+    Friend WithEvents Label3 As System.Windows.Forms.Label
 End Class

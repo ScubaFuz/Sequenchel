@@ -63,6 +63,9 @@
         chkAllowDelete.Tag = SeqData.curVar.AllowDelete
         chkAllowDelete.Checked = SeqData.curVar.AllowDelete
 
+        txtTimerHours.Tag = SeqData.curVar.TimedShutdown / 60 / 60 / 1000
+        txtTimerHours.Text = SeqData.curVar.TimedShutdown / 60 / 60 / 1000
+
         chkLimitLookupLists.Tag = SeqData.curVar.LimitLookupLists
         chkLimitLookupLists.Checked = SeqData.curVar.LimitLookupLists
         txtLimitLookupLists.Tag = SeqData.curVar.LimitLookupListsCount
@@ -209,6 +212,14 @@
         End If
     End Sub
 
+    Private Sub txtTimerHours_TextChanged(sender As Object, e As EventArgs) Handles txtTimerHours.TextChanged
+        If txtTimerHours.Text = txtTimerHours.Tag Then
+            txtTimerHours.BackColor = clrControl
+        Else
+            txtTimerHours.BackColor = clrMarked
+        End If
+    End Sub
+
     Private Sub chkLimitLookupLists_CheckedChanged(sender As Object, e As EventArgs) Handles chkLimitLookupLists.CheckedChanged
         If chkLimitLookupLists.Checked = chkLimitLookupLists.Tag Then
             chkLimitLookupLists.BackColor = clrControl
@@ -305,6 +316,22 @@
             chkAllowDelete.BackColor = clrOriginal
             blnSettingsChanged = True
         End If
+        If txtTimerHours.BackColor = clrMarked Then
+            If IsNumeric(txtTimerHours.Text) = True Then
+                Dim intTimer As Integer = txtTimerHours.Text
+                If intTimer > 576 Then
+                    MessageBox.Show("The timer cannot exceed 576 hours (24 days). please choose a value between 0 and 576", "Value to high", MessageBoxButtons.OK)
+                    txtTimerHours.Text = 0
+                End If
+            Else
+                txtTimerHours.Text = 0
+            End If
+            SeqData.curVar.TimedShutdown = txtTimerHours.Text * 60 * 60 * 1000
+            txtTimerHours.Tag = SeqData.curVar.TimedShutdown / 60 / 60 / 1000
+            txtTimerHours.BackColor = clrOriginal
+            blnSettingsChanged = True
+        End If
+
         If txtOverridePassword.Text.Length > 0 And txtOverridePassword.Text <> txtOverridePassword.Tag Then
             SeqData.curVar.OverridePassword = SeqData.dhdText.MD5Encrypt(txtOverridePassword.Text)
             blnSettingsChanged = True
@@ -1474,6 +1501,5 @@
     End Sub
 
 #End Region
-
 
 End Class

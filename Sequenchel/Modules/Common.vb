@@ -40,6 +40,7 @@ Module Common
     Friend strReport As String = "Sequenchel " & vbTab & " version: " & Core.GetVersion("B") & "  Licensed by: " & Core.LicenseName
     Friend dtmElapsedTime As DateTime
     Friend tmsElapsedTime As TimeSpan
+    Friend tmrShutdown As New Timers.Timer
 
     Private _SelectedItem As DataGridViewRow
 
@@ -107,6 +108,40 @@ Module Common
         '    blnEncryption = False
         'End If
 
+    End Sub
+
+    Friend Sub SetTimer()
+        AddHandler tmrShutdown.Elapsed, AddressOf TimedShutdown
+        Dim intShutdown As Integer = SeqData.curVar.TimedShutdown
+        If intShutdown > 60000 Then intShutdown -= 60000
+        If intShutdown > 0 Then tmrShutdown.Interval = intShutdown
+        If intShutdown <= 60000 Then
+            tmrShutdown.Enabled = False
+        ElseIf intShutdown > 0 Then
+            tmrShutdown.Enabled = True
+            tmrShutdown.Start()
+        End If
+    End Sub
+
+    Friend Sub ShutdownDelay()
+        If tmrShutdown.Enabled = False And tmrShutdown.Interval > 0 Then
+            tmrShutdown.Enabled = True
+            tmrShutdown.Start()
+        Else
+            tmrShutdown.Stop()
+            tmrShutdown.Enabled = False
+            tmrShutdown.Enabled = True
+            tmrShutdown.Start()
+        End If
+    End Sub
+
+    Friend Sub TimedShutdown()
+        ShutdownDelay()
+        ShowShutdownForm()
+    End Sub
+
+    Friend Sub ShowShutdownForm()
+        Application.Run(frmShutdown)
     End Sub
 
     Friend Sub LoadLicense(lblTarget As Label)

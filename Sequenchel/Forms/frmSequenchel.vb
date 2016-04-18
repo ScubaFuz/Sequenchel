@@ -30,8 +30,8 @@ Public Class frmSequenchel
                 SeqData.WriteLog(Core.Message.strXmlError, 1)
                 MessageBox.Show(Core.Message.strXmlError)
             End If
-
         End If
+        SetTimer()
         SecuritySet()
         SeqData.LoadGeneralSettingsXml(xmlGeneralSettings)
         'Core.DeleteOldLogs()
@@ -109,7 +109,7 @@ Public Class frmSequenchel
     End Sub
 
     Private Sub btnTest_Click(sender As Object, e As EventArgs) Handles btnTest.Click
-        'MessageBox.Show(FormatFieldWhere2("SearchField", "dbo.TableName", "15", "CHAR", "Pirates AND Pearl NOT Dead OR Caribbean"))
+        'TimedShutdown()
     End Sub
 
 #Region "Navigation"
