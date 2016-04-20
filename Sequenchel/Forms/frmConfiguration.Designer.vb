@@ -270,7 +270,7 @@ Partial Class frmConfiguration
         Me.btnShowDatabasePassword.Location = New System.Drawing.Point(714, 155)
         Me.btnShowDatabasePassword.Name = "btnShowDatabasePassword"
         Me.btnShowDatabasePassword.Size = New System.Drawing.Size(23, 23)
-        Me.btnShowDatabasePassword.TabIndex = 111
+        Me.btnShowDatabasePassword.TabIndex = 11
         Me.btnShowDatabasePassword.UseVisualStyleBackColor = True
         '
         'btnDefaultTableSetFile
@@ -280,7 +280,7 @@ Partial Class frmConfiguration
         Me.btnDefaultTableSetFile.Location = New System.Drawing.Point(527, 228)
         Me.btnDefaultTableSetFile.Name = "btnDefaultTableSetFile"
         Me.btnDefaultTableSetFile.Size = New System.Drawing.Size(23, 23)
-        Me.btnDefaultTableSetFile.TabIndex = 110
+        Me.btnDefaultTableSetFile.TabIndex = 14
         '
         'btnTableSetFileBrowse
         '
@@ -290,7 +290,7 @@ Partial Class frmConfiguration
         Me.btnTableSetFileBrowse.Location = New System.Drawing.Point(714, 228)
         Me.btnTableSetFileBrowse.Name = "btnTableSetFileBrowse"
         Me.btnTableSetFileBrowse.Size = New System.Drawing.Size(23, 23)
-        Me.btnTableSetFileBrowse.TabIndex = 15
+        Me.btnTableSetFileBrowse.TabIndex = 16
         '
         'lblBackupPath
         '
@@ -310,7 +310,7 @@ Partial Class frmConfiguration
         Me.btnBackupLocation.Location = New System.Drawing.Point(714, 644)
         Me.btnBackupLocation.Name = "btnBackupLocation"
         Me.btnBackupLocation.Size = New System.Drawing.Size(23, 23)
-        Me.btnBackupLocation.TabIndex = 20
+        Me.btnBackupLocation.TabIndex = 27
         Me.btnBackupLocation.Text = "..."
         '
         'lblBackupLocation
@@ -329,7 +329,7 @@ Partial Class frmConfiguration
         Me.txtBackupLocation.Location = New System.Drawing.Point(554, 643)
         Me.txtBackupLocation.Name = "txtBackupLocation"
         Me.txtBackupLocation.Size = New System.Drawing.Size(154, 20)
-        Me.txtBackupLocation.TabIndex = 19
+        Me.txtBackupLocation.TabIndex = 26
         '
         'btnBackup
         '
@@ -337,17 +337,17 @@ Partial Class frmConfiguration
         Me.btnBackup.Location = New System.Drawing.Point(453, 705)
         Me.btnBackup.Name = "btnBackup"
         Me.btnBackup.Size = New System.Drawing.Size(131, 20)
-        Me.btnBackup.TabIndex = 21
+        Me.btnBackup.TabIndex = 28
         Me.btnBackup.Text = "Backup"
         '
         'lstDatabases
         '
         Me.lstDatabases.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lstDatabases.FormattingEnabled = True
-        Me.lstDatabases.Location = New System.Drawing.Point(554, 84)
+        Me.lstDatabases.Location = New System.Drawing.Point(552, 84)
         Me.lstDatabases.Name = "lstDatabases"
         Me.lstDatabases.Size = New System.Drawing.Size(147, 95)
-        Me.lstDatabases.TabIndex = 101
+        Me.lstDatabases.TabIndex = 6
         Me.lstDatabases.TabStop = False
         Me.lstDatabases.Visible = False
         '
@@ -355,10 +355,10 @@ Partial Class frmConfiguration
         '
         Me.lstServers.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lstServers.FormattingEnabled = True
-        Me.lstServers.Location = New System.Drawing.Point(554, 60)
+        Me.lstServers.Location = New System.Drawing.Point(552, 60)
         Me.lstServers.Name = "lstServers"
         Me.lstServers.Size = New System.Drawing.Size(147, 95)
-        Me.lstServers.TabIndex = 103
+        Me.lstServers.TabIndex = 3
         Me.lstServers.TabStop = False
         Me.lstServers.Visible = False
         '
@@ -370,7 +370,7 @@ Partial Class frmConfiguration
         Me.btnCrawlServers.Location = New System.Drawing.Point(707, 61)
         Me.btnCrawlServers.Name = "btnCrawlServers"
         Me.btnCrawlServers.Size = New System.Drawing.Size(30, 20)
-        Me.btnCrawlServers.TabIndex = 6
+        Me.btnCrawlServers.TabIndex = 4
         Me.btnCrawlServers.Text = "..."
         '
         'btnCrawlDatabases
@@ -381,7 +381,7 @@ Partial Class frmConfiguration
         Me.btnCrawlDatabases.Location = New System.Drawing.Point(707, 84)
         Me.btnCrawlDatabases.Name = "btnCrawlDatabases"
         Me.btnCrawlDatabases.Size = New System.Drawing.Size(30, 20)
-        Me.btnCrawlDatabases.TabIndex = 8
+        Me.btnCrawlDatabases.TabIndex = 7
         Me.btnCrawlDatabases.Text = "..."
         '
         'btnConnectionDelete
@@ -390,7 +390,7 @@ Partial Class frmConfiguration
         Me.btnConnectionDelete.Location = New System.Drawing.Point(606, 256)
         Me.btnConnectionDelete.Name = "btnConnectionDelete"
         Me.btnConnectionDelete.Size = New System.Drawing.Size(131, 20)
-        Me.btnConnectionDelete.TabIndex = 17
+        Me.btnConnectionDelete.TabIndex = 18
         Me.btnConnectionDelete.Text = "Delete Connection"
         '
         'btnConnectionClear
@@ -399,7 +399,7 @@ Partial Class frmConfiguration
         Me.btnConnectionClear.Location = New System.Drawing.Point(453, 282)
         Me.btnConnectionClear.Name = "btnConnectionClear"
         Me.btnConnectionClear.Size = New System.Drawing.Size(131, 20)
-        Me.btnConnectionClear.TabIndex = 18
+        Me.btnConnectionClear.TabIndex = 19
         Me.btnConnectionClear.Text = "Clear"
         '
         'lblTableSetsFile
@@ -418,7 +418,7 @@ Partial Class frmConfiguration
         Me.txtTableSetsFile.Location = New System.Drawing.Point(554, 230)
         Me.txtTableSetsFile.Name = "txtTableSetsFile"
         Me.txtTableSetsFile.Size = New System.Drawing.Size(154, 20)
-        Me.txtTableSetsFile.TabIndex = 14
+        Me.txtTableSetsFile.TabIndex = 15
         '
         'cbxDataProvider
         '
@@ -438,7 +438,7 @@ Partial Class frmConfiguration
         Me.cbxLoginMethod.Location = New System.Drawing.Point(554, 108)
         Me.cbxLoginMethod.Name = "cbxLoginMethod"
         Me.cbxLoginMethod.Size = New System.Drawing.Size(183, 21)
-        Me.cbxLoginMethod.TabIndex = 9
+        Me.cbxLoginMethod.TabIndex = 8
         '
         'btnConnectionAddOrUpdate
         '
@@ -446,7 +446,7 @@ Partial Class frmConfiguration
         Me.btnConnectionAddOrUpdate.Location = New System.Drawing.Point(453, 256)
         Me.btnConnectionAddOrUpdate.Name = "btnConnectionAddOrUpdate"
         Me.btnConnectionAddOrUpdate.Size = New System.Drawing.Size(131, 20)
-        Me.btnConnectionAddOrUpdate.TabIndex = 16
+        Me.btnConnectionAddOrUpdate.TabIndex = 17
         Me.btnConnectionAddOrUpdate.Text = "Add/Update Connection"
         '
         'btnConnectionDefault
@@ -454,7 +454,7 @@ Partial Class frmConfiguration
         Me.btnConnectionDefault.Location = New System.Drawing.Point(25, 256)
         Me.btnConnectionDefault.Name = "btnConnectionDefault"
         Me.btnConnectionDefault.Size = New System.Drawing.Size(164, 20)
-        Me.btnConnectionDefault.TabIndex = 1
+        Me.btnConnectionDefault.TabIndex = 20
         Me.btnConnectionDefault.Text = "Set as Default Connection"
         '
         'lblConnectionName
@@ -473,7 +473,7 @@ Partial Class frmConfiguration
         Me.txtConnectionName.Location = New System.Drawing.Point(554, 36)
         Me.txtConnectionName.Name = "txtConnectionName"
         Me.txtConnectionName.Size = New System.Drawing.Size(183, 20)
-        Me.txtConnectionName.TabIndex = 4
+        Me.txtConnectionName.TabIndex = 1
         '
         'lblDataLocation
         '
@@ -551,7 +551,7 @@ Partial Class frmConfiguration
         Me.txtDataLocation.Location = New System.Drawing.Point(554, 60)
         Me.txtDataLocation.Name = "txtDataLocation"
         Me.txtDataLocation.Size = New System.Drawing.Size(147, 20)
-        Me.txtDataLocation.TabIndex = 5
+        Me.txtDataLocation.TabIndex = 2
         '
         'txtLoginName
         '
@@ -560,7 +560,7 @@ Partial Class frmConfiguration
         Me.txtLoginName.Location = New System.Drawing.Point(554, 133)
         Me.txtLoginName.Name = "txtLoginName"
         Me.txtLoginName.Size = New System.Drawing.Size(183, 20)
-        Me.txtLoginName.TabIndex = 10
+        Me.txtLoginName.TabIndex = 9
         '
         'txtPassword
         '
@@ -570,7 +570,7 @@ Partial Class frmConfiguration
         Me.txtPassword.Name = "txtPassword"
         Me.txtPassword.PasswordChar = Global.Microsoft.VisualBasic.ChrW(42)
         Me.txtPassword.Size = New System.Drawing.Size(157, 20)
-        Me.txtPassword.TabIndex = 11
+        Me.txtPassword.TabIndex = 10
         Me.txtPassword.Tag = "<Keep Current Password>"
         '
         'txtTimeOut
@@ -588,7 +588,7 @@ Partial Class frmConfiguration
         Me.txtDataBaseName.Location = New System.Drawing.Point(554, 84)
         Me.txtDataBaseName.Name = "txtDataBaseName"
         Me.txtDataBaseName.Size = New System.Drawing.Size(147, 20)
-        Me.txtDataBaseName.TabIndex = 7
+        Me.txtDataBaseName.TabIndex = 5
         '
         'btnConnectionsShow
         '
@@ -596,7 +596,7 @@ Partial Class frmConfiguration
         Me.btnConnectionsShow.Location = New System.Drawing.Point(25, 705)
         Me.btnConnectionsShow.Name = "btnConnectionsShow"
         Me.btnConnectionsShow.Size = New System.Drawing.Size(164, 20)
-        Me.btnConnectionsShow.TabIndex = 3
+        Me.btnConnectionsShow.TabIndex = 24
         Me.btnConnectionsShow.Text = "Show All Connections"
         '
         'lblSelectedConnection
@@ -617,7 +617,7 @@ Partial Class frmConfiguration
         Me.tvwConnection.Location = New System.Drawing.Point(25, 302)
         Me.tvwConnection.Name = "tvwConnection"
         Me.tvwConnection.Size = New System.Drawing.Size(392, 397)
-        Me.tvwConnection.TabIndex = 2
+        Me.tvwConnection.TabIndex = 21
         '
         'lblConnections
         '
@@ -701,7 +701,7 @@ Partial Class frmConfiguration
         Me.btnDefaultPathSet.Location = New System.Drawing.Point(539, 60)
         Me.btnDefaultPathSet.Name = "btnDefaultPathSet"
         Me.btnDefaultPathSet.Size = New System.Drawing.Size(23, 23)
-        Me.btnDefaultPathSet.TabIndex = 107
+        Me.btnDefaultPathSet.TabIndex = 3
         '
         'btnDefaultPathBrowse
         '
@@ -711,7 +711,7 @@ Partial Class frmConfiguration
         Me.btnDefaultPathBrowse.Location = New System.Drawing.Point(714, 60)
         Me.btnDefaultPathBrowse.Name = "btnDefaultPathBrowse"
         Me.btnDefaultPathBrowse.Size = New System.Drawing.Size(23, 23)
-        Me.btnDefaultPathBrowse.TabIndex = 6
+        Me.btnDefaultPathBrowse.TabIndex = 5
         '
         'lblDefaultPath
         '
@@ -729,7 +729,7 @@ Partial Class frmConfiguration
         Me.txtDefaultPath.Location = New System.Drawing.Point(567, 62)
         Me.txtDefaultPath.Name = "txtDefaultPath"
         Me.txtDefaultPath.Size = New System.Drawing.Size(145, 20)
-        Me.txtDefaultPath.TabIndex = 5
+        Me.txtDefaultPath.TabIndex = 4
         '
         'chkDefaultValues
         '
@@ -740,7 +740,7 @@ Partial Class frmConfiguration
         Me.chkDefaultValues.Location = New System.Drawing.Point(567, 220)
         Me.chkDefaultValues.Name = "chkDefaultValues"
         Me.chkDefaultValues.Size = New System.Drawing.Size(129, 17)
-        Me.chkDefaultValues.TabIndex = 12
+        Me.chkDefaultValues.TabIndex = 11
         Me.chkDefaultValues.Text = "Autofill Default Values"
         Me.chkDefaultValues.UseVisualStyleBackColor = True
         '
@@ -760,7 +760,7 @@ Partial Class frmConfiguration
         Me.txtSearchFile.Location = New System.Drawing.Point(567, 194)
         Me.txtSearchFile.Name = "txtSearchFile"
         Me.txtSearchFile.Size = New System.Drawing.Size(170, 20)
-        Me.txtSearchFile.TabIndex = 11
+        Me.txtSearchFile.TabIndex = 10
         '
         'btnDefaultTableSet
         '
@@ -769,7 +769,7 @@ Partial Class frmConfiguration
         Me.btnDefaultTableSet.Location = New System.Drawing.Point(539, 34)
         Me.btnDefaultTableSet.Name = "btnDefaultTableSet"
         Me.btnDefaultTableSet.Size = New System.Drawing.Size(23, 23)
-        Me.btnDefaultTableSet.TabIndex = 100
+        Me.btnDefaultTableSet.TabIndex = 1
         '
         'btnTableSetDelete
         '
@@ -777,7 +777,7 @@ Partial Class frmConfiguration
         Me.btnTableSetDelete.Location = New System.Drawing.Point(606, 256)
         Me.btnTableSetDelete.Name = "btnTableSetDelete"
         Me.btnTableSetDelete.Size = New System.Drawing.Size(131, 20)
-        Me.btnTableSetDelete.TabIndex = 14
+        Me.btnTableSetDelete.TabIndex = 13
         Me.btnTableSetDelete.Text = "Delete TableSet"
         '
         'btnTableSetClear
@@ -786,7 +786,7 @@ Partial Class frmConfiguration
         Me.btnTableSetClear.Location = New System.Drawing.Point(453, 282)
         Me.btnTableSetClear.Name = "btnTableSetClear"
         Me.btnTableSetClear.Size = New System.Drawing.Size(131, 20)
-        Me.btnTableSetClear.TabIndex = 15
+        Me.btnTableSetClear.TabIndex = 14
         Me.btnTableSetClear.Text = "Clear"
         '
         'lblReportsFile
@@ -805,7 +805,7 @@ Partial Class frmConfiguration
         Me.txtReportsFile.Location = New System.Drawing.Point(567, 168)
         Me.txtReportsFile.Name = "txtReportsFile"
         Me.txtReportsFile.Size = New System.Drawing.Size(170, 20)
-        Me.txtReportsFile.TabIndex = 10
+        Me.txtReportsFile.TabIndex = 9
         '
         'btnTableSetAdd
         '
@@ -813,7 +813,7 @@ Partial Class frmConfiguration
         Me.btnTableSetAdd.Location = New System.Drawing.Point(453, 256)
         Me.btnTableSetAdd.Name = "btnTableSetAdd"
         Me.btnTableSetAdd.Size = New System.Drawing.Size(131, 20)
-        Me.btnTableSetAdd.TabIndex = 13
+        Me.btnTableSetAdd.TabIndex = 12
         Me.btnTableSetAdd.Text = "Add/Update TableSet"
         '
         'btnTableSetDefault
@@ -821,7 +821,7 @@ Partial Class frmConfiguration
         Me.btnTableSetDefault.Location = New System.Drawing.Point(25, 256)
         Me.btnTableSetDefault.Name = "btnTableSetDefault"
         Me.btnTableSetDefault.Size = New System.Drawing.Size(164, 20)
-        Me.btnTableSetDefault.TabIndex = 1
+        Me.btnTableSetDefault.TabIndex = 15
         Me.btnTableSetDefault.Text = "Set as Default Tableset"
         '
         'lblTableSetName
@@ -840,7 +840,7 @@ Partial Class frmConfiguration
         Me.txtTableSetName.Location = New System.Drawing.Point(567, 36)
         Me.txtTableSetName.Name = "txtTableSetName"
         Me.txtTableSetName.Size = New System.Drawing.Size(170, 20)
-        Me.txtTableSetName.TabIndex = 4
+        Me.txtTableSetName.TabIndex = 2
         '
         'lblOutputPath
         '
@@ -878,7 +878,7 @@ Partial Class frmConfiguration
         Me.txtOutputPath.Location = New System.Drawing.Point(567, 118)
         Me.txtOutputPath.Name = "txtOutputPath"
         Me.txtOutputPath.Size = New System.Drawing.Size(170, 20)
-        Me.txtOutputPath.TabIndex = 8
+        Me.txtOutputPath.TabIndex = 7
         '
         'txtReportsSetName
         '
@@ -886,7 +886,7 @@ Partial Class frmConfiguration
         Me.txtReportsSetName.Location = New System.Drawing.Point(567, 142)
         Me.txtReportsSetName.Name = "txtReportsSetName"
         Me.txtReportsSetName.Size = New System.Drawing.Size(170, 20)
-        Me.txtReportsSetName.TabIndex = 9
+        Me.txtReportsSetName.TabIndex = 8
         '
         'txtTablesFile
         '
@@ -894,7 +894,7 @@ Partial Class frmConfiguration
         Me.txtTablesFile.Location = New System.Drawing.Point(567, 94)
         Me.txtTablesFile.Name = "txtTablesFile"
         Me.txtTablesFile.Size = New System.Drawing.Size(170, 20)
-        Me.txtTablesFile.TabIndex = 7
+        Me.txtTablesFile.TabIndex = 6
         '
         'btnTableSetsShow
         '
@@ -902,7 +902,7 @@ Partial Class frmConfiguration
         Me.btnTableSetsShow.Location = New System.Drawing.Point(25, 705)
         Me.btnTableSetsShow.Name = "btnTableSetsShow"
         Me.btnTableSetsShow.Size = New System.Drawing.Size(164, 20)
-        Me.btnTableSetsShow.TabIndex = 3
+        Me.btnTableSetsShow.TabIndex = 17
         Me.btnTableSetsShow.Text = "Show All TableSets"
         '
         'lblSelectedTableSet
@@ -923,7 +923,7 @@ Partial Class frmConfiguration
         Me.tvwTableSet.Location = New System.Drawing.Point(25, 302)
         Me.tvwTableSet.Name = "tvwTableSet"
         Me.tvwTableSet.Size = New System.Drawing.Size(392, 397)
-        Me.tvwTableSet.TabIndex = 2
+        Me.tvwTableSet.TabIndex = 16
         '
         'lblTableSets
         '
@@ -1060,7 +1060,7 @@ Partial Class frmConfiguration
         Me.chkRelatedField.Location = New System.Drawing.Point(107, 142)
         Me.chkRelatedField.Name = "chkRelatedField"
         Me.chkRelatedField.Size = New System.Drawing.Size(15, 14)
-        Me.chkRelatedField.TabIndex = 162
+        Me.chkRelatedField.TabIndex = 7
         Me.chkRelatedField.UseVisualStyleBackColor = True
         '
         'lblFieldName
@@ -1094,7 +1094,7 @@ Partial Class frmConfiguration
         Me.chkIdentity.Location = New System.Drawing.Point(277, 248)
         Me.chkIdentity.Name = "chkIdentity"
         Me.chkIdentity.Size = New System.Drawing.Size(15, 14)
-        Me.chkIdentity.TabIndex = 18
+        Me.chkIdentity.TabIndex = 14
         Me.chkIdentity.UseVisualStyleBackColor = True
         '
         'txtFieldAlias
@@ -1128,7 +1128,7 @@ Partial Class frmConfiguration
         Me.chkPrimaryKey.Location = New System.Drawing.Point(277, 274)
         Me.chkPrimaryKey.Name = "chkPrimaryKey"
         Me.chkPrimaryKey.Size = New System.Drawing.Size(15, 14)
-        Me.chkPrimaryKey.TabIndex = 19
+        Me.chkPrimaryKey.TabIndex = 16
         Me.chkPrimaryKey.UseVisualStyleBackColor = True
         '
         'lblDataType
@@ -1229,7 +1229,7 @@ Partial Class frmConfiguration
         Me.btnRelationAdd.Location = New System.Drawing.Point(249, 112)
         Me.btnRelationAdd.Name = "btnRelationAdd"
         Me.btnRelationAdd.Size = New System.Drawing.Size(20, 20)
-        Me.btnRelationAdd.TabIndex = 6
+        Me.btnRelationAdd.TabIndex = 5
         Me.btnRelationAdd.Text = "V"
         Me.btnRelationAdd.UseVisualStyleBackColor = True
         '
@@ -1264,7 +1264,7 @@ Partial Class frmConfiguration
         Me.btnRelationRemove.Location = New System.Drawing.Point(271, 112)
         Me.btnRelationRemove.Name = "btnRelationRemove"
         Me.btnRelationRemove.Size = New System.Drawing.Size(20, 20)
-        Me.btnRelationRemove.TabIndex = 7
+        Me.btnRelationRemove.TabIndex = 6
         Me.btnRelationRemove.Text = "X"
         Me.btnRelationRemove.UseVisualStyleBackColor = True
         '
@@ -1300,7 +1300,7 @@ Partial Class frmConfiguration
         Me.chkControlMode.Location = New System.Drawing.Point(107, 274)
         Me.chkControlMode.Name = "chkControlMode"
         Me.chkControlMode.Size = New System.Drawing.Size(15, 14)
-        Me.chkControlMode.TabIndex = 14
+        Me.chkControlMode.TabIndex = 15
         Me.chkControlMode.UseVisualStyleBackColor = True
         '
         'lblControlMode
@@ -1318,7 +1318,7 @@ Partial Class frmConfiguration
         Me.chkFieldList.Location = New System.Drawing.Point(107, 298)
         Me.chkFieldList.Name = "chkFieldList"
         Me.chkFieldList.Size = New System.Drawing.Size(15, 14)
-        Me.chkFieldList.TabIndex = 15
+        Me.chkFieldList.TabIndex = 17
         Me.chkFieldList.UseVisualStyleBackColor = True
         '
         'lblFieldList
@@ -1336,7 +1336,7 @@ Partial Class frmConfiguration
         Me.txtFieldListOrder.Location = New System.Drawing.Point(104, 349)
         Me.txtFieldListOrder.Name = "txtFieldListOrder"
         Me.txtFieldListOrder.Size = New System.Drawing.Size(44, 20)
-        Me.txtFieldListOrder.TabIndex = 17
+        Me.txtFieldListOrder.TabIndex = 21
         '
         'chkFieldVisible
         '
@@ -1344,7 +1344,7 @@ Partial Class frmConfiguration
         Me.chkFieldVisible.Location = New System.Drawing.Point(277, 299)
         Me.chkFieldVisible.Name = "chkFieldVisible"
         Me.chkFieldVisible.Size = New System.Drawing.Size(15, 14)
-        Me.chkFieldVisible.TabIndex = 20
+        Me.chkFieldVisible.TabIndex = 18
         Me.chkFieldVisible.UseVisualStyleBackColor = True
         '
         'txtFieldListWidth
@@ -1353,7 +1353,7 @@ Partial Class frmConfiguration
         Me.txtFieldListWidth.Location = New System.Drawing.Point(104, 322)
         Me.txtFieldListWidth.Name = "txtFieldListWidth"
         Me.txtFieldListWidth.Size = New System.Drawing.Size(44, 20)
-        Me.txtFieldListWidth.TabIndex = 16
+        Me.txtFieldListWidth.TabIndex = 19
         '
         'lblFieldVisible
         '
@@ -1379,7 +1379,7 @@ Partial Class frmConfiguration
         Me.chkFieldSearch.Location = New System.Drawing.Point(277, 324)
         Me.chkFieldSearch.Name = "chkFieldSearch"
         Me.chkFieldSearch.Size = New System.Drawing.Size(15, 14)
-        Me.chkFieldSearch.TabIndex = 21
+        Me.chkFieldSearch.TabIndex = 20
         Me.chkFieldSearch.UseVisualStyleBackColor = True
         '
         'lblFieldListWidth
@@ -1465,10 +1465,10 @@ Partial Class frmConfiguration
         Me.lstTables.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lstTables.FormattingEnabled = True
         Me.lstTables.HorizontalScrollbar = True
-        Me.lstTables.Location = New System.Drawing.Point(554, 35)
+        Me.lstTables.Location = New System.Drawing.Point(552, 35)
         Me.lstTables.Name = "lstTables"
         Me.lstTables.Size = New System.Drawing.Size(147, 95)
-        Me.lstTables.TabIndex = 145
+        Me.lstTables.TabIndex = 2
         Me.lstTables.TabStop = False
         Me.lstTables.Visible = False
         '
@@ -1479,7 +1479,7 @@ Partial Class frmConfiguration
         Me.chkImportAllTables.Location = New System.Drawing.Point(453, 209)
         Me.chkImportAllTables.Name = "chkImportAllTables"
         Me.chkImportAllTables.Size = New System.Drawing.Size(72, 17)
-        Me.chkImportAllTables.TabIndex = 12
+        Me.chkImportAllTables.TabIndex = 10
         Me.chkImportAllTables.Text = "All Tables"
         Me.chkImportAllTables.UseVisualStyleBackColor = True
         '
@@ -1500,7 +1500,7 @@ Partial Class frmConfiguration
         Me.chkTableDelete.Location = New System.Drawing.Point(554, 187)
         Me.chkTableDelete.Name = "chkTableDelete"
         Me.chkTableDelete.Size = New System.Drawing.Size(15, 14)
-        Me.chkTableDelete.TabIndex = 11
+        Me.chkTableDelete.TabIndex = 9
         Me.chkTableDelete.UseVisualStyleBackColor = True
         '
         'btnColumnsImport
@@ -1509,7 +1509,7 @@ Partial Class frmConfiguration
         Me.btnColumnsImport.Location = New System.Drawing.Point(554, 207)
         Me.btnColumnsImport.Name = "btnColumnsImport"
         Me.btnColumnsImport.Size = New System.Drawing.Size(180, 20)
-        Me.btnColumnsImport.TabIndex = 13
+        Me.btnColumnsImport.TabIndex = 11
         Me.btnColumnsImport.Text = "Import Columns for this table"
         '
         'btnCrawlTables
@@ -1520,7 +1520,7 @@ Partial Class frmConfiguration
         Me.btnCrawlTables.Location = New System.Drawing.Point(707, 35)
         Me.btnCrawlTables.Name = "btnCrawlTables"
         Me.btnCrawlTables.Size = New System.Drawing.Size(30, 20)
-        Me.btnCrawlTables.TabIndex = 5
+        Me.btnCrawlTables.TabIndex = 3
         Me.btnCrawlTables.Text = "..."
         '
         'lblTableSearch
@@ -1542,7 +1542,7 @@ Partial Class frmConfiguration
         Me.chkTableSearch.Location = New System.Drawing.Point(554, 114)
         Me.chkTableSearch.Name = "chkTableSearch"
         Me.chkTableSearch.Size = New System.Drawing.Size(15, 14)
-        Me.chkTableSearch.TabIndex = 8
+        Me.chkTableSearch.TabIndex = 6
         Me.chkTableSearch.UseVisualStyleBackColor = True
         '
         'lblTableUpdate
@@ -1562,7 +1562,7 @@ Partial Class frmConfiguration
         Me.chkTableUpdate.Location = New System.Drawing.Point(554, 138)
         Me.chkTableUpdate.Name = "chkTableUpdate"
         Me.chkTableUpdate.Size = New System.Drawing.Size(15, 14)
-        Me.chkTableUpdate.TabIndex = 9
+        Me.chkTableUpdate.TabIndex = 7
         Me.chkTableUpdate.UseVisualStyleBackColor = True
         '
         'lblTableInsert
@@ -1582,7 +1582,7 @@ Partial Class frmConfiguration
         Me.chkTableInsert.Location = New System.Drawing.Point(554, 162)
         Me.chkTableInsert.Name = "chkTableInsert"
         Me.chkTableInsert.Size = New System.Drawing.Size(15, 14)
-        Me.chkTableInsert.TabIndex = 10
+        Me.chkTableInsert.TabIndex = 8
         Me.chkTableInsert.UseVisualStyleBackColor = True
         '
         'lblTableVisible
@@ -1604,7 +1604,7 @@ Partial Class frmConfiguration
         Me.chkTableVisible.Location = New System.Drawing.Point(554, 90)
         Me.chkTableVisible.Name = "chkTableVisible"
         Me.chkTableVisible.Size = New System.Drawing.Size(15, 14)
-        Me.chkTableVisible.TabIndex = 7
+        Me.chkTableVisible.TabIndex = 5
         Me.chkTableVisible.UseVisualStyleBackColor = True
         '
         'btnTableDelete
@@ -1613,7 +1613,7 @@ Partial Class frmConfiguration
         Me.btnTableDelete.Location = New System.Drawing.Point(603, 256)
         Me.btnTableDelete.Name = "btnTableDelete"
         Me.btnTableDelete.Size = New System.Drawing.Size(131, 20)
-        Me.btnTableDelete.TabIndex = 15
+        Me.btnTableDelete.TabIndex = 13
         Me.btnTableDelete.Text = "Delete Table"
         '
         'btnTableClear
@@ -1622,7 +1622,7 @@ Partial Class frmConfiguration
         Me.btnTableClear.Location = New System.Drawing.Point(453, 282)
         Me.btnTableClear.Name = "btnTableClear"
         Me.btnTableClear.Size = New System.Drawing.Size(131, 20)
-        Me.btnTableClear.TabIndex = 16
+        Me.btnTableClear.TabIndex = 14
         Me.btnTableClear.Text = "Clear"
         '
         'btnTableAddOrUpdate
@@ -1631,7 +1631,7 @@ Partial Class frmConfiguration
         Me.btnTableAddOrUpdate.Location = New System.Drawing.Point(453, 256)
         Me.btnTableAddOrUpdate.Name = "btnTableAddOrUpdate"
         Me.btnTableAddOrUpdate.Size = New System.Drawing.Size(131, 20)
-        Me.btnTableAddOrUpdate.TabIndex = 14
+        Me.btnTableAddOrUpdate.TabIndex = 12
         Me.btnTableAddOrUpdate.Text = "Add/Update Table"
         '
         'btnTableDefault
@@ -1639,7 +1639,7 @@ Partial Class frmConfiguration
         Me.btnTableDefault.Location = New System.Drawing.Point(25, 256)
         Me.btnTableDefault.Name = "btnTableDefault"
         Me.btnTableDefault.Size = New System.Drawing.Size(164, 20)
-        Me.btnTableDefault.TabIndex = 1
+        Me.btnTableDefault.TabIndex = 15
         Me.btnTableDefault.Text = "Set as Default Table"
         '
         'lblTableName
@@ -1658,7 +1658,7 @@ Partial Class frmConfiguration
         Me.txtTableName.Location = New System.Drawing.Point(554, 36)
         Me.txtTableName.Name = "txtTableName"
         Me.txtTableName.Size = New System.Drawing.Size(147, 20)
-        Me.txtTableName.TabIndex = 4
+        Me.txtTableName.TabIndex = 1
         '
         'lblTableAlias
         '
@@ -1676,7 +1676,7 @@ Partial Class frmConfiguration
         Me.txtTableAlias.Location = New System.Drawing.Point(554, 60)
         Me.txtTableAlias.Name = "txtTableAlias"
         Me.txtTableAlias.Size = New System.Drawing.Size(183, 20)
-        Me.txtTableAlias.TabIndex = 6
+        Me.txtTableAlias.TabIndex = 4
         '
         'btnTablesShow
         '
@@ -1684,7 +1684,7 @@ Partial Class frmConfiguration
         Me.btnTablesShow.Location = New System.Drawing.Point(25, 705)
         Me.btnTablesShow.Name = "btnTablesShow"
         Me.btnTablesShow.Size = New System.Drawing.Size(164, 20)
-        Me.btnTablesShow.TabIndex = 3
+        Me.btnTablesShow.TabIndex = 17
         Me.btnTablesShow.Text = "Show All Tables"
         '
         'lblSelectedTable
@@ -1705,7 +1705,7 @@ Partial Class frmConfiguration
         Me.tvwTable.Location = New System.Drawing.Point(25, 302)
         Me.tvwTable.Name = "tvwTable"
         Me.tvwTable.Size = New System.Drawing.Size(392, 397)
-        Me.tvwTable.TabIndex = 2
+        Me.tvwTable.TabIndex = 16
         '
         'lblTables
         '
@@ -1910,7 +1910,7 @@ Partial Class frmConfiguration
         Me.btnCancel.Location = New System.Drawing.Point(508, 803)
         Me.btnCancel.Name = "btnCancel"
         Me.btnCancel.Size = New System.Drawing.Size(135, 23)
-        Me.btnCancel.TabIndex = 9
+        Me.btnCancel.TabIndex = 1
         Me.btnCancel.Text = "Cancel"
         Me.btnCancel.UseVisualStyleBackColor = True
         Me.btnCancel.Visible = False

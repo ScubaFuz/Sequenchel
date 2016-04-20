@@ -56,13 +56,14 @@
 
     Private Sub btnCreateSmartUpdateTable_Click(sender As Object, e As EventArgs) Handles btnCreateSmartUpdateTable.Click
         Dim strSQL As String = ""
+        WriteStatus("", 0, lblStatusText)
 
         Try
             'check if table exists
             strSQL = "Select TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'SmartUpdate'"
             Dim dtsdata As DataSet = SeqData.QueryDb(SeqData.dhdConnection, strSQL, True, 5)
             If SeqData.dhdText.DatasetCheck(dtsdata) = True Then
-                lblStatusText.Text = "SmartUpdate table already exists. Please delete the table before (re)creating it."
+                WriteStatus("SmartUpdate table already exists. Please delete the table before (re)creating it.", 2, lblStatusText)
                 Exit Sub
             End If
             'create table
@@ -73,14 +74,21 @@
             If SeqData.curVar.Encryption = False Then strSQL = strSQL.Replace("WITH ENCRYPTION", "")
             If SeqData.curVar.DevMode Then MessageBox.Show(strSQL)
             SeqData.QueryDb(SeqData.dhdConnection, strSQL, False, 10)
-            lblStatusText.Text = "SmartUpdate Table created succesfully"
+            If SeqData.dhdConnection.ErrorLevel = -1 Then
+                WriteStatus("There was an error creating the SmartUpdate Table. Please check the log.", 1, lblStatusText)
+                SeqData.WriteLog("There was an error creating the SmartUpdate Table. " & SeqData.dhdConnection.ErrorMessage, 1)
+            Else
+                WriteStatus("SmartUpdate Table created succesfully.", 0, lblStatusText)
+            End If
         Catch ex As Exception
-            MessageBox.Show("There was an error while creating the SmartUpdate Table" & Environment.NewLine & ex.Message, "Error Creating Table", MessageBoxButtons.OK)
+            WriteStatus("There was an error creating the SmartUpdate Table. Please check the log.", 1, lblStatusText)
+            SeqData.WriteLog("There was an error while creating the SmartUpdate Table" & Environment.NewLine & ex.Message, 1)
         End Try
     End Sub
 
     Private Sub btnCreateSmartUpdateProcedure_Click(sender As Object, e As EventArgs) Handles btnCreateSmartUpdateProcedure.Click
         Dim strSQL As String = ""
+        WriteStatus("", 0, lblStatusText)
         Dim blnExists As Boolean = False
         Try
             'Check for procedure
@@ -96,9 +104,15 @@
             If blnExists = True Then strSQL = strSQL.Replace("CREATE PROCEDURE", "ALTER PROCEDURE")
             If SeqData.curVar.DevMode Then MessageBox.Show(strSQL)
             SeqData.QueryDb(SeqData.dhdConnection, strSQL, False, 10)
-            lblStatusText.Text = "SmartUpdate Procedure created succesfully"
+            If SeqData.dhdConnection.ErrorLevel = -1 Then
+                WriteStatus("There was an error creating the SmartUpdate Procedure. Please check the log.", 1, lblStatusText)
+                SeqData.WriteLog("There was an error creating the SmartUpdate Procedure. " & SeqData.dhdConnection.ErrorMessage, 1)
+            Else
+                WriteStatus("SmartUpdate Procedure created succesfully.", 0, lblStatusText)
+            End If
         Catch ex As Exception
-            MessageBox.Show("There was an error while creating the SmartUpdate Procedure" & Environment.NewLine & ex.Message, "Error Creating Procedure", MessageBoxButtons.OK)
+            WriteStatus("There was an error creating the SmartUpdate Procedure. Please check the log.", 1, lblStatusText)
+            SeqData.WriteLog("There was an error while creating the SmartUpdate Procedure" & Environment.NewLine & ex.Message, 1)
         End Try
     End Sub
 
@@ -118,6 +132,7 @@
 
     Private Sub lstSourceTables_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lstSourceTables.SelectedIndexChanged
         CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
         txtSourceTable.Text = lstSourceTables.SelectedItem
         lstSourceTables.Visible = False
         CursorControl()
@@ -129,6 +144,7 @@
 
     Private Sub lstTargetTables_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lstTargetTables.SelectedIndexChanged
         CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
         txtTargetTable.Text = lstTargetTables.SelectedItem
         lstTargetTables.Visible = False
         CursorControl()
@@ -140,8 +156,9 @@
 
     Private Sub btnImportTables_Click(sender As Object, e As EventArgs) Handles btnImportTables.Click
         CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
         If txtSourceTable.Text.Length = 0 Then
-            MessageBox.Show("You need to select at least a source table")
+            WriteStatus("You need to select at least a source table", 2, lblStatusText)
             Exit Sub
         End If
 
@@ -166,8 +183,9 @@
 
     Private Sub btnSaveConfiguration_Click(sender As Object, e As EventArgs) Handles btnSaveConfiguration.Click
         CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
         If pnlCompareColumn.Controls.Count = 0 Then
-            lblStatusText.Text = "There is no configuration to save."
+            WriteStatus("There is no configuration to save.", 2, lblStatusText)
             Exit Sub
         End If
         Dim blnCheckFound As Boolean = False
@@ -175,14 +193,14 @@
             If ctrl.Checked = True Then blnCheckFound = True
         Next
         If blnCheckFound = False Then
-            lblStatusText.Text = "Nothing has been selected for comparison. Nothing is saved."
+            WriteStatus("Nothing has been selected for comparison. Nothing is saved.", 2, lblStatusText)
             Exit Sub
         End If
         'check for table dbo.SmartUpdate
         Dim strSQL As String = "Select TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'SmartUpdate'"
         Dim dtsData As DataSet = SeqData.QueryDb(SeqData.dhdConnection, strSQL, True, 5)
         If SeqData.dhdText.DatasetCheck(dtsData) = False Then
-            lblStatusText.Text = "The SmartUpdate table was not found. Please create the table first."
+            WriteStatus("The SmartUpdate table was not found. Please create the table first.", 2, lblStatusText)
             Exit Sub
         End If
 
@@ -229,11 +247,15 @@
             SeqData.QueryDb(SeqData.dhdConnection, strUpdate, 0)
             SeqData.QueryDb(SeqData.dhdConnection, strDelete, 0)
             SeqData.QueryDb(SeqData.dhdConnection, strInsert, 0)
-            lblStatusText.Text = "Configuration Saved to SmartUpdate Table on connection: " & SeqData.curStatus.Connection
+            If SeqData.dhdConnection.ErrorLevel = -1 Then
+                WriteStatus("There was an error saving the SmartUpdate configuration. Please check the log.", 1, lblStatusText)
+                SeqData.WriteLog("There was an error saving the SmartUpdate configuration. " & SeqData.dhdConnection.ErrorMessage, 1)
+            Else
+                WriteStatus("Configuration Saved to SmartUpdate Table for: " & SeqData.curStatus.Connection & "." & strSchemaName & "." & strTableName, 2, lblStatusText)
+            End If
         Catch ex As Exception
-            lblStatusText.Text = "There was an error saving the configuration. Check the log for more details"
-            MessageBox.Show("There was an error saving the configuration: " & Environment.NewLine & ex.Message)
-            SeqData.WriteLog("There was an error saving the configuration: " & Environment.NewLine & ex.Message, 1)
+            WriteStatus("There was an error saving the SmartUpdate configuration. Please check the log.", 1, lblStatusText)
+            SeqData.WriteLog("There was an error saving the configuration for: " & SeqData.curStatus.Connection & "." & strSchemaName & "." & strTableName & Environment.NewLine & ex.Message, 1)
         End Try
 
         CursorControl()
@@ -269,8 +291,9 @@
 
     Private Sub btnAddSmartUpdateSchedule_Click(sender As Object, e As EventArgs) Handles btnAddSmartUpdateSchedule.Click
         CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
         If txtSmartUpdateCommand.Text.Length = 0 Then
-            lblStatusText.Text = "There is no command to schedule, aborting action"
+            WriteStatus("There is no command to schedule, aborting action", 2, lblStatusText)
             Exit Sub
         End If
         'get logpath
@@ -278,13 +301,13 @@
         'get jobname
         Dim strJobName As String = GetJobName(SeqData.dhdConnection, "SmartUpdate")
         If strJobName = "" Then
-            lblStatusText.Text = "Job SmartUpdate was not found on the server. Create the job first with the scheduler (Settings)"
+            WriteStatus("Job SmartUpdate was not found on the server. Create the job first with the scheduler (Settings)", 2, lblStatusText)
             Exit Sub
         End If
         'get JobStepCount
         Dim intJobStepCount As Integer = GetJobStepCount(SeqData.dhdConnection, strJobName)
         If intJobStepCount = -1 Then
-            lblStatusText.Text = "There was an error retrieving information about the SmartUpdate Job, aborting action"
+            WriteStatus("There was an error retrieving information about the SmartUpdate Job, aborting action", 1, lblStatusText)
             Exit Sub
         End If
         Dim intFlags As Integer = 0
@@ -304,7 +327,13 @@
         strQuery &= " @flags=" & intFlags & ";"
 
         SeqData.QueryDb(SeqData.dhdConnection, strQuery, 0)
-        lblStatusText.Text = "Jobstep added to job: " & strJobName & " on database: " & SeqData.dhdConnection.DatabaseName
+        If SeqData.dhdConnection.ErrorLevel = -1 Then
+            WriteStatus("There was an error saving the SmartUpdate job configuration. Please check the log.", 1, lblStatusText)
+            SeqData.WriteLog("There was an error saving the SmartUpdate job configuration. " & SeqData.dhdConnection.ErrorMessage, 1)
+        Else
+            WriteStatus("Jobstep added to job: " & strJobName & " on database: " & SeqData.dhdConnection.DatabaseName, 0, lblStatusText)
+        End If
+
         CursorControl()
     End Sub
 
@@ -495,14 +524,14 @@
 
         Dim intPercent As Integer = pnlCompareColumn.Controls.Count / dtsTables.Tables(0).Rows.Count * 200
         If intPercent < 50 Then
-            lblStatusText.Text = "Matching columns is only " & intPercent & " percent. Are you sure you have the correct tables selected?"
+            WriteStatus("Matching columns is only " & intPercent & " percent. Are you sure you have the correct tables selected?", 2, lblStatusText)
         Else
-            lblStatusText.Text = ""
+            WriteStatus("", 0, lblStatusText)
         End If
     End Sub
 
     Private Sub ResetScreen()
-        lblStatusText.Text = ""
+        WriteStatus("", 0, lblStatusText)
         chkCreateTargetTable.Checked = False
         rbnSourceConfig.Checked = True
         rbnTargetConfig.Enabled = False

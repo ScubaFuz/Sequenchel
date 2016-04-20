@@ -269,7 +269,7 @@ Partial Class frmSettings
         Me.tabSettings.Name = "tabSettings"
         Me.tabSettings.SelectedIndex = 0
         Me.tabSettings.Size = New System.Drawing.Size(611, 394)
-        Me.tabSettings.TabIndex = 3
+        Me.tabSettings.TabIndex = 0
         '
         'tpgGeneral
         '
@@ -318,7 +318,7 @@ Partial Class frmSettings
         Me.Label4.Location = New System.Drawing.Point(193, 289)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(157, 13)
-        Me.Label4.TabIndex = 117
+        Me.Label4.TabIndex = 12
         Me.Label4.Text = "hours of inactivity (0 = unlimited)"
         '
         'Label3
@@ -344,7 +344,7 @@ Partial Class frmSettings
         Me.txtLimitLookupLists.Location = New System.Drawing.Point(455, 339)
         Me.txtLimitLookupLists.Name = "txtLimitLookupLists"
         Me.txtLimitLookupLists.Size = New System.Drawing.Size(41, 20)
-        Me.txtLimitLookupLists.TabIndex = 114
+        Me.txtLimitLookupLists.TabIndex = 16
         '
         'chkLimitLookupLists
         '
@@ -352,7 +352,7 @@ Partial Class frmSettings
         Me.chkLimitLookupLists.Location = New System.Drawing.Point(340, 341)
         Me.chkLimitLookupLists.Name = "chkLimitLookupLists"
         Me.chkLimitLookupLists.Size = New System.Drawing.Size(121, 17)
-        Me.chkLimitLookupLists.TabIndex = 113
+        Me.chkLimitLookupLists.TabIndex = 15
         Me.chkLimitLookupLists.Text = "Limit Lookup lists to "
         Me.chkLimitLookupLists.UseVisualStyleBackColor = True
         '
@@ -362,7 +362,7 @@ Partial Class frmSettings
         Me.chkIncludeDateInExportFiles.Location = New System.Drawing.Point(36, 341)
         Me.chkIncludeDateInExportFiles.Name = "chkIncludeDateInExportFiles"
         Me.chkIncludeDateInExportFiles.Size = New System.Drawing.Size(196, 17)
-        Me.chkIncludeDateInExportFiles.TabIndex = 108
+        Me.chkIncludeDateInExportFiles.TabIndex = 14
         Me.chkIncludeDateInExportFiles.Text = "Include the date in export file names"
         Me.chkIncludeDateInExportFiles.UseVisualStyleBackColor = True
         '
@@ -372,7 +372,7 @@ Partial Class frmSettings
         Me.cbxDateFormats.Location = New System.Drawing.Point(180, 314)
         Me.cbxDateFormats.Name = "cbxDateFormats"
         Me.cbxDateFormats.Size = New System.Drawing.Size(353, 21)
-        Me.cbxDateFormats.TabIndex = 112
+        Me.cbxDateFormats.TabIndex = 13
         '
         'lblDateFormatting
         '
@@ -390,7 +390,7 @@ Partial Class frmSettings
         Me.btnConnectionsFileSystem.Location = New System.Drawing.Point(126, 102)
         Me.btnConnectionsFileSystem.Name = "btnConnectionsFileSystem"
         Me.btnConnectionsFileSystem.Size = New System.Drawing.Size(23, 23)
-        Me.btnConnectionsFileSystem.TabIndex = 110
+        Me.btnConnectionsFileSystem.TabIndex = 9
         Me.ttpDefaultLogLocation.SetToolTip(Me.btnConnectionsFileSystem, "System Connections File Name and Path")
         '
         'btnSettingsFileSystem
@@ -400,7 +400,7 @@ Partial Class frmSettings
         Me.btnSettingsFileSystem.Location = New System.Drawing.Point(126, 77)
         Me.btnSettingsFileSystem.Name = "btnSettingsFileSystem"
         Me.btnSettingsFileSystem.Size = New System.Drawing.Size(23, 23)
-        Me.btnSettingsFileSystem.TabIndex = 109
+        Me.btnSettingsFileSystem.TabIndex = 5
         Me.ttpDefaultLogLocation.SetToolTip(Me.btnSettingsFileSystem, "System Settings File Name and Path")
         '
         'grpSecurity
@@ -432,7 +432,7 @@ Partial Class frmSettings
         Me.btnShowOverridePassword.Location = New System.Drawing.Point(333, 96)
         Me.btnShowOverridePassword.Name = "btnShowOverridePassword"
         Me.btnShowOverridePassword.Size = New System.Drawing.Size(23, 23)
-        Me.btnShowOverridePassword.TabIndex = 110
+        Me.btnShowOverridePassword.TabIndex = 10
         Me.btnShowOverridePassword.UseVisualStyleBackColor = True
         '
         'chkAllowSmartUpdate
@@ -441,7 +441,7 @@ Partial Class frmSettings
         Me.chkAllowSmartUpdate.Location = New System.Drawing.Point(175, 70)
         Me.chkAllowSmartUpdate.Name = "chkAllowSmartUpdate"
         Me.chkAllowSmartUpdate.Size = New System.Drawing.Size(181, 17)
-        Me.chkAllowSmartUpdate.TabIndex = 109
+        Me.chkAllowSmartUpdate.TabIndex = 5
         Me.chkAllowSmartUpdate.Text = "Allow SmartUpdate Configuration"
         Me.chkAllowSmartUpdate.UseVisualStyleBackColor = True
         '
@@ -451,7 +451,7 @@ Partial Class frmSettings
         Me.chkAllowDataImport.Location = New System.Drawing.Point(175, 47)
         Me.chkAllowDataImport.Name = "chkAllowDataImport"
         Me.chkAllowDataImport.Size = New System.Drawing.Size(109, 17)
-        Me.chkAllowDataImport.TabIndex = 108
+        Me.chkAllowDataImport.TabIndex = 4
         Me.chkAllowDataImport.Text = "Allow Data Import"
         Me.chkAllowDataImport.UseVisualStyleBackColor = True
         '
@@ -461,7 +461,7 @@ Partial Class frmSettings
         Me.chkAllowQueryEdit.Location = New System.Drawing.Point(175, 24)
         Me.chkAllowQueryEdit.Name = "chkAllowQueryEdit"
         Me.chkAllowQueryEdit.Size = New System.Drawing.Size(138, 17)
-        Me.chkAllowQueryEdit.TabIndex = 52
+        Me.chkAllowQueryEdit.TabIndex = 3
         Me.chkAllowQueryEdit.Text = "Allow Report Query Edit"
         Me.chkAllowQueryEdit.UseVisualStyleBackColor = True
         '
@@ -480,7 +480,7 @@ Partial Class frmSettings
         Me.chkAllowSettingsChange.Location = New System.Drawing.Point(6, 24)
         Me.chkAllowSettingsChange.Name = "chkAllowSettingsChange"
         Me.chkAllowSettingsChange.Size = New System.Drawing.Size(132, 17)
-        Me.chkAllowSettingsChange.TabIndex = 53
+        Me.chkAllowSettingsChange.TabIndex = 0
         Me.chkAllowSettingsChange.Text = "Allow Settings Change"
         Me.chkAllowSettingsChange.UseVisualStyleBackColor = True
         '
@@ -499,7 +499,7 @@ Partial Class frmSettings
         Me.chkAllowConfiguration.Location = New System.Drawing.Point(6, 47)
         Me.chkAllowConfiguration.Name = "chkAllowConfiguration"
         Me.chkAllowConfiguration.Size = New System.Drawing.Size(156, 17)
-        Me.chkAllowConfiguration.TabIndex = 54
+        Me.chkAllowConfiguration.TabIndex = 1
         Me.chkAllowConfiguration.Text = "Allow Configuration Change"
         Me.chkAllowConfiguration.UseVisualStyleBackColor = True
         '
@@ -509,7 +509,7 @@ Partial Class frmSettings
         Me.txtOverridePassword.Name = "txtOverridePassword"
         Me.txtOverridePassword.PasswordChar = Global.Microsoft.VisualBasic.ChrW(42)
         Me.txtOverridePassword.Size = New System.Drawing.Size(180, 20)
-        Me.txtOverridePassword.TabIndex = 105
+        Me.txtOverridePassword.TabIndex = 9
         Me.txtOverridePassword.Tag = "<Keep Current Password>"
         '
         'chkAllowLinkedServers
@@ -518,7 +518,7 @@ Partial Class frmSettings
         Me.chkAllowLinkedServers.Location = New System.Drawing.Point(6, 70)
         Me.chkAllowLinkedServers.Name = "chkAllowLinkedServers"
         Me.chkAllowLinkedServers.Size = New System.Drawing.Size(160, 17)
-        Me.chkAllowLinkedServers.TabIndex = 55
+        Me.chkAllowLinkedServers.TabIndex = 2
         Me.chkAllowLinkedServers.Text = "Allow Linked Server Change"
         Me.chkAllowLinkedServers.UseVisualStyleBackColor = True
         '
@@ -537,7 +537,7 @@ Partial Class frmSettings
         Me.chkAllowUpdate.Location = New System.Drawing.Point(366, 24)
         Me.chkAllowUpdate.Name = "chkAllowUpdate"
         Me.chkAllowUpdate.Size = New System.Drawing.Size(89, 17)
-        Me.chkAllowUpdate.TabIndex = 56
+        Me.chkAllowUpdate.TabIndex = 6
         Me.chkAllowUpdate.Text = "Allow Update"
         Me.chkAllowUpdate.UseVisualStyleBackColor = True
         '
@@ -547,7 +547,7 @@ Partial Class frmSettings
         Me.chkAllowDelete.Location = New System.Drawing.Point(366, 70)
         Me.chkAllowDelete.Name = "chkAllowDelete"
         Me.chkAllowDelete.Size = New System.Drawing.Size(85, 17)
-        Me.chkAllowDelete.TabIndex = 57
+        Me.chkAllowDelete.TabIndex = 8
         Me.chkAllowDelete.Text = "Allow Delete"
         Me.chkAllowDelete.UseVisualStyleBackColor = True
         '
@@ -557,7 +557,7 @@ Partial Class frmSettings
         Me.chkAllowInsert.Location = New System.Drawing.Point(366, 47)
         Me.chkAllowInsert.Name = "chkAllowInsert"
         Me.chkAllowInsert.Size = New System.Drawing.Size(80, 17)
-        Me.chkAllowInsert.TabIndex = 58
+        Me.chkAllowInsert.TabIndex = 7
         Me.chkAllowInsert.Text = "Allow Insert"
         Me.chkAllowInsert.UseVisualStyleBackColor = True
         '
@@ -588,7 +588,7 @@ Partial Class frmSettings
         Me.btnDefaultConfigFilePath.Location = New System.Drawing.Point(151, 51)
         Me.btnDefaultConfigFilePath.Name = "btnDefaultConfigFilePath"
         Me.btnDefaultConfigFilePath.Size = New System.Drawing.Size(23, 23)
-        Me.btnDefaultConfigFilePath.TabIndex = 101
+        Me.btnDefaultConfigFilePath.TabIndex = 1
         Me.ttpDefaultLogLocation.SetToolTip(Me.btnDefaultConfigFilePath, "Aplication Startup Path")
         '
         'btnConfigFilePath
@@ -597,7 +597,7 @@ Partial Class frmSettings
         Me.btnConfigFilePath.Location = New System.Drawing.Point(539, 51)
         Me.btnConfigFilePath.Name = "btnConfigFilePath"
         Me.btnConfigFilePath.Size = New System.Drawing.Size(23, 23)
-        Me.btnConfigFilePath.TabIndex = 61
+        Me.btnConfigFilePath.TabIndex = 3
         Me.btnConfigFilePath.Text = "..."
         Me.ttpDefaultLogLocation.SetToolTip(Me.btnConfigFilePath, "Browse for Folder")
         Me.btnConfigFilePath.UseVisualStyleBackColor = True
@@ -616,7 +616,7 @@ Partial Class frmSettings
         Me.txtDefaultConfigFilePath.Location = New System.Drawing.Point(180, 53)
         Me.txtDefaultConfigFilePath.Name = "txtDefaultConfigFilePath"
         Me.txtDefaultConfigFilePath.Size = New System.Drawing.Size(353, 20)
-        Me.txtDefaultConfigFilePath.TabIndex = 59
+        Me.txtDefaultConfigFilePath.TabIndex = 2
         '
         'btnConnectionsFile
         '
@@ -624,7 +624,7 @@ Partial Class frmSettings
         Me.btnConnectionsFile.Location = New System.Drawing.Point(539, 103)
         Me.btnConnectionsFile.Name = "btnConnectionsFile"
         Me.btnConnectionsFile.Size = New System.Drawing.Size(23, 23)
-        Me.btnConnectionsFile.TabIndex = 51
+        Me.btnConnectionsFile.TabIndex = 11
         Me.btnConnectionsFile.Text = "..."
         Me.ttpDefaultLogLocation.SetToolTip(Me.btnConnectionsFile, "Browse for File")
         Me.btnConnectionsFile.UseVisualStyleBackColor = True
@@ -635,7 +635,7 @@ Partial Class frmSettings
         Me.btnSettingsFile.Location = New System.Drawing.Point(539, 77)
         Me.btnSettingsFile.Name = "btnSettingsFile"
         Me.btnSettingsFile.Size = New System.Drawing.Size(23, 23)
-        Me.btnSettingsFile.TabIndex = 50
+        Me.btnSettingsFile.TabIndex = 7
         Me.btnSettingsFile.Text = "..."
         Me.ttpDefaultLogLocation.SetToolTip(Me.btnSettingsFile, "Browse for File")
         Me.btnSettingsFile.UseVisualStyleBackColor = True
@@ -645,7 +645,7 @@ Partial Class frmSettings
         Me.btnSettingsGeneralSave.Location = New System.Drawing.Point(427, 19)
         Me.btnSettingsGeneralSave.Name = "btnSettingsGeneralSave"
         Me.btnSettingsGeneralSave.Size = New System.Drawing.Size(135, 23)
-        Me.btnSettingsGeneralSave.TabIndex = 49
+        Me.btnSettingsGeneralSave.TabIndex = 0
         Me.btnSettingsGeneralSave.Text = "Save General Settings"
         Me.btnSettingsGeneralSave.UseVisualStyleBackColor = True
         '
@@ -679,7 +679,7 @@ Partial Class frmSettings
         Me.txtSettingsFile.Location = New System.Drawing.Point(180, 79)
         Me.txtSettingsFile.Name = "txtSettingsFile"
         Me.txtSettingsFile.Size = New System.Drawing.Size(353, 20)
-        Me.txtSettingsFile.TabIndex = 8
+        Me.txtSettingsFile.TabIndex = 6
         '
         'tpgLicense
         '
@@ -711,7 +711,7 @@ Partial Class frmSettings
         Me.txtLicenseKey.Location = New System.Drawing.Point(136, 77)
         Me.txtLicenseKey.Name = "txtLicenseKey"
         Me.txtLicenseKey.Size = New System.Drawing.Size(204, 20)
-        Me.txtLicenseKey.TabIndex = 6
+        Me.txtLicenseKey.TabIndex = 1
         '
         'btnSaveLicense
         '
@@ -736,14 +736,14 @@ Partial Class frmSettings
         Me.txtLicenseName.Location = New System.Drawing.Point(136, 51)
         Me.txtLicenseName.Name = "txtLicenseName"
         Me.txtLicenseName.Size = New System.Drawing.Size(204, 20)
-        Me.txtLicenseName.TabIndex = 1
+        Me.txtLicenseName.TabIndex = 0
         '
         'btnValidateLicense
         '
         Me.btnValidateLicense.Location = New System.Drawing.Point(390, 203)
         Me.btnValidateLicense.Name = "btnValidateLicense"
         Me.btnValidateLicense.Size = New System.Drawing.Size(127, 23)
-        Me.btnValidateLicense.TabIndex = 0
+        Me.btnValidateLicense.TabIndex = 2
         Me.btnValidateLicense.Text = "Validate"
         Me.btnValidateLicense.UseVisualStyleBackColor = True
         '
@@ -781,7 +781,7 @@ Partial Class frmSettings
         Me.btnLogLocationBrowse.Location = New System.Drawing.Point(539, 258)
         Me.btnLogLocationBrowse.Name = "btnLogLocationBrowse"
         Me.btnLogLocationBrowse.Size = New System.Drawing.Size(23, 23)
-        Me.btnLogLocationBrowse.TabIndex = 107
+        Me.btnLogLocationBrowse.TabIndex = 12
         Me.btnLogLocationBrowse.Text = "..."
         Me.btnLogLocationBrowse.UseVisualStyleBackColor = True
         '
@@ -792,7 +792,7 @@ Partial Class frmSettings
         Me.btnLogLocationDatabase.Location = New System.Drawing.Point(110, 258)
         Me.btnLogLocationDatabase.Name = "btnLogLocationDatabase"
         Me.btnLogLocationDatabase.Size = New System.Drawing.Size(23, 23)
-        Me.btnLogLocationDatabase.TabIndex = 106
+        Me.btnLogLocationDatabase.TabIndex = 8
         Me.ttpDefaultLogLocation.SetToolTip(Me.btnLogLocationDatabase, "Log to Database")
         '
         'btnLogfileNameDefault
@@ -802,7 +802,7 @@ Partial Class frmSettings
         Me.btnLogfileNameDefault.Location = New System.Drawing.Point(158, 232)
         Me.btnLogfileNameDefault.Name = "btnLogfileNameDefault"
         Me.btnLogfileNameDefault.Size = New System.Drawing.Size(23, 23)
-        Me.btnLogfileNameDefault.TabIndex = 105
+        Me.btnLogfileNameDefault.TabIndex = 6
         Me.ttpDefaultLogLocation.SetToolTip(Me.btnLogfileNameDefault, "Default Logfile Name")
         '
         'btnLogLocationSystem
@@ -812,7 +812,7 @@ Partial Class frmSettings
         Me.btnLogLocationSystem.Location = New System.Drawing.Point(134, 258)
         Me.btnLogLocationSystem.Name = "btnLogLocationSystem"
         Me.btnLogLocationSystem.Size = New System.Drawing.Size(23, 23)
-        Me.btnLogLocationSystem.TabIndex = 104
+        Me.btnLogLocationSystem.TabIndex = 10
         Me.ttpDefaultLogLocation.SetToolTip(Me.btnLogLocationSystem, "System Logfile Location")
         '
         'btnLogLocationDefault
@@ -848,7 +848,7 @@ Partial Class frmSettings
         Me.chkAutoDeleteOldLogs.Location = New System.Drawing.Point(8, 119)
         Me.chkAutoDeleteOldLogs.Name = "chkAutoDeleteOldLogs"
         Me.chkAutoDeleteOldLogs.Size = New System.Drawing.Size(119, 17)
-        Me.chkAutoDeleteOldLogs.TabIndex = 61
+        Me.chkAutoDeleteOldLogs.TabIndex = 4
         Me.chkAutoDeleteOldLogs.Text = "Auto delete old logs"
         Me.chkAutoDeleteOldLogs.UseVisualStyleBackColor = True
         '
@@ -857,7 +857,7 @@ Partial Class frmSettings
         Me.btnClearOldLogs.Location = New System.Drawing.Point(8, 86)
         Me.btnClearOldLogs.Name = "btnClearOldLogs"
         Me.btnClearOldLogs.Size = New System.Drawing.Size(140, 23)
-        Me.btnClearOldLogs.TabIndex = 57
+        Me.btnClearOldLogs.TabIndex = 3
         Me.btnClearOldLogs.Text = "Clear Old Logs"
         Me.btnClearOldLogs.UseVisualStyleBackColor = True
         '
@@ -869,7 +869,7 @@ Partial Class frmSettings
         Me.rbtKeepLogMonth.Margin = New System.Windows.Forms.Padding(2)
         Me.rbtKeepLogMonth.Name = "rbtKeepLogMonth"
         Me.rbtKeepLogMonth.Size = New System.Drawing.Size(55, 17)
-        Me.rbtKeepLogMonth.TabIndex = 58
+        Me.rbtKeepLogMonth.TabIndex = 2
         Me.rbtKeepLogMonth.TabStop = True
         Me.rbtKeepLogMonth.Text = "Month"
         Me.rbtKeepLogMonth.UseVisualStyleBackColor = True
@@ -881,7 +881,7 @@ Partial Class frmSettings
         Me.rbtKeepLogWeek.Margin = New System.Windows.Forms.Padding(2)
         Me.rbtKeepLogWeek.Name = "rbtKeepLogWeek"
         Me.rbtKeepLogWeek.Size = New System.Drawing.Size(54, 17)
-        Me.rbtKeepLogWeek.TabIndex = 59
+        Me.rbtKeepLogWeek.TabIndex = 1
         Me.rbtKeepLogWeek.Text = "Week"
         Me.rbtKeepLogWeek.UseVisualStyleBackColor = True
         '
@@ -892,7 +892,7 @@ Partial Class frmSettings
         Me.rbtKeepLogDay.Margin = New System.Windows.Forms.Padding(2)
         Me.rbtKeepLogDay.Name = "rbtKeepLogDay"
         Me.rbtKeepLogDay.Size = New System.Drawing.Size(44, 17)
-        Me.rbtKeepLogDay.TabIndex = 60
+        Me.rbtKeepLogDay.TabIndex = 0
         Me.rbtKeepLogDay.Text = "Day"
         Me.rbtKeepLogDay.UseVisualStyleBackColor = True
         '
@@ -901,21 +901,21 @@ Partial Class frmSettings
         Me.txtLogfileLocation.Location = New System.Drawing.Point(187, 260)
         Me.txtLogfileLocation.Name = "txtLogfileLocation"
         Me.txtLogfileLocation.Size = New System.Drawing.Size(346, 20)
-        Me.txtLogfileLocation.TabIndex = 47
+        Me.txtLogfileLocation.TabIndex = 11
         '
         'txtLogfileName
         '
         Me.txtLogfileName.Location = New System.Drawing.Point(187, 234)
         Me.txtLogfileName.Name = "txtLogfileName"
         Me.txtLogfileName.Size = New System.Drawing.Size(375, 20)
-        Me.txtLogfileName.TabIndex = 46
+        Me.txtLogfileName.TabIndex = 7
         '
         'btnSaveSettingsLog
         '
         Me.btnSaveSettingsLog.Location = New System.Drawing.Point(427, 19)
         Me.btnSaveSettingsLog.Name = "btnSaveSettingsLog"
         Me.btnSaveSettingsLog.Size = New System.Drawing.Size(135, 23)
-        Me.btnSaveSettingsLog.TabIndex = 48
+        Me.btnSaveSettingsLog.TabIndex = 13
         Me.btnSaveSettingsLog.Text = "Save Logging Settings"
         Me.btnSaveSettingsLog.UseVisualStyleBackColor = True
         '
@@ -943,7 +943,7 @@ Partial Class frmSettings
         Me.rbtLoggingLevel5.Location = New System.Drawing.Point(27, 163)
         Me.rbtLoggingLevel5.Name = "rbtLoggingLevel5"
         Me.rbtLoggingLevel5.Size = New System.Drawing.Size(172, 17)
-        Me.rbtLoggingLevel5.TabIndex = 45
+        Me.rbtLoggingLevel5.TabIndex = 5
         Me.rbtLoggingLevel5.Text = "All (includes Database Queries)"
         Me.rbtLoggingLevel5.UseVisualStyleBackColor = True
         '
@@ -963,7 +963,7 @@ Partial Class frmSettings
         Me.rbtLoggingLevel1.Location = New System.Drawing.Point(27, 71)
         Me.rbtLoggingLevel1.Name = "rbtLoggingLevel1"
         Me.rbtLoggingLevel1.Size = New System.Drawing.Size(102, 17)
-        Me.rbtLoggingLevel1.TabIndex = 41
+        Me.rbtLoggingLevel1.TabIndex = 1
         Me.rbtLoggingLevel1.TabStop = True
         Me.rbtLoggingLevel1.Text = "Low (errors only)"
         Me.rbtLoggingLevel1.UseVisualStyleBackColor = True
@@ -974,7 +974,7 @@ Partial Class frmSettings
         Me.rbtLoggingLevel2.Location = New System.Drawing.Point(27, 94)
         Me.rbtLoggingLevel2.Name = "rbtLoggingLevel2"
         Me.rbtLoggingLevel2.Size = New System.Drawing.Size(186, 17)
-        Me.rbtLoggingLevel2.TabIndex = 42
+        Me.rbtLoggingLevel2.TabIndex = 2
         Me.rbtLoggingLevel2.Text = "Medium (includes program events)"
         Me.rbtLoggingLevel2.UseVisualStyleBackColor = True
         '
@@ -984,7 +984,7 @@ Partial Class frmSettings
         Me.rbtLoggingLevel3.Location = New System.Drawing.Point(27, 117)
         Me.rbtLoggingLevel3.Name = "rbtLoggingLevel3"
         Me.rbtLoggingLevel3.Size = New System.Drawing.Size(194, 17)
-        Me.rbtLoggingLevel3.TabIndex = 43
+        Me.rbtLoggingLevel3.TabIndex = 3
         Me.rbtLoggingLevel3.Text = "Medium-High (Includes user events)"
         Me.rbtLoggingLevel3.UseVisualStyleBackColor = True
         '
@@ -994,7 +994,7 @@ Partial Class frmSettings
         Me.rbtLoggingLevel4.Location = New System.Drawing.Point(27, 140)
         Me.rbtLoggingLevel4.Name = "rbtLoggingLevel4"
         Me.rbtLoggingLevel4.Size = New System.Drawing.Size(229, 17)
-        Me.rbtLoggingLevel4.TabIndex = 44
+        Me.rbtLoggingLevel4.TabIndex = 4
         Me.rbtLoggingLevel4.Text = "High (Everything except Database Queries)"
         Me.rbtLoggingLevel4.UseVisualStyleBackColor = True
         '
@@ -1004,7 +1004,7 @@ Partial Class frmSettings
         Me.rbtLoggingLevel0.Location = New System.Drawing.Point(27, 48)
         Me.rbtLoggingLevel0.Name = "rbtLoggingLevel0"
         Me.rbtLoggingLevel0.Size = New System.Drawing.Size(196, 17)
-        Me.rbtLoggingLevel0.TabIndex = 40
+        Me.rbtLoggingLevel0.TabIndex = 0
         Me.rbtLoggingLevel0.Text = "Off (Program Startup && Security only)"
         Me.rbtLoggingLevel0.UseVisualStyleBackColor = True
         '
@@ -1053,7 +1053,7 @@ Partial Class frmSettings
         Me.btnShowDatabasePassword.Location = New System.Drawing.Point(331, 151)
         Me.btnShowDatabasePassword.Name = "btnShowDatabasePassword"
         Me.btnShowDatabasePassword.Size = New System.Drawing.Size(23, 23)
-        Me.btnShowDatabasePassword.TabIndex = 89
+        Me.btnShowDatabasePassword.TabIndex = 6
         Me.btnShowDatabasePassword.UseVisualStyleBackColor = True
         '
         'btnRefreshDatabase
@@ -1061,7 +1061,7 @@ Partial Class frmSettings
         Me.btnRefreshDatabase.Location = New System.Drawing.Point(427, 227)
         Me.btnRefreshDatabase.Name = "btnRefreshDatabase"
         Me.btnRefreshDatabase.Size = New System.Drawing.Size(135, 23)
-        Me.btnRefreshDatabase.TabIndex = 88
+        Me.btnRefreshDatabase.TabIndex = 13
         Me.btnRefreshDatabase.Text = "Refresh Database"
         Me.btnRefreshDatabase.UseVisualStyleBackColor = True
         '
@@ -1070,7 +1070,7 @@ Partial Class frmSettings
         Me.btnTestConnection.Location = New System.Drawing.Point(427, 47)
         Me.btnTestConnection.Name = "btnTestConnection"
         Me.btnTestConnection.Size = New System.Drawing.Size(135, 23)
-        Me.btnTestConnection.TabIndex = 87
+        Me.btnTestConnection.TabIndex = 8
         Me.btnTestConnection.Text = "Test Connection"
         Me.btnTestConnection.UseVisualStyleBackColor = True
         '
@@ -1089,7 +1089,7 @@ Partial Class frmSettings
         Me.txtBackupDatabase.Margin = New System.Windows.Forms.Padding(2)
         Me.txtBackupDatabase.Name = "txtBackupDatabase"
         Me.txtBackupDatabase.Size = New System.Drawing.Size(190, 20)
-        Me.txtBackupDatabase.TabIndex = 85
+        Me.txtBackupDatabase.TabIndex = 6
         '
         'lblBackupDatabase
         '
@@ -1105,7 +1105,7 @@ Partial Class frmSettings
         Me.btnBackupDatabase.Location = New System.Drawing.Point(427, 256)
         Me.btnBackupDatabase.Name = "btnBackupDatabase"
         Me.btnBackupDatabase.Size = New System.Drawing.Size(135, 23)
-        Me.btnBackupDatabase.TabIndex = 83
+        Me.btnBackupDatabase.TabIndex = 14
         Me.btnBackupDatabase.Text = "Backup Database"
         Me.btnBackupDatabase.UseVisualStyleBackColor = True
         '
@@ -1117,6 +1117,7 @@ Partial Class frmSettings
         Me.txtUpgradeDatabase.ReadOnly = True
         Me.txtUpgradeDatabase.Size = New System.Drawing.Size(190, 20)
         Me.txtUpgradeDatabase.TabIndex = 82
+        Me.txtUpgradeDatabase.TabStop = False
         '
         'lblDatabaseVersion
         '
@@ -1133,7 +1134,7 @@ Partial Class frmSettings
         Me.btnUpgradeDatabase.Location = New System.Drawing.Point(427, 198)
         Me.btnUpgradeDatabase.Name = "btnUpgradeDatabase"
         Me.btnUpgradeDatabase.Size = New System.Drawing.Size(135, 23)
-        Me.btnUpgradeDatabase.TabIndex = 80
+        Me.btnUpgradeDatabase.TabIndex = 12
         Me.btnUpgradeDatabase.Text = "Update Database"
         Me.btnUpgradeDatabase.UseVisualStyleBackColor = True
         '
@@ -1144,7 +1145,7 @@ Partial Class frmSettings
         Me.prbCreateDatabase.Name = "prbCreateDatabase"
         Me.prbCreateDatabase.Size = New System.Drawing.Size(135, 19)
         Me.prbCreateDatabase.Step = 1
-        Me.prbCreateDatabase.TabIndex = 79
+        Me.prbCreateDatabase.TabIndex = 15
         Me.prbCreateDatabase.Visible = False
         '
         'btnCreateExtraProcs
@@ -1152,7 +1153,7 @@ Partial Class frmSettings
         Me.btnCreateExtraProcs.Location = New System.Drawing.Point(427, 99)
         Me.btnCreateExtraProcs.Name = "btnCreateExtraProcs"
         Me.btnCreateExtraProcs.Size = New System.Drawing.Size(135, 23)
-        Me.btnCreateExtraProcs.TabIndex = 77
+        Me.btnCreateExtraProcs.TabIndex = 10
         Me.btnCreateExtraProcs.Text = "Create Extra Procs"
         Me.btnCreateExtraProcs.UseVisualStyleBackColor = True
         '
@@ -1161,7 +1162,7 @@ Partial Class frmSettings
         Me.btnCreateDatabase.Location = New System.Drawing.Point(427, 73)
         Me.btnCreateDatabase.Name = "btnCreateDatabase"
         Me.btnCreateDatabase.Size = New System.Drawing.Size(135, 23)
-        Me.btnCreateDatabase.TabIndex = 76
+        Me.btnCreateDatabase.TabIndex = 9
         Me.btnCreateDatabase.Text = "Create Database"
         Me.btnCreateDatabase.UseVisualStyleBackColor = True
         '
@@ -1170,7 +1171,7 @@ Partial Class frmSettings
         Me.btnSaveSettingsDatabase.Location = New System.Drawing.Point(427, 19)
         Me.btnSaveSettingsDatabase.Name = "btnSaveSettingsDatabase"
         Me.btnSaveSettingsDatabase.Size = New System.Drawing.Size(135, 23)
-        Me.btnSaveSettingsDatabase.TabIndex = 74
+        Me.btnSaveSettingsDatabase.TabIndex = 7
         Me.btnSaveSettingsDatabase.Text = "Save Database Settings"
         Me.btnSaveSettingsDatabase.UseVisualStyleBackColor = True
         '
@@ -1179,7 +1180,7 @@ Partial Class frmSettings
         Me.btnDatabaseDefaultsUse.Location = New System.Drawing.Point(427, 147)
         Me.btnDatabaseDefaultsUse.Name = "btnDatabaseDefaultsUse"
         Me.btnDatabaseDefaultsUse.Size = New System.Drawing.Size(135, 23)
-        Me.btnDatabaseDefaultsUse.TabIndex = 75
+        Me.btnDatabaseDefaultsUse.TabIndex = 11
         Me.btnDatabaseDefaultsUse.Text = "Use Defaults"
         Me.btnDatabaseDefaultsUse.UseVisualStyleBackColor = True
         '
@@ -1217,7 +1218,7 @@ Partial Class frmSettings
         Me.txtPassword.Name = "txtPassword"
         Me.txtPassword.PasswordChar = Global.Microsoft.VisualBasic.ChrW(42)
         Me.txtPassword.Size = New System.Drawing.Size(163, 20)
-        Me.txtPassword.TabIndex = 73
+        Me.txtPassword.TabIndex = 5
         Me.txtPassword.Tag = "<Keep Current Password>"
         '
         'cbxLoginMethod
@@ -1227,7 +1228,7 @@ Partial Class frmSettings
         Me.cbxLoginMethod.Location = New System.Drawing.Point(165, 100)
         Me.cbxLoginMethod.Name = "cbxLoginMethod"
         Me.cbxLoginMethod.Size = New System.Drawing.Size(100, 21)
-        Me.cbxLoginMethod.TabIndex = 71
+        Me.cbxLoginMethod.TabIndex = 3
         Me.cbxLoginMethod.Text = "Windows"
         '
         'txtLoginName
@@ -1236,7 +1237,7 @@ Partial Class frmSettings
         Me.txtLoginName.Location = New System.Drawing.Point(165, 127)
         Me.txtLoginName.Name = "txtLoginName"
         Me.txtLoginName.Size = New System.Drawing.Size(189, 20)
-        Me.txtLoginName.TabIndex = 72
+        Me.txtLoginName.TabIndex = 4
         '
         'lblDatabaseName
         '
@@ -1252,7 +1253,7 @@ Partial Class frmSettings
         Me.txtDatabaseName.Location = New System.Drawing.Point(165, 74)
         Me.txtDatabaseName.Name = "txtDatabaseName"
         Me.txtDatabaseName.Size = New System.Drawing.Size(189, 20)
-        Me.txtDatabaseName.TabIndex = 70
+        Me.txtDatabaseName.TabIndex = 2
         '
         'lblDatabaseLocation
         '
@@ -1271,7 +1272,7 @@ Partial Class frmSettings
         Me.cbxDataProvider.Location = New System.Drawing.Point(165, 21)
         Me.cbxDataProvider.Name = "cbxDataProvider"
         Me.cbxDataProvider.Size = New System.Drawing.Size(100, 21)
-        Me.cbxDataProvider.TabIndex = 68
+        Me.cbxDataProvider.TabIndex = 0
         Me.cbxDataProvider.Text = "SQL"
         '
         'txtDatabaseLocation
@@ -1279,7 +1280,7 @@ Partial Class frmSettings
         Me.txtDatabaseLocation.Location = New System.Drawing.Point(165, 48)
         Me.txtDatabaseLocation.Name = "txtDatabaseLocation"
         Me.txtDatabaseLocation.Size = New System.Drawing.Size(190, 20)
-        Me.txtDatabaseLocation.TabIndex = 69
+        Me.txtDatabaseLocation.TabIndex = 1
         '
         'lblDataProvider
         '
@@ -1361,7 +1362,7 @@ Partial Class frmSettings
         Me.btnErrorlogPathBrowse.Location = New System.Drawing.Point(557, 264)
         Me.btnErrorlogPathBrowse.Name = "btnErrorlogPathBrowse"
         Me.btnErrorlogPathBrowse.Size = New System.Drawing.Size(23, 23)
-        Me.btnErrorlogPathBrowse.TabIndex = 110
+        Me.btnErrorlogPathBrowse.TabIndex = 27
         Me.btnErrorlogPathBrowse.Text = "..."
         Me.btnErrorlogPathBrowse.UseVisualStyleBackColor = True
         '
@@ -1372,7 +1373,7 @@ Partial Class frmSettings
         Me.btnErrorlogPathDatabase.Location = New System.Drawing.Point(263, 266)
         Me.btnErrorlogPathDatabase.Name = "btnErrorlogPathDatabase"
         Me.btnErrorlogPathDatabase.Size = New System.Drawing.Size(23, 23)
-        Me.btnErrorlogPathDatabase.TabIndex = 109
+        Me.btnErrorlogPathDatabase.TabIndex = 23
         Me.ttpDefaultLogLocation.SetToolTip(Me.btnErrorlogPathDatabase, "Database Logfile Location")
         '
         'btnErrorlogPathSystem
@@ -1382,7 +1383,7 @@ Partial Class frmSettings
         Me.btnErrorlogPathSystem.Location = New System.Drawing.Point(287, 266)
         Me.btnErrorlogPathSystem.Name = "btnErrorlogPathSystem"
         Me.btnErrorlogPathSystem.Size = New System.Drawing.Size(23, 23)
-        Me.btnErrorlogPathSystem.TabIndex = 108
+        Me.btnErrorlogPathSystem.TabIndex = 24
         Me.ttpDefaultLogLocation.SetToolTip(Me.btnErrorlogPathSystem, "System Logfile Location")
         '
         'btnErrorlogPathDefault
@@ -1392,7 +1393,7 @@ Partial Class frmSettings
         Me.btnErrorlogPathDefault.Location = New System.Drawing.Point(311, 266)
         Me.btnErrorlogPathDefault.Name = "btnErrorlogPathDefault"
         Me.btnErrorlogPathDefault.Size = New System.Drawing.Size(23, 23)
-        Me.btnErrorlogPathDefault.TabIndex = 107
+        Me.btnErrorlogPathDefault.TabIndex = 25
         Me.ttpDefaultLogLocation.SetToolTip(Me.btnErrorlogPathDefault, "Default Logfile Location")
         '
         'lblJobNamePrefix
@@ -1409,7 +1410,7 @@ Partial Class frmSettings
         Me.txtJobNamePrefix.Location = New System.Drawing.Point(435, 52)
         Me.txtJobNamePrefix.Name = "txtJobNamePrefix"
         Me.txtJobNamePrefix.Size = New System.Drawing.Size(145, 20)
-        Me.txtJobNamePrefix.TabIndex = 41
+        Me.txtJobNamePrefix.TabIndex = 8
         '
         'chkIncludeHigherSqlVersions
         '
@@ -1417,7 +1418,7 @@ Partial Class frmSettings
         Me.chkIncludeHigherSqlVersions.Location = New System.Drawing.Point(565, 246)
         Me.chkIncludeHigherSqlVersions.Name = "chkIncludeHigherSqlVersions"
         Me.chkIncludeHigherSqlVersions.Size = New System.Drawing.Size(15, 14)
-        Me.chkIncludeHigherSqlVersions.TabIndex = 40
+        Me.chkIncludeHigherSqlVersions.TabIndex = 22
         Me.chkIncludeHigherSqlVersions.UseVisualStyleBackColor = True
         '
         'lblIncludeHigherSqlVersions
@@ -1426,7 +1427,7 @@ Partial Class frmSettings
         Me.lblIncludeHigherSqlVersions.Location = New System.Drawing.Point(416, 246)
         Me.lblIncludeHigherSqlVersions.Name = "lblIncludeHigherSqlVersions"
         Me.lblIncludeHigherSqlVersions.Size = New System.Drawing.Size(143, 13)
-        Me.lblIncludeHigherSqlVersions.TabIndex = 39
+        Me.lblIncludeHigherSqlVersions.TabIndex = 21
         Me.lblIncludeHigherSqlVersions.Text = "Include Higher SQL Versions"
         '
         'Label1
@@ -1452,14 +1453,14 @@ Partial Class frmSettings
         Me.txtErrorlogPath.Location = New System.Drawing.Point(340, 266)
         Me.txtErrorlogPath.Name = "txtErrorlogPath"
         Me.txtErrorlogPath.Size = New System.Drawing.Size(211, 20)
-        Me.txtErrorlogPath.TabIndex = 36
+        Me.txtErrorlogPath.TabIndex = 26
         '
         'nudTimeSpan
         '
         Me.nudTimeSpan.Location = New System.Drawing.Point(435, 111)
         Me.nudTimeSpan.Name = "nudTimeSpan"
         Me.nudTimeSpan.Size = New System.Drawing.Size(49, 20)
-        Me.nudTimeSpan.TabIndex = 35
+        Me.nudTimeSpan.TabIndex = 10
         Me.nudTimeSpan.Visible = False
         '
         'lblRepeatEvery
@@ -1477,7 +1478,7 @@ Partial Class frmSettings
         Me.btnCreateScheduledJob.Location = New System.Drawing.Point(225, 317)
         Me.btnCreateScheduledJob.Name = "btnCreateScheduledJob"
         Me.btnCreateScheduledJob.Size = New System.Drawing.Size(145, 23)
-        Me.btnCreateScheduledJob.TabIndex = 32
+        Me.btnCreateScheduledJob.TabIndex = 28
         Me.btnCreateScheduledJob.Text = "Create Scheduled Job"
         Me.btnCreateScheduledJob.UseVisualStyleBackColor = True
         '
@@ -1488,7 +1489,7 @@ Partial Class frmSettings
         Me.cbxSqlVersion.Location = New System.Drawing.Point(538, 218)
         Me.cbxSqlVersion.Name = "cbxSqlVersion"
         Me.cbxSqlVersion.Size = New System.Drawing.Size(42, 21)
-        Me.cbxSqlVersion.TabIndex = 31
+        Me.cbxSqlVersion.TabIndex = 19
         Me.cbxSqlVersion.Text = "0"
         '
         'chkMailStatistics
@@ -1497,7 +1498,7 @@ Partial Class frmSettings
         Me.chkMailStatistics.Location = New System.Drawing.Point(340, 246)
         Me.chkMailStatistics.Name = "chkMailStatistics"
         Me.chkMailStatistics.Size = New System.Drawing.Size(15, 14)
-        Me.chkMailStatistics.TabIndex = 30
+        Me.chkMailStatistics.TabIndex = 20
         Me.chkMailStatistics.UseVisualStyleBackColor = True
         '
         'lblSeparator
@@ -1533,7 +1534,7 @@ Partial Class frmSettings
         Me.txtSeparator.Location = New System.Drawing.Point(339, 215)
         Me.txtSeparator.Name = "txtSeparator"
         Me.txtSeparator.Size = New System.Drawing.Size(41, 26)
-        Me.txtSeparator.TabIndex = 25
+        Me.txtSeparator.TabIndex = 18
         Me.txtSeparator.Text = ","
         '
         'lblExceptionList
@@ -1550,7 +1551,7 @@ Partial Class frmSettings
         Me.txtExceptionList.Location = New System.Drawing.Point(339, 190)
         Me.txtExceptionList.Name = "txtExceptionList"
         Me.txtExceptionList.Size = New System.Drawing.Size(241, 20)
-        Me.txtExceptionList.TabIndex = 23
+        Me.txtExceptionList.TabIndex = 17
         '
         'lblRecipient
         '
@@ -1566,7 +1567,7 @@ Partial Class frmSettings
         Me.txtRecipient.Location = New System.Drawing.Point(339, 164)
         Me.txtRecipient.Name = "txtRecipient"
         Me.txtRecipient.Size = New System.Drawing.Size(241, 20)
-        Me.txtRecipient.TabIndex = 21
+        Me.txtRecipient.TabIndex = 16
         Me.txtRecipient.Text = "Screen"
         '
         'cbxEndMinute
@@ -1575,7 +1576,7 @@ Partial Class frmSettings
         Me.cbxEndMinute.Location = New System.Drawing.Point(539, 137)
         Me.cbxEndMinute.Name = "cbxEndMinute"
         Me.cbxEndMinute.Size = New System.Drawing.Size(41, 21)
-        Me.cbxEndMinute.TabIndex = 19
+        Me.cbxEndMinute.TabIndex = 15
         Me.cbxEndMinute.Text = "00"
         Me.cbxEndMinute.Visible = False
         '
@@ -1585,7 +1586,7 @@ Partial Class frmSettings
         Me.cbxEndHour.Location = New System.Drawing.Point(490, 137)
         Me.cbxEndHour.Name = "cbxEndHour"
         Me.cbxEndHour.Size = New System.Drawing.Size(41, 21)
-        Me.cbxEndHour.TabIndex = 18
+        Me.cbxEndHour.TabIndex = 14
         Me.cbxEndHour.Text = "00"
         Me.cbxEndHour.Visible = False
         '
@@ -1615,7 +1616,7 @@ Partial Class frmSettings
         Me.cbxStartMinute.Location = New System.Drawing.Point(388, 137)
         Me.cbxStartMinute.Name = "cbxStartMinute"
         Me.cbxStartMinute.Size = New System.Drawing.Size(41, 21)
-        Me.cbxStartMinute.TabIndex = 15
+        Me.cbxStartMinute.TabIndex = 13
         Me.cbxStartMinute.Text = "00"
         '
         'cbxStartHour
@@ -1624,7 +1625,7 @@ Partial Class frmSettings
         Me.cbxStartHour.Location = New System.Drawing.Point(339, 137)
         Me.cbxStartHour.Name = "cbxStartHour"
         Me.cbxStartHour.Size = New System.Drawing.Size(41, 21)
-        Me.cbxStartHour.TabIndex = 14
+        Me.cbxStartHour.TabIndex = 12
         Me.cbxStartHour.Text = "00"
         '
         'lblStartTime
@@ -1643,7 +1644,7 @@ Partial Class frmSettings
         Me.cbxTimespan.Location = New System.Drawing.Point(490, 110)
         Me.cbxTimespan.Name = "cbxTimespan"
         Me.cbxTimespan.Size = New System.Drawing.Size(90, 21)
-        Me.cbxTimespan.TabIndex = 12
+        Me.cbxTimespan.TabIndex = 11
         Me.cbxTimespan.Text = "Hour(s)"
         Me.cbxTimespan.Visible = False
         '
@@ -1672,7 +1673,7 @@ Partial Class frmSettings
         Me.chkTeusday.Location = New System.Drawing.Point(19, 139)
         Me.chkTeusday.Name = "chkTeusday"
         Me.chkTeusday.Size = New System.Drawing.Size(67, 17)
-        Me.chkTeusday.TabIndex = 8
+        Me.chkTeusday.TabIndex = 2
         Me.chkTeusday.Text = "Tuesday"
         Me.chkTeusday.UseVisualStyleBackColor = True
         '
@@ -1682,7 +1683,7 @@ Partial Class frmSettings
         Me.chkWednesday.Location = New System.Drawing.Point(19, 166)
         Me.chkWednesday.Name = "chkWednesday"
         Me.chkWednesday.Size = New System.Drawing.Size(83, 17)
-        Me.chkWednesday.TabIndex = 7
+        Me.chkWednesday.TabIndex = 3
         Me.chkWednesday.Text = "Wednesday"
         Me.chkWednesday.UseVisualStyleBackColor = True
         '
@@ -1692,7 +1693,7 @@ Partial Class frmSettings
         Me.chkThursday.Location = New System.Drawing.Point(19, 192)
         Me.chkThursday.Name = "chkThursday"
         Me.chkThursday.Size = New System.Drawing.Size(70, 17)
-        Me.chkThursday.TabIndex = 6
+        Me.chkThursday.TabIndex = 4
         Me.chkThursday.Text = "Thursday"
         Me.chkThursday.UseVisualStyleBackColor = True
         '
@@ -1712,7 +1713,7 @@ Partial Class frmSettings
         Me.chkSaturday.Location = New System.Drawing.Point(18, 243)
         Me.chkSaturday.Name = "chkSaturday"
         Me.chkSaturday.Size = New System.Drawing.Size(68, 17)
-        Me.chkSaturday.TabIndex = 4
+        Me.chkSaturday.TabIndex = 6
         Me.chkSaturday.Text = "Saturday"
         Me.chkSaturday.UseVisualStyleBackColor = True
         '
@@ -1722,7 +1723,7 @@ Partial Class frmSettings
         Me.chkSunday.Location = New System.Drawing.Point(19, 270)
         Me.chkSunday.Name = "chkSunday"
         Me.chkSunday.Size = New System.Drawing.Size(62, 17)
-        Me.chkSunday.TabIndex = 3
+        Me.chkSunday.TabIndex = 7
         Me.chkSunday.Text = "Sunday"
         Me.chkSunday.UseVisualStyleBackColor = True
         '
@@ -1732,7 +1733,7 @@ Partial Class frmSettings
         Me.chkMonday.Location = New System.Drawing.Point(19, 112)
         Me.chkMonday.Name = "chkMonday"
         Me.chkMonday.Size = New System.Drawing.Size(64, 17)
-        Me.chkMonday.TabIndex = 2
+        Me.chkMonday.TabIndex = 1
         Me.chkMonday.Text = "Monday"
         Me.chkMonday.UseVisualStyleBackColor = True
         '
@@ -1801,7 +1802,7 @@ Partial Class frmSettings
         Me.btnMonitorDataSpacesLoad.Location = New System.Drawing.Point(427, 18)
         Me.btnMonitorDataSpacesLoad.Name = "btnMonitorDataSpacesLoad"
         Me.btnMonitorDataSpacesLoad.Size = New System.Drawing.Size(135, 23)
-        Me.btnMonitorDataSpacesLoad.TabIndex = 98
+        Me.btnMonitorDataSpacesLoad.TabIndex = 7
         Me.btnMonitorDataSpacesLoad.Text = "Reload Monitor Settings"
         Me.btnMonitorDataSpacesLoad.UseVisualStyleBackColor = True
         '
@@ -1891,7 +1892,7 @@ Partial Class frmSettings
         Me.txtMinPercGrowth.Location = New System.Drawing.Point(209, 45)
         Me.txtMinPercGrowth.Name = "txtMinPercGrowth"
         Me.txtMinPercGrowth.Size = New System.Drawing.Size(100, 20)
-        Me.txtMinPercGrowth.TabIndex = 89
+        Me.txtMinPercGrowth.TabIndex = 0
         '
         'lblMinFreeSpace
         '
@@ -1907,7 +1908,7 @@ Partial Class frmSettings
         Me.txtMinFreeSpace.Location = New System.Drawing.Point(209, 97)
         Me.txtMinFreeSpace.Name = "txtMinFreeSpace"
         Me.txtMinFreeSpace.Size = New System.Drawing.Size(100, 20)
-        Me.txtMinFreeSpace.TabIndex = 87
+        Me.txtMinFreeSpace.TabIndex = 1
         '
         'lblLargeGrowth
         '
@@ -1923,7 +1924,7 @@ Partial Class frmSettings
         Me.txtLargeGrowth.Location = New System.Drawing.Point(462, 244)
         Me.txtLargeGrowth.Name = "txtLargeGrowth"
         Me.txtLargeGrowth.Size = New System.Drawing.Size(100, 20)
-        Me.txtLargeGrowth.TabIndex = 85
+        Me.txtLargeGrowth.TabIndex = 6
         '
         'lblMediumGrowth
         '
@@ -1939,7 +1940,7 @@ Partial Class frmSettings
         Me.txtMediumGrowth.Location = New System.Drawing.Point(462, 192)
         Me.txtMediumGrowth.Name = "txtMediumGrowth"
         Me.txtMediumGrowth.Size = New System.Drawing.Size(100, 20)
-        Me.txtMediumGrowth.TabIndex = 83
+        Me.txtMediumGrowth.TabIndex = 4
         '
         'lblSmallGrowth
         '
@@ -1955,7 +1956,7 @@ Partial Class frmSettings
         Me.txtSmallGrowth.Location = New System.Drawing.Point(462, 140)
         Me.txtSmallGrowth.Name = "txtSmallGrowth"
         Me.txtSmallGrowth.Size = New System.Drawing.Size(100, 20)
-        Me.txtSmallGrowth.TabIndex = 81
+        Me.txtSmallGrowth.TabIndex = 2
         '
         'lblUpperLimit
         '
@@ -1971,7 +1972,7 @@ Partial Class frmSettings
         Me.txtUpperLimit.Location = New System.Drawing.Point(462, 218)
         Me.txtUpperLimit.Name = "txtUpperLimit"
         Me.txtUpperLimit.Size = New System.Drawing.Size(100, 20)
-        Me.txtUpperLimit.TabIndex = 79
+        Me.txtUpperLimit.TabIndex = 5
         '
         'lblLowerLimit
         '
@@ -1987,14 +1988,14 @@ Partial Class frmSettings
         Me.txtLowerLimit.Location = New System.Drawing.Point(462, 166)
         Me.txtLowerLimit.Name = "txtLowerLimit"
         Me.txtLowerLimit.Size = New System.Drawing.Size(100, 20)
-        Me.txtLowerLimit.TabIndex = 77
+        Me.txtLowerLimit.TabIndex = 3
         '
         'btnMonitorDataSpacesSave
         '
         Me.btnMonitorDataSpacesSave.Location = New System.Drawing.Point(427, 47)
         Me.btnMonitorDataSpacesSave.Name = "btnMonitorDataSpacesSave"
         Me.btnMonitorDataSpacesSave.Size = New System.Drawing.Size(135, 23)
-        Me.btnMonitorDataSpacesSave.TabIndex = 75
+        Me.btnMonitorDataSpacesSave.TabIndex = 8
         Me.btnMonitorDataSpacesSave.Text = "Save Monitor Settings"
         Me.btnMonitorDataSpacesSave.UseVisualStyleBackColor = True
         '
@@ -2039,7 +2040,7 @@ Partial Class frmSettings
         Me.btnCreateDownloadProcedure.Location = New System.Drawing.Point(416, 95)
         Me.btnCreateDownloadProcedure.Name = "btnCreateDownloadProcedure"
         Me.btnCreateDownloadProcedure.Size = New System.Drawing.Size(154, 23)
-        Me.btnCreateDownloadProcedure.TabIndex = 108
+        Me.btnCreateDownloadProcedure.TabIndex = 12
         Me.btnCreateDownloadProcedure.Text = "Create Download Procedure"
         Me.btnCreateDownloadProcedure.UseVisualStyleBackColor = True
         '
@@ -2304,7 +2305,7 @@ Partial Class frmSettings
         Me.btnShowEmailPassword.Location = New System.Drawing.Point(369, 137)
         Me.btnShowEmailPassword.Name = "btnShowEmailPassword"
         Me.btnShowEmailPassword.Size = New System.Drawing.Size(23, 23)
-        Me.btnShowEmailPassword.TabIndex = 88
+        Me.btnShowEmailPassword.TabIndex = 4
         Me.btnShowEmailPassword.UseVisualStyleBackColor = True
         '
         'btnSettingsEmailSave
@@ -2312,7 +2313,7 @@ Partial Class frmSettings
         Me.btnSettingsEmailSave.Location = New System.Drawing.Point(427, 19)
         Me.btnSettingsEmailSave.Name = "btnSettingsEmailSave"
         Me.btnSettingsEmailSave.Size = New System.Drawing.Size(135, 23)
-        Me.btnSettingsEmailSave.TabIndex = 87
+        Me.btnSettingsEmailSave.TabIndex = 8
         Me.btnSettingsEmailSave.Text = "Save Email Settings"
         Me.btnSettingsEmailSave.UseVisualStyleBackColor = True
         '
@@ -2330,7 +2331,7 @@ Partial Class frmSettings
         Me.txtSmtpPortNumber.Location = New System.Drawing.Point(202, 187)
         Me.txtSmtpPortNumber.Name = "txtSmtpPortNumber"
         Me.txtSmtpPortNumber.Size = New System.Drawing.Size(43, 20)
-        Me.txtSmtpPortNumber.TabIndex = 94
+        Me.txtSmtpPortNumber.TabIndex = 6
         '
         'lblSmtpServer
         '
@@ -2347,7 +2348,7 @@ Partial Class frmSettings
         Me.chkUseSslEncryption.Location = New System.Drawing.Point(63, 169)
         Me.chkUseSslEncryption.Name = "chkUseSslEncryption"
         Me.chkUseSslEncryption.Size = New System.Drawing.Size(146, 17)
-        Me.chkUseSslEncryption.TabIndex = 92
+        Me.chkUseSslEncryption.TabIndex = 5
         Me.chkUseSslEncryption.Text = "Use SSL/TLS Encryption"
         Me.chkUseSslEncryption.UseVisualStyleBackColor = True
         '
@@ -2356,7 +2357,7 @@ Partial Class frmSettings
         Me.txtSmtpServer.Location = New System.Drawing.Point(202, 65)
         Me.txtSmtpServer.Name = "txtSmtpServer"
         Me.txtSmtpServer.Size = New System.Drawing.Size(190, 20)
-        Me.txtSmtpServer.TabIndex = 84
+        Me.txtSmtpServer.TabIndex = 0
         '
         'lblSmtpReply
         '
@@ -2373,14 +2374,14 @@ Partial Class frmSettings
         Me.txtSmtpServerUsername.Location = New System.Drawing.Point(202, 115)
         Me.txtSmtpServerUsername.Name = "txtSmtpServerUsername"
         Me.txtSmtpServerUsername.Size = New System.Drawing.Size(190, 20)
-        Me.txtSmtpServerUsername.TabIndex = 86
+        Me.txtSmtpServerUsername.TabIndex = 2
         '
         'txtSmtpReply
         '
         Me.txtSmtpReply.Location = New System.Drawing.Point(202, 220)
         Me.txtSmtpReply.Name = "txtSmtpReply"
         Me.txtSmtpReply.Size = New System.Drawing.Size(190, 20)
-        Me.txtSmtpReply.TabIndex = 91
+        Me.txtSmtpReply.TabIndex = 7
         '
         'lblSmtpServerUsername
         '
@@ -2399,7 +2400,7 @@ Partial Class frmSettings
         Me.chkSmtpCredentials.Location = New System.Drawing.Point(63, 95)
         Me.chkSmtpCredentials.Name = "chkSmtpCredentials"
         Me.chkSmtpCredentials.Size = New System.Drawing.Size(141, 17)
-        Me.chkSmtpCredentials.TabIndex = 89
+        Me.chkSmtpCredentials.TabIndex = 1
         Me.chkSmtpCredentials.Text = "use Network Credentials"
         Me.chkSmtpCredentials.UseVisualStyleBackColor = True
         '
@@ -2409,7 +2410,7 @@ Partial Class frmSettings
         Me.txtSmtpServerPassword.Location = New System.Drawing.Point(202, 139)
         Me.txtSmtpServerPassword.Name = "txtSmtpServerPassword"
         Me.txtSmtpServerPassword.Size = New System.Drawing.Size(165, 20)
-        Me.txtSmtpServerPassword.TabIndex = 88
+        Me.txtSmtpServerPassword.TabIndex = 3
         Me.txtSmtpServerPassword.Tag = "<Keep Current Password>"
         '
         'lblSmtpServerPassword
@@ -2427,7 +2428,7 @@ Partial Class frmSettings
         Me.btnClose.Location = New System.Drawing.Point(523, 411)
         Me.btnClose.Name = "btnClose"
         Me.btnClose.Size = New System.Drawing.Size(100, 23)
-        Me.btnClose.TabIndex = 4
+        Me.btnClose.TabIndex = 1
         Me.btnClose.Text = "Close"
         Me.btnClose.UseVisualStyleBackColor = True
         '
@@ -2435,7 +2436,7 @@ Partial Class frmSettings
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(637, 442)
+        Me.ClientSize = New System.Drawing.Size(637, 443)
         Me.Controls.Add(Me.btnClose)
         Me.Controls.Add(Me.tabSettings)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog

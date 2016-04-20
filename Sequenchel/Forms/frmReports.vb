@@ -1714,4 +1714,8 @@ Public Class frmReports
         sptReport.BackColor = clrControl
         sptReportTables.BackColor = clrControl
     End Sub
+
+    Private Sub dgvReport_DoubleClick(sender As Object, e As EventArgs) Handles dgvReport.DoubleClick
+
+    End Sub
 End Class

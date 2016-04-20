@@ -94,20 +94,6 @@ Module Common
             End Select
         Next
 
-        'If My.Application.CommandLineArgs.Contains("/debug") Then
-        '    CurVar.DebugMode = True
-        '    MessageBox.Show("Running in Debug Mode")
-        'End If
-        'If My.Application.CommandLineArgs.Contains("/control") Then
-        '    CurStatus.Status = CurrentStatus.StatusList.ControlSearch
-        'End If
-        'If My.Application.CommandLineArgs.Contains("/dev") Then
-        '    DevMode = True
-        'End If
-        'If My.Application.CommandLineArgs.Contains("/noencryption") Then
-        '    blnEncryption = False
-        'End If
-
     End Sub
 
     Friend Sub SetTimer()
@@ -148,9 +134,9 @@ Module Common
 
     Friend Sub LoadLicense(lblTarget As Label)
         If Core.LoadLicense = False Then
-            WriteStatus(Core.Message.ErrorMessage, 4, lblTarget)
+            WriteStatus(Core.Message.ErrorMessage, 1, lblTarget)
         Else
-            WriteStatus("License loaded succesfully", 0, lblTarget)
+            WriteStatus("License loaded succesfully", 2, lblTarget)
         End If
         strReport = "Sequenchel " & vbTab & " version: " & Core.GetVersion("B") & vbTab & "  Licensed to: " & Core.LicenseName
 
@@ -346,16 +332,18 @@ Module Common
         Return strTargetFile
     End Function
 
-    Friend Sub ExportFile(dtsInput As DataSet, strFileName As String)
+    Friend Function ExportFile(dtsInput As DataSet, strFileName As String) As Boolean
         CursorControl("Wait")
         Try
             SeqData.ExportFile(dtsInput, strFileName, SeqData.curVar.ConvertToText, SeqData.curVar.ConvertToNull, SeqData.curVar.ShowFile, SeqData.curVar.HasHeaders, SeqData.curVar.Delimiter, SeqData.curVar.QuoteValues, SeqData.curVar.CreateDir)
         Catch ex As Exception
             SeqData.curVar.ShowFile = False
             SeqData.WriteLog("An error occured while creating the file." & Environment.NewLine & ex.Message, 1)
+            Return False
         End Try
         CursorControl()
-    End Sub
+        Return True
+    End Function
 
 #Region "XML"
     Friend Sub DisplayXmlFile(ByVal xmlDoc As Xml.XmlDocument, ByVal tvw As TreeView)
@@ -780,12 +768,8 @@ Module Common
             Case 1
                 clrStatus = clrWarning
             Case 2
-                clrStatus = clrWarning
-            Case 3
                 clrStatus = clrMarked
-            Case 4
-                clrStatus = clrMarked
-            Case 5
+            Case 3, 4, 5
                 clrStatus = clrControl
         End Select
         lblTarget.Text = strStatusText

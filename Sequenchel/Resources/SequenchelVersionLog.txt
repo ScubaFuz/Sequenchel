@@ -1,5 +1,7 @@
 Version 3.7.1
 New: Shutdown timer to close Sequenchel after a period of inactivity.
+Enhanced: The Tab order has been made sensible.
+Enhanced: improved logging and status messages in main screen, SmartUpdate and Import.
 Fixed: SmartUpdate can now handle NULL values when comparing data.
 Fixed: In some cases the override password was removed when saving other settings.
 Fixed: Updating a saved search would show the search multiple times in the list.

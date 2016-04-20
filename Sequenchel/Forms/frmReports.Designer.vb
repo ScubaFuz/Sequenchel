@@ -126,11 +126,11 @@ Partial Class frmReports
         Me.btnSaveQuery = New System.Windows.Forms.Button()
         Me.btnExecuteQuery = New System.Windows.Forms.Button()
         Me.rtbQuery = New System.Windows.Forms.RichTextBox()
-        Me.dgvReport = New Sequenchel.usrDataGridView()
         Me.btnTest = New System.Windows.Forms.Button()
         Me.btnClose = New System.Windows.Forms.Button()
         Me.tmrElapsedTime = New System.Windows.Forms.Timer(Me.components)
         Me.lblStatus = New System.Windows.Forms.Label()
+        Me.dgvReport = New Sequenchel.usrDataGridView()
         Me.tabReports.SuspendLayout()
         Me.tpgReportDefinition.SuspendLayout()
         CType(Me.sptReports, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -324,7 +324,7 @@ Partial Class frmReports
         Me.btnReportFieldAdd.Location = New System.Drawing.Point(3, 113)
         Me.btnReportFieldAdd.Name = "btnReportFieldAdd"
         Me.btnReportFieldAdd.Size = New System.Drawing.Size(30, 23)
-        Me.btnReportFieldAdd.TabIndex = 1
+        Me.btnReportFieldAdd.TabIndex = 0
         Me.btnReportFieldAdd.UseVisualStyleBackColor = True
         '
         'btnReportFieldRemove
@@ -334,7 +334,7 @@ Partial Class frmReports
         Me.btnReportFieldRemove.Location = New System.Drawing.Point(3, 142)
         Me.btnReportFieldRemove.Name = "btnReportFieldRemove"
         Me.btnReportFieldRemove.Size = New System.Drawing.Size(30, 23)
-        Me.btnReportFieldRemove.TabIndex = 2
+        Me.btnReportFieldRemove.TabIndex = 1
         Me.btnReportFieldRemove.UseVisualStyleBackColor = True
         '
         'lvwSelectedFields
@@ -557,7 +557,7 @@ Partial Class frmReports
         Me.chkReportShow.Location = New System.Drawing.Point(155, 6)
         Me.chkReportShow.Name = "chkReportShow"
         Me.chkReportShow.Size = New System.Drawing.Size(53, 17)
-        Me.chkReportShow.TabIndex = 126
+        Me.chkReportShow.TabIndex = 0
         Me.chkReportShow.Text = "Show"
         Me.chkReportShow.UseVisualStyleBackColor = True
         '
@@ -641,7 +641,7 @@ Partial Class frmReports
         Me.pnlSplitSelectedFields.Location = New System.Drawing.Point(0, 0)
         Me.pnlSplitSelectedFields.Name = "pnlSplitSelectedFields"
         Me.pnlSplitSelectedFields.Size = New System.Drawing.Size(38, 417)
-        Me.pnlSplitSelectedFields.TabIndex = 153
+        Me.pnlSplitSelectedFields.TabIndex = 0
         '
         'btnReportFieldDown
         '
@@ -650,7 +650,7 @@ Partial Class frmReports
         Me.btnReportFieldDown.Location = New System.Drawing.Point(3, 142)
         Me.btnReportFieldDown.Name = "btnReportFieldDown"
         Me.btnReportFieldDown.Size = New System.Drawing.Size(30, 23)
-        Me.btnReportFieldDown.TabIndex = 2
+        Me.btnReportFieldDown.TabIndex = 1
         Me.btnReportFieldDown.UseVisualStyleBackColor = True
         '
         'btnReportFieldUp
@@ -660,7 +660,7 @@ Partial Class frmReports
         Me.btnReportFieldUp.Location = New System.Drawing.Point(3, 113)
         Me.btnReportFieldUp.Name = "btnReportFieldUp"
         Me.btnReportFieldUp.Size = New System.Drawing.Size(30, 23)
-        Me.btnReportFieldUp.TabIndex = 1
+        Me.btnReportFieldUp.TabIndex = 0
         Me.btnReportFieldUp.UseVisualStyleBackColor = True
         '
         'pnlRelationsMain
@@ -798,7 +798,7 @@ Partial Class frmReports
         Me.btnReportTableUp.Location = New System.Drawing.Point(3, 70)
         Me.btnReportTableUp.Name = "btnReportTableUp"
         Me.btnReportTableUp.Size = New System.Drawing.Size(30, 23)
-        Me.btnReportTableUp.TabIndex = 155
+        Me.btnReportTableUp.TabIndex = 0
         Me.btnReportTableUp.UseVisualStyleBackColor = True
         '
         'btnReportTableDown
@@ -808,7 +808,7 @@ Partial Class frmReports
         Me.btnReportTableDown.Location = New System.Drawing.Point(3, 99)
         Me.btnReportTableDown.Name = "btnReportTableDown"
         Me.btnReportTableDown.Size = New System.Drawing.Size(30, 23)
-        Me.btnReportTableDown.TabIndex = 156
+        Me.btnReportTableDown.TabIndex = 1
         Me.btnReportTableDown.UseVisualStyleBackColor = True
         '
         'pnlReportButtons
@@ -836,7 +836,7 @@ Partial Class frmReports
         Me.btnQueryShow.Location = New System.Drawing.Point(1073, 7)
         Me.btnQueryShow.Name = "btnQueryShow"
         Me.btnQueryShow.Size = New System.Drawing.Size(164, 20)
-        Me.btnQueryShow.TabIndex = 10
+        Me.btnQueryShow.TabIndex = 7
         Me.btnQueryShow.Text = "Show Query"
         '
         'btnReportClear
@@ -845,7 +845,7 @@ Partial Class frmReports
         Me.btnReportClear.Location = New System.Drawing.Point(903, 33)
         Me.btnReportClear.Name = "btnReportClear"
         Me.btnReportClear.Size = New System.Drawing.Size(164, 20)
-        Me.btnReportClear.TabIndex = 11
+        Me.btnReportClear.TabIndex = 8
         Me.btnReportClear.Text = "Clear All"
         '
         'lblDescription
@@ -864,7 +864,7 @@ Partial Class frmReports
         Me.btnReportCreate.Location = New System.Drawing.Point(903, 7)
         Me.btnReportCreate.Name = "btnReportCreate"
         Me.btnReportCreate.Size = New System.Drawing.Size(164, 20)
-        Me.btnReportCreate.TabIndex = 9
+        Me.btnReportCreate.TabIndex = 6
         Me.btnReportCreate.Text = "Create Report"
         '
         'txtDescription
@@ -875,7 +875,7 @@ Partial Class frmReports
         Me.txtDescription.Multiline = True
         Me.txtDescription.Name = "txtDescription"
         Me.txtDescription.Size = New System.Drawing.Size(541, 32)
-        Me.txtDescription.TabIndex = 196
+        Me.txtDescription.TabIndex = 2
         '
         'chkDistinct
         '
@@ -884,7 +884,7 @@ Partial Class frmReports
         Me.chkDistinct.Location = New System.Drawing.Point(743, 10)
         Me.chkDistinct.Name = "chkDistinct"
         Me.chkDistinct.Size = New System.Drawing.Size(98, 17)
-        Me.chkDistinct.TabIndex = 6
+        Me.chkDistinct.TabIndex = 3
         Me.chkDistinct.Text = "Use DISTINCT"
         Me.chkDistinct.UseVisualStyleBackColor = True
         '
@@ -894,7 +894,7 @@ Partial Class frmReports
         Me.btnReportExport.Location = New System.Drawing.Point(6, 7)
         Me.btnReportExport.Name = "btnReportExport"
         Me.btnReportExport.Size = New System.Drawing.Size(164, 20)
-        Me.btnReportExport.TabIndex = 194
+        Me.btnReportExport.TabIndex = 0
         Me.btnReportExport.Text = "Export Report Definition"
         '
         'chkTop
@@ -906,7 +906,7 @@ Partial Class frmReports
         Me.chkTop.Location = New System.Drawing.Point(743, 36)
         Me.chkTop.Name = "chkTop"
         Me.chkTop.Size = New System.Drawing.Size(70, 17)
-        Me.chkTop.TabIndex = 7
+        Me.chkTop.TabIndex = 4
         Me.chkTop.Text = "Use TOP"
         Me.chkTop.UseVisualStyleBackColor = True
         '
@@ -916,7 +916,7 @@ Partial Class frmReports
         Me.btnReportImport.Location = New System.Drawing.Point(6, 33)
         Me.btnReportImport.Name = "btnReportImport"
         Me.btnReportImport.Size = New System.Drawing.Size(164, 20)
-        Me.btnReportImport.TabIndex = 195
+        Me.btnReportImport.TabIndex = 1
         Me.btnReportImport.Text = "Import Report Definition"
         '
         'txtTop
@@ -925,7 +925,7 @@ Partial Class frmReports
         Me.txtTop.Location = New System.Drawing.Point(819, 34)
         Me.txtTop.Name = "txtTop"
         Me.txtTop.Size = New System.Drawing.Size(39, 20)
-        Me.txtTop.TabIndex = 8
+        Me.txtTop.TabIndex = 5
         Me.txtTop.Text = "1000"
         '
         'btnRevertChanges
@@ -934,7 +934,7 @@ Partial Class frmReports
         Me.btnRevertChanges.Location = New System.Drawing.Point(1073, 33)
         Me.btnRevertChanges.Name = "btnRevertChanges"
         Me.btnRevertChanges.Size = New System.Drawing.Size(164, 20)
-        Me.btnRevertChanges.TabIndex = 12
+        Me.btnRevertChanges.TabIndex = 9
         Me.btnRevertChanges.Text = "Revert Changes"
         '
         'pnlReportConnection
@@ -976,7 +976,7 @@ Partial Class frmReports
         Me.cbxReportName.Name = "cbxReportName"
         Me.cbxReportName.Size = New System.Drawing.Size(197, 21)
         Me.cbxReportName.Sorted = True
-        Me.cbxReportName.TabIndex = 3
+        Me.cbxReportName.TabIndex = 6
         '
         'btnReportAddOrUpdate
         '
@@ -984,7 +984,7 @@ Partial Class frmReports
         Me.btnReportAddOrUpdate.Location = New System.Drawing.Point(971, 20)
         Me.btnReportAddOrUpdate.Name = "btnReportAddOrUpdate"
         Me.btnReportAddOrUpdate.Size = New System.Drawing.Size(131, 20)
-        Me.btnReportAddOrUpdate.TabIndex = 4
+        Me.btnReportAddOrUpdate.TabIndex = 7
         Me.btnReportAddOrUpdate.Text = "Add/Update Report"
         '
         'btnTablesReload
@@ -994,7 +994,7 @@ Partial Class frmReports
         Me.btnTablesReload.Location = New System.Drawing.Point(471, 17)
         Me.btnTablesReload.Name = "btnTablesReload"
         Me.btnTablesReload.Size = New System.Drawing.Size(25, 25)
-        Me.btnTablesReload.TabIndex = 180
+        Me.btnTablesReload.TabIndex = 4
         Me.btnTablesReload.UseVisualStyleBackColor = True
         '
         'btnReportDelete
@@ -1003,7 +1003,7 @@ Partial Class frmReports
         Me.btnReportDelete.Location = New System.Drawing.Point(1108, 20)
         Me.btnReportDelete.Name = "btnReportDelete"
         Me.btnReportDelete.Size = New System.Drawing.Size(131, 20)
-        Me.btnReportDelete.TabIndex = 5
+        Me.btnReportDelete.TabIndex = 8
         Me.btnReportDelete.Text = "Delete Report"
         '
         'btnTableSetsReload
@@ -1012,7 +1012,7 @@ Partial Class frmReports
         Me.btnTableSetsReload.Location = New System.Drawing.Point(238, 17)
         Me.btnTableSetsReload.Name = "btnTableSetsReload"
         Me.btnTableSetsReload.Size = New System.Drawing.Size(25, 25)
-        Me.btnTableSetsReload.TabIndex = 179
+        Me.btnTableSetsReload.TabIndex = 2
         Me.btnTableSetsReload.UseVisualStyleBackColor = True
         '
         'lblConnection
@@ -1030,7 +1030,7 @@ Partial Class frmReports
         Me.btnConnectionsReload.Location = New System.Drawing.Point(5, 17)
         Me.btnConnectionsReload.Name = "btnConnectionsReload"
         Me.btnConnectionsReload.Size = New System.Drawing.Size(25, 25)
-        Me.btnConnectionsReload.TabIndex = 178
+        Me.btnConnectionsReload.TabIndex = 0
         Me.btnConnectionsReload.UseVisualStyleBackColor = True
         '
         'cbxConnection
@@ -1040,7 +1040,7 @@ Partial Class frmReports
         Me.cbxConnection.Name = "cbxConnection"
         Me.cbxConnection.Size = New System.Drawing.Size(200, 21)
         Me.cbxConnection.Sorted = True
-        Me.cbxConnection.TabIndex = 0
+        Me.cbxConnection.TabIndex = 1
         '
         'lblTable
         '
@@ -1058,7 +1058,7 @@ Partial Class frmReports
         Me.cbxTableSet.Name = "cbxTableSet"
         Me.cbxTableSet.Size = New System.Drawing.Size(200, 21)
         Me.cbxTableSet.Sorted = True
-        Me.cbxTableSet.TabIndex = 1
+        Me.cbxTableSet.TabIndex = 3
         '
         'cbxTable
         '
@@ -1068,7 +1068,7 @@ Partial Class frmReports
         Me.cbxTable.Name = "cbxTable"
         Me.cbxTable.Size = New System.Drawing.Size(200, 21)
         Me.cbxTable.Sorted = True
-        Me.cbxTable.TabIndex = 2
+        Me.cbxTable.TabIndex = 5
         '
         'lblTableSet
         '
@@ -1097,7 +1097,7 @@ Partial Class frmReports
         Me.tpgReportResult.Location = New System.Drawing.Point(4, 22)
         Me.tpgReportResult.Name = "tpgReportResult"
         Me.tpgReportResult.Padding = New System.Windows.Forms.Padding(3)
-        Me.tpgReportResult.Size = New System.Drawing.Size(1252, 737)
+        Me.tpgReportResult.Size = New System.Drawing.Size(1252, 736)
         Me.tpgReportResult.TabIndex = 1
         Me.tpgReportResult.Text = "Report Result"
         Me.tpgReportResult.UseVisualStyleBackColor = True
@@ -1111,7 +1111,7 @@ Partial Class frmReports
         Me.cbxEmailResults.Location = New System.Drawing.Point(738, 704)
         Me.cbxEmailResults.Name = "cbxEmailResults"
         Me.cbxEmailResults.Size = New System.Drawing.Size(60, 21)
-        Me.cbxEmailResults.TabIndex = 180
+        Me.cbxEmailResults.TabIndex = 6
         '
         'btnEmailResults
         '
@@ -1119,7 +1119,7 @@ Partial Class frmReports
         Me.btnEmailResults.Location = New System.Drawing.Point(602, 703)
         Me.btnEmailResults.Name = "btnEmailResults"
         Me.btnEmailResults.Size = New System.Drawing.Size(135, 23)
-        Me.btnEmailResults.TabIndex = 179
+        Me.btnEmailResults.TabIndex = 5
         Me.btnEmailResults.Text = "Email Results as:"
         Me.btnEmailResults.UseVisualStyleBackColor = True
         '
@@ -1138,7 +1138,7 @@ Partial Class frmReports
         Me.btnDefinition.Location = New System.Drawing.Point(1105, 703)
         Me.btnDefinition.Name = "btnDefinition"
         Me.btnDefinition.Size = New System.Drawing.Size(135, 23)
-        Me.btnDefinition.TabIndex = 5
+        Me.btnDefinition.TabIndex = 7
         Me.btnDefinition.Text = "Back to Definition"
         Me.btnDefinition.UseVisualStyleBackColor = True
         '
@@ -1221,23 +1221,6 @@ Partial Class frmReports
         Me.rtbQuery.TabIndex = 0
         Me.rtbQuery.Text = ""
         '
-        'dgvReport
-        '
-        Me.dgvReport.AllowUserToAddRows = False
-        Me.dgvReport.AllowUserToDeleteRows = False
-        Me.dgvReport.AllowUserToOrderColumns = True
-        Me.dgvReport.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.dgvReport.BackgroundColor = System.Drawing.SystemColors.Control
-        Me.dgvReport.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
-        Me.dgvReport.BackImage = CType(resources.GetObject("dgvReport.BackImage"), System.Drawing.Image)
-        Me.dgvReport.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvReport.Location = New System.Drawing.Point(6, 6)
-        Me.dgvReport.Name = "dgvReport"
-        Me.dgvReport.Size = New System.Drawing.Size(1243, 563)
-        Me.dgvReport.TabIndex = 0
-        '
         'btnTest
         '
         Me.btnTest.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
@@ -1256,7 +1239,7 @@ Partial Class frmReports
         Me.btnClose.Location = New System.Drawing.Point(1121, 777)
         Me.btnClose.Name = "btnClose"
         Me.btnClose.Size = New System.Drawing.Size(135, 23)
-        Me.btnClose.TabIndex = 2
+        Me.btnClose.TabIndex = 1
         Me.btnClose.Text = "Close"
         Me.btnClose.UseVisualStyleBackColor = True
         '
@@ -1272,6 +1255,23 @@ Partial Class frmReports
         Me.lblStatus.Name = "lblStatus"
         Me.lblStatus.Size = New System.Drawing.Size(0, 18)
         Me.lblStatus.TabIndex = 171
+        '
+        'dgvReport
+        '
+        Me.dgvReport.AllowUserToAddRows = False
+        Me.dgvReport.AllowUserToDeleteRows = False
+        Me.dgvReport.AllowUserToOrderColumns = True
+        Me.dgvReport.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.dgvReport.BackgroundColor = System.Drawing.SystemColors.Control
+        Me.dgvReport.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
+        Me.dgvReport.BackImage = CType(resources.GetObject("dgvReport.BackImage"), System.Drawing.Image)
+        Me.dgvReport.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dgvReport.Location = New System.Drawing.Point(6, 6)
+        Me.dgvReport.Name = "dgvReport"
+        Me.dgvReport.Size = New System.Drawing.Size(1243, 563)
+        Me.dgvReport.TabIndex = 0
         '
         'frmReports
         '

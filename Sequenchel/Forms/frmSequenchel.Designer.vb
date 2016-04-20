@@ -139,7 +139,7 @@ Partial Class frmSequenchel
         Me.cbxConnection.Name = "cbxConnection"
         Me.cbxConnection.Size = New System.Drawing.Size(200, 21)
         Me.cbxConnection.Sorted = True
-        Me.cbxConnection.TabIndex = 91
+        Me.cbxConnection.TabIndex = 2
         '
         'lblConnection
         '
@@ -166,7 +166,7 @@ Partial Class frmSequenchel
         Me.cbxTableSet.Name = "cbxTableSet"
         Me.cbxTableSet.Size = New System.Drawing.Size(200, 21)
         Me.cbxTableSet.Sorted = True
-        Me.cbxTableSet.TabIndex = 93
+        Me.cbxTableSet.TabIndex = 4
         '
         'lblTable
         '
@@ -184,7 +184,7 @@ Partial Class frmSequenchel
         Me.cbxTable.Name = "cbxTable"
         Me.cbxTable.Size = New System.Drawing.Size(200, 21)
         Me.cbxTable.Sorted = True
-        Me.cbxTable.TabIndex = 95
+        Me.cbxTable.TabIndex = 6
         '
         'btnConnectionsReload
         '
@@ -192,7 +192,7 @@ Partial Class frmSequenchel
         Me.btnConnectionsReload.Location = New System.Drawing.Point(26, 56)
         Me.btnConnectionsReload.Name = "btnConnectionsReload"
         Me.btnConnectionsReload.Size = New System.Drawing.Size(25, 25)
-        Me.btnConnectionsReload.TabIndex = 97
+        Me.btnConnectionsReload.TabIndex = 1
         Me.btnConnectionsReload.UseVisualStyleBackColor = True
         '
         'btnTableSetsReload
@@ -201,7 +201,7 @@ Partial Class frmSequenchel
         Me.btnTableSetsReload.Location = New System.Drawing.Point(259, 56)
         Me.btnTableSetsReload.Name = "btnTableSetsReload"
         Me.btnTableSetsReload.Size = New System.Drawing.Size(25, 25)
-        Me.btnTableSetsReload.TabIndex = 98
+        Me.btnTableSetsReload.TabIndex = 3
         Me.btnTableSetsReload.UseVisualStyleBackColor = True
         '
         'btnTablesReload
@@ -210,7 +210,7 @@ Partial Class frmSequenchel
         Me.btnTablesReload.Location = New System.Drawing.Point(492, 56)
         Me.btnTablesReload.Name = "btnTablesReload"
         Me.btnTablesReload.Size = New System.Drawing.Size(25, 25)
-        Me.btnTablesReload.TabIndex = 99
+        Me.btnTablesReload.TabIndex = 5
         Me.btnTablesReload.UseVisualStyleBackColor = True
         '
         'mnuMain
@@ -220,7 +220,7 @@ Partial Class frmSequenchel
         Me.mnuMain.Location = New System.Drawing.Point(0, 0)
         Me.mnuMain.Name = "mnuMain"
         Me.mnuMain.Size = New System.Drawing.Size(1284, 24)
-        Me.mnuMain.TabIndex = 100
+        Me.mnuMain.TabIndex = 0
         Me.mnuMain.Text = "mnuMain"
         '
         'mnuMainFile
@@ -265,7 +265,7 @@ Partial Class frmSequenchel
         '
         Me.mnuMainTools.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuMainToolsReports, Me.mnuMainToolsImport, Me.mnuMainToolsSmartUpdate})
         Me.mnuMainTools.Name = "mnuMainTools"
-        Me.mnuMainTools.Size = New System.Drawing.Size(47, 20)
+        Me.mnuMainTools.Size = New System.Drawing.Size(48, 20)
         Me.mnuMainTools.Text = "Tools"
         '
         'mnuMainToolsReports
@@ -335,7 +335,7 @@ Partial Class frmSequenchel
         Me.sptTable1.Panel2.Controls.Add(Me.sptFields1)
         Me.sptTable1.Size = New System.Drawing.Size(1246, 593)
         Me.sptTable1.SplitterDistance = 713
-        Me.sptTable1.TabIndex = 106
+        Me.sptTable1.TabIndex = 0
         '
         'sptFields1
         '
@@ -406,14 +406,14 @@ Partial Class frmSequenchel
         Me.cbxSearch.Location = New System.Drawing.Point(8, 35)
         Me.cbxSearch.Name = "cbxSearch"
         Me.cbxSearch.Size = New System.Drawing.Size(135, 21)
-        Me.cbxSearch.TabIndex = 138
+        Me.cbxSearch.TabIndex = 0
         '
         'btnDeleteSearch
         '
         Me.btnDeleteSearch.Location = New System.Drawing.Point(149, 35)
         Me.btnDeleteSearch.Name = "btnDeleteSearch"
         Me.btnDeleteSearch.Size = New System.Drawing.Size(135, 23)
-        Me.btnDeleteSearch.TabIndex = 136
+        Me.btnDeleteSearch.TabIndex = 2
         Me.btnDeleteSearch.Text = "Delete Search"
         Me.btnDeleteSearch.UseVisualStyleBackColor = True
         '
@@ -422,7 +422,7 @@ Partial Class frmSequenchel
         Me.btnSearchAddOrUpdate.Location = New System.Drawing.Point(149, 6)
         Me.btnSearchAddOrUpdate.Name = "btnSearchAddOrUpdate"
         Me.btnSearchAddOrUpdate.Size = New System.Drawing.Size(135, 23)
-        Me.btnSearchAddOrUpdate.TabIndex = 135
+        Me.btnSearchAddOrUpdate.TabIndex = 1
         Me.btnSearchAddOrUpdate.Text = "Add/Update Search"
         Me.btnSearchAddOrUpdate.UseVisualStyleBackColor = True
         '
@@ -432,7 +432,7 @@ Partial Class frmSequenchel
         Me.chkReversedSortOrder.Location = New System.Drawing.Point(334, 39)
         Me.chkReversedSortOrder.Name = "chkReversedSortOrder"
         Me.chkReversedSortOrder.Size = New System.Drawing.Size(123, 17)
-        Me.chkReversedSortOrder.TabIndex = 134
+        Me.chkReversedSortOrder.TabIndex = 5
         Me.chkReversedSortOrder.Text = "Reversed Sort Order"
         Me.chkReversedSortOrder.UseVisualStyleBackColor = True
         '
@@ -441,7 +441,7 @@ Partial Class frmSequenchel
         Me.btnDelete.Location = New System.Drawing.Point(894, 35)
         Me.btnDelete.Name = "btnDelete"
         Me.btnDelete.Size = New System.Drawing.Size(135, 23)
-        Me.btnDelete.TabIndex = 131
+        Me.btnDelete.TabIndex = 13
         Me.btnDelete.Text = "Delete Item"
         Me.btnDelete.UseVisualStyleBackColor = True
         '
@@ -450,7 +450,7 @@ Partial Class frmSequenchel
         Me.txtUseTop.Location = New System.Drawing.Point(404, 8)
         Me.txtUseTop.Name = "txtUseTop"
         Me.txtUseTop.Size = New System.Drawing.Size(61, 20)
-        Me.txtUseTop.TabIndex = 133
+        Me.txtUseTop.TabIndex = 4
         Me.txtUseTop.Text = "1000"
         '
         'chkUseTop
@@ -461,7 +461,7 @@ Partial Class frmSequenchel
         Me.chkUseTop.Location = New System.Drawing.Point(334, 10)
         Me.chkUseTop.Name = "chkUseTop"
         Me.chkUseTop.Size = New System.Drawing.Size(70, 17)
-        Me.chkUseTop.TabIndex = 132
+        Me.chkUseTop.TabIndex = 3
         Me.chkUseTop.Text = "Use TOP"
         Me.chkUseTop.UseVisualStyleBackColor = True
         '
@@ -470,7 +470,7 @@ Partial Class frmSequenchel
         Me.btnLoadList.Location = New System.Drawing.Point(471, 6)
         Me.btnLoadList.Name = "btnLoadList"
         Me.btnLoadList.Size = New System.Drawing.Size(135, 23)
-        Me.btnLoadList.TabIndex = 124
+        Me.btnLoadList.TabIndex = 6
         Me.btnLoadList.Text = "(Re)Load Complete List"
         Me.btnLoadList.UseVisualStyleBackColor = True
         '
@@ -479,7 +479,7 @@ Partial Class frmSequenchel
         Me.btnExportList.Location = New System.Drawing.Point(471, 35)
         Me.btnExportList.Name = "btnExportList"
         Me.btnExportList.Size = New System.Drawing.Size(135, 23)
-        Me.btnExportList.TabIndex = 125
+        Me.btnExportList.TabIndex = 10
         Me.btnExportList.Text = "Export List to File"
         Me.btnExportList.UseVisualStyleBackColor = True
         '
@@ -488,7 +488,7 @@ Partial Class frmSequenchel
         Me.btnLoadSearchCriteria.Location = New System.Drawing.Point(612, 6)
         Me.btnLoadSearchCriteria.Name = "btnLoadSearchCriteria"
         Me.btnLoadSearchCriteria.Size = New System.Drawing.Size(135, 23)
-        Me.btnLoadSearchCriteria.TabIndex = 126
+        Me.btnLoadSearchCriteria.TabIndex = 7
         Me.btnLoadSearchCriteria.Text = "(Re)Load Search Criteria"
         Me.btnLoadSearchCriteria.UseVisualStyleBackColor = True
         '
@@ -497,7 +497,7 @@ Partial Class frmSequenchel
         Me.btnSearch.Location = New System.Drawing.Point(753, 6)
         Me.btnSearch.Name = "btnSearch"
         Me.btnSearch.Size = New System.Drawing.Size(135, 23)
-        Me.btnSearch.TabIndex = 127
+        Me.btnSearch.TabIndex = 8
         Me.btnSearch.Text = "Search"
         Me.btnSearch.UseVisualStyleBackColor = True
         '
@@ -506,7 +506,7 @@ Partial Class frmSequenchel
         Me.btnUpdate.Location = New System.Drawing.Point(753, 35)
         Me.btnUpdate.Name = "btnUpdate"
         Me.btnUpdate.Size = New System.Drawing.Size(135, 23)
-        Me.btnUpdate.TabIndex = 128
+        Me.btnUpdate.TabIndex = 12
         Me.btnUpdate.Text = "Update Item"
         Me.btnUpdate.UseVisualStyleBackColor = True
         '
@@ -516,7 +516,7 @@ Partial Class frmSequenchel
         Me.btnClear.Location = New System.Drawing.Point(894, 6)
         Me.btnClear.Name = "btnClear"
         Me.btnClear.Size = New System.Drawing.Size(135, 23)
-        Me.btnClear.TabIndex = 129
+        Me.btnClear.TabIndex = 9
         Me.btnClear.Text = "Clear"
         Me.btnClear.UseVisualStyleBackColor = True
         '
@@ -525,7 +525,7 @@ Partial Class frmSequenchel
         Me.btnAdd.Location = New System.Drawing.Point(612, 35)
         Me.btnAdd.Name = "btnAdd"
         Me.btnAdd.Size = New System.Drawing.Size(135, 23)
-        Me.btnAdd.TabIndex = 130
+        Me.btnAdd.TabIndex = 11
         Me.btnAdd.Text = "New Item"
         Me.btnAdd.UseVisualStyleBackColor = True
         '

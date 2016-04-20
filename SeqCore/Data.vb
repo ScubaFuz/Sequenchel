@@ -1224,7 +1224,7 @@ Public Class Data
             End Select
         Catch ex As Exception
             blnShowFile = False
-            'WriteLog("Couldn't create Excel file.\r\nException: " + ex.Message, 1)
+            WriteLog("There was an error exporting the file: " + ex.Message, 1)
             Return False
         End Try
 
