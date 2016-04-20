@@ -239,16 +239,6 @@ Module Common
                                 Case 2
                                     tblTable.Item(intField).Checked = sender.Value
                             End Select
-                            'If sender.Text.ToString <> sender.Tag.ToString Then
-                            '    sender.BackColor = clrMarked
-                            'Else
-                            '    If sender.Enabled = True Then
-                            '        sender.BackColor = clrOriginal
-                            '    Else
-                            '        sender.BackColor = clrDisabled
-                            '    End If
-                            'End If
-
                         End If
                     Next
             End Select

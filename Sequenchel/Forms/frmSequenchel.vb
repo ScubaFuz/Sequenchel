@@ -242,8 +242,17 @@ Public Class frmSequenchel
         End If
     End Sub
 
-    Private Sub sptFields1_MouseWheel(sender As Object, e As MouseEventArgs) Handles sptFields1.MouseWheel
+    Private Sub sptFields1_Panel2_MouseWheel(sender As Object, e As MouseEventArgs) Handles sptFields1.Panel2.MouseWheel
+        sptFields1.Panel1.VerticalScroll.Minimum = sptFields1.Panel2.VerticalScroll.Minimum
+        sptFields1.Panel1.VerticalScroll.Maximum = sptFields1.Panel2.VerticalScroll.Maximum
 
+        Dim vScrollPosition As Integer = sptFields1.Panel2.VerticalScroll.Value
+        sptFields1.Panel1.AutoScrollPosition = New Point(sptFields1.Panel1.AutoScrollPosition.X, vScrollPosition)
+        sptFields1.Panel1.VerticalScroll.Value = vScrollPosition
+        sptFields1.Panel2.AutoScrollPosition = New Point(sptFields1.Panel2.AutoScrollPosition.X, vScrollPosition)
+        sptFields1.Panel2.VerticalScroll.Value = vScrollPosition
+        sptFields1.Panel1.Invalidate()
+        sptFields1.Panel2.Invalidate()
     End Sub
 
     Private Sub Panel2_Scroll(ByVal sender As Object, ByVal e As System.Windows.Forms.ScrollEventArgs) Handles sptFields1.Panel2.Scroll
@@ -255,6 +264,8 @@ Public Class frmSequenchel
             sptFields1.Panel1.VerticalScroll.Value = e.NewValue
             sptFields1.Panel2.AutoScrollPosition = New Point(sptFields1.Panel2.AutoScrollPosition.X, e.NewValue)
             sptFields1.Panel2.VerticalScroll.Value = e.NewValue
+            sptFields1.Panel1.Invalidate()
+            sptFields1.Panel2.Invalidate()
         End If
     End Sub
 
@@ -1627,7 +1638,4 @@ Public Class frmSequenchel
 
 #End Region
 
-    Private Sub sptFields1_Panel2_Paint(sender As Object, e As PaintEventArgs) Handles sptFields1.Panel2.Paint
-
-    End Sub
 End Class

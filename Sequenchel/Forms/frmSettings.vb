@@ -266,6 +266,7 @@
             SeqData.curVar.TimedShutdown = txtTimerHours.Text * 60 * 60 * 1000
             txtTimerHours.Tag = SeqData.curVar.TimedShutdown / 60 / 60 / 1000
             txtTimerHours.BackColor = clrOriginal
+            SetTimer()
             blnSettingsChanged = True
         End If
 
