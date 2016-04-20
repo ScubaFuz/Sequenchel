@@ -265,6 +265,7 @@ Partial Class frmConfiguration
         '
         'btnShowDatabasePassword
         '
+        Me.btnShowDatabasePassword.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnShowDatabasePassword.Image = Global.Sequenchel.My.Resources.Resources.eye
         Me.btnShowDatabasePassword.Location = New System.Drawing.Point(714, 155)
         Me.btnShowDatabasePassword.Name = "btnShowDatabasePassword"

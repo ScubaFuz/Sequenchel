@@ -207,12 +207,11 @@ Public Class frmSequenchel
 
     Private Sub cbxConnection_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbxConnection.SelectedIndexChanged
         If cbxConnection.SelectedIndex >= -1 Then
-            SeqData.CurStatus.Connection = cbxConnection.SelectedItem
+            CursorControl("Wait")
+            SeqData.curStatus.Connection = cbxConnection.SelectedItem
             SeqData.LoadConnection(xmlConnections, SeqData.curStatus.Connection)
             LoadTableSets()
-            'dhdText.FindXmlNode(xmlConnections, "Connection", "DatabasdeName", strConnection)
-            'Dim xmlConnNode As xmlnode = xmlConnections.SelectSingleNode("\\Connection", "descendant::Connection[DataBaseName='" & strConnection & "']")
-            'dhdConnection.DatabaseName = strConnection
+            CursorControl()
         End If
     End Sub
 
@@ -222,11 +221,12 @@ Public Class frmSequenchel
 
     Private Sub cbxTableSet_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbxTableSet.SelectedIndexChanged
         If cbxTableSet.SelectedIndex >= -1 Then
-            SeqData.CurStatus.TableSet = cbxTableSet.SelectedItem
+            CursorControl("Wait")
+            SeqData.curStatus.TableSet = cbxTableSet.SelectedItem
             SeqData.LoadTableSet(xmlTableSets, SeqData.curStatus.TableSet)
             LoadTables()
+            CursorControl()
         End If
-
     End Sub
 
     Private Sub btnTablesReload_Click(sender As Object, e As EventArgs) Handles btnTablesReload.Click
@@ -235,9 +235,15 @@ Public Class frmSequenchel
 
     Private Sub cbxTable_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbxTable.SelectedIndexChanged
         If cbxTable.SelectedIndex >= -1 Then
-            SeqData.CurStatus.Table = cbxTable.SelectedItem
-            LoadTable(SeqData.CurStatus.Table)
+            CursorControl("Wait")
+            SeqData.curStatus.Table = cbxTable.SelectedItem
+            LoadTable(SeqData.curStatus.Table)
+            CursorControl()
         End If
+    End Sub
+
+    Private Sub sptFields1_MouseWheel(sender As Object, e As MouseEventArgs) Handles sptFields1.MouseWheel
+
     End Sub
 
     Private Sub Panel2_Scroll(ByVal sender As Object, ByVal e As System.Windows.Forms.ScrollEventArgs) Handles sptFields1.Panel2.Scroll
@@ -682,6 +688,7 @@ Public Class frmSequenchel
     End Sub
 
     Private Sub btnExportList_Click(sender As Object, e As EventArgs) Handles btnExportList.Click
+        CursorControl("Wait")
         If SeqData.dhdText.DatasetCheck(dtsTable) = False Then Exit Sub
         Dim strReportName As String = ""
         If cbxSearch.Text.Length > 0 Then
@@ -693,10 +700,12 @@ Public Class frmSequenchel
         End If
         Dim strFileName As String = GetSaveFileName(strReportName)
         ExportFile(dtsTable, strFileName)
+        CursorControl()
         'XmlExportDatagridView(dgvTable1, "Sequenchel", SeqData.CurStatus.Table, SeqData.CurStatus.Table & "-Item")
     End Sub
 
     Private Sub btnAdd_Click(sender As Object, e As EventArgs) Handles btnAdd.Click
+        CursorControl("Wait")
         If btnAdd.Text = "New Item" Then
             MessageBox.Show("Your current selection (if any) is duplicated." & Environment.NewLine & _
                                "You can edit the data before you save it to the database" & Environment.NewLine & _
@@ -733,10 +742,13 @@ Public Class frmSequenchel
             FieldsEnable()
             ButtonHandle()
         End If
+        CursorControl()
     End Sub
 
     Private Sub btnUpdate_Click(sender As Object, e As EventArgs) Handles btnUpdate.Click
+        CursorControl("Wait")
         ItemUpdate()
+        CursorControl()
     End Sub
 
     Private Sub btnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
@@ -749,7 +761,9 @@ Public Class frmSequenchel
             WriteStatus("Delete cancelled", 5, lblStatusText)
             Exit Sub
         End If
+        CursorControl("Wait")
         ItemDelete()
+        CursorControl()
     End Sub
 
     Private Sub btnSearchAddOrUpdate_Click(sender As Object, e As EventArgs) Handles btnSearchAddOrUpdate.Click
@@ -758,14 +772,16 @@ Public Class frmSequenchel
             WriteStatus("The Name of the Search must be at least 1 character long", 0, lblStatusText)
             Exit Sub
         End If
+        CursorControl("Wait")
         SearchDelete(True)
         SearchAdd()
         If SaveXmlFile(xmlSearch, SeqData.curVar.SearchFile, True) = False Then
             MessageBox.Show("The file " & SeqData.curVar.SearchFile & " was not saved.")
         Else
-            cbxSearch.Items.Add(cbxSearch.Text)
+            If cbxSearch.Items.Contains(cbxSearch.Text) = False Then cbxSearch.Items.Add(cbxSearch.Text)
             WriteStatus("Search saved", 0, lblStatusText)
         End If
+        CursorControl()
 
         'SearchListLoad(tblTable.TableName)
     End Sub
@@ -776,6 +792,7 @@ Public Class frmSequenchel
             MessageBox.Show("The Name of the Search must be at least 1 character long")
             Exit Sub
         End If
+        CursorControl("Wait")
         SearchDelete(False)
         If SaveXmlFile(xmlSearch, SeqData.curVar.SearchFile, True) = False Then
             MessageBox.Show("The file " & SeqData.curVar.SearchFile & " was not saved.")
@@ -785,6 +802,7 @@ Public Class frmSequenchel
         cbxSearch.SelectedIndex = -1
         cbxSearch.Text = ""
         WriteStatus("Search deleted", 0, lblStatusText)
+        CursorControl()
     End Sub
 
     Private Sub cbxSearch_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbxSearch.SelectedIndexChanged
@@ -1609,4 +1627,7 @@ Public Class frmSequenchel
 
 #End Region
 
+    Private Sub sptFields1_Panel2_Paint(sender As Object, e As PaintEventArgs) Handles sptFields1.Panel2.Paint
+
+    End Sub
 End Class

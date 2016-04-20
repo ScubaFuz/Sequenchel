@@ -124,14 +124,16 @@ Module Common
     End Sub
 
     Friend Sub ShutdownDelay()
-        If tmrShutdown.Enabled = False And tmrShutdown.Interval > 0 Then
+        If tmrShutdown.Enabled = False And tmrShutdown.Interval > 60000 Then
             tmrShutdown.Enabled = True
             tmrShutdown.Start()
-        Else
+        ElseIf tmrShutdown.Enabled = True And tmrShutdown.Interval > 60000 Then
             tmrShutdown.Stop()
             tmrShutdown.Enabled = False
             tmrShutdown.Enabled = True
             tmrShutdown.Start()
+        Else
+            tmrShutdown.Enabled = False
         End If
     End Sub
 
@@ -849,6 +851,7 @@ Module Common
     End Function
 
     Friend Sub CursorControl(Optional strStyle As String = "Default")
+        ShutdownDelay()
         Select Case strStyle
             Case "Default"
                 Cursor.Current = Cursors.Default
@@ -859,6 +862,45 @@ Module Common
         End Select
     End Sub
 
+    Friend Sub SetBackColor(ctrl As Control)
+        Select Case TypeName(ctrl)
+            Case "TextBox", "ComboBox"
+                If ctrl.Text Is Nothing Then
+                    ctrl.BackColor = clrOriginal
+                    Exit Sub
+                End If
+
+                If ctrl.Tag Is Nothing Then
+                    If ctrl.Text = "" Then
+                        ctrl.BackColor = clrOriginal
+                    ElseIf ctrl.Text.Length = 0 Then
+                        ctrl.BackColor = clrOriginal
+                    Else
+                        ctrl.BackColor = clrMarked
+                    End If
+                ElseIf ctrl.Text.ToString = ctrl.Tag.ToString Then
+                    ctrl.BackColor = clrOriginal
+                Else
+                    ctrl.BackColor = clrMarked
+                End If
+            Case "CheckBox"
+                Dim chk As CheckBox = TryCast(ctrl, CheckBox)
+                If chk IsNot Nothing Then
+                    If chk.Tag Is Nothing Then
+                        If chk.Checked = 0 Then
+                            chk.BackColor = clrControl
+                        Else
+                            chk.BackColor = clrMarked
+                        End If
+                    ElseIf chk.Checked.ToString = chk.Tag.ToString Then
+                        chk.BackColor = clrControl
+                    Else
+                        chk.BackColor = clrMarked
+                    End If
+                End If
+        End Select
+
+    End Sub
 #End Region
 
     Friend Function DataSet2DataGridView(dtsSource As DataSet, SourceTable As Integer, dgvTarget As DataGridView, RebuildColumns As Boolean) As Boolean

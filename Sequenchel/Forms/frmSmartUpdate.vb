@@ -6,6 +6,7 @@
     Dim strTargetTable As String = ""
 
     Private Sub frmSmartUpdate_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        CursorControl("Wait")
         If Core.LicenseValidated = True Then
             btnCreateSmartUpdateProcedure.Enabled = True
             lblLicenseRequired.Visible = False
@@ -15,6 +16,7 @@
             LoadTables()
         End If
         dtpStartDate.Value = Today()
+        CursorControl()
     End Sub
 
     Private Sub LoadConnections()
@@ -37,6 +39,7 @@
     End Sub
 
     Private Sub cbxConnection_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbxConnection.SelectedIndexChanged
+        CursorControl("Wait")
         If cbxConnection.SelectedIndex >= -1 Then
             SeqData.curStatus.Connection = cbxConnection.SelectedItem
             SeqData.LoadConnection(xmlConnections, SeqData.curStatus.Connection)
@@ -48,6 +51,7 @@
             'Dim xmlConnNode As xmlnode = xmlConnections.SelectSingleNode("\\Connection", "descendant::Connection[DataBaseName='" & strConnection & "']")
             'dhdConnection.DatabaseName = strConnection
         End If
+        CursorControl()
     End Sub
 
     Private Sub btnCreateSmartUpdateTable_Click(sender As Object, e As EventArgs) Handles btnCreateSmartUpdateTable.Click
@@ -99,18 +103,24 @@
     End Sub
 
     Private Sub btnCrawlSourceTables_Click(sender As Object, e As EventArgs) Handles btnCrawlSourceTables.Click
+        CursorControl("Wait")
         lstSourceTables.Visible = True
         lstSourceTables.Focus()
+        CursorControl()
     End Sub
 
     Private Sub btnCrawlTargetTables_Click(sender As Object, e As EventArgs) Handles btnCrawlTargetTables.Click
+        CursorControl("Wait")
         lstTargetTables.Visible = True
         lstTargetTables.Focus()
+        CursorControl()
     End Sub
 
     Private Sub lstSourceTables_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lstSourceTables.SelectedIndexChanged
+        CursorControl("Wait")
         txtSourceTable.Text = lstSourceTables.SelectedItem
         lstSourceTables.Visible = False
+        CursorControl()
     End Sub
 
     Private Sub lstSourceTables_LostFocus(sender As Object, e As EventArgs) Handles lstSourceTables.MouseLeave
@@ -118,8 +128,10 @@
     End Sub
 
     Private Sub lstTargetTables_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lstTargetTables.SelectedIndexChanged
+        CursorControl("Wait")
         txtTargetTable.Text = lstTargetTables.SelectedItem
         lstTargetTables.Visible = False
+        CursorControl()
     End Sub
 
     Private Sub lstTargetTables_LostFocus(sender As Object, e As EventArgs) Handles lstTargetTables.MouseLeave
@@ -127,6 +139,7 @@
     End Sub
 
     Private Sub btnImportTables_Click(sender As Object, e As EventArgs) Handles btnImportTables.Click
+        CursorControl("Wait")
         If txtSourceTable.Text.Length = 0 Then
             MessageBox.Show("You need to select at least a source table")
             Exit Sub
@@ -135,6 +148,7 @@
         GetTableNames()
         ResetScreen()
         GetColumns(strSourceSchema, strSourceTable, strTargetSchema, strTargetTable)
+        CursorControl()
     End Sub
 
     Private Sub dtpEndDate_ValueChanged(sender As Object, e As EventArgs) Handles dtpEndDate.ValueChanged
@@ -151,6 +165,7 @@
     End Sub
 
     Private Sub btnSaveConfiguration_Click(sender As Object, e As EventArgs) Handles btnSaveConfiguration.Click
+        CursorControl("Wait")
         If pnlCompareColumn.Controls.Count = 0 Then
             lblStatusText.Text = "There is no configuration to save."
             Exit Sub
@@ -221,7 +236,7 @@
             SeqData.WriteLog("There was an error saving the configuration: " & Environment.NewLine & ex.Message, 1)
         End Try
 
-
+        CursorControl()
     End Sub
 
     Private Sub txtSourceTable_TextChanged(sender As Object, e As EventArgs) Handles txtSourceTable.TextChanged
@@ -253,7 +268,7 @@
     End Sub
 
     Private Sub btnAddSmartUpdateSchedule_Click(sender As Object, e As EventArgs) Handles btnAddSmartUpdateSchedule.Click
-        'MessageBox.Show("The Scheduler is not yet operational. Please schedule the SmartUpdate Command manually.")
+        CursorControl("Wait")
         If txtSmartUpdateCommand.Text.Length = 0 Then
             lblStatusText.Text = "There is no command to schedule, aborting action"
             Exit Sub
@@ -290,6 +305,7 @@
 
         SeqData.QueryDb(SeqData.dhdConnection, strQuery, 0)
         lblStatusText.Text = "Jobstep added to job: " & strJobName & " on database: " & SeqData.dhdConnection.DatabaseName
+        CursorControl()
     End Sub
 
     Private Sub LoadTables()
@@ -303,7 +319,6 @@
         Dim lstNewTables As List(Of String) = LoadTablesList(SeqData.dhdConnection, blnCrawlViews)
 
         If lstNewTables Is Nothing Then
-            CursorControl()
             lblStatusText.Text = "No tables found"
             Exit Sub
         End If
@@ -315,7 +330,6 @@
             lstTarget.Items.Add(TableName)
         Next
 
-        CursorControl()
         If lstTarget.Items.Count < 15 Then
             lstTarget.Height = lstSourceTables.Items.Count * 15
         Else

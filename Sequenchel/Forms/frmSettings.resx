@@ -129,9 +129,6 @@
   <data name="rtbFtpDefaultValues.Text" xml:space="preserve">
     <value>Set the default values for your environment and create FTP Upload and Download Stored Procedures in your main Sequenchel database.  All values can also be inserted as variables when calling the procedures.</value>
   </data>
-  <metadata name="ttpDefaultLogLocation.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>

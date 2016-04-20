@@ -215,12 +215,13 @@ Partial Class frmSequenchel
         '
         'mnuMain
         '
+        Me.mnuMain.BackColor = System.Drawing.SystemColors.Control
         Me.mnuMain.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuMainFile, Me.mnuMainEdit, Me.mnuMainTools, Me.mnuMainHelp})
         Me.mnuMain.Location = New System.Drawing.Point(0, 0)
         Me.mnuMain.Name = "mnuMain"
         Me.mnuMain.Size = New System.Drawing.Size(1284, 24)
         Me.mnuMain.TabIndex = 100
-        Me.mnuMain.Text = "MenuStrip1"
+        Me.mnuMain.Text = "mnuMain"
         '
         'mnuMainFile
         '
@@ -308,12 +309,13 @@ Partial Class frmSequenchel
         '
         Me.lblLicense.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblLicense.AutoSize = True
+        Me.lblLicense.BackColor = System.Drawing.Color.Transparent
         Me.lblLicense.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblLicense.Location = New System.Drawing.Point(977, 0)
+        Me.lblLicense.Location = New System.Drawing.Point(890, 0)
         Me.lblLicense.Name = "lblLicense"
-        Me.lblLicense.Size = New System.Drawing.Size(307, 24)
+        Me.lblLicense.Size = New System.Drawing.Size(375, 24)
         Me.lblLicense.TabIndex = 105
-        Me.lblLicense.Text = "Licensed to: Gemeente Amsterdam"
+        Me.lblLicense.Text = "Licensed to: Thicor Services Demo License"
         '
         'sptTable1
         '

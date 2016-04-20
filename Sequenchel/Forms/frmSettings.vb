@@ -107,11 +107,7 @@
     End Sub
 
     Private Sub txtDefaultConfigFilePath_TextChanged(sender As Object, e As EventArgs) Handles txtDefaultConfigFilePath.TextChanged
-        If txtDefaultConfigFilePath.Text = txtDefaultConfigFilePath.Tag Then
-            txtDefaultConfigFilePath.BackColor = clrOriginal
-        Else
-            txtDefaultConfigFilePath.BackColor = clrMarked
-        End If
+        SetBackColor(txtDefaultConfigFilePath)
         If txtDefaultConfigFilePath.Text.Length > 0 Then
             txtSettingsFile.Text = txtDefaultConfigFilePath.Text & "\" & SeqData.curVar.GeneralSettings.Substring(SeqData.curVar.GeneralSettings.LastIndexOf("\") + 1, SeqData.curVar.GeneralSettings.Length - (SeqData.curVar.GeneralSettings.LastIndexOf("\") + 1))
             txtConnectionsFile.Text = txtDefaultConfigFilePath.Text & "\" & SeqData.curVar.ConnectionsFile.Substring(SeqData.curVar.ConnectionsFile.LastIndexOf("\") + 1, SeqData.curVar.ConnectionsFile.Length - (SeqData.curVar.ConnectionsFile.LastIndexOf("\") + 1))
@@ -125,126 +121,67 @@
     End Sub
 
     Private Sub txtSettingsFile_TextChanged(sender As Object, e As EventArgs) Handles txtSettingsFile.TextChanged
-        If txtSettingsFile.Text = txtSettingsFile.Tag Then
-            txtSettingsFile.BackColor = clrOriginal
-        Else
-            txtSettingsFile.BackColor = clrMarked
-        End If
+        SetBackColor(txtSettingsFile)
     End Sub
 
     Private Sub txtConnectionsFile_TextChanged(sender As Object, e As EventArgs) Handles txtConnectionsFile.TextChanged
-        If txtConnectionsFile.Text = txtConnectionsFile.Tag Then
-            txtConnectionsFile.BackColor = clrOriginal
-        Else
-            txtConnectionsFile.BackColor = clrMarked
-        End If
+        SetBackColor(txtConnectionsFile)
     End Sub
 
     Private Sub chkAllowSettingsChange_CheckedChanged(sender As Object, e As EventArgs) Handles chkAllowSettingsChange.CheckedChanged
-        If chkAllowSettingsChange.Checked = chkAllowSettingsChange.Tag Then
-            chkAllowSettingsChange.BackColor = clrControl
-        Else
-            chkAllowSettingsChange.BackColor = clrMarked
-        End If
+        SetBackColor(chkAllowSettingsChange)
     End Sub
 
     Private Sub chkAllowConfiguration_CheckedChanged(sender As Object, e As EventArgs) Handles chkAllowConfiguration.CheckedChanged
-        If chkAllowConfiguration.Checked = chkAllowConfiguration.Tag Then
-            chkAllowConfiguration.BackColor = clrControl
-        Else
-            chkAllowConfiguration.BackColor = clrMarked
-        End If
+        SetBackColor(chkAllowConfiguration)
     End Sub
 
     Private Sub chkAllowLinkedServers_CheckedChanged(sender As Object, e As EventArgs) Handles chkAllowLinkedServers.CheckedChanged
-        If chkAllowLinkedServers.Checked = chkAllowLinkedServers.Tag Then
-            chkAllowLinkedServers.BackColor = clrControl
-        Else
-            chkAllowLinkedServers.BackColor = clrMarked
-        End If
+        SetBackColor(chkAllowLinkedServers)
     End Sub
 
     Private Sub chkAllowQueryEdit_CheckedChanged(sender As Object, e As EventArgs) Handles chkAllowQueryEdit.CheckedChanged
-        If chkAllowQueryEdit.Checked = chkAllowQueryEdit.Tag Then
-            chkAllowQueryEdit.BackColor = clrControl
-        Else
-            chkAllowQueryEdit.BackColor = clrMarked
-        End If
+        SetBackColor(chkAllowQueryEdit)
     End Sub
 
     Private Sub chkAllowDataImport_CheckedChanged(sender As Object, e As EventArgs) Handles chkAllowDataImport.CheckedChanged
-        If chkAllowDataImport.Checked = chkAllowDataImport.Tag Then
-            chkAllowDataImport.BackColor = clrControl
-        Else
-            chkAllowDataImport.BackColor = clrMarked
-        End If
+        SetBackColor(chkAllowDataImport)
     End Sub
 
     Private Sub chkAllowSmartUpdate_CheckedChanged(sender As Object, e As EventArgs) Handles chkAllowSmartUpdate.CheckedChanged
-        If chkAllowSmartUpdate.Checked = chkAllowSmartUpdate.Tag Then
-            chkAllowSmartUpdate.BackColor = clrControl
-        Else
-            chkAllowSmartUpdate.BackColor = clrMarked
-        End If
+        SetBackColor(chkAllowSmartUpdate)
     End Sub
 
     Private Sub chkAllowUpdate_CheckedChanged(sender As Object, e As EventArgs) Handles chkAllowUpdate.CheckedChanged
-        If chkAllowUpdate.Checked = chkAllowUpdate.Tag Then
-            chkAllowUpdate.BackColor = clrControl
-        Else
-            chkAllowUpdate.BackColor = clrMarked
-        End If
+        SetBackColor(chkAllowUpdate)
     End Sub
 
     Private Sub chkAllowInsert_CheckedChanged(sender As Object, e As EventArgs) Handles chkAllowInsert.CheckedChanged
-        If chkAllowInsert.Checked = chkAllowInsert.Tag Then
-            chkAllowInsert.BackColor = clrControl
-        Else
-            chkAllowInsert.BackColor = clrMarked
-        End If
+        SetBackColor(chkAllowInsert)
     End Sub
 
     Private Sub chkAllowDelete_CheckedChanged(sender As Object, e As EventArgs) Handles chkAllowDelete.CheckedChanged
-        If chkAllowDelete.Checked = chkAllowDelete.Tag Then
-            chkAllowDelete.BackColor = clrControl
-        Else
-            chkAllowDelete.BackColor = clrMarked
-        End If
+        SetBackColor(chkAllowDelete)
     End Sub
 
     Private Sub txtTimerHours_TextChanged(sender As Object, e As EventArgs) Handles txtTimerHours.TextChanged
-        If txtTimerHours.Text = txtTimerHours.Tag Then
-            txtTimerHours.BackColor = clrControl
-        Else
-            txtTimerHours.BackColor = clrMarked
-        End If
+        SetBackColor(txtTimerHours)
     End Sub
 
     Private Sub chkLimitLookupLists_CheckedChanged(sender As Object, e As EventArgs) Handles chkLimitLookupLists.CheckedChanged
-        If chkLimitLookupLists.Checked = chkLimitLookupLists.Tag Then
-            chkLimitLookupLists.BackColor = clrControl
-        Else
-            chkLimitLookupLists.BackColor = clrMarked
-        End If
+        SetBackColor(chkLimitLookupLists)
     End Sub
 
     Private Sub txtLimitLookupLists_TextChanged(sender As Object, e As EventArgs) Handles txtLimitLookupLists.TextChanged
-        If txtLimitLookupLists.Text = txtLimitLookupLists.Tag And txtLimitLookupLists.Text <> "" And txtLimitLookupLists.Text <> 0 Then
-            txtLimitLookupLists.BackColor = clrOriginal
-        Else
-            txtLimitLookupLists.BackColor = clrMarked
-        End If
+        SetBackColor(txtLimitLookupLists)
     End Sub
 
     Private Sub chkIncludeDateInExportFiles_CheckedChanged(sender As Object, e As EventArgs) Handles chkIncludeDateInExportFiles.CheckedChanged
-        If chkIncludeDateInExportFiles.Checked = chkIncludeDateInExportFiles.Tag Then
-            chkIncludeDateInExportFiles.BackColor = clrControl
-        Else
-            chkIncludeDateInExportFiles.BackColor = clrMarked
-        End If
+        SetBackColor(chkIncludeDateInExportFiles)
     End Sub
 
     Private Sub btnSettingsGeneralSave_Click(sender As Object, e As EventArgs) Handles btnSettingsGeneralSave.Click
+        CursorControl("Wait")
         Dim blnSettingsChanged As Boolean = False
         Dim blnGeneralSettingsChanged As Boolean = False
 
@@ -265,55 +202,55 @@
         If chkAllowSettingsChange.BackColor = clrMarked Then
             SeqData.curVar.AllowSettingsChange = chkAllowSettingsChange.Checked
             chkAllowSettingsChange.Tag = SeqData.curVar.AllowSettingsChange
-            chkAllowSettingsChange.BackColor = clrOriginal
+            chkAllowSettingsChange.BackColor = clrControl
             blnSettingsChanged = True
         End If
         If chkAllowConfiguration.BackColor = clrMarked Then
             SeqData.curVar.AllowConfiguration = chkAllowConfiguration.Checked
             chkAllowConfiguration.Tag = SeqData.curVar.AllowConfiguration
-            chkAllowConfiguration.BackColor = clrOriginal
+            chkAllowConfiguration.BackColor = clrControl
             blnSettingsChanged = True
         End If
         If chkAllowLinkedServers.BackColor = clrMarked Then
             SeqData.curVar.AllowLinkedServers = chkAllowLinkedServers.Checked
             chkAllowLinkedServers.Tag = SeqData.curVar.AllowLinkedServers
-            chkAllowLinkedServers.BackColor = clrOriginal
+            chkAllowLinkedServers.BackColor = clrControl
             blnSettingsChanged = True
         End If
         If chkAllowQueryEdit.BackColor = clrMarked Then
             SeqData.curVar.AllowQueryEdit = chkAllowQueryEdit.Checked
             chkAllowQueryEdit.Tag = SeqData.curVar.AllowQueryEdit
-            chkAllowQueryEdit.BackColor = clrOriginal
+            chkAllowQueryEdit.BackColor = clrControl
             blnSettingsChanged = True
         End If
         If chkAllowDataImport.BackColor = clrMarked Then
             SeqData.curVar.AllowDataImport = chkAllowDataImport.Checked
             chkAllowDataImport.Tag = SeqData.curVar.AllowDataImport
-            chkAllowDataImport.BackColor = clrOriginal
+            chkAllowDataImport.BackColor = clrControl
             blnSettingsChanged = True
         End If
         If chkAllowSmartUpdate.BackColor = clrMarked Then
             SeqData.curVar.AllowSmartUpdate = chkAllowSmartUpdate.Checked
             chkAllowSmartUpdate.Tag = SeqData.curVar.AllowSmartUpdate
-            chkAllowSmartUpdate.BackColor = clrOriginal
+            chkAllowSmartUpdate.BackColor = clrControl
             blnSettingsChanged = True
         End If
         If chkAllowUpdate.BackColor = clrMarked Then
             SeqData.curVar.AllowUpdate = chkAllowUpdate.Checked
             chkAllowUpdate.Tag = SeqData.curVar.AllowUpdate
-            chkAllowUpdate.BackColor = clrOriginal
+            chkAllowUpdate.BackColor = clrControl
             blnSettingsChanged = True
         End If
         If chkAllowInsert.BackColor = clrMarked Then
             SeqData.curVar.AllowInsert = chkAllowInsert.Checked
             chkAllowInsert.Tag = SeqData.curVar.AllowInsert
-            chkAllowInsert.BackColor = clrOriginal
+            chkAllowInsert.BackColor = clrControl
             blnSettingsChanged = True
         End If
         If chkAllowDelete.BackColor = clrMarked Then
             SeqData.curVar.AllowDelete = chkAllowDelete.Checked
             chkAllowDelete.Tag = SeqData.curVar.AllowDelete
-            chkAllowDelete.BackColor = clrOriginal
+            chkAllowDelete.BackColor = clrControl
             blnSettingsChanged = True
         End If
         If txtTimerHours.BackColor = clrMarked Then
@@ -340,7 +277,7 @@
         If chkLimitLookupLists.BackColor = clrMarked Then
             SeqData.curVar.LimitLookupLists = chkLimitLookupLists.Checked
             chkLimitLookupLists.Tag = SeqData.curVar.LimitLookupLists
-            chkLimitLookupLists.BackColor = clrOriginal
+            chkLimitLookupLists.BackColor = clrControl
             blnGeneralSettingsChanged = True
         End If
         If txtLimitLookupLists.BackColor = clrMarked Then
@@ -377,6 +314,7 @@
             SeqData.SaveGeneralSettingsXml(xmlGeneralSettings)
             blnGeneralSettingsChanged = False
         End If
+        CursorControl()
     End Sub
 
     Private Sub btnConfigFilePath_Click(sender As Object, e As EventArgs) Handles btnConfigFilePath.Click
@@ -536,6 +474,7 @@
 #Region "License"
 
     Private Sub btnSaveLicense_Click(sender As Object, e As EventArgs) Handles btnSaveLicense.Click
+        CursorControl("Wait")
         Dim strLocation As String = ""
         If Core.CheckLicense(txtLicenseKey.Text, txtLicenseName.Text, Core.GetVersion("M"), Nothing) = False Then
             'MessageBox.Show(strMessages.strLicenseError)
@@ -564,11 +503,14 @@
                 MessageBox.Show("There ws an errror saving you license information" & Environment.NewLine & ex.Message)
             End Try
         End If
+        CursorControl()
     End Sub
 
     Private Sub btnValidateLicense_Click(sender As Object, e As EventArgs) Handles btnValidateLicense.Click
+        CursorControl("Wait")
         Core.CheckLicense(txtLicenseKey.Text, txtLicenseName.Text, Core.GetVersion("M"), Nothing)
         MessageBox.Show("Your license validated: " & Core.LicenseValidated)
+        CursorControl()
     End Sub
 
 #End Region
@@ -608,6 +550,7 @@
     End Sub
 
     Private Sub btnSaveSettingsLog_Click(sender As Object, e As EventArgs) Handles btnSaveSettingsLog.Click
+        CursorControl("Wait")
         SeqData.dhdText.LogFileName = txtLogfileName.Text
         SeqData.dhdText.LogLevel = 1
         SeqData.dhdText.LogLocation = txtLogfileLocation.Text
@@ -636,22 +579,25 @@
             SeqData.dhdText.AutoDelete = False
         End If
         SeqData.SaveGeneralSettingsXml(xmlGeneralSettings)
+        CursorControl()
     End Sub
 
     Private Sub btnClearOldLogs_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnClearOldLogs.Click
+        CursorControl("Wait")
         If SeqData.dhdText.LogLocation.ToLower = "database" Then
             Dim dtmDate As Date = Today
 
             If rbtKeepLogDay.Checked = True Then dtmDate = dtmDate.AddDays(-1)
             If rbtKeepLogWeek.Checked = True Then dtmDate = dtmDate.AddDays(-7)
             If rbtKeepLogMonth.Checked = True Then dtmDate = dtmDate.AddMonths(-1)
-            If SeqData.CurVar.DebugMode = True Then MessageBox.Show(dtmDate.ToString)
+            If SeqData.curVar.DebugMode = True Then MessageBox.Show(dtmDate.ToString)
             If SeqData.dhdText.LogLocation.ToLower = "database" Then
                 ClearDBLog(dtmDate)
             Else
                 MessageBox.Show("You can only delete database logging as of yet.")
             End If
         End If
+        CursorControl()
     End Sub
 
     Private Sub btnLogfileNameDefault_Click(sender As Object, e As EventArgs) Handles btnLogfileNameDefault.Click
@@ -692,14 +638,18 @@
 
 #Region "Database"
     Private Sub btnCreateDatabase_Click(sender As Object, e As EventArgs) Handles btnCreateDatabase.Click
+        CursorControl("Wait")
         CreateDatabase(True)
+        CursorControl()
     End Sub
 
     Private Sub btnRefreshDatabase_Click(sender As Object, e As EventArgs) Handles btnRefreshDatabase.Click
         If MessageBox.Show("This will update all standard Sequenchel Views, Stored Procedures and Functions to their latest version. " & Environment.NewLine _
             & "Your Tables will not be changed." & Environment.NewLine _
             & Core.Message.strAreYouSure, Core.Message.strWarning, MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.No Then Exit Sub
+        CursorControl("Wait")
         CreateDatabase(False)
+        CursorControl()
     End Sub
 
     Friend Sub CreateDatabase(Optional ByVal blnIncludeTables As Boolean = True)
@@ -831,6 +781,7 @@
     End Sub
 
     Private Sub btnSaveSettingsDatabase_Click(sender As Object, e As EventArgs) Handles btnSaveSettingsDatabase.Click
+        CursorControl("Wait")
         If cbxDataProvider.Items.Contains(cbxDataProvider.Text) = False Or cbxLoginMethod.Items.Contains(cbxLoginMethod.Text) = False Then
             MessageBox.Show(Core.Message.strPreconfigured & Environment.NewLine & Core.Message.strCheckSettings)
             Exit Sub
@@ -861,7 +812,7 @@
             SeqData.LoadGeneralSettingsXml(xmlGeneralSettings)
             DatabaseShow()
         End Try
-
+        CursorControl()
     End Sub
 
     Private Sub btnTestConnection_Click(sender As Object, e As EventArgs) Handles btnTestConnection.Click
@@ -906,6 +857,7 @@
     End Sub
 
     Private Sub btnUpgradeDatabase_Click(sender As Object, e As EventArgs) Handles btnUpgradeDatabase.Click
+        CursorControl("Wait")
         Dim strSQL As String
         Dim strMode As String
         Dim MydbRef As New SDBA.DBRef
@@ -949,21 +901,26 @@
         btnUpgradeDatabase.BackColor = clrOriginal
         txtUpgradeDatabase.Text = txtUpgradeDatabase.Tag
         txtUpgradeDatabase.Tag = ""
+        CursorControl()
         MessageBox.Show("Database Update successfull")
         VersionLoad()
     End Sub
 
     Private Sub btnBackupDatabase_Click(sender As Object, e As EventArgs) Handles btnBackupDatabase.Click
+        CursorControl("Wait")
         Try
             BackupDatabase(SeqData.dhdMainDB, txtBackupDatabase.Text)
             SaveConfigSetting("Database", "BackupLocation", txtBackupDatabase.Text, "A valid location on the server")
         Catch ex As Exception
+            CursorControl()
             MessageBox.Show("While saving the database, the following error occured: " & Environment.NewLine & ex.Message)
         End Try
+        CursorControl()
     End Sub
 
     Private Sub btnCreateExtraProcs_Click(sender As Object, e As EventArgs) Handles btnCreateExtraProcs.Click
         If MessageBox.Show("This will create extra procedures with the power to damage your data or database. Create these procedures in a secure database." & Environment.NewLine & Core.Message.strContinue, Core.Message.strWarning, MessageBoxButtons.YesNo, MessageBoxIcon.Hand, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.No Then Exit Sub
+        CursorControl("Wait")
 
         Dim strSQL As String
         Dim MydbRef As New SDBA.DBRef
@@ -996,6 +953,7 @@
             MessageBox.Show(ex.Message)
             Exit Sub
         End Try
+        CursorControl()
         MessageBox.Show("Procedures added successfully")
 
     End Sub
@@ -1096,7 +1054,9 @@
     End Sub
 
     Private Sub btnCreateScheduledJob_Click(sender As Object, e As EventArgs) Handles btnCreateScheduledJob.Click
+        CursorControl("Wait")
         If cbxProcedures.SelectedIndex = -1 Then
+            CursorControl()
             MessageBox.Show("Please select a procedure to schedule first")
             Exit Sub
         End If
@@ -1104,6 +1064,7 @@
             Exit Sub
         End If
         ScheduleAdd()
+        CursorControl()
     End Sub
 
     Private Sub ScheduleAdd()
@@ -1276,6 +1237,7 @@
     End Sub
 
     Private Sub btnMonitorDataSpacesSave_Click(sender As Object, e As EventArgs) Handles btnMonitorDataSpacesSave.Click
+        CursorControl("Wait")
         Dim intMinPercGrowth As Integer = SeqData.curVar.MinPercGrowth
         Dim intMinFreeSpace As Integer = SeqData.curVar.MinFreeSpace
         Dim intLowerLimit As Integer = SeqData.curVar.LowerLimit
@@ -1294,10 +1256,12 @@
 
         If Not intLowerLimit < intUpperlimit Then
             MessageBox.Show("The Lower Limit should be smaller than the Upper Limit")
+            CursorControl()
             Exit Sub
         End If
         If Not (intSmallGrowth < intMediumGrowth And intMediumGrowth < intLargeGrowth And intLargeGrowth < intUpperlimit) Then
             MessageBox.Show("Small growth should be smaller than Medium Growth." & Environment.NewLine & "Medium Growth should be smaller than Large Growth" & Environment.NewLine & "Large Growth should be smaller than Upper Growth")
+            CursorControl()
             Exit Sub
         End If
         SeqData.curVar.MinPercGrowth = intMinPercGrowth
@@ -1316,6 +1280,7 @@
         SaveConfigSetting("MonitorDataspaces", "MediumGrowth", SeqData.curVar.MediumGrowth)
         SaveConfigSetting("MonitorDataspaces", "LargeGrowth", SeqData.curVar.LargeGrowth)
 
+        CursorControl()
     End Sub
 
 #End Region
@@ -1372,6 +1337,7 @@
     End Sub
 
     Private Sub btnCreateUploadProcedure_Click(sender As Object, e As EventArgs) Handles btnCreateUploadProcedure.Click
+        CursorControl("Wait")
         Dim MydbRef As New SDBA.DBRef
         Dim strSQL As String
 
@@ -1398,10 +1364,11 @@
         Else
             If SeqData.CurVar.DebugMode Then MessageBox.Show("The script: 01 dbo.usp_PutFTPfiles.sql returned: " & strSQL)
         End If
-
+        CursorControl()
     End Sub
 
     Private Sub btnCreateDownloadProcedure_Click(sender As Object, e As EventArgs) Handles btnCreateDownloadProcedure.Click
+        CursorControl("Wait")
         Dim MydbRef As New SDBA.DBRef
         Dim strSQL As String
 
@@ -1429,6 +1396,7 @@
         Else
             If SeqData.CurVar.DebugMode Then MessageBox.Show("The script: 01 dbo.usp_GetFTPfiles.sql returned: " & strSQL)
         End If
+        CursorControl()
     End Sub
 
 #End Region
@@ -1449,6 +1417,7 @@
     End Sub
 
     Private Sub btnSettingsEmailSave_Click(sender As Object, e As EventArgs) Handles btnSettingsEmailSave.Click
+        CursorControl("Wait")
         SeqData.dhdText.SmtpServer = txtSmtpServer.Text
         SeqData.dhdText.SmtpCredentials = chkSmtpCredentials.Checked
         SeqData.dhdText.SmtpUser = txtSmtpServerUsername.Text
@@ -1457,6 +1426,7 @@
         SeqData.dhdText.SmtpPort = txtSmtpPortNumber.Text
         SeqData.dhdText.SmtpSsl = chkUseSslEncryption.Checked
         SeqData.SaveGeneralSettingsXml(xmlGeneralSettings)
+        CursorControl()
     End Sub
 
     Private Sub chkSmtpCredentials_CheckedChanged(sender As Object, e As EventArgs) Handles chkSmtpCredentials.CheckedChanged

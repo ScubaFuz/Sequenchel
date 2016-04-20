@@ -67,12 +67,11 @@ Public Class frmReports
 
     Private Sub cbxConnection_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbxConnection.SelectedIndexChanged
         If cbxConnection.SelectedIndex >= -1 Then
+            CursorControl("Wait")
             SeqData.curStatus.Connection = cbxConnection.SelectedItem
             SeqData.LoadConnection(xmlConnections, SeqData.curStatus.Connection)
             LoadTableSets()
-            'dhdText.FindXmlNode(xmlConnections, "Connection", "DatabasdeName", strConnection)
-            'Dim xmlConnNode As xmlnode = xmlConnections.SelectSingleNode("\\Connection", "descendant::Connection[DataBaseName='" & strConnection & "']")
-            'dhdConnection.DatabaseName = strConnection
+            CursorControl()
         End If
     End Sub
 
@@ -82,11 +81,13 @@ Public Class frmReports
 
     Private Sub cbxTableSet_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbxTableSet.SelectedIndexChanged
         If cbxTableSet.SelectedIndex >= -1 Then
+            CursorControl("Wait")
             SeqData.curStatus.TableSet = cbxTableSet.SelectedItem
             SeqData.LoadTableSet(xmlTableSets, SeqData.curStatus.TableSet)
             LoadTables()
             LoadTableFields()
             ReportsLoad()
+            CursorControl()
         End If
     End Sub
 
@@ -906,11 +907,15 @@ Public Class frmReports
     End Sub
 
     Private Sub btnSaveQuery_Click(sender As Object, e As EventArgs) Handles btnSaveQuery.Click
+        CursorControl("Wait")
         SaveQuery()
+        CursorControl()
     End Sub
 
     Private Sub btnLoadQuery_Click(sender As Object, e As EventArgs) Handles btnLoadQuery.Click
+        CursorControl("Wait")
         LoadQuery()
+        CursorControl()
     End Sub
 
     Private Sub btnReportAddOrUpdate_Click(sender As Object, e As EventArgs) Handles btnReportAddOrUpdate.Click
@@ -953,6 +958,7 @@ Public Class frmReports
     End Sub
 
     Private Sub cbxReportName_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbxReportName.SelectedIndexChanged
+        CursorControl("Wait")
         PanelsSuspendLayout()
         If cbxReportName.SelectedIndex >= 0 Then
             ReportFieldsDispose(False)
@@ -961,15 +967,19 @@ Public Class frmReports
         pnlSelectedFieldsMain.Focus()
         pnlSelectedFieldsMain.Invalidate()
         PanelsResumeLayout()
+        CursorControl()
     End Sub
 
     Private Sub btnRevertChanges_Click(sender As Object, e As EventArgs) Handles btnRevertChanges.Click
+        CursorControl("Wait")
         ReportFieldsDispose(False)
         ReportLoad(xmlReports, cbxReportName.Text)
+        CursorControl()
     End Sub
 
     Private Sub btnExportToFile_Click(sender As Object, e As EventArgs) Handles btnExportToFile.Click
         If dgvReport.RowCount = 0 Then Exit Sub
+        CursorControl("Wait")
         Dim strReportName As String = ""
         If cbxReportName.Text.Length > 0 Then
             strReportName = cbxReportName.Text
@@ -978,6 +988,7 @@ Public Class frmReports
         End If
         Dim strFileName As String = GetSaveFileName(strReportName)
         ExportFile(dtsReport, strFileName)
+        CursorControl()
     End Sub
 
 #End Region
@@ -1368,7 +1379,9 @@ Public Class frmReports
     End Sub
 
     Private Sub btnDefinition_Click(sender As Object, e As EventArgs) Handles btnDefinition.Click
+        CursorControl("Wait")
         tabReports.SelectedTab = tpgReportDefinition
+        CursorControl()
     End Sub
 
 #End Region
@@ -1379,6 +1392,7 @@ Public Class frmReports
     End Sub
 
     Private Sub btnReportExport_Click(sender As Object, e As EventArgs) Handles btnReportExport.Click
+        CursorControl("Wait")
         Dim xmlExport As XmlDocument = SeqData.dhdText.CreateRootDocument(Nothing, Nothing, Nothing)
         'ReportAdd(xmlExport, cbxReportName.Text)
         ReportToXML(xmlExport, cbxReportName.Text)
@@ -1413,9 +1427,11 @@ Public Class frmReports
         Catch ex As Exception
             SeqData.WriteLog(ex.Message, 1)
         End Try
+        CursorControl()
     End Sub
 
     Private Sub btnReportImport_Click(sender As Object, e As EventArgs) Handles btnReportImport.Click
+        CursorControl("Wait")
         Dim xmlImport As New XmlDocument
         Dim strReportName As String
         Dim loadFile1 As New OpenFileDialog
@@ -1424,7 +1440,13 @@ Public Class frmReports
         loadFile1.Filter = "Report Files|*.xml"
 
         If (loadFile1.ShowDialog() = System.Windows.Forms.DialogResult.OK) And (loadFile1.FileName.Length) > 0 Then
-            xmlImport.Load(loadFile1.FileName)
+            Try
+                xmlImport.Load(loadFile1.FileName)
+            Catch ex As Exception
+                SeqData.WriteLog("Error importing Report: " & ex.Message, 1)
+                CursorControl()
+                Exit Sub
+            End Try
         End If
         If loadFile1.FileName = "" Then Exit Sub
         Dim xNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlImport, "ReportName")
@@ -1436,6 +1458,7 @@ Public Class frmReports
             strReportName &= "_" & FormatDateTime(Now())
         End If
         cbxReportName.Text = strReportName
+        CursorControl()
     End Sub
 
     Private Sub pnlSelectedFieldsMain_MouseDown(sender As Object, e As System.Windows.Forms.MouseEventArgs) Handles pnlSelectedFieldsMain.MouseDown
@@ -1493,6 +1516,7 @@ Public Class frmReports
             WriteStatus("Email address not valid. No email was sent", 0, lblErrorMessage)
             Exit Sub
         End If
+        CursorControl("Wait")
         Dim strRecepientName As String = SeqData.dhdText.SmtpRecipient.Substring(0, SeqData.dhdText.SmtpRecipient.IndexOf("@"))
         Dim strSenderName As String = SeqData.dhdText.SmtpReply.Substring(0, SeqData.dhdText.SmtpReply.IndexOf("@"))
 
@@ -1530,7 +1554,7 @@ Public Class frmReports
         Catch ex As Exception
             MessageBox.Show("An error occured sending your email" & Environment.NewLine & Environment.NewLine & ex.Message)
         End Try
-
+        CursorControl()
     End Sub
 
     Private Sub sptReports_MouseHover(sender As Object, e As EventArgs) Handles sptReports.MouseHover
@@ -1584,7 +1608,7 @@ Public Class frmReports
 
 
     Private Sub sptReport_SplitterMoved(sender As Object, e As SplitterEventArgs) Handles sptReport.SplitterMoved
-        sptReportTables.SplitterDistance = sptReport.SplitterDistance
+        If sptReportTables.SplitterDistance <> sptReport.SplitterDistance Then sptReportTables.SplitterDistance = sptReport.SplitterDistance
     End Sub
 
     Private Sub sptReport_MouseHover(sender As Object, e As EventArgs) Handles sptReport.MouseHover
@@ -1608,7 +1632,7 @@ Public Class frmReports
     End Sub
 
     Private Sub sptReportTables_SplitterMoved(sender As Object, e As SplitterEventArgs) Handles sptReportTables.SplitterMoved
-        sptReport.SplitterDistance = sptReportTables.SplitterDistance
+        If sptReport.SplitterDistance <> sptReportTables.SplitterDistance Then sptReport.SplitterDistance = sptReportTables.SplitterDistance
     End Sub
 
     Private Sub sptReportTables_MouseHover(sender As Object, e As EventArgs) Handles sptReportTables.MouseHover

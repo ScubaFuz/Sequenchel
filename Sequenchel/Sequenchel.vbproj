@@ -182,10 +182,10 @@
     <Compile Include="Forms\frmSmartUpdate.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\ShutDown.Designer.vb">
-      <DependentUpon>ShutDown.vb</DependentUpon>
+    <Compile Include="Forms\frmShutDown.Designer.vb">
+      <DependentUpon>frmShutDown.vb</DependentUpon>
     </Compile>
-    <Compile Include="Forms\ShutDown.vb">
+    <Compile Include="Forms\frmShutDown.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Modules\Common.vb" />
@@ -236,8 +236,9 @@
     <EmbeddedResource Include="Forms\frmSmartUpdate.resx">
       <DependentUpon>frmSmartUpdate.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ShutDown.resx">
-      <DependentUpon>ShutDown.vb</DependentUpon>
+    <EmbeddedResource Include="Forms\frmShutDown.resx">
+      <DependentUpon>frmShutDown.vb</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>

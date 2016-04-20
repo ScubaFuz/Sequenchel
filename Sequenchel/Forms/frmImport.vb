@@ -6,23 +6,30 @@ Public Class frmImport
     End Sub
 
     Private Sub btnSelectFile_Click(sender As Object, e As EventArgs) Handles btnSelectFile.Click
+        CursorControl("Wait")
         SelectFile()
+        CursorControl()
     End Sub
 
     Private Sub btnImportFile_Click(sender As Object, e As EventArgs) Handles btnImportFile.Click
+        CursorControl("Wait")
         If txtCurrentFile.Text.Length > 3 And txtCurrentFile.Text.Contains(".") Then
             ImportFile()
         Else
             MessageBox.Show("Please enter a valid path and filename before pressing this button")
         End If
+        CursorControl()
     End Sub
 
     Private Sub btnUploadFile_Click(sender As Object, e As EventArgs) Handles btnUploadFile.Click
+        CursorControl("Wait")
         If SeqData.dhdText.DatasetCheck(dtsImport) = False Then Exit Sub
         UploadFile(dtsImport)
+        CursorControl()
     End Sub
 
     Private Sub btnUploadTable_Click(sender As Object, e As EventArgs) Handles btnUploadTable.Click
+        CursorControl("Wait")
         Try
             If dgvImport.DataSource Is Nothing Then Exit Sub
             Dim dtsUpload As New DataSet
@@ -33,6 +40,7 @@ Public Class frmImport
             lblStatusText.Text = "0 rows uploaded"
             Exit Sub
         End Try
+        CursorControl()
     End Sub
 
     Private Sub LoadDefaults()
@@ -211,11 +219,15 @@ Public Class frmImport
     End Sub
 
     Private Sub btnPreviousTable_Click(sender As Object, e As EventArgs) Handles btnPreviousTable.Click
+        CursorControl("Wait")
         DisplayData(btnPreviousTable.Tag)
+        CursorControl()
     End Sub
 
     Private Sub btnNextTable_Click(sender As Object, e As EventArgs) Handles btnNextTable.Click
+        CursorControl("Wait")
         DisplayData(btnNextTable.Tag)
+        CursorControl()
     End Sub
 
     Private Sub chkImportTable_CheckedChanged(sender As Object, e As EventArgs) Handles chkUploadTable.CheckedChanged

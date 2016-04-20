@@ -343,6 +343,7 @@ Public Class frmConfiguration
     End Sub
 
     Private Sub btnConnectionDefault_Click(sender As Object, e As EventArgs) Handles btnConnectionDefault.Click
+        CursorControl("Wait")
         If lvwConnections.SelectedItems.Count = 1 Then
             Dim strSelection As String = lvwConnections.SelectedItems.Item(0).Tag
 
@@ -362,15 +363,19 @@ Public Class frmConfiguration
             ConfigurationSave()
             ConnectionLoad()
         End If
-
+        CursorControl()
     End Sub
 
     Private Sub btnConnectionClear_Click(sender As Object, e As EventArgs) Handles btnConnectionClear.Click
+        CursorControl("Wait")
         ConnectionClear()
+        CursorControl()
     End Sub
 
     Private Sub btnConnectionDelete_Click(sender As Object, e As EventArgs) Handles btnConnectionDelete.Click
+        CursorControl("Wait")
         ConnectionDelete()
+        CursorControl()
     End Sub
 
     Private Sub ConnectionDelete()
@@ -543,6 +548,7 @@ Public Class frmConfiguration
     End Sub
 
     Private Sub btnTableSetDefault_Click(sender As Object, e As EventArgs) Handles btnTableSetDefault.Click
+        CursorControl("Wait")
         If lvwTableSets.SelectedItems.Count = 1 Then
             Dim strSelection As String = lvwTableSets.SelectedItems.Item(0).Tag
 
@@ -563,10 +569,13 @@ Public Class frmConfiguration
             ConfigurationSave()
             TableSetLoad()
         End If
+        CursorControl()
     End Sub
 
     Private Sub btnTableSetsShow_Click(sender As Object, e As EventArgs) Handles btnTableSetsShow.Click
+        CursorControl("Wait")
         DisplayXmlFile(xmlTableSets, tvwTableSet)
+        CursorControl()
     End Sub
 
     Private Sub btnTableSetAdd_Click(sender As Object, e As EventArgs) Handles btnTableSetAdd.Click
@@ -609,7 +618,9 @@ Public Class frmConfiguration
     End Sub
 
     Private Sub btnTableSetClear_Click(sender As Object, e As EventArgs) Handles btnTableSetClear.Click
+        CursorControl("Wait")
         TableSetClear()
+        CursorControl()
     End Sub
 
     Private Sub TableSetClear()
@@ -623,6 +634,7 @@ Public Class frmConfiguration
     End Sub
 
     Private Sub btnTableSetDelete_Click(sender As Object, e As EventArgs) Handles btnTableSetDelete.Click
+        CursorControl("Wait")
         Dim strSelection As String = txtTableSetName.Text
 
         If strSelection.Length = 0 Then Exit Sub
@@ -636,6 +648,7 @@ Public Class frmConfiguration
             btnTableSetClear_Click(Nothing, Nothing)
             TableSetsLoad()
         End If
+        CursorControl()
     End Sub
 
 #End Region
@@ -920,6 +933,7 @@ Public Class frmConfiguration
     End Sub
 
     Private Sub btnTableDefault_Click(sender As Object, e As EventArgs) Handles btnTableDefault.Click
+        CursorControl("Wait")
         If lvwTables.SelectedItems.Count = 1 Then
             Dim strSelection As String = lvwTables.SelectedItems.Item(0).Tag
 
@@ -939,10 +953,13 @@ Public Class frmConfiguration
             ConfigurationSave()
             TableLoad()
         End If
+        CursorControl()
     End Sub
 
     Private Sub btnTablesShow_Click(sender As Object, e As EventArgs) Handles btnTablesShow.Click
+        CursorControl("Wait")
         DisplayXmlFile(xmlTables, tvwTable)
+        CursorControl()
     End Sub
 
     Private Sub btnTableAddOrUpdate_Click(sender As Object, e As EventArgs) Handles btnTableAddOrUpdate.Click
@@ -980,15 +997,18 @@ Public Class frmConfiguration
     End Sub
 
     Private Sub btnTableClear_Click(sender As Object, e As EventArgs) Handles btnTableClear.Click
+        CursorControl("Wait")
         txtTableName.Text = ""
         txtTableAlias.Text = ""
         chkTableVisible.Checked = False
         chkTableSearch.Checked = False
         chkTableUpdate.Checked = False
         chkTableInsert.Checked = False
+        CursorControl()
     End Sub
 
     Private Sub btnTableDelete_Click(sender As Object, e As EventArgs) Handles btnTableDelete.Click
+        CursorControl("Wait")
         Dim strSelection As String = txtTableName.Text
 
         If strSelection.Length = 0 Then Exit Sub
@@ -1003,6 +1023,7 @@ Public Class frmConfiguration
             TablesLoad()
             tvwTable.Nodes.Clear()
         End If
+        CursorControl()
     End Sub
 
 #End Region
@@ -1159,7 +1180,9 @@ Public Class frmConfiguration
     End Sub
 
     Private Sub btnFieldClear_Click(sender As Object, e As EventArgs) Handles btnFieldClear.Click
+        CursorControl("Wait")
         FieldsClear()
+        CursorControl()
     End Sub
 
     Private Sub FieldsClear()
@@ -1248,6 +1271,7 @@ Public Class frmConfiguration
     End Sub
 
     Private Sub btnFieldDelete_Click(sender As Object, e As EventArgs) Handles btnFieldDelete.Click
+        CursorControl("Wait")
         Dim strSelection As String = txtFieldName.Text
 
         If strSelection.Length = 0 Then Exit Sub
@@ -1261,6 +1285,7 @@ Public Class frmConfiguration
             FieldsClear()
             lvwTables_SelectedIndexChanged(Nothing, Nothing)
         End If
+        CursorControl()
     End Sub
 
     Private Sub chkFieldVisible_CheckedChanged(sender As Object, e As EventArgs) Handles chkFieldVisible.CheckedChanged
@@ -1351,6 +1376,7 @@ Public Class frmConfiguration
 #Region "Backup"
 
     Private Sub btnBackup_Click(sender As Object, e As EventArgs) Handles btnBackup.Click
+        CursorControl("Wait")
         If txtBackupLocation.Text.Length = 0 Then
             lblStatus.Text = "A backup location is required, aborting action"
             Exit Sub
@@ -1361,6 +1387,7 @@ Public Class frmConfiguration
         Catch ex As Exception
             MessageBox.Show("While saving the database, the following error occured: " & Environment.NewLine & ex.Message)
         End Try
+        CursorControl()
     End Sub
 
     Friend Sub BackupDatabase(ByVal strPath As String)
@@ -1391,6 +1418,7 @@ Public Class frmConfiguration
 #Region "Relations"
 
     Private Sub btnRelationRemove_Click(sender As Object, e As EventArgs) Handles btnRelationRemove.Click
+        CursorControl("Wait")
         If cbxRelations.Text.Length < 1 Then Exit Sub
         Dim strFieldName As String = txtFieldName.Tag
         Dim strSelection As String = cbxRelations.Text
@@ -1414,7 +1442,7 @@ Public Class frmConfiguration
             'If cbxRelations.Items.Contains(cbxRelations.Text) Then cbxRelations.Items.Remove(cbxRelations.Text)
             'cbxRelations.Text = ""
         End If
-
+        CursorControl()
     End Sub
 
     Private Sub RelationAdd(strTableName As String, strFieldName As String, strRelation As String, strRelatedField As String, blnRelatedFieldList As Boolean)
@@ -1457,10 +1485,12 @@ Public Class frmConfiguration
     End Sub
 
     Private Sub btnRelationAdd_Click(sender As Object, e As EventArgs) Handles btnRelationAdd.Click
+        CursorControl("Wait")
         If cbxRelations.Text.Length = 0 Then Exit Sub
         RelationAdd(SeqData.curStatus.Table, txtFieldName.Tag, cbxRelations.Text, txtRelatedField.Text, chkRelatedField.Checked)
 
         'If Not cbxRelations.Items.Contains(cbxRelations.Text) Then cbxRelations.Items.Add(cbxRelations.Text)
+        CursorControl()
     End Sub
 
 #End Region
