@@ -82,6 +82,8 @@ Partial Class frmLinkedServer
         Me.grpUpdatable = New System.Windows.Forms.GroupBox()
         Me.lblLinkedServerName = New System.Windows.Forms.Label()
         Me.txtLinkedServerName = New System.Windows.Forms.TextBox()
+        Me.lblStatusTitle = New System.Windows.Forms.Label()
+        Me.lblStatusText = New System.Windows.Forms.Label()
         Me.grpUpdatable.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -672,11 +674,33 @@ Partial Class frmLinkedServer
         Me.txtLinkedServerName.TabIndex = 188
         Me.txtLinkedServerName.TabStop = False
         '
+        'lblStatusTitle
+        '
+        Me.lblStatusTitle.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.lblStatusTitle.AutoSize = True
+        Me.lblStatusTitle.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblStatusTitle.Location = New System.Drawing.Point(18, 579)
+        Me.lblStatusTitle.Name = "lblStatusTitle"
+        Me.lblStatusTitle.Size = New System.Drawing.Size(51, 16)
+        Me.lblStatusTitle.TabIndex = 190
+        Me.lblStatusTitle.Text = "Status"
+        '
+        'lblStatusText
+        '
+        Me.lblStatusText.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.lblStatusText.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblStatusText.Location = New System.Drawing.Point(75, 575)
+        Me.lblStatusText.Name = "lblStatusText"
+        Me.lblStatusText.Size = New System.Drawing.Size(514, 23)
+        Me.lblStatusText.TabIndex = 191
+        '
         'frmLinkedServer
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(741, 606)
+        Me.ClientSize = New System.Drawing.Size(741, 605)
+        Me.Controls.Add(Me.lblStatusText)
+        Me.Controls.Add(Me.lblStatusTitle)
         Me.Controls.Add(Me.lblLinkedServerName)
         Me.Controls.Add(Me.txtLinkedServerName)
         Me.Controls.Add(Me.grpUpdatable)
@@ -787,4 +811,6 @@ Partial Class frmLinkedServer
     Friend WithEvents grpUpdatable As System.Windows.Forms.GroupBox
     Friend WithEvents lblLinkedServerName As System.Windows.Forms.Label
     Friend WithEvents txtLinkedServerName As System.Windows.Forms.TextBox
+    Friend WithEvents lblStatusTitle As System.Windows.Forms.Label
+    Friend WithEvents lblStatusText As System.Windows.Forms.Label
 End Class

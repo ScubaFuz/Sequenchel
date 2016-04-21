@@ -26,7 +26,7 @@ Partial Class frmSequenchel
         Me.btnTest = New System.Windows.Forms.Button()
         Me.btnClose = New System.Windows.Forms.Button()
         Me.lblStatusText = New System.Windows.Forms.Label()
-        Me.lblStatus = New System.Windows.Forms.Label()
+        Me.lblStatusTitle = New System.Windows.Forms.Label()
         Me.cbxConnection = New System.Windows.Forms.ComboBox()
         Me.lblConnection = New System.Windows.Forms.Label()
         Me.lblTableSet = New System.Windows.Forms.Label()
@@ -52,6 +52,7 @@ Partial Class frmSequenchel
         Me.mnuMainHelpAbout = New System.Windows.Forms.ToolStripMenuItem()
         Me.lblLicense = New System.Windows.Forms.Label()
         Me.sptTable1 = New System.Windows.Forms.SplitContainer()
+        Me.dgvTable1 = New Sequenchel.usrDataGridView()
         Me.sptFields1 = New System.Windows.Forms.SplitContainer()
         Me.lblListCount = New System.Windows.Forms.Label()
         Me.lblListCountNumber = New System.Windows.Forms.Label()
@@ -74,18 +75,17 @@ Partial Class frmSequenchel
         Me.lblMultipleRows = New System.Windows.Forms.Label()
         Me.pnlListCount = New System.Windows.Forms.Panel()
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
-        Me.dgvTable1 = New Sequenchel.usrDataGridView()
         Me.mnuMain.SuspendLayout()
         CType(Me.sptTable1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.sptTable1.Panel1.SuspendLayout()
         Me.sptTable1.Panel2.SuspendLayout()
         Me.sptTable1.SuspendLayout()
+        CType(Me.dgvTable1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.sptFields1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.sptFields1.SuspendLayout()
         Me.pnlFooterControls.SuspendLayout()
         Me.pnlListCount.SuspendLayout()
         Me.TableLayoutPanel1.SuspendLayout()
-        CType(Me.dgvTable1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'btnTest
@@ -114,23 +114,23 @@ Partial Class frmSequenchel
         '
         Me.lblStatusText.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lblStatusText.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblStatusText.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblStatusText.Location = New System.Drawing.Point(86, 778)
         Me.lblStatusText.Name = "lblStatusText"
         Me.lblStatusText.Size = New System.Drawing.Size(777, 25)
         Me.lblStatusText.TabIndex = 83
         Me.lblStatusText.Text = "Program Start"
         '
-        'lblStatus
+        'lblStatusTitle
         '
-        Me.lblStatus.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.lblStatus.AutoSize = True
-        Me.lblStatus.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblStatus.Location = New System.Drawing.Point(12, 778)
-        Me.lblStatus.Name = "lblStatus"
-        Me.lblStatus.Size = New System.Drawing.Size(56, 20)
-        Me.lblStatus.TabIndex = 82
-        Me.lblStatus.Text = "Status"
+        Me.lblStatusTitle.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.lblStatusTitle.AutoSize = True
+        Me.lblStatusTitle.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblStatusTitle.Location = New System.Drawing.Point(12, 778)
+        Me.lblStatusTitle.Name = "lblStatusTitle"
+        Me.lblStatusTitle.Size = New System.Drawing.Size(51, 16)
+        Me.lblStatusTitle.TabIndex = 82
+        Me.lblStatusTitle.Text = "Status"
         '
         'cbxConnection
         '
@@ -265,7 +265,7 @@ Partial Class frmSequenchel
         '
         Me.mnuMainTools.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuMainToolsReports, Me.mnuMainToolsImport, Me.mnuMainToolsSmartUpdate})
         Me.mnuMainTools.Name = "mnuMainTools"
-        Me.mnuMainTools.Size = New System.Drawing.Size(48, 20)
+        Me.mnuMainTools.Size = New System.Drawing.Size(47, 20)
         Me.mnuMainTools.Text = "Tools"
         '
         'mnuMainToolsReports
@@ -337,11 +337,34 @@ Partial Class frmSequenchel
         Me.sptTable1.SplitterDistance = 713
         Me.sptTable1.TabIndex = 0
         '
+        'dgvTable1
+        '
+        Me.dgvTable1.AllowUserToAddRows = False
+        Me.dgvTable1.AllowUserToDeleteRows = False
+        Me.dgvTable1.AllowUserToOrderColumns = True
+        Me.dgvTable1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.dgvTable1.BackgroundColor = System.Drawing.SystemColors.Control
+        Me.dgvTable1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
+        Me.dgvTable1.BackImage = CType(resources.GetObject("dgvTable1.BackImage"), System.Drawing.Image)
+        Me.dgvTable1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dgvTable1.Location = New System.Drawing.Point(3, 3)
+        Me.dgvTable1.MultiSelect = False
+        Me.dgvTable1.Name = "dgvTable1"
+        Me.dgvTable1.ReadOnly = True
+        Me.dgvTable1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
+        Me.dgvTable1.Size = New System.Drawing.Size(707, 587)
+        Me.dgvTable1.TabIndex = 0
+        '
         'sptFields1
         '
         Me.sptFields1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.sptFields1.Location = New System.Drawing.Point(0, 0)
         Me.sptFields1.Name = "sptFields1"
+        '
+        'sptFields1.Panel1
+        '
         '
         'sptFields1.Panel2
         '
@@ -570,26 +593,6 @@ Partial Class frmSequenchel
         Me.TableLayoutPanel1.Size = New System.Drawing.Size(1243, 87)
         Me.TableLayoutPanel1.TabIndex = 126
         '
-        'dgvTable1
-        '
-        Me.dgvTable1.AllowUserToAddRows = False
-        Me.dgvTable1.AllowUserToDeleteRows = False
-        Me.dgvTable1.AllowUserToOrderColumns = True
-        Me.dgvTable1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.dgvTable1.BackgroundColor = System.Drawing.SystemColors.Control
-        Me.dgvTable1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
-        Me.dgvTable1.BackImage = CType(resources.GetObject("dgvTable1.BackImage"), System.Drawing.Image)
-        Me.dgvTable1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvTable1.Location = New System.Drawing.Point(3, 3)
-        Me.dgvTable1.MultiSelect = False
-        Me.dgvTable1.Name = "dgvTable1"
-        Me.dgvTable1.ReadOnly = True
-        Me.dgvTable1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgvTable1.Size = New System.Drawing.Size(707, 587)
-        Me.dgvTable1.TabIndex = 0
-        '
         'frmSequenchel
         '
         Me.AcceptButton = Me.btnSearch
@@ -612,7 +615,7 @@ Partial Class frmSequenchel
         Me.Controls.Add(Me.lblConnection)
         Me.Controls.Add(Me.cbxConnection)
         Me.Controls.Add(Me.lblStatusText)
-        Me.Controls.Add(Me.lblStatus)
+        Me.Controls.Add(Me.lblStatusTitle)
         Me.Controls.Add(Me.mnuMain)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.MainMenuStrip = Me.mnuMain
@@ -626,6 +629,7 @@ Partial Class frmSequenchel
         Me.sptTable1.Panel2.ResumeLayout(False)
         CType(Me.sptTable1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.sptTable1.ResumeLayout(False)
+        CType(Me.dgvTable1, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.sptFields1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.sptFields1.ResumeLayout(False)
         Me.pnlFooterControls.ResumeLayout(False)
@@ -633,7 +637,6 @@ Partial Class frmSequenchel
         Me.pnlListCount.ResumeLayout(False)
         Me.pnlListCount.PerformLayout()
         Me.TableLayoutPanel1.ResumeLayout(False)
-        CType(Me.dgvTable1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -641,7 +644,7 @@ Partial Class frmSequenchel
     Friend WithEvents btnTest As System.Windows.Forms.Button
     Friend WithEvents btnClose As System.Windows.Forms.Button
     Friend WithEvents lblStatusText As System.Windows.Forms.Label
-    Friend WithEvents lblStatus As System.Windows.Forms.Label
+    Friend WithEvents lblStatusTitle As System.Windows.Forms.Label
     Friend WithEvents cbxConnection As System.Windows.Forms.ComboBox
     Friend WithEvents lblConnection As System.Windows.Forms.Label
     Friend WithEvents lblTableSet As System.Windows.Forms.Label

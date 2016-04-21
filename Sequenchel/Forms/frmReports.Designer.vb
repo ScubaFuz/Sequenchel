@@ -126,11 +126,11 @@ Partial Class frmReports
         Me.btnSaveQuery = New System.Windows.Forms.Button()
         Me.btnExecuteQuery = New System.Windows.Forms.Button()
         Me.rtbQuery = New System.Windows.Forms.RichTextBox()
+        Me.dgvReport = New Sequenchel.usrDataGridView()
         Me.btnTest = New System.Windows.Forms.Button()
         Me.btnClose = New System.Windows.Forms.Button()
         Me.tmrElapsedTime = New System.Windows.Forms.Timer(Me.components)
         Me.lblStatus = New System.Windows.Forms.Label()
-        Me.dgvReport = New Sequenchel.usrDataGridView()
         Me.tabReports.SuspendLayout()
         Me.tpgReportDefinition.SuspendLayout()
         CType(Me.sptReports, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -1221,6 +1221,23 @@ Partial Class frmReports
         Me.rtbQuery.TabIndex = 0
         Me.rtbQuery.Text = ""
         '
+        'dgvReport
+        '
+        Me.dgvReport.AllowUserToAddRows = False
+        Me.dgvReport.AllowUserToDeleteRows = False
+        Me.dgvReport.AllowUserToOrderColumns = True
+        Me.dgvReport.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.dgvReport.BackgroundColor = System.Drawing.SystemColors.Control
+        Me.dgvReport.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
+        Me.dgvReport.BackImage = CType(resources.GetObject("dgvReport.BackImage"), System.Drawing.Image)
+        Me.dgvReport.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dgvReport.Location = New System.Drawing.Point(6, 6)
+        Me.dgvReport.Name = "dgvReport"
+        Me.dgvReport.Size = New System.Drawing.Size(1243, 563)
+        Me.dgvReport.TabIndex = 0
+        '
         'btnTest
         '
         Me.btnTest.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
@@ -1255,23 +1272,6 @@ Partial Class frmReports
         Me.lblStatus.Name = "lblStatus"
         Me.lblStatus.Size = New System.Drawing.Size(0, 18)
         Me.lblStatus.TabIndex = 171
-        '
-        'dgvReport
-        '
-        Me.dgvReport.AllowUserToAddRows = False
-        Me.dgvReport.AllowUserToDeleteRows = False
-        Me.dgvReport.AllowUserToOrderColumns = True
-        Me.dgvReport.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.dgvReport.BackgroundColor = System.Drawing.SystemColors.Control
-        Me.dgvReport.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
-        Me.dgvReport.BackImage = CType(resources.GetObject("dgvReport.BackImage"), System.Drawing.Image)
-        Me.dgvReport.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvReport.Location = New System.Drawing.Point(6, 6)
-        Me.dgvReport.Name = "dgvReport"
-        Me.dgvReport.Size = New System.Drawing.Size(1243, 563)
-        Me.dgvReport.TabIndex = 0
         '
         'frmReports
         '

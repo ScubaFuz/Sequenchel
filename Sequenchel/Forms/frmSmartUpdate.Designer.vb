@@ -276,11 +276,10 @@ Partial Class frmSmartUpdate
         'lblStatusText
         '
         Me.lblStatusText.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.lblStatusText.AutoSize = True
         Me.lblStatusText.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblStatusText.Location = New System.Drawing.Point(103, 531)
+        Me.lblStatusText.Location = New System.Drawing.Point(70, 531)
         Me.lblStatusText.Name = "lblStatusText"
-        Me.lblStatusText.Size = New System.Drawing.Size(0, 16)
+        Me.lblStatusText.Size = New System.Drawing.Size(692, 16)
         Me.lblStatusText.TabIndex = 148
         '
         'lstTargetTables
@@ -423,7 +422,7 @@ Partial Class frmSmartUpdate
         Me.lblStatusTitle.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.lblStatusTitle.AutoSize = True
         Me.lblStatusTitle.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblStatusTitle.Location = New System.Drawing.Point(36, 531)
+        Me.lblStatusTitle.Location = New System.Drawing.Point(9, 531)
         Me.lblStatusTitle.Name = "lblStatusTitle"
         Me.lblStatusTitle.Size = New System.Drawing.Size(55, 16)
         Me.lblStatusTitle.TabIndex = 162

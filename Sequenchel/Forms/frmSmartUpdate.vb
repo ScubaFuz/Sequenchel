@@ -251,7 +251,7 @@
                 WriteStatus("There was an error saving the SmartUpdate configuration. Please check the log.", 1, lblStatusText)
                 SeqData.WriteLog("There was an error saving the SmartUpdate configuration. " & SeqData.dhdConnection.ErrorMessage, 1)
             Else
-                WriteStatus("Configuration Saved to SmartUpdate Table for: " & SeqData.curStatus.Connection & "." & strSchemaName & "." & strTableName, 2, lblStatusText)
+                WriteStatus("Configuration Saved to SmartUpdate Table for: " & SeqData.curStatus.Connection & "." & strSchemaName & "." & strTableName, 0, lblStatusText)
             End If
         Catch ex As Exception
             WriteStatus("There was an error saving the SmartUpdate configuration. Please check the log.", 1, lblStatusText)

@@ -20,6 +20,7 @@ Public Class frmConfiguration
     End Sub
 
     Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
+        WriteStatus("", 0, lblStatusText)
         If lstServers.Visible = True Then
             lstServers.Visible = False
         End If
@@ -159,6 +160,7 @@ Public Class frmConfiguration
 
     Private Sub btnCrawlServers_Click(sender As Object, e As EventArgs) Handles btnCrawlServers.Click
         CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
         GetSqlInstances()
         CursorControl()
     End Sub
@@ -215,6 +217,7 @@ Public Class frmConfiguration
 
     Private Sub btnCrawlDatabases_Click(sender As Object, e As EventArgs) Handles btnCrawlDatabases.Click
         CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
         'Application.DoEvents()
 
         SeqData.dhdConnection.DatabaseName = "master"
@@ -231,7 +234,7 @@ Public Class frmConfiguration
 
         If dtsData Is Nothing Then
             CursorControl()
-            lblStatus.Text = SeqData.ErrorMessage
+            WriteStatus(SeqData.ErrorMessage, 1, lblStatusText)
             Exit Sub
         End If
         If dtsData.Tables.Count = 0 Then Exit Sub
@@ -265,6 +268,7 @@ Public Class frmConfiguration
 
     Private Sub btnConnectionsShow_Click(sender As Object, e As EventArgs) Handles btnConnectionsShow.Click
         CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
         DisplayXmlFile(xmlConnections, tvwConnection)
         CursorControl()
     End Sub
@@ -302,6 +306,7 @@ Public Class frmConfiguration
 
     Private Sub btnConnectionAddOrUpdate_Click(sender As Object, e As EventArgs) Handles btnConnectionAddOrUpdate.Click
         CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
         ConnectionAddOrUpdate()
         CursorControl()
     End Sub
@@ -314,7 +319,7 @@ Public Class frmConfiguration
         End If
 
         If txtConnectionName.Text.Length < 2 Or txtDataLocation.Text.Length < 2 Or txtDataBaseName.Text.Length < 2 Or txtTableSetsFile.Text.Length < 2 Then
-            lblStatus.Text = Core.Message.strAllData
+            WriteStatus(Core.Message.strAllData, 2, lblStatusText)
             Exit Sub
         End If
 
@@ -340,10 +345,12 @@ Public Class frmConfiguration
         SeqData.curStatus.ConnectionChanged = True
         ConfigurationSave()
         ConnectionsLoad()
+        WriteStatus("Connection Saved", 0, lblStatusText)
     End Sub
 
     Private Sub btnConnectionDefault_Click(sender As Object, e As EventArgs) Handles btnConnectionDefault.Click
         CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
         If lvwConnections.SelectedItems.Count = 1 Then
             Dim strSelection As String = lvwConnections.SelectedItems.Item(0).Tag
 
@@ -362,18 +369,21 @@ Public Class frmConfiguration
             SeqData.curStatus.ConnectionChanged = True
             ConfigurationSave()
             ConnectionLoad()
+            WriteStatus("Default connection set", 0, lblStatusText)
         End If
         CursorControl()
     End Sub
 
     Private Sub btnConnectionClear_Click(sender As Object, e As EventArgs) Handles btnConnectionClear.Click
         CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
         ConnectionClear()
         CursorControl()
     End Sub
 
     Private Sub btnConnectionDelete_Click(sender As Object, e As EventArgs) Handles btnConnectionDelete.Click
         CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
         ConnectionDelete()
         CursorControl()
     End Sub
@@ -391,6 +401,7 @@ Public Class frmConfiguration
             ConfigurationSave()
             ConnectionClear()
             ConnectionsLoad()
+            WriteStatus("Connection Deleted", 0, lblStatusText)
         End If
     End Sub
 
@@ -549,6 +560,7 @@ Public Class frmConfiguration
 
     Private Sub btnTableSetDefault_Click(sender As Object, e As EventArgs) Handles btnTableSetDefault.Click
         CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
         If lvwTableSets.SelectedItems.Count = 1 Then
             Dim strSelection As String = lvwTableSets.SelectedItems.Item(0).Tag
 
@@ -568,18 +580,21 @@ Public Class frmConfiguration
             SeqData.curStatus.TableSetChanged = True
             ConfigurationSave()
             TableSetLoad()
+            WriteStatus("Default TableSet Set", 0, lblStatusText)
         End If
         CursorControl()
     End Sub
 
     Private Sub btnTableSetsShow_Click(sender As Object, e As EventArgs) Handles btnTableSetsShow.Click
         CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
         DisplayXmlFile(xmlTableSets, tvwTableSet)
         CursorControl()
     End Sub
 
     Private Sub btnTableSetAdd_Click(sender As Object, e As EventArgs) Handles btnTableSetAdd.Click
         CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
         TableSetAddOrUpdate()
         CursorControl()
     End Sub
@@ -587,7 +602,7 @@ Public Class frmConfiguration
     Private Sub TableSetAddOrUpdate()
         'dhdText.RemoveNode(xmlConnections, "Connections", "ConnectionName", txtConnectionName.Text)
         If txtTableSetName.Text.Length < 2 Or txtTablesFile.Text.Length < 2 Then
-            lblStatus.Text = Core.Message.strAllData
+            WriteStatus(Core.Message.strAllData, 2, lblStatusText)
             Exit Sub
         End If
 
@@ -615,10 +630,13 @@ Public Class frmConfiguration
         SeqData.curStatus.TableSetChanged = True
         ConfigurationSave()
         TableSetsLoad()
+        WriteStatus("TableSet Saved", 0, lblStatusText)
+
     End Sub
 
     Private Sub btnTableSetClear_Click(sender As Object, e As EventArgs) Handles btnTableSetClear.Click
         CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
         TableSetClear()
         CursorControl()
     End Sub
@@ -635,6 +653,7 @@ Public Class frmConfiguration
 
     Private Sub btnTableSetDelete_Click(sender As Object, e As EventArgs) Handles btnTableSetDelete.Click
         CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
         Dim strSelection As String = txtTableSetName.Text
 
         If strSelection.Length = 0 Then Exit Sub
@@ -647,6 +666,9 @@ Public Class frmConfiguration
             ConfigurationSave()
             btnTableSetClear_Click(Nothing, Nothing)
             TableSetsLoad()
+            WriteStatus("TableSet Deleted", 0, lblStatusText)
+        Else
+            WriteStatus("Unable to delete TableSet.", 2, lblStatusText)
         End If
         CursorControl()
     End Sub
@@ -707,6 +729,7 @@ Public Class frmConfiguration
 
     Private Sub btnCrawlTables_Click(sender As Object, e As EventArgs) Handles btnCrawlTables.Click
         CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
         'Application.DoEvents()
 
         If CheckSqlVersion(SeqData.dhdConnection) = False Then Exit Sub
@@ -715,7 +738,7 @@ Public Class frmConfiguration
 
         If lstNewTables Is Nothing Then
             CursorControl()
-            lblStatus.Text = "No tables found"
+            WriteStatus("No tables found", 2, lblStatusText)
             Exit Sub
         End If
 
@@ -751,11 +774,12 @@ Public Class frmConfiguration
 
     Private Sub btnColumnsImport_Click(sender As Object, e As EventArgs) Handles btnColumnsImport.Click
         CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
 
         If CheckSqlVersion(SeqData.dhdConnection) = False Then Exit Sub
 
         If txtTableName.Text.Length < 2 And chkImportAllTables.Checked = False Then
-            lblStatus.Text = "Please enter a schema name with a table name first"
+            WriteStatus("Please enter a schema name with a table name.", 2, lblStatusText)
             Exit Sub
         End If
 
@@ -783,7 +807,7 @@ Public Class frmConfiguration
         Dim lstNewTables As List(Of String) = LoadTablesList(SeqData.dhdConnection)
 
         If lstNewTables Is Nothing Then
-            lblStatus.Text = "No tables found"
+            WriteStatus("No tables found", 2, lblStatusText)
             Exit Sub
         End If
 
@@ -811,7 +835,7 @@ Public Class frmConfiguration
 
         Dim dtsData As DataSet = SeqData.QueryDb(SeqData.dhdConnection, strQuery, True)
         If dtsData Is Nothing Then
-            lblStatus.Text = "No columns found for table " & strSchemaName & "." & strTableName
+            WriteStatus("No columns found for table " & strSchemaName & "." & strTableName, 2, lblStatusText)
             Exit Sub
         End If
         If dtsData.Tables.Count = 0 Then Exit Sub
@@ -934,6 +958,7 @@ Public Class frmConfiguration
 
     Private Sub btnTableDefault_Click(sender As Object, e As EventArgs) Handles btnTableDefault.Click
         CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
         If lvwTables.SelectedItems.Count = 1 Then
             Dim strSelection As String = lvwTables.SelectedItems.Item(0).Tag
 
@@ -952,21 +977,25 @@ Public Class frmConfiguration
             SeqData.curStatus.TableChanged = True
             ConfigurationSave()
             TableLoad()
+            WriteStatus("Default Table Set", 0, lblStatusText)
         End If
         CursorControl()
     End Sub
 
     Private Sub btnTablesShow_Click(sender As Object, e As EventArgs) Handles btnTablesShow.Click
         CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
         DisplayXmlFile(xmlTables, tvwTable)
         CursorControl()
     End Sub
 
     Private Sub btnTableAddOrUpdate_Click(sender As Object, e As EventArgs) Handles btnTableAddOrUpdate.Click
         CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
         TableAddOrUpdate(txtTableName.Text, txtTableAlias.Text, chkTableVisible.Checked, chkTableSearch.Checked, chkTableUpdate.Checked, chkTableInsert.Checked, chkTableDelete.Checked, True)
         SeqData.curStatus.TableChanged = True
         ConfigurationSave()
+        WriteStatus("Table Saved", 0, lblStatusText)
         CursorControl()
     End Sub
 
@@ -998,6 +1027,7 @@ Public Class frmConfiguration
 
     Private Sub btnTableClear_Click(sender As Object, e As EventArgs) Handles btnTableClear.Click
         CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
         txtTableName.Text = ""
         txtTableAlias.Text = ""
         chkTableVisible.Checked = False
@@ -1009,6 +1039,7 @@ Public Class frmConfiguration
 
     Private Sub btnTableDelete_Click(sender As Object, e As EventArgs) Handles btnTableDelete.Click
         CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
         Dim strSelection As String = txtTableName.Text
 
         If strSelection.Length = 0 Then Exit Sub
@@ -1022,6 +1053,9 @@ Public Class frmConfiguration
             btnTableClear_Click(Nothing, Nothing)
             TablesLoad()
             tvwTable.Nodes.Clear()
+            WriteStatus("Table Deleted", 0, lblStatusText)
+        Else
+            WriteStatus("Unable to Delete Table", 2, lblStatusText)
         End If
         CursorControl()
     End Sub
@@ -1174,6 +1208,7 @@ Public Class frmConfiguration
 
     Private Sub btnFieldAddOrUpdate_Click(sender As Object, e As EventArgs) Handles btnFieldAddOrUpdate.Click
         CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
         FieldAddOrUpdate(SeqData.curStatus.Table, txtFieldName.Text, txtFieldAlias.Text, cbxDataType.SelectedItem, chkIdentity.Checked, chkPrimaryKey.Checked, txtFieldWidth.Text, cbxRelations.Text, txtRelatedField.Text, chkRelatedField.Checked, txtControlField.Text, txtControlValue.Text, chkControlUpdate.Checked, _
                          chkControlMode.Checked, chkDefaultButton.Checked, txtDefaultButton.Text, chkFieldList.Checked, txtFieldListOrder.Text, txtFieldListWidth.Text, chkFieldVisible.Checked, chkFieldSearch.Checked, chkFieldSearchList.Checked, chkFieldUpdate.Checked, True)
         CursorControl()
@@ -1181,6 +1216,7 @@ Public Class frmConfiguration
 
     Private Sub btnFieldClear_Click(sender As Object, e As EventArgs) Handles btnFieldClear.Click
         CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
         FieldsClear()
         CursorControl()
     End Sub
@@ -1220,7 +1256,7 @@ Public Class frmConfiguration
 
         Dim xTNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlTables, "Table", "Name", TableName)
         If xTNode Is Nothing Then
-            lblStatus.Text = "The table to which this field belongs was not found"
+            WriteStatus("The table to which this field belongs was not found", 2, lblStatusText)
             Exit Sub
         End If
 
@@ -1267,11 +1303,13 @@ Public Class frmConfiguration
         End If
         SeqData.curStatus.TableChanged = True
         ConfigurationSave()
+        WriteStatus("Field Saved", 0, lblStatusText)
 
     End Sub
 
     Private Sub btnFieldDelete_Click(sender As Object, e As EventArgs) Handles btnFieldDelete.Click
         CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
         Dim strSelection As String = txtFieldName.Text
 
         If strSelection.Length = 0 Then Exit Sub
@@ -1284,6 +1322,9 @@ Public Class frmConfiguration
             ConfigurationSave()
             FieldsClear()
             lvwTables_SelectedIndexChanged(Nothing, Nothing)
+            WriteStatus("Field Deleted", 0, lblStatusText)
+        Else
+            WriteStatus("Unable to Delete Field", 2, lblStatusText)
         End If
         CursorControl()
     End Sub
@@ -1300,10 +1341,12 @@ Public Class frmConfiguration
 
 #Region "Table Templates"
     Private Sub btnloadTemplates_Click(sender As Object, e As EventArgs) Handles btnloadTemplates.Click
+        WriteStatus("", 0, lblStatusText)
         TemplatesGet()
     End Sub
 
     Private Sub btnSearchTemplate_Click(sender As Object, e As EventArgs) Handles btnSearchTemplate.Click
+        WriteStatus("", 0, lblStatusText)
         TemplatesGet(txtSearchTemplate.Text)
     End Sub
 
@@ -1343,6 +1386,7 @@ Public Class frmConfiguration
 
     Private Sub btnUseTemplate_Click(sender As Object, e As EventArgs) Handles btnUseTemplate.Click
         CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
         xmlTables = xmlDoc
         SeqData.curStatus.TableChanged = True
         ConfigurationSave()
@@ -1353,6 +1397,7 @@ Public Class frmConfiguration
 
     Private Sub btnLoadTemplate_Click(sender As Object, e As EventArgs) Handles btnLoadTemplate.Click
         CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
         Dim loadFile1 As New OpenFileDialog
         loadFile1.Title = "Table Template File"
         loadFile1.DefaultExt = "*.xml"
@@ -1377,15 +1422,18 @@ Public Class frmConfiguration
 
     Private Sub btnBackup_Click(sender As Object, e As EventArgs) Handles btnBackup.Click
         CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
         If txtBackupLocation.Text.Length = 0 Then
-            lblStatus.Text = "A backup location is required, aborting action"
+            WriteStatus("A backup location is required, aborting action", 2, lblStatusText)
             Exit Sub
         End If
         Try
             BackupDatabase(txtBackupLocation.Text)
             SaveConfigSetting("Database", "BackupLocation", txtBackupLocation.Text, "A valid location on the server")
+            WriteStatus("Database backup is created.", 0, lblStatusText)
         Catch ex As Exception
-            MessageBox.Show("While saving the database, the following error occured: " & Environment.NewLine & ex.Message)
+            SeqData.WriteLog("While saving the database, the following error occured: " & Environment.NewLine & ex.Message, 1)
+            WriteStatus("An error occured saving the database. Please check the log", 1, lblStatusText)
         End Try
         CursorControl()
     End Sub
@@ -1402,12 +1450,13 @@ Public Class frmConfiguration
         Try
             SeqData.QueryDb(SeqData.dhdConnection, strQuery, False)
         Catch ex As Exception
-            SeqData.WriteLog(ex.Message, 1)
+            SeqData.WriteLog("Backup error database: " & ex.Message, 1)
             MessageBox.Show(ex.Message)
         End Try
     End Sub
 
     Private Sub btnBackupLocation_Click(sender As Object, e As EventArgs) Handles btnBackupLocation.Click
+        WriteStatus("", 0, lblStatusText)
         Dim fbdBackup As New FolderBrowserDialog
         fbdBackup.ShowDialog()
         txtBackupLocation.Text = fbdBackup.SelectedPath
@@ -1449,12 +1498,12 @@ Public Class frmConfiguration
         If strRelation.Length = 0 Then Exit Sub
         Dim xPNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlTables, "Table", "Name", strTableName)
         If xPNode Is Nothing Then
-            lblStatus.Text = "The Table " & strTableName & " was not found. Aborting action"
+            WriteStatus("The Table " & strTableName & " was not found. Aborting action", 2, lblStatusText)
             Exit Sub
         End If
         Dim xNode As XmlNode = SeqData.dhdText.FindXmlChildNode(xPNode, "Fields/Field", "FldName", strFieldName)
         If xNode Is Nothing Then
-            lblStatus.Text = "The Field " & strFieldName & " was not found. Aborting action"
+            WriteStatus("The Field " & strFieldName & " was not found. Aborting action", 2, lblStatusText)
             Exit Sub
         End If
         Dim xCNode As XmlNode = SeqData.dhdText.FindXmlChildNode(xNode, "Relations")
@@ -1472,7 +1521,7 @@ Public Class frmConfiguration
             SeqData.dhdText.CreateAppendAttribute(xRNode, "RelatedField", strRelatedField, True)
             SeqData.dhdText.CreateAppendAttribute(xRNode, "RelatedFieldList", blnRelatedFieldList, True)
         End If
-        lblStatus.Text = "Updating Relation completed succesfully"
+        WriteStatus("Updating Relation completed succesfully", 2, lblStatusText)
 
         tvwTable.Nodes.Clear()
         DisplayXmlNode(xPNode, tvwTable.Nodes)

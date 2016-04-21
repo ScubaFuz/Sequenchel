@@ -12,11 +12,11 @@ Public Class frmReports
 
         DebugSettings()
         SecuritySet()
-        'ReportFieldsDispose(True)
         LoadConnections()
         cbxEmailResults.SelectedIndex = 0
-        'LoadTableFields()
-        'ReportsLoad()
+        Me.lvwAvailableFields.ListViewItemSorter = New ListViewItemComparer(1)
+        Me.lvwAvailableFields.ListViewItemSorter = New ListViewItemComparer(0)
+
     End Sub
 
     Private Sub frmReports_Activated(sender As Object, e As EventArgs) Handles Me.Activated
@@ -1715,7 +1715,11 @@ Public Class frmReports
         sptReportTables.BackColor = clrControl
     End Sub
 
-    Private Sub dgvReport_DoubleClick(sender As Object, e As EventArgs) Handles dgvReport.DoubleClick
+    Private Sub lvwAvailableFields_ColumnClick(sender As Object, e As ColumnClickEventArgs) Handles lvwAvailableFields.ColumnClick
+        Me.lvwAvailableFields.ListViewItemSorter = New ListViewItemComparer(e.Column)
+    End Sub
+
+    Private Sub lvwAvailableFields_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lvwAvailableFields.SelectedIndexChanged
 
     End Sub
 End Class

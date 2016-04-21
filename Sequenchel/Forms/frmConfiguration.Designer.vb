@@ -176,7 +176,7 @@ Partial Class frmConfiguration
         Me.colTableName = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.colTableAlias = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.tpgTableTemplates = New System.Windows.Forms.TabPage()
-        Me.Button1 = New System.Windows.Forms.Button()
+        Me.tbnSearchSequenchelTemplates = New System.Windows.Forms.Button()
         Me.btnUseTemplate = New System.Windows.Forms.Button()
         Me.btnLoadTemplate = New System.Windows.Forms.Button()
         Me.lblSelectedTemplate = New System.Windows.Forms.Label()
@@ -188,9 +188,10 @@ Partial Class frmConfiguration
         Me.lstAvailableTemplates = New System.Windows.Forms.ListBox()
         Me.rtbTableTemplates = New System.Windows.Forms.RichTextBox()
         Me.btnTest = New System.Windows.Forms.Button()
-        Me.lblStatus = New System.Windows.Forms.Label()
         Me.btnClose = New System.Windows.Forms.Button()
         Me.btnCancel = New System.Windows.Forms.Button()
+        Me.lblStatusTitle = New System.Windows.Forms.Label()
+        Me.lblStatusText = New System.Windows.Forms.Label()
         Me.tabConfiguration.SuspendLayout()
         Me.tpgConnections.SuspendLayout()
         Me.tpgTableSets.SuspendLayout()
@@ -1743,7 +1744,7 @@ Partial Class frmConfiguration
         '
         'tpgTableTemplates
         '
-        Me.tpgTableTemplates.Controls.Add(Me.Button1)
+        Me.tpgTableTemplates.Controls.Add(Me.tbnSearchSequenchelTemplates)
         Me.tpgTableTemplates.Controls.Add(Me.btnUseTemplate)
         Me.tpgTableTemplates.Controls.Add(Me.btnLoadTemplate)
         Me.tpgTableTemplates.Controls.Add(Me.lblSelectedTemplate)
@@ -1761,16 +1762,16 @@ Partial Class frmConfiguration
         Me.tpgTableTemplates.Text = "Table Templates"
         Me.tpgTableTemplates.UseVisualStyleBackColor = True
         '
-        'Button1
+        'tbnSearchSequenchelTemplates
         '
-        Me.Button1.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.Button1.Enabled = False
-        Me.Button1.Location = New System.Drawing.Point(171, 704)
-        Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(140, 23)
-        Me.Button1.TabIndex = 3
-        Me.Button1.Text = "Search Sequenchel.com"
-        Me.Button1.UseVisualStyleBackColor = True
+        Me.tbnSearchSequenchelTemplates.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.tbnSearchSequenchelTemplates.Enabled = False
+        Me.tbnSearchSequenchelTemplates.Location = New System.Drawing.Point(171, 704)
+        Me.tbnSearchSequenchelTemplates.Name = "tbnSearchSequenchelTemplates"
+        Me.tbnSearchSequenchelTemplates.Size = New System.Drawing.Size(140, 23)
+        Me.tbnSearchSequenchelTemplates.TabIndex = 3
+        Me.tbnSearchSequenchelTemplates.Text = "Search Sequenchel.com"
+        Me.tbnSearchSequenchelTemplates.UseVisualStyleBackColor = True
         '
         'btnUseTemplate
         '
@@ -1873,7 +1874,7 @@ Partial Class frmConfiguration
         'btnTest
         '
         Me.btnTest.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnTest.Location = New System.Drawing.Point(367, 803)
+        Me.btnTest.Location = New System.Drawing.Point(649, -1)
         Me.btnTest.Name = "btnTest"
         Me.btnTest.Size = New System.Drawing.Size(135, 23)
         Me.btnTest.TabIndex = 7
@@ -1881,16 +1882,6 @@ Partial Class frmConfiguration
         Me.btnTest.Text = "Test"
         Me.btnTest.UseVisualStyleBackColor = True
         Me.btnTest.Visible = False
-        '
-        'lblStatus
-        '
-        Me.lblStatus.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.lblStatus.AutoSize = True
-        Me.lblStatus.Font = New System.Drawing.Font("Microsoft Sans Serif", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblStatus.Location = New System.Drawing.Point(12, 808)
-        Me.lblStatus.Name = "lblStatus"
-        Me.lblStatus.Size = New System.Drawing.Size(0, 18)
-        Me.lblStatus.TabIndex = 8
         '
         'btnClose
         '
@@ -1915,15 +1906,34 @@ Partial Class frmConfiguration
         Me.btnCancel.UseVisualStyleBackColor = True
         Me.btnCancel.Visible = False
         '
+        'lblStatusTitle
+        '
+        Me.lblStatusTitle.AutoSize = True
+        Me.lblStatusTitle.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblStatusTitle.Location = New System.Drawing.Point(13, 808)
+        Me.lblStatusTitle.Name = "lblStatusTitle"
+        Me.lblStatusTitle.Size = New System.Drawing.Size(51, 16)
+        Me.lblStatusTitle.TabIndex = 9
+        Me.lblStatusTitle.Text = "Status"
+        '
+        'lblStatusText
+        '
+        Me.lblStatusText.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblStatusText.Location = New System.Drawing.Point(70, 808)
+        Me.lblStatusText.Name = "lblStatusText"
+        Me.lblStatusText.Size = New System.Drawing.Size(432, 23)
+        Me.lblStatusText.TabIndex = 10
+        '
         'frmConfiguration
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.btnClose
         Me.ClientSize = New System.Drawing.Size(800, 842)
+        Me.Controls.Add(Me.lblStatusText)
+        Me.Controls.Add(Me.lblStatusTitle)
         Me.Controls.Add(Me.btnCancel)
         Me.Controls.Add(Me.btnClose)
-        Me.Controls.Add(Me.lblStatus)
         Me.Controls.Add(Me.btnTest)
         Me.Controls.Add(Me.tabConfiguration)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
@@ -2080,7 +2090,6 @@ Partial Class frmConfiguration
     Friend WithEvents chkImportAllTables As System.Windows.Forms.CheckBox
     Friend WithEvents lblSearchFile As System.Windows.Forms.Label
     Friend WithEvents txtSearchFile As System.Windows.Forms.TextBox
-    Friend WithEvents lblStatus As System.Windows.Forms.Label
     Friend WithEvents btnRelationAdd As System.Windows.Forms.Button
     Friend WithEvents tpgTableTemplates As System.Windows.Forms.TabPage
     Friend WithEvents lblAvailableTemplates As System.Windows.Forms.Label
@@ -2093,7 +2102,7 @@ Partial Class frmConfiguration
     Friend WithEvents btnLoadTemplate As System.Windows.Forms.Button
     Friend WithEvents lblSelectedTemplate As System.Windows.Forms.Label
     Friend WithEvents tvwSelectedTemplate As System.Windows.Forms.TreeView
-    Friend WithEvents Button1 As System.Windows.Forms.Button
+    Friend WithEvents tbnSearchSequenchelTemplates As System.Windows.Forms.Button
     Friend WithEvents txtDefaultButton As System.Windows.Forms.TextBox
     Friend WithEvents lblDefaultButton As System.Windows.Forms.Label
     Friend WithEvents chkDefaultButton As System.Windows.Forms.CheckBox
@@ -2115,4 +2124,6 @@ Partial Class frmConfiguration
     Friend WithEvents btnCancel As System.Windows.Forms.Button
     Friend WithEvents chkRelatedField As System.Windows.Forms.CheckBox
     Friend WithEvents btnShowDatabasePassword As System.Windows.Forms.Button
+    Friend WithEvents lblStatusTitle As System.Windows.Forms.Label
+    Friend WithEvents lblStatusText As System.Windows.Forms.Label
 End Class

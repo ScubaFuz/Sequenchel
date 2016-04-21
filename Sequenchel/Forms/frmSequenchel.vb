@@ -261,6 +261,21 @@ Public Class frmSequenchel
         sptFields1.Panel1.AutoScrollPosition = New Point(sptFields1.Panel1.AutoScrollPosition.X, vScrollPosition)
         sptFields1.Panel1.VerticalScroll.Value = vScrollPosition
         sptFields1.Panel2.AutoScrollPosition = New Point(sptFields1.Panel2.AutoScrollPosition.X, vScrollPosition)
+        'sptFields1.Panel2.VerticalScroll.Value = vScrollPosition
+        sptFields1.Panel1.Invalidate()
+        sptFields1.Panel2.Invalidate()
+    End Sub
+
+    Private Sub sptFields1_Panel1_MouseWheel(sender As Object, e As MouseEventArgs) Handles sptFields1.Panel1.MouseWheel
+        sptFields1.Panel1.VerticalScroll.Minimum = sptFields1.Panel2.VerticalScroll.Minimum
+        sptFields1.Panel1.VerticalScroll.Maximum = sptFields1.Panel2.VerticalScroll.Maximum
+
+        Dim vScrollPosition As Integer = sptFields1.Panel2.VerticalScroll.Value - e.Delta
+        vScrollPosition = Math.Max(sptFields1.Panel1.VerticalScroll.Minimum, vScrollPosition)
+        vScrollPosition = Math.Min(sptFields1.Panel1.VerticalScroll.Maximum, vScrollPosition)
+        sptFields1.Panel1.AutoScrollPosition = New Point(sptFields1.Panel1.AutoScrollPosition.X, vScrollPosition)
+        sptFields1.Panel1.VerticalScroll.Value = vScrollPosition
+        sptFields1.Panel2.AutoScrollPosition = New Point(sptFields1.Panel2.AutoScrollPosition.X, vScrollPosition)
         sptFields1.Panel2.VerticalScroll.Value = vScrollPosition
         sptFields1.Panel1.Invalidate()
         sptFields1.Panel2.Invalidate()

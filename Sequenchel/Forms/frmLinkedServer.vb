@@ -70,36 +70,42 @@
 
     Private Sub btnLinkedServerClear_Click(sender As Object, e As EventArgs) Handles btnLinkedServerClear.Click
         CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
         ClearAll()
         CursorControl()
     End Sub
 
     Private Sub btnColumnsImport_Click(sender As Object, e As EventArgs) Handles btnColumnsImport.Click
         CursorControl("Wait")
-        LinkedServersLoad()
+        WriteStatus("", 0, lblStatusText)
+        If LinkedServersLoad() = True Then WriteStatus("Linked Servers loaded", 0, lblStatusText)
         CursorControl()
     End Sub
 
     Private Sub lvwLinkedServers_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lvwLinkedServers.SelectedIndexChanged
         CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
         LinkedServerSelect()
         CursorControl()
     End Sub
 
     Private Sub btnLinkedServerAdd_Click(sender As Object, e As EventArgs) Handles btnLinkedServerAdd.Click
         CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
         LinkedServerAdd(True)
         CursorControl()
     End Sub
 
     Private Sub btnLinkedServerDelete_Click(sender As Object, e As EventArgs) Handles btnLinkedServerDelete.Click
         CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
         LinkedServerDelete()
         CursorControl()
     End Sub
 
     Private Sub btnLinkedServerUpdate_Click(sender As Object, e As EventArgs) Handles btnLinkedServerUpdate.Click
         CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
         LinkedServerAdd(False)
         CursorControl()
     End Sub
@@ -166,8 +172,11 @@
         chkRpcOut.Checked = True
     End Sub
 
-    Private Sub LinkedServersLoad()
-        If txtHostServer.Text.Length = 0 Then Exit Sub
+    Private Function LinkedServersLoad() As Boolean
+        If txtHostServer.Text.Length = 0 Then
+            WriteStatus("A host server is required for loading Linked Servers.", 2, lblStatusText)
+            Return False
+        End If
         strQuery = "SELECT server_id,[name] COLLATE DATABASE_DEFAULT as [Name],product,provider,data_source,location,provider_string,[catalog]"
         strQuery &= ",connect_timeout,query_timeout,is_linked,is_remote_login_enabled,is_rpc_out_enabled,is_data_access_enabled,is_collation_compatible"
         strQuery &= ",uses_remote_collation,collation_name,lazy_schema_validation,is_system,is_publisher,is_subscriber,is_distributor"
@@ -182,8 +191,8 @@
         Dim objData As DataSet = SeqData.QueryDb(SeqData.dhdConnection, strQuery, True)
         If SeqData.dhdText.DatasetCheck(objData) = False Then
             SeqData.WriteLog("No Linked Servers were found. Please check your settings. Connection:" & strDataSource, 1)
-            MessageBox.Show("No Linked Servers were found. Please check your settings." & Environment.NewLine & strDataSource)
-            Exit Sub
+            WriteStatus("No Linked Servers were found. Please check your settings.", 2, lblStatusText)
+            Return False
         End If
         lvwLinkedServers.Items.Clear()
         For intRowCount1 As Integer = 0 To objData.Tables(0).Rows.Count - 1
@@ -247,17 +256,25 @@
                     lsvItem.SubItems.Add("")
                 End If
                 lvwLinkedServers.Items.Add(lsvItem)
+                WriteStatus("Linked Server " & strDataSource & " loaded", 0, lblStatusText)
 
                 'End If
             Catch ex As Exception
-                SeqData.WriteLog("There was a problem processing the Linked Server with datasource:" & Environment.NewLine & strDataSource & Environment.NewLine & Environment.NewLine & ex.Message, 1)
-                MessageBox.Show("There was a problem processing the Linked Server with datasource:" & Environment.NewLine & strDataSource & Environment.NewLine & Environment.NewLine & ex.Message)
+                SeqData.WriteLog("There was a problem processing the Linked Server with datasource:" & strDataSource & Environment.NewLine & ex.Message, 1)
+                WriteStatus("There was a problem processing the Linked Server with datasource:" & strDataSource & ". Please check the log", 1, lblStatusText)
+                If MessageBox.Show("There was a problem processing the Linked Server with datasource:" & strDataSource & Environment.NewLine & ex.Message & Environment.NewLine & Environment.NewLine & "Do you wish to continue loading Linked Servers?", "Error Loading Linked Server", MessageBoxButtons.YesNo, MessageBoxIcon.Error) = Windows.Forms.DialogResult.No Then
+                    Return False
+                End If
             End Try
         Next
-    End Sub
+        Return True
+    End Function
 
     Private Sub LinkedServerAdd(Optional blnCreate As Boolean = True)
-        If txtDataSource.Text.Length = 0 Then Exit Sub
+        If txtDataSource.Text.Length = 0 Then
+            WriteStatus("A valid datasource is required for creating or updating a Linked Server", 2, lblStatusText)
+            Exit Sub
+        End If
         strQuery = "USE [master]; " & Environment.NewLine
         strQuery &= " DECLARE      @ServerName nvarchar(100),@LinkedServerName nvarchar(255),@DataSource nvarchar(255),@Instance nvarchar(100),@Domain nvarchar(100),@Port nvarchar(10)" & Environment.NewLine
 
@@ -296,19 +313,35 @@
         strQuery &= " EXEC master.dbo.sp_serveroption @server=@LinkedServerName, @optname=N'remote proc transaction promotion', @optvalue=N'" & chkRPTPromotion.Checked & "';" & Environment.NewLine
 
         SeqData.QueryDb(SeqData.dhdConnection, strQuery, False)
-        LinkedServersLoad()
+        If SeqData.dhdConnection.ErrorLevel = -1 Then
+            WriteStatus("There was an error saving the Linked Server. Please check the log.", 1, lblStatusText)
+            SeqData.WriteLog("There was an error saving the Linked Server. " & SeqData.dhdConnection.ErrorMessage, 1)
+        Else
+            WriteStatus("Linked Server saved", 0, lblStatusText)
+            LinkedServersLoad()
+        End If
+
     End Sub
 
     Private Sub LinkedServerDelete()
         Dim strSelection As String = txtLinkedServerName.Text
-        If strSelection.Length = 0 Then Exit Sub
+        If strSelection.Length = 0 Then
+            WriteStatus("No Linked Server was selected for deletion.", 2, lblStatusText)
+            Exit Sub
+        End If
         'If txtInstance.Text.Length > 0 Then strSelection &= "\" & txtInstance.Text
         If MessageBox.Show("This will permanently remove the Item: " & strSelection & Environment.NewLine & Core.Message.strContinue, Core.Message.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Exit Sub
 
         strQuery = "master.dbo.sp_dropserver @server=N'" & strSelection & "', @droplogins='droplogins'"
         SeqData.QueryDb(SeqData.dhdConnection, strQuery, False)
-        txtLinkedServerName.Text = ""
-        LinkedServersLoad()
+        If SeqData.dhdConnection.ErrorLevel = -1 Then
+            WriteStatus("There was an error deleting the Linked Server. Please check the log.", 1, lblStatusText)
+            SeqData.WriteLog("There was an error deleting the Linked Server. " & SeqData.dhdConnection.ErrorMessage, 1)
+        Else
+            WriteStatus("Linked Server deleted", 0, lblStatusText)
+            txtLinkedServerName.Text = ""
+            LinkedServersLoad()
+        End If
     End Sub
 
     Private Sub LinkedServerSelect()
