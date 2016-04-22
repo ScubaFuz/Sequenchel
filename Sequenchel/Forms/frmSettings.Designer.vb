@@ -197,7 +197,6 @@ Partial Class frmSettings
         Me.btnMonitorDataSpacesSave = New System.Windows.Forms.Button()
         Me.tpgFtp = New System.Windows.Forms.TabPage()
         Me.btnCreateDownloadProcedure = New System.Windows.Forms.Button()
-        Me.lblFtpStatus = New System.Windows.Forms.Label()
         Me.rtbFtpCmdshell = New System.Windows.Forms.RichTextBox()
         Me.chkCmdshell = New System.Windows.Forms.CheckBox()
         Me.lblCmdshell = New System.Windows.Forms.Label()
@@ -240,6 +239,8 @@ Partial Class frmSettings
         Me.lblSmtpServerPassword = New System.Windows.Forms.Label()
         Me.btnClose = New System.Windows.Forms.Button()
         Me.ttpDefaultLogLocation = New System.Windows.Forms.ToolTip(Me.components)
+        Me.lblStatusText = New System.Windows.Forms.Label()
+        Me.lblStatusTitle = New System.Windows.Forms.Label()
         Me.tabSettings.SuspendLayout()
         Me.tpgGeneral.SuspendLayout()
         Me.grpSecurity.SuspendLayout()
@@ -2002,7 +2003,6 @@ Partial Class frmSettings
         'tpgFtp
         '
         Me.tpgFtp.Controls.Add(Me.btnCreateDownloadProcedure)
-        Me.tpgFtp.Controls.Add(Me.lblFtpStatus)
         Me.tpgFtp.Controls.Add(Me.rtbFtpCmdshell)
         Me.tpgFtp.Controls.Add(Me.chkCmdshell)
         Me.tpgFtp.Controls.Add(Me.lblCmdshell)
@@ -2043,13 +2043,6 @@ Partial Class frmSettings
         Me.btnCreateDownloadProcedure.TabIndex = 12
         Me.btnCreateDownloadProcedure.Text = "Create Download Procedure"
         Me.btnCreateDownloadProcedure.UseVisualStyleBackColor = True
-        '
-        'lblFtpStatus
-        '
-        Me.lblFtpStatus.Location = New System.Drawing.Point(415, 137)
-        Me.lblFtpStatus.Name = "lblFtpStatus"
-        Me.lblFtpStatus.Size = New System.Drawing.Size(157, 28)
-        Me.lblFtpStatus.TabIndex = 107
         '
         'rtbFtpCmdshell
         '
@@ -2432,11 +2425,34 @@ Partial Class frmSettings
         Me.btnClose.Text = "Close"
         Me.btnClose.UseVisualStyleBackColor = True
         '
+        'lblStatusText
+        '
+        Me.lblStatusText.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lblStatusText.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblStatusText.Location = New System.Drawing.Point(66, 414)
+        Me.lblStatusText.Name = "lblStatusText"
+        Me.lblStatusText.Size = New System.Drawing.Size(451, 23)
+        Me.lblStatusText.TabIndex = 175
+        '
+        'lblStatusTitle
+        '
+        Me.lblStatusTitle.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.lblStatusTitle.AutoSize = True
+        Me.lblStatusTitle.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblStatusTitle.Location = New System.Drawing.Point(9, 414)
+        Me.lblStatusTitle.Name = "lblStatusTitle"
+        Me.lblStatusTitle.Size = New System.Drawing.Size(51, 16)
+        Me.lblStatusTitle.TabIndex = 174
+        Me.lblStatusTitle.Text = "Status"
+        '
         'frmSettings
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(637, 443)
+        Me.Controls.Add(Me.lblStatusText)
+        Me.Controls.Add(Me.lblStatusTitle)
         Me.Controls.Add(Me.btnClose)
         Me.Controls.Add(Me.tabSettings)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog
@@ -2471,6 +2487,7 @@ Partial Class frmSettings
         Me.tpgEmail.ResumeLayout(False)
         Me.tpgEmail.PerformLayout()
         Me.ResumeLayout(False)
+        Me.PerformLayout()
 
     End Sub
     Friend WithEvents tabSettings As System.Windows.Forms.TabControl
@@ -2665,7 +2682,6 @@ Partial Class frmSettings
     Friend WithEvents rtbFtpCmdshell As System.Windows.Forms.RichTextBox
     Friend WithEvents chkCmdshell As System.Windows.Forms.CheckBox
     Friend WithEvents lblCmdshell As System.Windows.Forms.Label
-    Friend WithEvents lblFtpStatus As System.Windows.Forms.Label
     Friend WithEvents btnCreateDownloadProcedure As System.Windows.Forms.Button
     Friend WithEvents chkAllowDataImport As System.Windows.Forms.CheckBox
     Friend WithEvents chkAllowSmartUpdate As System.Windows.Forms.CheckBox
@@ -2689,4 +2705,6 @@ Partial Class frmSettings
     Friend WithEvents txtTimerHours As System.Windows.Forms.TextBox
     Friend WithEvents Label4 As System.Windows.Forms.Label
     Friend WithEvents Label3 As System.Windows.Forms.Label
+    Friend WithEvents lblStatusText As System.Windows.Forms.Label
+    Friend WithEvents lblStatusTitle As System.Windows.Forms.Label
 End Class

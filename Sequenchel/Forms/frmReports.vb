@@ -62,10 +62,12 @@ Public Class frmReports
 
 #Region "Controls"
     Private Sub btnConnectionsReload_Click(sender As Object, e As EventArgs) Handles btnConnectionsReload.Click
+        WriteStatus("", 0, lblStatusText)
         LoadConnections()
     End Sub
 
     Private Sub cbxConnection_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbxConnection.SelectedIndexChanged
+        WriteStatus("", 0, lblStatusText)
         If cbxConnection.SelectedIndex >= -1 Then
             CursorControl("Wait")
             SeqData.curStatus.Connection = cbxConnection.SelectedItem
@@ -76,10 +78,12 @@ Public Class frmReports
     End Sub
 
     Private Sub btnTableSetsReload_Click(sender As Object, e As EventArgs) Handles btnTableSetsReload.Click
+        WriteStatus("", 0, lblStatusText)
         LoadTableSets()
     End Sub
 
     Private Sub cbxTableSet_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbxTableSet.SelectedIndexChanged
+        WriteStatus("", 0, lblStatusText)
         If cbxTableSet.SelectedIndex >= -1 Then
             CursorControl("Wait")
             SeqData.curStatus.TableSet = cbxTableSet.SelectedItem
@@ -92,10 +96,12 @@ Public Class frmReports
     End Sub
 
     Private Sub btnTablesReload_Click(sender As Object, e As EventArgs) Handles btnTablesReload.Click
+        WriteStatus("", 0, lblStatusText)
         LoadTables()
     End Sub
 
     Private Sub btnReportFieldAdd_Click(sender As Object, e As EventArgs) Handles btnReportFieldAdd.Click
+        WriteStatus("", 0, lblStatusText)
         For Each lvwItem As ListViewItem In lvwAvailableFields.SelectedItems
             'Dim lvwItem As ListViewItem = lvwAvailableFields.SelectedItems(intCount)
             lvwAvailableFields.Items.Remove(lvwItem)
@@ -109,6 +115,7 @@ Public Class frmReports
     End Sub
 
     Private Sub btnReportFieldRemove_Click(sender As Object, e As EventArgs) Handles btnReportFieldRemove.Click
+        WriteStatus("", 0, lblStatusText)
         For Each lvwItem As ListViewItem In lvwSelectedFields.SelectedItems
             'Dim lvwItem As ListViewItem = lvwSelectedFields.SelectedItems(0)
             lvwSelectedFields.Items.Remove(lvwItem)
@@ -123,6 +130,7 @@ Public Class frmReports
     End Sub
 
     Private Sub btnReportFieldUp_Click(sender As Object, e As EventArgs) Handles btnReportFieldUp.Click
+        WriteStatus("", 0, lblStatusText)
         If lvwSelectedFields.SelectedItems.Count = 1 Then
             Dim item As ListViewItem = lvwSelectedFields.SelectedItems(0)
             If Not item Is Nothing Then
@@ -139,6 +147,7 @@ Public Class frmReports
     End Sub
 
     Private Sub btnReportFieldDown_Click(sender As Object, e As EventArgs) Handles btnReportFieldDown.Click
+        WriteStatus("", 0, lblStatusText)
         If lvwSelectedFields.SelectedItems.Count = 1 Then
             Dim item As ListViewItem = lvwSelectedFields.SelectedItems(0)
             If Not item Is Nothing Then
@@ -179,6 +188,7 @@ Public Class frmReports
     End Sub
 
     Private Sub btnReportTableUp_Click(sender As Object, e As EventArgs) Handles btnReportTableUp.Click
+        WriteStatus("", 0, lblStatusText)
         If lvwSelectedTables.SelectedItems.Count = 1 Then
             Dim item As ListViewItem = lvwSelectedTables.SelectedItems(0)
             If Not item Is Nothing Then
@@ -195,6 +205,7 @@ Public Class frmReports
     End Sub
 
     Private Sub btnReportTableDown_Click(sender As Object, e As EventArgs) Handles btnReportTableDown.Click
+        WriteStatus("", 0, lblStatusText)
         If lvwSelectedTables.SelectedItems.Count = 1 Then
             Dim item As ListViewItem = lvwSelectedTables.SelectedItems(0)
             If Not item Is Nothing Then
@@ -454,7 +465,8 @@ Public Class frmReports
             Next
         End If
         If intCount > 9 Then
-            MessageBox.Show("You cannot have more than 9 filters on any given field. Please try to combine your filters.")
+            SeqData.WriteLog("Maximum number of filters reached. No filter created", 2)
+            WriteStatus("Maximum number of filters reached.", 2, lblStatusText)
             Exit Sub
         End If
 
@@ -682,8 +694,7 @@ Public Class frmReports
                         Next
                     Else
                         If intControlNumber > intMaxNumber Then intMaxNumber = intControlNumber
-                        'MessageBox.Show(CurStatus.ReportMaxTop & Environment.NewLine & ((intControlNumber - 1) * SeqData.CurVar.FieldHeight) & Environment.NewLine & ((intControlNumber - 1) * SeqData.CurVar.BuildMargin))
-                        ctrControl.Top = SeqData.CurStatus.ReportMaxTop + ((intControlNumber - 1) * SeqData.CurVar.FieldHeight) + ((intControlNumber - 1) * SeqData.CurVar.BuildMargin)
+                        ctrControl.Top = SeqData.curStatus.ReportMaxTop + ((intControlNumber - 1) * SeqData.curVar.FieldHeight) + ((intControlNumber - 1) * SeqData.curVar.BuildMargin)
                     End If
 
                 End If
@@ -710,7 +721,6 @@ Public Class frmReports
             'PanelsRelationSort()
             PanelRelationWidthSet()
         End If
-        '        MessageBox.Show(strTabel)
     End Sub
 
     Private Sub ReportTableRemove(strTable As String)
@@ -721,7 +731,6 @@ Public Class frmReports
         For Each strItem As ListViewItem In lvwSelectedFields.Items
             If strTable = strItem.Tag Then
                 intCount += 1
-                'MessageBox.Show(strItem.ToString)
             End If
         Next
         If intCount = 0 Then
@@ -798,7 +807,6 @@ Public Class frmReports
         For Each xmlCNode As System.Xml.XmlNode In xmlFieldList
             Dim xmlRelationList As System.Xml.XmlNodeList = SeqData.dhdText.FindXmlChildNodes(xmlCNode, "Relation")
             For Each xmlRNode As System.Xml.XmlNode In xmlRelationList
-                'MessageBox.Show(xmlCNode("Relations").Value)
                 If xmlRNode.InnerText.Length > 0 Then
                     intCount += 1
                     If intCount > 1 Then RelationUseAdd(strTable)
@@ -835,17 +843,18 @@ Public Class frmReports
 #Region "Controls"
     Private Sub btnReportClear_Click(sender As Object, e As EventArgs) Handles btnReportClear.Click
         CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
         If cbxReportName.SelectedIndex = -1 Then
             ReportFieldsDispose(False)
         End If
         cbxReportName.SelectedIndex = -1
         cbxReportName.Text = ""
-        lblStatus.Text = ""
         CursorControl()
     End Sub
 
     Private Sub btnReportCreate_Click(sender As Object, e As EventArgs) Handles btnReportCreate.Click
         CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
         If QueryShow() = True Then
             QueryExecute()
         End If
@@ -854,12 +863,14 @@ Public Class frmReports
 
     Private Sub btnQueryShow_Click(sender As Object, e As EventArgs) Handles btnQueryShow.Click
         CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
         QueryShow()
         CursorControl()
     End Sub
 
     Private Sub btnExecuteQuery_Click(sender As Object, e As EventArgs) Handles btnExecuteQuery.Click
         CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
         strQuery = rtbQuery.Text
         If strQuery.Length > 0 Then QueryExecute()
         CursorControl()
@@ -883,7 +894,7 @@ Public Class frmReports
         ReportToXML(xmlReportShow, strReportName)
         strQuery = SeqData.ReportQueryBuild(xmlReportShow, xmlTables, strReportName, SeqData.curVar.DateTimeStyle)
         If strQuery = Nothing Then
-            WriteStatus("No fields were selected. Select at least 1 field to be shown in your report", 0, lblStatus)
+            WriteStatus("No fields were selected. Select at least 1 field to be shown in your report", 2, lblStatusText)
             Return False
         End If
         'strQuery = ReportQueryBuild2()
@@ -899,6 +910,10 @@ Public Class frmReports
         tmrElapsedTime.Start()
         dtsReport = Nothing
         dtsReport = SeqData.QueryDb(SeqData.dhdConnection, strQuery, True)
+        If SeqData.dhdConnection.ErrorLevel = -1 Then
+            WriteStatus(SeqData.dhdConnection.ErrorMessage, 1, lblStatusText)
+            lblErrorMessage.Text = SeqData.ErrorMessage
+        End If
         ReportShow(dtsReport)
         tmrElapsedTime.Stop()
         tmrElapsedTime.Enabled = False
@@ -908,26 +923,27 @@ Public Class frmReports
 
     Private Sub btnSaveQuery_Click(sender As Object, e As EventArgs) Handles btnSaveQuery.Click
         CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
         SaveQuery()
         CursorControl()
     End Sub
 
     Private Sub btnLoadQuery_Click(sender As Object, e As EventArgs) Handles btnLoadQuery.Click
         CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
         LoadQuery()
         CursorControl()
     End Sub
 
     Private Sub btnReportAddOrUpdate_Click(sender As Object, e As EventArgs) Handles btnReportAddOrUpdate.Click
         CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
         If cbxReportName.Text.Length < 3 Then
-            'MessageBox.Show("Report Name must be at least 3 characters long")
-            WriteStatus("Report Name must be at least 3 characters long.", 0, lblStatus)
+            WriteStatus("Report Name must be at least 3 characters long.", 2, lblStatusText)
             Exit Sub
         End If
         If lvwSelectedFields.Items.Count = 0 Then
-            WriteStatus("No fields have been selected for this report. Aborting save.", 0, lblStatus)
-            'MessageBox.Show("No fields have been selected for this report. Aborting save.", "No fields selected", MessageBoxButtons.OK, MessageBoxIcon.Hand)
+            WriteStatus("No fields have been selected for this report. Aborting save.", 2, lblStatusText)
             Exit Sub
         End If
         ReportDelete(cbxReportName.Text)
@@ -936,14 +952,19 @@ Public Class frmReports
         If Not cbxReportName.Items.Contains(cbxReportName.Text) Then cbxReportName.Items.Add(cbxReportName.Text)
 
         If SaveXmlFile(xmlReports, SeqData.curVar.ReportSetFile, True) = False Then
-            WriteStatus("The file " & SeqData.curVar.ReportSetFile & " was not saved.", 0, lblStatus)
-            'MessageBox.Show("The file " & SeqData.curVar.ReportSetFile & " was not saved.")
+            WriteStatus("The file " & SeqData.curVar.ReportSetFile & " was not saved. please check the log.", 1, lblStatusText)
+        Else
+            WriteStatus("Report Saved", 0, lblStatusText)
         End If
         CursorControl()
     End Sub
 
     Private Sub btnReportDelete_Click(sender As Object, e As EventArgs) Handles btnReportDelete.Click
-        If MessageBox.Show("This will permanently remove the Item: " & cbxReportName.Text & Environment.NewLine & Core.Message.strContinue, Core.Message.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Exit Sub
+        WriteStatus("", 0, lblStatusText)
+        If MessageBox.Show("This will permanently remove the Item: " & cbxReportName.Text & Environment.NewLine & Core.Message.strContinue, Core.Message.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then
+            WriteStatus("Report deltion aborted.", 0, lblStatusText)
+            Exit Sub
+        End If
         CursorControl("Wait")
         ReportDelete(cbxReportName.Text)
         If cbxReportName.Items.Contains(cbxReportName.Text) Then cbxReportName.Items.Remove(cbxReportName.Text)
@@ -952,13 +973,16 @@ Public Class frmReports
         ReportFieldsDispose(False)
 
         If SaveXmlFile(xmlReports, SeqData.curVar.ReportSetFile, True) = False Then
-            MessageBox.Show("The file " & SeqData.curVar.ReportSetFile & " was not saved.")
+            WriteStatus("The file " & SeqData.curVar.ReportSetFile & " was not saved. please check the log.", 1, lblStatusText)
+        Else
+            WriteStatus("Report Deleted", 0, lblStatusText)
         End If
         CursorControl()
     End Sub
 
     Private Sub cbxReportName_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbxReportName.SelectedIndexChanged
         CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
         PanelsSuspendLayout()
         If cbxReportName.SelectedIndex >= 0 Then
             ReportFieldsDispose(False)
@@ -972,12 +996,14 @@ Public Class frmReports
 
     Private Sub btnRevertChanges_Click(sender As Object, e As EventArgs) Handles btnRevertChanges.Click
         CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
         ReportFieldsDispose(False)
         ReportLoad(xmlReports, cbxReportName.Text)
         CursorControl()
     End Sub
 
     Private Sub btnExportToFile_Click(sender As Object, e As EventArgs) Handles btnExportToFile.Click
+        WriteStatus("", 0, lblStatusText)
         If dgvReport.RowCount = 0 Then Exit Sub
         CursorControl("Wait")
         Dim strReportName As String = ""
@@ -987,7 +1013,11 @@ Public Class frmReports
             strReportName = SeqData.curStatus.Connection
         End If
         Dim strFileName As String = GetSaveFileName(strReportName)
-        ExportFile(dtsReport, strFileName)
+        If ExportFile(dtsReport, strFileName) = False Then
+            WriteStatus("There was an error saving the file. Please check the log.", 1, lblStatusText)
+        Else
+            WriteStatus("File Saved", 0, lblStatusText)
+        End If
         CursorControl()
     End Sub
 
@@ -1015,6 +1045,9 @@ Public Class frmReports
             Else
                 XmlToReport_old(xmlReports, strReportName)
             End If
+            WriteStatus("Report loaded.", 0, lblStatusText)
+        Else
+            WriteStatus("The selected report was not found.", 2, lblStatusText)
         End If
     End Sub
 
@@ -1046,7 +1079,10 @@ Public Class frmReports
                         SetCtrText(pnlReportFilterText, strTable & "." & strField, xFnode.Item("FilterText").InnerText, xFnode.Item("FilterNumber").InnerText)
                     Next
                 Catch ex As Exception
-                    If MessageBox.Show("Unable to load the Field " & strTable & "." & strField & Environment.NewLine & "Do you wish to keep loading the report?", "Error Loading Report", MessageBoxButtons.YesNo, MessageBoxIcon.Error, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.No Then Exit Sub
+                    If MessageBox.Show("Unable to load the Field " & strTable & "." & strField & Environment.NewLine & "Do you wish to keep loading the report?", "Error Loading Report", MessageBoxButtons.YesNo, MessageBoxIcon.Error, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.No Then
+                        WriteStatus("Report loading aborted.", 0, lblStatusText)
+                        Exit Sub
+                    End If
                 End Try
             Next
 
@@ -1061,6 +1097,9 @@ Public Class frmReports
                 SetCtrText(pnlRelationsJoinType, strTable, xRNode.Item("RelationJoinType").InnerText, intRelationNumber)
 
             Next
+            WriteStatus("Report loading completed.", 0, lblStatusText)
+        Else
+            WriteStatus("Selected report not found.", 0, lblStatusText)
         End If
     End Sub
 
@@ -1092,7 +1131,10 @@ Public Class frmReports
                         SetCtrText(pnlReportFilterText, strTable & "." & strField, xFnode.Item("FilterText").InnerText, xFnode.Item("FilterNumber").InnerText)
                     Next
                 Catch ex As Exception
-                    If MessageBox.Show("Unable to load the Field " & strTable & "." & strField & Environment.NewLine & "Do you wish to keep loading the report?", "Error Loading Report", MessageBoxButtons.YesNo, MessageBoxIcon.Error, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.No Then Exit Sub
+                    If MessageBox.Show("Unable to load the Field " & strTable & "." & strField & Environment.NewLine & "Do you wish to keep loading the report?", "Error Loading Report", MessageBoxButtons.YesNo, MessageBoxIcon.Error, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.No Then
+                        WriteStatus("Report loading aborted.", 0, lblStatusText)
+                        Exit Sub
+                    End If
                 End Try
             Next
 
@@ -1107,6 +1149,9 @@ Public Class frmReports
                 SetCtrText(pnlRelationsJoinType, strTable, xRNode.Item("RelationJoinType").InnerText, intRelationNumber)
 
             Next
+            WriteStatus("Report loading completed.", 0, lblStatusText)
+        Else
+            WriteStatus("Selected report not found.", 0, lblStatusText)
         End If
     End Sub
 
@@ -1203,14 +1248,15 @@ Public Class frmReports
 
         Try
             If DataSet2DataGridView(dtsData, 0, dgvReport, True) = False Then
-                MessageBox.Show("There was an error loading the report")
+                WriteStatus("There was an error loading the report", 1, lblStatusText)
             End If
             'dgvReport.DataSource = dtsData.Tables(0)
             lblListCountNumber.Text = dtsData.Tables(0).Rows.Count.ToString
             'DataGridViewColumnSize(dgvReport)
             lblErrorMessage.Text = "Command completed succesfully"
         Catch ex As Exception
-            MessageBox.Show("There was an error loading the report" & Environment.NewLine & ex.Message)
+            SeqData.WriteLog("There was an error loading the report" & Environment.NewLine & ex.Message, 1)
+            WriteStatus("There was an error loading the report. Please check the log", 1, lblStatusText)
         End Try
 
         'If strErrorMessage = "" Then lblErrorMessage.Text = "Command completed succesfully"
@@ -1363,7 +1409,13 @@ Public Class frmReports
         saveFile1.Filter = "Query Files|*.sql"
 
         If (saveFile1.ShowDialog() = System.Windows.Forms.DialogResult.OK) And (saveFile1.FileName.Length) > 0 Then
-            rtbQuery.SaveFile(saveFile1.FileName, RichTextBoxStreamType.PlainText)
+            Try
+                rtbQuery.SaveFile(saveFile1.FileName, RichTextBoxStreamType.PlainText)
+                WriteStatus("Query Saved.", 0, lblStatusText)
+            Catch ex As Exception
+                SeqData.WriteLog("There was an error saving the query. " & ex.Message, 1)
+                WriteStatus("There was an error saving the query. Please check the log.", 1, lblStatusText)
+            End Try
         End If
     End Sub
 
@@ -1374,12 +1426,18 @@ Public Class frmReports
         loadFile1.Filter = "Query Files|*.sql"
 
         If (loadFile1.ShowDialog() = System.Windows.Forms.DialogResult.OK) And (loadFile1.FileName.Length) > 0 Then
-            rtbQuery.LoadFile(loadFile1.FileName, RichTextBoxStreamType.PlainText)
+            Try
+                rtbQuery.LoadFile(loadFile1.FileName, RichTextBoxStreamType.PlainText)
+            Catch ex As Exception
+                SeqData.WriteLog("There was an error loading the query. " & ex.Message, 1)
+                WriteStatus("There was an error loading the query. Please check the log.", 1, lblStatusText)
+            End Try
         End If
     End Sub
 
     Private Sub btnDefinition_Click(sender As Object, e As EventArgs) Handles btnDefinition.Click
         CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
         tabReports.SelectedTab = tpgReportDefinition
         CursorControl()
     End Sub
@@ -1393,6 +1451,7 @@ Public Class frmReports
 
     Private Sub btnReportExport_Click(sender As Object, e As EventArgs) Handles btnReportExport.Click
         CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
         Dim xmlExport As XmlDocument = SeqData.dhdText.CreateRootDocument(Nothing, Nothing, Nothing)
         'ReportAdd(xmlExport, cbxReportName.Text)
         ReportToXML(xmlExport, cbxReportName.Text)
@@ -1423,15 +1482,17 @@ Public Class frmReports
                     SeqData.dhdText.CreateFile(sw.ToString(), strTargetFile)
                 End Using
             End Using
-
+            WriteStatus("Report exported.", 0, lblStatusText)
         Catch ex As Exception
             SeqData.WriteLog(ex.Message, 1)
+            WriteStatus("An error occured exporting the report definition. Please check the log.", 1, lblStatusText)
         End Try
         CursorControl()
     End Sub
 
     Private Sub btnReportImport_Click(sender As Object, e As EventArgs) Handles btnReportImport.Click
         CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
         Dim xmlImport As New XmlDocument
         Dim strReportName As String
         Dim loadFile1 As New OpenFileDialog
@@ -1444,20 +1505,27 @@ Public Class frmReports
                 xmlImport.Load(loadFile1.FileName)
             Catch ex As Exception
                 SeqData.WriteLog("Error importing Report: " & ex.Message, 1)
+                WriteStatus("An error occured importing the report definition. Please check the log.", 1, lblStatusText)
                 CursorControl()
                 Exit Sub
             End Try
         End If
         If loadFile1.FileName = "" Then Exit Sub
-        Dim xNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlImport, "ReportName")
-        strReportName = xNode.InnerText
-        ReportFieldsDispose(False)
-        ReportLoad(xmlImport, strReportName)
-        'XmlToReport(xmlImport, strReportName)
-        If cbxReportName.Items.Contains(strReportName) Then
-            strReportName &= "_" & FormatDateTime(Now())
-        End If
-        cbxReportName.Text = strReportName
+        Try
+            Dim xNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlImport, "ReportName")
+            strReportName = xNode.InnerText
+            ReportFieldsDispose(False)
+            ReportLoad(xmlImport, strReportName)
+            'XmlToReport(xmlImport, strReportName)
+            If cbxReportName.Items.Contains(strReportName) Then
+                strReportName &= "_" & FormatDateTime(Now())
+            End If
+            cbxReportName.Text = strReportName
+            WriteStatus("Report definition imported", 0, lblStatusText)
+        Catch ex As Exception
+            SeqData.WriteLog("Error importing Report: " & ex.Message, 1)
+            WriteStatus("An error occured importing the report definition. Please check the log.", 1, lblStatusText)
+        End Try
         CursorControl()
     End Sub
 
@@ -1506,14 +1574,15 @@ Public Class frmReports
     End Sub
 
     Private Sub btnEmailResults_Click(sender As Object, e As EventArgs) Handles btnEmailResults.Click
+        WriteStatus("", 0, lblStatusText)
         If SeqData.dhdText.SmtpServer.Length = 0 Then
-            WriteStatus("Email is not configured. No email was sent", 0, lblErrorMessage)
+            WriteStatus("Email is not configured. No email was sent", 2, lblErrorMessage)
             Exit Sub
         End If
         If dgvReport.RowCount = 0 Then Exit Sub
         SeqData.dhdText.SmtpRecipient = InputBox("Please enter a valid Email Address", "Email", SeqData.dhdText.SmtpRecipient)
         If SeqData.dhdText.SmtpRecipient = "" Or SeqData.dhdText.EmailAddressCheck(SeqData.dhdText.SmtpRecipient) = False Then
-            WriteStatus("Email address not valid. No email was sent", 0, lblErrorMessage)
+            WriteStatus("Email address not valid. No email was sent", 2, lblErrorMessage)
             Exit Sub
         End If
         CursorControl("Wait")
@@ -1551,8 +1620,10 @@ Public Class frmReports
             End Select
             SeqData.dhdText.SendSMTP(SeqData.dhdText.SmtpReply, strSenderName, SeqData.dhdText.SmtpRecipient, strRecepientName, SeqData.dhdText.SmtpReply, strSenderName, strReportName, strBody, strTargetName)
             SeqData.dhdText.DeleteFile(strTargetName)
+            WriteStatus("Email was sent.", 0, lblStatusText)
         Catch ex As Exception
-            MessageBox.Show("An error occured sending your email" & Environment.NewLine & Environment.NewLine & ex.Message)
+            SeqData.WriteLog("An error occured sending your email. " & ex.Message, 1)
+            WriteStatus("An error occured sending your email. Please check the log.", 1, lblStatusText)
         End Try
         CursorControl()
     End Sub
@@ -1719,7 +1790,4 @@ Public Class frmReports
         Me.lvwAvailableFields.ListViewItemSorter = New ListViewItemComparer(e.Column)
     End Sub
 
-    Private Sub lvwAvailableFields_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lvwAvailableFields.SelectedIndexChanged
-
-    End Sub
 End Class

@@ -130,7 +130,8 @@ Partial Class frmReports
         Me.btnTest = New System.Windows.Forms.Button()
         Me.btnClose = New System.Windows.Forms.Button()
         Me.tmrElapsedTime = New System.Windows.Forms.Timer(Me.components)
-        Me.lblStatus = New System.Windows.Forms.Label()
+        Me.lblStatusText = New System.Windows.Forms.Label()
+        Me.lblStatusTitle = New System.Windows.Forms.Label()
         Me.tabReports.SuspendLayout()
         Me.tpgReportDefinition.SuspendLayout()
         CType(Me.sptReports, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -1264,21 +1265,34 @@ Partial Class frmReports
         '
         Me.tmrElapsedTime.Interval = 1000
         '
-        'lblStatus
+        'lblStatusText
         '
-        Me.lblStatus.AutoSize = True
-        Me.lblStatus.Font = New System.Drawing.Font("Microsoft Sans Serif", 11.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblStatus.Location = New System.Drawing.Point(22, 783)
-        Me.lblStatus.Name = "lblStatus"
-        Me.lblStatus.Size = New System.Drawing.Size(0, 18)
-        Me.lblStatus.TabIndex = 171
+        Me.lblStatusText.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lblStatusText.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblStatusText.Location = New System.Drawing.Point(66, 780)
+        Me.lblStatusText.Name = "lblStatusText"
+        Me.lblStatusText.Size = New System.Drawing.Size(908, 23)
+        Me.lblStatusText.TabIndex = 173
+        '
+        'lblStatusTitle
+        '
+        Me.lblStatusTitle.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.lblStatusTitle.AutoSize = True
+        Me.lblStatusTitle.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblStatusTitle.Location = New System.Drawing.Point(9, 780)
+        Me.lblStatusTitle.Name = "lblStatusTitle"
+        Me.lblStatusTitle.Size = New System.Drawing.Size(51, 16)
+        Me.lblStatusTitle.TabIndex = 172
+        Me.lblStatusTitle.Text = "Status"
         '
         'frmReports
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(1284, 811)
-        Me.Controls.Add(Me.lblStatus)
+        Me.Controls.Add(Me.lblStatusText)
+        Me.Controls.Add(Me.lblStatusTitle)
         Me.Controls.Add(Me.btnClose)
         Me.Controls.Add(Me.btnTest)
         Me.Controls.Add(Me.lblLicense)
@@ -1430,7 +1444,6 @@ Partial Class frmReports
     Friend WithEvents chkReportShow As System.Windows.Forms.CheckBox
     Friend WithEvents cbxEmailResults As System.Windows.Forms.ComboBox
     Friend WithEvents btnEmailResults As System.Windows.Forms.Button
-    Friend WithEvents lblStatus As System.Windows.Forms.Label
     Friend WithEvents pnlSplitFields As System.Windows.Forms.Panel
     Friend WithEvents sptReportFields As System.Windows.Forms.SplitContainer
     Friend WithEvents sptReportTables As System.Windows.Forms.SplitContainer
@@ -1439,4 +1452,6 @@ Partial Class frmReports
     Friend WithEvents pnlSplitSelectedTables As System.Windows.Forms.Panel
     Friend WithEvents pnlSplitTables As System.Windows.Forms.Panel
     Friend WithEvents pnlReportButtons As System.Windows.Forms.Panel
+    Friend WithEvents lblStatusText As System.Windows.Forms.Label
+    Friend WithEvents lblStatusTitle As System.Windows.Forms.Label
 End Class

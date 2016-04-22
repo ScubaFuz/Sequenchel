@@ -726,11 +726,14 @@ Public Class Data
 
         Try
             xmlSaveDoc.LoadXml(strXmlText)
-            SaveGeneralSettingsXml = dhdText.CreateFile(strXmlText, dhdText.PathConvert(CheckFilePath(curVar.GeneralSettings)))
-            If SaveGeneralSettingsXml = False Then WriteLog("There was an error saving the General Settings file" & Environment.NewLine & dhdText.Errormessage, 1)
+            If dhdText.CreateFile(strXmlText, dhdText.PathConvert(CheckFilePath(curVar.GeneralSettings))) = False Then
+                WriteLog("There was an error saving the General Settings file" & Environment.NewLine & dhdText.Errormessage, 1)
+                Return False
+            End If
+            Return True
         Catch ex As Exception
             WriteLog(Core.Message.strXmlError & Environment.NewLine & ex.Message, 1)
-            SaveGeneralSettingsXml = Nothing
+            Return False
         End Try
     End Function
 

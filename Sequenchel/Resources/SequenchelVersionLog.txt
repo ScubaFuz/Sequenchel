@@ -8,7 +8,7 @@ Fixed: In some cases the override password was removed when saving other setting
 Fixed: Updating a saved search would show the search multiple times in the list.
 Fixed: Removing values from settings could result in an error.
 Fixed: Mousewheel now scrolls fields and labels simultaniously on main screen.
-
+Fixed: Sequenchel no longer crashes if duplicate names are used in a report.
 
 Version 3.7.0
 New: Added Commandline options to export a report or import a file without user intervention.

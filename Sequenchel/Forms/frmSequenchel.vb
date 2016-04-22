@@ -1643,4 +1643,7 @@ Public Class frmSequenchel
 
 #End Region
 
+    Private Sub dgvTable1_DoubleClick(sender As Object, e As EventArgs) Handles dgvTable1.DoubleClick
+
+    End Sub
 End Class

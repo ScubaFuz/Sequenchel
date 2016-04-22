@@ -401,6 +401,7 @@ Module Common
         Try
             SeqData.dhdText.SaveXmlFile(xmlDoc, SeqData.dhdText.PathConvert(SeqData.CheckFilePath(FilePathName)), True)
         Catch ex As Exception
+            SeqData.WriteLog("There was an error saving the XML file: " & SeqData.dhdText.PathConvert(SeqData.CheckFilePath(FilePathName)) & Environment.NewLine & ex.Message, 1)
             Return False
         End Try
         Return True
@@ -516,7 +517,7 @@ Module Common
         Return strReturn
     End Function
 
-    Friend Sub ClearDBLog(ByVal dtmDate As Date)
+    Friend Function ClearDBLog(ByVal dtmDate As Date) As Boolean
         strQuery = ""
         strQuery = "exec usp_LoggingHandle 'Del','" & FormatDate(dtmDate) & "'"
 
@@ -524,10 +525,11 @@ Module Common
             SeqData.QueryDb(SeqData.dhdMainDB, strQuery, False)
         Catch ex As Exception
             SeqData.dhdText.LogLocation = ""
-            SeqData.WriteLog(ex.Message, 1)
-            MessageBox.Show(ex.Message)
+            SeqData.WriteLog("Error deleting old logs: " & ex.Message, 1)
+            Return False
         End Try
-    End Sub
+        Return True
+    End Function
 
     Friend Function LoadTablesList(ByVal dhdConnect As DataHandler.db, Optional blnCrawlViews As Boolean = True) As List(Of String)
         strQuery = "SELECT "
@@ -556,7 +558,7 @@ Module Common
         Return ReturnValue
     End Function
 
-    Friend Sub ScheduleCreate(JobName As String, SqlCommand As String, FreqType As Integer, FreqInterval As Integer, FreqSubType As Integer, FreqSubTypeInt As Integer, StartTime As Integer, EndTime As Integer, OutputPath As String)
+    Friend Function ScheduleCreate(JobName As String, SqlCommand As String, FreqType As Integer, FreqInterval As Integer, FreqSubType As Integer, FreqSubTypeInt As Integer, StartTime As Integer, EndTime As Integer, OutputPath As String) As Boolean
         CursorControl("Wait")
 
         Dim strStartDate As String = Now.ToString("yyyyMMdd")
@@ -576,7 +578,11 @@ Module Common
         strQuery &= ",@EndTime = " & EndTime
 
         SeqData.QueryDb(SeqData.dhdMainDB, strQuery, False)
-    End Sub
+        If SeqData.dhdMainDB.ErrorLevel = -1 Then
+            Return False
+        End If
+        Return True
+    End Function
 
     Friend Function GetDefaultLogPath(dhdConnect As DataHandler.db) As String
         strQuery = "SELECT coalesce(serverproperty('InstanceDefaultLogPath'),LEFT(physical_name,LEN(physical_name) - charindex('\',reverse(physical_name)))) AS InstanceDefaultLogPath FROM sys.master_files where name = 'mastlog' "
