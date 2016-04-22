@@ -854,7 +854,7 @@ Public Class frmSequenchel
             WriteStatus("Search deleted", 0, lblStatusText)
         End If
         SearchListLoad(tblTable.TableName)
-        btnClear_Click(Nothing, Nothing)
+        FieldsClearAll(True)
         cbxSearch.SelectedIndex = -1
         cbxSearch.Text = ""
         CursorControl()
