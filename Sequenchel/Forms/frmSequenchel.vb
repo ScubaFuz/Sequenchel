@@ -106,7 +106,11 @@ Public Class frmSequenchel
     End Sub
 
     Private Sub btnTest_Click(sender As Object, e As EventArgs) Handles btnTest.Click
-        'TimedShutdown()
+        MessageBox.Show(SeqData.TestPath(1))
+        MessageBox.Show(SeqData.TestPath(2))
+        MessageBox.Show(SeqData.TestPath(3))
+        MessageBox.Show(SeqData.TestPath(4))
+        MessageBox.Show(SeqData.TestPath(5))
     End Sub
 
 #Region "Navigation"

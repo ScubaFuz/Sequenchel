@@ -32,6 +32,23 @@ Public Class Data
         End Set
     End Property
 
+    Public DataBaseOnline As Boolean = False
+
+    Public Function TestPath(intInput As Integer) As String
+        Select Case intInput
+            Case 1
+                Return System.AppDomain.CurrentDomain.BaseDirectory
+            Case 2
+                Return System.Reflection.Assembly.GetCallingAssembly.Location
+            Case 3
+                Return Reflection.Assembly.GetExecutingAssembly().Location
+            Case 4
+                Return Reflection.Assembly.GetEntryAssembly().Location
+            Case 5
+                Return IO.Path.GetDirectoryName(Diagnostics.Process.GetCurrentProcess().MainModule.FileName)
+        End Select
+        Return ""
+    End Function
 
 #Region "General"
     Public Sub SetDefaults()
@@ -83,7 +100,6 @@ Public Class Data
     End Sub
 
 #End Region
-    Public DataBaseOnline As Boolean = False
 
 #Region "DataBase"
     Public Function QueryDb(ByVal dhdConnect As DataHandler.db, ByVal strQueryData As String, ByVal ReturnValue As Boolean, Optional ByVal LogLevel As Integer = 5) As DataSet
@@ -624,7 +640,7 @@ Public Class Data
         Try
             xmlSDBASettings.LoadXml(strXmlText)
             If dhdText.CreateFile(strXmlText, System.AppDomain.CurrentDomain.BaseDirectory & dhdText.InputFile) = False Then
-                WriteLog("There was an error creating or saving the Settings file" & dhdText.Errormessage, 1)
+                WriteLog("There was an error creating or saving the Settings file. " & dhdText.Errormessage, 1)
                 ErrorMessage = "There was an error creating or saving the Settings file: " & dhdText.Errormessage
                 Return False
             End If

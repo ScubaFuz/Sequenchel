@@ -58,7 +58,7 @@ Module Common
 
         For Each Command As String In My.Application.CommandLineArgs
             Dim intPosition As Integer = Command.IndexOf(":")
-            If intPosition < 1 Then intPosition = Command.Length
+            If intPosition < 0 Then intPosition = Command.Length
             Dim strCommand As String = Command.ToLower.Substring(0, intPosition)
             Select Case strCommand
                 Case "/silent"

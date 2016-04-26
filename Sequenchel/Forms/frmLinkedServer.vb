@@ -205,15 +205,15 @@
                 intDomain = strDataSource.IndexOf(".")
                 intInstance = strDataSource.IndexOf("\")
                 intPort = strDataSource.IndexOf(",")
-                If intPort = -1 And intInstance > 0 Then
+                If intPort = -1 And intInstance > -1 Then
                     intInstanceLength = strDataSource.Length - intInstance
-                ElseIf intPort > 0 And intInstance > 0 Then
+                ElseIf intPort > -1 And intInstance > -1 Then
                     intInstanceLength = intPort - intInstance
                 End If
-                If intDomain > 0 Then
-                    If intInstance > 0 Then
+                If intDomain > -1 Then
+                    If intInstance > -1 Then
                         intDomainLength = intInstance - intDomain
-                    ElseIf intPort > 0 Then
+                    ElseIf intPort > -1 Then
                         intDomainLength = intPort - intDomain
                     Else
                         intDomainLength = strDataSource.Length - intDomain
@@ -226,9 +226,9 @@
                 If strDataSource.Length > 0 Then
                     If intDomain > 0 Then
                         lsvItem.Text = strDataSource.Substring(0, intDomain)
-                    ElseIf intInstance > 0 Then
+                    ElseIf intInstance > -1 Then
                         lsvItem.Text = strDataSource.Substring(0, intInstance)
-                    ElseIf intPort > 0 Then
+                    ElseIf intPort > -1 Then
                         lsvItem.Text = strDataSource.Substring(0, intPort)
                     Else
                         lsvItem.Text = strDataSource
@@ -238,19 +238,19 @@
                 End If
 
                 'Add Instance Name
-                If intInstance > 0 Then
+                If intInstance > -1 Then
                     lsvItem.SubItems.Add(strDataSource.Substring(intInstance + 1, intInstanceLength - 1))
                 Else
                     lsvItem.SubItems.Add("")
                 End If
                 'Add Domain Name
-                If intDomain > 0 Then
+                If intDomain > -1 Then
                     lsvItem.SubItems.Add(strDataSource.Substring(intDomain + 1, intDomainLength - 1))
                 Else
                     lsvItem.SubItems.Add("")
                 End If
                 'Add port number
-                If intPort > 0 Then
+                If intPort > -1 Then
                     lsvItem.SubItems.Add(strDataSource.Substring(intPort + 1, strDataSource.Length - intPort - 1))
                 Else
                     lsvItem.SubItems.Add("")

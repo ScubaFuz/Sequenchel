@@ -96,7 +96,7 @@ Module SeqCmd
         For Each Command As String In My.Application.CommandLineArgs
             Dim intPosition As Integer = Command.IndexOf(":")
             Dim strInput As String = ""
-            If intPosition < 1 Then
+            If intPosition < 0 Then
                 intPosition = Command.Length
             Else
                 strInput = Command.Substring(intPosition + 1, Command.Length - (intPosition + 1))
