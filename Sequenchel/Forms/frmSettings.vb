@@ -1326,8 +1326,18 @@
             CursorControl()
             Exit Sub
         End If
-        If Not (intSmallGrowth < intMediumGrowth And intMediumGrowth < intLargeGrowth And intLargeGrowth < intUpperlimit) Then
-            MessageBox.Show("Small growth should be smaller than Medium Growth." & Environment.NewLine & "Medium Growth should be smaller than Large Growth" & Environment.NewLine & "Large Growth should be smaller than Upper Growth")
+        If Not intSmallGrowth < intMediumGrowth Then
+            WriteStatus("Small growth should be smaller than Medium Growth.", 2, lblStatusText)
+            CursorControl()
+            Exit Sub
+        End If
+        If Not intMediumGrowth < intLargeGrowth Then
+            WriteStatus("Medium Growth should be smaller than Large Growth.", 2, lblStatusText)
+            CursorControl()
+            Exit Sub
+        End If
+        If Not intLargeGrowth < intUpperlimit Then
+            WriteStatus("large Growth should be smaller than Upper Limit.", 2, lblStatusText)
             CursorControl()
             Exit Sub
         End If

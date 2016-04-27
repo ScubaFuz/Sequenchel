@@ -321,6 +321,7 @@ Public Class frmSequenchel
             End If
         Next
     End Sub
+
 #End Region
 
     Private Sub AllClear(intLevel As Integer)
@@ -1647,7 +1648,4 @@ Public Class frmSequenchel
 
 #End Region
 
-    Private Sub dgvTable1_DoubleClick(sender As Object, e As EventArgs) Handles dgvTable1.DoubleClick
-
-    End Sub
 End Class
