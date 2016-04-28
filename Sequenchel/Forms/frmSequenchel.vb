@@ -609,7 +609,7 @@ Public Class frmSequenchel
                                 msfRelatedField.Width = sptFields1.Panel2.Width - msfRelatedField.Left - (SeqData.CurVar.BuildMargin * 3) - SystemInformation.VerticalScrollBarWidth
                                 msfRelatedField.Anchor = AnchorStyles.Top Or AnchorStyles.Left Or AnchorStyles.Right
                                 msfRelatedField.Visible = True
-                                If SeqData.dhdConnection.DataBaseOnline = True Then msfRelatedField.RunSearch()
+                                'If SeqData.dhdConnection.DataBaseOnline = True Then msfRelatedField.RunSearch()
                             End If
                         End If
                         FieldEnableHandler(fldField, fldField.FieldSearch)
