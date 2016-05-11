@@ -80,23 +80,32 @@ Public Class Data
     End Sub
 
     Public Sub WriteLog(ByVal strLogtext As String, ByVal intLogLevel As Integer)
+        Dim blnLogSucces As Boolean = True
         Try
             If dhdText.LogLocation.ToLower = "database" Then
-                dhdMainDB.WriteLog(strLogtext, intLogLevel, dhdText.LogLevel)
+                If dhdMainDB.WriteLog(strLogtext, intLogLevel, dhdText.LogLevel) = False Then
+                    blnLogSucces = False
+                End If
             Else
-                dhdText.WriteLog(strLogtext, intLogLevel)
+                If dhdText.WriteLog(strLogtext, intLogLevel) = False Then
+                    blnLogSucces = False
+                End If
                 'If DevMode Then MessageBox.Show(dhdText.LogFileName & Environment.NewLine & dhdText.LogLocation & Environment.NewLine & dhdText.LogLevel)
             End If
         Catch ex As Exception
-            Dim strMyDir As String
-            strMyDir = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+            blnLogSucces = False
+            'MessageBox.Show("there was an error writing to the logfile: " & Environment.NewLine & ex.Message)
+        End Try
 
+        If blnLogSucces = False Then
+            Dim strMyDir As String = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+            Dim strOrgDir As String = dhdText.LogLocation
             If dhdText.CheckDir(strMyDir & "\Sequenchel", True) = False Then dhdText.CreateDir(strMyDir & "\Sequenchel")
             If dhdText.CheckDir(strMyDir & "\Sequenchel\LOG", True) = False Then dhdText.CreateDir(strMyDir & "\Sequenchel\LOG")
             dhdText.LogFileName = "Sequenchel.Log"
             dhdText.LogLocation = strMyDir & "\Sequenchel\LOG"
-            'MessageBox.Show("there was an error writing to the logfile: " & Environment.NewLine & ex.Message)
-        End Try
+            dhdText.WriteLog("There was an error writng to the logfile at: " & strOrgDir & Environment.NewLine & dhdText.Errormessage, 1)
+        End If
     End Sub
 
 #End Region

@@ -1,3 +1,6 @@
+Version 3.7.2
+Fixed: When writing to log location doesn't work, the log location is adjusted to Documents\Sequenchel\LOG
+
 Version 3.7.1
 New: Shutdown timer to close Sequenchel after a period of inactivity.
 Enhanced: The Tab order has been made more intuitive.
