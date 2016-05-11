@@ -85,24 +85,26 @@ Public Class frmSequenchel
         End If
     End Sub
 
+#Region "Common routines"
+
     Private Sub DebugSettings()
-        If SeqData.CurVar.DebugMode Then
+        If SeqData.curVar.DebugMode Then
             btnTest.Visible = True
         End If
-        If SeqData.CurVar.DevMode Then
+        If SeqData.curVar.DevMode Then
             'mnuMain.Visible = True
         End If
     End Sub
 
     Private Sub SecuritySet()
-        If SeqData.CurVar.AllowSettingsChange = False And SeqData.CurVar.SecurityOverride = False Then mnuMainEditSettings.Enabled = False
-        If SeqData.CurVar.AllowConfiguration = False And SeqData.CurVar.SecurityOverride = False Then mnuMainEditConfiguration.Enabled = False
-        If SeqData.CurVar.AllowLinkedServers = False And SeqData.CurVar.SecurityOverride = False Then mnuMainEditLinkedServers.Enabled = False
-        If SeqData.CurVar.AllowDataImport = False And SeqData.CurVar.SecurityOverride = False Then mnuMainToolsImport.Enabled = False
-        If SeqData.CurVar.AllowSmartUpdate = False And SeqData.CurVar.SecurityOverride = False Then mnuMainToolsSmartUpdate.Enabled = False
-        If SeqData.CurVar.AllowUpdate = False And SeqData.CurVar.SecurityOverride = False Then btnUpdate.Enabled = False
-        If SeqData.CurVar.AllowInsert = False And SeqData.CurVar.SecurityOverride = False Then btnAdd.Enabled = False
-        If SeqData.CurVar.AllowDelete = False And SeqData.CurVar.SecurityOverride = False Then btnDelete.Enabled = False
+        If SeqData.curVar.AllowSettingsChange = False And SeqData.curVar.SecurityOverride = False Then mnuMainEditSettings.Enabled = False
+        If SeqData.curVar.AllowConfiguration = False And SeqData.curVar.SecurityOverride = False Then mnuMainEditConfiguration.Enabled = False
+        If SeqData.curVar.AllowLinkedServers = False And SeqData.curVar.SecurityOverride = False Then mnuMainEditLinkedServers.Enabled = False
+        If SeqData.curVar.AllowDataImport = False And SeqData.curVar.SecurityOverride = False Then mnuMainToolsImport.Enabled = False
+        If SeqData.curVar.AllowSmartUpdate = False And SeqData.curVar.SecurityOverride = False Then mnuMainToolsSmartUpdate.Enabled = False
+        If SeqData.curVar.AllowUpdate = False And SeqData.curVar.SecurityOverride = False Then btnUpdate.Enabled = False
+        If SeqData.curVar.AllowInsert = False And SeqData.curVar.SecurityOverride = False Then btnAdd.Enabled = False
+        If SeqData.curVar.AllowDelete = False And SeqData.curVar.SecurityOverride = False Then btnDelete.Enabled = False
     End Sub
 
     Private Sub btnTest_Click(sender As Object, e As EventArgs) Handles btnTest.Click
@@ -112,6 +114,8 @@ Public Class frmSequenchel
         MessageBox.Show(SeqData.TestPath(4))
         MessageBox.Show(SeqData.TestPath(5))
     End Sub
+
+#End Region
 
 #Region "Navigation"
 
@@ -199,11 +203,6 @@ Public Class frmSequenchel
         Dim frmSettingsForm As New frmSettings
         frmSettingsForm.ShowDialog(Me)
     End Sub
-
-#End Region
-
-#Region "Common routines"
-
 
 #End Region
 
@@ -526,7 +525,7 @@ Public Class frmSequenchel
                                 fldField.Top = tblTable(tblTable.Count - 2).Top + fldField.Height + SeqData.curVar.BuildMargin
                             End If
                             If fldField.top > sptFields1.Panel2.Height And fldField.Width >= sptFields1.Panel2.Width - (SeqData.curVar.BuildMargin * 3) - SystemInformation.VerticalScrollBarWidth Then
-                                fldField.width = sptFields1.Panel2.Width - (SeqData.CurVar.BuildMargin * 3) - SystemInformation.VerticalScrollBarWidth
+                                fldField.width = sptFields1.Panel2.Width - (SeqData.curVar.BuildMargin * 3) - SystemInformation.VerticalScrollBarWidth
                             End If
                             Dim lblLabel As New Label
                             arrLabels.Add(lblLabel)
@@ -601,12 +600,12 @@ Public Class frmSequenchel
                                 msfRelatedField.Top = fldField.Top
                                 msfRelatedField.Left = fldField.Left + fldField.Width + SeqData.curVar.BuildMargin
                                 If fldField.top > sptFields1.Panel2.Height Then
-                                    msfRelatedField.Width = sptFields1.Panel2.Width - msfRelatedField.Left - (SeqData.CurVar.BuildMargin * 3) - SystemInformation.VerticalScrollBarWidth
+                                    msfRelatedField.Width = sptFields1.Panel2.Width - msfRelatedField.Left - (SeqData.curVar.BuildMargin * 3) - SystemInformation.VerticalScrollBarWidth
                                 Else
-                                    msfRelatedField.Width = sptFields1.Panel2.Width - msfRelatedField.Left - (SeqData.CurVar.BuildMargin * 3)
+                                    msfRelatedField.Width = sptFields1.Panel2.Width - msfRelatedField.Left - (SeqData.curVar.BuildMargin * 3)
                                 End If
 
-                                msfRelatedField.Width = sptFields1.Panel2.Width - msfRelatedField.Left - (SeqData.CurVar.BuildMargin * 3) - SystemInformation.VerticalScrollBarWidth
+                                msfRelatedField.Width = sptFields1.Panel2.Width - msfRelatedField.Left - (SeqData.curVar.BuildMargin * 3) - SystemInformation.VerticalScrollBarWidth
                                 msfRelatedField.Anchor = AnchorStyles.Top Or AnchorStyles.Left Or AnchorStyles.Right
                                 msfRelatedField.Visible = True
                                 'If SeqData.dhdConnection.DataBaseOnline = True Then msfRelatedField.RunSearch()
@@ -683,8 +682,8 @@ Public Class frmSequenchel
 
     Private Sub SetWidth()
         For Each ctrField In sptFields1.Panel2.Controls
-            If ctrField.Left + ctrField.Width > sptFields1.Panel2.Width - (SeqData.CurVar.BuildMargin * 3) - SystemInformation.VerticalScrollBarWidth Then
-                ctrField.Width = sptFields1.Panel2.Width - ctrField.Left - (SeqData.CurVar.BuildMargin * 3) - SystemInformation.VerticalScrollBarWidth
+            If ctrField.Left + ctrField.Width > sptFields1.Panel2.Width - (SeqData.curVar.BuildMargin * 3) - SystemInformation.VerticalScrollBarWidth Then
+                ctrField.Width = sptFields1.Panel2.Width - ctrField.Left - (SeqData.curVar.BuildMargin * 3) - SystemInformation.VerticalScrollBarWidth
             End If
         Next
     End Sub

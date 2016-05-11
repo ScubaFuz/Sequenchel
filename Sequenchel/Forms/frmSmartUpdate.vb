@@ -19,24 +19,7 @@
         CursorControl()
     End Sub
 
-    Private Sub LoadConnections()
-        'AllClear(4)
-        Dim lstConnections As List(Of String) = SeqData.LoadConnectionsXml(xmlConnections)
-        If lstConnections Is Nothing Then
-            xmlConnections.RemoveAll()
-            xmlTableSets.RemoveAll()
-            SeqData.curVar.TableSetsFile = ""
-            xmlTables.RemoveAll()
-            SeqData.curVar.TablesFile = ""
-            TableClear()
-            SeqData.dhdConnection = SeqData.dhdMainDB
-            Exit Sub
-        End If
-        For Each lstItem As String In lstConnections
-            cbxConnection.Items.Add(lstItem)
-        Next
-        cbxConnection.SelectedItem = SeqData.curStatus.Connection
-    End Sub
+#Region "Controls"
 
     Private Sub cbxConnection_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbxConnection.SelectedIndexChanged
         CursorControl("Wait")
@@ -95,7 +78,7 @@
             strSQL = "SELECT ROUTINE_NAME FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_NAME = 'usp_SmartUpdate' AND ROUTINE_SCHEMA = 'dbo' AND ROUTINE_TYPE = 'PROCEDURE'"
             Dim dtsdata As DataSet = SeqData.QueryDb(SeqData.dhdConnection, strSQL, True, 5)
             If SeqData.dhdText.DatasetCheck(dtsdata) = True Then blnExists = True
-            
+
             'create procedure
             Dim MydbRef As New SDBA.DBRef
             strSQL = MydbRef.GetScript("01 dbo.usp_SmartUpdate.sql")
@@ -339,6 +322,28 @@
         End If
 
         CursorControl()
+    End Sub
+
+
+#End Region
+
+    Private Sub LoadConnections()
+        'AllClear(4)
+        Dim lstConnections As List(Of String) = SeqData.LoadConnectionsXml(xmlConnections)
+        If lstConnections Is Nothing Then
+            xmlConnections.RemoveAll()
+            xmlTableSets.RemoveAll()
+            SeqData.curVar.TableSetsFile = ""
+            xmlTables.RemoveAll()
+            SeqData.curVar.TablesFile = ""
+            TableClear()
+            SeqData.dhdConnection = SeqData.dhdMainDB
+            Exit Sub
+        End If
+        For Each lstItem As String In lstConnections
+            cbxConnection.Items.Add(lstItem)
+        Next
+        cbxConnection.SelectedItem = SeqData.curStatus.Connection
     End Sub
 
     Private Sub LoadTables()

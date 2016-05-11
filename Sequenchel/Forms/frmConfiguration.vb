@@ -68,74 +68,13 @@ Public Class frmConfiguration
         Next
     End Sub
 
-
-
 #Region "Connections"
-    Private Sub ConnectionsLoad()
-        lvwConnections.Items.Clear()
-        Dim lstXml As XmlNodeList
-        lstXml = SeqData.dhdText.FindXmlNodes(xmlConnections, "//Connection")
-        If lstXml Is Nothing Then Exit Sub
-        Dim xNode As XmlNode
-        For Each xNode In lstXml
-            Dim lsvItem As New ListViewItem
-            lsvItem.Tag = xNode.Item("ConnectionName").InnerText
-            lsvItem.Text = xNode.Item("ConnectionName").InnerText
-            lsvItem.SubItems.Add(xNode.Item("DataBaseName").InnerText)
-            lsvItem.SubItems.Add(xNode.Item("DataLocation").InnerText)
-            lvwConnections.Items.Add(lsvItem)
-
-            If xNode.Item("ConnectionName").InnerText = SeqData.curStatus.Connection Then
-                SeqData.dhdConnection.DatabaseName = xNode.Item("DataBaseName").InnerText
-                SeqData.dhdConnection.DataLocation = xNode.Item("DataLocation").InnerText
-                SeqData.dhdConnection.DataProvider = xNode.Item("DataProvider").InnerText
-                SeqData.dhdConnection.LoginMethod = xNode.Item("LoginMethod").InnerText
-                SeqData.dhdConnection.LoginName = xNode.Item("LoginName").InnerText
-                If SeqData.dhdText.CheckNodeElement(xNode, "Password") Then SeqData.dhdConnection.Password = DataHandler.txt.DecryptText(xNode.Item("Password").InnerText)
-            End If
-        Next
-        For Each lstItem In lvwConnections.Items
-            If lstItem.Tag = SeqData.curStatus.Connection Then
-                lstItem.Selected = True
-            End If
-        Next
-        'lvwConnections.SelectedItems(0)
-    End Sub
+#Region "Controls"
 
     Private Sub lvwConnections_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lvwConnections.SelectedIndexChanged
         CursorControl("Wait")
         ConnectionLoad()
         CursorControl()
-    End Sub
-
-    Private Sub ConnectionLoad()
-        If lvwConnections.SelectedItems.Count = 1 Then
-            'If CurStatus.Connection <> lvwConnections.SelectedItems.Item(0).Tag Then
-            SeqData.curStatus.ConnectionReload = True
-            SeqData.curStatus.Connection = lvwConnections.SelectedItems.Item(0).Tag
-            SeqData.LoadConnection(xmlConnections, SeqData.curStatus.Connection)
-            TableSetClear()
-            SeqData.LoadTableSetsXml(xmlTableSets)
-            'If lstTableSets Is Nothing Then
-            '    xmlTableSets.RemoveAll()
-            '    xmlTables.RemoveAll()
-            '    SeqData.curVar.TablesFile = ""
-            '    TableClear()
-            '    Exit Sub
-            'End If
-            SeqData.LoadTableSet(xmlTableSets, SeqData.curStatus.TableSet)
-            TableSetsLoad()
-            SeqData.LoadTablesXml(xmlTables)
-            TablesLoad()
-            'End If
-
-            Dim xNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlConnections, "Connection", "ConnectionName", SeqData.curStatus.Connection)
-            tvwConnection.Nodes.Clear()
-            DisplayXmlNode(xNode, tvwConnection.Nodes)
-            tvwConnection.ExpandAll()
-            ConnectionEdit()
-        End If
-
     End Sub
 
     Private Sub txtConnectionName_TextChanged(sender As Object, e As EventArgs) Handles txtConnectionName.TextChanged
@@ -163,29 +102,6 @@ Public Class frmConfiguration
         WriteStatus("", 0, lblStatusText)
         GetSqlInstances()
         CursorControl()
-    End Sub
-
-    Friend Sub GetSqlInstances()
-        Dim strResult As String = ""
-
-        Using dtSqlSources As DataTable = System.Data.Sql.SqlDataSourceEnumerator.Instance.GetDataSources()
-            If dtSqlSources.Rows.Count > 0 Then
-                lstServers.Items.Clear()
-                lstServers.Items.Add("")
-                For Each objDR As DataRow In dtSqlSources.Rows
-                    strResult = objDR("ServerName")
-                    If objDR("InstanceName").ToString.Length > 0 Then strResult &= "\" & objDR("InstanceName")
-                    lstServers.Items.Add(strResult)
-                Next
-
-                lstServers.AutoSize = True
-                lstServers.Height = lstServers.Items.Count * 15
-                lstServers.Visible = True
-                lstServers.Focus()
-            Else
-                MessageBox.Show("No servers found")
-            End If
-        End Using
     End Sub
 
     Private Sub cbxLoginMethod_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbxLoginMethod.SelectedIndexChanged
@@ -273,81 +189,6 @@ Public Class frmConfiguration
         CursorControl()
     End Sub
 
-    Private Sub ConnectionEdit()
-        If lvwConnections.SelectedItems.Count = 1 Then
-            Dim strConnection As String = lvwConnections.SelectedItems.Item(0).Tag
-
-            Dim xNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlConnections, "Connection", "ConnectionName", strConnection)
-            txtConnectionName.Text = xNode.Item("ConnectionName").InnerText
-            txtConnectionName.Tag = xNode.Item("ConnectionName").InnerText
-            txtDataBaseName.Text = xNode.Item("DataBaseName").InnerText
-            txtDataLocation.Text = xNode.Item("DataLocation").InnerText
-            txtLoginName.Tag = xNode.Item("LoginName").InnerText
-            txtLoginName.Text = xNode.Item("LoginName").InnerText
-            'txtPassword.Text = DataHandler.txt.DecryptText(xNode.Item("Password").InnerText)
-            cbxDataProvider.Text = xNode.Item("DataProvider").InnerText
-            cbxLoginMethod.Text = xNode.Item("LoginMethod").InnerText
-            txtTimeOut.Text = xNode.Item("Timeout").InnerText
-            txtTableSetsFile.Text = xNode.Item("TableSets").InnerText
-        ElseIf lvwConnections.Items.Count = 0 Then
-            txtConnectionName.Text = SeqData.dhdConnection.DatabaseName
-            txtConnectionName.Tag = SeqData.dhdConnection.DatabaseName
-            txtDataBaseName.Text = SeqData.dhdConnection.DatabaseName
-            txtDataLocation.Text = SeqData.dhdConnection.DataLocation
-            txtLoginName.Tag = SeqData.dhdConnection.LoginName
-            txtLoginName.Text = SeqData.dhdConnection.LoginName
-            'txtPassword.Text = DataHandler.txt.DecryptText(xNode.Item("Password").InnerText)
-            cbxDataProvider.Text = SeqData.dhdConnection.DataProvider
-            cbxLoginMethod.Text = SeqData.dhdConnection.LoginMethod
-            txtTimeOut.Text = SeqData.dhdConnection.ConnectionTimeout
-            txtTableSetsFile.Text = SeqData.curVar.DefaultConfigFilePath & "\" & txtConnectionName.Text.Replace(" ", "_") & "TableSets.xml"
-        End If
-    End Sub
-
-    Private Sub btnConnectionAddOrUpdate_Click(sender As Object, e As EventArgs) Handles btnConnectionAddOrUpdate.Click
-        CursorControl("Wait")
-        WriteStatus("", 0, lblStatusText)
-        ConnectionAddOrUpdate()
-        CursorControl()
-    End Sub
-
-    Private Sub ConnectionAddOrUpdate()
-        'dhdText.RemoveNode(xmlConnections, "Connections", "ConnectionName", txtConnectionName.Text)
-        Dim root As XmlElement = xmlConnections.DocumentElement
-        If root Is Nothing Then
-            xmlConnections = SeqData.dhdText.CreateRootDocument(xmlConnections, "Sequenchel", "Connections", True)
-        End If
-
-        If txtConnectionName.Text.Length < 2 Or txtDataLocation.Text.Length < 2 Or txtDataBaseName.Text.Length < 2 Or txtTableSetsFile.Text.Length < 2 Then
-            WriteStatus(Core.Message.strAllData, 2, lblStatusText)
-            Exit Sub
-        End If
-
-        Dim xCNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlConnections, "Connection", "ConnectionName", txtConnectionName.Text)
-        If xCNode Is Nothing Then
-            xCNode = SeqData.dhdText.CreateAppendElement(xmlConnections.Item("Sequenchel").Item("Connections"), "Connection", Nothing, False)
-        End If
-
-        SeqData.dhdText.CreateAppendAttribute(xCNode, "Default", "False", True)
-        SeqData.dhdText.CreateAppendElement(xCNode, "ConnectionName", txtConnectionName.Text, True)
-        SeqData.dhdText.CreateAppendElement(xCNode, "DataBaseName", txtDataBaseName.Text, True)
-        SeqData.dhdText.CreateAppendElement(xCNode, "DataLocation", txtDataLocation.Text, True)
-        SeqData.dhdText.CreateAppendElement(xCNode, "LoginName", txtLoginName.Text, True)
-        If txtPassword.Text <> txtPassword.Tag Then SeqData.dhdText.CreateAppendElement(xCNode, "Password", DataHandler.txt.EncryptText(txtPassword.Text), True)
-        SeqData.dhdText.CreateAppendElement(xCNode, "DataProvider", cbxDataProvider.Text, True)
-        SeqData.dhdText.CreateAppendElement(xCNode, "LoginMethod", cbxLoginMethod.Text, True)
-        SeqData.dhdText.CreateAppendElement(xCNode, "Timeout", txtTimeOut.Text, True)
-        SeqData.dhdText.CreateAppendElement(xCNode, "TableSets", txtTableSetsFile.Text, True)
-        SeqData.curStatus.Connection = txtConnectionName.Text
-        SeqData.curVar.TableSetsFile = txtTableSetsFile.Text
-        SeqData.curStatus.TableSet = ""
-        SeqData.curStatus.Table = ""
-        SeqData.curStatus.ConnectionChanged = True
-        ConfigurationSave()
-        ConnectionsLoad()
-        WriteStatus("Connection Saved", 0, lblStatusText)
-    End Sub
-
     Private Sub btnConnectionDefault_Click(sender As Object, e As EventArgs) Handles btnConnectionDefault.Click
         CursorControl("Wait")
         WriteStatus("", 0, lblStatusText)
@@ -388,6 +229,189 @@ Public Class frmConfiguration
         CursorControl()
     End Sub
 
+    Private Sub btnConnectionAddOrUpdate_Click(sender As Object, e As EventArgs) Handles btnConnectionAddOrUpdate.Click
+        CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
+        ConnectionAddOrUpdate()
+        CursorControl()
+    End Sub
+
+    Private Sub txtPassword_GotFocus(sender As Object, e As EventArgs) Handles txtPassword.GotFocus
+        RemoveDefaultText(sender)
+        PasswordCharSet(sender)
+    End Sub
+
+    Private Sub txtPassword_LostFocus(sender As Object, e As EventArgs) Handles txtPassword.LostFocus
+        SetDefaultText(sender)
+        PasswordCharSet(sender)
+    End Sub
+
+    Private Sub btnShowDatabasePassword_MouseDown(sender As Object, e As MouseEventArgs) Handles btnShowDatabasePassword.MouseDown
+        txtPassword.PasswordChar = Nothing
+    End Sub
+
+    Private Sub btnShowDatabasePassword_MouseLeave(sender As Object, e As EventArgs) Handles btnShowDatabasePassword.MouseLeave
+        PasswordCharSet(txtPassword)
+    End Sub
+
+    Private Sub btnShowDatabasePassword_MouseUp(sender As Object, e As MouseEventArgs) Handles btnShowDatabasePassword.MouseUp
+        PasswordCharSet(txtPassword)
+    End Sub
+
+#End Region
+
+    Private Sub ConnectionsLoad()
+        lvwConnections.Items.Clear()
+        Dim lstXml As XmlNodeList
+        lstXml = SeqData.dhdText.FindXmlNodes(xmlConnections, "//Connection")
+        If lstXml Is Nothing Then Exit Sub
+        Dim xNode As XmlNode
+        For Each xNode In lstXml
+            Dim lsvItem As New ListViewItem
+            lsvItem.Tag = xNode.Item("ConnectionName").InnerText
+            lsvItem.Text = xNode.Item("ConnectionName").InnerText
+            lsvItem.SubItems.Add(xNode.Item("DataBaseName").InnerText)
+            lsvItem.SubItems.Add(xNode.Item("DataLocation").InnerText)
+            lvwConnections.Items.Add(lsvItem)
+
+            If xNode.Item("ConnectionName").InnerText = SeqData.curStatus.Connection Then
+                SeqData.dhdConnection.DatabaseName = xNode.Item("DataBaseName").InnerText
+                SeqData.dhdConnection.DataLocation = xNode.Item("DataLocation").InnerText
+                SeqData.dhdConnection.DataProvider = xNode.Item("DataProvider").InnerText
+                SeqData.dhdConnection.LoginMethod = xNode.Item("LoginMethod").InnerText
+                SeqData.dhdConnection.LoginName = xNode.Item("LoginName").InnerText
+                If SeqData.dhdText.CheckNodeElement(xNode, "Password") Then SeqData.dhdConnection.Password = DataHandler.txt.DecryptText(xNode.Item("Password").InnerText)
+            End If
+        Next
+        For Each lstItem In lvwConnections.Items
+            If lstItem.Tag = SeqData.curStatus.Connection Then
+                lstItem.Selected = True
+            End If
+        Next
+        'lvwConnections.SelectedItems(0)
+    End Sub
+
+    Private Sub ConnectionLoad()
+        If lvwConnections.SelectedItems.Count = 1 Then
+            'If CurStatus.Connection <> lvwConnections.SelectedItems.Item(0).Tag Then
+            SeqData.curStatus.ConnectionReload = True
+            SeqData.curStatus.Connection = lvwConnections.SelectedItems.Item(0).Tag
+            SeqData.LoadConnection(xmlConnections, SeqData.curStatus.Connection)
+            TableSetClear()
+            SeqData.LoadTableSetsXml(xmlTableSets)
+            'If lstTableSets Is Nothing Then
+            '    xmlTableSets.RemoveAll()
+            '    xmlTables.RemoveAll()
+            '    SeqData.curVar.TablesFile = ""
+            '    TableClear()
+            '    Exit Sub
+            'End If
+            SeqData.LoadTableSet(xmlTableSets, SeqData.curStatus.TableSet)
+            TableSetsLoad()
+            SeqData.LoadTablesXml(xmlTables)
+            TablesLoad()
+            'End If
+
+            Dim xNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlConnections, "Connection", "ConnectionName", SeqData.curStatus.Connection)
+            tvwConnection.Nodes.Clear()
+            DisplayXmlNode(xNode, tvwConnection.Nodes)
+            tvwConnection.ExpandAll()
+            ConnectionEdit()
+        End If
+
+    End Sub
+
+    Friend Sub GetSqlInstances()
+        Dim strResult As String = ""
+
+        Using dtSqlSources As DataTable = System.Data.Sql.SqlDataSourceEnumerator.Instance.GetDataSources()
+            If dtSqlSources.Rows.Count > 0 Then
+                lstServers.Items.Clear()
+                lstServers.Items.Add("")
+                For Each objDR As DataRow In dtSqlSources.Rows
+                    strResult = objDR("ServerName")
+                    If objDR("InstanceName").ToString.Length > 0 Then strResult &= "\" & objDR("InstanceName")
+                    lstServers.Items.Add(strResult)
+                Next
+
+                lstServers.AutoSize = True
+                lstServers.Height = lstServers.Items.Count * 15
+                lstServers.Visible = True
+                lstServers.Focus()
+            Else
+                MessageBox.Show("No servers found")
+            End If
+        End Using
+    End Sub
+
+    Private Sub ConnectionEdit()
+        If lvwConnections.SelectedItems.Count = 1 Then
+            Dim strConnection As String = lvwConnections.SelectedItems.Item(0).Tag
+
+            Dim xNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlConnections, "Connection", "ConnectionName", strConnection)
+            txtConnectionName.Text = xNode.Item("ConnectionName").InnerText
+            txtConnectionName.Tag = xNode.Item("ConnectionName").InnerText
+            txtDataBaseName.Text = xNode.Item("DataBaseName").InnerText
+            txtDataLocation.Text = xNode.Item("DataLocation").InnerText
+            txtLoginName.Tag = xNode.Item("LoginName").InnerText
+            txtLoginName.Text = xNode.Item("LoginName").InnerText
+            'txtPassword.Text = DataHandler.txt.DecryptText(xNode.Item("Password").InnerText)
+            cbxDataProvider.Text = xNode.Item("DataProvider").InnerText
+            cbxLoginMethod.Text = xNode.Item("LoginMethod").InnerText
+            txtTimeOut.Text = xNode.Item("Timeout").InnerText
+            txtTableSetsFile.Text = xNode.Item("TableSets").InnerText
+        ElseIf lvwConnections.Items.Count = 0 Then
+            txtConnectionName.Text = SeqData.dhdConnection.DatabaseName
+            txtConnectionName.Tag = SeqData.dhdConnection.DatabaseName
+            txtDataBaseName.Text = SeqData.dhdConnection.DatabaseName
+            txtDataLocation.Text = SeqData.dhdConnection.DataLocation
+            txtLoginName.Tag = SeqData.dhdConnection.LoginName
+            txtLoginName.Text = SeqData.dhdConnection.LoginName
+            'txtPassword.Text = DataHandler.txt.DecryptText(xNode.Item("Password").InnerText)
+            cbxDataProvider.Text = SeqData.dhdConnection.DataProvider
+            cbxLoginMethod.Text = SeqData.dhdConnection.LoginMethod
+            txtTimeOut.Text = SeqData.dhdConnection.ConnectionTimeout
+            txtTableSetsFile.Text = SeqData.curVar.DefaultConfigFilePath & "\" & txtConnectionName.Text.Replace(" ", "_") & "TableSets.xml"
+        End If
+    End Sub
+
+    Private Sub ConnectionAddOrUpdate()
+        'dhdText.RemoveNode(xmlConnections, "Connections", "ConnectionName", txtConnectionName.Text)
+        Dim root As XmlElement = xmlConnections.DocumentElement
+        If root Is Nothing Then
+            xmlConnections = SeqData.dhdText.CreateRootDocument(xmlConnections, "Sequenchel", "Connections", True)
+        End If
+
+        If txtConnectionName.Text.Length < 2 Or txtDataLocation.Text.Length < 2 Or txtDataBaseName.Text.Length < 2 Or txtTableSetsFile.Text.Length < 2 Then
+            WriteStatus(Core.Message.strAllData, 2, lblStatusText)
+            Exit Sub
+        End If
+
+        Dim xCNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlConnections, "Connection", "ConnectionName", txtConnectionName.Text)
+        If xCNode Is Nothing Then
+            xCNode = SeqData.dhdText.CreateAppendElement(xmlConnections.Item("Sequenchel").Item("Connections"), "Connection", Nothing, False)
+        End If
+
+        SeqData.dhdText.CreateAppendAttribute(xCNode, "Default", "False", True)
+        SeqData.dhdText.CreateAppendElement(xCNode, "ConnectionName", txtConnectionName.Text, True)
+        SeqData.dhdText.CreateAppendElement(xCNode, "DataBaseName", txtDataBaseName.Text, True)
+        SeqData.dhdText.CreateAppendElement(xCNode, "DataLocation", txtDataLocation.Text, True)
+        SeqData.dhdText.CreateAppendElement(xCNode, "LoginName", txtLoginName.Text, True)
+        If txtPassword.Text <> txtPassword.Tag Then SeqData.dhdText.CreateAppendElement(xCNode, "Password", DataHandler.txt.EncryptText(txtPassword.Text), True)
+        SeqData.dhdText.CreateAppendElement(xCNode, "DataProvider", cbxDataProvider.Text, True)
+        SeqData.dhdText.CreateAppendElement(xCNode, "LoginMethod", cbxLoginMethod.Text, True)
+        SeqData.dhdText.CreateAppendElement(xCNode, "Timeout", txtTimeOut.Text, True)
+        SeqData.dhdText.CreateAppendElement(xCNode, "TableSets", txtTableSetsFile.Text, True)
+        SeqData.curStatus.Connection = txtConnectionName.Text
+        SeqData.curVar.TableSetsFile = txtTableSetsFile.Text
+        SeqData.curStatus.TableSet = ""
+        SeqData.curStatus.Table = ""
+        SeqData.curStatus.ConnectionChanged = True
+        ConfigurationSave()
+        ConnectionsLoad()
+        WriteStatus("Connection Saved", 0, lblStatusText)
+    End Sub
+
     Private Sub ConnectionDelete()
         Dim strSelection As String = txtConnectionName.Text
 
@@ -417,76 +441,15 @@ Public Class frmConfiguration
         txtTableSetsFile.Text = ""
     End Sub
 
-    Private Sub txtPassword_GotFocus(sender As Object, e As EventArgs) Handles txtPassword.GotFocus
-        RemoveDefaultText(sender)
-        PasswordCharSet(sender)
-    End Sub
-
-    Private Sub txtPassword_LostFocus(sender As Object, e As EventArgs) Handles txtPassword.LostFocus
-        SetDefaultText(sender)
-        PasswordCharSet(sender)
-    End Sub
-
-    Private Sub btnShowDatabasePassword_MouseDown(sender As Object, e As MouseEventArgs) Handles btnShowDatabasePassword.MouseDown
-        txtPassword.PasswordChar = Nothing
-    End Sub
-
-    Private Sub btnShowDatabasePassword_MouseLeave(sender As Object, e As EventArgs) Handles btnShowDatabasePassword.MouseLeave
-        PasswordCharSet(txtPassword)
-    End Sub
-
-    Private Sub btnShowDatabasePassword_MouseUp(sender As Object, e As MouseEventArgs) Handles btnShowDatabasePassword.MouseUp
-        PasswordCharSet(txtPassword)
-    End Sub
-
 #End Region
 
 #Region "TableSets"
-    Private Sub TableSetsLoad()
-        lvwTableSets.Items.Clear()
-        tvwTableSet.Nodes.Clear()
-        If xmlTableSets.OuterXml.Length = 0 Then Exit Sub
-
-        Dim lstXml As XmlNodeList
-        lstXml = SeqData.dhdText.FindXmlNodes(xmlTableSets, "//TableSet")
-        Dim xNode As XmlNode
-        For Each xNode In lstXml
-            Dim lsvItem As New ListViewItem
-            lsvItem.Tag = xNode.Item("TableSetName").InnerText
-            lsvItem.Text = xNode.Item("TableSetName").InnerText
-            lsvItem.SubItems.Add(xNode.Item("TablesFile").InnerText)
-            lvwTableSets.Items.Add(lsvItem)
-        Next
-        For Each lstItemn In lvwTableSets.Items
-            If lstItemn.Tag = SeqData.curStatus.TableSet Then
-                lstItemn.Selected = True
-            End If
-        Next
-
-    End Sub
+#Region "Controls"
 
     Private Sub lvwTableSets_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lvwTableSets.SelectedIndexChanged
         CursorControl("Wait")
         TableSetLoad()
         CursorControl()
-    End Sub
-
-    Private Sub TableSetLoad()
-        TableSetClear()
-        If lvwTableSets.SelectedItems.Count = 1 Then
-            If SeqData.curStatus.TableSet <> lvwTableSets.SelectedItems.Item(0).Tag Then
-                SeqData.curStatus.TableSetReload = True
-                SeqData.curStatus.TableSet = lvwTableSets.SelectedItems.Item(0).Tag
-                SeqData.LoadTableSet(xmlTableSets, SeqData.curStatus.TableSet)
-                SeqData.LoadTablesXml(xmlTables)
-                TablesLoad()
-            End If
-            Dim xNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlTableSets, "TableSet", "TableSetName", SeqData.curStatus.TableSet)
-            tvwTableSet.Nodes.Clear()
-            DisplayXmlNode(xNode, tvwTableSet.Nodes)
-            tvwTableSet.ExpandAll()
-            TableSetEdit()
-        End If
     End Sub
 
     Private Sub txtTableSetName_TextChanged(sender As Object, e As EventArgs) Handles txtTableSetName.TextChanged
@@ -516,45 +479,9 @@ Public Class frmConfiguration
         DefaultPathBrowse()
     End Sub
 
-    Private Sub DefaultPathBrowse()
-        Dim fbdBrowse As New FolderBrowserDialog
-        If (fbdBrowse.ShowDialog() = System.Windows.Forms.DialogResult.OK) And (fbdBrowse.SelectedPath.Length) > 0 Then
-            txtDefaultPath.Text = fbdBrowse.SelectedPath
-        End If
-    End Sub
-
     Private Sub chkDefaultValues_CheckedChanged(sender As Object, e As EventArgs) Handles chkDefaultValues.CheckedChanged
         If chkDefaultValues.Checked = True Then
             AutoFillDefaults()
-        End If
-    End Sub
-
-    Private Sub AutoFillDefaults()
-        Dim strSeparator As String = "\"
-        If txtDefaultPath.Text.Length = 0 Then
-            strSeparator = ""
-            txtOutputPath.Text = "."
-        Else
-            txtOutputPath.Text = txtDefaultPath.Text
-        End If
-        txtTablesFile.Text = txtDefaultPath.Text & strSeparator & SeqData.curStatus.Connection.Replace(" ", "_") & txtTableSetName.Text.Replace(" ", "_") & "Tables.xml"
-        txtReportsSetName.Text = txtTableSetName.Text.Replace(" ", "_") & "_Reports"
-        txtReportsFile.Text = txtDefaultPath.Text & strSeparator & SeqData.curStatus.Connection.Replace(" ", "_") & txtTableSetName.Text.Replace(" ", "_") & "Reports.xml"
-        txtSearchFile.Text = txtDefaultPath.Text & strSeparator & SeqData.curStatus.Connection.Replace(" ", "_") & txtTableSetName.Text.Replace(" ", "_") & "Search.xml"
-    End Sub
-
-    Private Sub TableSetEdit()
-        If lvwTableSets.SelectedItems.Count = 1 Then
-            Dim strSelection As String = lvwTableSets.SelectedItems.Item(0).Tag
-
-            Dim xNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlTableSets, "TableSet", "TableSetName", strSelection)
-            txtTableSetName.Text = xNode.Item("TableSetName").InnerText
-            txtTableSetName.Tag = xNode.Item("TableSetName").InnerText
-            txtTablesFile.Text = xNode.Item("TablesFile").InnerText
-            txtOutputPath.Text = xNode.Item("OutputPath").InnerText
-            txtReportsSetName.Text = xNode.Item("ReportSet").Attributes("Name").InnerText
-            txtReportsFile.Text = xNode.Item("ReportSet").InnerText
-            If SeqData.dhdText.CheckNodeElement(xNode, "Search") Then txtSearchFile.Text = xNode.Item("Search").InnerText
         End If
     End Sub
 
@@ -599,6 +526,114 @@ Public Class frmConfiguration
         CursorControl()
     End Sub
 
+    Private Sub btnTableSetClear_Click(sender As Object, e As EventArgs) Handles btnTableSetClear.Click
+        CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
+        TableSetClear()
+        CursorControl()
+    End Sub
+
+    Private Sub btnTableSetDelete_Click(sender As Object, e As EventArgs) Handles btnTableSetDelete.Click
+        CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
+        Dim strSelection As String = txtTableSetName.Text
+
+        If strSelection.Length = 0 Then Exit Sub
+        Dim xNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlTableSets, "TableSet", "TableSetName", strSelection)
+        If Not xNode Is Nothing Then
+            If MessageBox.Show("This will permanently remove the Item: " & strSelection & Environment.NewLine & Core.Message.strContinue, Core.Message.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Exit Sub
+            xNode.ParentNode.RemoveChild(xNode)
+
+            SeqData.curStatus.TableSetChanged = True
+            ConfigurationSave()
+            btnTableSetClear_Click(Nothing, Nothing)
+            TableSetsLoad()
+            WriteStatus("TableSet Deleted", 0, lblStatusText)
+        Else
+            WriteStatus("Unable to delete TableSet.", 2, lblStatusText)
+        End If
+        CursorControl()
+    End Sub
+
+#End Region
+
+    Private Sub TableSetsLoad()
+        lvwTableSets.Items.Clear()
+        tvwTableSet.Nodes.Clear()
+        If xmlTableSets.OuterXml.Length = 0 Then Exit Sub
+
+        Dim lstXml As XmlNodeList
+        lstXml = SeqData.dhdText.FindXmlNodes(xmlTableSets, "//TableSet")
+        Dim xNode As XmlNode
+        For Each xNode In lstXml
+            Dim lsvItem As New ListViewItem
+            lsvItem.Tag = xNode.Item("TableSetName").InnerText
+            lsvItem.Text = xNode.Item("TableSetName").InnerText
+            lsvItem.SubItems.Add(xNode.Item("TablesFile").InnerText)
+            lvwTableSets.Items.Add(lsvItem)
+        Next
+        For Each lstItemn In lvwTableSets.Items
+            If lstItemn.Tag = SeqData.curStatus.TableSet Then
+                lstItemn.Selected = True
+            End If
+        Next
+
+    End Sub
+
+    Private Sub TableSetLoad()
+        TableSetClear()
+        If lvwTableSets.SelectedItems.Count = 1 Then
+            If SeqData.curStatus.TableSet <> lvwTableSets.SelectedItems.Item(0).Tag Then
+                SeqData.curStatus.TableSetReload = True
+                SeqData.curStatus.TableSet = lvwTableSets.SelectedItems.Item(0).Tag
+                SeqData.LoadTableSet(xmlTableSets, SeqData.curStatus.TableSet)
+                SeqData.LoadTablesXml(xmlTables)
+                TablesLoad()
+            End If
+            Dim xNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlTableSets, "TableSet", "TableSetName", SeqData.curStatus.TableSet)
+            tvwTableSet.Nodes.Clear()
+            DisplayXmlNode(xNode, tvwTableSet.Nodes)
+            tvwTableSet.ExpandAll()
+            TableSetEdit()
+        End If
+    End Sub
+
+    Private Sub DefaultPathBrowse()
+        Dim fbdBrowse As New FolderBrowserDialog
+        If (fbdBrowse.ShowDialog() = System.Windows.Forms.DialogResult.OK) And (fbdBrowse.SelectedPath.Length) > 0 Then
+            txtDefaultPath.Text = fbdBrowse.SelectedPath
+        End If
+    End Sub
+
+    Private Sub AutoFillDefaults()
+        Dim strSeparator As String = "\"
+        If txtDefaultPath.Text.Length = 0 Then
+            strSeparator = ""
+            txtOutputPath.Text = "."
+        Else
+            txtOutputPath.Text = txtDefaultPath.Text
+        End If
+        txtTablesFile.Text = txtDefaultPath.Text & strSeparator & SeqData.curStatus.Connection.Replace(" ", "_") & txtTableSetName.Text.Replace(" ", "_") & "Tables.xml"
+        txtReportsSetName.Text = txtTableSetName.Text.Replace(" ", "_") & "_Reports"
+        txtReportsFile.Text = txtDefaultPath.Text & strSeparator & SeqData.curStatus.Connection.Replace(" ", "_") & txtTableSetName.Text.Replace(" ", "_") & "Reports.xml"
+        txtSearchFile.Text = txtDefaultPath.Text & strSeparator & SeqData.curStatus.Connection.Replace(" ", "_") & txtTableSetName.Text.Replace(" ", "_") & "Search.xml"
+    End Sub
+
+    Private Sub TableSetEdit()
+        If lvwTableSets.SelectedItems.Count = 1 Then
+            Dim strSelection As String = lvwTableSets.SelectedItems.Item(0).Tag
+
+            Dim xNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlTableSets, "TableSet", "TableSetName", strSelection)
+            txtTableSetName.Text = xNode.Item("TableSetName").InnerText
+            txtTableSetName.Tag = xNode.Item("TableSetName").InnerText
+            txtTablesFile.Text = xNode.Item("TablesFile").InnerText
+            txtOutputPath.Text = xNode.Item("OutputPath").InnerText
+            txtReportsSetName.Text = xNode.Item("ReportSet").Attributes("Name").InnerText
+            txtReportsFile.Text = xNode.Item("ReportSet").InnerText
+            If SeqData.dhdText.CheckNodeElement(xNode, "Search") Then txtSearchFile.Text = xNode.Item("Search").InnerText
+        End If
+    End Sub
+
     Private Sub TableSetAddOrUpdate()
         'dhdText.RemoveNode(xmlConnections, "Connections", "ConnectionName", txtConnectionName.Text)
         If txtTableSetName.Text.Length < 2 Or txtTablesFile.Text.Length < 2 Then
@@ -634,13 +669,6 @@ Public Class frmConfiguration
 
     End Sub
 
-    Private Sub btnTableSetClear_Click(sender As Object, e As EventArgs) Handles btnTableSetClear.Click
-        CursorControl("Wait")
-        WriteStatus("", 0, lblStatusText)
-        TableSetClear()
-        CursorControl()
-    End Sub
-
     Private Sub TableSetClear()
         txtTableSetName.Text = ""
         txtDefaultPath.Text = ""
@@ -651,80 +679,15 @@ Public Class frmConfiguration
         txtSearchFile.Text = ""
     End Sub
 
-    Private Sub btnTableSetDelete_Click(sender As Object, e As EventArgs) Handles btnTableSetDelete.Click
-        CursorControl("Wait")
-        WriteStatus("", 0, lblStatusText)
-        Dim strSelection As String = txtTableSetName.Text
-
-        If strSelection.Length = 0 Then Exit Sub
-        Dim xNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlTableSets, "TableSet", "TableSetName", strSelection)
-        If Not xNode Is Nothing Then
-            If MessageBox.Show("This will permanently remove the Item: " & strSelection & Environment.NewLine & Core.Message.strContinue, Core.Message.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Exit Sub
-            xNode.ParentNode.RemoveChild(xNode)
-
-            SeqData.curStatus.TableSetChanged = True
-            ConfigurationSave()
-            btnTableSetClear_Click(Nothing, Nothing)
-            TableSetsLoad()
-            WriteStatus("TableSet Deleted", 0, lblStatusText)
-        Else
-            WriteStatus("Unable to delete TableSet.", 2, lblStatusText)
-        End If
-        CursorControl()
-    End Sub
-
 #End Region
 
 #Region "Tables"
-
-    Private Sub TablesLoad()
-        lvwTables.Items.Clear()
-        tvwTable.Nodes.Clear()
-        If xmlTables.OuterXml.Length = 0 Then Exit Sub
-
-        Dim lstXml As XmlNodeList
-        lstXml = SeqData.dhdText.FindXmlNodes(xmlTables, "//Table")
-        If lstXml Is Nothing Then Exit Sub
-        Dim xNode As XmlNode
-        For Each xNode In lstXml
-            Dim lsvItem As New ListViewItem
-            lsvItem.Tag = xNode.Item("Name").InnerText
-            lsvItem.Text = xNode.Item("Name").InnerText
-            lsvItem.SubItems.Add(xNode.Item("Alias").InnerText)
-            lvwTables.Items.Add(lsvItem)
-        Next
-        For Each lstItemn In lvwTables.Items
-            If lstItemn.Tag = SeqData.curStatus.Table Then
-                lstItemn.Selected = True
-            End If
-        Next
-    End Sub
+#Region "Controls"
 
     Private Sub lvwTables_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lvwTables.SelectedIndexChanged
         CursorControl("Wait")
         TableLoad()
         CursorControl()
-    End Sub
-
-    Private Sub TableLoad()
-        If lvwTables.SelectedItems.Count = 1 Then
-            If SeqData.curStatus.Table <> lvwTables.SelectedItems.Item(0).Tag Then
-                SeqData.curStatus.Table = lvwTables.SelectedItems.Item(0).Tag
-                SeqData.curStatus.TableReload = True
-            End If
-
-            Dim xNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlTables, "Table", "Name", SeqData.curStatus.Table)
-            tvwTable.Nodes.Clear()
-            DisplayXmlNode(xNode, tvwTable.Nodes)
-            tvwTable.Nodes(0).Expand()
-            Try
-                tvwTable.SelectedNode = tvwTable.Nodes.Find("Fields", True)(0)
-                tvwTable.SelectedNode.Expand()
-            Catch ex As Exception
-                tvwTable.Nodes(0).LastNode.Expand()
-            End Try
-            TableEdit()
-        End If
     End Sub
 
     Private Sub btnCrawlTables_Click(sender As Object, e As EventArgs) Handles btnCrawlTables.Click
@@ -792,6 +755,138 @@ Public Class frmConfiguration
         SeqData.curStatus.TableChanged = True
         ConfigurationSave()
         CursorControl()
+    End Sub
+
+    Private Sub chkImportAllTables_CheckedChanged(sender As Object, e As EventArgs) Handles chkImportAllTables.CheckedChanged
+        If chkImportAllTables.Checked Then
+            btnColumnsImport.Text = "Import Columns for all tables"
+        Else
+            btnColumnsImport.Text = "Import Columns for this table"
+        End If
+    End Sub
+
+    Private Sub btnTableDefault_Click(sender As Object, e As EventArgs) Handles btnTableDefault.Click
+        CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
+        If lvwTables.SelectedItems.Count = 1 Then
+            Dim strSelection As String = lvwTables.SelectedItems.Item(0).Tag
+
+            'Get the ParentNode
+            Dim xNode0 As XmlNode = SeqData.dhdText.FindXmlNode(xmlTables, "Tables")
+            'Update all attribuites to False
+            Dim xNode As XmlNode
+            For Each xNode In xNode0
+                xNode.Attributes("Default").InnerText = "False"
+            Next
+
+            'Slect the correct Node
+            Dim xNode2 As XmlNode = SeqData.dhdText.FindXmlNode(xmlTables, "Table", "Name", strSelection)
+            'Update this attribute to true
+            xNode2.Attributes("Default").InnerText = "True"
+            SeqData.curStatus.TableChanged = True
+            ConfigurationSave()
+            TableLoad()
+            WriteStatus("Default Table Set", 0, lblStatusText)
+        End If
+        CursorControl()
+    End Sub
+
+    Private Sub btnTablesShow_Click(sender As Object, e As EventArgs) Handles btnTablesShow.Click
+        CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
+        DisplayXmlFile(xmlTables, tvwTable)
+        CursorControl()
+    End Sub
+
+    Private Sub btnTableAddOrUpdate_Click(sender As Object, e As EventArgs) Handles btnTableAddOrUpdate.Click
+        CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
+        TableAddOrUpdate(txtTableName.Text, txtTableAlias.Text, chkTableVisible.Checked, chkTableSearch.Checked, chkTableUpdate.Checked, chkTableInsert.Checked, chkTableDelete.Checked, True)
+        SeqData.curStatus.TableChanged = True
+        ConfigurationSave()
+        WriteStatus("Table Saved", 0, lblStatusText)
+        CursorControl()
+    End Sub
+
+    Private Sub btnTableClear_Click(sender As Object, e As EventArgs) Handles btnTableClear.Click
+        CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
+        txtTableName.Text = ""
+        txtTableAlias.Text = ""
+        chkTableVisible.Checked = False
+        chkTableSearch.Checked = False
+        chkTableUpdate.Checked = False
+        chkTableInsert.Checked = False
+        CursorControl()
+    End Sub
+
+    Private Sub btnTableDelete_Click(sender As Object, e As EventArgs) Handles btnTableDelete.Click
+        CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
+        Dim strSelection As String = txtTableName.Text
+
+        If strSelection.Length = 0 Then Exit Sub
+        Dim xNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlTables, "Table", "Name", strSelection)
+        If Not xNode Is Nothing Then
+            If MessageBox.Show("This will permanently remove the Item: " & strSelection & Environment.NewLine & Core.Message.strContinue, Core.Message.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Exit Sub
+            xNode.ParentNode.RemoveChild(xNode)
+
+            SeqData.curStatus.TableChanged = True
+            ConfigurationSave()
+            btnTableClear_Click(Nothing, Nothing)
+            TablesLoad()
+            tvwTable.Nodes.Clear()
+            WriteStatus("Table Deleted", 0, lblStatusText)
+        Else
+            WriteStatus("Unable to Delete Table", 2, lblStatusText)
+        End If
+        CursorControl()
+    End Sub
+
+#End Region
+
+    Private Sub TablesLoad()
+        lvwTables.Items.Clear()
+        tvwTable.Nodes.Clear()
+        If xmlTables.OuterXml.Length = 0 Then Exit Sub
+
+        Dim lstXml As XmlNodeList
+        lstXml = SeqData.dhdText.FindXmlNodes(xmlTables, "//Table")
+        If lstXml Is Nothing Then Exit Sub
+        Dim xNode As XmlNode
+        For Each xNode In lstXml
+            Dim lsvItem As New ListViewItem
+            lsvItem.Tag = xNode.Item("Name").InnerText
+            lsvItem.Text = xNode.Item("Name").InnerText
+            lsvItem.SubItems.Add(xNode.Item("Alias").InnerText)
+            lvwTables.Items.Add(lsvItem)
+        Next
+        For Each lstItemn In lvwTables.Items
+            If lstItemn.Tag = SeqData.curStatus.Table Then
+                lstItemn.Selected = True
+            End If
+        Next
+    End Sub
+
+    Private Sub TableLoad()
+        If lvwTables.SelectedItems.Count = 1 Then
+            If SeqData.curStatus.Table <> lvwTables.SelectedItems.Item(0).Tag Then
+                SeqData.curStatus.Table = lvwTables.SelectedItems.Item(0).Tag
+                SeqData.curStatus.TableReload = True
+            End If
+
+            Dim xNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlTables, "Table", "Name", SeqData.curStatus.Table)
+            tvwTable.Nodes.Clear()
+            DisplayXmlNode(xNode, tvwTable.Nodes)
+            tvwTable.Nodes(0).Expand()
+            Try
+                tvwTable.SelectedNode = tvwTable.Nodes.Find("Fields", True)(0)
+                tvwTable.SelectedNode.Expand()
+            Catch ex As Exception
+                tvwTable.Nodes(0).LastNode.Expand()
+            End Try
+            TableEdit()
+        End If
     End Sub
 
     Private Sub ImportOneTable(strTableName As String, strTableAlias As String, blnReload As Boolean)
@@ -932,14 +1027,6 @@ Public Class frmConfiguration
 
     End Sub
 
-    Private Sub chkImportAllTables_CheckedChanged(sender As Object, e As EventArgs) Handles chkImportAllTables.CheckedChanged
-        If chkImportAllTables.Checked Then
-            btnColumnsImport.Text = "Import Columns for all tables"
-        Else
-            btnColumnsImport.Text = "Import Columns for this table"
-        End If
-    End Sub
-
     Private Sub TableEdit()
         If lvwTables.SelectedItems.Count = 1 Then
             Dim strSelection As String = lvwTables.SelectedItems.Item(0).Tag
@@ -954,49 +1041,6 @@ Public Class frmConfiguration
             If SeqData.dhdText.CheckNodeElement(xNode, "Insert") Then chkTableInsert.Checked = xNode.Item("Insert").InnerText
             If SeqData.dhdText.CheckNodeElement(xNode, "Delete") Then chkTableDelete.Checked = xNode.Item("Delete").InnerText
         End If
-    End Sub
-
-    Private Sub btnTableDefault_Click(sender As Object, e As EventArgs) Handles btnTableDefault.Click
-        CursorControl("Wait")
-        WriteStatus("", 0, lblStatusText)
-        If lvwTables.SelectedItems.Count = 1 Then
-            Dim strSelection As String = lvwTables.SelectedItems.Item(0).Tag
-
-            'Get the ParentNode
-            Dim xNode0 As XmlNode = SeqData.dhdText.FindXmlNode(xmlTables, "Tables")
-            'Update all attribuites to False
-            Dim xNode As XmlNode
-            For Each xNode In xNode0
-                xNode.Attributes("Default").InnerText = "False"
-            Next
-
-            'Slect the correct Node
-            Dim xNode2 As XmlNode = SeqData.dhdText.FindXmlNode(xmlTables, "Table", "Name", strSelection)
-            'Update this attribute to true
-            xNode2.Attributes("Default").InnerText = "True"
-            SeqData.curStatus.TableChanged = True
-            ConfigurationSave()
-            TableLoad()
-            WriteStatus("Default Table Set", 0, lblStatusText)
-        End If
-        CursorControl()
-    End Sub
-
-    Private Sub btnTablesShow_Click(sender As Object, e As EventArgs) Handles btnTablesShow.Click
-        CursorControl("Wait")
-        WriteStatus("", 0, lblStatusText)
-        DisplayXmlFile(xmlTables, tvwTable)
-        CursorControl()
-    End Sub
-
-    Private Sub btnTableAddOrUpdate_Click(sender As Object, e As EventArgs) Handles btnTableAddOrUpdate.Click
-        CursorControl("Wait")
-        WriteStatus("", 0, lblStatusText)
-        TableAddOrUpdate(txtTableName.Text, txtTableAlias.Text, chkTableVisible.Checked, chkTableSearch.Checked, chkTableUpdate.Checked, chkTableInsert.Checked, chkTableDelete.Checked, True)
-        SeqData.curStatus.TableChanged = True
-        ConfigurationSave()
-        WriteStatus("Table Saved", 0, lblStatusText)
-        CursorControl()
     End Sub
 
     Private Sub TableAddOrUpdate(strTableName As String, strAlias As String, blnVisible As Boolean, blnSearch As Boolean, blnUpdate As Boolean, blnInsert As Boolean, blnDelete As Boolean, Optional blnReload As Boolean = True)
@@ -1025,44 +1069,11 @@ Public Class frmConfiguration
         If blnReload = True Then TablesLoad()
     End Sub
 
-    Private Sub btnTableClear_Click(sender As Object, e As EventArgs) Handles btnTableClear.Click
-        CursorControl("Wait")
-        WriteStatus("", 0, lblStatusText)
-        txtTableName.Text = ""
-        txtTableAlias.Text = ""
-        chkTableVisible.Checked = False
-        chkTableSearch.Checked = False
-        chkTableUpdate.Checked = False
-        chkTableInsert.Checked = False
-        CursorControl()
-    End Sub
-
-    Private Sub btnTableDelete_Click(sender As Object, e As EventArgs) Handles btnTableDelete.Click
-        CursorControl("Wait")
-        WriteStatus("", 0, lblStatusText)
-        Dim strSelection As String = txtTableName.Text
-
-        If strSelection.Length = 0 Then Exit Sub
-        Dim xNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlTables, "Table", "Name", strSelection)
-        If Not xNode Is Nothing Then
-            If MessageBox.Show("This will permanently remove the Item: " & strSelection & Environment.NewLine & Core.Message.strContinue, Core.Message.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Exit Sub
-            xNode.ParentNode.RemoveChild(xNode)
-
-            SeqData.curStatus.TableChanged = True
-            ConfigurationSave()
-            btnTableClear_Click(Nothing, Nothing)
-            TablesLoad()
-            tvwTable.Nodes.Clear()
-            WriteStatus("Table Deleted", 0, lblStatusText)
-        Else
-            WriteStatus("Unable to Delete Table", 2, lblStatusText)
-        End If
-        CursorControl()
-    End Sub
-
 #End Region
 
 #Region "Fields"
+#Region "Controls"
+
     Private Sub tvwTable_AfterSelect(sender As Object, e As TreeViewEventArgs) Handles tvwTable.AfterSelect
         Dim strFieldName As String = ""
         Dim strFieldValue As String = ""
@@ -1091,6 +1102,65 @@ Public Class frmConfiguration
 
         NodeDisplay(trnNode)
     End Sub
+
+    Private Sub chkFieldList_CheckedChanged(sender As Object, e As EventArgs) Handles chkFieldList.CheckedChanged
+        If chkFieldList.Checked Then
+            txtFieldListWidth.Enabled = True
+            txtFieldListOrder.Enabled = True
+        Else
+            txtFieldListWidth.Enabled = False
+            txtFieldListWidth.Text = ""
+            txtFieldListOrder.Enabled = False
+            txtFieldListOrder.Text = ""
+        End If
+    End Sub
+
+    Private Sub btnFieldAddOrUpdate_Click(sender As Object, e As EventArgs) Handles btnFieldAddOrUpdate.Click
+        CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
+        FieldAddOrUpdate(SeqData.curStatus.Table, txtFieldName.Text, txtFieldAlias.Text, cbxDataType.SelectedItem, chkIdentity.Checked, chkPrimaryKey.Checked, txtFieldWidth.Text, cbxRelations.Text, txtRelatedField.Text, chkRelatedField.Checked, txtControlField.Text, txtControlValue.Text, chkControlUpdate.Checked, _
+                         chkControlMode.Checked, chkDefaultButton.Checked, txtDefaultButton.Text, chkFieldList.Checked, txtFieldListOrder.Text, txtFieldListWidth.Text, chkFieldVisible.Checked, chkFieldSearch.Checked, chkFieldSearchList.Checked, chkFieldUpdate.Checked, True)
+        CursorControl()
+    End Sub
+
+    Private Sub btnFieldClear_Click(sender As Object, e As EventArgs) Handles btnFieldClear.Click
+        CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
+        FieldsClear()
+        CursorControl()
+    End Sub
+
+    Private Sub btnFieldDelete_Click(sender As Object, e As EventArgs) Handles btnFieldDelete.Click
+        CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
+        Dim strSelection As String = txtFieldName.Text
+
+        If strSelection.Length = 0 Then Exit Sub
+        Dim xNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlTables, "Field", "FldName", strSelection)
+        If Not xNode Is Nothing Then
+            If MessageBox.Show("This will permanently remove the Item: " & strSelection & Environment.NewLine & Core.Message.strContinue, Core.Message.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Exit Sub
+            xNode.ParentNode.RemoveChild(xNode)
+
+            SeqData.curStatus.TableChanged = True
+            ConfigurationSave()
+            FieldsClear()
+            lvwTables_SelectedIndexChanged(Nothing, Nothing)
+            WriteStatus("Field Deleted", 0, lblStatusText)
+        Else
+            WriteStatus("Unable to Delete Field", 2, lblStatusText)
+        End If
+        CursorControl()
+    End Sub
+
+    Private Sub chkFieldVisible_CheckedChanged(sender As Object, e As EventArgs) Handles chkFieldVisible.CheckedChanged
+        If chkFieldVisible.Checked = True Then
+            lblFieldWidth.Text = lblFieldWidth.Tag & "*"
+        Else
+            lblFieldWidth.Text = lblFieldWidth.Tag
+        End If
+    End Sub
+
+#End Region
 
     Private Sub NodeDisplay(PNode As TreeNode)
         FieldsClear()
@@ -1194,33 +1264,6 @@ Public Class frmConfiguration
         Next
     End Sub
 
-    Private Sub chkFieldList_CheckedChanged(sender As Object, e As EventArgs) Handles chkFieldList.CheckedChanged
-        If chkFieldList.Checked Then
-            txtFieldListWidth.Enabled = True
-            txtFieldListOrder.Enabled = True
-        Else
-            txtFieldListWidth.Enabled = False
-            txtFieldListWidth.Text = ""
-            txtFieldListOrder.Enabled = False
-            txtFieldListOrder.Text = ""
-        End If
-    End Sub
-
-    Private Sub btnFieldAddOrUpdate_Click(sender As Object, e As EventArgs) Handles btnFieldAddOrUpdate.Click
-        CursorControl("Wait")
-        WriteStatus("", 0, lblStatusText)
-        FieldAddOrUpdate(SeqData.curStatus.Table, txtFieldName.Text, txtFieldAlias.Text, cbxDataType.SelectedItem, chkIdentity.Checked, chkPrimaryKey.Checked, txtFieldWidth.Text, cbxRelations.Text, txtRelatedField.Text, chkRelatedField.Checked, txtControlField.Text, txtControlValue.Text, chkControlUpdate.Checked, _
-                         chkControlMode.Checked, chkDefaultButton.Checked, txtDefaultButton.Text, chkFieldList.Checked, txtFieldListOrder.Text, txtFieldListWidth.Text, chkFieldVisible.Checked, chkFieldSearch.Checked, chkFieldSearchList.Checked, chkFieldUpdate.Checked, True)
-        CursorControl()
-    End Sub
-
-    Private Sub btnFieldClear_Click(sender As Object, e As EventArgs) Handles btnFieldClear.Click
-        CursorControl("Wait")
-        WriteStatus("", 0, lblStatusText)
-        FieldsClear()
-        CursorControl()
-    End Sub
-
     Private Sub FieldsClear()
         txtFieldName.Tag = ""
         txtFieldName.Text = ""
@@ -1307,39 +1350,11 @@ Public Class frmConfiguration
 
     End Sub
 
-    Private Sub btnFieldDelete_Click(sender As Object, e As EventArgs) Handles btnFieldDelete.Click
-        CursorControl("Wait")
-        WriteStatus("", 0, lblStatusText)
-        Dim strSelection As String = txtFieldName.Text
-
-        If strSelection.Length = 0 Then Exit Sub
-        Dim xNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlTables, "Field", "FldName", strSelection)
-        If Not xNode Is Nothing Then
-            If MessageBox.Show("This will permanently remove the Item: " & strSelection & Environment.NewLine & Core.Message.strContinue, Core.Message.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Exit Sub
-            xNode.ParentNode.RemoveChild(xNode)
-
-            SeqData.curStatus.TableChanged = True
-            ConfigurationSave()
-            FieldsClear()
-            lvwTables_SelectedIndexChanged(Nothing, Nothing)
-            WriteStatus("Field Deleted", 0, lblStatusText)
-        Else
-            WriteStatus("Unable to Delete Field", 2, lblStatusText)
-        End If
-        CursorControl()
-    End Sub
-
-    Private Sub chkFieldVisible_CheckedChanged(sender As Object, e As EventArgs) Handles chkFieldVisible.CheckedChanged
-        If chkFieldVisible.Checked = True Then
-            lblFieldWidth.Text = lblFieldWidth.Tag & "*"
-        Else
-            lblFieldWidth.Text = lblFieldWidth.Tag
-        End If
-    End Sub
-
 #End Region
 
 #Region "Table Templates"
+#Region "Controls"
+
     Private Sub btnloadTemplates_Click(sender As Object, e As EventArgs) Handles btnloadTemplates.Click
         WriteStatus("", 0, lblStatusText)
         TemplatesGet()
@@ -1350,38 +1365,12 @@ Public Class frmConfiguration
         TemplatesGet(txtSearchTemplate.Text)
     End Sub
 
-
-    Private Sub TemplatesGet(Optional strSearch As String = "")
-        Try
-            lstAvailableTemplates.Items.Clear()
-            Dim MydbRef As New SDBA.DBRef
-            Dim arrScripts(100) As String
-            arrScripts = MydbRef.GetTemplateList()
-            For intCount As Integer = 0 To arrScripts.GetUpperBound(0)
-                If strSearch = "" Or arrScripts(intCount).ToString.ToLower.Contains(strSearch.ToLower) = True Then
-                    lstAvailableTemplates.Items.Add(arrScripts(intCount))
-                End If
-            Next
-        Catch ex As Exception
-            SeqData.WriteLog(ex.Message, 1)
-        End Try
-
-    End Sub
-
     Private Sub lstAvailableTemplates_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lstAvailableTemplates.SelectedIndexChanged
         CursorControl("Wait")
         Dim MydbRef As New SDBA.DBRef
         xmlDoc.LoadXml(MydbRef.GetScript(lstAvailableTemplates.SelectedItem))
         TemplateShow()
         CursorControl()
-    End Sub
-
-    Private Sub TemplateShow()
-        Dim xNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlDoc, "Tables")
-        tvwSelectedTemplate.Nodes.Clear()
-        If xNode Is Nothing Then Exit Sub
-        DisplayXmlNode(xNode, tvwSelectedTemplate.Nodes)
-        tvwSelectedTemplate.Nodes(0).Expand()
     End Sub
 
     Private Sub btnUseTemplate_Click(sender As Object, e As EventArgs) Handles btnUseTemplate.Click
@@ -1410,6 +1399,33 @@ Public Class frmConfiguration
             tvwSelectedTemplate.Nodes.Clear()
         End If
         CursorControl()
+    End Sub
+
+#End Region
+
+    Private Sub TemplatesGet(Optional strSearch As String = "")
+        Try
+            lstAvailableTemplates.Items.Clear()
+            Dim MydbRef As New SDBA.DBRef
+            Dim arrScripts(100) As String
+            arrScripts = MydbRef.GetTemplateList()
+            For intCount As Integer = 0 To arrScripts.GetUpperBound(0)
+                If strSearch = "" Or arrScripts(intCount).ToString.ToLower.Contains(strSearch.ToLower) = True Then
+                    lstAvailableTemplates.Items.Add(arrScripts(intCount))
+                End If
+            Next
+        Catch ex As Exception
+            SeqData.WriteLog(ex.Message, 1)
+        End Try
+
+    End Sub
+
+    Private Sub TemplateShow()
+        Dim xNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlDoc, "Tables")
+        tvwSelectedTemplate.Nodes.Clear()
+        If xNode Is Nothing Then Exit Sub
+        DisplayXmlNode(xNode, tvwSelectedTemplate.Nodes)
+        tvwSelectedTemplate.Nodes(0).Expand()
     End Sub
 
 #End Region

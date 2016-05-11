@@ -5,6 +5,8 @@ Public Class frmImport
         LoadDefaults()
     End Sub
 
+#Region "Controls"
+
     Private Sub btnSelectFile_Click(sender As Object, e As EventArgs) Handles btnSelectFile.Click
         CursorControl("Wait")
         WriteStatus("", 0, lblStatusText)
@@ -46,6 +48,59 @@ Public Class frmImport
         End Try
         CursorControl()
     End Sub
+
+    Private Sub chkDatabase_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles chkDatabase.CheckedChanged
+        Checkfields()
+    End Sub
+
+    Private Sub chkFile_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles chkFile.CheckedChanged
+        Checkfields()
+    End Sub
+
+    Private Sub chkWinAuth_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles chkWinAuth.CheckedChanged
+        Checkfields()
+    End Sub
+
+    Private Sub btnPreviousTable_Click(sender As Object, e As EventArgs) Handles btnPreviousTable.Click
+        CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
+        DisplayData(btnPreviousTable.Tag)
+        CursorControl()
+    End Sub
+
+    Private Sub btnNextTable_Click(sender As Object, e As EventArgs) Handles btnNextTable.Click
+        CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
+        DisplayData(btnNextTable.Tag)
+        CursorControl()
+    End Sub
+
+    Private Sub chkImportTable_CheckedChanged(sender As Object, e As EventArgs) Handles chkUploadTable.CheckedChanged
+        DataTableSetExtendedProperty(dgvImport.DataSource, chkUploadTable.Checked)
+    End Sub
+
+    Private Sub chkCovertToText_CheckedChanged(sender As Object, e As EventArgs) Handles chkCovertToText.CheckedChanged
+        SeqData.curVar.ConvertToText = chkCovertToText.Checked
+    End Sub
+
+    Private Sub chkCovertToNull_CheckedChanged(sender As Object, e As EventArgs) Handles chkCovertToNull.CheckedChanged
+        SeqData.curVar.ConvertToNull = chkCovertToNull.Checked
+    End Sub
+
+    Private Sub txtDelimiter_MouseHover(sender As Object, e As EventArgs) Handles txtDelimiter.MouseHover
+        txtDelimiterShow.Text = txtDelimiter.Text
+        txtDelimiterShow.Visible = True
+    End Sub
+
+    Private Sub txtDelimiter_MouseLeave(sender As Object, e As EventArgs) Handles txtDelimiter.MouseLeave
+        txtDelimiterShow.Visible = False
+    End Sub
+
+    Private Sub txtDelimiter_TextChanged(sender As Object, e As EventArgs) Handles txtDelimiter.TextChanged
+        txtDelimiterShow.Text = txtDelimiter.Text
+    End Sub
+
+#End Region
 
     Private Sub LoadDefaults()
         txtServer.Text = SeqData.dhdConnection.DataLocation
@@ -219,36 +274,6 @@ Public Class frmImport
         End If
     End Sub
 
-    Private Sub chkDatabase_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles chkDatabase.CheckedChanged
-        Checkfields()
-    End Sub
-
-    Private Sub chkFile_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles chkFile.CheckedChanged
-        Checkfields()
-    End Sub
-
-    Private Sub chkWinAuth_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles chkWinAuth.CheckedChanged
-        Checkfields()
-    End Sub
-
-    Private Sub btnPreviousTable_Click(sender As Object, e As EventArgs) Handles btnPreviousTable.Click
-        CursorControl("Wait")
-        WriteStatus("", 0, lblStatusText)
-        DisplayData(btnPreviousTable.Tag)
-        CursorControl()
-    End Sub
-
-    Private Sub btnNextTable_Click(sender As Object, e As EventArgs) Handles btnNextTable.Click
-        CursorControl("Wait")
-        WriteStatus("", 0, lblStatusText)
-        DisplayData(btnNextTable.Tag)
-        CursorControl()
-    End Sub
-
-    Private Sub chkImportTable_CheckedChanged(sender As Object, e As EventArgs) Handles chkUploadTable.CheckedChanged
-        DataTableSetExtendedProperty(dgvImport.DataSource, chkUploadTable.Checked)
-    End Sub
-
     Private Sub DataTableSetExtendedProperty(dttInput As DataTable, blnExportTable As Boolean)
         If dttInput Is Nothing Then Exit Sub
         If dttInput.ExtendedProperties.Count = 0 Then
@@ -276,24 +301,4 @@ Public Class frmImport
         End If
     End Function
 
-    Private Sub chkCovertToText_CheckedChanged(sender As Object, e As EventArgs) Handles chkCovertToText.CheckedChanged
-        SeqData.curVar.ConvertToText = chkCovertToText.Checked
-    End Sub
-
-    Private Sub chkCovertToNull_CheckedChanged(sender As Object, e As EventArgs) Handles chkCovertToNull.CheckedChanged
-        SeqData.curVar.ConvertToNull = chkCovertToNull.Checked
-    End Sub
-
-    Private Sub txtDelimiter_MouseHover(sender As Object, e As EventArgs) Handles txtDelimiter.MouseHover
-        txtDelimiterShow.Text = txtDelimiter.Text
-        txtDelimiterShow.Visible = True
-    End Sub
-
-    Private Sub txtDelimiter_MouseLeave(sender As Object, e As EventArgs) Handles txtDelimiter.MouseLeave
-        txtDelimiterShow.Visible = False
-    End Sub
-
-    Private Sub txtDelimiter_TextChanged(sender As Object, e As EventArgs) Handles txtDelimiter.TextChanged
-        txtDelimiterShow.Text = txtDelimiter.Text
-    End Sub
 End Class
