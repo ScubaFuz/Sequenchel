@@ -69,7 +69,7 @@ Partial Class frmImport
         Me.btnImportFile.Location = New System.Drawing.Point(571, 29)
         Me.btnImportFile.Name = "btnImportFile"
         Me.btnImportFile.Size = New System.Drawing.Size(171, 23)
-        Me.btnImportFile.TabIndex = 5
+        Me.btnImportFile.TabIndex = 4
         Me.btnImportFile.Text = "Import File"
         Me.btnImportFile.UseVisualStyleBackColor = True
         '
@@ -87,14 +87,14 @@ Partial Class frmImport
         Me.txtCurrentFile.Location = New System.Drawing.Point(240, 31)
         Me.txtCurrentFile.Name = "txtCurrentFile"
         Me.txtCurrentFile.Size = New System.Drawing.Size(313, 20)
-        Me.txtCurrentFile.TabIndex = 7
+        Me.txtCurrentFile.TabIndex = 1
         '
         'btnSelectFile
         '
         Me.btnSelectFile.Location = New System.Drawing.Point(29, 29)
         Me.btnSelectFile.Name = "btnSelectFile"
         Me.btnSelectFile.Size = New System.Drawing.Size(126, 23)
-        Me.btnSelectFile.TabIndex = 8
+        Me.btnSelectFile.TabIndex = 0
         Me.btnSelectFile.Text = "Select File"
         Me.btnSelectFile.UseVisualStyleBackColor = True
         '
@@ -128,7 +128,7 @@ Partial Class frmImport
         Me.chkWinAuth.Margin = New System.Windows.Forms.Padding(2)
         Me.chkWinAuth.Name = "chkWinAuth"
         Me.chkWinAuth.Size = New System.Drawing.Size(160, 17)
-        Me.chkWinAuth.TabIndex = 36
+        Me.chkWinAuth.TabIndex = 12
         Me.chkWinAuth.Text = "Use windows Authentication"
         Me.chkWinAuth.UseVisualStyleBackColor = True
         '
@@ -179,7 +179,7 @@ Partial Class frmImport
         Me.txtFileName.Margin = New System.Windows.Forms.Padding(2)
         Me.txtFileName.Name = "txtFileName"
         Me.txtFileName.Size = New System.Drawing.Size(312, 20)
-        Me.txtFileName.TabIndex = 31
+        Me.txtFileName.TabIndex = 7
         '
         'txtPassword
         '
@@ -189,7 +189,7 @@ Partial Class frmImport
         Me.txtPassword.Name = "txtPassword"
         Me.txtPassword.PasswordChar = Global.Microsoft.VisualBasic.ChrW(42)
         Me.txtPassword.Size = New System.Drawing.Size(110, 20)
-        Me.txtPassword.TabIndex = 30
+        Me.txtPassword.TabIndex = 14
         '
         'txtUser
         '
@@ -198,7 +198,7 @@ Partial Class frmImport
         Me.txtUser.Margin = New System.Windows.Forms.Padding(2)
         Me.txtUser.Name = "txtUser"
         Me.txtUser.Size = New System.Drawing.Size(110, 20)
-        Me.txtUser.TabIndex = 29
+        Me.txtUser.TabIndex = 13
         '
         'txtTable
         '
@@ -207,7 +207,7 @@ Partial Class frmImport
         Me.txtTable.Margin = New System.Windows.Forms.Padding(2)
         Me.txtTable.Name = "txtTable"
         Me.txtTable.Size = New System.Drawing.Size(193, 20)
-        Me.txtTable.TabIndex = 28
+        Me.txtTable.TabIndex = 11
         '
         'txtDatabase
         '
@@ -216,7 +216,7 @@ Partial Class frmImport
         Me.txtDatabase.Margin = New System.Windows.Forms.Padding(2)
         Me.txtDatabase.Name = "txtDatabase"
         Me.txtDatabase.Size = New System.Drawing.Size(193, 20)
-        Me.txtDatabase.TabIndex = 27
+        Me.txtDatabase.TabIndex = 10
         '
         'txtServer
         '
@@ -225,7 +225,7 @@ Partial Class frmImport
         Me.txtServer.Margin = New System.Windows.Forms.Padding(2)
         Me.txtServer.Name = "txtServer"
         Me.txtServer.Size = New System.Drawing.Size(193, 20)
-        Me.txtServer.TabIndex = 26
+        Me.txtServer.TabIndex = 9
         '
         'chkFile
         '
@@ -234,7 +234,7 @@ Partial Class frmImport
         Me.chkFile.Margin = New System.Windows.Forms.Padding(2)
         Me.chkFile.Name = "chkFile"
         Me.chkFile.Size = New System.Drawing.Size(89, 17)
-        Me.chkFile.TabIndex = 25
+        Me.chkFile.TabIndex = 6
         Me.chkFile.Text = "Output to File"
         Me.chkFile.UseVisualStyleBackColor = True
         '
@@ -245,7 +245,7 @@ Partial Class frmImport
         Me.chkDatabase.Margin = New System.Windows.Forms.Padding(2)
         Me.chkDatabase.Name = "chkDatabase"
         Me.chkDatabase.Size = New System.Drawing.Size(119, 17)
-        Me.chkDatabase.TabIndex = 24
+        Me.chkDatabase.TabIndex = 8
         Me.chkDatabase.Text = "Output to Database"
         Me.chkDatabase.UseVisualStyleBackColor = True
         '
@@ -258,7 +258,7 @@ Partial Class frmImport
         Me.chkScreen.Margin = New System.Windows.Forms.Padding(2)
         Me.chkScreen.Name = "chkScreen"
         Me.chkScreen.Size = New System.Drawing.Size(107, 17)
-        Me.chkScreen.TabIndex = 23
+        Me.chkScreen.TabIndex = 5
         Me.chkScreen.Text = "Output to Screen"
         Me.chkScreen.UseVisualStyleBackColor = True
         '
@@ -279,7 +279,7 @@ Partial Class frmImport
         Me.btnUploadFile.Location = New System.Drawing.Point(571, 107)
         Me.btnUploadFile.Name = "btnUploadFile"
         Me.btnUploadFile.Size = New System.Drawing.Size(171, 23)
-        Me.btnUploadFile.TabIndex = 40
+        Me.btnUploadFile.TabIndex = 15
         Me.btnUploadFile.Text = "Upload File"
         Me.btnUploadFile.UseVisualStyleBackColor = True
         '
@@ -287,20 +287,22 @@ Partial Class frmImport
         '
         Me.lblStatus.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.lblStatus.AutoSize = True
-        Me.lblStatus.Location = New System.Drawing.Point(26, 731)
+        Me.lblStatus.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblStatus.Location = New System.Drawing.Point(26, 728)
         Me.lblStatus.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
         Me.lblStatus.Name = "lblStatus"
-        Me.lblStatus.Size = New System.Drawing.Size(37, 13)
+        Me.lblStatus.Size = New System.Drawing.Size(51, 16)
         Me.lblStatus.TabIndex = 41
         Me.lblStatus.Text = "Status"
         '
         'lblStatusText
         '
-        Me.lblStatusText.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.lblStatusText.AutoSize = True
-        Me.lblStatusText.Location = New System.Drawing.Point(79, 731)
+        Me.lblStatusText.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lblStatusText.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblStatusText.Location = New System.Drawing.Point(82, 728)
         Me.lblStatusText.Name = "lblStatusText"
-        Me.lblStatusText.Size = New System.Drawing.Size(0, 13)
+        Me.lblStatusText.Size = New System.Drawing.Size(660, 13)
         Me.lblStatusText.TabIndex = 42
         '
         'btnPreviousTable
@@ -308,7 +310,7 @@ Partial Class frmImport
         Me.btnPreviousTable.Location = New System.Drawing.Point(29, 209)
         Me.btnPreviousTable.Name = "btnPreviousTable"
         Me.btnPreviousTable.Size = New System.Drawing.Size(34, 23)
-        Me.btnPreviousTable.TabIndex = 43
+        Me.btnPreviousTable.TabIndex = 16
         Me.btnPreviousTable.Text = "<"
         Me.btnPreviousTable.UseVisualStyleBackColor = True
         '
@@ -317,7 +319,7 @@ Partial Class frmImport
         Me.btnNextTable.Location = New System.Drawing.Point(177, 209)
         Me.btnNextTable.Name = "btnNextTable"
         Me.btnNextTable.Size = New System.Drawing.Size(34, 23)
-        Me.btnNextTable.TabIndex = 44
+        Me.btnNextTable.TabIndex = 17
         Me.btnNextTable.Text = ">"
         Me.btnNextTable.UseVisualStyleBackColor = True
         '
@@ -353,7 +355,7 @@ Partial Class frmImport
         Me.chkUploadTable.Location = New System.Drawing.Point(360, 214)
         Me.chkUploadTable.Name = "chkUploadTable"
         Me.chkUploadTable.Size = New System.Drawing.Size(174, 17)
-        Me.chkUploadTable.TabIndex = 48
+        Me.chkUploadTable.TabIndex = 18
         Me.chkUploadTable.Text = "Upload This Table to Database"
         Me.chkUploadTable.UseVisualStyleBackColor = True
         '
@@ -362,7 +364,7 @@ Partial Class frmImport
         Me.btnUploadTable.Location = New System.Drawing.Point(571, 210)
         Me.btnUploadTable.Name = "btnUploadTable"
         Me.btnUploadTable.Size = New System.Drawing.Size(171, 23)
-        Me.btnUploadTable.TabIndex = 49
+        Me.btnUploadTable.TabIndex = 19
         Me.btnUploadTable.Text = "Upload currently selected Table"
         Me.btnUploadTable.UseVisualStyleBackColor = True
         '
@@ -397,7 +399,7 @@ Partial Class frmImport
         Me.chkHasHeaders.Margin = New System.Windows.Forms.Padding(2)
         Me.chkHasHeaders.Name = "chkHasHeaders"
         Me.chkHasHeaders.Size = New System.Drawing.Size(153, 17)
-        Me.chkHasHeaders.TabIndex = 52
+        Me.chkHasHeaders.TabIndex = 2
         Me.chkHasHeaders.Text = "Text File Contains Headers"
         Me.chkHasHeaders.UseVisualStyleBackColor = True
         '
@@ -418,7 +420,7 @@ Partial Class frmImport
         Me.txtDelimiter.Margin = New System.Windows.Forms.Padding(2)
         Me.txtDelimiter.Name = "txtDelimiter"
         Me.txtDelimiter.Size = New System.Drawing.Size(22, 20)
-        Me.txtDelimiter.TabIndex = 53
+        Me.txtDelimiter.TabIndex = 3
         Me.txtDelimiter.Text = ","
         Me.txtDelimiter.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
@@ -432,6 +434,7 @@ Partial Class frmImport
         Me.txtDelimiterShow.Name = "txtDelimiterShow"
         Me.txtDelimiterShow.Size = New System.Drawing.Size(39, 38)
         Me.txtDelimiterShow.TabIndex = 55
+        Me.txtDelimiterShow.TabStop = False
         Me.txtDelimiterShow.Text = ","
         Me.txtDelimiterShow.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         Me.txtDelimiterShow.Visible = False
@@ -445,11 +448,12 @@ Partial Class frmImport
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.dgvImport.BackgroundColor = System.Drawing.SystemColors.Control
         Me.dgvImport.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
+        Me.dgvImport.BackImage = CType(resources.GetObject("dgvImport.BackImage"), System.Drawing.Image)
         Me.dgvImport.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgvImport.Location = New System.Drawing.Point(29, 239)
         Me.dgvImport.Name = "dgvImport"
         Me.dgvImport.Size = New System.Drawing.Size(713, 473)
-        Me.dgvImport.TabIndex = 1
+        Me.dgvImport.TabIndex = 20
         '
         'frmImport
         '

@@ -32,6 +32,23 @@ Public Class Data
         End Set
     End Property
 
+    Public DataBaseOnline As Boolean = False
+
+    Public Function TestPath(intInput As Integer) As String
+        Select Case intInput
+            Case 1
+                Return System.AppDomain.CurrentDomain.BaseDirectory
+            Case 2
+                Return System.Reflection.Assembly.GetCallingAssembly.Location
+            Case 3
+                Return Reflection.Assembly.GetExecutingAssembly().Location
+            Case 4
+                Return Reflection.Assembly.GetEntryAssembly().Location
+            Case 5
+                Return IO.Path.GetDirectoryName(Diagnostics.Process.GetCurrentProcess().MainModule.FileName)
+        End Select
+        Return ""
+    End Function
 
 #Region "General"
     Public Sub SetDefaults()
@@ -63,27 +80,35 @@ Public Class Data
     End Sub
 
     Public Sub WriteLog(ByVal strLogtext As String, ByVal intLogLevel As Integer)
+        Dim blnLogSucces As Boolean = True
         Try
             If dhdText.LogLocation.ToLower = "database" Then
-                dhdMainDB.WriteLog(strLogtext, intLogLevel, dhdText.LogLevel)
+                If dhdMainDB.WriteLog(strLogtext, intLogLevel, dhdText.LogLevel) = False Then
+                    blnLogSucces = False
+                End If
             Else
-                dhdText.WriteLog(strLogtext, intLogLevel)
+                If dhdText.WriteLog(strLogtext, intLogLevel) = False Then
+                    blnLogSucces = False
+                End If
                 'If DevMode Then MessageBox.Show(dhdText.LogFileName & Environment.NewLine & dhdText.LogLocation & Environment.NewLine & dhdText.LogLevel)
             End If
         Catch ex As Exception
-            Dim strMyDir As String
-            strMyDir = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+            blnLogSucces = False
+            'MessageBox.Show("there was an error writing to the logfile: " & Environment.NewLine & ex.Message)
+        End Try
 
+        If blnLogSucces = False Then
+            Dim strMyDir As String = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+            Dim strOrgDir As String = dhdText.LogLocation
             If dhdText.CheckDir(strMyDir & "\Sequenchel", True) = False Then dhdText.CreateDir(strMyDir & "\Sequenchel")
             If dhdText.CheckDir(strMyDir & "\Sequenchel\LOG", True) = False Then dhdText.CreateDir(strMyDir & "\Sequenchel\LOG")
             dhdText.LogFileName = "Sequenchel.Log"
             dhdText.LogLocation = strMyDir & "\Sequenchel\LOG"
-            'MessageBox.Show("there was an error writing to the logfile: " & Environment.NewLine & ex.Message)
-        End Try
+            dhdText.WriteLog("There was an error writng to the logfile at: " & strOrgDir & Environment.NewLine & dhdText.Errormessage, 1)
+        End If
     End Sub
 
 #End Region
-    Public DataBaseOnline As Boolean = False
 
 #Region "DataBase"
     Public Function QueryDb(ByVal dhdConnect As DataHandler.db, ByVal strQueryData As String, ByVal ReturnValue As Boolean, Optional ByVal LogLevel As Integer = 5) As DataSet
@@ -580,9 +605,12 @@ Public Class Data
                     If xmlLoadDoc.Item("Sequenchel").Item("Settings").Item("OverridePassword").InnerText.Length > 0 Then
                         If curVar.OverridePassword = xmlLoadDoc.Item("Sequenchel").Item("Settings").Item("OverridePassword").InnerText Then
                             curVar.SecurityOverride = True
+                        Else
+                            curVar.OverridePassword = xmlLoadDoc.Item("Sequenchel").Item("Settings").Item("OverridePassword").InnerText
                         End If
                     End If
                 End If
+                If dhdText.CheckElement(xmlLoadDoc, "TimedShutdown") Then curVar.TimedShutdown = xmlLoadDoc.Item("Sequenchel").Item("Settings").Item("TimedShutdown").InnerText
             Catch ex As Exception
                 ErrorMessage = "There was an error reading the XML file. Please check the file" & Environment.NewLine & System.AppDomain.CurrentDomain.BaseDirectory & dhdText.InputFile & Environment.NewLine & Environment.NewLine & ex.Message
                 WriteLog("There was an error reading the XML file. Please check the file" & Environment.NewLine & System.AppDomain.CurrentDomain.BaseDirectory & dhdText.InputFile & Environment.NewLine & Environment.NewLine & ex.Message, 1)
@@ -615,12 +643,13 @@ Public Class Data
         strXmlText &= "		<AllowInsert>" & curVar.AllowInsert & "</AllowInsert>" & Environment.NewLine
         strXmlText &= "		<AllowDelete>" & curVar.AllowDelete & "</AllowDelete>" & Environment.NewLine
         strXmlText &= "		<OverridePassword>" & curVar.OverridePassword & "</OverridePassword>" & Environment.NewLine
+        strXmlText &= "		<TimedShutdown>" & curVar.TimedShutdown & "</TimedShutdown>" & Environment.NewLine
         strXmlText &= "	</Settings>" & Environment.NewLine
         strXmlText &= "</Sequenchel>" & Environment.NewLine
         Try
             xmlSDBASettings.LoadXml(strXmlText)
             If dhdText.CreateFile(strXmlText, System.AppDomain.CurrentDomain.BaseDirectory & dhdText.InputFile) = False Then
-                WriteLog("There was an error creating or saving the Settings file" & dhdText.Errormessage, 1)
+                WriteLog("There was an error creating or saving the Settings file. " & dhdText.Errormessage, 1)
                 ErrorMessage = "There was an error creating or saving the Settings file: " & dhdText.Errormessage
                 Return False
             End If
@@ -722,11 +751,14 @@ Public Class Data
 
         Try
             xmlSaveDoc.LoadXml(strXmlText)
-            SaveGeneralSettingsXml = dhdText.CreateFile(strXmlText, dhdText.PathConvert(CheckFilePath(curVar.GeneralSettings)))
-            If SaveGeneralSettingsXml = False Then WriteLog("There was an error saving the General Settings file" & Environment.NewLine & dhdText.Errormessage, 1)
+            If dhdText.CreateFile(strXmlText, dhdText.PathConvert(CheckFilePath(curVar.GeneralSettings))) = False Then
+                WriteLog("There was an error saving the General Settings file" & Environment.NewLine & dhdText.Errormessage, 1)
+                Return False
+            End If
+            Return True
         Catch ex As Exception
             WriteLog(Core.Message.strXmlError & Environment.NewLine & ex.Message, 1)
-            SaveGeneralSettingsXml = Nothing
+            Return False
         End Try
     End Function
 
@@ -1220,7 +1252,7 @@ Public Class Data
             End Select
         Catch ex As Exception
             blnShowFile = False
-            'WriteLog("Couldn't create Excel file.\r\nException: " + ex.Message, 1)
+            WriteLog("There was an error exporting the file: " + ex.Message, 1)
             Return False
         End Try
 

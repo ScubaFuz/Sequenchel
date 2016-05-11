@@ -14,6 +14,7 @@
     Private _LimitLookupLists As Boolean = True
     Private _LimitLookupListsCount As Integer = 100
     Private _IncludeDate As Boolean = False
+    Private _TimedShutdown As Integer = 0
 
     Public Property DebugMode() As Boolean
         Get
@@ -129,6 +130,15 @@
         End Get
         Set(ByVal Value As Boolean)
             _IncludeDate = Value
+        End Set
+    End Property
+
+    Public Property TimedShutdown() As Integer
+        Get
+            Return _TimedShutdown
+        End Get
+        Set(ByVal Value As Integer)
+            _TimedShutdown = Value
         End Set
     End Property
 

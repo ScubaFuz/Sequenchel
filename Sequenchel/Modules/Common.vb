@@ -40,6 +40,7 @@ Module Common
     Friend strReport As String = "Sequenchel " & vbTab & " version: " & Core.GetVersion("B") & "  Licensed by: " & Core.LicenseName
     Friend dtmElapsedTime As DateTime
     Friend tmsElapsedTime As TimeSpan
+    Friend tmrShutdown As New Timers.Timer
 
     Private _SelectedItem As DataGridViewRow
 
@@ -57,7 +58,7 @@ Module Common
 
         For Each Command As String In My.Application.CommandLineArgs
             Dim intPosition As Integer = Command.IndexOf(":")
-            If intPosition < 1 Then intPosition = Command.Length
+            If intPosition < 0 Then intPosition = Command.Length
             Dim strCommand As String = Command.ToLower.Substring(0, intPosition)
             Select Case strCommand
                 Case "/silent"
@@ -93,27 +94,49 @@ Module Common
             End Select
         Next
 
-        'If My.Application.CommandLineArgs.Contains("/debug") Then
-        '    CurVar.DebugMode = True
-        '    MessageBox.Show("Running in Debug Mode")
-        'End If
-        'If My.Application.CommandLineArgs.Contains("/control") Then
-        '    CurStatus.Status = CurrentStatus.StatusList.ControlSearch
-        'End If
-        'If My.Application.CommandLineArgs.Contains("/dev") Then
-        '    DevMode = True
-        'End If
-        'If My.Application.CommandLineArgs.Contains("/noencryption") Then
-        '    blnEncryption = False
-        'End If
+    End Sub
 
+    Friend Sub SetTimer()
+        AddHandler tmrShutdown.Elapsed, AddressOf TimedShutdown
+        Dim intShutdown As Integer = SeqData.curVar.TimedShutdown
+        If intShutdown > 60000 Then intShutdown -= 60000
+        If intShutdown > 0 Then tmrShutdown.Interval = intShutdown
+        If intShutdown <= 60000 Then
+            tmrShutdown.Enabled = False
+        ElseIf intShutdown > 0 Then
+            tmrShutdown.Enabled = True
+            tmrShutdown.Start()
+        End If
+    End Sub
+
+    Friend Sub ShutdownDelay()
+        If tmrShutdown.Enabled = False And tmrShutdown.Interval > 60000 Then
+            tmrShutdown.Enabled = True
+            tmrShutdown.Start()
+        ElseIf tmrShutdown.Enabled = True And tmrShutdown.Interval > 60000 Then
+            tmrShutdown.Stop()
+            tmrShutdown.Enabled = False
+            tmrShutdown.Enabled = True
+            tmrShutdown.Start()
+        Else
+            tmrShutdown.Enabled = False
+        End If
+    End Sub
+
+    Friend Sub TimedShutdown()
+        ShutdownDelay()
+        ShowShutdownForm()
+    End Sub
+
+    Friend Sub ShowShutdownForm()
+        Application.Run(frmShutdown)
     End Sub
 
     Friend Sub LoadLicense(lblTarget As Label)
         If Core.LoadLicense = False Then
-            WriteStatus(Core.Message.ErrorMessage, 4, lblTarget)
+            WriteStatus(Core.Message.ErrorMessage, 1, lblTarget)
         Else
-            WriteStatus("License loaded succesfully", 0, lblTarget)
+            WriteStatus("License loaded succesfully", 2, lblTarget)
         End If
         strReport = "Sequenchel " & vbTab & " version: " & Core.GetVersion("B") & vbTab & "  Licensed to: " & Core.LicenseName
 
@@ -202,16 +225,6 @@ Module Common
                                 Case 2
                                     tblTable.Item(intField).Checked = sender.Value
                             End Select
-                            'If sender.Text.ToString <> sender.Tag.ToString Then
-                            '    sender.BackColor = clrMarked
-                            'Else
-                            '    If sender.Enabled = True Then
-                            '        sender.BackColor = clrOriginal
-                            '    Else
-                            '        sender.BackColor = clrDisabled
-                            '    End If
-                            'End If
-
                         End If
                     Next
             End Select
@@ -319,16 +332,18 @@ Module Common
         Return strTargetFile
     End Function
 
-    Friend Sub ExportFile(dtsInput As DataSet, strFileName As String)
+    Friend Function ExportFile(dtsInput As DataSet, strFileName As String) As Boolean
         CursorControl("Wait")
         Try
             SeqData.ExportFile(dtsInput, strFileName, SeqData.curVar.ConvertToText, SeqData.curVar.ConvertToNull, SeqData.curVar.ShowFile, SeqData.curVar.HasHeaders, SeqData.curVar.Delimiter, SeqData.curVar.QuoteValues, SeqData.curVar.CreateDir)
         Catch ex As Exception
             SeqData.curVar.ShowFile = False
             SeqData.WriteLog("An error occured while creating the file." & Environment.NewLine & ex.Message, 1)
+            Return False
         End Try
         CursorControl()
-    End Sub
+        Return True
+    End Function
 
 #Region "XML"
     Friend Sub DisplayXmlFile(ByVal xmlDoc As Xml.XmlDocument, ByVal tvw As TreeView)
@@ -386,6 +401,7 @@ Module Common
         Try
             SeqData.dhdText.SaveXmlFile(xmlDoc, SeqData.dhdText.PathConvert(SeqData.CheckFilePath(FilePathName)), True)
         Catch ex As Exception
+            SeqData.WriteLog("There was an error saving the XML file: " & SeqData.dhdText.PathConvert(SeqData.CheckFilePath(FilePathName)) & Environment.NewLine & ex.Message, 1)
             Return False
         End Try
         Return True
@@ -501,7 +517,7 @@ Module Common
         Return strReturn
     End Function
 
-    Friend Sub ClearDBLog(ByVal dtmDate As Date)
+    Friend Function ClearDBLog(ByVal dtmDate As Date) As Boolean
         strQuery = ""
         strQuery = "exec usp_LoggingHandle 'Del','" & FormatDate(dtmDate) & "'"
 
@@ -509,10 +525,11 @@ Module Common
             SeqData.QueryDb(SeqData.dhdMainDB, strQuery, False)
         Catch ex As Exception
             SeqData.dhdText.LogLocation = ""
-            SeqData.WriteLog(ex.Message, 1)
-            MessageBox.Show(ex.Message)
+            SeqData.WriteLog("Error deleting old logs: " & ex.Message, 1)
+            Return False
         End Try
-    End Sub
+        Return True
+    End Function
 
     Friend Function LoadTablesList(ByVal dhdConnect As DataHandler.db, Optional blnCrawlViews As Boolean = True) As List(Of String)
         strQuery = "SELECT "
@@ -541,7 +558,7 @@ Module Common
         Return ReturnValue
     End Function
 
-    Friend Sub ScheduleCreate(JobName As String, SqlCommand As String, FreqType As Integer, FreqInterval As Integer, FreqSubType As Integer, FreqSubTypeInt As Integer, StartTime As Integer, EndTime As Integer, OutputPath As String)
+    Friend Function ScheduleCreate(JobName As String, SqlCommand As String, FreqType As Integer, FreqInterval As Integer, FreqSubType As Integer, FreqSubTypeInt As Integer, StartTime As Integer, EndTime As Integer, OutputPath As String) As Boolean
         CursorControl("Wait")
 
         Dim strStartDate As String = Now.ToString("yyyyMMdd")
@@ -561,7 +578,11 @@ Module Common
         strQuery &= ",@EndTime = " & EndTime
 
         SeqData.QueryDb(SeqData.dhdMainDB, strQuery, False)
-    End Sub
+        If SeqData.dhdMainDB.ErrorLevel = -1 Then
+            Return False
+        End If
+        Return True
+    End Function
 
     Friend Function GetDefaultLogPath(dhdConnect As DataHandler.db) As String
         strQuery = "SELECT coalesce(serverproperty('InstanceDefaultLogPath'),LEFT(physical_name,LEN(physical_name) - charindex('\',reverse(physical_name)))) AS InstanceDefaultLogPath FROM sys.master_files where name = 'mastlog' "
@@ -753,12 +774,8 @@ Module Common
             Case 1
                 clrStatus = clrWarning
             Case 2
-                clrStatus = clrWarning
-            Case 3
                 clrStatus = clrMarked
-            Case 4
-                clrStatus = clrMarked
-            Case 5
+            Case 3, 4, 5
                 clrStatus = clrControl
         End Select
         lblTarget.Text = strStatusText
@@ -814,6 +831,7 @@ Module Common
     End Function
 
     Friend Sub CursorControl(Optional strStyle As String = "Default")
+        ShutdownDelay()
         Select Case strStyle
             Case "Default"
                 Cursor.Current = Cursors.Default
@@ -824,6 +842,45 @@ Module Common
         End Select
     End Sub
 
+    Friend Sub SetBackColor(ctrl As Control)
+        Select Case TypeName(ctrl)
+            Case "TextBox", "ComboBox"
+                If ctrl.Text Is Nothing Then
+                    ctrl.BackColor = clrOriginal
+                    Exit Sub
+                End If
+
+                If ctrl.Tag Is Nothing Then
+                    If ctrl.Text = "" Then
+                        ctrl.BackColor = clrOriginal
+                    ElseIf ctrl.Text.Length = 0 Then
+                        ctrl.BackColor = clrOriginal
+                    Else
+                        ctrl.BackColor = clrMarked
+                    End If
+                ElseIf ctrl.Text.ToString = ctrl.Tag.ToString Then
+                    ctrl.BackColor = clrOriginal
+                Else
+                    ctrl.BackColor = clrMarked
+                End If
+            Case "CheckBox"
+                Dim chk As CheckBox = TryCast(ctrl, CheckBox)
+                If chk IsNot Nothing Then
+                    If chk.Tag Is Nothing Then
+                        If chk.Checked = 0 Then
+                            chk.BackColor = clrControl
+                        Else
+                            chk.BackColor = clrMarked
+                        End If
+                    ElseIf chk.Checked.ToString = chk.Tag.ToString Then
+                        chk.BackColor = clrControl
+                    Else
+                        chk.BackColor = clrMarked
+                    End If
+                End If
+        End Select
+
+    End Sub
 #End Region
 
     Friend Function DataSet2DataGridView(dtsSource As DataSet, SourceTable As Integer, dgvTarget As DataGridView, RebuildColumns As Boolean) As Boolean

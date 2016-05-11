@@ -26,18 +26,15 @@ Public Class frmSequenchel
         lblLicense.Left = Me.Width - lblLicense.Width - (SeqData.CurVar.BuildMargin * 5)
 
         If SeqData.LoadSDBASettingsXml(xmlSDBASettings) = False Then
-            If SeqData.SaveSDBASettingsXml(xmlSDBASettings) = False Then
-                SeqData.WriteLog(Core.Message.strXmlError, 1)
-                MessageBox.Show(Core.Message.strXmlError)
-            End If
-
+            If SeqData.SaveSDBASettingsXml(xmlSDBASettings) = False Then WriteStatus("There was an error loading the main settings. please check the logfile", 1, lblStatusText)
         End If
+        SetTimer()
         SecuritySet()
-        SeqData.LoadGeneralSettingsXml(xmlGeneralSettings)
+        If SeqData.LoadGeneralSettingsXml(xmlGeneralSettings) = False Then WriteStatus("There was an error loading the settings. please check the logfile", 1, lblStatusText)
         'Core.DeleteOldLogs()
         LoadConnections()
 
-        If SeqData.CurVar.SecurityOverride = True Then Me.Text &= " SecurityOverride"
+        If SeqData.curVar.SecurityOverride = True Then Me.Text &= " SecurityOverride"
 
         Me.Show()
         If Core.LicenseValidated Then
@@ -88,29 +85,37 @@ Public Class frmSequenchel
         End If
     End Sub
 
+#Region "Common routines"
+
     Private Sub DebugSettings()
-        If SeqData.CurVar.DebugMode Then
+        If SeqData.curVar.DebugMode Then
             btnTest.Visible = True
         End If
-        If SeqData.CurVar.DevMode Then
+        If SeqData.curVar.DevMode Then
             'mnuMain.Visible = True
         End If
     End Sub
 
     Private Sub SecuritySet()
-        If SeqData.CurVar.AllowSettingsChange = False And SeqData.CurVar.SecurityOverride = False Then mnuMainEditSettings.Enabled = False
-        If SeqData.CurVar.AllowConfiguration = False And SeqData.CurVar.SecurityOverride = False Then mnuMainEditConfiguration.Enabled = False
-        If SeqData.CurVar.AllowLinkedServers = False And SeqData.CurVar.SecurityOverride = False Then mnuMainEditLinkedServers.Enabled = False
-        If SeqData.CurVar.AllowDataImport = False And SeqData.CurVar.SecurityOverride = False Then mnuMainToolsImport.Enabled = False
-        If SeqData.CurVar.AllowSmartUpdate = False And SeqData.CurVar.SecurityOverride = False Then mnuMainToolsSmartUpdate.Enabled = False
-        If SeqData.CurVar.AllowUpdate = False And SeqData.CurVar.SecurityOverride = False Then btnUpdate.Enabled = False
-        If SeqData.CurVar.AllowInsert = False And SeqData.CurVar.SecurityOverride = False Then btnAdd.Enabled = False
-        If SeqData.CurVar.AllowDelete = False And SeqData.CurVar.SecurityOverride = False Then btnDelete.Enabled = False
+        If SeqData.curVar.AllowSettingsChange = False And SeqData.curVar.SecurityOverride = False Then mnuMainEditSettings.Enabled = False
+        If SeqData.curVar.AllowConfiguration = False And SeqData.curVar.SecurityOverride = False Then mnuMainEditConfiguration.Enabled = False
+        If SeqData.curVar.AllowLinkedServers = False And SeqData.curVar.SecurityOverride = False Then mnuMainEditLinkedServers.Enabled = False
+        If SeqData.curVar.AllowDataImport = False And SeqData.curVar.SecurityOverride = False Then mnuMainToolsImport.Enabled = False
+        If SeqData.curVar.AllowSmartUpdate = False And SeqData.curVar.SecurityOverride = False Then mnuMainToolsSmartUpdate.Enabled = False
+        If SeqData.curVar.AllowUpdate = False And SeqData.curVar.SecurityOverride = False Then btnUpdate.Enabled = False
+        If SeqData.curVar.AllowInsert = False And SeqData.curVar.SecurityOverride = False Then btnAdd.Enabled = False
+        If SeqData.curVar.AllowDelete = False And SeqData.curVar.SecurityOverride = False Then btnDelete.Enabled = False
     End Sub
 
     Private Sub btnTest_Click(sender As Object, e As EventArgs) Handles btnTest.Click
-        'MessageBox.Show(FormatFieldWhere2("SearchField", "dbo.TableName", "15", "CHAR", "Pirates AND Pearl NOT Dead OR Caribbean"))
+        MessageBox.Show(SeqData.TestPath(1))
+        MessageBox.Show(SeqData.TestPath(2))
+        MessageBox.Show(SeqData.TestPath(3))
+        MessageBox.Show(SeqData.TestPath(4))
+        MessageBox.Show(SeqData.TestPath(5))
     End Sub
+
+#End Region
 
 #Region "Navigation"
 
@@ -125,36 +130,44 @@ Public Class frmSequenchel
 
     Private Sub mnuMainEditSettings_Click(sender As Object, e As EventArgs) Handles mnuMainEditSettings.Click
         CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
         ShowSettingsForm()
         CursorControl()
     End Sub
 
     Private Sub mnuMainEditLinkedServers_Click(sender As Object, e As EventArgs) Handles mnuMainEditLinkedServers.Click
+        WriteStatus("", 0, lblStatusText)
         ShowLinkedServerForm()
     End Sub
 
     Private Sub mnuMainEditConfiguration_Click(sender As Object, e As EventArgs) Handles mnuMainEditConfiguration.Click
+        WriteStatus("", 0, lblStatusText)
         ShowConfigurationForm()
     End Sub
 
     Private Sub mnuMainToolsReports_Click(sender As Object, e As EventArgs) Handles mnuMainToolsReports.Click
+        WriteStatus("", 0, lblStatusText)
         ShowReportsForm()
     End Sub
 
     Private Sub mnuMainToolsImport_Click(sender As Object, e As EventArgs) Handles mnuMainToolsImport.Click
+        WriteStatus("", 0, lblStatusText)
         ShowImportForm()
     End Sub
 
     Private Sub mnuMainToolsSmartUpdate_Click(sender As Object, e As EventArgs) Handles mnuMainToolsSmartUpdate.Click
+        WriteStatus("", 0, lblStatusText)
         ShowSmartUpdateForm()
     End Sub
 
     Private Sub mnuMainHelpManual_Click(sender As Object, e As EventArgs) Handles mnuMainHelpManual.Click
+        WriteStatus("", 0, lblStatusText)
         System.Diagnostics.Process.Start("http://sequenchel.com/service/manual")
     End Sub
 
     Private Sub mnuMainHelpAbout_Click(sender As Object, e As EventArgs) Handles mnuMainHelpAbout.Click
-        SeqData.CurVar.CallSplash = True
+        WriteStatus("", 0, lblStatusText)
+        SeqData.curVar.CallSplash = True
         Dim frmAboutForm As New frmAbout
         frmAboutForm.Show(Me)
     End Sub
@@ -193,51 +206,82 @@ Public Class frmSequenchel
 
 #End Region
 
-#Region "Common routines"
-
-
-#End Region
-
 #Region "Definitions Load"
 
 #Region "Controls"
     Private Sub btnConnectionsReload_Click(sender As Object, e As EventArgs) Handles btnConnectionsReload.Click
+        WriteStatus("", 0, lblStatusText)
         LoadConnections()
     End Sub
 
     Private Sub cbxConnection_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbxConnection.SelectedIndexChanged
+        WriteStatus("", 0, lblStatusText)
         If cbxConnection.SelectedIndex >= -1 Then
-            SeqData.CurStatus.Connection = cbxConnection.SelectedItem
+            CursorControl("Wait")
+            SeqData.curStatus.Connection = cbxConnection.SelectedItem
             SeqData.LoadConnection(xmlConnections, SeqData.curStatus.Connection)
             LoadTableSets()
-            'dhdText.FindXmlNode(xmlConnections, "Connection", "DatabasdeName", strConnection)
-            'Dim xmlConnNode As xmlnode = xmlConnections.SelectSingleNode("\\Connection", "descendant::Connection[DataBaseName='" & strConnection & "']")
-            'dhdConnection.DatabaseName = strConnection
+            CursorControl()
         End If
     End Sub
 
     Private Sub btnTableSetsReload_Click(sender As Object, e As EventArgs) Handles btnTableSetsReload.Click
+        WriteStatus("", 0, lblStatusText)
         LoadTableSets()
     End Sub
 
     Private Sub cbxTableSet_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbxTableSet.SelectedIndexChanged
+        WriteStatus("", 0, lblStatusText)
         If cbxTableSet.SelectedIndex >= -1 Then
-            SeqData.CurStatus.TableSet = cbxTableSet.SelectedItem
+            CursorControl("Wait")
+            SeqData.curStatus.TableSet = cbxTableSet.SelectedItem
             SeqData.LoadTableSet(xmlTableSets, SeqData.curStatus.TableSet)
             LoadTables()
+            CursorControl()
         End If
-
     End Sub
 
     Private Sub btnTablesReload_Click(sender As Object, e As EventArgs) Handles btnTablesReload.Click
+        WriteStatus("", 0, lblStatusText)
         LoadTables()
     End Sub
 
     Private Sub cbxTable_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbxTable.SelectedIndexChanged
+        WriteStatus("", 0, lblStatusText)
         If cbxTable.SelectedIndex >= -1 Then
-            SeqData.CurStatus.Table = cbxTable.SelectedItem
-            LoadTable(SeqData.CurStatus.Table)
+            CursorControl("Wait")
+            SeqData.curStatus.Table = cbxTable.SelectedItem
+            LoadTable(SeqData.curStatus.Table)
+            CursorControl()
         End If
+    End Sub
+
+    Private Sub sptFields1_Panel2_MouseWheel(sender As Object, e As MouseEventArgs) Handles sptFields1.Panel2.MouseWheel
+        sptFields1.Panel1.VerticalScroll.Minimum = sptFields1.Panel2.VerticalScroll.Minimum
+        sptFields1.Panel1.VerticalScroll.Maximum = sptFields1.Panel2.VerticalScroll.Maximum
+
+        Dim vScrollPosition As Integer = sptFields1.Panel2.VerticalScroll.Value
+        sptFields1.Panel1.AutoScrollPosition = New Point(sptFields1.Panel1.AutoScrollPosition.X, vScrollPosition)
+        sptFields1.Panel1.VerticalScroll.Value = vScrollPosition
+        sptFields1.Panel2.AutoScrollPosition = New Point(sptFields1.Panel2.AutoScrollPosition.X, vScrollPosition)
+        'sptFields1.Panel2.VerticalScroll.Value = vScrollPosition
+        sptFields1.Panel1.Invalidate()
+        sptFields1.Panel2.Invalidate()
+    End Sub
+
+    Private Sub sptFields1_Panel1_MouseWheel(sender As Object, e As MouseEventArgs) Handles sptFields1.Panel1.MouseWheel
+        sptFields1.Panel1.VerticalScroll.Minimum = sptFields1.Panel2.VerticalScroll.Minimum
+        sptFields1.Panel1.VerticalScroll.Maximum = sptFields1.Panel2.VerticalScroll.Maximum
+
+        Dim vScrollPosition As Integer = sptFields1.Panel2.VerticalScroll.Value - e.Delta
+        vScrollPosition = Math.Max(sptFields1.Panel1.VerticalScroll.Minimum, vScrollPosition)
+        vScrollPosition = Math.Min(sptFields1.Panel1.VerticalScroll.Maximum, vScrollPosition)
+        sptFields1.Panel1.AutoScrollPosition = New Point(sptFields1.Panel1.AutoScrollPosition.X, vScrollPosition)
+        sptFields1.Panel1.VerticalScroll.Value = vScrollPosition
+        sptFields1.Panel2.AutoScrollPosition = New Point(sptFields1.Panel2.AutoScrollPosition.X, vScrollPosition)
+        sptFields1.Panel2.VerticalScroll.Value = vScrollPosition
+        sptFields1.Panel1.Invalidate()
+        sptFields1.Panel2.Invalidate()
     End Sub
 
     Private Sub Panel2_Scroll(ByVal sender As Object, ByVal e As System.Windows.Forms.ScrollEventArgs) Handles sptFields1.Panel2.Scroll
@@ -249,20 +293,25 @@ Public Class frmSequenchel
             sptFields1.Panel1.VerticalScroll.Value = e.NewValue
             sptFields1.Panel2.AutoScrollPosition = New Point(sptFields1.Panel2.AutoScrollPosition.X, e.NewValue)
             sptFields1.Panel2.VerticalScroll.Value = e.NewValue
+            sptFields1.Panel1.Invalidate()
+            sptFields1.Panel2.Invalidate()
         End If
     End Sub
 
     Private Sub btnReload_Click(sender As Object, e As EventArgs)
+        WriteStatus("", 0, lblStatusText)
         Dim strReload As String = sender.name.ToString.Substring(3, sender.name.ToString.Length - 3)
         LoadSearchCriteria(strReload)
     End Sub
 
     Private Sub btnDefault_Click(sender As Object, e As EventArgs)
+        WriteStatus("", 0, lblStatusText)
         Dim strDefault As String = sender.name.ToString.Substring(3, sender.name.ToString.Length - 3)
         LoadDefaultValue(strDefault)
     End Sub
 
     Private Sub cbxRelatedField_SelectedIndexChanged(sender As Object, e As EventArgs)
+        WriteStatus("", 0, lblStatusText)
         Dim strRelatedField As String = sender.FieldRelatedField
         Dim strSelectedItem As String = sender.SelectedItem.ToString.Substring(0, sender.SelectedItem.ToString.IndexOf("|") - 1)
         For intFieldCount As Integer = 0 To tblTable.Count - 1
@@ -271,6 +320,7 @@ Public Class frmSequenchel
             End If
         Next
     End Sub
+
 #End Region
 
     Private Sub AllClear(intLevel As Integer)
@@ -392,6 +442,7 @@ Public Class frmSequenchel
                             fldField = New TextField
                         End If
                         tblTable.Add(fldField)
+                        fldField.TabIndex = tblTable.Count
                         If SeqData.dhdText.CheckNodeElement(xNode, "FldName") Then fldField.FieldName = xNode.Item("FldName").InnerText
                         If SeqData.dhdText.CheckNodeElement(xNode, "FldAlias") Then fldField.FieldAlias = xNode.Item("FldAlias").InnerText
                         If fldField.FieldAlias = "" Then fldField.FieldAlias = fldField.FieldName
@@ -474,7 +525,7 @@ Public Class frmSequenchel
                                 fldField.Top = tblTable(tblTable.Count - 2).Top + fldField.Height + SeqData.curVar.BuildMargin
                             End If
                             If fldField.top > sptFields1.Panel2.Height And fldField.Width >= sptFields1.Panel2.Width - (SeqData.curVar.BuildMargin * 3) - SystemInformation.VerticalScrollBarWidth Then
-                                fldField.width = sptFields1.Panel2.Width - (SeqData.CurVar.BuildMargin * 3) - SystemInformation.VerticalScrollBarWidth
+                                fldField.width = sptFields1.Panel2.Width - (SeqData.curVar.BuildMargin * 3) - SystemInformation.VerticalScrollBarWidth
                             End If
                             Dim lblLabel As New Label
                             arrLabels.Add(lblLabel)
@@ -549,15 +600,15 @@ Public Class frmSequenchel
                                 msfRelatedField.Top = fldField.Top
                                 msfRelatedField.Left = fldField.Left + fldField.Width + SeqData.curVar.BuildMargin
                                 If fldField.top > sptFields1.Panel2.Height Then
-                                    msfRelatedField.Width = sptFields1.Panel2.Width - msfRelatedField.Left - (SeqData.CurVar.BuildMargin * 3) - SystemInformation.VerticalScrollBarWidth
+                                    msfRelatedField.Width = sptFields1.Panel2.Width - msfRelatedField.Left - (SeqData.curVar.BuildMargin * 3) - SystemInformation.VerticalScrollBarWidth
                                 Else
-                                    msfRelatedField.Width = sptFields1.Panel2.Width - msfRelatedField.Left - (SeqData.CurVar.BuildMargin * 3)
+                                    msfRelatedField.Width = sptFields1.Panel2.Width - msfRelatedField.Left - (SeqData.curVar.BuildMargin * 3)
                                 End If
 
-                                msfRelatedField.Width = sptFields1.Panel2.Width - msfRelatedField.Left - (SeqData.CurVar.BuildMargin * 3) - SystemInformation.VerticalScrollBarWidth
+                                msfRelatedField.Width = sptFields1.Panel2.Width - msfRelatedField.Left - (SeqData.curVar.BuildMargin * 3) - SystemInformation.VerticalScrollBarWidth
                                 msfRelatedField.Anchor = AnchorStyles.Top Or AnchorStyles.Left Or AnchorStyles.Right
                                 msfRelatedField.Visible = True
-                                If SeqData.dhdConnection.DataBaseOnline = True Then msfRelatedField.RunSearch()
+                                'If SeqData.dhdConnection.DataBaseOnline = True Then msfRelatedField.RunSearch()
                             End If
                         End If
                         FieldEnableHandler(fldField, fldField.FieldSearch)
@@ -604,7 +655,7 @@ Public Class frmSequenchel
             End If
             ButtonHandle()
         Catch ex As Exception
-            MessageBox.Show("There was an error reading the Table file. Please check the file for Table: " & Environment.NewLine & strTable & Environment.NewLine & ex.Message)
+            WriteStatus("There was an error reading the Table file. Please check the log.", 1, lblStatusText)
             SeqData.WriteLog("There was an error reading the Table file. Please check the file for Table: " & Environment.NewLine & strTable & Environment.NewLine & ex.Message, 1)
         End Try
 
@@ -631,8 +682,8 @@ Public Class frmSequenchel
 
     Private Sub SetWidth()
         For Each ctrField In sptFields1.Panel2.Controls
-            If ctrField.Left + ctrField.Width > sptFields1.Panel2.Width - (SeqData.CurVar.BuildMargin * 3) - SystemInformation.VerticalScrollBarWidth Then
-                ctrField.Width = sptFields1.Panel2.Width - ctrField.Left - (SeqData.CurVar.BuildMargin * 3) - SystemInformation.VerticalScrollBarWidth
+            If ctrField.Left + ctrField.Width > sptFields1.Panel2.Width - (SeqData.curVar.BuildMargin * 3) - SystemInformation.VerticalScrollBarWidth Then
+                ctrField.Width = sptFields1.Panel2.Width - ctrField.Left - (SeqData.curVar.BuildMargin * 3) - SystemInformation.VerticalScrollBarWidth
             End If
         Next
     End Sub
@@ -643,6 +694,7 @@ Public Class frmSequenchel
 #Region "Controls"
 
     Private Sub dgvTable1_DoubleClick(sender As Object, e As MouseEventArgs) Handles dgvTable1.DoubleClick
+        WriteStatus("", 0, lblStatusText)
         Dim args As MouseEventArgs = e
         Dim dgv As DataGridView = sender
         Dim hit As DataGridView.HitTestInfo = dgv.HitTest(args.X, args.Y)
@@ -652,11 +704,13 @@ Public Class frmSequenchel
     End Sub
 
     Private Sub dgvTable1_SelectionChanged(sender As Object, e As EventArgs) Handles dgvTable1.SelectionChanged
+        WriteStatus("", 0, lblStatusText)
         ItemSelect()
     End Sub
 
     Private Sub btnLoadList_Click(sender As Object, e As EventArgs) Handles btnLoadList.Click
         CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
         FieldsClearAll(True)
         ColorReset()
         LoadList(False)
@@ -665,23 +719,28 @@ Public Class frmSequenchel
 
     Private Sub btnLoadSearchCriteria_Click(sender As Object, e As EventArgs) Handles btnLoadSearchCriteria.Click
         CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
         LoadSearchCriteria()
         CursorControl()
     End Sub
 
     Private Sub btnSearch_Click(sender As Object, e As EventArgs) Handles btnSearch.Click
         CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
         LoadList(True)
         CursorControl()
     End Sub
 
     Private Sub btnClear_Click(sender As Object, e As EventArgs) Handles btnClear.Click
         CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
         FieldsClearAll(True)
         CursorControl()
     End Sub
 
     Private Sub btnExportList_Click(sender As Object, e As EventArgs) Handles btnExportList.Click
+        CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
         If SeqData.dhdText.DatasetCheck(dtsTable) = False Then Exit Sub
         Dim strReportName As String = ""
         If cbxSearch.Text.Length > 0 Then
@@ -692,17 +751,20 @@ Public Class frmSequenchel
             strReportName = SeqData.curStatus.Table
         End If
         Dim strFileName As String = GetSaveFileName(strReportName)
-        ExportFile(dtsTable, strFileName)
+        If ExportFile(dtsTable, strFileName) = False Then WriteStatus("There was an error exporting the file. please check the log.", 1, lblStatusText)
+        CursorControl()
         'XmlExportDatagridView(dgvTable1, "Sequenchel", SeqData.CurStatus.Table, SeqData.CurStatus.Table & "-Item")
     End Sub
 
     Private Sub btnAdd_Click(sender As Object, e As EventArgs) Handles btnAdd.Click
+        CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
         If btnAdd.Text = "New Item" Then
-            MessageBox.Show("Your current selection (if any) is duplicated." & Environment.NewLine & _
-                               "You can edit the data before you save it to the database" & Environment.NewLine & _
-                               "Click 'Clear' to cancel the operation" & Environment.NewLine & _
-                               "Click 'Save' to save the new item to the database" _
-                               , "How it works", MessageBoxButtons.OK, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1)
+            'MessageBox.Show("Your current selection (if any) is duplicated." & Environment.NewLine & _
+            '                   "You can edit the data before you save it to the database" & Environment.NewLine & _
+            '                   "Click 'Clear' to cancel the operation" & Environment.NewLine & _
+            '                   "Click 'Save' to save the new item to the database" _
+            '                   , "How it works", MessageBoxButtons.OK, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1)
             If SeqData.curStatus.Status > 3 Then
                 SeqData.curStatus.Status = SeqCore.CurrentStatus.StatusList.ControlAdd
             Else
@@ -721,6 +783,7 @@ Public Class frmSequenchel
             ColorSet()
             btnAdd.Text = "Save Item"
             btnAdd.BackColor = clrMarked
+            WriteStatus("Adding mode enabled", 0, lblStatusText)
         ElseIf btnAdd.Text = "Save Item" Then
             btnAdd.Text = "New Item"
             btnAdd.BackColor = clrControl
@@ -733,63 +796,78 @@ Public Class frmSequenchel
             FieldsEnable()
             ButtonHandle()
         End If
+        CursorControl()
     End Sub
 
     Private Sub btnUpdate_Click(sender As Object, e As EventArgs) Handles btnUpdate.Click
+        CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
         ItemUpdate()
+        CursorControl()
     End Sub
 
     Private Sub btnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
+        WriteStatus("", 0, lblStatusText)
         If dgvTable1.RowCount = 0 Then Exit Sub
         If dgvTable1.SelectedRows.Count <> 1 Then
-            WriteStatus("You need to select 1 item from the list to use this function", 0, lblStatusText)
+            WriteStatus("You need to select 1 item from the list to use this function", 2, lblStatusText)
             Exit Sub
         End If
         If MessageBox.Show("This will permanently delete the selected Item from the database." & Environment.NewLine & Core.Message.strContinue, Core.Message.strAreYouSure, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.No Then
-            WriteStatus("Delete cancelled", 5, lblStatusText)
+            WriteStatus("Delete cancelled", 0, lblStatusText)
             Exit Sub
         End If
+        CursorControl("Wait")
         ItemDelete()
+        CursorControl()
     End Sub
 
     Private Sub btnSearchAddOrUpdate_Click(sender As Object, e As EventArgs) Handles btnSearchAddOrUpdate.Click
+        WriteStatus("", 0, lblStatusText)
         If tblTable.TableName.Length < 1 Then Exit Sub
         If cbxSearch.Text.Length < 1 Then
-            WriteStatus("The Name of the Search must be at least 1 character long", 0, lblStatusText)
+            WriteStatus("The Name of the Search must be at least 1 character long", 2, lblStatusText)
             Exit Sub
         End If
+        CursorControl("Wait")
         SearchDelete(True)
         SearchAdd()
         If SaveXmlFile(xmlSearch, SeqData.curVar.SearchFile, True) = False Then
-            MessageBox.Show("The file " & SeqData.curVar.SearchFile & " was not saved.")
+            WriteStatus("The file " & SeqData.curVar.SearchFile & " was not saved.", 1, lblStatusText)
         Else
-            cbxSearch.Items.Add(cbxSearch.Text)
+            If cbxSearch.Items.Contains(cbxSearch.Text) = False Then cbxSearch.Items.Add(cbxSearch.Text)
             WriteStatus("Search saved", 0, lblStatusText)
         End If
+        CursorControl()
 
         'SearchListLoad(tblTable.TableName)
     End Sub
 
     Private Sub btnDeleteSearch_Click(sender As Object, e As EventArgs) Handles btnDeleteSearch.Click
+        WriteStatus("", 0, lblStatusText)
         If tblTable.TableName.Length < 1 Then Exit Sub
         If cbxSearch.Text.Length < 1 Then
-            MessageBox.Show("The Name of the Search must be at least 1 character long")
+            WriteStatus("The Name of the Search must be at least 1 character long", 2, lblStatusText)
             Exit Sub
         End If
+        CursorControl("Wait")
         SearchDelete(False)
         If SaveXmlFile(xmlSearch, SeqData.curVar.SearchFile, True) = False Then
-            MessageBox.Show("The file " & SeqData.curVar.SearchFile & " was not saved.")
+            WriteStatus("The file " & SeqData.curVar.SearchFile & " was not saved.", 1, lblStatusText)
+        Else
+            WriteStatus("Search deleted", 0, lblStatusText)
         End If
         SearchListLoad(tblTable.TableName)
-        btnClear_Click(Nothing, Nothing)
+        FieldsClearAll(True)
         cbxSearch.SelectedIndex = -1
         cbxSearch.Text = ""
-        WriteStatus("Search deleted", 0, lblStatusText)
+        CursorControl()
     End Sub
 
     Private Sub cbxSearch_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbxSearch.SelectedIndexChanged
         If SeqData.curStatus.SuspendActions = False Then
             CursorControl("Wait")
+            WriteStatus("", 0, lblStatusText)
             FieldsClearAll()
             SearchLoad()
             LoadList(True)
@@ -865,7 +943,6 @@ Public Class frmSequenchel
                         Dim strControl As String = tblTable.Item(intField).ControlField
                         Dim strControlValue As String = tblTable.Item(intField).ControlValue
                         If strControl.Length > 0 Then
-                            'MessageBox.Show(tblTable.Item(intField).FieldName)
                             For intField2 As Integer = 0 To tblTable.Count - 1
                                 If tblTable.Item(intField2).FieldName = strControl Then
                                     Select Case tblTable.Item(intField2).FieldCategory
@@ -1086,11 +1163,6 @@ Public Class frmSequenchel
         If objData.Tables(0).Rows.Count = 0 Then Exit Sub
         SeqData.curStatus.SuspendActions = True
         Try
-            'For intRowCount1 As Integer = 0 To objData.Tables(0).Rows.Count - 1
-            'If objData.Tables.Item(0).Rows(intRowCount1).Item(0).GetType().ToString = "System.DBNull" Then
-            'MessageBox.Show("Cell Must be empty")
-            'Else
-            'strReportText &= Environment.NewLine
             For intField As Integer = 0 To tblTable.Count - 1
                 If objData.Tables.Item(0).Rows(0).Item(tblTable.Item(intField).FieldName).GetType().ToString = "System.DBNull" Then
                     tblTable.Item(intField).BackColor = clrEmpty
@@ -1113,7 +1185,7 @@ Public Class frmSequenchel
             If objData.Tables(0).Rows.Count > 1 Then lblMultipleRows.Visible = True
 
         Catch ex As Exception
-            MessageBox.Show("There was an error loading the data." & Environment.NewLine & ex.Message)
+            WriteStatus("There was an error loading the data. please check the log.", 1, lblStatusText)
             SeqData.WriteLog("There was an error loading the data." & Environment.NewLine & ex.Message, 1)
 
             SeqData.curStatus.SuspendActions = False
@@ -1136,40 +1208,6 @@ Public Class frmSequenchel
                 strQuery2 = " WHERE 1=1 "
                 strQuery3 = ""
                 If tblTable.Item(intField).FieldSearchList = True Then
-                    'If tblTable.Item(intField).FieldName = strCriterium Or strCriterium = "" Then
-                    '    strQuery = "SELECT DISTINCT " & " "
-                    '    If SeqData.CurVar.LimitLookupLists = True Then strQuery &= "TOP " & SeqData.CurVar.LimitLookupListsCount & " "
-                    '    strQuery &= "COALESCE([" & tblTable.Item(intField).FieldName & "],'') AS [" & tblTable.Item(intField).FieldName & "]"
-                    '    strQuery &= " FROM [" & tblTable.TableName.Replace(".", "].[") & "] "
-                    '    strQuery3 = " ORDER BY [" & tblTable.Item(intField).FieldName & "] "
-                    'End If
-
-                    'If strCriterium.Length > 0 And strQuery.Length > 0 Then
-                    '    For intField2 As Integer = 0 To tblTable.Count - 1
-                    '        If tblTable.Item(intField2).BackColor = clrMarked And tblTable.Item(intField2).FieldName <> strCriterium Then
-                    '            strQuery2 &= " AND [" & tblTable.Item(intField2).FieldName & "] = '" & tblTable.Item(intField2).Text & "'"
-                    '        End If
-                    '    Next
-                    'End If
-                    'If tblTable.Item(intField).FieldName = strCriterium Or strCriterium = "" Then
-                    '    Try
-                    '        strQuery = strQuery & strQuery2 & strQuery3
-                    '        Dim objData As DataSet = QueryDb(dhdConnection, strQuery, True)
-                    '        If objData Is Nothing Then Exit Sub
-                    '        If objData.Tables.Count = 0 Then Exit Sub
-                    '        If objData.Tables(0).Rows.Count = 0 Then Exit Sub
-                    '        tblTable.Item(intField).Items.Clear()
-                    '        For intRowCount1 As Integer = 0 To objData.Tables(0).Rows.Count - 1
-                    '            'If objData.Tables.Item(0).Rows(intRowCount1).Item(0).GetType().ToString = "System.DBNull" Then
-                    '            'MessageBox.Show("Cell Must be empty")
-                    '            'Else
-                    '            tblTable.Item(intField).Items.Add(objData.Tables.Item(0).Rows(intRowCount1).Item(tblTable.Item(intField).FieldName))
-                    '            'End If
-                    '        Next
-                    '    Catch ex As Exception
-                    '        WriteLog(ex.Message, 1)
-                    '    End Try
-                    'End If
                     tblTable.Item(intField).RunSearch()
                 End If
             Next
@@ -1376,8 +1414,8 @@ Public Class frmSequenchel
                 WriteStatus(SeqData.dhdConnection.RowsAffected & " Record(s) Inserted.", 0, lblStatusText)
             End If
         Catch ex As Exception
-            MessageBox.Show("There was an error inserting the record: " & Environment.NewLine & ex.Message)
             SeqData.WriteLog("There was an error inserting the record: " & Environment.NewLine & ex.Message, 1)
+            WriteStatus("There was an error inserting the record. Please check the logfile.", 0, lblStatusText)
         End Try
 
         If SeqData.curStatus.Status > 3 Then
@@ -1456,7 +1494,7 @@ Public Class frmSequenchel
                 WriteStatus(SeqData.dhdConnection.RowsAffected & " Record(s) Updated.", 0, lblStatusText)
             End If
         Catch ex As Exception
-            MessageBox.Show("There was an error updating the record: " & Environment.NewLine & ex.Message)
+            WriteStatus("There was an error updating the record. Please check the logfile.", 0, lblStatusText)
             SeqData.WriteLog("There was an error updating the record: " & Environment.NewLine & ex.Message, 1)
         End Try
 
@@ -1485,7 +1523,7 @@ Public Class frmSequenchel
 
         Next
         If strQueryWhere = " WHERE 1=1 " Then
-            WriteStatus("You need an AUTOID or Primary Key field in order to delete an item", 1, lblStatusText)
+            WriteStatus("You need an AUTOID or Primary Key field in order to delete an item", 2, lblStatusText)
             Exit Sub
         End If
         strQuery = strQuery & strQueryWhere
@@ -1503,7 +1541,7 @@ Public Class frmSequenchel
             dtsData = SeqData.QueryDb(SeqData.dhdConnection, strQuery, 0)
             WriteStatus("Record Deleted", 0, lblStatusText)
         Catch ex As Exception
-            MessageBox.Show("There was an error deleting the record: " & Environment.NewLine & ex.Message)
+            WriteStatus("There was an error deleting the record. Please check the logfile", 1, lblStatusText)
             SeqData.WriteLog("There was an error deleting the record: " & Environment.NewLine & ex.Message, 1)
         End Try
 

@@ -82,6 +82,8 @@ Partial Class frmLinkedServer
         Me.grpUpdatable = New System.Windows.Forms.GroupBox()
         Me.lblLinkedServerName = New System.Windows.Forms.Label()
         Me.txtLinkedServerName = New System.Windows.Forms.TextBox()
+        Me.lblStatusTitle = New System.Windows.Forms.Label()
+        Me.lblStatusText = New System.Windows.Forms.Label()
         Me.grpUpdatable.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -96,7 +98,7 @@ Partial Class frmLinkedServer
         Me.lvwLinkedServers.MultiSelect = False
         Me.lvwLinkedServers.Name = "lvwLinkedServers"
         Me.lvwLinkedServers.Size = New System.Drawing.Size(394, 323)
-        Me.lvwLinkedServers.TabIndex = 78
+        Me.lvwLinkedServers.TabIndex = 0
         Me.lvwLinkedServers.UseCompatibleStateImageBehavior = False
         Me.lvwLinkedServers.View = System.Windows.Forms.View.Details
         '
@@ -136,7 +138,7 @@ Partial Class frmLinkedServer
         Me.txtServer.Location = New System.Drawing.Point(546, 110)
         Me.txtServer.Name = "txtServer"
         Me.txtServer.Size = New System.Drawing.Size(183, 20)
-        Me.txtServer.TabIndex = 116
+        Me.txtServer.TabIndex = 2
         '
         'lblInstance
         '
@@ -154,7 +156,7 @@ Partial Class frmLinkedServer
         Me.txtInstance.Location = New System.Drawing.Point(546, 136)
         Me.txtInstance.Name = "txtInstance"
         Me.txtInstance.Size = New System.Drawing.Size(183, 20)
-        Me.txtInstance.TabIndex = 118
+        Me.txtInstance.TabIndex = 4
         '
         'lblTcpPport
         '
@@ -172,7 +174,7 @@ Partial Class frmLinkedServer
         Me.txtTcpPort.Location = New System.Drawing.Point(546, 162)
         Me.txtTcpPort.Name = "txtTcpPort"
         Me.txtTcpPort.Size = New System.Drawing.Size(183, 20)
-        Me.txtTcpPort.TabIndex = 120
+        Me.txtTcpPort.TabIndex = 6
         '
         'lblDomain
         '
@@ -190,7 +192,7 @@ Partial Class frmLinkedServer
         Me.txtDomain.Location = New System.Drawing.Point(546, 188)
         Me.txtDomain.Name = "txtDomain"
         Me.txtDomain.Size = New System.Drawing.Size(183, 20)
-        Me.txtDomain.TabIndex = 122
+        Me.txtDomain.TabIndex = 8
         '
         'btnLinkedServerDelete
         '
@@ -198,7 +200,7 @@ Partial Class frmLinkedServer
         Me.btnLinkedServerDelete.Location = New System.Drawing.Point(458, 544)
         Me.btnLinkedServerDelete.Name = "btnLinkedServerDelete"
         Me.btnLinkedServerDelete.Size = New System.Drawing.Size(131, 20)
-        Me.btnLinkedServerDelete.TabIndex = 129
+        Me.btnLinkedServerDelete.TabIndex = 18
         Me.btnLinkedServerDelete.Text = "Delete Linked Server"
         '
         'btnLinkedServerClear
@@ -207,7 +209,7 @@ Partial Class frmLinkedServer
         Me.btnLinkedServerClear.Location = New System.Drawing.Point(595, 544)
         Me.btnLinkedServerClear.Name = "btnLinkedServerClear"
         Me.btnLinkedServerClear.Size = New System.Drawing.Size(131, 20)
-        Me.btnLinkedServerClear.TabIndex = 128
+        Me.btnLinkedServerClear.TabIndex = 19
         Me.btnLinkedServerClear.Text = "Clear"
         '
         'btnLinkedServerAdd
@@ -216,7 +218,7 @@ Partial Class frmLinkedServer
         Me.btnLinkedServerAdd.Location = New System.Drawing.Point(458, 518)
         Me.btnLinkedServerAdd.Name = "btnLinkedServerAdd"
         Me.btnLinkedServerAdd.Size = New System.Drawing.Size(131, 20)
-        Me.btnLinkedServerAdd.TabIndex = 127
+        Me.btnLinkedServerAdd.TabIndex = 16
         Me.btnLinkedServerAdd.Text = "Add Linked Server"
         '
         'btnLinkedServerUpdate
@@ -225,7 +227,7 @@ Partial Class frmLinkedServer
         Me.btnLinkedServerUpdate.Location = New System.Drawing.Point(595, 518)
         Me.btnLinkedServerUpdate.Name = "btnLinkedServerUpdate"
         Me.btnLinkedServerUpdate.Size = New System.Drawing.Size(131, 20)
-        Me.btnLinkedServerUpdate.TabIndex = 126
+        Me.btnLinkedServerUpdate.TabIndex = 17
         Me.btnLinkedServerUpdate.Text = "Update Linked Server"
         '
         'btnColumnsImport
@@ -234,7 +236,7 @@ Partial Class frmLinkedServer
         Me.btnColumnsImport.Location = New System.Drawing.Point(447, 44)
         Me.btnColumnsImport.Name = "btnColumnsImport"
         Me.btnColumnsImport.Size = New System.Drawing.Size(282, 20)
-        Me.btnColumnsImport.TabIndex = 147
+        Me.btnColumnsImport.TabIndex = 1
         Me.btnColumnsImport.Text = "Import Linked Servers from Host Server"
         '
         'lblHostServer
@@ -255,6 +257,7 @@ Partial Class frmLinkedServer
         Me.txtHostServer.ReadOnly = True
         Me.txtHostServer.Size = New System.Drawing.Size(183, 20)
         Me.txtHostServer.TabIndex = 148
+        Me.txtHostServer.TabStop = False
         '
         'btnClose
         '
@@ -262,7 +265,7 @@ Partial Class frmLinkedServer
         Me.btnClose.Location = New System.Drawing.Point(595, 570)
         Me.btnClose.Name = "btnClose"
         Me.btnClose.Size = New System.Drawing.Size(131, 23)
-        Me.btnClose.TabIndex = 150
+        Me.btnClose.TabIndex = 20
         Me.btnClose.Text = "Close"
         Me.btnClose.UseVisualStyleBackColor = True
         '
@@ -283,7 +286,7 @@ Partial Class frmLinkedServer
         Me.txtLinkedServer.Location = New System.Drawing.Point(546, 214)
         Me.txtLinkedServer.Name = "txtLinkedServer"
         Me.txtLinkedServer.Size = New System.Drawing.Size(183, 20)
-        Me.txtLinkedServer.TabIndex = 151
+        Me.txtLinkedServer.TabIndex = 10
         '
         'chkLinkedServer
         '
@@ -292,7 +295,7 @@ Partial Class frmLinkedServer
         Me.chkLinkedServer.Location = New System.Drawing.Point(525, 217)
         Me.chkLinkedServer.Name = "chkLinkedServer"
         Me.chkLinkedServer.Size = New System.Drawing.Size(15, 14)
-        Me.chkLinkedServer.TabIndex = 153
+        Me.chkLinkedServer.TabIndex = 9
         Me.chkLinkedServer.UseVisualStyleBackColor = True
         '
         'chkInstance
@@ -304,7 +307,7 @@ Partial Class frmLinkedServer
         Me.chkInstance.Location = New System.Drawing.Point(525, 139)
         Me.chkInstance.Name = "chkInstance"
         Me.chkInstance.Size = New System.Drawing.Size(15, 14)
-        Me.chkInstance.TabIndex = 155
+        Me.chkInstance.TabIndex = 3
         Me.chkInstance.UseVisualStyleBackColor = True
         '
         'chkTcpPort
@@ -316,7 +319,7 @@ Partial Class frmLinkedServer
         Me.chkTcpPort.Location = New System.Drawing.Point(525, 165)
         Me.chkTcpPort.Name = "chkTcpPort"
         Me.chkTcpPort.Size = New System.Drawing.Size(15, 14)
-        Me.chkTcpPort.TabIndex = 156
+        Me.chkTcpPort.TabIndex = 5
         Me.chkTcpPort.UseVisualStyleBackColor = True
         '
         'chkDomain
@@ -328,7 +331,7 @@ Partial Class frmLinkedServer
         Me.chkDomain.Location = New System.Drawing.Point(525, 191)
         Me.chkDomain.Name = "chkDomain"
         Me.chkDomain.Size = New System.Drawing.Size(15, 14)
-        Me.chkDomain.TabIndex = 157
+        Me.chkDomain.TabIndex = 7
         Me.chkDomain.UseVisualStyleBackColor = True
         '
         'chkDataSource
@@ -338,7 +341,7 @@ Partial Class frmLinkedServer
         Me.chkDataSource.Location = New System.Drawing.Point(525, 243)
         Me.chkDataSource.Name = "chkDataSource"
         Me.chkDataSource.Size = New System.Drawing.Size(15, 14)
-        Me.chkDataSource.TabIndex = 160
+        Me.chkDataSource.TabIndex = 11
         Me.chkDataSource.UseVisualStyleBackColor = True
         '
         'lblDataSource
@@ -358,7 +361,7 @@ Partial Class frmLinkedServer
         Me.txtDataSource.Location = New System.Drawing.Point(546, 240)
         Me.txtDataSource.Name = "txtDataSource"
         Me.txtDataSource.Size = New System.Drawing.Size(183, 20)
-        Me.txtDataSource.TabIndex = 158
+        Me.txtDataSource.TabIndex = 12
         '
         'lblProvider
         '
@@ -376,7 +379,7 @@ Partial Class frmLinkedServer
         Me.txtProvider.Location = New System.Drawing.Point(531, 19)
         Me.txtProvider.Name = "txtProvider"
         Me.txtProvider.Size = New System.Drawing.Size(183, 20)
-        Me.txtProvider.TabIndex = 161
+        Me.txtProvider.TabIndex = 10
         Me.txtProvider.Text = "SQLNCLI"
         '
         'lblServerProduct
@@ -395,7 +398,7 @@ Partial Class frmLinkedServer
         Me.txtServerProduct.Location = New System.Drawing.Point(531, 45)
         Me.txtServerProduct.Name = "txtServerProduct"
         Me.txtServerProduct.Size = New System.Drawing.Size(183, 20)
-        Me.txtServerProduct.TabIndex = 163
+        Me.txtServerProduct.TabIndex = 11
         Me.txtServerProduct.Text = "SQL_Server"
         '
         'chkCollationCompatible
@@ -404,7 +407,7 @@ Partial Class frmLinkedServer
         Me.chkCollationCompatible.Location = New System.Drawing.Point(6, 21)
         Me.chkCollationCompatible.Name = "chkCollationCompatible"
         Me.chkCollationCompatible.Size = New System.Drawing.Size(121, 17)
-        Me.chkCollationCompatible.TabIndex = 165
+        Me.chkCollationCompatible.TabIndex = 0
         Me.chkCollationCompatible.Text = "Collation Compatible"
         Me.chkCollationCompatible.UseVisualStyleBackColor = True
         '
@@ -416,7 +419,7 @@ Partial Class frmLinkedServer
         Me.chkDataAccess.Location = New System.Drawing.Point(6, 47)
         Me.chkDataAccess.Name = "chkDataAccess"
         Me.chkDataAccess.Size = New System.Drawing.Size(87, 17)
-        Me.chkDataAccess.TabIndex = 166
+        Me.chkDataAccess.TabIndex = 1
         Me.chkDataAccess.Text = "Data Access"
         Me.chkDataAccess.UseVisualStyleBackColor = True
         '
@@ -428,7 +431,7 @@ Partial Class frmLinkedServer
         Me.chkRpcOut.Location = New System.Drawing.Point(260, 127)
         Me.chkRpcOut.Name = "chkRpcOut"
         Me.chkRpcOut.Size = New System.Drawing.Size(68, 17)
-        Me.chkRpcOut.TabIndex = 167
+        Me.chkRpcOut.TabIndex = 9
         Me.chkRpcOut.Text = "RPC Out"
         Me.chkRpcOut.UseVisualStyleBackColor = True
         '
@@ -440,7 +443,7 @@ Partial Class frmLinkedServer
         Me.chkRpc.Location = New System.Drawing.Point(260, 101)
         Me.chkRpc.Name = "chkRpc"
         Me.chkRpc.Size = New System.Drawing.Size(48, 17)
-        Me.chkRpc.TabIndex = 168
+        Me.chkRpc.TabIndex = 8
         Me.chkRpc.Text = "RPC"
         Me.chkRpc.UseVisualStyleBackColor = True
         '
@@ -450,7 +453,7 @@ Partial Class frmLinkedServer
         Me.chkLazySchema.Location = New System.Drawing.Point(6, 73)
         Me.chkLazySchema.Name = "chkLazySchema"
         Me.chkLazySchema.Size = New System.Drawing.Size(139, 17)
-        Me.chkLazySchema.TabIndex = 169
+        Me.chkLazySchema.TabIndex = 2
         Me.chkLazySchema.Text = "Lazy Schema Validation"
         Me.chkLazySchema.UseVisualStyleBackColor = True
         '
@@ -462,7 +465,7 @@ Partial Class frmLinkedServer
         Me.chkRemoteCollation.Location = New System.Drawing.Point(6, 99)
         Me.chkRemoteCollation.Name = "chkRemoteCollation"
         Me.chkRemoteCollation.Size = New System.Drawing.Size(128, 17)
-        Me.chkRemoteCollation.TabIndex = 170
+        Me.chkRemoteCollation.TabIndex = 3
         Me.chkRemoteCollation.Text = "Use Remote Collation"
         Me.chkRemoteCollation.UseVisualStyleBackColor = True
         '
@@ -472,7 +475,7 @@ Partial Class frmLinkedServer
         Me.chkRPTPromotion.Location = New System.Drawing.Point(6, 125)
         Me.chkRPTPromotion.Name = "chkRPTPromotion"
         Me.chkRPTPromotion.Size = New System.Drawing.Size(224, 17)
-        Me.chkRPTPromotion.TabIndex = 171
+        Me.chkRPTPromotion.TabIndex = 4
         Me.chkRPTPromotion.Text = "Remote Procedure Transaction Promotion"
         Me.chkRPTPromotion.UseVisualStyleBackColor = True
         '
@@ -482,7 +485,7 @@ Partial Class frmLinkedServer
         Me.chkDistributor.Location = New System.Drawing.Point(260, 23)
         Me.chkDistributor.Name = "chkDistributor"
         Me.chkDistributor.Size = New System.Drawing.Size(73, 17)
-        Me.chkDistributor.TabIndex = 172
+        Me.chkDistributor.TabIndex = 5
         Me.chkDistributor.Text = "Distributor"
         Me.chkDistributor.UseVisualStyleBackColor = True
         '
@@ -492,7 +495,7 @@ Partial Class frmLinkedServer
         Me.chkPublisher.Location = New System.Drawing.Point(260, 49)
         Me.chkPublisher.Name = "chkPublisher"
         Me.chkPublisher.Size = New System.Drawing.Size(69, 17)
-        Me.chkPublisher.TabIndex = 173
+        Me.chkPublisher.TabIndex = 6
         Me.chkPublisher.Text = "Publisher"
         Me.chkPublisher.UseVisualStyleBackColor = True
         '
@@ -502,7 +505,7 @@ Partial Class frmLinkedServer
         Me.chkSubscriber.Location = New System.Drawing.Point(260, 75)
         Me.chkSubscriber.Name = "chkSubscriber"
         Me.chkSubscriber.Size = New System.Drawing.Size(76, 17)
-        Me.chkSubscriber.TabIndex = 174
+        Me.chkSubscriber.TabIndex = 7
         Me.chkSubscriber.Text = "Subscriber"
         Me.chkSubscriber.UseVisualStyleBackColor = True
         '
@@ -522,7 +525,7 @@ Partial Class frmLinkedServer
         Me.txtConnectionTimeout.Location = New System.Drawing.Point(531, 71)
         Me.txtConnectionTimeout.Name = "txtConnectionTimeout"
         Me.txtConnectionTimeout.Size = New System.Drawing.Size(183, 20)
-        Me.txtConnectionTimeout.TabIndex = 175
+        Me.txtConnectionTimeout.TabIndex = 12
         Me.txtConnectionTimeout.Text = "0"
         '
         'lblCollationName
@@ -541,7 +544,7 @@ Partial Class frmLinkedServer
         Me.txtCollationName.Location = New System.Drawing.Point(531, 97)
         Me.txtCollationName.Name = "txtCollationName"
         Me.txtCollationName.Size = New System.Drawing.Size(183, 20)
-        Me.txtCollationName.TabIndex = 177
+        Me.txtCollationName.TabIndex = 13
         '
         'lblQueryTimeout
         '
@@ -559,7 +562,7 @@ Partial Class frmLinkedServer
         Me.txtQueryTimeout.Location = New System.Drawing.Point(531, 123)
         Me.txtQueryTimeout.Name = "txtQueryTimeout"
         Me.txtQueryTimeout.Size = New System.Drawing.Size(183, 20)
-        Me.txtQueryTimeout.TabIndex = 179
+        Me.txtQueryTimeout.TabIndex = 14
         Me.txtQueryTimeout.Text = "0"
         '
         'lblRemoteLoginName
@@ -579,7 +582,7 @@ Partial Class frmLinkedServer
         Me.txtRemoteLoginName.Location = New System.Drawing.Point(546, 300)
         Me.txtRemoteLoginName.Name = "txtRemoteLoginName"
         Me.txtRemoteLoginName.Size = New System.Drawing.Size(183, 20)
-        Me.txtRemoteLoginName.TabIndex = 181
+        Me.txtRemoteLoginName.TabIndex = 14
         '
         'lblPassword
         '
@@ -599,7 +602,7 @@ Partial Class frmLinkedServer
         Me.txtPassword.Name = "txtPassword"
         Me.txtPassword.PasswordChar = Global.Microsoft.VisualBasic.ChrW(42)
         Me.txtPassword.Size = New System.Drawing.Size(183, 20)
-        Me.txtPassword.TabIndex = 183
+        Me.txtPassword.TabIndex = 15
         '
         'lblLocalLoginName
         '
@@ -618,7 +621,7 @@ Partial Class frmLinkedServer
         Me.txtLocalLoginName.Location = New System.Drawing.Point(546, 274)
         Me.txtLocalLoginName.Name = "txtLocalLoginName"
         Me.txtLocalLoginName.Size = New System.Drawing.Size(183, 20)
-        Me.txtLocalLoginName.TabIndex = 185
+        Me.txtLocalLoginName.TabIndex = 13
         '
         'grpUpdatable
         '
@@ -669,12 +672,36 @@ Partial Class frmLinkedServer
         Me.txtLinkedServerName.ReadOnly = True
         Me.txtLinkedServerName.Size = New System.Drawing.Size(183, 20)
         Me.txtLinkedServerName.TabIndex = 188
+        Me.txtLinkedServerName.TabStop = False
+        '
+        'lblStatusTitle
+        '
+        Me.lblStatusTitle.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.lblStatusTitle.AutoSize = True
+        Me.lblStatusTitle.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblStatusTitle.Location = New System.Drawing.Point(18, 579)
+        Me.lblStatusTitle.Name = "lblStatusTitle"
+        Me.lblStatusTitle.Size = New System.Drawing.Size(51, 16)
+        Me.lblStatusTitle.TabIndex = 190
+        Me.lblStatusTitle.Text = "Status"
+        '
+        'lblStatusText
+        '
+        Me.lblStatusText.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lblStatusText.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblStatusText.Location = New System.Drawing.Point(75, 575)
+        Me.lblStatusText.Name = "lblStatusText"
+        Me.lblStatusText.Size = New System.Drawing.Size(514, 23)
+        Me.lblStatusText.TabIndex = 191
         '
         'frmLinkedServer
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(741, 606)
+        Me.Controls.Add(Me.lblStatusText)
+        Me.Controls.Add(Me.lblStatusTitle)
         Me.Controls.Add(Me.lblLinkedServerName)
         Me.Controls.Add(Me.txtLinkedServerName)
         Me.Controls.Add(Me.grpUpdatable)
@@ -785,4 +812,6 @@ Partial Class frmLinkedServer
     Friend WithEvents grpUpdatable As System.Windows.Forms.GroupBox
     Friend WithEvents lblLinkedServerName As System.Windows.Forms.Label
     Friend WithEvents txtLinkedServerName As System.Windows.Forms.TextBox
+    Friend WithEvents lblStatusTitle As System.Windows.Forms.Label
+    Friend WithEvents lblStatusText As System.Windows.Forms.Label
 End Class

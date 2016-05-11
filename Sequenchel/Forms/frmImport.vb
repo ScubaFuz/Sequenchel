@@ -5,35 +5,102 @@ Public Class frmImport
         LoadDefaults()
     End Sub
 
+#Region "Controls"
+
     Private Sub btnSelectFile_Click(sender As Object, e As EventArgs) Handles btnSelectFile.Click
+        CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
         SelectFile()
+        CursorControl()
     End Sub
 
     Private Sub btnImportFile_Click(sender As Object, e As EventArgs) Handles btnImportFile.Click
+        CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
         If txtCurrentFile.Text.Length > 3 And txtCurrentFile.Text.Contains(".") Then
             ImportFile()
         Else
-            MessageBox.Show("Please enter a valid path and filename before pressing this button")
+            WriteStatus("Please enter a valid path and filename before pressing this button", 2, lblStatusText)
         End If
+        CursorControl()
     End Sub
 
     Private Sub btnUploadFile_Click(sender As Object, e As EventArgs) Handles btnUploadFile.Click
+        CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
         If SeqData.dhdText.DatasetCheck(dtsImport) = False Then Exit Sub
         UploadFile(dtsImport)
+        CursorControl()
     End Sub
 
     Private Sub btnUploadTable_Click(sender As Object, e As EventArgs) Handles btnUploadTable.Click
+        CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
         Try
             If dgvImport.DataSource Is Nothing Then Exit Sub
             Dim dtsUpload As New DataSet
             dtsUpload.Tables.Add(dgvImport.DataSource.Copy)
             UploadFile(dtsUpload)
         Catch ex As Exception
-            MessageBox.Show("Table Upload failed. Check if the columns match and try again" & Environment.NewLine & ex.Message)
-            lblStatusText.Text = "0 rows uploaded"
+            WriteStatus("Table Upload failed. Check the log for more information.", 1, lblStatusText)
+            SeqData.WriteLog("Table Upload failed. Check if the columns match and try again" & Environment.NewLine & ex.Message, 1)
             Exit Sub
         End Try
+        CursorControl()
     End Sub
+
+    Private Sub chkDatabase_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles chkDatabase.CheckedChanged
+        Checkfields()
+    End Sub
+
+    Private Sub chkFile_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles chkFile.CheckedChanged
+        Checkfields()
+    End Sub
+
+    Private Sub chkWinAuth_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles chkWinAuth.CheckedChanged
+        Checkfields()
+    End Sub
+
+    Private Sub btnPreviousTable_Click(sender As Object, e As EventArgs) Handles btnPreviousTable.Click
+        CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
+        DisplayData(btnPreviousTable.Tag)
+        CursorControl()
+    End Sub
+
+    Private Sub btnNextTable_Click(sender As Object, e As EventArgs) Handles btnNextTable.Click
+        CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
+        DisplayData(btnNextTable.Tag)
+        CursorControl()
+    End Sub
+
+    Private Sub chkImportTable_CheckedChanged(sender As Object, e As EventArgs) Handles chkUploadTable.CheckedChanged
+        DataTableSetExtendedProperty(dgvImport.DataSource, chkUploadTable.Checked)
+    End Sub
+
+    Private Sub chkCovertToText_CheckedChanged(sender As Object, e As EventArgs) Handles chkCovertToText.CheckedChanged
+        SeqData.curVar.ConvertToText = chkCovertToText.Checked
+    End Sub
+
+    Private Sub chkCovertToNull_CheckedChanged(sender As Object, e As EventArgs) Handles chkCovertToNull.CheckedChanged
+        SeqData.curVar.ConvertToNull = chkCovertToNull.Checked
+    End Sub
+
+    Private Sub txtDelimiter_MouseHover(sender As Object, e As EventArgs) Handles txtDelimiter.MouseHover
+        txtDelimiterShow.Text = txtDelimiter.Text
+        txtDelimiterShow.Visible = True
+    End Sub
+
+    Private Sub txtDelimiter_MouseLeave(sender As Object, e As EventArgs) Handles txtDelimiter.MouseLeave
+        txtDelimiterShow.Visible = False
+    End Sub
+
+    Private Sub txtDelimiter_TextChanged(sender As Object, e As EventArgs) Handles txtDelimiter.TextChanged
+        txtDelimiterShow.Text = txtDelimiter.Text
+    End Sub
+
+#End Region
 
     Private Sub LoadDefaults()
         txtServer.Text = SeqData.dhdConnection.DataLocation
@@ -63,18 +130,19 @@ Public Class frmImport
 
         SeqData.dhdText.ImportFile = ofdFile.FileName
         txtCurrentFile.Text = SeqData.dhdText.ImportFile
+        WriteStatus("File Selected for Import", 0, lblStatusText)
         ImportFile()
     End Sub
 
     Private Sub ImportFile()
         If SeqData.dhdText.CheckFile(SeqData.dhdText.PathConvert(SeqData.CheckFilePath(SeqData.dhdText.ImportFile))) = False Then
-            MessageBox.Show("The file was not found. Check the file path and name")
+            WriteStatus("The file was not found. Check the file path and name", 2, lblStatusText)
             Exit Sub
         End If
         dtsImport = SeqData.ImportFile(SeqData.dhdText.PathConvert(SeqData.CheckFilePath(SeqData.dhdText.ImportFile)), chkHasHeaders.Checked, txtDelimiter.Text)
 
         If SeqData.dhdText.DatasetCheck(dtsImport) = False Then
-            MessageBox.Show("File extension or delimiter not recognised." & Environment.NewLine & "Please try again or select a different file.")
+            WriteStatus("File extension or delimiter not recognised or unable to load file .", 2, lblStatusText)
             Exit Sub
         End If
 
@@ -85,10 +153,11 @@ Public Class frmImport
                 End If
                 UploadFile(dtsImport)
             Else
-                MessageBox.Show("No data was loaded from the file." & Environment.NewLine & "Please check the file before trying again.")
+                WriteStatus("No data was loaded from the file.", 2, lblStatusText)
             End If
         Catch ex As Exception
-            MessageBox.Show("There was an error displaying or uploading the file." & Environment.NewLine & ex.Message)
+            WriteStatus("There was an error displaying or uploading the file. Please check the log", 1, lblStatusText)
+            SeqData.WriteLog("There was an error displaying or uploading the file." & Environment.NewLine & ex.Message, 1)
         End Try
     End Sub
 
@@ -139,10 +208,15 @@ Public Class frmImport
                 End If
             Next
             If dtsUpload.Tables.Count > 0 Then
-                SeqData.ExportFile(dtsUpload, SeqData.CheckFilePath(txtFileName.Text, True), SeqData.curVar.ConvertToText, SeqData.curVar.ConvertToNull, SeqData.curVar.ShowFile, chkHasHeaders.Checked, txtDelimiter.Text, SeqData.curVar.QuoteValues, SeqData.curVar.CreateDir)
+                If SeqData.ExportFile(dtsUpload, SeqData.CheckFilePath(txtFileName.Text, True), SeqData.curVar.ConvertToText, SeqData.curVar.ConvertToNull, SeqData.curVar.ShowFile, chkHasHeaders.Checked, txtDelimiter.Text, SeqData.curVar.QuoteValues, SeqData.curVar.CreateDir) = False Then
+                    WriteStatus("There was an error exporting the file. PLease check the log.", 1, lblStatusText)
+                Else
+                    WriteStatus("File uploaded.", 0, lblStatusText)
+                End If
             End If
         Catch ex As Exception
-            MessageBox.Show("There was an error writng to " & txtFileName.Text & Environment.NewLine & ex.Message)
+            WriteStatus("There was an error writng to " & txtFileName.Text & " Please check the log", 1, lblStatusText)
+            SeqData.WriteLog("There was an error writng to " & txtFileName.Text & Environment.NewLine & ex.Message, 1)
         End Try
     End Sub
 
@@ -163,10 +237,12 @@ Public Class frmImport
         dhdDB.Password = txtPassword.Text
         intRecordsAffected = SeqData.SaveToDatabase(dhdDB, dtsUpload, SeqData.curVar.ConvertToText, SeqData.curVar.ConvertToNull)
         If intRecordsAffected = -1 Then
+            WriteStatus("Export to database failed.", 1, lblStatusText)
+            SeqData.WriteLog("Export to database failed. Check if the columns match and try again" & Environment.NewLine & "If you are importing more than 1 table, make sure they have identical columns" & Environment.NewLine & dhdDB.ErrorMessage, 1)
             MessageBox.Show("Export to database failed. Check if the columns match and try again" & Environment.NewLine & "If you are importing more than 1 table, make sure they have identical columns" & Environment.NewLine & dhdDB.ErrorMessage)
             Exit Sub
         Else
-            lblStatusText.Text = intRecordsAffected & " rows uploaded"
+            WriteStatus(intRecordsAffected & " row(s) uploaded", 0, lblStatusText)
         End If
     End Sub
 
@@ -198,30 +274,6 @@ Public Class frmImport
         End If
     End Sub
 
-    Private Sub chkDatabase_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles chkDatabase.CheckedChanged
-        Checkfields()
-    End Sub
-
-    Private Sub chkFile_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles chkFile.CheckedChanged
-        Checkfields()
-    End Sub
-
-    Private Sub chkWinAuth_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles chkWinAuth.CheckedChanged
-        Checkfields()
-    End Sub
-
-    Private Sub btnPreviousTable_Click(sender As Object, e As EventArgs) Handles btnPreviousTable.Click
-        DisplayData(btnPreviousTable.Tag)
-    End Sub
-
-    Private Sub btnNextTable_Click(sender As Object, e As EventArgs) Handles btnNextTable.Click
-        DisplayData(btnNextTable.Tag)
-    End Sub
-
-    Private Sub chkImportTable_CheckedChanged(sender As Object, e As EventArgs) Handles chkUploadTable.CheckedChanged
-        DataTableSetExtendedProperty(dgvImport.DataSource, chkUploadTable.Checked)
-    End Sub
-
     Private Sub DataTableSetExtendedProperty(dttInput As DataTable, blnExportTable As Boolean)
         If dttInput Is Nothing Then Exit Sub
         If dttInput.ExtendedProperties.Count = 0 Then
@@ -249,24 +301,4 @@ Public Class frmImport
         End If
     End Function
 
-    Private Sub chkCovertToText_CheckedChanged(sender As Object, e As EventArgs) Handles chkCovertToText.CheckedChanged
-        SeqData.curVar.ConvertToText = chkCovertToText.Checked
-    End Sub
-
-    Private Sub chkCovertToNull_CheckedChanged(sender As Object, e As EventArgs) Handles chkCovertToNull.CheckedChanged
-        SeqData.curVar.ConvertToNull = chkCovertToNull.Checked
-    End Sub
-
-    Private Sub txtDelimiter_MouseHover(sender As Object, e As EventArgs) Handles txtDelimiter.MouseHover
-        txtDelimiterShow.Text = txtDelimiter.Text
-        txtDelimiterShow.Visible = True
-    End Sub
-
-    Private Sub txtDelimiter_MouseLeave(sender As Object, e As EventArgs) Handles txtDelimiter.MouseLeave
-        txtDelimiterShow.Visible = False
-    End Sub
-
-    Private Sub txtDelimiter_TextChanged(sender As Object, e As EventArgs) Handles txtDelimiter.TextChanged
-        txtDelimiterShow.Text = txtDelimiter.Text
-    End Sub
 End Class
