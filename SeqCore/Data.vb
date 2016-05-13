@@ -852,19 +852,7 @@ Public Class Data
         If dhdText.CheckFile(CheckFilePath(curVar.TablesFile)) = True Then
             Try
                 xmlTables.Load(dhdText.PathConvert(CheckFilePath(curVar.TablesFile)))
-                Dim blnTableExists As Boolean = False
-                curVar.TableDefault = ""
-
-                Dim TableNode As XmlNode
-                Dim ReturnValue As New List(Of String)
-                For Each TableNode In xmlTables.SelectNodes("//Table")
-                    If TableNode.Item("Name").InnerText = curStatus.Table Then blnTableExists = True
-                    ReturnValue.Add(TableNode.Item("Alias").InnerText)
-                    If TableNode.Attributes("Default").Value = "True" Then
-                        curVar.TableDefault = TableNode.Item("Alias").InnerText
-                    End If
-                Next
-                If blnTableExists = False And curStatus.Table = "" Then curStatus.Table = curVar.TableDefault
+                Dim ReturnValue As List(Of String) = LoadTablesListXml(xmlTables, False)
                 Return ReturnValue
             Catch ex As Exception
                 Return Nothing
@@ -873,6 +861,34 @@ Public Class Data
             End Try
         End If
         Return Nothing
+    End Function
+
+    Public Function LoadTablesListXml(xmlTables As XmlDocument, blnUseFullName As Boolean) As List(Of String)
+        Try
+            Dim blnTableExists As Boolean = False
+            curVar.TableDefault = ""
+
+            Dim TableNode As XmlNode
+            Dim ReturnValue As New List(Of String)
+            For Each TableNode In xmlTables.SelectNodes("//Table")
+                If TableNode.Item("Name").InnerText = curStatus.Table Then blnTableExists = True
+                If blnUseFullName = True Then
+                    ReturnValue.Add(TableNode.Item("Alias").InnerText & " (" & TableNode.Item("Name").InnerText & ")")
+                Else
+                    ReturnValue.Add(TableNode.Item("Alias").InnerText)
+                End If
+                If TableNode.Attributes("Default").Value = "True" Then
+                    curVar.TableDefault = TableNode.Item("Alias").InnerText
+                End If
+            Next
+            If blnTableExists = False And curStatus.Table = "" Then curStatus.Table = curVar.TableDefault
+            Return ReturnValue
+        Catch ex As Exception
+            Return Nothing
+            ErrorMessage = "There was an error loading the tables list. Please check the file" & Environment.NewLine & dhdText.PathConvert(curVar.TablesFile) & Environment.NewLine & ex.Message
+            WriteLog("There was an error loading the tables list. Please check the file" & Environment.NewLine & dhdText.PathConvert(curVar.TablesFile) & Environment.NewLine & ex.Message, 1)
+        End Try
+
     End Function
 
     Public Function LoadReportsXml(xmlReports As XmlDocument) As List(Of String)

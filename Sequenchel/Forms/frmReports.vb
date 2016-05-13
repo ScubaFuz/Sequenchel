@@ -877,6 +877,20 @@ Public Class frmReports
                             End If
                         End If
                     Next
+                    For Each ctrControl In pnlRelationsTargetTable.Controls
+                        If ctrControl.Name.ToString.Substring(ctrControl.Name.ToString.Length - strTable.Length, strTable.Length) = strTable Then
+                            If ctrControl.Name.ToString.Substring(ctrControl.Name.ToString.Length - strTable.Length - 1, 1) = intCount Then
+                                ctrControl.Text = xmlRNode.InnerText
+                            End If
+                        End If
+                    Next
+                    For Each ctrControl In pnlRelationsTargetField.Controls
+                        If ctrControl.Name.ToString.Substring(ctrControl.Name.ToString.Length - strTable.Length, strTable.Length) = strTable Then
+                            If ctrControl.Name.ToString.Substring(ctrControl.Name.ToString.Length - strTable.Length - 1, 1) = intCount Then
+                                ctrControl.Text = xmlRNode.InnerText
+                            End If
+                        End If
+                    Next
                     For Each ctrControl In pnlRelationsJoinType.Controls
                         If ctrControl.Name.ToString.Substring(ctrControl.Name.ToString.Length - strTable.Length, strTable.Length) = strTable Then
                             If ctrControl.Name.ToString.Substring(ctrControl.Name.ToString.Length - strTable.Length - 1, 1) = intCount Then
@@ -1145,6 +1159,9 @@ Public Class frmReports
                 'btnReportFieldAdd_Click(Nothing, Nothing)
                 SetCtrText(pnlRelationsUse, strTable, xRNode.Item("RelationEnabled").InnerText, intRelationNumber)
                 SetCtrText(pnlRelationsField, strTable, xRNode.Item("RelationSource").InnerText, intRelationNumber)
+                If SeqData.dhdText.CheckNodeElement(xRNode, "RelationTarget") Then SetCtrText(pnlRelationsRelation, strTable, xRNode.Item("RelationTarget").InnerText, intRelationNumber)
+                If SeqData.dhdText.CheckNodeElement(xRNode, "RelationTargetTable") Then SetCtrText(pnlRelationsTargetTable, strTable, xRNode.Item("RelationTargetTable").InnerText, intRelationNumber)
+                If SeqData.dhdText.CheckNodeElement(xRNode, "RelationTargetField") Then SetCtrText(pnlRelationsTargetField, strTable, xRNode.Item("RelationTargetField").InnerText, intRelationNumber)
                 SetCtrText(pnlRelationsRelation, strTable, xRNode.Item("RelationTarget").InnerText, intRelationNumber)
                 SetCtrText(pnlRelationsJoinType, strTable, xRNode.Item("RelationJoinType").InnerText, intRelationNumber)
 
@@ -1197,7 +1214,9 @@ Public Class frmReports
                 'btnReportFieldAdd_Click(Nothing, Nothing)
                 SetCtrText(pnlRelationsUse, strTable, xRNode.Item("RelationEnabled").InnerText, intRelationNumber)
                 SetCtrText(pnlRelationsField, strTable, xRNode.Item("RelationSource").InnerText, intRelationNumber)
-                SetCtrText(pnlRelationsRelation, strTable, xRNode.Item("RelationTarget").InnerText, intRelationNumber)
+                If SeqData.dhdText.CheckNodeElement(xRNode, "RelationTarget") Then SetCtrText(pnlRelationsRelation, strTable, xRNode.Item("RelationTarget").InnerText, intRelationNumber)
+                If SeqData.dhdText.CheckNodeElement(xRNode, "RelationTargetTable") Then SetCtrText(pnlRelationsTargetTable, strTable, xRNode.Item("RelationTargetTable").InnerText, intRelationNumber)
+                If SeqData.dhdText.CheckNodeElement(xRNode, "RelationTargetField") Then SetCtrText(pnlRelationsTargetField, strTable, xRNode.Item("RelationTargetField").InnerText, intRelationNumber)
                 SetCtrText(pnlRelationsJoinType, strTable, xRNode.Item("RelationJoinType").InnerText, intRelationNumber)
 
             Next
@@ -1449,7 +1468,9 @@ Public Class frmReports
                     SeqData.dhdText.CreateAppendElement(NewRelationNode, "RelationNumber", intControlNumber)
                     SeqData.dhdText.CreateAppendElement(NewRelationNode, "RelationEnabled", ctrRelation.Checked.ToString)
                     SeqData.dhdText.CreateAppendElement(NewRelationNode, "RelationSource", GetCtrText(pnlRelationsField, strTableName, intControlNumber))
-                    SeqData.dhdText.CreateAppendElement(NewRelationNode, "RelationTarget", GetCtrText(pnlRelationsRelation, strTableName, intControlNumber))
+                    'SeqData.dhdText.CreateAppendElement(NewRelationNode, "RelationTarget", GetCtrText(pnlRelationsRelation, strTableName, intControlNumber))
+                    SeqData.dhdText.CreateAppendElement(NewRelationNode, "RelationTargetTable", GetCtrText(pnlRelationsTargetTable, strTableName, intControlNumber))
+                    SeqData.dhdText.CreateAppendElement(NewRelationNode, "RelationTargetField", GetCtrText(pnlRelationsTargetField, strTableName, intControlNumber))
                     SeqData.dhdText.CreateAppendElement(NewRelationNode, "RelationTargetAlias", GetCtrText(pnlRelationsRelation, strTableName, intControlNumber))
                     SeqData.dhdText.CreateAppendElement(NewRelationNode, "RelationJoinType", GetCtrText(pnlRelationsJoinType, strTableName, intControlNumber))
                 End If

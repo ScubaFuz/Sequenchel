@@ -998,7 +998,7 @@ Public Class frmConfiguration
             intWidth = SeqData.GetWidth(strDataType, dtsData.Tables.Item(0).Rows(intRowCount).Item("MaxLength"))
             If intRowCount = dtsData.Tables(0).Rows.Count - 1 And blnReloadAll = True Then blnReload = True
             FieldAddOrUpdate(strSchemaName & "." & strTableName, dtsData.Tables.Item(0).Rows(intRowCount).Item("colName"), dtsData.Tables.Item(0).Rows(intRowCount).Item("colName"), _
-                     strDataType, blnIdentity, blnPrimaryKey, intWidth, "", "", False, txtControlField.Text, txtControlValue.Text, chkControlUpdate.Checked, chkControlMode.Checked, False, "", _
+                     strDataType, blnIdentity, blnPrimaryKey, intWidth, "", "", "", "", False, txtControlField.Text, txtControlValue.Text, chkControlUpdate.Checked, chkControlMode.Checked, False, "", _
                      blnShowField, intColCount, intWidth, True, True, chkFieldSearchList.Checked, chkFieldUpdate.Checked, blnReload)
 
             If Not dtsRelations Is Nothing Then
@@ -1012,9 +1012,9 @@ Public Class frmConfiguration
                             And dtsRelations.Tables.Item(0).Rows(intRowCountRel).Item("FK_Table") = strTableName _
                             And dtsRelations.Tables.Item(0).Rows(intRowCountRel).Item("FK_Column") = dtsData.Tables.Item(0).Rows(intRowCount).Item("colName") Then
                                 RelationAdd(strSchemaName & "." & strTableName, dtsData.Tables.Item(0).Rows(intRowCount).Item("colName"), _
-                                    dtsRelations.Tables.Item(0).Rows(intRowCountRel).Item("PK_Schema") & "." _
-                                    & dtsRelations.Tables.Item(0).Rows(intRowCountRel).Item("PK_Table") & "." _
-                                    & dtsRelations.Tables.Item(0).Rows(intRowCountRel).Item("PK_Column"), "", False)
+                                    dtsRelations.Tables.Item(0).Rows(intRowCountRel).Item("PK_Schema") & "." & dtsRelations.Tables.Item(0).Rows(intRowCountRel).Item("PK_Table"), _
+                                    dtsRelations.Tables.Item(0).Rows(intRowCountRel).Item("PK_Schema") & "." & dtsRelations.Tables.Item(0).Rows(intRowCountRel).Item("PK_Table"), _
+                                    dtsRelations.Tables.Item(0).Rows(intRowCountRel).Item("PK_Column"), "", False)
                                 'Add Relations for this column
                             End If
                         Next
@@ -1118,7 +1118,16 @@ Public Class frmConfiguration
     Private Sub btnFieldAddOrUpdate_Click(sender As Object, e As EventArgs) Handles btnFieldAddOrUpdate.Click
         CursorControl("Wait")
         WriteStatus("", 0, lblStatusText)
-        FieldAddOrUpdate(SeqData.curStatus.Table, txtFieldName.Text, txtFieldAlias.Text, cbxDataType.SelectedItem, chkIdentity.Checked, chkPrimaryKey.Checked, txtFieldWidth.Text, cbxRelations.Text, txtRelatedField.Text, chkRelatedField.Checked, txtControlField.Text, txtControlValue.Text, chkControlUpdate.Checked, _
+        Dim strTableName As String = "", strTableAlias As String = ""
+        If cbxRelationTables.Text.IndexOf("(") > 0 Then
+            strTableName = cbxRelationTables.Text.Substring(cbxRelationTables.Text.IndexOf("(") + 1, cbxRelationTables.Text.Length - (cbxRelationTables.Text.IndexOf("(") + 1) - 1)
+            strTableAlias = cbxRelationTables.Text.Substring(0, cbxRelationTables.Text.IndexOf("(") - 1)
+        Else
+            strTableName = cbxRelationTables.Text
+            strTableAlias = cbxRelationTables.Text
+        End If
+
+        FieldAddOrUpdate(SeqData.curStatus.Table, txtFieldName.Text, txtFieldAlias.Text, cbxDataType.SelectedItem, chkIdentity.Checked, chkPrimaryKey.Checked, txtFieldWidth.Text, strTableName, strTableAlias, cbxRelationFields.Text, txtRelatedField.Text, chkRelatedField.Checked, txtControlField.Text, txtControlValue.Text, chkControlUpdate.Checked, _
                          chkControlMode.Checked, chkDefaultButton.Checked, txtDefaultButton.Text, chkFieldList.Checked, txtFieldListOrder.Text, txtFieldListWidth.Text, chkFieldVisible.Checked, chkFieldSearch.Checked, chkFieldSearchList.Checked, chkFieldUpdate.Checked, True)
         CursorControl()
     End Sub
@@ -1166,6 +1175,7 @@ Public Class frmConfiguration
         FieldsClear()
         Dim strFieldName As String = ""
         Dim strFieldValue As String = ""
+        Dim strTableName As String = "", strTableAlias As String = "", strRelatedField As String = ""
 
         For Each xNode As TreeNode In PNode.Nodes
             strFieldName = xNode.Text
@@ -1209,28 +1219,29 @@ Public Class frmConfiguration
                     If strFieldValue.Length > 0 Then txtFieldWidth.Text = strFieldValue
                 Case "Relations"
                     For Each xRnode As TreeNode In xNode.Nodes
-                        If xRnode.Nodes(0).Text = "(ATTRIBUTES)" Then
-                            'MessageBox.Show(xNode.Nodes(0).Nodes.Count)
-                            Try
-                                txtRelatedField.Text = Replace(Replace(xRnode.Nodes(0).Nodes(0).Text, "RelatedField = '", ""), "'", "")
-                            Catch ex As Exception
-                                txtRelatedField.Text = ""
-                            End Try
-                            Try
-                                chkRelatedField.Checked = Replace(Replace(xRnode.Nodes(0).Nodes(1).Text, "RelatedFieldList = '", ""), "'", "")
-                            Catch ex As Exception
-                                chkRelatedField.Checked = False
-                            End Try
-                            strFieldValue = xRnode.Nodes(1).Text
-                        Else
-                            strFieldValue = xRnode.Nodes(0).Text
+                        If xRnode.Nodes.Count > 0 Then
+                            If xRnode.Nodes(0).Text = "(ATTRIBUTES)" Then
+                                'MessageBox.Show(xNode.Nodes(0).Nodes.Count)
+                                strFieldValue = xRnode.Nodes(1).Text
+                            ElseIf xRnode.Nodes(0).Text = "RelationTable" Then
+                                'dont know yet
+                                strTableName = xRnode.Nodes(0).Nodes(0).Text
+                                strTableAlias = xRnode.Nodes(1).Nodes(0).Text
+                                strRelatedField = xRnode.Nodes(2).Nodes(0).Text
+                                strFieldValue = strTableAlias & " (" & strTableName & ")"
+                            Else
+                                strFieldValue = xRnode.Nodes(0).Text
+                                If strFieldValue.IndexOf(".") > 0 Then
+                                    strFieldValue = strFieldValue.Substring(0, strFieldValue.LastIndexOf(".")) & " (" & strFieldValue.Substring(0, strFieldValue.LastIndexOf(".")) & ")"
+                                End If
+                            End If
                         End If
 
                         If xRnode.Nodes.Count > 0 Then
-                            cbxRelations.Items.Add(strFieldValue)
+                            cbxRelationTables.Items.Add(strFieldValue)
                         End If
                     Next
-                    If cbxRelations.Items.Count > 0 Then cbxRelations.SelectedIndex = 0
+                    If cbxRelationTables.Items.Count > 0 Then cbxRelationTables.SelectedIndex = 0
                     ''If strFieldValue.Length > 0 Then txtRelations.Text = strFieldValue
                     'If strFieldValue.Length > 0 Then cbxRelations.Items.Add(strFieldValue)
                     'If cbxRelations.Items.Count > 0 Then cbxRelations.SelectedIndex = 0
@@ -1272,11 +1283,12 @@ Public Class frmConfiguration
         chkIdentity.Checked = False
         chkPrimaryKey.Checked = False
         txtFieldWidth.Text = ""
-        'txtRelations.Text = ""
-        cbxRelations.Items.Clear()
+        cbxRelationTables.Items.Clear()
+        cbxRelationTables.Text = ""
+        cbxRelationFields.Items.Clear()
+        cbxRelationFields.Text = ""
         txtRelatedField.Text = ""
         chkRelatedField.Checked = False
-        cbxRelations.Text = ""
         chkDefaultButton.Checked = False
         txtDefaultButton.Text = ""
         txtControlField.Text = ""
@@ -1293,7 +1305,7 @@ Public Class frmConfiguration
         chkFieldUpdate.Checked = False
     End Sub
 
-    Private Sub FieldAddOrUpdate(TableName As String, FldName As String, FldAlias As String, DataType As String, Identity As Boolean, PrimaryKey As Boolean, FldWidth As String, Relations As String, RelatedField As String, RelatedFieldList As String, ControlField As String, _
+    Private Sub FieldAddOrUpdate(TableName As String, FldName As String, FldAlias As String, DataType As String, Identity As Boolean, PrimaryKey As Boolean, FldWidth As String, RelationTable As String, RelationTableAlias As String, RelationField As String, RelatedField As String, RelatedFieldList As String, ControlField As String, _
                          ControlValue As String, ControlUpdate As Boolean, ControlMode As Boolean, DefaultButton As Boolean, DefaultValue As String, FldList As Boolean, Order As String, Width As String, _
                          FldVisible As Boolean, FldSearch As Boolean, FldSearchList As Boolean, FldUpdate As Boolean, Optional Reload As Boolean = False)
 
@@ -1335,7 +1347,7 @@ Public Class frmConfiguration
         SeqData.dhdText.CreateAppendElement(xFNode, "FldSearchList", FldSearchList, True)
         SeqData.dhdText.CreateAppendElement(xFNode, "FldUpdate", FldUpdate, True)
 
-        RelationAdd(TableName, FldName, Relations, RelatedField, RelatedFieldList)
+        RelationAdd(TableName, FldName, RelationTable, RelationTableAlias, RelationField, RelatedField, RelatedFieldList)
 
         If Reload = True Then
             tvwTable.Nodes.Clear()
@@ -1482,11 +1494,162 @@ Public Class frmConfiguration
 
 #Region "Relations"
 
+    Private Sub btnShowRelationTables_Click(sender As Object, e As EventArgs) Handles btnShowRelationTables.Click
+        CursorControl("Wait")
+        Dim lstFindTables As List(Of String) = SeqData.LoadTablesListXml(xmlTables, True)
+
+        If lstFindTables Is Nothing Then
+            CursorControl()
+            WriteStatus("No tables found", 2, lblStatusText)
+            Exit Sub
+        End If
+
+        lstRelationTables.Items.Clear()
+        lstRelationTables.Items.Add("")
+
+        For Each lstItem As String In lstFindTables
+            lstRelationTables.Items.Add(lstItem)
+        Next
+
+        CursorControl()
+        If lstRelationTables.Items.Count < 15 Then
+            lstRelationTables.Height = lstRelationTables.Items.Count * 15
+        Else
+            lstRelationTables.Height = 15 * 15
+        End If
+        lstRelationTables.Visible = True
+        lstRelationTables.Focus()
+    End Sub
+
+    Private Sub lstRelationTables_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lstRelationTables.SelectedIndexChanged
+        Dim strTable As String = lstRelationTables.SelectedItem
+        If cbxRelationTables.Items.Contains(strTable) Then
+            cbxRelationTables.SelectedItem = strTable
+        Else
+            cbxRelationTables.Text = strTable
+        End If
+        lstRelationTables.Visible = False
+    End Sub
+
+    Private Sub cbxRelationTables_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbxRelationTables.SelectedIndexChanged
+        If SeqData.curStatus.SuspendActions = False Then
+            If cbxRelationTables.Text.Length = 0 Then Exit Sub
+
+            Dim strTableName As String = "", strTableAlias As String = ""
+            If cbxRelationTables.Text.IndexOf("(") > 0 Then
+                strTableName = cbxRelationTables.Text.Substring(cbxRelationTables.Text.IndexOf("(") + 1, cbxRelationTables.Text.Length - (cbxRelationTables.Text.IndexOf("(") + 1) - 1)
+                strTableAlias = cbxRelationTables.Text.Substring(0, cbxRelationTables.Text.IndexOf("(") - 2)
+            Else
+                strTableName = cbxRelationTables.Text
+                strTableAlias = cbxRelationTables.Text
+            End If
+            cbxRelationFields.Text = ""
+            chkRelatedField.Checked = False
+            txtRelatedField.Text = ""
+
+            Dim strFieldName As String = txtFieldName.Text
+            Dim xMNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlTables, "Table", "Name", txtTableName.Text)
+            If xMNode Is Nothing Then Exit Sub
+            Dim xPNode As XmlNode = SeqData.dhdText.FindXmlChildNode(xMNode, "Fields/Field", "FldName", txtFieldName.Text)
+            If xPNode Is Nothing Then Exit Sub
+
+            Dim xlmRNodes As XmlNodeList = SeqData.dhdText.FindXmlChildNodes(xPNode, "Relations/Relation", Nothing, Nothing)
+            If xlmRNodes Is Nothing Then Exit Sub
+
+            For Each xRNode As XmlNode In xlmRNodes
+                If SeqData.dhdText.CheckNodeElement(xRNode, "RelationField") = True Then
+                    If xRNode.Item("RelationTable").InnerText = strTableName Then
+                        cbxRelationFields.Text = xRNode.Item("RelationField").InnerText
+                        chkRelatedField.Checked = xRNode.Item("RelatedFieldList").InnerText
+                        txtRelatedField.Text = xRNode.Item("RelatedField").InnerText
+                    End If
+                Else
+                    Dim strRelation As String = xRNode.InnerText
+                    Dim strRelationField As String = ""
+                    If strRelation.Length > 0 Then
+                        If strRelation.IndexOf(".") > 0 Then
+                            strRelationField = strRelation.Substring(strRelation.LastIndexOf(".") + 1, strRelation.Length - (strRelation.LastIndexOf(".") + 1))
+                            strRelation = strRelation.Substring(0, strRelation.LastIndexOf(".")) & " (" & strRelation.Substring(0, strRelation.LastIndexOf(".")) & ")"
+                        End If
+
+                        If strRelation = cbxRelationTables.SelectedItem Then
+                            cbxRelationFields.Text = strRelationField
+                            If xRNode.Attributes.Count > 0 Then
+                                If xRNode.Attributes(0).Name = "RelatedField" Then txtRelatedField.Text = xRNode.Attributes("RelatedField").InnerText
+                                If xRNode.Attributes.Count > 1 Then
+                                    If xRNode.Attributes(1).Name = "RelatedFieldList" Then chkRelatedField.Checked = xRNode.Attributes("RelatedFieldList").InnerText
+                                End If
+                                Exit For
+                            End If
+                        End If
+                    End If
+                End If
+            Next
+        End If
+
+
+        'current selected table, selected field, defined relations
+        'find existing relation and display or empty fields
+
+    End Sub
+
+    Private Sub lstRelationTables_LostFocus(sender As Object, e As EventArgs) Handles lstRelationTables.LostFocus
+        lstRelationTables.Visible = False
+    End Sub
+
+    Private Sub btnShowRelationFields_Click(sender As Object, e As EventArgs) Handles btnShowRelationFields.Click
+        CursorControl("Wait")
+        If cbxRelationTables.Text.Length = 0 Then
+            CursorControl()
+            WriteStatus("No table selected", 2, lblStatusText)
+            Exit Sub
+        End If
+
+        Dim strTable As String = cbxRelationTables.Text
+        If strTable.IndexOf("(") > 0 Then
+            strTable = strTable.Substring(strTable.IndexOf("(") + 1, strTable.Length - strTable.IndexOf("(") - 2)
+        End If
+        Dim lstFindFields As New List(Of String)
+        lstFindFields = SeqData.dhdText.LoadItemList(xmlTables, "Table", "Name", strTable, "Field", "FldName")
+
+        If lstFindFields Is Nothing Then
+            CursorControl()
+            WriteStatus("No fields found", 2, lblStatusText)
+            Exit Sub
+        End If
+
+        lstRelationFields.Items.Clear()
+        lstRelationFields.Items.Add("")
+
+        For Each lstItem As String In lstFindFields
+            lstRelationFields.Items.Add(lstItem)
+        Next
+
+        CursorControl()
+        If lstRelationFields.Items.Count < 15 Then
+            lstRelationFields.Height = lstRelationFields.Items.Count * 15
+        Else
+            lstRelationFields.Height = 15 * 15
+        End If
+        lstRelationFields.Visible = True
+        lstRelationFields.Focus()
+
+    End Sub
+
+    Private Sub lstRelationFields_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lstRelationFields.SelectedIndexChanged
+        cbxRelationFields.Text = lstRelationFields.SelectedItem
+        lstRelationFields.Visible = False
+    End Sub
+
+    Private Sub lstRelationFields_LostFocus(sender As Object, e As EventArgs) Handles lstRelationFields.LostFocus
+        lstRelationFields.Visible = False
+    End Sub
+
     Private Sub btnRelationRemove_Click(sender As Object, e As EventArgs) Handles btnRelationRemove.Click
         CursorControl("Wait")
-        If cbxRelations.Text.Length < 1 Then Exit Sub
+        If cbxRelationTables.Text.Length < 1 Then Exit Sub
         Dim strFieldName As String = txtFieldName.Tag
-        Dim strSelection As String = cbxRelations.Text
+        Dim strSelection As String = cbxRelationTables.Text
         Dim xPNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlTables, "Table", "Name", SeqData.curStatus.Table)
         Dim xNode As XmlNode = SeqData.dhdText.FindXmlChildNode(xPNode, "Fields/Field", "FldName", strFieldName)
         Dim xCNode As XmlNode = SeqData.dhdText.FindXmlChildNode(xNode, "Relations")
@@ -1510,34 +1673,61 @@ Public Class frmConfiguration
         CursorControl()
     End Sub
 
-    Private Sub RelationAdd(strTableName As String, strFieldName As String, strRelation As String, strRelatedField As String, blnRelatedFieldList As Boolean)
-        If strRelation.Length = 0 Then Exit Sub
-        Dim xPNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlTables, "Table", "Name", strTableName)
+    Private Sub RelationAdd(strTableSource As String, strFieldSource As String, strTableRelation As String, strTableAliasRelation As String, strFieldRelation As String, strRelatedField As String, blnRelatedFieldList As Boolean)
+        If strFieldRelation.Length = 0 Then Exit Sub
+        Dim xPNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlTables, "Table", "Name", strTableSource)
         If xPNode Is Nothing Then
-            WriteStatus("The Table " & strTableName & " was not found. Aborting action", 2, lblStatusText)
+            WriteStatus("The Table " & strTableSource & " was not found. Aborting action", 2, lblStatusText)
             Exit Sub
         End If
-        Dim xNode As XmlNode = SeqData.dhdText.FindXmlChildNode(xPNode, "Fields/Field", "FldName", strFieldName)
+        Dim xNode As XmlNode = SeqData.dhdText.FindXmlChildNode(xPNode, "Fields/Field", "FldName", strFieldSource)
         If xNode Is Nothing Then
-            WriteStatus("The Field " & strFieldName & " was not found. Aborting action", 2, lblStatusText)
+            WriteStatus("The Field " & strFieldSource & " was not found. Aborting action", 2, lblStatusText)
             Exit Sub
         End If
         Dim xCNode As XmlNode = SeqData.dhdText.FindXmlChildNode(xNode, "Relations")
         If xCNode Is Nothing Then xCNode = SeqData.dhdText.CreateAppendElement(xNode, "Relations", Nothing, False)
         'remove existing node
         Try
-            Dim XDelNode As XmlNode = SeqData.dhdText.FindXmlChildNode(xCNode, "Relation", "Relation", strRelation)
-            If Not XDelNode Is Nothing Then XDelNode.ParentNode.RemoveChild(XDelNode)
-            'dhdText.RemoveChildNode(xCNode, "Relation", "Relation", strRelation)
+            'enhance relation detection (table name/table alias/field name)
+            If xCNode.ChildNodes.Count > 0 Then
+                Dim strRelTable As String = "", strRelTableAlias As String = "", strRelField As String = "", strFieldRelated As String = "", strFieldListRelated As String = "", strRelation As String = ""
+
+                For Each xXNode As XmlNode In xCNode.ChildNodes
+                    If SeqData.dhdText.CheckNodeElement(xXNode, "RelationTable") Then strRelTable = xXNode.Item("RelationTable").InnerText
+                    If SeqData.dhdText.CheckNodeElement(xXNode, "RelationTableAlias") Then strRelTableAlias = xXNode.Item("RelationTableAlias").InnerText
+                    If SeqData.dhdText.CheckNodeElement(xXNode, "RelationField") Then strRelField = xXNode.Item("RelationField").InnerText
+                    If xXNode.ChildNodes.Count = 1 Then
+                        strRelation = xXNode.InnerText
+                        If strRelation.Length > 0 Then
+                            strRelTable = strRelation.Substring(0, strRelation.LastIndexOf("."))
+                            strRelTableAlias = strRelation.Substring(0, strRelation.LastIndexOf("."))
+                            strRelField = strRelation.Substring(strRelation.LastIndexOf(".") + 1, strRelation.Length - (strRelation.LastIndexOf(".") + 1))
+                        End If
+                    End If
+                    If strRelTable = strTableRelation And strFieldRelation = strRelField Then
+                        xXNode.ParentNode.RemoveChild(xXNode)
+                        'Exit For
+                    End If
+                Next
+            End If
+
+            'Dim XDelNode As XmlNode = SeqData.dhdText.FindXmlChildNode(xCNode, "Relation", "Relation", strFieldRelation)
+            'If Not XDelNode Is Nothing Then XDelNode.ParentNode.RemoveChild(XDelNode)
         Catch ex As Exception
             'No such node
+            MessageBox.Show(ex.Message)
         End Try
-        Dim xRNode As XmlNode = SeqData.dhdText.CreateAppendElement(xCNode, "Relation", strRelation, False)
-        If strRelatedField.Length > 0 Then
-            SeqData.dhdText.CreateAppendAttribute(xRNode, "RelatedField", strRelatedField, True)
-            SeqData.dhdText.CreateAppendAttribute(xRNode, "RelatedFieldList", blnRelatedFieldList, True)
-        End If
-        WriteStatus("Updating Relation completed succesfully", 2, lblStatusText)
+        Dim xRNode As XmlNode = SeqData.dhdText.CreateAppendElement(xCNode, "Relation", Nothing, False)
+        SeqData.dhdText.CreateAppendElement(xRNode, "RelationTable", strTableRelation, True)
+        SeqData.dhdText.CreateAppendElement(xRNode, "RelationTableAlias", strTableAliasRelation, True)
+        SeqData.dhdText.CreateAppendElement(xRNode, "RelationField", strFieldRelation, True)
+        SeqData.dhdText.CreateAppendElement(xRNode, "RelatedField", strRelatedField, True)
+        SeqData.dhdText.CreateAppendElement(xRNode, "RelatedFieldList", blnRelatedFieldList, True)
+
+        SeqData.curStatus.TableChanged = True
+        ConfigurationSave()
+        WriteStatus("Add/Update Relation completed succesfully", 2, lblStatusText)
 
         tvwTable.Nodes.Clear()
         DisplayXmlNode(xPNode, tvwTable.Nodes)
@@ -1545,14 +1735,20 @@ Public Class frmConfiguration
         tvwTable.SelectedNode = tvwTable.Nodes.Find("Fields", True)(0)
         tvwTable.SelectedNode.Expand()
 
-        SeqData.curStatus.TableChanged = True
-        ConfigurationSave()
     End Sub
 
     Private Sub btnRelationAdd_Click(sender As Object, e As EventArgs) Handles btnRelationAdd.Click
         CursorControl("Wait")
-        If cbxRelations.Text.Length = 0 Then Exit Sub
-        RelationAdd(SeqData.curStatus.Table, txtFieldName.Tag, cbxRelations.Text, txtRelatedField.Text, chkRelatedField.Checked)
+        If cbxRelationFields.Text.Length = 0 Then Exit Sub
+        Dim strTableName As String = "", strTableAlias As String = ""
+        If cbxRelationTables.Text.IndexOf("(") > 0 Then
+            strTableName = cbxRelationTables.Text.Substring(cbxRelationTables.Text.IndexOf("(") + 1, cbxRelationTables.Text.Length - (cbxRelationTables.Text.IndexOf("(") + 1) - 1)
+            strTableAlias = cbxRelationTables.Text.Substring(0, cbxRelationTables.Text.IndexOf("(") - 2)
+        Else
+            strTableName = cbxRelationTables.Text
+            strTableAlias = cbxRelationTables.Text
+        End If
+        RelationAdd(SeqData.curStatus.Table, txtFieldName.Tag, strTableName, strTableAlias, cbxRelationFields.Text, txtRelatedField.Text, chkRelatedField.Checked)
 
         'If Not cbxRelations.Items.Contains(cbxRelations.Text) Then cbxRelations.Items.Add(cbxRelations.Text)
         CursorControl()

@@ -1,3 +1,7 @@
+Version 3.8.0
+New: In Reports: tabl;e alias is used to enable multiple instances of the same table.
+Enhanced: In Reports: Select lists for related tables and fields
+
 Version 3.7.2
 Fixed: When writing to log location doesn't work, the log location is adjusted to Documents\Sequenchel\LOG
 
