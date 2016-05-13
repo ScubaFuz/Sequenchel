@@ -1,0 +1,10 @@
+Reports:
+Display table alias instead of table name (left column)
+Use table alias in query
+
+(this report only)
+Duplicate table with new alias.
+Switch existing field to other table alias for same table.
+Duplicate 1 existing field with new table alias.
+Create new custom field with any table alias.
+

@@ -569,6 +569,21 @@ Public Class frmReports
                     cbxTarget.Items.Add(lstItem)
                 Next
                 'cbxTarget.SelectedItem = "INNER"
+            Case "RelationTargetTable"
+                For Each lvwItem As ListViewItem In lvwSelectedTables.Items
+                    If cbxTarget.Items.Contains(lvwItem.Text & " (" & lvwItem.Tag & ")") = False Then
+                        cbxTarget.Items.Add(lvwItem.Text & " (" & lvwItem.Tag & ")")
+                    End If
+                Next
+            Case "RelationTargetfield"
+                cbxTarget.SelectedIndex = -1
+                cbxTarget.Items.Clear()
+                cbxTarget.Items.Add("")
+                For Each lvwItem As ListViewItem In lvwAvailableFields.Items
+                    If lvwItem.Text = strSource Then
+                        cbxTarget.Items.Add(lvwItem.SubItems(1).Text)
+                    End If
+                Next
             Case "JoinType"
                 cbxTarget.Items.Clear()
                 cbxTarget.Items.Add("")
@@ -619,7 +634,13 @@ Public Class frmReports
         pnlRelationsRelation.Left = pnlRelationsField.Left + pnlRelationsField.Width
         lblRelationsRelation.Left = pnlRelationsRelation.Left + SeqData.curVar.BuildMargin
 
-        pnlRelationsJoinType.Left = pnlRelationsRelation.Left + pnlRelationsRelation.Width
+        pnlRelationsTargetTable.Left = pnlRelationsRelation.Left + pnlRelationsRelation.Width
+        lblRelationsTargetTable.Left = pnlRelationsTargetTable.Left + SeqData.curVar.BuildMargin
+
+        pnlRelationsTargetField.Left = pnlRelationsTargetTable.Left + pnlRelationsTargetTable.Width
+        lblRelationsTargetField.Left = pnlRelationsTargetField.Left + SeqData.curVar.BuildMargin
+
+        pnlRelationsJoinType.Left = pnlRelationsTargetField.Left + pnlRelationsTargetField.Width
         lblRelationsJoinType.Left = pnlRelationsJoinType.Left + SeqData.curVar.BuildMargin
 
         pnlRelations.Width = pnlRelationsJoinType.Left + pnlRelationsJoinType.Width + (SeqData.curVar.BuildMargin * 2)
@@ -646,6 +667,8 @@ Public Class frmReports
         End If
         pnlRelationsField.Height = pnlRelationsUse.Height
         pnlRelationsRelation.Height = pnlRelationsUse.Height
+        pnlRelationsTargetTable.Height = pnlRelationsUse.Height
+        pnlRelationsTargetField.Height = pnlRelationsUse.Height
         pnlRelationsJoinType.Height = pnlRelationsUse.Height
         pnlRelationsLabel.Height = pnlRelationsUse.Height
         pnlRelations.Height = pnlRelationsUse.Height
@@ -668,6 +691,8 @@ Public Class frmReports
         FieldSort(lvwSelectedTables, pnlRelationsUse, False, pnlRelationsUse)
         FieldSort(lvwSelectedTables, pnlRelationsField, False, pnlRelationsUse)
         FieldSort(lvwSelectedTables, pnlRelationsRelation, False, pnlRelationsUse)
+        FieldSort(lvwSelectedTables, pnlRelationsTargetTable, False, pnlRelationsUse)
+        FieldSort(lvwSelectedTables, pnlRelationsTargetField, False, pnlRelationsUse)
         FieldSort(lvwSelectedTables, pnlRelationsJoinType, False, pnlRelationsUse)
         FieldSort(lvwSelectedTables, pnlRelationsLabel, True, pnlRelationsUse)
         PanelRelationHeightSet()
@@ -719,6 +744,14 @@ Public Class frmReports
             RelationUseAdd(strTable, 0)
             RelationsLoad(strTable)
             'PanelsRelationSort()
+            For Each cbxControl In pnlRelationsTargetTable.Controls
+                Dim strName As String = cbxControl.[GetType]().Name
+                If cbxControl.[GetType]().Name = "ComboField" Then
+                    Dim cbxAfterFill As ComboField = TryCast(cbxControl, ComboField)
+                    ComboBoxFill(cbxAfterFill, "RelationTargetTable", cbxAfterFill.Tag)
+                End If
+            Next
+
             PanelRelationWidthSet()
         End If
     End Sub
@@ -774,7 +807,7 @@ Public Class frmReports
         Dim cbxNewField As New ComboField
         cbxNewField.Name = pnlRelationsField.Name & intCount.ToString & strTableName
         cbxNewField.Tag = strTableName
-        cbxNewField.Width = 140
+        cbxNewField.Width = pnlRelationsField.Width - SeqData.curVar.BuildMargin
         pnlRelationsField.Controls.Add(cbxNewField)
         cbxNewField.Top = ((lvwSelectedTables.Items.Count - 1) * SeqData.CurVar.FieldHeight) + ((lvwSelectedTables.Items.Count - 1) * SeqData.CurVar.BuildMargin)
         cbxNewField.Left = SeqData.CurVar.BuildMargin
@@ -783,15 +816,34 @@ Public Class frmReports
         Dim txtNewFilter As New TextField
         txtNewFilter.Name = pnlRelationsRelation.Name & intCount.ToString & strTableName
         txtNewFilter.Tag = strTableName
-        txtNewFilter.Width = 200
+        txtNewFilter.Width = pnlRelationsRelation.Width - SeqData.curVar.BuildMargin
         pnlRelationsRelation.Controls.Add(txtNewFilter)
         txtNewFilter.Top = ((lvwSelectedTables.Items.Count - 1) * SeqData.CurVar.FieldHeight) + ((lvwSelectedTables.Items.Count - 1) * SeqData.CurVar.BuildMargin)
         txtNewFilter.Left = SeqData.CurVar.BuildMargin
 
+        Dim cbxNewTargetTable As New ComboField
+        cbxNewTargetTable.Name = pnlRelationsTargetTable.Name & intCount.ToString & strTableName
+        cbxNewTargetTable.Tag = strTableName
+        cbxNewTargetTable.Width = pnlRelationsTargetTable.Width - SeqData.curVar.BuildMargin
+        pnlRelationsTargetTable.Controls.Add(cbxNewTargetTable)
+        cbxNewTargetTable.Top = ((lvwSelectedTables.Items.Count - 1) * SeqData.curVar.FieldHeight) + ((lvwSelectedTables.Items.Count - 1) * SeqData.curVar.BuildMargin)
+        cbxNewTargetTable.Left = SeqData.curVar.BuildMargin
+        AddHandler cbxNewTargetTable.SelectedIndexChanged, AddressOf Me.cbxRelationTargetTable_SelectedIndexChanged
+        cbxNewTargetTable.Items.Add("")
+        ComboBoxFill(cbxNewTargetTable, "RelationTargetTable", strTableName)
+
+        Dim cbxNewTargetField As New ComboField
+        cbxNewTargetField.Name = pnlRelationsTargetField.Name & intCount.ToString & strTableName
+        cbxNewTargetField.Tag = strTableName
+        cbxNewTargetField.Width = pnlRelationsTargetField.Width - SeqData.curVar.BuildMargin
+        pnlRelationsTargetField.Controls.Add(cbxNewTargetField)
+        cbxNewTargetField.Top = ((lvwSelectedTables.Items.Count - 1) * SeqData.curVar.FieldHeight) + ((lvwSelectedTables.Items.Count - 1) * SeqData.curVar.BuildMargin)
+        cbxNewTargetField.Left = SeqData.curVar.BuildMargin
+
         Dim cbxNewJoinType As New ComboField
         cbxNewJoinType.Name = pnlRelationsJoinType.Name & intCount.ToString & strTableName
         cbxNewJoinType.Tag = strTableName
-        cbxNewJoinType.Width = 110
+        cbxNewJoinType.Width = pnlRelationsJoinType.Width - SeqData.curVar.BuildMargin
         pnlRelationsJoinType.Controls.Add(cbxNewJoinType)
         cbxNewJoinType.Top = ((lvwSelectedTables.Items.Count - 1) * SeqData.CurVar.FieldHeight) + ((lvwSelectedTables.Items.Count - 1) * SeqData.CurVar.BuildMargin)
         cbxNewJoinType.Left = SeqData.CurVar.BuildMargin
@@ -1330,8 +1382,10 @@ Public Class frmReports
     'End Sub
 
     Private Function ReportToXML(xmlReport As XmlDocument, strReportName As String) As XmlDocument
-        Dim strTable As String = ""
         Dim strField As String = ""
+        Dim strFieldAlias As String = ""
+        Dim strTableName As String = ""
+        Dim strTableAlias As String = ""
         Dim intControlNumber As Integer = 0
 
         Dim root As XmlElement = xmlReport.DocumentElement
@@ -1348,13 +1402,17 @@ Public Class frmReports
         Dim NewFieldsNode As XmlNode = SeqData.dhdText.CreateAppendElement(NewReportNode, "Fields")
         For intFieldCount As Integer = 0 To lvwSelectedFields.Items.Count - 1
             strField = lvwSelectedFields.Items.Item(intFieldCount).Name
-            strTable = strField.Substring(0, strField.LastIndexOf("."))
+            strFieldAlias = lvwSelectedFields.Items.Item(intFieldCount).SubItems(1).Text
+            strTableName = strField.Substring(0, strField.LastIndexOf("."))
+            strTableAlias = lvwSelectedFields.Items.Item(intFieldCount).Text
             'If strField.Length > strTable.Length Then
 
             Dim strFieldName As String = strField.Substring(strField.LastIndexOf(".") + 1, strField.Length - strField.LastIndexOf(".") - 1)
             Dim NewFieldNode As XmlNode = SeqData.dhdText.CreateAppendElement(NewFieldsNode, "Field")
             SeqData.dhdText.CreateAppendElement(NewFieldNode, "FieldName", strFieldName)
-            SeqData.dhdText.CreateAppendElement(NewFieldNode, "TableName", strTable)
+            SeqData.dhdText.CreateAppendElement(NewFieldNode, "FieldAlias", strFieldAlias)
+            SeqData.dhdText.CreateAppendElement(NewFieldNode, "TableName", strTableName)
+            SeqData.dhdText.CreateAppendElement(NewFieldNode, "TableAlias", strTableAlias)
             SeqData.dhdText.CreateAppendElement(NewFieldNode, "FieldShow", GetCtrText(pnlReportDisplay, strField))
             SeqData.dhdText.CreateAppendElement(NewFieldNode, "FieldShowMode", GetCtrText(pnlReportShowMode, strField))
             SeqData.dhdText.CreateAppendElement(NewFieldNode, "FieldSort", GetCtrText(pnlReportSort, strField))
@@ -1379,18 +1437,21 @@ Public Class frmReports
         intControlNumber = 0
         Dim NewRelationsNode As XmlNode = SeqData.dhdText.CreateAppendElement(NewReportNode, "Relations")
         For intTableCount As Integer = 0 To lvwSelectedTables.Items.Count - 1
-            strTable = lvwSelectedTables.Items.Item(intTableCount).Name
+            strTableName = lvwSelectedTables.Items.Item(intTableCount).Name
+            strTableAlias = lvwSelectedTables.Items.Item(intTableCount).Text
 
             For Each ctrRelation In pnlRelationsUse.Controls
-                If ctrRelation.Tag = strTable Then
+                If ctrRelation.Tag = strTableName Then
                     Dim NewRelationNode As XmlNode = SeqData.dhdText.CreateAppendElement(NewRelationsNode, "Relation")
-                    intControlNumber = ctrRelation.Name.ToString.Substring(ctrRelation.Name.ToString.Length - strTable.Length - 1, 1)
-                    SeqData.dhdText.CreateAppendElement(NewRelationNode, "TableName", strTable)
+                    intControlNumber = ctrRelation.Name.ToString.Substring(ctrRelation.Name.ToString.Length - strTableName.Length - 1, 1)
+                    SeqData.dhdText.CreateAppendElement(NewRelationNode, "TableName", strTableName)
+                    SeqData.dhdText.CreateAppendElement(NewRelationNode, "TableAlias", strTableAlias)
                     SeqData.dhdText.CreateAppendElement(NewRelationNode, "RelationNumber", intControlNumber)
                     SeqData.dhdText.CreateAppendElement(NewRelationNode, "RelationEnabled", ctrRelation.Checked.ToString)
-                    SeqData.dhdText.CreateAppendElement(NewRelationNode, "RelationSource", GetCtrText(pnlRelationsField, strTable, intControlNumber))
-                    SeqData.dhdText.CreateAppendElement(NewRelationNode, "RelationTarget", GetCtrText(pnlRelationsRelation, strTable, intControlNumber))
-                    SeqData.dhdText.CreateAppendElement(NewRelationNode, "RelationJoinType", GetCtrText(pnlRelationsJoinType, strTable, intControlNumber))
+                    SeqData.dhdText.CreateAppendElement(NewRelationNode, "RelationSource", GetCtrText(pnlRelationsField, strTableName, intControlNumber))
+                    SeqData.dhdText.CreateAppendElement(NewRelationNode, "RelationTarget", GetCtrText(pnlRelationsRelation, strTableName, intControlNumber))
+                    SeqData.dhdText.CreateAppendElement(NewRelationNode, "RelationTargetAlias", GetCtrText(pnlRelationsRelation, strTableName, intControlNumber))
+                    SeqData.dhdText.CreateAppendElement(NewRelationNode, "RelationJoinType", GetCtrText(pnlRelationsJoinType, strTableName, intControlNumber))
                 End If
             Next
         Next
@@ -1790,4 +1851,30 @@ Public Class frmReports
         Me.lvwAvailableFields.ListViewItemSorter = New ListViewItemComparer(e.Column)
     End Sub
 
+    Private Sub dgvReport_DoubleClick(sender As Object, e As EventArgs) Handles dgvReport.DoubleClick
+
+    End Sub
+
+    Private Sub cbxRelationTargetTable_SelectedIndexChanged(sender As Object, e As EventArgs)
+        If sender.[GetType]().Name = "ComboField" Then
+            Dim cbxSource As ComboField = TryCast(sender, ComboField)
+            If Not cbxSource Is Nothing Then
+                'Find TableName for collecting Fields
+                Dim strtable As String = cbxSource.SelectedItem
+                Dim strTargetTable As String = strtable.Substring(0, strtable.IndexOf(" "))
+
+                'Find correct combobox to fill...
+                Dim strSourceTable As String = sender.tag
+                Dim strName As String = sender.name
+                Dim strCounter As String = strName.Substring(pnlRelationsTargetTable.Name.Length, 1)
+                Dim strTargetBox As String = pnlRelationsTargetField.Name & strCounter & strSourceTable
+                For Each cbxTarget As ComboField In pnlRelationsTargetField.Controls
+                    If cbxTarget.Name = strTargetBox Then
+                        ComboBoxFill(cbxTarget, "RelationTargetfield", strTargetTable)
+                    End If
+                Next
+            End If
+        End If
+
+    End Sub
 End Class
