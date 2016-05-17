@@ -474,14 +474,30 @@ Public Class frmSequenchel
 
                         If SeqData.dhdText.CheckNodeElement(xNode, "Relations") Then
                             For Each xRnode As XmlNode In xNode.Item("Relations").ChildNodes
-                                fldField.FieldRelation = xRnode.InnerText
-                                If xRnode.Attributes.Count > 0 Then
-                                    If xRnode.Attributes(0).Name = "RelatedField" Then fldField.FieldRelatedField = xRnode.Attributes("RelatedField").InnerText
-                                    If xRnode.Attributes.Count > 1 Then
-                                        If xRnode.Attributes(1).Name = "RelatedFieldList" Then fldField.FieldRelatedFieldList = xRnode.Attributes("RelatedFieldList").InnerText
+
+                                'New relation style...
+                                    Dim strRelTable As String = "", strRelField As String = "", strRelation As String = ""
+
+                                If SeqData.dhdText.CheckNodeElement(xRnode, "RelationTable") Then strRelTable = xRnode.Item("RelationTable").InnerText
+                                If SeqData.dhdText.CheckNodeElement(xRnode, "RelationField") Then strRelField = xRnode.Item("RelationField").InnerText
+                                fldField.FieldRelation = strRelTable & "." & strRelField
+                                If SeqData.dhdText.CheckNodeElement(xRnode, "RelatedField") Then fldField.FieldRelatedField = xRnode.Item("RelatedField").InnerText
+                                If SeqData.dhdText.CheckNodeElement(xRnode, "RelatedFieldList") Then fldField.FieldRelatedFieldList = xRnode.Item("RelatedFieldList").InnerText
+                                If xRnode.ChildNodes.Count = 1 Then
+                                    strRelation = xRnode.InnerText
+                                    If strRelation.Length > 0 Then
+                                        strRelTable = strRelation.Substring(0, strRelation.LastIndexOf("."))
+                                        strRelField = strRelation.Substring(strRelation.LastIndexOf(".") + 1, strRelation.Length - (strRelation.LastIndexOf(".") + 1))
+                                        If xRnode.Attributes.Count > 0 Then
+                                            If xRnode.Attributes(0).Name = "RelatedField" Then fldField.FieldRelatedField = xRnode.Attributes("RelatedField").InnerText
+                                            If xRnode.Attributes.Count > 1 Then
+                                                If xRnode.Attributes(1).Name = "RelatedFieldList" Then fldField.FieldRelatedFieldList = xRnode.Attributes("RelatedFieldList").InnerText
+                                            End If
+                                            fldField.FieldRelation = xRnode.InnerText
+                                            'If SeqData.dhdText.CheckNodeElement(xRnode, "RelatedField") Then fldField.FieldRelatedField = xRnode.Attributes("RelatedField").InnerText
+                                            Exit For
+                                        End If
                                     End If
-                                    'If SeqData.dhdText.CheckNodeElement(xRnode, "RelatedField") Then fldField.FieldRelatedField = xRnode.Attributes("RelatedField").InnerText
-                                    Exit For
                                 End If
                             Next
                         End If

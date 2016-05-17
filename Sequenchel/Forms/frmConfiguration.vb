@@ -1647,87 +1647,18 @@ Public Class frmConfiguration
 
     Private Sub btnRelationRemove_Click(sender As Object, e As EventArgs) Handles btnRelationRemove.Click
         CursorControl("Wait")
-        If cbxRelationTables.Text.Length < 1 Then Exit Sub
+        If cbxRelationTables.Text.Length < 1 Or cbxRelationFields.Text.Length < 1 Then Exit Sub
         Dim strFieldName As String = txtFieldName.Tag
-        Dim strSelection As String = cbxRelationTables.Text
+        Dim strRelatedTable As String = cbxRelationTables.Text
+        Dim strRelatedField As String = cbxRelationFields.Text
+
+        If strRelatedTable.Contains("(") Then strRelatedTable = strRelatedTable.Substring(strRelatedTable.IndexOf("(") + 1, strRelatedTable.Length - (strRelatedTable.IndexOf("(") + 1) - 1)
+
+        If RelationRemove(SeqData.curStatus.Table, txtFieldName.Tag, strRelatedTable, strRelatedField, True) = False Then
+            Exit Sub
+        End If
+
         Dim xPNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlTables, "Table", "Name", SeqData.curStatus.Table)
-        Dim xNode As XmlNode = SeqData.dhdText.FindXmlChildNode(xPNode, "Fields/Field", "FldName", strFieldName)
-        Dim xCNode As XmlNode = SeqData.dhdText.FindXmlChildNode(xNode, "Relations")
-        Dim xRNode As XmlNode = SeqData.dhdText.FindXmlChildNode(xCNode, "Relation", "Relation", strSelection)
-
-        If Not xRNode Is Nothing Then
-            If MessageBox.Show("This will permanently remove the Item: " & strSelection & Environment.NewLine & Core.Message.strContinue, Core.Message.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Exit Sub
-            xRNode.ParentNode.RemoveChild(xRNode)
-
-            tvwTable.Nodes.Clear()
-            DisplayXmlNode(xPNode, tvwTable.Nodes)
-            tvwTable.Nodes(0).Expand()
-            tvwTable.SelectedNode = tvwTable.Nodes.Find("Fields", True)(0)
-            tvwTable.SelectedNode.Expand()
-
-            SeqData.curStatus.TableChanged = True
-            ConfigurationSave()
-            'If cbxRelations.Items.Contains(cbxRelations.Text) Then cbxRelations.Items.Remove(cbxRelations.Text)
-            'cbxRelations.Text = ""
-        End If
-        CursorControl()
-    End Sub
-
-    Private Sub RelationAdd(strTableSource As String, strFieldSource As String, strTableRelation As String, strTableAliasRelation As String, strFieldRelation As String, strRelatedField As String, blnRelatedFieldList As Boolean)
-        If strFieldRelation.Length = 0 Then Exit Sub
-        Dim xPNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlTables, "Table", "Name", strTableSource)
-        If xPNode Is Nothing Then
-            WriteStatus("The Table " & strTableSource & " was not found. Aborting action", 2, lblStatusText)
-            Exit Sub
-        End If
-        Dim xNode As XmlNode = SeqData.dhdText.FindXmlChildNode(xPNode, "Fields/Field", "FldName", strFieldSource)
-        If xNode Is Nothing Then
-            WriteStatus("The Field " & strFieldSource & " was not found. Aborting action", 2, lblStatusText)
-            Exit Sub
-        End If
-        Dim xCNode As XmlNode = SeqData.dhdText.FindXmlChildNode(xNode, "Relations")
-        If xCNode Is Nothing Then xCNode = SeqData.dhdText.CreateAppendElement(xNode, "Relations", Nothing, False)
-        'remove existing node
-        Try
-            'enhance relation detection (table name/table alias/field name)
-            If xCNode.ChildNodes.Count > 0 Then
-                Dim strRelTable As String = "", strRelTableAlias As String = "", strRelField As String = "", strFieldRelated As String = "", strFieldListRelated As String = "", strRelation As String = ""
-
-                For Each xXNode As XmlNode In xCNode.ChildNodes
-                    If SeqData.dhdText.CheckNodeElement(xXNode, "RelationTable") Then strRelTable = xXNode.Item("RelationTable").InnerText
-                    If SeqData.dhdText.CheckNodeElement(xXNode, "RelationTableAlias") Then strRelTableAlias = xXNode.Item("RelationTableAlias").InnerText
-                    If SeqData.dhdText.CheckNodeElement(xXNode, "RelationField") Then strRelField = xXNode.Item("RelationField").InnerText
-                    If xXNode.ChildNodes.Count = 1 Then
-                        strRelation = xXNode.InnerText
-                        If strRelation.Length > 0 Then
-                            strRelTable = strRelation.Substring(0, strRelation.LastIndexOf("."))
-                            strRelTableAlias = strRelation.Substring(0, strRelation.LastIndexOf("."))
-                            strRelField = strRelation.Substring(strRelation.LastIndexOf(".") + 1, strRelation.Length - (strRelation.LastIndexOf(".") + 1))
-                        End If
-                    End If
-                    If strRelTable = strTableRelation And strFieldRelation = strRelField Then
-                        xXNode.ParentNode.RemoveChild(xXNode)
-                        'Exit For
-                    End If
-                Next
-            End If
-
-            'Dim XDelNode As XmlNode = SeqData.dhdText.FindXmlChildNode(xCNode, "Relation", "Relation", strFieldRelation)
-            'If Not XDelNode Is Nothing Then XDelNode.ParentNode.RemoveChild(XDelNode)
-        Catch ex As Exception
-            'No such node
-            MessageBox.Show(ex.Message)
-        End Try
-        Dim xRNode As XmlNode = SeqData.dhdText.CreateAppendElement(xCNode, "Relation", Nothing, False)
-        SeqData.dhdText.CreateAppendElement(xRNode, "RelationTable", strTableRelation, True)
-        SeqData.dhdText.CreateAppendElement(xRNode, "RelationTableAlias", strTableAliasRelation, True)
-        SeqData.dhdText.CreateAppendElement(xRNode, "RelationField", strFieldRelation, True)
-        SeqData.dhdText.CreateAppendElement(xRNode, "RelatedField", strRelatedField, True)
-        SeqData.dhdText.CreateAppendElement(xRNode, "RelatedFieldList", blnRelatedFieldList, True)
-
-        SeqData.curStatus.TableChanged = True
-        ConfigurationSave()
-        WriteStatus("Add/Update Relation completed succesfully", 2, lblStatusText)
 
         tvwTable.Nodes.Clear()
         DisplayXmlNode(xPNode, tvwTable.Nodes)
@@ -1735,7 +1666,113 @@ Public Class frmConfiguration
         tvwTable.SelectedNode = tvwTable.Nodes.Find("Fields", True)(0)
         tvwTable.SelectedNode.Expand()
 
+        SeqData.curStatus.TableChanged = True
+        ConfigurationSave()
+        CursorControl()
     End Sub
+
+    Private Function RelationRemove(strTableSource As String, strFieldSource As String, strRelatedTable As String, strRelatedField As String, blnRemoveOnly As Boolean) As Boolean
+        Dim xPNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlTables, "Table", "Name", strTableSource)
+        If xPNode Is Nothing Then
+            WriteStatus("The Table " & strTableSource & " was not found. Aborting action", 2, lblStatusText)
+            Return False
+        End If
+        Dim xNode As XmlNode = SeqData.dhdText.FindXmlChildNode(xPNode, "Fields/Field", "FldName", strFieldSource)
+        If xNode Is Nothing Then
+            WriteStatus("The Field " & strFieldSource & " was not found. Aborting action", 2, lblStatusText)
+            Return False
+        End If
+        Dim xCNode As XmlNode = SeqData.dhdText.FindXmlChildNode(xNode, "Relations")
+        'If relations node does not exist, nothing needs to be deleted.
+        If xCNode Is Nothing Then Return True
+
+        Dim xRNode As XmlNode = SeqData.dhdText.FindXmlChildNode(xCNode, "Relation", "RelationTable", strRelatedTable)
+        'Find relation old style
+        If xRNode Is Nothing Then xRNode = SeqData.dhdText.FindXmlChildNode(xCNode, "Relation", "Relation", strRelatedTable & "." & strRelatedField)
+        If xRNode Is Nothing Then
+            WriteStatus("The Relation " & strRelatedTable & "." & strRelatedField & " was not found. Nothing is deleted", 2, lblStatusText)
+            Return True
+        End If
+
+        If blnRemoveOnly = True Then
+            If MessageBox.Show("This will permanently remove the relation: " & strRelatedTable & "." & strRelatedField & Environment.NewLine & Core.Message.strContinue, Core.Message.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Return False
+        End If
+
+        'remove existing node
+        Try
+            'enhance relation detection (table name/table alias/field name)
+            If xCNode.ChildNodes.Count > 0 Then
+                Dim strRelTable As String = "", strRelField As String = "", strRelation As String = ""
+
+                For Each xXNode As XmlNode In xCNode.ChildNodes
+                    If SeqData.dhdText.CheckNodeElement(xXNode, "RelationTable") Then strRelTable = xXNode.Item("RelationTable").InnerText
+                    If SeqData.dhdText.CheckNodeElement(xXNode, "RelationField") Then strRelField = xXNode.Item("RelationField").InnerText
+                    If xXNode.ChildNodes.Count = 1 Then
+                        strRelation = xXNode.InnerText
+                        If strRelation.Length > 0 Then
+                            strRelTable = strRelation.Substring(0, strRelation.LastIndexOf("."))
+                            strRelField = strRelation.Substring(strRelation.LastIndexOf(".") + 1, strRelation.Length - (strRelation.LastIndexOf(".") + 1))
+                        End If
+                    End If
+                    If strRelTable = strRelatedTable And strRelField = strRelatedField Then
+                        xXNode.ParentNode.RemoveChild(xXNode)
+                    End If
+                Next
+            End If
+            Return True
+        Catch ex As Exception
+            SeqData.WriteLog("Error removing (old) relation: " & ex.Message, 1)
+            WriteStatus("Error removing (old) relation: " & ex.Message, 1, lblStatusText)
+            Return False
+        End Try
+
+    End Function
+
+    Private Function RelationAdd(strTableSource As String, strFieldSource As String, strTableRelation As String, strTableAliasRelation As String, strFieldRelation As String, strRelatedField As String, blnRelatedFieldList As Boolean) As Boolean
+        If strFieldRelation.Length = 0 Then Return False
+
+        If RelationRemove(strTableSource, strFieldSource, strTableRelation, strFieldRelation, False) = False Then
+            Return False
+        End If
+
+        Dim xPNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlTables, "Table", "Name", strTableSource)
+        If xPNode Is Nothing Then
+            WriteStatus("The Table " & strTableSource & " was not found. Aborting action", 2, lblStatusText)
+            Return False
+        End If
+        Dim xNode As XmlNode = SeqData.dhdText.FindXmlChildNode(xPNode, "Fields/Field", "FldName", strFieldSource)
+        If xNode Is Nothing Then
+            WriteStatus("The Field " & strFieldSource & " was not found. Aborting action", 2, lblStatusText)
+            Return False
+        End If
+        Dim xCNode As XmlNode = SeqData.dhdText.FindXmlChildNode(xNode, "Relations")
+        If xCNode Is Nothing Then xCNode = SeqData.dhdText.CreateAppendElement(xNode, "Relations", Nothing, False)
+
+        Try
+            Dim xRNode As XmlNode = SeqData.dhdText.CreateAppendElement(xCNode, "Relation", Nothing, False)
+            SeqData.dhdText.CreateAppendElement(xRNode, "RelationTable", strTableRelation, True)
+            SeqData.dhdText.CreateAppendElement(xRNode, "RelationTableAlias", strTableAliasRelation, True)
+            SeqData.dhdText.CreateAppendElement(xRNode, "RelationField", strFieldRelation, True)
+            SeqData.dhdText.CreateAppendElement(xRNode, "RelatedField", strRelatedField, True)
+            SeqData.dhdText.CreateAppendElement(xRNode, "RelatedFieldList", blnRelatedFieldList, True)
+
+            WriteStatus("Add/Update Relation completed succesfully", 0, lblStatusText)
+            SeqData.curStatus.TableChanged = True
+            ConfigurationSave()
+        Catch ex As Exception
+            SeqData.WriteLog("Error saving relation: " & ex.Message, 1)
+            WriteStatus("Error saving relation: " & ex.Message, 1, lblStatusText)
+            Return False
+        End Try
+
+        tvwTable.Nodes.Clear()
+        DisplayXmlNode(xPNode, tvwTable.Nodes)
+        tvwTable.Nodes(0).Expand()
+        tvwTable.SelectedNode = tvwTable.Nodes.Find("Fields", True)(0)
+        tvwTable.SelectedNode.Expand()
+        Return True
+
+    End Function
 
     Private Sub btnRelationAdd_Click(sender As Object, e As EventArgs) Handles btnRelationAdd.Click
         CursorControl("Wait")
