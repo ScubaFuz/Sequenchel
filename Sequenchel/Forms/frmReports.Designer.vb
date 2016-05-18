@@ -73,16 +73,18 @@ Partial Class frmReports
         Me.btnReportFieldUp = New System.Windows.Forms.Button()
         Me.pnlRelationsMain = New System.Windows.Forms.Panel()
         Me.pnlRelations = New System.Windows.Forms.Panel()
+        Me.pnlRelationsTargetField = New System.Windows.Forms.Panel()
         Me.pnlRelationsJoinType = New System.Windows.Forms.Panel()
+        Me.pnlRelationsTargetTable = New System.Windows.Forms.Panel()
         Me.pnlRelationsField = New System.Windows.Forms.Panel()
-        Me.pnlRelationsRelation = New System.Windows.Forms.Panel()
         Me.pnlRelationsUse = New System.Windows.Forms.Panel()
         Me.pnlRelationsLabel = New System.Windows.Forms.Panel()
         Me.pnlRelationHeaders = New System.Windows.Forms.Panel()
+        Me.lblRelationsTargetField = New System.Windows.Forms.Label()
+        Me.lblRelationsTargetTable = New System.Windows.Forms.Label()
         Me.lblSourceField = New System.Windows.Forms.Label()
         Me.lblRelationUse = New System.Windows.Forms.Label()
         Me.lblRelationsJoinType = New System.Windows.Forms.Label()
-        Me.lblRelationsRelation = New System.Windows.Forms.Label()
         Me.lblRelationsSelectedTable = New System.Windows.Forms.Label()
         Me.pnlSplitSelectedTables = New System.Windows.Forms.Panel()
         Me.btnReportTableUp = New System.Windows.Forms.Button()
@@ -131,10 +133,6 @@ Partial Class frmReports
         Me.tmrElapsedTime = New System.Windows.Forms.Timer(Me.components)
         Me.lblStatusText = New System.Windows.Forms.Label()
         Me.lblStatusTitle = New System.Windows.Forms.Label()
-        Me.pnlRelationsTargetTable = New System.Windows.Forms.Panel()
-        Me.pnlRelationsTargetField = New System.Windows.Forms.Panel()
-        Me.lblRelationsTargetTable = New System.Windows.Forms.Label()
-        Me.lblRelationsTargetField = New System.Windows.Forms.Label()
         Me.dgvReport = New Sequenchel.usrDataGridView()
         Me.tabReports.SuspendLayout()
         Me.tpgReportDefinition.SuspendLayout()
@@ -682,17 +680,23 @@ Partial Class frmReports
         '
         'pnlRelations
         '
+        Me.pnlRelations.Controls.Add(Me.pnlRelationsTargetTable)
         Me.pnlRelations.Controls.Add(Me.pnlRelationsTargetField)
         Me.pnlRelations.Controls.Add(Me.pnlRelationsJoinType)
-        Me.pnlRelations.Controls.Add(Me.pnlRelationsTargetTable)
         Me.pnlRelations.Controls.Add(Me.pnlRelationsField)
-        Me.pnlRelations.Controls.Add(Me.pnlRelationsRelation)
         Me.pnlRelations.Controls.Add(Me.pnlRelationsUse)
         Me.pnlRelations.Controls.Add(Me.pnlRelationsLabel)
         Me.pnlRelations.Location = New System.Drawing.Point(0, 24)
         Me.pnlRelations.Name = "pnlRelations"
         Me.pnlRelations.Size = New System.Drawing.Size(800, 48)
         Me.pnlRelations.TabIndex = 7
+        '
+        'pnlRelationsTargetField
+        '
+        Me.pnlRelationsTargetField.Location = New System.Drawing.Point(528, 0)
+        Me.pnlRelationsTargetField.Name = "pnlRelationsTargetField"
+        Me.pnlRelationsTargetField.Size = New System.Drawing.Size(150, 48)
+        Me.pnlRelationsTargetField.TabIndex = 11
         '
         'pnlRelationsJoinType
         '
@@ -701,19 +705,19 @@ Partial Class frmReports
         Me.pnlRelationsJoinType.Size = New System.Drawing.Size(120, 48)
         Me.pnlRelationsJoinType.TabIndex = 9
         '
+        'pnlRelationsTargetTable
+        '
+        Me.pnlRelationsTargetTable.Location = New System.Drawing.Point(353, 0)
+        Me.pnlRelationsTargetTable.Name = "pnlRelationsTargetTable"
+        Me.pnlRelationsTargetTable.Size = New System.Drawing.Size(175, 48)
+        Me.pnlRelationsTargetTable.TabIndex = 10
+        '
         'pnlRelationsField
         '
         Me.pnlRelationsField.Location = New System.Drawing.Point(203, 0)
         Me.pnlRelationsField.Name = "pnlRelationsField"
         Me.pnlRelationsField.Size = New System.Drawing.Size(150, 48)
         Me.pnlRelationsField.TabIndex = 10
-        '
-        'pnlRelationsRelation
-        '
-        Me.pnlRelationsRelation.Location = New System.Drawing.Point(353, 0)
-        Me.pnlRelationsRelation.Name = "pnlRelationsRelation"
-        Me.pnlRelationsRelation.Size = New System.Drawing.Size(179, 48)
-        Me.pnlRelationsRelation.TabIndex = 9
         '
         'pnlRelationsUse
         '
@@ -738,12 +742,29 @@ Partial Class frmReports
         Me.pnlRelationHeaders.Controls.Add(Me.lblSourceField)
         Me.pnlRelationHeaders.Controls.Add(Me.lblRelationUse)
         Me.pnlRelationHeaders.Controls.Add(Me.lblRelationsJoinType)
-        Me.pnlRelationHeaders.Controls.Add(Me.lblRelationsRelation)
         Me.pnlRelationHeaders.Controls.Add(Me.lblRelationsSelectedTable)
         Me.pnlRelationHeaders.Location = New System.Drawing.Point(0, 0)
         Me.pnlRelationHeaders.Name = "pnlRelationHeaders"
         Me.pnlRelationHeaders.Size = New System.Drawing.Size(843, 24)
         Me.pnlRelationHeaders.TabIndex = 155
+        '
+        'lblRelationsTargetField
+        '
+        Me.lblRelationsTargetField.AutoSize = True
+        Me.lblRelationsTargetField.Location = New System.Drawing.Point(525, 8)
+        Me.lblRelationsTargetField.Name = "lblRelationsTargetField"
+        Me.lblRelationsTargetField.Size = New System.Drawing.Size(63, 13)
+        Me.lblRelationsTargetField.TabIndex = 123
+        Me.lblRelationsTargetField.Text = "Target Field"
+        '
+        'lblRelationsTargetTable
+        '
+        Me.lblRelationsTargetTable.AutoSize = True
+        Me.lblRelationsTargetTable.Location = New System.Drawing.Point(350, 8)
+        Me.lblRelationsTargetTable.Name = "lblRelationsTargetTable"
+        Me.lblRelationsTargetTable.Size = New System.Drawing.Size(68, 13)
+        Me.lblRelationsTargetTable.TabIndex = 122
+        Me.lblRelationsTargetTable.Text = "Target Table"
         '
         'lblSourceField
         '
@@ -771,15 +792,6 @@ Partial Class frmReports
         Me.lblRelationsJoinType.Size = New System.Drawing.Size(53, 13)
         Me.lblRelationsJoinType.TabIndex = 119
         Me.lblRelationsJoinType.Text = "Join Type"
-        '
-        'lblRelationsRelation
-        '
-        Me.lblRelationsRelation.AutoSize = True
-        Me.lblRelationsRelation.Location = New System.Drawing.Point(354, 8)
-        Me.lblRelationsRelation.Name = "lblRelationsRelation"
-        Me.lblRelationsRelation.Size = New System.Drawing.Size(46, 13)
-        Me.lblRelationsRelation.TabIndex = 118
-        Me.lblRelationsRelation.Text = "Relation"
         '
         'lblRelationsSelectedTable
         '
@@ -1277,38 +1289,6 @@ Partial Class frmReports
         Me.lblStatusTitle.TabIndex = 172
         Me.lblStatusTitle.Text = "Status"
         '
-        'pnlRelationsTargetTable
-        '
-        Me.pnlRelationsTargetTable.Location = New System.Drawing.Point(468, 0)
-        Me.pnlRelationsTargetTable.Name = "pnlRelationsTargetTable"
-        Me.pnlRelationsTargetTable.Size = New System.Drawing.Size(115, 48)
-        Me.pnlRelationsTargetTable.TabIndex = 10
-        '
-        'pnlRelationsTargetField
-        '
-        Me.pnlRelationsTargetField.Location = New System.Drawing.Point(582, 0)
-        Me.pnlRelationsTargetField.Name = "pnlRelationsTargetField"
-        Me.pnlRelationsTargetField.Size = New System.Drawing.Size(97, 48)
-        Me.pnlRelationsTargetField.TabIndex = 11
-        '
-        'lblRelationsTargetTable
-        '
-        Me.lblRelationsTargetTable.AutoSize = True
-        Me.lblRelationsTargetTable.Location = New System.Drawing.Point(471, 8)
-        Me.lblRelationsTargetTable.Name = "lblRelationsTargetTable"
-        Me.lblRelationsTargetTable.Size = New System.Drawing.Size(68, 13)
-        Me.lblRelationsTargetTable.TabIndex = 122
-        Me.lblRelationsTargetTable.Text = "Target Table"
-        '
-        'lblRelationsTargetField
-        '
-        Me.lblRelationsTargetField.AutoSize = True
-        Me.lblRelationsTargetField.Location = New System.Drawing.Point(585, 8)
-        Me.lblRelationsTargetField.Name = "lblRelationsTargetField"
-        Me.lblRelationsTargetField.Size = New System.Drawing.Size(63, 13)
-        Me.lblRelationsTargetField.TabIndex = 123
-        Me.lblRelationsTargetField.Text = "Target Field"
-        '
         'dgvReport
         '
         Me.dgvReport.AllowUserToAddRows = False
@@ -1438,14 +1418,12 @@ Partial Class frmReports
     Friend WithEvents pnlRelations As System.Windows.Forms.Panel
     Friend WithEvents pnlRelationsField As System.Windows.Forms.Panel
     Friend WithEvents pnlRelationsJoinType As System.Windows.Forms.Panel
-    Friend WithEvents pnlRelationsRelation As System.Windows.Forms.Panel
     Friend WithEvents pnlRelationsUse As System.Windows.Forms.Panel
     Friend WithEvents pnlRelationsLabel As System.Windows.Forms.Panel
     Friend WithEvents pnlRelationHeaders As System.Windows.Forms.Panel
     Friend WithEvents lblSourceField As System.Windows.Forms.Label
     Friend WithEvents lblRelationUse As System.Windows.Forms.Label
     Friend WithEvents lblRelationsJoinType As System.Windows.Forms.Label
-    Friend WithEvents lblRelationsRelation As System.Windows.Forms.Label
     Friend WithEvents lblRelationsSelectedTable As System.Windows.Forms.Label
     Friend WithEvents lblSelectedTables As System.Windows.Forms.Label
     Friend WithEvents tpgReportResult As System.Windows.Forms.TabPage
