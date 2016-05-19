@@ -222,6 +222,8 @@ Partial Class frmConfiguration
         '
         'tpgConnections
         '
+        Me.tpgConnections.Controls.Add(Me.lstDatabases)
+        Me.tpgConnections.Controls.Add(Me.lstServers)
         Me.tpgConnections.Controls.Add(Me.btnShowDatabasePassword)
         Me.tpgConnections.Controls.Add(Me.btnDefaultTableSetFile)
         Me.tpgConnections.Controls.Add(Me.btnTableSetFileBrowse)
@@ -230,8 +232,6 @@ Partial Class frmConfiguration
         Me.tpgConnections.Controls.Add(Me.lblBackupLocation)
         Me.tpgConnections.Controls.Add(Me.txtBackupLocation)
         Me.tpgConnections.Controls.Add(Me.btnBackup)
-        Me.tpgConnections.Controls.Add(Me.lstDatabases)
-        Me.tpgConnections.Controls.Add(Me.lstServers)
         Me.tpgConnections.Controls.Add(Me.btnCrawlServers)
         Me.tpgConnections.Controls.Add(Me.btnCrawlDatabases)
         Me.tpgConnections.Controls.Add(Me.btnConnectionDelete)
@@ -1008,8 +1008,8 @@ Partial Class frmConfiguration
         Me.pnlFieldSettings.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.pnlFieldSettings.AutoScroll = True
-        Me.pnlFieldSettings.Controls.Add(Me.lstRelationTables)
         Me.pnlFieldSettings.Controls.Add(Me.lstRelationFields)
+        Me.pnlFieldSettings.Controls.Add(Me.lstRelationTables)
         Me.pnlFieldSettings.Controls.Add(Me.cbxRelationFields)
         Me.pnlFieldSettings.Controls.Add(Me.btnShowRelationFields)
         Me.pnlFieldSettings.Controls.Add(Me.btnShowRelationTables)
@@ -1070,7 +1070,7 @@ Partial Class frmConfiguration
         Me.lstRelationTables.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lstRelationTables.FormattingEnabled = True
         Me.lstRelationTables.HorizontalScrollbar = True
-        Me.lstRelationTables.Location = New System.Drawing.Point(48, 29)
+        Me.lstRelationTables.Location = New System.Drawing.Point(104, 109)
         Me.lstRelationTables.Name = "lstRelationTables"
         Me.lstRelationTables.Size = New System.Drawing.Size(145, 95)
         Me.lstRelationTables.TabIndex = 163
@@ -1082,7 +1082,7 @@ Partial Class frmConfiguration
         Me.lstRelationFields.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lstRelationFields.FormattingEnabled = True
         Me.lstRelationFields.HorizontalScrollbar = True
-        Me.lstRelationFields.Location = New System.Drawing.Point(72, 137)
+        Me.lstRelationFields.Location = New System.Drawing.Point(104, 136)
         Me.lstRelationFields.Name = "lstRelationFields"
         Me.lstRelationFields.Size = New System.Drawing.Size(145, 95)
         Me.lstRelationFields.TabIndex = 166

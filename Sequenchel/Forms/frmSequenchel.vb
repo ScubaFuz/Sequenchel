@@ -478,16 +478,18 @@ Public Class frmSequenchel
                                 'New relation style...
                                     Dim strRelTable As String = "", strRelField As String = "", strRelation As String = ""
 
-                                If SeqData.dhdText.CheckNodeElement(xRnode, "RelationTable") Then strRelTable = xRnode.Item("RelationTable").InnerText
-                                If SeqData.dhdText.CheckNodeElement(xRnode, "RelationField") Then strRelField = xRnode.Item("RelationField").InnerText
-                                fldField.FieldRelation = strRelTable & "." & strRelField
+                                If SeqData.dhdText.CheckNodeElement(xRnode, "RelationTable") Then fldField.FieldRelationTable = xRnode.Item("RelationTable").InnerText
+                                If SeqData.dhdText.CheckNodeElement(xRnode, "RelationTableAlias") Then fldField.FieldRelationTableAlias = xRnode.Item("RelationTableAlias").InnerText
+                                If String.IsNullOrEmpty(fldField.FieldRelationTableAlias) Then fldField.FieldRelationTableAlias = fldField.FieldRelationTable.ToString.Replace(".", "_")
+                                If SeqData.dhdText.CheckNodeElement(xRnode, "RelationField") Then fldField.FieldRelationField = xRnode.Item("RelationField").InnerText
+                                fldField.FieldRelation = fldField.FieldRelationTable & "." & fldField.FieldRelationField
                                 If SeqData.dhdText.CheckNodeElement(xRnode, "RelatedField") Then fldField.FieldRelatedField = xRnode.Item("RelatedField").InnerText
                                 If SeqData.dhdText.CheckNodeElement(xRnode, "RelatedFieldList") Then fldField.FieldRelatedFieldList = xRnode.Item("RelatedFieldList").InnerText
                                 If xRnode.ChildNodes.Count = 1 Then
                                     strRelation = xRnode.InnerText
                                     If strRelation.Length > 0 Then
-                                        strRelTable = strRelation.Substring(0, strRelation.LastIndexOf("."))
-                                        strRelField = strRelation.Substring(strRelation.LastIndexOf(".") + 1, strRelation.Length - (strRelation.LastIndexOf(".") + 1))
+                                        fldField.FieldRelationTable = strRelation.Substring(0, strRelation.LastIndexOf("."))
+                                        fldField.FieldRelationField = strRelation.Substring(strRelation.LastIndexOf(".") + 1, strRelation.Length - (strRelation.LastIndexOf(".") + 1))
                                         If xRnode.Attributes.Count > 0 Then
                                             If xRnode.Attributes(0).Name = "RelatedField" Then fldField.FieldRelatedField = xRnode.Attributes("RelatedField").InnerText
                                             If xRnode.Attributes.Count > 1 Then
@@ -591,7 +593,7 @@ Public Class frmSequenchel
                                 Dim msfRelatedField As New ManagedSelectField
                                 'AddHandler msfRelatedField.SelectedIndexChanged, AddressOf Me.cbxRelatedField_SelectedIndexChanged
                                 tblTable.Add(msfRelatedField)
-                                msfRelatedField.Name = fldField.FieldRelation.Substring(0, fldField.FieldRelation.LastIndexOf(".")) & "." & fldField.FieldRelatedField
+                                msfRelatedField.Name = fldField.FieldRelationTable & "." & fldField.FieldRelatedField
                                 msfRelatedField.FieldName = fldField.FieldRelatedField
                                 msfRelatedField.FieldRelatedField = fldField.FieldName
                                 msfRelatedField.FieldSearch = fldField.FieldSearch
@@ -1038,7 +1040,7 @@ Public Class frmSequenchel
         lblListCountNumber.Text = 0
 
         strQuery = strQuerySelect
-        strQuery &= " FROM [" & tblTable.TableName.Replace(".", "].[") & "] "
+        strQuery &= " FROM [" & tblTable.TableName.Replace(".", "].[") & "] " & tblTable.TableAlias & " "
         strQuery &= " WHERE 1=1 "
 
         If blnRefine = True Then
@@ -1052,7 +1054,7 @@ Public Class frmSequenchel
                         Case Else
                             strValue = tblTable.Item(intField).Text
                     End Select
-                    strQuery &= " AND " & FormatFieldWhere1(tblTable.Item(intField).FieldName, tblTable.TableName, tblTable.Item(intField).Width, tblTable.Item(intField).FieldDataType, strValue)
+                    strQuery &= " AND " & FormatFieldWhere1(tblTable.Item(intField).FieldName, tblTable.TableAlias, tblTable.Item(intField).Width, tblTable.Item(intField).FieldDataType, strValue)
                 End If
             Next
         End If
@@ -1079,7 +1081,7 @@ Public Class frmSequenchel
                 If intOrder = column.displayindex Then
                     For intField As Integer = 0 To tblTable.Count - 1
                         If tblTable.Item(intField).FieldName = column.Name Then
-                            strQuery &= ", " & SeqData.FormatField(tblTable.Item(intField).FieldName, tblTable.TableName, tblTable.Item(intField).Width, tblTable.Item(intField).FieldDataType, tblTable.Item(intField).FieldName, Nothing, True, True, SeqData.curVar.DateTimeStyle)
+                            strQuery &= ", " & SeqData.FormatField(tblTable.TableName, tblTable.TableAlias, tblTable.Item(intField).FieldName, tblTable.Item(intField).FieldAlias, tblTable.Item(intField).FieldDataType, tblTable.Item(intField).Width, Nothing, True, True, SeqData.curVar.DateTimeStyle)
                             Exit For
                         End If
                     Next
@@ -1107,7 +1109,7 @@ Public Class frmSequenchel
                                 Case "BINARY", "XML", "GEO", "TEXT", "IMAGE"
                                     'No sort order
                                 Case Else
-                                    strQuery &= ", " & SeqData.FormatField(tblTable.Item(intField).FieldName, tblTable.TableName, tblTable.Item(intField).Width, tblTable.Item(intField).FieldDataType, Nothing, Nothing, False, False, SeqData.curVar.DateTimeStyle)
+                                    strQuery &= ", " & SeqData.FormatField(tblTable.TableName, tblTable.TableAlias, tblTable.Item(intField).FieldName, Nothing, tblTable.Item(intField).FieldDataType, tblTable.Item(intField).Width, Nothing, False, False, SeqData.curVar.DateTimeStyle)
                                     If chkReversedSortOrder.Checked = True Then
                                         strQuery &= " DESC "
                                     End If
@@ -1136,19 +1138,19 @@ Public Class frmSequenchel
     Private Sub LoadItem(dgrSelection As DataGridViewRow)
         Dim strQueryWhere As String = " WHERE 1=1 "
         Dim strQueryWhere2 As String = ""
-        Dim strQueryFrom As String = " FROM [" & tblTable.TableName.Replace(".", "].[") & "] "
+        Dim strQueryFrom As String = " FROM [" & tblTable.TableName.Replace(".", "].[") & "] " & tblTable.TableAlias & " "
         'strQuery = "SELECT TOP 1 ,"
         strQuery = "SELECT ,"
         For intField As Integer = 0 To tblTable.Count - 1
             'strQuery &= ",COALESCE([" & tblTable.Item(intField).FieldName & "],'') AS [" & tblTable.Item(intField).FieldName & "]"
             If tblTable.Item(intField).Name.Substring(0, tblTable.Item(intField).Name.LastIndexOf(".")) = tblTable.TableName Then
 
-                strQuery &= ", " & SeqData.FormatField(tblTable.Item(intField).FieldName, tblTable.TableName, tblTable.Item(intField).Width, tblTable.Item(intField).FieldDataType, tblTable.Item(intField).FieldName, Nothing, True, True, SeqData.curVar.DateTimeStyle)
+                strQuery &= ", " & SeqData.FormatField(tblTable.TableName, tblTable.TableAlias, tblTable.Item(intField).FieldName, tblTable.Item(intField).FieldAlias, tblTable.Item(intField).FieldDataType, tblTable.Item(intField).Width, Nothing, True, True, SeqData.curVar.DateTimeStyle)
 
                 If tblTable.Item(intField).FieldRelatedField.Length > 0 Then
                     Dim strRelation As String = tblTable.Item(intField).FieldRelation
                     strQuery &= ",[" & tblTable.Item(intField).FieldRelation.Substring(0, tblTable.Item(intField).FieldRelation.LastIndexOf(".")).Replace(".", "].[") & "].[" & tblTable.Item(intField).FieldRelatedField & "] AS [" & tblTable.Item(intField).FieldRelatedField & "]"
-                    strQueryFrom &= " LEFT OUTER JOIN " & tblTable.Item(intField).FieldRelation.Substring(0, tblTable.Item(intField).FieldRelation.LastIndexOf(".")) & " ON " & "[" & tblTable.TableName.Replace(".", "].[") & "]." & tblTable.Item(intField).FieldName & " = " & tblTable.Item(intField).FieldRelation.Substring(0, tblTable.Item(intField).FieldRelation.LastIndexOf(".")) & "." & tblTable.Item(intField).FieldRelation.Substring(tblTable.Item(intField).FieldRelation.LastIndexOf(".") + 1, tblTable.Item(intField).FieldRelation.Length - tblTable.Item(intField).FieldRelation.LastIndexOf(".") - 1)
+                    strQueryFrom &= " LEFT OUTER JOIN " & tblTable.Item(intField).FieldRelation.Substring(0, tblTable.Item(intField).FieldRelation.LastIndexOf(".")) & " ON " & "[" & tblTable.TableAlias & "]." & tblTable.Item(intField).FieldName & " = " & tblTable.Item(intField).FieldRelation.Substring(0, tblTable.Item(intField).FieldRelation.LastIndexOf(".")) & "." & tblTable.Item(intField).FieldRelation.Substring(tblTable.Item(intField).FieldRelation.LastIndexOf(".") + 1, tblTable.Item(intField).FieldRelation.Length - tblTable.Item(intField).FieldRelation.LastIndexOf(".") - 1)
                 End If
 
                 For Each cell In dgrSelection.Cells
@@ -1156,11 +1158,11 @@ Public Class frmSequenchel
                         If Not cell.Value Is Nothing Then
                             If tblTable.Item(intField).Identity = True Or tblTable.Item(intField).PrimaryKey = True Then
                                 'strQueryWhere &= " AND [" & tblTable.TableName.Replace(".", "].[") & "].[" & tblTable.Item(intField).FieldName & "] = " & SetDelimiters(cell.Value.ToString, tblTable.Item(intField).FieldDataType, "=")
-                                strQueryWhere &= " AND " & SeqData.FormatField(tblTable.Item(intField).FieldName, tblTable.TableName, tblTable.Item(intField).Width, tblTable.Item(intField).FieldDataType, Nothing, Nothing, False, False, SeqData.curVar.DateTimeStyle) & " = " & SeqData.SetDelimiters(cell.Value.ToString, tblTable.Item(intField).FieldDataType, "=")
+                                strQueryWhere &= " AND " & SeqData.FormatField(tblTable.TableName, tblTable.TableAlias, tblTable.Item(intField).FieldName, Nothing, tblTable.Item(intField).FieldDataType, tblTable.Item(intField).Width, Nothing, False, False, SeqData.curVar.DateTimeStyle) & " = " & SeqData.SetDelimiters(cell.Value.ToString, tblTable.Item(intField).FieldDataType, "=")
 
                             End If
                             'strQueryWhere2 &= " AND [" & tblTable.TableName.Replace(".", "].[") & "].[" & tblTable.Item(intField).FieldName & "] = " & SetDelimiters(cell.Value.ToString, tblTable.Item(intField).FieldDataType, "=")
-                            strQueryWhere2 &= " AND " & SeqData.FormatField(tblTable.Item(intField).FieldName, tblTable.TableName, tblTable.Item(intField).Width, tblTable.Item(intField).FieldDataType, Nothing, Nothing, False, False, SeqData.curVar.DateTimeStyle) & " = " & SeqData.SetDelimiters(cell.Value.ToString, tblTable.Item(intField).FieldDataType, "=")
+                            strQueryWhere2 &= " AND " & SeqData.FormatField(tblTable.TableName, tblTable.TableAlias, tblTable.Item(intField).FieldName, Nothing, tblTable.Item(intField).FieldDataType, tblTable.Item(intField).Width, Nothing, False, False, SeqData.curVar.DateTimeStyle) & " = " & SeqData.SetDelimiters(cell.Value.ToString, tblTable.Item(intField).FieldDataType, "=")
                         End If
                     End If
                 Next

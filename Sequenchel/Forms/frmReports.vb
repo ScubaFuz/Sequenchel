@@ -295,7 +295,7 @@ Public Class frmReports
             lsvItem.Tag = TableNode.Item("DataType").InnerText
             'lsvItem.Tag = TableNode.ParentNode.ParentNode.Item("Name").InnerText
             lsvItem.Name = TableNode.ParentNode.ParentNode.Item("Name").InnerText & "." & TableNode.Item("FldName").InnerText
-            lsvItem.Text = TableNode.ParentNode.ParentNode.Item("Alias").InnerText
+            lsvItem.Text = TableNode.ParentNode.ParentNode.Item("Alias").InnerText.Replace(".", "_")
             lsvItem.SubItems.Add(TableNode.Item("FldAlias").InnerText)
             lvwAvailableFields.Items.Add(lsvItem)
         Next
@@ -1191,7 +1191,7 @@ Public Class frmReports
 
     Private Sub XmlToReport(xmlReports As XmlDocument, strReportName As String)
         Dim xNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlReports, "Report", "ReportName", strReportName)
-        Dim strTable As String = "", strField As String = "", intRelationNumber As Integer = 0
+        Dim strTable As String = "", strTableAlias As String = "", strField As String = "", intRelationNumber As Integer = 0
 
         If Not xNode Is Nothing Then
             If SeqData.dhdText.CheckNodeElement(xNode, "Description") Then txtDescription.Text = xNode.Item("Description").InnerText
@@ -1201,6 +1201,8 @@ Public Class frmReports
             For Each xCNode As XmlNode In SeqData.dhdText.FindXmlChildNodes(xNode, "Fields/Field")
                 strTable = xCNode.Item("TableName").InnerText
                 If strTable.IndexOf(".") = -1 Then strTable = "dbo." & strTable
+                If SeqData.dhdText.CheckNodeElement(xCNode, "TableAlias") Then strTableAlias = xCNode.Item("TableAlias").InnerText
+                If String.IsNullOrEmpty(strTableAlias) Then strTableAlias = strTable.Replace(".", "_")
                 strField = xCNode.Item("FieldName").InnerText
                 Try
                     lvwAvailableFields.Items(strTable & "." & strField).Selected = True
@@ -1916,4 +1918,5 @@ Public Class frmReports
         End If
 
     End Sub
+
 End Class

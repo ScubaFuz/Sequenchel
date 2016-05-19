@@ -1,5 +1,5 @@
 Version 3.8.0
-New: In Reports: tabl;e alias is used to enable multiple instances of the same table.
+New: In Reports: table alias is used to enable multiple instances of the same table.
 Enhanced: In Reports: Select lists for related tables and fields.
 Fixed: Import to table now uses table name instead of alias.
 

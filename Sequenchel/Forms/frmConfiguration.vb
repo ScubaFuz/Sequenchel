@@ -157,6 +157,7 @@ Public Class frmConfiguration
         If dtsData.Tables(0).Rows.Count = 0 Then Exit Sub
 
         lstDatabases.Items.Clear()
+        lstDatabases.Width = 147
         lstDatabases.Items.Add("")
         For intRowCount = 0 To dtsData.Tables(0).Rows.Count - 1
             'If dtsData.Tables.Item(0).Rows(intRowCount).Item(0).GetType().ToString = "System.DBNull" Then
@@ -327,6 +328,7 @@ Public Class frmConfiguration
         Using dtSqlSources As DataTable = System.Data.Sql.SqlDataSourceEnumerator.Instance.GetDataSources()
             If dtSqlSources.Rows.Count > 0 Then
                 lstServers.Items.Clear()
+                lstServers.Width = 147
                 lstServers.Items.Add("")
                 For Each objDR As DataRow In dtSqlSources.Rows
                     strResult = objDR("ServerName")
@@ -725,7 +727,7 @@ Public Class frmConfiguration
 
     Private Sub lstTables_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lstTables.SelectedIndexChanged
         txtTableName.Text = lstTables.SelectedItem
-        txtTableAlias.Text = lstTables.SelectedItem
+        txtTableAlias.Text = lstTables.SelectedItem.ToString.Replace(".", "_")
         chkTableVisible.Checked = True
         chkTableSearch.Checked = True
         lstTables.Visible = False
@@ -911,7 +913,7 @@ Public Class frmConfiguration
             If lstNewTables.Last = TableName Then
                 blnReload = True
             End If
-            ImportOneTable(TableName, TableName, blnReload)
+            ImportOneTable(TableName, TableName.Replace(".", "_"), blnReload)
         Next
     End Sub
 
