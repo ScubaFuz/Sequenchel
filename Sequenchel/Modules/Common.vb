@@ -901,10 +901,10 @@ Module Common
             Dim dgvRow As New DataGridViewRow
             dgvRow.CreateCells(dgvTarget)
             For Each dgvColumn As DataGridViewTextBoxColumn In dgvTarget.Columns
-                If dtsSource.Tables.Item(0).Rows(intRowCount1).Item(dgvColumn.Name).GetType().ToString = "System.DBNull" Then
+                If dtsSource.Tables.Item(0).Rows(intRowCount1).Item(dgvColumn.HeaderText).GetType().ToString = "System.DBNull" Then
                     dgvRow.Cells.Item(dgvTarget.Columns.Item(dgvColumn.Name).Index).Style.BackColor = clrEmpty
                 Else
-                    dgvRow.Cells.Item(dgvTarget.Columns.Item(dgvColumn.Name).Index).Value = dtsSource.Tables(SourceTable).Rows(intRowCount1).Item(dgvColumn.Name)
+                    dgvRow.Cells.Item(dgvTarget.Columns.Item(dgvColumn.Name).Index).Value = dtsSource.Tables(SourceTable).Rows(intRowCount1).Item(dgvColumn.HeaderText)
                 End If
             Next
             dgvTarget.Rows.Add(dgvRow)

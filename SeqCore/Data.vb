@@ -1155,11 +1155,8 @@ Public Class Data
         For Each xTNode As XmlNode In dhdText.FindXmlChildNodes(XNode, "Relations/Relation")
             Dim strTableName As String = xTNode.Item("TableName").InnerText
             Dim strTableAlias As String = ""
-            If dhdText.CheckNodeElement(xTNode, "TableAlias") Then
-                strTableAlias = GetTableAliasFromString(xTNode.Item("TableAlias").InnerText)
-            Else
-                strTableAlias = GetTableAliasFromString(xTNode.Item("TableName").InnerText)
-            End If
+            If dhdText.CheckNodeElement(xTNode, "TableAlias") Then strTableAlias = GetTableAliasFromString(xTNode.Item("TableAlias").InnerText)
+            If String.IsNullOrEmpty(strTableAlias) Then strTableAlias = GetTableAliasFromString(xTNode.Item("TableName").InnerText)
 
             If intCount = 0 Then strFromClause &= strTableName & " " & strTableAlias
             If xTNode.Item("RelationEnabled").InnerText = "True" Then
@@ -1198,7 +1195,7 @@ Public Class Data
 
     Private Function OrderClauseGet(xmlCNodelist As XmlNodeList, intMaxSort As Integer) As String
         Dim strQueryOrder As String = "ORDER BY "
-        Dim strTableName As String = ""
+        Dim strTableAlias As String = ""
         Dim strFieldName As String = ""
         Dim strFieldSort As String = ""
         Dim intOrder As Integer = 0
@@ -1208,10 +1205,11 @@ Public Class Data
                 If IsNumeric(xCNode.Item("FieldSortOrder").InnerText) Then
                     intOrder = xCNode.Item("FieldSortOrder").InnerText
                     If intCount = intOrder Or (intCount > intMaxSort And intOrder > intMaxSort) Then
-                        strTableName = xCNode.Item("TableName").InnerText
-                        If strTableName.IndexOf(".") = -1 Then strTableName = "dbo." & strTableName
+                        If dhdText.CheckNodeElement(xCNode, "TableAlias") Then strTableAlias = xCNode.Item("TableAlias").InnerText
+                        If String.IsNullOrEmpty(strTableAlias) Then strTableAlias = xCNode.Item("TableName").InnerText.Replace(".", "_")
+                        'If strTableName.IndexOf(".") = -1 Then strTableName = "dbo." & strTableName
                         strFieldName = xCNode.Item("FieldName").InnerText
-                        strQueryOrder &= ", " & strTableName & "." & strFieldName
+                        strQueryOrder &= ", " & strTableAlias & "." & strFieldName
                         strFieldSort = xCNode.Item("FieldSort").InnerText
                         If strFieldSort = "ASC" Or strFieldSort = "DESC" Then strQueryOrder &= " " & strFieldSort
                     End If
@@ -1239,7 +1237,7 @@ Public Class Data
             strReturn = strInput.Substring(strInput.IndexOf("(") + 1, strInput.Length - (strInput.IndexOf("(") + 1) - 1)
         Else
             If strInput.IndexOf(".") <> strInput.LastIndexOf(".") Then
-                strReturn = strInput.Substring(0, strInput.LastIndexOf(".") - 1)
+                strReturn = strInput.Substring(0, strInput.LastIndexOf("."))
             End If
         End If
         Return strReturn
@@ -1252,7 +1250,7 @@ Public Class Data
             strReturn = strInput.Substring(0, strInput.IndexOf("(") - 1)
         End If
         If strInput.IndexOf(".") <> strInput.LastIndexOf(".") Then
-            strReturn = strInput.Substring(0, strInput.LastIndexOf(".") - 1)
+            strReturn = strInput.Substring(0, strInput.LastIndexOf("."))
         End If
         If strReturn.IndexOf(".") > -1 Then
             strReturn = strReturn.Replace(".", "_")

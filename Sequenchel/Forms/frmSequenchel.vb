@@ -419,7 +419,7 @@ Public Class frmSequenchel
             If Not xPNode Is Nothing Then
                 'If SeqData.dhdText.CheckNodeElement(xPNode, "Alias") Then tabTables.TabPages("tpgTable1").Text = xPNode.Item("Alias").InnerText
                 If SeqData.dhdText.CheckNodeElement(xPNode, "Name") Then tblTable.TableName = xPNode.Item("Name").InnerText
-                If SeqData.dhdText.CheckNodeElement(xPNode, "Alias") Then tblTable.TableAlias = xPNode.Item("Alias").InnerText
+                If SeqData.dhdText.CheckNodeElement(xPNode, "Alias") Then tblTable.TableAlias = xPNode.Item("Alias").InnerText.Replace(".", "_")
                 If SeqData.dhdText.CheckNodeElement(xPNode, "Visible") Then tblTable.TableVisible = xPNode.Item("Visible").InnerText
                 If SeqData.dhdText.CheckNodeElement(xPNode, "Update") Then tblTable.TableUpdate = xPNode.Item("Update").InnerText
                 If SeqData.dhdText.CheckNodeElement(xPNode, "Search") Then tblTable.TableSearch = xPNode.Item("Search").InnerText
@@ -1154,7 +1154,7 @@ Public Class frmSequenchel
                 End If
 
                 For Each cell In dgrSelection.Cells
-                    If cell.OwningColumn.Name = tblTable.Item(intField).FieldName Then
+                    If cell.OwningColumn.HeaderText = tblTable.Item(intField).FieldName Then
                         If Not cell.Value Is Nothing Then
                             If tblTable.Item(intField).Identity = True Or tblTable.Item(intField).PrimaryKey = True Then
                                 'strQueryWhere &= " AND [" & tblTable.TableName.Replace(".", "].[") & "].[" & tblTable.Item(intField).FieldName & "] = " & SetDelimiters(cell.Value.ToString, tblTable.Item(intField).FieldDataType, "=")
@@ -1182,20 +1182,20 @@ Public Class frmSequenchel
         SeqData.curStatus.SuspendActions = True
         Try
             For intField As Integer = 0 To tblTable.Count - 1
-                If objData.Tables.Item(0).Rows(0).Item(tblTable.Item(intField).FieldName).GetType().ToString = "System.DBNull" Then
+                If objData.Tables.Item(0).Rows(0).Item(tblTable.Item(intField).FieldAlias).GetType().ToString = "System.DBNull" Then
                     tblTable.Item(intField).BackColor = clrEmpty
                     tblTable.Item(intField).Tag = ""
                 Else
                     Select Case tblTable.Item(intField).FieldCategory
                         Case 1, 3, 4
-                            tblTable.Item(intField).Text = objData.Tables.Item(0).Rows(0).Item(tblTable.Item(intField).FieldName)
+                            tblTable.Item(intField).Text = objData.Tables.Item(0).Rows(0).Item(tblTable.Item(intField).FieldAlias)
                         Case 2
-                            tblTable.Item(intField).Checked = objData.Tables.Item(0).Rows(0).Item(tblTable.Item(intField).FieldName)
+                            tblTable.Item(intField).Checked = objData.Tables.Item(0).Rows(0).Item(tblTable.Item(intField).FieldAlias)
                         Case 5, 6
-                            tblTable.Item(intField).Text = objData.Tables.Item(0).Rows(0).Item(tblTable.Item(intField).FieldName)
+                            tblTable.Item(intField).Text = objData.Tables.Item(0).Rows(0).Item(tblTable.Item(intField).FieldAlias)
                             tblTable.Item(intField).DropDown(2)
                     End Select
-                    tblTable.Item(intField).Tag = objData.Tables.Item(0).Rows(0).Item(tblTable.Item(intField).FieldName).ToString
+                    tblTable.Item(intField).Tag = objData.Tables.Item(0).Rows(0).Item(tblTable.Item(intField).FieldAlias).ToString
                 End If
             Next
             'End If
