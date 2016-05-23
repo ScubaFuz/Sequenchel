@@ -1600,6 +1600,51 @@ Public Class frmConfiguration
     End Sub
 
     Private Sub btnShowRelationFields_Click(sender As Object, e As EventArgs) Handles btnShowRelationFields.Click
+        ShowTableFields(lstRelationFields)
+
+        'CursorControl("Wait")
+        'If cbxRelationTables.Text.Length = 0 Then
+        '    CursorControl()
+        '    WriteStatus("No table selected", 2, lblStatusText)
+        '    Exit Sub
+        'End If
+
+        'Dim strTable As String = cbxRelationTables.Text
+        'If strTable.IndexOf("(") > 0 Then
+        '    strTable = strTable.Substring(strTable.IndexOf("(") + 1, strTable.Length - strTable.IndexOf("(") - 2)
+        'End If
+        'Dim lstFindFields As New List(Of String)
+        'lstFindFields = SeqData.dhdText.LoadItemList(xmlTables, "Table", "Name", strTable, "Field", "FldName")
+
+        'If lstFindFields Is Nothing Then
+        '    CursorControl()
+        '    WriteStatus("No fields found", 2, lblStatusText)
+        '    Exit Sub
+        'End If
+
+        'lstRelationFields.Items.Clear()
+        'lstRelationFields.Items.Add("")
+
+        'For Each lstItem As String In lstFindFields
+        '    lstRelationFields.Items.Add(lstItem)
+        'Next
+
+        'CursorControl()
+        'If lstRelationFields.Items.Count < 15 Then
+        '    lstRelationFields.Height = lstRelationFields.Items.Count * 15
+        'Else
+        '    lstRelationFields.Height = 15 * 15
+        'End If
+        'lstRelationFields.Visible = True
+        'lstRelationFields.Focus()
+
+    End Sub
+
+    Private Sub btnShowRelatedFields_Click(sender As Object, e As EventArgs) Handles btnShowRelatedFields.Click
+        ShowTableFields(lstRelatedFields)
+    End Sub
+
+    Private Sub ShowTableFields(lstInput As ListBox)
         CursorControl("Wait")
         If cbxRelationTables.Text.Length = 0 Then
             CursorControl()
@@ -1620,22 +1665,21 @@ Public Class frmConfiguration
             Exit Sub
         End If
 
-        lstRelationFields.Items.Clear()
-        lstRelationFields.Items.Add("")
+        lstInput.Items.Clear()
+        lstInput.Items.Add("")
 
         For Each lstItem As String In lstFindFields
-            lstRelationFields.Items.Add(lstItem)
+            lstInput.Items.Add(lstItem)
         Next
 
         CursorControl()
-        If lstRelationFields.Items.Count < 15 Then
-            lstRelationFields.Height = lstRelationFields.Items.Count * 15
+        If lstInput.Items.Count < 15 Then
+            lstInput.Height = lstInput.Items.Count * 15
         Else
-            lstRelationFields.Height = 15 * 15
+            lstInput.Height = 15 * 15
         End If
-        lstRelationFields.Visible = True
-        lstRelationFields.Focus()
-
+        lstInput.Visible = True
+        lstInput.Focus()
     End Sub
 
     Private Sub lstRelationFields_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lstRelationFields.SelectedIndexChanged
@@ -1645,6 +1689,15 @@ Public Class frmConfiguration
 
     Private Sub lstRelationFields_LostFocus(sender As Object, e As EventArgs) Handles lstRelationFields.LostFocus
         lstRelationFields.Visible = False
+    End Sub
+
+    Private Sub lstRelatedFields_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lstRelatedFields.SelectedIndexChanged
+        txtRelatedField.Text = lstRelatedFields.SelectedItem
+        lstRelatedFields.Visible = False
+    End Sub
+
+    Private Sub lstRelatedFields_LostFocus(sender As Object, e As EventArgs) Handles lstRelatedFields.LostFocus
+        lstRelatedFields.Visible = False
     End Sub
 
     Private Sub btnRelationRemove_Click(sender As Object, e As EventArgs) Handles btnRelationRemove.Click

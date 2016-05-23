@@ -25,6 +25,8 @@ Partial Class frmConfiguration
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmConfiguration))
         Me.tabConfiguration = New System.Windows.Forms.TabControl()
         Me.tpgConnections = New System.Windows.Forms.TabPage()
+        Me.lstDatabases = New System.Windows.Forms.ListBox()
+        Me.lstServers = New System.Windows.Forms.ListBox()
         Me.btnShowDatabasePassword = New System.Windows.Forms.Button()
         Me.btnDefaultTableSetFile = New System.Windows.Forms.Button()
         Me.btnTableSetFileBrowse = New System.Windows.Forms.Button()
@@ -33,8 +35,6 @@ Partial Class frmConfiguration
         Me.lblBackupLocation = New System.Windows.Forms.Label()
         Me.txtBackupLocation = New System.Windows.Forms.TextBox()
         Me.btnBackup = New System.Windows.Forms.Button()
-        Me.lstDatabases = New System.Windows.Forms.ListBox()
-        Me.lstServers = New System.Windows.Forms.ListBox()
         Me.btnCrawlServers = New System.Windows.Forms.Button()
         Me.btnCrawlDatabases = New System.Windows.Forms.Button()
         Me.btnConnectionDelete = New System.Windows.Forms.Button()
@@ -99,8 +99,10 @@ Partial Class frmConfiguration
         Me.colTablesFile = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.tpgTables = New System.Windows.Forms.TabPage()
         Me.pnlFieldSettings = New System.Windows.Forms.Panel()
-        Me.lstRelationTables = New System.Windows.Forms.ListBox()
+        Me.lstRelatedFields = New System.Windows.Forms.ListBox()
+        Me.btnShowRelatedFields = New System.Windows.Forms.Button()
         Me.lstRelationFields = New System.Windows.Forms.ListBox()
+        Me.lstRelationTables = New System.Windows.Forms.ListBox()
         Me.cbxRelationFields = New System.Windows.Forms.ComboBox()
         Me.btnShowRelationFields = New System.Windows.Forms.Button()
         Me.btnShowRelationTables = New System.Windows.Forms.Button()
@@ -269,6 +271,28 @@ Partial Class frmConfiguration
         Me.tpgConnections.Text = "Connections"
         Me.tpgConnections.UseVisualStyleBackColor = True
         '
+        'lstDatabases
+        '
+        Me.lstDatabases.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lstDatabases.FormattingEnabled = True
+        Me.lstDatabases.Location = New System.Drawing.Point(552, 84)
+        Me.lstDatabases.Name = "lstDatabases"
+        Me.lstDatabases.Size = New System.Drawing.Size(147, 95)
+        Me.lstDatabases.TabIndex = 6
+        Me.lstDatabases.TabStop = False
+        Me.lstDatabases.Visible = False
+        '
+        'lstServers
+        '
+        Me.lstServers.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lstServers.FormattingEnabled = True
+        Me.lstServers.Location = New System.Drawing.Point(552, 60)
+        Me.lstServers.Name = "lstServers"
+        Me.lstServers.Size = New System.Drawing.Size(147, 95)
+        Me.lstServers.TabIndex = 3
+        Me.lstServers.TabStop = False
+        Me.lstServers.Visible = False
+        '
         'btnShowDatabasePassword
         '
         Me.btnShowDatabasePassword.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
@@ -345,28 +369,6 @@ Partial Class frmConfiguration
         Me.btnBackup.Size = New System.Drawing.Size(131, 20)
         Me.btnBackup.TabIndex = 28
         Me.btnBackup.Text = "Backup"
-        '
-        'lstDatabases
-        '
-        Me.lstDatabases.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lstDatabases.FormattingEnabled = True
-        Me.lstDatabases.Location = New System.Drawing.Point(552, 84)
-        Me.lstDatabases.Name = "lstDatabases"
-        Me.lstDatabases.Size = New System.Drawing.Size(147, 95)
-        Me.lstDatabases.TabIndex = 6
-        Me.lstDatabases.TabStop = False
-        Me.lstDatabases.Visible = False
-        '
-        'lstServers
-        '
-        Me.lstServers.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lstServers.FormattingEnabled = True
-        Me.lstServers.Location = New System.Drawing.Point(552, 60)
-        Me.lstServers.Name = "lstServers"
-        Me.lstServers.Size = New System.Drawing.Size(147, 95)
-        Me.lstServers.TabIndex = 3
-        Me.lstServers.TabStop = False
-        Me.lstServers.Visible = False
         '
         'btnCrawlServers
         '
@@ -1008,6 +1010,8 @@ Partial Class frmConfiguration
         Me.pnlFieldSettings.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.pnlFieldSettings.AutoScroll = True
+        Me.pnlFieldSettings.Controls.Add(Me.lstRelatedFields)
+        Me.pnlFieldSettings.Controls.Add(Me.btnShowRelatedFields)
         Me.pnlFieldSettings.Controls.Add(Me.lstRelationFields)
         Me.pnlFieldSettings.Controls.Add(Me.lstRelationTables)
         Me.pnlFieldSettings.Controls.Add(Me.cbxRelationFields)
@@ -1065,17 +1069,28 @@ Partial Class frmConfiguration
         Me.pnlFieldSettings.Size = New System.Drawing.Size(318, 453)
         Me.pnlFieldSettings.TabIndex = 162
         '
-        'lstRelationTables
+        'lstRelatedFields
         '
-        Me.lstRelationTables.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lstRelationTables.FormattingEnabled = True
-        Me.lstRelationTables.HorizontalScrollbar = True
-        Me.lstRelationTables.Location = New System.Drawing.Point(104, 109)
-        Me.lstRelationTables.Name = "lstRelationTables"
-        Me.lstRelationTables.Size = New System.Drawing.Size(145, 95)
-        Me.lstRelationTables.TabIndex = 163
-        Me.lstRelationTables.TabStop = False
-        Me.lstRelationTables.Visible = False
+        Me.lstRelatedFields.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lstRelatedFields.FormattingEnabled = True
+        Me.lstRelatedFields.HorizontalScrollbar = True
+        Me.lstRelatedFields.Location = New System.Drawing.Point(104, 164)
+        Me.lstRelatedFields.Name = "lstRelatedFields"
+        Me.lstRelatedFields.Size = New System.Drawing.Size(145, 95)
+        Me.lstRelatedFields.TabIndex = 168
+        Me.lstRelatedFields.TabStop = False
+        Me.lstRelatedFields.Visible = False
+        '
+        'btnShowRelatedFields
+        '
+        Me.btnShowRelatedFields.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnShowRelatedFields.BackgroundImage = Global.Sequenchel.My.Resources.Resources.button_down
+        Me.btnShowRelatedFields.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
+        Me.btnShowRelatedFields.Location = New System.Drawing.Point(260, 164)
+        Me.btnShowRelatedFields.Name = "btnShowRelatedFields"
+        Me.btnShowRelatedFields.Size = New System.Drawing.Size(30, 20)
+        Me.btnShowRelatedFields.TabIndex = 167
+        Me.btnShowRelatedFields.Text = "..."
         '
         'lstRelationFields
         '
@@ -1088,6 +1103,18 @@ Partial Class frmConfiguration
         Me.lstRelationFields.TabIndex = 166
         Me.lstRelationFields.TabStop = False
         Me.lstRelationFields.Visible = False
+        '
+        'lstRelationTables
+        '
+        Me.lstRelationTables.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lstRelationTables.FormattingEnabled = True
+        Me.lstRelationTables.HorizontalScrollbar = True
+        Me.lstRelationTables.Location = New System.Drawing.Point(104, 109)
+        Me.lstRelationTables.Name = "lstRelationTables"
+        Me.lstRelationTables.Size = New System.Drawing.Size(145, 95)
+        Me.lstRelationTables.TabIndex = 163
+        Me.lstRelationTables.TabStop = False
+        Me.lstRelationTables.Visible = False
         '
         'cbxRelationFields
         '
@@ -1102,7 +1129,7 @@ Partial Class frmConfiguration
         Me.btnShowRelationFields.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnShowRelationFields.BackgroundImage = Global.Sequenchel.My.Resources.Resources.button_down
         Me.btnShowRelationFields.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
-        Me.btnShowRelationFields.Location = New System.Drawing.Point(260, 137)
+        Me.btnShowRelationFields.Location = New System.Drawing.Point(260, 136)
         Me.btnShowRelationFields.Name = "btnShowRelationFields"
         Me.btnShowRelationFields.Size = New System.Drawing.Size(30, 20)
         Me.btnShowRelationFields.TabIndex = 165
@@ -1113,7 +1140,7 @@ Partial Class frmConfiguration
         Me.btnShowRelationTables.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnShowRelationTables.BackgroundImage = Global.Sequenchel.My.Resources.Resources.button_down
         Me.btnShowRelationTables.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
-        Me.btnShowRelationTables.Location = New System.Drawing.Point(260, 111)
+        Me.btnShowRelationTables.Location = New System.Drawing.Point(260, 109)
         Me.btnShowRelationTables.Name = "btnShowRelationTables"
         Me.btnShowRelationTables.Size = New System.Drawing.Size(30, 20)
         Me.btnShowRelationTables.TabIndex = 163
@@ -1227,7 +1254,7 @@ Partial Class frmConfiguration
         '
         Me.txtRelatedField.Location = New System.Drawing.Point(128, 165)
         Me.txtRelatedField.Name = "txtRelatedField"
-        Me.txtRelatedField.Size = New System.Drawing.Size(162, 20)
+        Me.txtRelatedField.Size = New System.Drawing.Size(127, 20)
         Me.txtRelatedField.TabIndex = 8
         '
         'txtFieldWidth
@@ -2198,4 +2225,6 @@ Partial Class frmConfiguration
     Friend WithEvents lstRelationFields As System.Windows.Forms.ListBox
     Friend WithEvents btnShowRelationFields As System.Windows.Forms.Button
     Friend WithEvents cbxRelationFields As System.Windows.Forms.ComboBox
+    Friend WithEvents lstRelatedFields As System.Windows.Forms.ListBox
+    Friend WithEvents btnShowRelatedFields As System.Windows.Forms.Button
 End Class

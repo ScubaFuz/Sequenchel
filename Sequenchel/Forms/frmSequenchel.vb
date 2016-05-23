@@ -595,6 +595,7 @@ Public Class frmSequenchel
                                 tblTable.Add(msfRelatedField)
                                 msfRelatedField.Name = fldField.FieldRelationTable & "." & fldField.FieldRelatedField
                                 msfRelatedField.FieldName = fldField.FieldRelatedField
+                                msfRelatedField.FieldAlias = fldField.FieldRelatedField
                                 msfRelatedField.FieldRelatedField = fldField.FieldName
                                 msfRelatedField.FieldSearch = fldField.FieldSearch
                                 msfRelatedField.FieldUpdate = fldField.FieldUpdate
@@ -788,15 +789,16 @@ Public Class frmSequenchel
             Else
                 SeqData.curStatus.Status = SeqCore.CurrentStatus.StatusList.Add
             End If
+            FieldsDisable()
             FieldsClear(True)
             FieldsEnable(False)
 
             SeqData.curStatus.SuspendActions = True
             dgvTable1.ClearSelection()
             dgvTable1.CurrentCell = Nothing
-            SeqData.curStatus.SuspendActions = False
 
             ButtonHandle()
+            SeqData.curStatus.SuspendActions = False
             TagsClear()
             ColorSet()
             btnAdd.Text = "Save Item"

@@ -221,7 +221,7 @@ Module Common
                         If tblTable.Item(intField).FieldName = sender.FieldRelatedField Then
                             Select Case tblTable.Item(intField).FieldCategory
                                 Case 1, 3, 4, 5
-                                    tblTable.Item(intField).Text = sender.Value
+                                    If Not sender.value = Nothing Then tblTable.Item(intField).Text = sender.Value
                                 Case 2
                                     tblTable.Item(intField).Checked = sender.Value
                             End Select

@@ -928,11 +928,12 @@ Public Class frmReports
     Private Sub btnReportClear_Click(sender As Object, e As EventArgs) Handles btnReportClear.Click
         CursorControl("Wait")
         WriteStatus("", 0, lblStatusText)
-        If cbxReportName.SelectedIndex = -1 Then
-            ReportFieldsDispose(False)
-        End If
+        'If cbxReportName.SelectedIndex = -1 Then
+        ReportFieldsDispose(False)
+        'End If
         cbxReportName.SelectedIndex = -1
         cbxReportName.Text = ""
+        ReportClear(True)
         CursorControl()
     End Sub
 
@@ -963,6 +964,7 @@ Public Class frmReports
     Private Sub ReportClear(blnAll As Boolean)
         strErrorMessage = ""
         lblErrorMessage.Text = ""
+        lblListCountNumber.Text = "0"
         dgvReport.Columns.Clear()
         If blnAll = True Then
             rtbQuery.Text = ""
@@ -1493,7 +1495,7 @@ Public Class frmReports
         intControlNumber = 0
         Dim NewRelationsNode As XmlNode = SeqData.dhdText.CreateAppendElement(NewReportNode, "Relations")
         For intTableCount As Integer = 0 To lvwSelectedTables.Items.Count - 1
-            strTableName = lvwSelectedTables.Items.Item(intTableCount).Name
+            strTableName = lvwSelectedTables.Items.Item(intTableCount).Tag
             strTableAlias = lvwSelectedTables.Items.Item(intTableCount).Text
 
             For Each ctrRelation In pnlRelationsUse.Controls
