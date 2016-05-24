@@ -7,6 +7,9 @@
     Private _Identity As Boolean = False
     Private _PrimaryKey As Boolean = False
     Private _FieldRelation As String = ""
+    Private _FieldRelationTable As String = ""
+    Private _FieldRelationTableAlias As String = ""
+    Private _FieldRelationField As String = ""
     Private _FieldRelatedField As String = ""
     Private _FieldRelatedFieldList As Boolean = False
     Private _FieldCategory As Integer = 2
@@ -62,6 +65,33 @@
         End Get
         Set(ByVal Value As String)
             _FieldRelation = Value
+        End Set
+    End Property
+
+    Public Property FieldRelationTable() As String
+        Get
+            Return _FieldRelationTable
+        End Get
+        Set(ByVal Value As String)
+            _FieldRelationTable = Value
+        End Set
+    End Property
+
+    Public Property FieldRelationTableAlias() As String
+        Get
+            Return _FieldRelationTableAlias
+        End Get
+        Set(ByVal Value As String)
+            _FieldRelationTableAlias = Value
+        End Set
+    End Property
+
+    Public Property FieldRelationField() As String
+        Get
+            Return _FieldRelationField
+        End Get
+        Set(ByVal Value As String)
+            _FieldRelationField = Value
         End Set
     End Property
 

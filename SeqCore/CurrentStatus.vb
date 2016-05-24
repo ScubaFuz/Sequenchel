@@ -2,6 +2,7 @@
     Private _Connection As String = ""
     Private _TableSet As String = ""
     Private _Table As String = ""
+    Private _TableAlias As String = ""
     Private _Report As String = ""
     Private _Status As Short
     Private _SuspendActions As Boolean = False
@@ -53,6 +54,15 @@
         End Get
         Set(ByVal Value As String)
             _Table = Value
+        End Set
+    End Property
+
+    Public Property TableAlias() As String
+        Get
+            Return _TableAlias
+        End Get
+        Set(ByVal Value As String)
+            _TableAlias = Value
         End Set
     End Property
 

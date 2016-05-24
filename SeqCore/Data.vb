@@ -852,19 +852,7 @@ Public Class Data
         If dhdText.CheckFile(CheckFilePath(curVar.TablesFile)) = True Then
             Try
                 xmlTables.Load(dhdText.PathConvert(CheckFilePath(curVar.TablesFile)))
-                Dim blnTableExists As Boolean = False
-                curVar.TableDefault = ""
-
-                Dim TableNode As XmlNode
-                Dim ReturnValue As New List(Of String)
-                For Each TableNode In xmlTables.SelectNodes("//Table")
-                    If TableNode.Item("Name").InnerText = curStatus.Table Then blnTableExists = True
-                    ReturnValue.Add(TableNode.Item("Alias").InnerText)
-                    If TableNode.Attributes("Default").Value = "True" Then
-                        curVar.TableDefault = TableNode.Item("Alias").InnerText
-                    End If
-                Next
-                If blnTableExists = False And curStatus.Table = "" Then curStatus.Table = curVar.TableDefault
+                Dim ReturnValue As List(Of String) = LoadTablesListXml(xmlTables, False)
                 Return ReturnValue
             Catch ex As Exception
                 Return Nothing
@@ -873,6 +861,34 @@ Public Class Data
             End Try
         End If
         Return Nothing
+    End Function
+
+    Public Function LoadTablesListXml(xmlTables As XmlDocument, blnUseFullName As Boolean) As List(Of String)
+        Try
+            Dim blnTableExists As Boolean = False
+            curVar.TableDefault = ""
+
+            Dim TableNode As XmlNode
+            Dim ReturnValue As New List(Of String)
+            For Each TableNode In xmlTables.SelectNodes("//Table")
+                If TableNode.Item("Name").InnerText = curStatus.Table Then blnTableExists = True
+                If blnUseFullName = True Then
+                    ReturnValue.Add(TableNode.Item("Alias").InnerText & " (" & TableNode.Item("Name").InnerText & ")")
+                Else
+                    ReturnValue.Add(TableNode.Item("Alias").InnerText)
+                End If
+                If TableNode.Attributes("Default").Value = "True" Then
+                    curVar.TableDefault = TableNode.Item("Alias").InnerText
+                End If
+            Next
+            If blnTableExists = False And curStatus.Table = "" Then curStatus.Table = curVar.TableDefault
+            Return ReturnValue
+        Catch ex As Exception
+            Return Nothing
+            ErrorMessage = "There was an error loading the tables list. Please check the file" & Environment.NewLine & dhdText.PathConvert(curVar.TablesFile) & Environment.NewLine & ex.Message
+            WriteLog("There was an error loading the tables list. Please check the file" & Environment.NewLine & dhdText.PathConvert(curVar.TablesFile) & Environment.NewLine & ex.Message, 1)
+        End Try
+
     End Function
 
     Public Function LoadReportsXml(xmlReports As XmlDocument) As List(Of String)
@@ -920,19 +936,15 @@ Public Class Data
         Return Nothing
     End Function
 
-    Public Function GetFieldDataType(xmlTables As XmlDocument, strFullFieldName As String) As String
-        Dim strTableName As String = strFullFieldName.Substring(0, strFullFieldName.LastIndexOf("."))
-        Dim strFieldName As String = strFullFieldName.Substring(strFullFieldName.LastIndexOf(".") + 1, strFullFieldName.Length - (strFullFieldName.LastIndexOf(".") + 1))
+    Public Function GetFieldDataType(xmlTables As XmlDocument, strTableName As String, strFieldName As String) As String
         Dim xNode As XmlNode = dhdText.FindXmlNode(xmlTables, "Table", "Name", strTableName)
         Dim xCNode As XmlNode = dhdText.FindXmlChildNode(xNode, "Fields/Field", "FldName", strFieldName)
         Dim strFieldDataType As String = xCNode.Item("DataType").InnerText
         Return strFieldDataType
     End Function
 
-    Public Function FormatFieldXML(xmlTablesDoc As XmlDocument, strFullFieldName As String, strShowMode As String, blnUseAlias As Boolean, blnSelect As Boolean, blnConvert As Boolean, DateTimeStyle As Integer) As String
+    Public Function FormatFieldXML(xmlTablesDoc As XmlDocument, strTableName As String, strTableAlias As String, strFieldName As String, strShowMode As String, blnUseAlias As Boolean, blnSelect As Boolean, blnConvert As Boolean, DateTimeStyle As Integer) As String
         Dim strOutput As String = ""
-        Dim strTableName As String = strFullFieldName.Substring(0, strFullFieldName.LastIndexOf("."))
-        Dim strFieldName As String = strFullFieldName.Substring(strFullFieldName.LastIndexOf(".") + 1, strFullFieldName.Length - (strFullFieldName.LastIndexOf(".") + 1))
         Dim xNode As XmlNode = dhdText.FindXmlNode(xmlTablesDoc, "Table", "Name", strTableName)
         Dim xCNode As XmlNode = dhdText.FindXmlChildNode(xNode, "Fields/Field", "FldName", strFieldName)
         Dim strFieldType As String = xCNode.Item("DataType").InnerText
@@ -940,13 +952,15 @@ Public Class Data
         Dim strFieldAlias As String = xCNode.Item("FldAlias").InnerText
         If blnUseAlias = False Then strFieldAlias = Nothing
 
-        strOutput = FormatField(strFieldName, strTableName, strFieldWidth, strFieldType, strFieldAlias, strShowMode, blnSelect, blnConvert, DateTimeStyle)
+        strOutput = FormatField(strTableName, strTableAlias, strFieldName, strFieldAlias, strFieldType, strFieldWidth, strShowMode, blnSelect, blnConvert, DateTimeStyle)
         Return strOutput
     End Function
 
-    Public Function FormatField(strFieldName As String, strTableName As String, strFieldWidth As String, strFieldType As String, strFieldAlias As String, strShowMode As String, blnSelect As Boolean, blnConvert As Boolean, DateTimeStyle As Integer) As String
+    Public Function FormatField(strTableName As String, strTableAlias As String, strFieldName As String, strFieldAlias As String, strFieldType As String, strFieldWidth As String, strShowMode As String, blnSelect As Boolean, blnConvert As Boolean, DateTimeStyle As Integer) As String
         Dim strOutput As String = ""
-        Dim strFQDN As String = "[" & strTableName.Replace(".", "].[") & "].[" & strFieldName & "]"
+        If String.IsNullOrEmpty(strTableAlias) Then strTableAlias = strTableName.Replace(".", "_")
+        'Dim strFQDN As String = "[" & strTableName.Replace(".", "].[") & "].[" & strFieldName & "]"
+        Dim strFQDN As String = "[" & strTableAlias & "].[" & strFieldName & "]"
 
         If Not strShowMode Is Nothing Then
             Select Case strShowMode.ToUpper
@@ -1015,7 +1029,7 @@ Public Class Data
     End Function
 
     Public Function ReportQueryBuild(xmlQueryDoc As XmlDocument, xmlTables As XmlDocument, strReportName As String, DateTimeStyle As Integer) As String
-        Dim strTableName As String = ""
+        Dim strTableName As String = "", strTableAlias As String = ""
         Dim strFieldName As String = ""
         Dim strShowMode As String = Nothing
         'Dim strHavingMode As String = Nothing
@@ -1041,7 +1055,8 @@ Public Class Data
         Dim xmlCNodelist As XmlNodeList = dhdText.FindXmlChildNodes(xNode, "Fields/Field")
         For Each xCNode As XmlNode In xmlCNodelist
             strTableName = xCNode.Item("TableName").InnerText
-            If strTableName.IndexOf(".") = -1 Then strTableName = "dbo." & strTableName
+            If dhdText.CheckNodeElement(xCNode, "TableAlias") Then strTableAlias = xCNode.Item("TableAlias").InnerText Else strTableAlias = strTableName.Replace(".", "_")
+            If strTableName.Contains(".") = False Then strTableName = "dbo." & strTableName
             strFieldName = xCNode.Item("FieldName").InnerText
             If IsNumeric(xCNode.Item("FieldSortOrder").InnerText) Then
                 intSort = xCNode.Item("FieldSortOrder").InnerText
@@ -1050,13 +1065,13 @@ Public Class Data
             Try
                 If xCNode.Item("FieldShow").InnerText = 1 Then
                     strShowMode = xCNode.Item("FieldShowMode").InnerText
-                    Dim strQueryField As String = FormatFieldXML(xmlTables, strTableName & "." & strFieldName, strShowMode, True, True, True, DateTimeStyle)
+                    Dim strQueryField As String = FormatFieldXML(xmlTables, strTableName, strTableAlias, strFieldName, strShowMode, True, True, True, DateTimeStyle)
                     strQuery &= ", " & strQueryField
                     Select Case strShowMode
                         Case Nothing
-                            strQueryGroup &= ", " & FormatFieldXML(xmlTables, strTableName & "." & strFieldName, strShowMode, False, False, True, DateTimeStyle)
+                            strQueryGroup &= ", " & FormatFieldXML(xmlTables, strTableName, strTableAlias, strFieldName, strShowMode, False, False, True, DateTimeStyle)
                         Case "DATE", "YEAR", "MONTH", "DAY", "TIME", "HOUR", "MINUTE", "SECOND"
-                            strQueryGroup &= ", " & FormatFieldXML(xmlTables, strTableName & "." & strFieldName, strShowMode, False, False, True, DateTimeStyle)
+                            strQueryGroup &= ", " & FormatFieldXML(xmlTables, strTableName, strTableAlias, strFieldName, strShowMode, False, False, True, DateTimeStyle)
                         Case Else
                             blnGroup = True
                     End Select
@@ -1072,11 +1087,11 @@ Public Class Data
                         If strHavingMode = "" Then strHavingMode = "AND"
                         If strHavingMode.Contains("AND") Then strHavingMode = ") " & strHavingMode & " ("
                         strHavingType = xFnode.Item("FilterType").InnerText
-                        strHavingClause = SetDelimiters(xFnode.Item("FilterText").InnerText, GetFieldDataType(xmlTables, strTableName & "." & strFieldName), strHavingType, strShowMode)
-                        strHavingField = " " & FormatFieldXML(xmlTables, strTableName & "." & strFieldName, strShowMode, False, False, True, DateTimeStyle)
+                        strHavingClause = SetDelimiters(xFnode.Item("FilterText").InnerText, GetFieldDataType(xmlTables, strTableName, strFieldName), strHavingType, strShowMode)
+                        strHavingField = " " & FormatFieldXML(xmlTables, strTableName, strTableAlias, strFieldName, strShowMode, False, False, True, DateTimeStyle)
                         If strHavingType.Contains("LIKE") And strHavingClause.Contains("*") Then strHavingClause = strHavingClause.Replace("*", "%")
 
-                        If strHavingType <> Nothing And strHavingClause <> Nothing Then
+                        If Not strHavingType = Nothing And Not strHavingClause = Nothing Then
                             'If strHavingMode = Nothing Then
                             '    strQueryHaving &= " " & strHavingField & " " & strHavingType & " " & strHavingClause
                             'Else
@@ -1089,11 +1104,11 @@ Public Class Data
                         strWhereMode = xFnode.Item("FilterMode").InnerText
                         If strWhereMode = "" Then strWhereMode = "AND"
                         If strWhereMode.Contains("AND") Then strWhereMode = ") " & strWhereMode & " ("
-                        strWhereClause = SetDelimiters(xFnode.Item("FilterText").InnerText, GetFieldDataType(xmlTables, strTableName & "." & strFieldName), xFnode.Item("FilterType").InnerText)
+                        strWhereClause = SetDelimiters(xFnode.Item("FilterText").InnerText, GetFieldDataType(xmlTables, strTableName, strFieldName), xFnode.Item("FilterType").InnerText)
 
                         If xFnode.Item("FilterType").InnerText.Contains("LIKE") And strWhereClause.Contains("*") Then strWhereClause = strWhereClause.Replace("*", "%")
                         If xFnode.Item("FilterType").InnerText <> "" And strWhereClause <> "" Then
-                            strQueryWhere &= " " & strWhereMode & " " & strTableName & "." & strFieldName & " " & xFnode.Item("FilterType").InnerText & " " & strWhereClause
+                            strQueryWhere &= " " & strWhereMode & " " & GetTableAliasFromString(strTableAlias) & "." & strFieldName & " " & xFnode.Item("FilterType").InnerText & " " & strWhereClause
                         End If
                     End If
 
@@ -1134,28 +1149,42 @@ Public Class Data
 
     Private Function FromClauseGet(XNode As XmlNode) As String
         Dim strFromClause As String = "FROM "
-        Dim strFromSource As String = Nothing, strFromType As String = Nothing, strFromRelation As String = Nothing, strTargetTable As String = Nothing
+        Dim strFromSource As String = Nothing, strFromType As String = Nothing, strFromRelation As String = Nothing, strTargetTable As String = Nothing, strTargetTableAlias As String = Nothing, strTargetField As String = Nothing
 
         Dim intCount As Integer = 0
         For Each xTNode As XmlNode In dhdText.FindXmlChildNodes(XNode, "Relations/Relation")
             Dim strTableName As String = xTNode.Item("TableName").InnerText
-            If intCount = 0 Then strFromClause &= strTableName
+            Dim strTableAlias As String = ""
+            If dhdText.CheckNodeElement(xTNode, "TableAlias") Then strTableAlias = GetTableAliasFromString(xTNode.Item("TableAlias").InnerText)
+            If String.IsNullOrEmpty(strTableAlias) Then strTableAlias = GetTableAliasFromString(xTNode.Item("TableName").InnerText)
+
+            If intCount = 0 Then strFromClause &= strTableName & " " & strTableAlias
             If xTNode.Item("RelationEnabled").InnerText = "True" Then
 
                 strFromSource = xTNode.Item("RelationSource").InnerText
-                strFromRelation = xTNode.Item("RelationTarget").InnerText
                 strFromType = xTNode.Item("RelationJoinType").InnerText
-                strTargetTable = strFromRelation.Substring(0, strFromRelation.LastIndexOf("."))
-                strTargetTable = strTargetTable.Substring(strTargetTable.LastIndexOf("(") + 1, strTargetTable.Length - (strTargetTable.LastIndexOf("(") + 1))
+
+                If dhdText.CheckNodeElement(xTNode, "RelationTarget") Then
+                    strFromRelation = xTNode.Item("RelationTarget").InnerText
+                    strTargetTable = GetTableNameFromString(strFromRelation)
+                    strTargetTableAlias = GetTableAliasFromString(strFromRelation)
+                    strTargetField = strFromRelation.Substring(strFromRelation.LastIndexOf(".") + 1, strFromRelation.Length - (strFromRelation.LastIndexOf(".") + 1))
+                End If
+                If dhdText.CheckNodeElement(xTNode, "RelationTargetTable") Then strTargetTable = xTNode.Item("RelationTargetTable").InnerText
+                If dhdText.CheckNodeElement(xTNode, "RelationTargetAlias") Then strTargetTableAlias = xTNode.Item("RelationTargetAlias").InnerText
+                If dhdText.CheckNodeElement(xTNode, "RelationTargetField") Then strTargetField = xTNode.Item("RelationTargetField").InnerText
+
+                'strTargetTable = strFromRelation.Substring(0, strFromRelation.LastIndexOf("."))
+                'strTargetTable = strTargetTable.Substring(strTargetTable.LastIndexOf("(") + 1, strTargetTable.Length - (strTargetTable.LastIndexOf("(") + 1))
 
                 If strFromClause.Contains(strTargetTable) = True And strFromClause.Contains(strTableName) = False Then
-                    strFromClause &= Environment.NewLine & strFromType & " JOIN " & strTableName & " ON " & strTableName & "." & strFromSource & " = " & strFromRelation
+                    strFromClause &= Environment.NewLine & strFromType & " JOIN " & strTableName & " " & strTableAlias & " ON " & strTableAlias & "." & strFromSource & " = " & strTargetTableAlias & "." & strTargetField
                 ElseIf strFromClause.Contains(strTargetTable) = True And strFromClause.Contains(strTableName) = True Then
-                    strFromClause &= Environment.NewLine & " AND " & strTableName & "." & strFromSource & " = " & strFromRelation
+                    strFromClause &= Environment.NewLine & " AND " & strTableAlias & "." & strFromSource & " = " & strTargetTableAlias & "." & strTargetField
                 ElseIf strFromClause.Contains(strTargetTable) = False And strFromClause.Contains(strTableName) = False Then
-                    strFromClause &= Environment.NewLine & strFromType & " JOIN " & strTargetTable & " ON " & strTableName & "." & strFromSource & " = " & strFromRelation
+                    strFromClause &= Environment.NewLine & strFromType & " JOIN " & strTargetTable & " " & strTargetTableAlias & " ON " & strTableAlias & "." & strFromSource & " = " & strTargetTableAlias & "." & strTargetField
                 ElseIf strFromClause.Contains(strTargetTable) = False And strFromClause.Contains(strTableName) = True Then
-                    strFromClause &= Environment.NewLine & strFromType & " JOIN " & strTargetTable & " ON " & strTableName & "." & strFromSource & " = " & strFromRelation
+                    strFromClause &= Environment.NewLine & strFromType & " JOIN " & strTargetTable & " " & strTargetTableAlias & " ON " & strTableAlias & "." & strFromSource & " = " & strTargetTableAlias & "." & strTargetField
                 End If
             End If
 
@@ -1166,7 +1195,7 @@ Public Class Data
 
     Private Function OrderClauseGet(xmlCNodelist As XmlNodeList, intMaxSort As Integer) As String
         Dim strQueryOrder As String = "ORDER BY "
-        Dim strTableName As String = ""
+        Dim strTableAlias As String = ""
         Dim strFieldName As String = ""
         Dim strFieldSort As String = ""
         Dim intOrder As Integer = 0
@@ -1176,10 +1205,11 @@ Public Class Data
                 If IsNumeric(xCNode.Item("FieldSortOrder").InnerText) Then
                     intOrder = xCNode.Item("FieldSortOrder").InnerText
                     If intCount = intOrder Or (intCount > intMaxSort And intOrder > intMaxSort) Then
-                        strTableName = xCNode.Item("TableName").InnerText
-                        If strTableName.IndexOf(".") = -1 Then strTableName = "dbo." & strTableName
+                        If dhdText.CheckNodeElement(xCNode, "TableAlias") Then strTableAlias = xCNode.Item("TableAlias").InnerText
+                        If String.IsNullOrEmpty(strTableAlias) Then strTableAlias = xCNode.Item("TableName").InnerText.Replace(".", "_")
+                        'If strTableName.IndexOf(".") = -1 Then strTableName = "dbo." & strTableName
                         strFieldName = xCNode.Item("FieldName").InnerText
-                        strQueryOrder &= ", " & strTableName & "." & strFieldName
+                        strQueryOrder &= ", " & strTableAlias & "." & strFieldName
                         strFieldSort = xCNode.Item("FieldSort").InnerText
                         If strFieldSort = "ASC" Or strFieldSort = "DESC" Then strQueryOrder &= " " & strFieldSort
                     End If
@@ -1189,6 +1219,43 @@ Public Class Data
 
         strQueryOrder = strQueryOrder.Replace("ORDER BY ,", "ORDER BY ")
         Return strQueryOrder
+    End Function
+
+    Public Function GetTableNameFromAlias(xmlTables As XmlDocument, strInput As String) As String
+        Dim strReturn As String = strInput
+        Dim xNode As XmlNode = dhdText.FindXmlNode(xmlTables, "Table", "Alias", strInput)
+        If Not xNode Is Nothing Then
+            If dhdText.CheckNodeElement(xNode, "Name") = True Then strReturn = xNode.Item("Name").InnerText
+        End If
+        Return strReturn
+    End Function
+
+    Public Function GetTableNameFromString(strInput As String) As String
+        If String.IsNullOrEmpty(strInput) Then Return strInput
+        Dim strReturn As String = strInput
+        If strInput.Contains("(") Then
+            strReturn = strInput.Substring(strInput.IndexOf("(") + 1, strInput.Length - (strInput.IndexOf("(") + 1) - 1)
+        Else
+            If strInput.IndexOf(".") <> strInput.LastIndexOf(".") Then
+                strReturn = strInput.Substring(0, strInput.LastIndexOf("."))
+            End If
+        End If
+        Return strReturn
+    End Function
+
+    Public Function GetTableAliasFromString(strInput As String) As String
+        If String.IsNullOrEmpty(strInput) Then Return strInput
+        Dim strReturn As String = strInput
+        If strInput.Contains("(") Then
+            strReturn = strInput.Substring(0, strInput.IndexOf("(") - 1)
+        End If
+        If strInput.IndexOf(".") <> strInput.LastIndexOf(".") Then
+            strReturn = strInput.Substring(0, strInput.LastIndexOf("."))
+        End If
+        If strReturn.IndexOf(".") > -1 Then
+            strReturn = strReturn.Replace(".", "_")
+        End If
+        Return strReturn
     End Function
 
 #End Region
@@ -1249,6 +1316,8 @@ Public Class Data
                 Case Else
                     'unknown filetype, do nothing
                     blnShowFile = False
+                    WriteLog("Unknown File extension. Unable to export file.", 2)
+                    Return False
             End Select
         Catch ex As Exception
             blnShowFile = False

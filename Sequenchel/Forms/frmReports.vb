@@ -295,7 +295,7 @@ Public Class frmReports
             lsvItem.Tag = TableNode.Item("DataType").InnerText
             'lsvItem.Tag = TableNode.ParentNode.ParentNode.Item("Name").InnerText
             lsvItem.Name = TableNode.ParentNode.ParentNode.Item("Name").InnerText & "." & TableNode.Item("FldName").InnerText
-            lsvItem.Text = TableNode.ParentNode.ParentNode.Item("Alias").InnerText
+            lsvItem.Text = TableNode.ParentNode.ParentNode.Item("Alias").InnerText.Replace(".", "_")
             lsvItem.SubItems.Add(TableNode.Item("FldAlias").InnerText)
             lvwAvailableFields.Items.Add(lsvItem)
         Next
@@ -338,7 +338,8 @@ Public Class frmReports
         PanelControlsDispose(pnlRelationsLabel)
         PanelControlsDispose(pnlRelationsUse)
         PanelControlsDispose(pnlRelationsField)
-        PanelControlsDispose(pnlRelationsRelation)
+        PanelControlsDispose(pnlRelationsTargetTable)
+        PanelControlsDispose(pnlRelationsTargetField)
         PanelControlsDispose(pnlRelationsJoinType)
         pnlSelectedFields.Height = 31
         If blnAll = False Then
@@ -360,7 +361,8 @@ Public Class frmReports
         pnlRelationsLabel.SuspendLayout()
         pnlRelationsUse.SuspendLayout()
         pnlRelationsField.SuspendLayout()
-        pnlRelationsRelation.SuspendLayout()
+        pnlRelationsTargetTable.SuspendLayout()
+        pnlRelationsTargetField.SuspendLayout()
         pnlRelationsJoinType.SuspendLayout()
         pnlSelectedFieldsMain.SuspendLayout()
     End Sub
@@ -379,7 +381,8 @@ Public Class frmReports
         pnlRelationsLabel.ResumeLayout()
         pnlRelationsUse.ResumeLayout()
         pnlRelationsField.ResumeLayout()
-        pnlRelationsRelation.ResumeLayout()
+        pnlRelationsTargetTable.ResumeLayout()
+        pnlRelationsTargetField.ResumeLayout()
         pnlRelationsJoinType.ResumeLayout()
         pnlSelectedFieldsMain.ResumeLayout()
     End Sub
@@ -569,6 +572,21 @@ Public Class frmReports
                     cbxTarget.Items.Add(lstItem)
                 Next
                 'cbxTarget.SelectedItem = "INNER"
+            Case "RelationTargetTable"
+                For Each lvwItem As ListViewItem In lvwSelectedTables.Items
+                    If cbxTarget.Items.Contains(lvwItem.Text & " (" & lvwItem.Tag & ")") = False Then
+                        cbxTarget.Items.Add(lvwItem.Text & " (" & lvwItem.Tag & ")")
+                    End If
+                Next
+            Case "RelationTargetfield"
+                cbxTarget.SelectedIndex = -1
+                cbxTarget.Items.Clear()
+                cbxTarget.Items.Add("")
+                For Each lvwItem As ListViewItem In lvwAvailableFields.Items
+                    If lvwItem.Text = strSource Then
+                        cbxTarget.Items.Add(lvwItem.SubItems(1).Text)
+                    End If
+                Next
             Case "JoinType"
                 cbxTarget.Items.Clear()
                 cbxTarget.Items.Add("")
@@ -616,10 +634,13 @@ Public Class frmReports
         pnlRelationsField.Left = pnlRelationsUse.Left + pnlRelationsUse.Width
         lblSourceField.Left = pnlRelationsField.Left + SeqData.curVar.BuildMargin
 
-        pnlRelationsRelation.Left = pnlRelationsField.Left + pnlRelationsField.Width
-        lblRelationsRelation.Left = pnlRelationsRelation.Left + SeqData.curVar.BuildMargin
+        pnlRelationsTargetTable.Left = pnlRelationsField.Left + pnlRelationsField.Width
+        lblRelationsTargetTable.Left = pnlRelationsTargetTable.Left + SeqData.curVar.BuildMargin
 
-        pnlRelationsJoinType.Left = pnlRelationsRelation.Left + pnlRelationsRelation.Width
+        pnlRelationsTargetField.Left = pnlRelationsTargetTable.Left + pnlRelationsTargetTable.Width
+        lblRelationsTargetField.Left = pnlRelationsTargetField.Left + SeqData.curVar.BuildMargin
+
+        pnlRelationsJoinType.Left = pnlRelationsTargetField.Left + pnlRelationsTargetField.Width
         lblRelationsJoinType.Left = pnlRelationsJoinType.Left + SeqData.curVar.BuildMargin
 
         pnlRelations.Width = pnlRelationsJoinType.Left + pnlRelationsJoinType.Width + (SeqData.curVar.BuildMargin * 2)
@@ -645,7 +666,8 @@ Public Class frmReports
             pnlRelationsUse.Height = (pnlRelationsUse.Controls.Count + 1) * (SeqData.CurVar.BuildMargin + SeqData.CurVar.FieldHeight)
         End If
         pnlRelationsField.Height = pnlRelationsUse.Height
-        pnlRelationsRelation.Height = pnlRelationsUse.Height
+        pnlRelationsTargetTable.Height = pnlRelationsUse.Height
+        pnlRelationsTargetField.Height = pnlRelationsUse.Height
         pnlRelationsJoinType.Height = pnlRelationsUse.Height
         pnlRelationsLabel.Height = pnlRelationsUse.Height
         pnlRelations.Height = pnlRelationsUse.Height
@@ -667,7 +689,8 @@ Public Class frmReports
     Private Sub PanelsRelationSort()
         FieldSort(lvwSelectedTables, pnlRelationsUse, False, pnlRelationsUse)
         FieldSort(lvwSelectedTables, pnlRelationsField, False, pnlRelationsUse)
-        FieldSort(lvwSelectedTables, pnlRelationsRelation, False, pnlRelationsUse)
+        FieldSort(lvwSelectedTables, pnlRelationsTargetTable, False, pnlRelationsUse)
+        FieldSort(lvwSelectedTables, pnlRelationsTargetField, False, pnlRelationsUse)
         FieldSort(lvwSelectedTables, pnlRelationsJoinType, False, pnlRelationsUse)
         FieldSort(lvwSelectedTables, pnlRelationsLabel, True, pnlRelationsUse)
         PanelRelationHeightSet()
@@ -707,11 +730,11 @@ Public Class frmReports
         'Dim strTable As String = strFieldName.Substring(0, strFieldName.LastIndexOf("."))
         Dim blnTableFound As Boolean = False
         For Each lvwitem In lvwSelectedTables.Items
-            If lvwitem.Name = strTable Then blnTableFound = True
+            If lvwitem.Name = strTable & "_" & strAlias Then blnTableFound = True
         Next
         If blnTableFound = False Then
             Dim lvwAddItem As New ListViewItem
-            lvwAddItem.Name = strTable
+            lvwAddItem.Name = strTable & "_" & strAlias
             lvwAddItem.Tag = strTable
             lvwAddItem.Text = strAlias
             lvwSelectedTables.Items.Add(lvwAddItem)
@@ -719,6 +742,14 @@ Public Class frmReports
             RelationUseAdd(strTable, 0)
             RelationsLoad(strTable)
             'PanelsRelationSort()
+            For Each cbxControl In pnlRelationsTargetTable.Controls
+                Dim strName As String = cbxControl.[GetType]().Name
+                If cbxControl.[GetType]().Name = "ComboField" Then
+                    Dim cbxAfterFill As ComboField = TryCast(cbxControl, ComboField)
+                    ComboBoxFill(cbxAfterFill, "RelationTargetTable", cbxAfterFill.Tag)
+                End If
+            Next
+
             PanelRelationWidthSet()
         End If
     End Sub
@@ -774,24 +805,43 @@ Public Class frmReports
         Dim cbxNewField As New ComboField
         cbxNewField.Name = pnlRelationsField.Name & intCount.ToString & strTableName
         cbxNewField.Tag = strTableName
-        cbxNewField.Width = 140
+        cbxNewField.Width = pnlRelationsField.Width - SeqData.curVar.BuildMargin
         pnlRelationsField.Controls.Add(cbxNewField)
         cbxNewField.Top = ((lvwSelectedTables.Items.Count - 1) * SeqData.CurVar.FieldHeight) + ((lvwSelectedTables.Items.Count - 1) * SeqData.CurVar.BuildMargin)
         cbxNewField.Left = SeqData.CurVar.BuildMargin
         ComboBoxFill(cbxNewField, "RelationField", strTableName)
 
-        Dim txtNewFilter As New TextField
-        txtNewFilter.Name = pnlRelationsRelation.Name & intCount.ToString & strTableName
-        txtNewFilter.Tag = strTableName
-        txtNewFilter.Width = 200
-        pnlRelationsRelation.Controls.Add(txtNewFilter)
-        txtNewFilter.Top = ((lvwSelectedTables.Items.Count - 1) * SeqData.CurVar.FieldHeight) + ((lvwSelectedTables.Items.Count - 1) * SeqData.CurVar.BuildMargin)
-        txtNewFilter.Left = SeqData.CurVar.BuildMargin
+        'Dim txtNewFilter As New TextField
+        'txtNewFilter.Name = pnlRelationsRelation.Name & intCount.ToString & strTableName
+        'txtNewFilter.Tag = strTableName
+        'txtNewFilter.Width = pnlRelationsRelation.Width - SeqData.curVar.BuildMargin
+        'pnlRelationsRelation.Controls.Add(txtNewFilter)
+        'txtNewFilter.Top = ((lvwSelectedTables.Items.Count - 1) * SeqData.CurVar.FieldHeight) + ((lvwSelectedTables.Items.Count - 1) * SeqData.CurVar.BuildMargin)
+        'txtNewFilter.Left = SeqData.CurVar.BuildMargin
+
+        Dim cbxNewTargetTable As New ComboField
+        cbxNewTargetTable.Name = pnlRelationsTargetTable.Name & intCount.ToString & strTableName
+        cbxNewTargetTable.Tag = strTableName
+        cbxNewTargetTable.Width = pnlRelationsTargetTable.Width - SeqData.curVar.BuildMargin
+        pnlRelationsTargetTable.Controls.Add(cbxNewTargetTable)
+        cbxNewTargetTable.Top = ((lvwSelectedTables.Items.Count - 1) * SeqData.curVar.FieldHeight) + ((lvwSelectedTables.Items.Count - 1) * SeqData.curVar.BuildMargin)
+        cbxNewTargetTable.Left = SeqData.curVar.BuildMargin
+        AddHandler cbxNewTargetTable.SelectedIndexChanged, AddressOf Me.cbxRelationTargetTable_SelectedIndexChanged
+        cbxNewTargetTable.Items.Add("")
+        ComboBoxFill(cbxNewTargetTable, "RelationTargetTable", strTableName)
+
+        Dim cbxNewTargetField As New ComboField
+        cbxNewTargetField.Name = pnlRelationsTargetField.Name & intCount.ToString & strTableName
+        cbxNewTargetField.Tag = strTableName
+        cbxNewTargetField.Width = pnlRelationsTargetField.Width - SeqData.curVar.BuildMargin
+        pnlRelationsTargetField.Controls.Add(cbxNewTargetField)
+        cbxNewTargetField.Top = ((lvwSelectedTables.Items.Count - 1) * SeqData.curVar.FieldHeight) + ((lvwSelectedTables.Items.Count - 1) * SeqData.curVar.BuildMargin)
+        cbxNewTargetField.Left = SeqData.curVar.BuildMargin
 
         Dim cbxNewJoinType As New ComboField
         cbxNewJoinType.Name = pnlRelationsJoinType.Name & intCount.ToString & strTableName
         cbxNewJoinType.Tag = strTableName
-        cbxNewJoinType.Width = 110
+        cbxNewJoinType.Width = pnlRelationsJoinType.Width - SeqData.curVar.BuildMargin
         pnlRelationsJoinType.Controls.Add(cbxNewJoinType)
         cbxNewJoinType.Top = ((lvwSelectedTables.Items.Count - 1) * SeqData.CurVar.FieldHeight) + ((lvwSelectedTables.Items.Count - 1) * SeqData.CurVar.BuildMargin)
         cbxNewJoinType.Left = SeqData.CurVar.BuildMargin
@@ -806,22 +856,56 @@ Public Class frmReports
         Dim intCount As Integer = 0
         For Each xmlCNode As System.Xml.XmlNode In xmlFieldList
             Dim xmlRelationList As System.Xml.XmlNodeList = SeqData.dhdText.FindXmlChildNodes(xmlCNode, "Relation")
-            For Each xmlRNode As System.Xml.XmlNode In xmlRelationList
-                If xmlRNode.InnerText.Length > 0 Then
+            For Each xRNode As System.Xml.XmlNode In xmlRelationList
+                Dim strRelationTable As String = "", strRelationTableAlias As String = "", strRelationField As String = ""
+                If SeqData.dhdText.CheckNodeElement(xRNode, "RelationField") = True Then
+                    strRelationTable = xRNode.Item("RelationTable").InnerText
+                    strRelationTableAlias = xRNode.Item("RelationTableAlias").InnerText
+                    strRelationField = xRNode.Item("RelationField").InnerText
+                Else
+                    Dim strRelation As String = xRNode.InnerText
+                    If strRelation.Length > 0 Then
+                        If strRelation.IndexOf(".") > 0 Then
+                            strRelationTable = strRelation.Substring(0, strRelation.LastIndexOf(".")) & " (" & strRelation.Substring(0, strRelation.LastIndexOf(".")) & ")"
+                            strRelationTableAlias = strRelation.Substring(0, strRelation.LastIndexOf(".")) & " (" & strRelation.Substring(0, strRelation.LastIndexOf(".")) & ")"
+                            strRelationField = strRelation.Substring(strRelation.LastIndexOf(".") + 1, strRelation.Length - (strRelation.LastIndexOf(".") + 1))
+                        Else
+                            strRelationTable = strRelation
+                            strRelationTableAlias = strRelation
+                            strRelationField = strRelation
+                        End If
+                    End If
+                End If
+
+                If xRNode.InnerText.Length > 0 Then
                     intCount += 1
                     If intCount > 1 Then RelationUseAdd(strTable)
                     For Each ctrControl In pnlRelationsField.Controls
                         If ctrControl.Name.ToString.Substring(ctrControl.Name.ToString.Length - strTable.Length, strTable.Length) = strTable Then
                             If ctrControl.Name.ToString.Substring(ctrControl.Name.ToString.Length - strTable.Length - 1, 1) = intCount Then
                                 'ctrControl.Text = xmlCNode.Item("FldName").InnerText
-                                ctrControl.Text = xmlRNode.ParentNode.ParentNode.Item("FldName").InnerText
+                                ctrControl.Text = xRNode.ParentNode.ParentNode.Item("FldName").InnerText
                             End If
                         End If
                     Next
-                    For Each ctrControl In pnlRelationsRelation.Controls
+                    'For Each ctrControl In pnlRelationsRelation.Controls
+                    '    If ctrControl.Name.ToString.Substring(ctrControl.Name.ToString.Length - strTable.Length, strTable.Length) = strTable Then
+                    '        If ctrControl.Name.ToString.Substring(ctrControl.Name.ToString.Length - strTable.Length - 1, 1) = intCount Then
+                    '            ctrControl.Text = xRNode.InnerText
+                    '        End If
+                    '    End If
+                    'Next
+                    For Each ctrControl In pnlRelationsTargetTable.Controls
                         If ctrControl.Name.ToString.Substring(ctrControl.Name.ToString.Length - strTable.Length, strTable.Length) = strTable Then
                             If ctrControl.Name.ToString.Substring(ctrControl.Name.ToString.Length - strTable.Length - 1, 1) = intCount Then
-                                ctrControl.Text = xmlRNode.InnerText
+                                ctrControl.Text = strRelationTableAlias & " (" & strRelationTable & ")"
+                            End If
+                        End If
+                    Next
+                    For Each ctrControl In pnlRelationsTargetField.Controls
+                        If ctrControl.Name.ToString.Substring(ctrControl.Name.ToString.Length - strTable.Length, strTable.Length) = strTable Then
+                            If ctrControl.Name.ToString.Substring(ctrControl.Name.ToString.Length - strTable.Length - 1, 1) = intCount Then
+                                ctrControl.Text = strRelationField
                             End If
                         End If
                     Next
@@ -844,11 +928,12 @@ Public Class frmReports
     Private Sub btnReportClear_Click(sender As Object, e As EventArgs) Handles btnReportClear.Click
         CursorControl("Wait")
         WriteStatus("", 0, lblStatusText)
-        If cbxReportName.SelectedIndex = -1 Then
-            ReportFieldsDispose(False)
-        End If
+        'If cbxReportName.SelectedIndex = -1 Then
+        ReportFieldsDispose(False)
+        'End If
         cbxReportName.SelectedIndex = -1
         cbxReportName.Text = ""
+        ReportClear(True)
         CursorControl()
     End Sub
 
@@ -879,6 +964,7 @@ Public Class frmReports
     Private Sub ReportClear(blnAll As Boolean)
         strErrorMessage = ""
         lblErrorMessage.Text = ""
+        lblListCountNumber.Text = "0"
         dgvReport.Columns.Clear()
         If blnAll = True Then
             rtbQuery.Text = ""
@@ -961,12 +1047,16 @@ Public Class frmReports
 
     Private Sub btnReportDelete_Click(sender As Object, e As EventArgs) Handles btnReportDelete.Click
         WriteStatus("", 0, lblStatusText)
-        If MessageBox.Show("This will permanently remove the Item: " & cbxReportName.Text & Environment.NewLine & Core.Message.strContinue, Core.Message.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then
-            WriteStatus("Report deltion aborted.", 0, lblStatusText)
+        If cbxReportName.SelectedIndex < 0 Then
+            WriteStatus("No report is selected. Select a report before deleting it.", 2, lblStatusText)
+            Exit Sub
+        End If
+        If MessageBox.Show("This will permanently remove the Item: " & cbxReportName.SelectedItem & Environment.NewLine & Core.Message.strContinue, Core.Message.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then
+            WriteStatus("Report deletion aborted.", 0, lblStatusText)
             Exit Sub
         End If
         CursorControl("Wait")
-        ReportDelete(cbxReportName.Text)
+        ReportDelete(cbxReportName.SelectedItem)
         If cbxReportName.Items.Contains(cbxReportName.Text) Then cbxReportName.Items.Remove(cbxReportName.Text)
         cbxReportName.SelectedIndex = -1
         cbxReportName.Text = ""
@@ -986,7 +1076,7 @@ Public Class frmReports
         PanelsSuspendLayout()
         If cbxReportName.SelectedIndex >= 0 Then
             ReportFieldsDispose(False)
-            ReportLoad(xmlReports, cbxReportName.Text)
+            ReportLoad(xmlReports, cbxReportName.SelectedItem)
         End If
         pnlSelectedFieldsMain.Focus()
         pnlSelectedFieldsMain.Invalidate()
@@ -995,10 +1085,14 @@ Public Class frmReports
     End Sub
 
     Private Sub btnRevertChanges_Click(sender As Object, e As EventArgs) Handles btnRevertChanges.Click
-        CursorControl("Wait")
         WriteStatus("", 0, lblStatusText)
+        If cbxReportName.SelectedIndex < 0 Then
+            WriteStatus("No report is selected to revert to.", 2, lblStatusText)
+            Exit Sub
+        End If
+        CursorControl("Wait")
         ReportFieldsDispose(False)
-        ReportLoad(xmlReports, cbxReportName.Text)
+        ReportLoad(xmlReports, cbxReportName.SelectedItem)
         CursorControl()
     End Sub
 
@@ -1086,14 +1180,24 @@ Public Class frmReports
                 End Try
             Next
 
-            For Each xRNode As XmlNode In SeqData.dhdText.FindXmlChildNodes(xNode, "Tables/Table/Relations/Relation")
-                strTable = xRNode.ParentNode.ParentNode.Item("TableName").InnerText
+            For Each xRNode As XmlNode In SeqData.dhdText.FindXmlChildNodes(xNode, "Relations/Relation")
+                strTable = xRNode.Item("TableName").InnerText
                 intRelationNumber = xRNode.Item("RelationNumber").InnerText
                 'lstAvailableFields.SelectedItem = strTable & "." & strField
                 'btnReportFieldAdd_Click(Nothing, Nothing)
                 SetCtrText(pnlRelationsUse, strTable, xRNode.Item("RelationEnabled").InnerText, intRelationNumber)
                 SetCtrText(pnlRelationsField, strTable, xRNode.Item("RelationSource").InnerText, intRelationNumber)
-                SetCtrText(pnlRelationsRelation, strTable, xRNode.Item("RelationTarget").InnerText, intRelationNumber)
+                If SeqData.dhdText.CheckNodeElement(xRNode, "RelationTarget") Then
+                    Dim strRelationTarget As String = xRNode.Item("RelationTarget").InnerText
+                    SetCtrText(pnlRelationsTargetField, strTable, strRelationTarget.Substring(strRelationTarget.LastIndexOf("."), strRelationTarget.Length - strRelationTarget.LastIndexOf(".")), intRelationNumber)
+                    SetCtrText(pnlRelationsTargetTable, strTable, SeqData.GetTableAliasFromString(strRelationTarget) & " (" & SeqData.GetTableNameFromString(strRelationTarget) & ")", intRelationNumber)
+                End If
+                If SeqData.dhdText.CheckNodeElement(xRNode, "RelationTargetTable") Then
+                    Dim strTargetTable As String = xRNode.Item("RelationTargetAlias").InnerText & " (" & xRNode.Item("RelationTargetTable").InnerText & ")"
+                    If strTargetTable = " ()" Then strTargetTable = ""
+                    SetCtrText(pnlRelationsTargetTable, strTable, strTargetTable, intRelationNumber)
+                End If
+                If SeqData.dhdText.CheckNodeElement(xRNode, "RelationTargetField") Then SetCtrText(pnlRelationsTargetField, strTable, xRNode.Item("RelationTargetField").InnerText, intRelationNumber)
                 SetCtrText(pnlRelationsJoinType, strTable, xRNode.Item("RelationJoinType").InnerText, intRelationNumber)
 
             Next
@@ -1105,7 +1209,7 @@ Public Class frmReports
 
     Private Sub XmlToReport(xmlReports As XmlDocument, strReportName As String)
         Dim xNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlReports, "Report", "ReportName", strReportName)
-        Dim strTable As String = "", strField As String = "", intRelationNumber As Integer = 0
+        Dim strTable As String = "", strTableAlias As String = "", strField As String = "", intRelationNumber As Integer = 0
 
         If Not xNode Is Nothing Then
             If SeqData.dhdText.CheckNodeElement(xNode, "Description") Then txtDescription.Text = xNode.Item("Description").InnerText
@@ -1115,6 +1219,8 @@ Public Class frmReports
             For Each xCNode As XmlNode In SeqData.dhdText.FindXmlChildNodes(xNode, "Fields/Field")
                 strTable = xCNode.Item("TableName").InnerText
                 If strTable.IndexOf(".") = -1 Then strTable = "dbo." & strTable
+                If SeqData.dhdText.CheckNodeElement(xCNode, "TableAlias") Then strTableAlias = xCNode.Item("TableAlias").InnerText
+                If String.IsNullOrEmpty(strTableAlias) Then strTableAlias = strTable.Replace(".", "_")
                 strField = xCNode.Item("FieldName").InnerText
                 Try
                     lvwAvailableFields.Items(strTable & "." & strField).Selected = True
@@ -1145,7 +1251,19 @@ Public Class frmReports
                 'btnReportFieldAdd_Click(Nothing, Nothing)
                 SetCtrText(pnlRelationsUse, strTable, xRNode.Item("RelationEnabled").InnerText, intRelationNumber)
                 SetCtrText(pnlRelationsField, strTable, xRNode.Item("RelationSource").InnerText, intRelationNumber)
-                SetCtrText(pnlRelationsRelation, strTable, xRNode.Item("RelationTarget").InnerText, intRelationNumber)
+                If SeqData.dhdText.CheckNodeElement(xRNode, "RelationTarget") Then
+                    Dim strRelationTarget As String = xRNode.Item("RelationTarget").InnerText
+                    If String.IsNullOrEmpty(strRelationTarget) = False Then
+                        SetCtrText(pnlRelationsTargetField, strTable, strRelationTarget.Substring(strRelationTarget.LastIndexOf(".") + 1, strRelationTarget.Length - strRelationTarget.LastIndexOf(".") - 1), intRelationNumber)
+                        SetCtrText(pnlRelationsTargetTable, strTable, SeqData.GetTableAliasFromString(strRelationTarget) & " (" & SeqData.GetTableNameFromString(strRelationTarget) & ")", intRelationNumber)
+                    End If
+                End If
+                If SeqData.dhdText.CheckNodeElement(xRNode, "RelationTargetTable") Then
+                    Dim strTargetTable As String = xRNode.Item("RelationTargetAlias").InnerText & " (" & xRNode.Item("RelationTargetTable").InnerText & ")"
+                    If strTargetTable = " ()" Then strTargetTable = ""
+                    SetCtrText(pnlRelationsTargetTable, strTable, strTargetTable, intRelationNumber)
+                End If
+                If SeqData.dhdText.CheckNodeElement(xRNode, "RelationTargetField") Then SetCtrText(pnlRelationsTargetField, strTable, xRNode.Item("RelationTargetField").InnerText, intRelationNumber)
                 SetCtrText(pnlRelationsJoinType, strTable, xRNode.Item("RelationJoinType").InnerText, intRelationNumber)
 
             Next
@@ -1330,8 +1448,10 @@ Public Class frmReports
     'End Sub
 
     Private Function ReportToXML(xmlReport As XmlDocument, strReportName As String) As XmlDocument
-        Dim strTable As String = ""
         Dim strField As String = ""
+        Dim strFieldAlias As String = ""
+        Dim strTableName As String = ""
+        Dim strTableAlias As String = ""
         Dim intControlNumber As Integer = 0
 
         Dim root As XmlElement = xmlReport.DocumentElement
@@ -1348,13 +1468,17 @@ Public Class frmReports
         Dim NewFieldsNode As XmlNode = SeqData.dhdText.CreateAppendElement(NewReportNode, "Fields")
         For intFieldCount As Integer = 0 To lvwSelectedFields.Items.Count - 1
             strField = lvwSelectedFields.Items.Item(intFieldCount).Name
-            strTable = strField.Substring(0, strField.LastIndexOf("."))
+            strFieldAlias = lvwSelectedFields.Items.Item(intFieldCount).SubItems(1).Text
+            strTableName = strField.Substring(0, strField.LastIndexOf("."))
+            strTableAlias = lvwSelectedFields.Items.Item(intFieldCount).Text
             'If strField.Length > strTable.Length Then
 
             Dim strFieldName As String = strField.Substring(strField.LastIndexOf(".") + 1, strField.Length - strField.LastIndexOf(".") - 1)
             Dim NewFieldNode As XmlNode = SeqData.dhdText.CreateAppendElement(NewFieldsNode, "Field")
             SeqData.dhdText.CreateAppendElement(NewFieldNode, "FieldName", strFieldName)
-            SeqData.dhdText.CreateAppendElement(NewFieldNode, "TableName", strTable)
+            SeqData.dhdText.CreateAppendElement(NewFieldNode, "FieldAlias", strFieldAlias)
+            SeqData.dhdText.CreateAppendElement(NewFieldNode, "TableName", strTableName)
+            SeqData.dhdText.CreateAppendElement(NewFieldNode, "TableAlias", strTableAlias)
             SeqData.dhdText.CreateAppendElement(NewFieldNode, "FieldShow", GetCtrText(pnlReportDisplay, strField))
             SeqData.dhdText.CreateAppendElement(NewFieldNode, "FieldShowMode", GetCtrText(pnlReportShowMode, strField))
             SeqData.dhdText.CreateAppendElement(NewFieldNode, "FieldSort", GetCtrText(pnlReportSort, strField))
@@ -1379,18 +1503,23 @@ Public Class frmReports
         intControlNumber = 0
         Dim NewRelationsNode As XmlNode = SeqData.dhdText.CreateAppendElement(NewReportNode, "Relations")
         For intTableCount As Integer = 0 To lvwSelectedTables.Items.Count - 1
-            strTable = lvwSelectedTables.Items.Item(intTableCount).Name
+            strTableName = lvwSelectedTables.Items.Item(intTableCount).Tag
+            strTableAlias = lvwSelectedTables.Items.Item(intTableCount).Text
 
             For Each ctrRelation In pnlRelationsUse.Controls
-                If ctrRelation.Tag = strTable Then
+                If ctrRelation.Tag = strTableName Then
                     Dim NewRelationNode As XmlNode = SeqData.dhdText.CreateAppendElement(NewRelationsNode, "Relation")
-                    intControlNumber = ctrRelation.Name.ToString.Substring(ctrRelation.Name.ToString.Length - strTable.Length - 1, 1)
-                    SeqData.dhdText.CreateAppendElement(NewRelationNode, "TableName", strTable)
+                    intControlNumber = ctrRelation.Name.ToString.Substring(ctrRelation.Name.ToString.Length - strTableName.Length - 1, 1)
+                    SeqData.dhdText.CreateAppendElement(NewRelationNode, "TableName", strTableName)
+                    SeqData.dhdText.CreateAppendElement(NewRelationNode, "TableAlias", strTableAlias)
                     SeqData.dhdText.CreateAppendElement(NewRelationNode, "RelationNumber", intControlNumber)
                     SeqData.dhdText.CreateAppendElement(NewRelationNode, "RelationEnabled", ctrRelation.Checked.ToString)
-                    SeqData.dhdText.CreateAppendElement(NewRelationNode, "RelationSource", GetCtrText(pnlRelationsField, strTable, intControlNumber))
-                    SeqData.dhdText.CreateAppendElement(NewRelationNode, "RelationTarget", GetCtrText(pnlRelationsRelation, strTable, intControlNumber))
-                    SeqData.dhdText.CreateAppendElement(NewRelationNode, "RelationJoinType", GetCtrText(pnlRelationsJoinType, strTable, intControlNumber))
+                    SeqData.dhdText.CreateAppendElement(NewRelationNode, "RelationSource", GetCtrText(pnlRelationsField, strTableName, intControlNumber))
+                    'SeqData.dhdText.CreateAppendElement(NewRelationNode, "RelationTarget", GetCtrText(pnlRelationsRelation, strTableName, intControlNumber))
+                    SeqData.dhdText.CreateAppendElement(NewRelationNode, "RelationTargetTable", SeqData.GetTableNameFromString(GetCtrText(pnlRelationsTargetTable, strTableName, intControlNumber)))
+                    SeqData.dhdText.CreateAppendElement(NewRelationNode, "RelationTargetAlias", SeqData.GetTableAliasFromString(GetCtrText(pnlRelationsTargetTable, strTableName, intControlNumber)))
+                    SeqData.dhdText.CreateAppendElement(NewRelationNode, "RelationTargetField", GetCtrText(pnlRelationsTargetField, strTableName, intControlNumber))
+                    SeqData.dhdText.CreateAppendElement(NewRelationNode, "RelationJoinType", GetCtrText(pnlRelationsJoinType, strTableName, intControlNumber))
                 End If
             Next
         Next
@@ -1746,12 +1875,12 @@ Public Class frmReports
         sptReportTables.BackColor = clrControl
     End Sub
 
-    Private Sub lblRelationsRelation_MouseHover(sender As Object, e As EventArgs) Handles lblRelationsRelation.MouseHover
+    Private Sub lblRelationsRelation_MouseHover(sender As Object, e As EventArgs)
         sptReport.BackColor = Color.LightGray
         sptReportTables.BackColor = Color.LightGray
     End Sub
 
-    Private Sub lblRelationsRelation_MouseLeave(sender As Object, e As EventArgs) Handles lblRelationsRelation.MouseLeave
+    Private Sub lblRelationsRelation_MouseLeave(sender As Object, e As EventArgs)
         sptReport.BackColor = clrControl
         sptReportTables.BackColor = clrControl
     End Sub
@@ -1788,6 +1917,34 @@ Public Class frmReports
 
     Private Sub lvwAvailableFields_ColumnClick(sender As Object, e As ColumnClickEventArgs) Handles lvwAvailableFields.ColumnClick
         Me.lvwAvailableFields.ListViewItemSorter = New ListViewItemComparer(e.Column)
+    End Sub
+
+    Private Sub dgvReport_DoubleClick(sender As Object, e As EventArgs) Handles dgvReport.DoubleClick
+
+    End Sub
+
+    Private Sub cbxRelationTargetTable_SelectedIndexChanged(sender As Object, e As EventArgs)
+        If sender.[GetType]().Name = "ComboField" Then
+            Dim cbxSource As ComboField = TryCast(sender, ComboField)
+            If Not cbxSource Is Nothing Then
+                'Find Table Alias for collecting Fields
+                Dim strtable As String = cbxSource.SelectedItem
+                If String.IsNullOrEmpty(strtable) Then Exit Sub
+                Dim strTargetTable As String = SeqData.GetTableAliasFromString(strtable)
+
+                'Find correct combobox to fill...
+                Dim strSourceTable As String = sender.tag
+                Dim strName As String = sender.name
+                Dim strCounter As String = strName.Substring(pnlRelationsTargetTable.Name.Length, 1)
+                Dim strTargetBox As String = pnlRelationsTargetField.Name & strCounter & strSourceTable
+                For Each cbxTarget As ComboField In pnlRelationsTargetField.Controls
+                    If cbxTarget.Name = strTargetBox Then
+                        ComboBoxFill(cbxTarget, "RelationTargetfield", strTargetTable)
+                    End If
+                Next
+            End If
+        End If
+
     End Sub
 
 End Class

@@ -221,7 +221,7 @@ Module Common
                         If tblTable.Item(intField).FieldName = sender.FieldRelatedField Then
                             Select Case tblTable.Item(intField).FieldCategory
                                 Case 1, 3, 4, 5
-                                    tblTable.Item(intField).Text = sender.Value
+                                    If Not sender.value = Nothing Then tblTable.Item(intField).Text = sender.Value
                                 Case 2
                                     tblTable.Item(intField).Checked = sender.Value
                             End Select
@@ -437,8 +437,8 @@ Module Common
             Dim intSqlVersion As Integer = SeqData.GetSqlVersion(dhdConnect)
             Select Case intSqlVersion
                 Case 0
-                    MessageBox.Show("SQL Server not found or not accessible" & Environment.NewLine & "Please check your settings")
-                    SeqData.WriteLog("SQL Server not found or not accessible" & Environment.NewLine & "Please check your settings", 1)
+                    MessageBox.Show("SQL Server not found or not accessible" & Environment.NewLine & "Please check your settings" & Environment.NewLine & "Error: " & dhdConnect.ErrorMessage)
+                    SeqData.WriteLog("SQL Server not found or not accessible" & Environment.NewLine & "Please check your settings" & Environment.NewLine & "Error: " & dhdConnect.ErrorMessage, 1)
                     Return False
                 Case 7, 8
                     MessageBox.Show("SQL Server 2000 or older is not supported")
@@ -454,8 +454,8 @@ Module Common
                     Return False
             End Select
         Catch ex As Exception
-            MessageBox.Show("SQL Server not found or not accessible" & Environment.NewLine & "Please check your settings")
-            SeqData.WriteLog("SQL Server not found or not accessible" & Environment.NewLine & "Please check your settings", 1)
+            MessageBox.Show("SQL Server not found or not accessible." & Environment.NewLine & "Please check the log.")
+            SeqData.WriteLog("SQL Server not found or not accessible." & Environment.NewLine & "Please check your settings." & Environment.NewLine & ex.Message, 1)
             Return False
         End Try
     End Function
@@ -687,9 +687,9 @@ Module Common
         Return strOutput
     End Function
 
-    Friend Function FormatFieldWhere1(strFieldName As String, strTableName As String, strFieldWidth As String, strFieldType As String, strFieldValue As String) As String
+    Friend Function FormatFieldWhere1(strFieldName As String, strTableAlias As String, strFieldWidth As String, strFieldType As String, strFieldValue As String) As String
         Dim strOutput As String = ""
-        Dim strTableField As String = " [" & strTableName.Replace(".", "].[") & "].[" & strFieldName & "]"
+        Dim strTableField As String = " [" & strTableAlias.Replace(".", "].[") & "].[" & strFieldName & "]"
 
         If strFieldValue = "NULL" Or strFieldValue = "" Then
             Select Case strFieldType.ToUpper
@@ -901,10 +901,10 @@ Module Common
             Dim dgvRow As New DataGridViewRow
             dgvRow.CreateCells(dgvTarget)
             For Each dgvColumn As DataGridViewTextBoxColumn In dgvTarget.Columns
-                If dtsSource.Tables.Item(0).Rows(intRowCount1).Item(dgvColumn.Name).GetType().ToString = "System.DBNull" Then
+                If dtsSource.Tables.Item(0).Rows(intRowCount1).Item(dgvColumn.HeaderText).GetType().ToString = "System.DBNull" Then
                     dgvRow.Cells.Item(dgvTarget.Columns.Item(dgvColumn.Name).Index).Style.BackColor = clrEmpty
                 Else
-                    dgvRow.Cells.Item(dgvTarget.Columns.Item(dgvColumn.Name).Index).Value = dtsSource.Tables(SourceTable).Rows(intRowCount1).Item(dgvColumn.Name)
+                    dgvRow.Cells.Item(dgvTarget.Columns.Item(dgvColumn.Name).Index).Value = dtsSource.Tables(SourceTable).Rows(intRowCount1).Item(dgvColumn.HeaderText)
                 End If
             Next
             dgvTarget.Rows.Add(dgvRow)

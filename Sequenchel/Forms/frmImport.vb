@@ -226,7 +226,7 @@ Public Class frmImport
 
         dhdDB.DataLocation = txtServer.Text
         dhdDB.DatabaseName = txtDatabase.Text
-        dhdDB.DataTableName = txtTable.Text
+        dhdDB.DataTableName = SeqData.GetTableNameFromAlias(xmlTables, txtTable.Text)
         dhdDB.DataProvider = "SQL"
         If chkWinAuth.Checked = True Then
             dhdDB.LoginMethod = "Windows"
