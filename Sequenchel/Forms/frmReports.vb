@@ -1047,12 +1047,16 @@ Public Class frmReports
 
     Private Sub btnReportDelete_Click(sender As Object, e As EventArgs) Handles btnReportDelete.Click
         WriteStatus("", 0, lblStatusText)
-        If MessageBox.Show("This will permanently remove the Item: " & cbxReportName.Text & Environment.NewLine & Core.Message.strContinue, Core.Message.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then
-            WriteStatus("Report deltion aborted.", 0, lblStatusText)
+        If cbxReportName.SelectedIndex < 0 Then
+            WriteStatus("No report is selected. Select a report before deleting it.", 2, lblStatusText)
+            Exit Sub
+        End If
+        If MessageBox.Show("This will permanently remove the Item: " & cbxReportName.SelectedItem & Environment.NewLine & Core.Message.strContinue, Core.Message.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then
+            WriteStatus("Report deletion aborted.", 0, lblStatusText)
             Exit Sub
         End If
         CursorControl("Wait")
-        ReportDelete(cbxReportName.Text)
+        ReportDelete(cbxReportName.SelectedItem)
         If cbxReportName.Items.Contains(cbxReportName.Text) Then cbxReportName.Items.Remove(cbxReportName.Text)
         cbxReportName.SelectedIndex = -1
         cbxReportName.Text = ""
@@ -1072,7 +1076,7 @@ Public Class frmReports
         PanelsSuspendLayout()
         If cbxReportName.SelectedIndex >= 0 Then
             ReportFieldsDispose(False)
-            ReportLoad(xmlReports, cbxReportName.Text)
+            ReportLoad(xmlReports, cbxReportName.SelectedItem)
         End If
         pnlSelectedFieldsMain.Focus()
         pnlSelectedFieldsMain.Invalidate()
@@ -1081,10 +1085,14 @@ Public Class frmReports
     End Sub
 
     Private Sub btnRevertChanges_Click(sender As Object, e As EventArgs) Handles btnRevertChanges.Click
-        CursorControl("Wait")
         WriteStatus("", 0, lblStatusText)
+        If cbxReportName.SelectedIndex < 0 Then
+            WriteStatus("No report is selected to revert to.", 2, lblStatusText)
+            Exit Sub
+        End If
+        CursorControl("Wait")
         ReportFieldsDispose(False)
-        ReportLoad(xmlReports, cbxReportName.Text)
+        ReportLoad(xmlReports, cbxReportName.SelectedItem)
         CursorControl()
     End Sub
 

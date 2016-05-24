@@ -1118,8 +1118,21 @@ Public Class frmConfiguration
     End Sub
 
     Private Sub btnFieldAddOrUpdate_Click(sender As Object, e As EventArgs) Handles btnFieldAddOrUpdate.Click
-        CursorControl("Wait")
         WriteStatus("", 0, lblStatusText)
+        If String.IsNullOrEmpty(txtFieldWidth.Text) = False And IsNumeric(txtFieldWidth.Text) = False Then
+            WriteStatus("The Field Width must be a numerical value", 2, lblStatusText)
+            Exit Sub
+        End If
+        If String.IsNullOrEmpty(txtFieldListWidth.Text) = False And IsNumeric(txtFieldListWidth.Text) = False Then
+            WriteStatus("The Field List Width must be a numerical value", 2, lblStatusText)
+            Exit Sub
+        End If
+        If String.IsNullOrEmpty(txtFieldListOrder.Text) = False And IsNumeric(txtFieldListOrder.Text) = False Then
+            WriteStatus("The Field List Order must be a numerical value", 2, lblStatusText)
+            Exit Sub
+        End If
+
+        CursorControl("Wait")
         Dim strTableName As String = "", strTableAlias As String = ""
         If cbxRelationTables.Text.IndexOf("(") > 0 Then
             strTableName = cbxRelationTables.Text.Substring(cbxRelationTables.Text.IndexOf("(") + 1, cbxRelationTables.Text.Length - (cbxRelationTables.Text.IndexOf("(") + 1) - 1)
@@ -1128,7 +1141,6 @@ Public Class frmConfiguration
             strTableName = cbxRelationTables.Text
             strTableAlias = cbxRelationTables.Text
         End If
-
         FieldAddOrUpdate(SeqData.curStatus.Table, txtFieldName.Text, txtFieldAlias.Text, cbxDataType.SelectedItem, chkIdentity.Checked, chkPrimaryKey.Checked, txtFieldWidth.Text, strTableName, strTableAlias, cbxRelationFields.Text, txtRelatedField.Text, chkRelatedField.Checked, txtControlField.Text, txtControlValue.Text, chkControlUpdate.Checked, _
                          chkControlMode.Checked, chkDefaultButton.Checked, txtDefaultButton.Text, chkFieldList.Checked, txtFieldListOrder.Text, txtFieldListWidth.Text, chkFieldVisible.Checked, chkFieldSearch.Checked, chkFieldSearchList.Checked, chkFieldUpdate.Checked, True)
         CursorControl()
