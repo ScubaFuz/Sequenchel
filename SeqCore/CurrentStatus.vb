@@ -54,12 +54,23 @@
 #End Region
 
 #Region "ConnectionChange"
+    Private _ConnectionsReload As Boolean = True
     Private _ConnectionChanged As Boolean = False
     Private _ConnectionReload As Boolean = False
+    Private _TableSetsReload As Boolean = False
     Private _TableSetChanged As Boolean = False
     Private _TableSetReload As Boolean = False
     Private _TableChanged As Boolean = False
     Private _TableReload As Boolean = False
+
+    Public Property ConnectionsReload() As Boolean
+        Get
+            Return _ConnectionsReload
+        End Get
+        Set(ByVal Value As Boolean)
+            _ConnectionsReload = Value
+        End Set
+    End Property
 
     Public Property ConnectionChanged() As Boolean
         Get
@@ -76,6 +87,15 @@
         End Get
         Set(ByVal Value As Boolean)
             _ConnectionReload = Value
+        End Set
+    End Property
+
+    Public Property TableSetsReload() As Boolean
+        Get
+            Return _TableSetsReload
+        End Get
+        Set(ByVal Value As Boolean)
+            _TableSetsReload = Value
         End Set
     End Property
 

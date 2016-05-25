@@ -1,5 +1,28 @@
 ﻿Public Class Variables
 
+#Region "License"
+    Private _LicenseName As String = "Thicor Services Demo License"
+    Private _LicenseKey As String = ""
+
+    Public Property LicenseName() As String
+        Get
+            Return _LicenseName
+        End Get
+        Set(ByVal Value As String)
+            _LicenseName = Value
+        End Set
+    End Property
+
+    Public Property LicenseKey() As String
+        Get
+            Return _LicenseKey
+        End Get
+        Set(ByVal Value As String)
+            _LicenseKey = Value
+        End Set
+    End Property
+#End Region
+
 #Region "General"
     Private _DebugMode As Boolean = False
     Private _DevMode As Boolean = False

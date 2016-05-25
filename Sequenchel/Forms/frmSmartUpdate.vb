@@ -7,7 +7,7 @@
 
     Private Sub frmSmartUpdate_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         CursorControl("Wait")
-        If Core.LicenseValidated = True Then
+        If SeqCore.LicenseValidated = True Then
             btnCreateSmartUpdateProcedure.Enabled = True
             lblLicenseRequired.Visible = False
         End If
@@ -24,8 +24,8 @@
     Private Sub cbxConnection_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbxConnection.SelectedIndexChanged
         CursorControl("Wait")
         If cbxConnection.SelectedIndex >= -1 Then
-            SeqData.curStatus.Connection = cbxConnection.SelectedItem
-            SeqData.LoadConnection(xmlConnections, SeqData.curStatus.Connection)
+            basCode.curStatus.Connection = cbxConnection.SelectedItem
+            basCode.LoadConnection(xmlConnections, basCode.curStatus.Connection)
             LoadTables()
             PanelsClear()
             txtSourceTable.Text = ""
@@ -328,9 +328,9 @@
 #End Region
 
     Private Sub LoadConnections()
-        'AllClear(4)
-        Dim lstConnections As List(Of String) = SeqData.LoadConnectionsXml(xmlConnections)
+        Dim lstConnections As List(Of String) = basCode.LoadConnections(xmlConnections)
         If lstConnections Is Nothing Then
+            'AllClear(4)
             xmlConnections.RemoveAll()
             xmlTableSets.RemoveAll()
             SeqData.curVar.TableSetsFile = ""

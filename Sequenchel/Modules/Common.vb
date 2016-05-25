@@ -11,7 +11,7 @@ Module Common
     Friend strErrorMessage As String = ""
     Friend strQuery As String = Nothing
 
-    Friend Core As New SeqCore.Core
+    'Friend Core As New SeqCore.Core
     Friend Excel As New SeqCore.Excel
     Friend SeqData As New SeqCore.Data
 
@@ -37,10 +37,9 @@ Module Common
     Friend clrWarning As Color = System.Drawing.Color.IndianRed
     Friend clrEmpty As Color = System.Drawing.Color.LemonChiffon
 
-    Friend strReport As String = "Sequenchel " & vbTab & " version: " & Core.GetVersion("B") & "  Licensed by: " & Core.LicenseName
+    Friend strReport As String = "Sequenchel " & vbTab & " version: " & basCode.GetVersion("B") & "  Licensed by: " & basCode.curVar.LicenseName
     Friend dtmElapsedTime As DateTime
     Friend tmsElapsedTime As TimeSpan
-    Friend tmrShutdown As New Timers.Timer
 
     Private _SelectedItem As DataGridViewRow
 
@@ -52,95 +51,6 @@ Module Common
             _SelectedItem = Value
         End Set
     End Property
-
-    Friend Sub ParseCommands()
-        Dim intLength As Integer = 0
-
-        For Each Command As String In My.Application.CommandLineArgs
-            Dim intPosition As Integer = Command.IndexOf(":")
-            If intPosition < 0 Then intPosition = Command.Length
-            Dim strCommand As String = Command.ToLower.Substring(0, intPosition)
-            Select Case strCommand
-                Case "/silent"
-                    'Start wihtout any windows / forms
-                Case "/debug"
-                    SeqData.curVar.DebugMode = True
-                Case "/control"
-                    SeqData.curStatus.Status = SeqCore.CurrentStatus.StatusList.ControlSearch
-                Case "/dev"
-                    SeqData.curVar.DevMode = True
-                Case "/noencryption"
-                    SeqData.curVar.Encryption = False
-                Case "/securityoverride"
-                    If Command.Length > intPosition + 1 Then
-                        SeqData.curVar.OverridePassword = SeqData.dhdText.MD5Encrypt(Command.Substring(intPosition + 1, Command.Length - (intPosition + 1)))
-                    End If
-                Case "/report"
-                    'Open Report window directly
-                Case "/connection"
-                    'Use the chosen connection
-                Case "/tableset"
-                    'Use the chosen TableSet
-                Case "/table"
-                    'Use the chosen Table
-                Case "/reportname"
-                    'Open the report if found
-                Case "/exportfile"
-                    'Export the report to the chosen file
-                Case "/import"
-                    'open the Import window
-                Case "/importfile"
-                    'Export the report to the chosen file
-            End Select
-        Next
-
-    End Sub
-
-    Friend Sub SetTimer()
-        AddHandler tmrShutdown.Elapsed, AddressOf TimedShutdown
-        Dim intShutdown As Integer = SeqData.curVar.TimedShutdown
-        If intShutdown > 60000 Then intShutdown -= 60000
-        If intShutdown > 0 Then tmrShutdown.Interval = intShutdown
-        If intShutdown <= 60000 Then
-            tmrShutdown.Enabled = False
-        ElseIf intShutdown > 0 Then
-            tmrShutdown.Enabled = True
-            tmrShutdown.Start()
-        End If
-    End Sub
-
-    Friend Sub ShutdownDelay()
-        If tmrShutdown.Enabled = False And tmrShutdown.Interval > 60000 Then
-            tmrShutdown.Enabled = True
-            tmrShutdown.Start()
-        ElseIf tmrShutdown.Enabled = True And tmrShutdown.Interval > 60000 Then
-            tmrShutdown.Stop()
-            tmrShutdown.Enabled = False
-            tmrShutdown.Enabled = True
-            tmrShutdown.Start()
-        Else
-            tmrShutdown.Enabled = False
-        End If
-    End Sub
-
-    Friend Sub TimedShutdown()
-        ShutdownDelay()
-        ShowShutdownForm()
-    End Sub
-
-    Friend Sub ShowShutdownForm()
-        Application.Run(frmShutdown)
-    End Sub
-
-    Friend Sub LoadLicense(lblTarget As Label)
-        If Core.LoadLicense = False Then
-            WriteStatus(Core.Message.ErrorMessage, 1, lblTarget)
-        Else
-            WriteStatus("License loaded succesfully", 2, lblTarget)
-        End If
-        strReport = "Sequenchel " & vbTab & " version: " & Core.GetVersion("B") & vbTab & "  Licensed to: " & Core.LicenseName
-
-    End Sub
 
     Public Sub FieldTextHandler(sender As Object)
         If SeqData.curStatus.SuspendActions = False Then
@@ -389,9 +299,9 @@ Module Common
     End Sub
 
     Friend Function SaveXmlFile(xmlDoc As XmlDocument, FilePathName As String, CreateDir As Boolean) As Boolean
-        If SeqData.dhdText.CheckDir(SeqData.dhdText.PathConvert(SeqData.CheckFilePath(FilePathName)).Substring(0, SeqData.dhdText.PathConvert(SeqData.CheckFilePath(FilePathName)).LastIndexOf("\")), False) = False Then
+        If SeqData.dhdText.CheckDir(SeqData.dhdText.PathConvert(basCode.CheckFilePath(FilePathName)).Substring(0, SeqData.dhdText.PathConvert(basCode.CheckFilePath(FilePathName)).LastIndexOf("\")), False) = False Then
             If CreateDir = True Then
-                If MessageBox.Show("The folder " & SeqData.dhdText.PathConvert(SeqData.CheckFilePath(FilePathName)).Substring(0, SeqData.dhdText.PathConvert(SeqData.CheckFilePath(FilePathName)).LastIndexOf("\")) & " does not exist." & Environment.NewLine & "do you wish to create it?", "Folder does not exist", MessageBoxButtons.YesNo, MessageBoxIcon.Hand, MessageBoxDefaultButton.Button1) = DialogResult.No Then
+                If MessageBox.Show("The folder " & SeqData.dhdText.PathConvert(basCode.CheckFilePath(FilePathName)).Substring(0, SeqData.dhdText.PathConvert(basCode.CheckFilePath(FilePathName)).LastIndexOf("\")) & " does not exist." & Environment.NewLine & "do you wish to create it?", "Folder does not exist", MessageBoxButtons.YesNo, MessageBoxIcon.Hand, MessageBoxDefaultButton.Button1) = DialogResult.No Then
                     Return False
                 End If
             Else
@@ -399,9 +309,9 @@ Module Common
             End If
         End If
         Try
-            SeqData.dhdText.SaveXmlFile(xmlDoc, SeqData.dhdText.PathConvert(SeqData.CheckFilePath(FilePathName)), True)
+            SeqData.dhdText.SaveXmlFile(xmlDoc, SeqData.dhdText.PathConvert(basCode.CheckFilePath(FilePathName)), True)
         Catch ex As Exception
-            SeqData.WriteLog("There was an error saving the XML file: " & SeqData.dhdText.PathConvert(SeqData.CheckFilePath(FilePathName)) & Environment.NewLine & ex.Message, 1)
+            SeqData.WriteLog("There was an error saving the XML file: " & SeqData.dhdText.PathConvert(basCode.CheckFilePath(FilePathName)) & Environment.NewLine & ex.Message, 1)
             Return False
         End Try
         Return True
@@ -765,22 +675,6 @@ Module Common
     End Function
 
 #End Region
-
-    Friend Sub WriteStatus(strStatusText As String, intStatusLevel As Integer, lblTarget As Label)
-        Dim clrStatus As Color = clrControl
-        Select Case intStatusLevel
-            Case 0
-                clrStatus = clrControl
-            Case 1
-                clrStatus = clrWarning
-            Case 2
-                clrStatus = clrMarked
-            Case 3, 4, 5
-                clrStatus = clrControl
-        End Select
-        lblTarget.Text = strStatusText
-        lblTarget.BackColor = clrStatus
-    End Sub
 
     Friend Sub MasterPanelControlsDispose(pnlMaster As Panel, Optional strTag As String = "")
         For Each pnlTarget In pnlMaster.Controls

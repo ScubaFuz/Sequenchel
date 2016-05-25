@@ -45,17 +45,17 @@ Public Class frmConfiguration
     Private Sub ConfigurationSave()
         If SeqData.curStatus.ConnectionChanged = True Then
             SeqData.curStatus.ConnectionReload = True
-            SeqData.dhdText.SaveXmlFile(xmlConnections, SeqData.dhdText.PathConvert(SeqData.CheckFilePath(SeqData.curVar.ConnectionsFile)), True)
+            SeqData.dhdText.SaveXmlFile(xmlConnections, SeqData.dhdText.PathConvert(basCode.CheckFilePath(SeqData.curVar.ConnectionsFile)), True)
             SeqData.curStatus.ConnectionChanged = False
         End If
         If SeqData.curStatus.TableSetChanged = True Then
             SeqData.curStatus.TableSetReload = True
-            SeqData.dhdText.SaveXmlFile(xmlTableSets, SeqData.dhdText.PathConvert(SeqData.CheckFilePath(SeqData.curVar.TableSetsFile)), True)
+            SeqData.dhdText.SaveXmlFile(xmlTableSets, SeqData.dhdText.PathConvert(basCode.CheckFilePath(SeqData.curVar.TableSetsFile)), True)
             SeqData.curStatus.TableSetChanged = False
         End If
         If SeqData.curStatus.TableChanged = True Then
             SeqData.curStatus.TableReload = True
-            SeqData.dhdText.SaveXmlFile(xmlTables, SeqData.dhdText.PathConvert(SeqData.CheckFilePath(SeqData.curVar.TablesFile)), True)
+            SeqData.dhdText.SaveXmlFile(xmlTables, SeqData.dhdText.PathConvert(basCode.CheckFilePath(SeqData.curVar.TablesFile)), True)
             SeqData.curStatus.TableChanged = False
         End If
     End Sub
@@ -295,11 +295,11 @@ Public Class frmConfiguration
     Private Sub ConnectionLoad()
         If lvwConnections.SelectedItems.Count = 1 Then
             'If CurStatus.Connection <> lvwConnections.SelectedItems.Item(0).Tag Then
-            SeqData.curStatus.ConnectionReload = True
-            SeqData.curStatus.Connection = lvwConnections.SelectedItems.Item(0).Tag
-            SeqData.LoadConnection(xmlConnections, SeqData.curStatus.Connection)
+            basCode.curStatus.ConnectionReload = True
+            basCode.curStatus.Connection = lvwConnections.SelectedItems.Item(0).Tag
+            basCode.LoadConnection(xmlConnections, basCode.curStatus.Connection)
             TableSetClear()
-            SeqData.LoadTableSetsXml(xmlTableSets)
+            basCode.LoadTableSetsXml(xmlTableSets)
             'If lstTableSets Is Nothing Then
             '    xmlTableSets.RemoveAll()
             '    xmlTables.RemoveAll()
@@ -307,7 +307,7 @@ Public Class frmConfiguration
             '    TableClear()
             '    Exit Sub
             'End If
-            SeqData.LoadTableSet(xmlTableSets, SeqData.curStatus.TableSet)
+            basCode.LoadTableSet(xmlTableSets, SeqData.curStatus.TableSet)
             TableSetsLoad()
             SeqData.LoadTablesXml(xmlTables)
             TablesLoad()
@@ -385,7 +385,7 @@ Public Class frmConfiguration
         End If
 
         If txtConnectionName.Text.Length < 2 Or txtDataLocation.Text.Length < 2 Or txtDataBaseName.Text.Length < 2 Or txtTableSetsFile.Text.Length < 2 Then
-            WriteStatus(Core.Message.strAllData, 2, lblStatusText)
+            WriteStatus(basCode.Message.strAllData, 2, lblStatusText)
             Exit Sub
         End If
 
@@ -408,6 +408,7 @@ Public Class frmConfiguration
         SeqData.curVar.TableSetsFile = txtTableSetsFile.Text
         SeqData.curStatus.TableSet = ""
         SeqData.curStatus.Table = ""
+        basCode.curStatus.ConnectionsReload = True
         SeqData.curStatus.ConnectionChanged = True
         ConfigurationSave()
         ConnectionsLoad()
@@ -420,7 +421,7 @@ Public Class frmConfiguration
         If strSelection.Length = 0 Then Exit Sub
         Dim xNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlConnections, "Connection", "ConnectionName", strSelection)
         If Not xNode Is Nothing Then
-            If MessageBox.Show("This will permanently remove the Item: " & strSelection & Environment.NewLine & Core.Message.strContinue, Core.Message.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Exit Sub
+            If MessageBox.Show("This will permanently remove the Item: " & strSelection & Environment.NewLine & basCode.Message.strContinue, basCode.Message.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Exit Sub
             xNode.ParentNode.RemoveChild(xNode)
 
             SeqData.curStatus.ConnectionChanged = True
@@ -543,7 +544,7 @@ Public Class frmConfiguration
         If strSelection.Length = 0 Then Exit Sub
         Dim xNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlTableSets, "TableSet", "TableSetName", strSelection)
         If Not xNode Is Nothing Then
-            If MessageBox.Show("This will permanently remove the Item: " & strSelection & Environment.NewLine & Core.Message.strContinue, Core.Message.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Exit Sub
+            If MessageBox.Show("This will permanently remove the Item: " & strSelection & Environment.NewLine & basCode.Message.strContinue, basCode.Message.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Exit Sub
             xNode.ParentNode.RemoveChild(xNode)
 
             SeqData.curStatus.TableSetChanged = True
@@ -585,14 +586,14 @@ Public Class frmConfiguration
     Private Sub TableSetLoad()
         TableSetClear()
         If lvwTableSets.SelectedItems.Count = 1 Then
-            If SeqData.curStatus.TableSet <> lvwTableSets.SelectedItems.Item(0).Tag Then
-                SeqData.curStatus.TableSetReload = True
-                SeqData.curStatus.TableSet = lvwTableSets.SelectedItems.Item(0).Tag
-                SeqData.LoadTableSet(xmlTableSets, SeqData.curStatus.TableSet)
+            If basCode.curStatus.TableSet <> lvwTableSets.SelectedItems.Item(0).Tag Then
+                basCode.curStatus.TableSetReload = True
+                basCode.curStatus.TableSet = lvwTableSets.SelectedItems.Item(0).Tag
+                basCode.LoadTableSet(xmlTableSets, SeqData.curStatus.TableSet)
                 SeqData.LoadTablesXml(xmlTables)
                 TablesLoad()
             End If
-            Dim xNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlTableSets, "TableSet", "TableSetName", SeqData.curStatus.TableSet)
+            Dim xNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlTableSets, "TableSet", "TableSetName", basCode.curStatus.TableSet)
             tvwTableSet.Nodes.Clear()
             DisplayXmlNode(xNode, tvwTableSet.Nodes)
             tvwTableSet.ExpandAll()
@@ -639,7 +640,7 @@ Public Class frmConfiguration
     Private Sub TableSetAddOrUpdate()
         'dhdText.RemoveNode(xmlConnections, "Connections", "ConnectionName", txtConnectionName.Text)
         If txtTableSetName.Text.Length < 2 Or txtTablesFile.Text.Length < 2 Then
-            WriteStatus(Core.Message.strAllData, 2, lblStatusText)
+            WriteStatus(basCode.Message.strAllData, 2, lblStatusText)
             Exit Sub
         End If
 
@@ -830,7 +831,7 @@ Public Class frmConfiguration
         If strSelection.Length = 0 Then Exit Sub
         Dim xNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlTables, "Table", "Name", strSelection)
         If Not xNode Is Nothing Then
-            If MessageBox.Show("This will permanently remove the Item: " & strSelection & Environment.NewLine & Core.Message.strContinue, Core.Message.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Exit Sub
+            If MessageBox.Show("This will permanently remove the Item: " & strSelection & Environment.NewLine & basCode.Message.strContinue, basCode.Message.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Exit Sub
             xNode.ParentNode.RemoveChild(xNode)
 
             SeqData.curStatus.TableChanged = True
@@ -1161,7 +1162,7 @@ Public Class frmConfiguration
         If strSelection.Length = 0 Then Exit Sub
         Dim xNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlTables, "Field", "FldName", strSelection)
         If Not xNode Is Nothing Then
-            If MessageBox.Show("This will permanently remove the Item: " & strSelection & Environment.NewLine & Core.Message.strContinue, Core.Message.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Exit Sub
+            If MessageBox.Show("This will permanently remove the Item: " & strSelection & Environment.NewLine & basCode.Message.strContinue, basCode.Message.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Exit Sub
             xNode.ParentNode.RemoveChild(xNode)
 
             SeqData.curStatus.TableChanged = True
@@ -1762,7 +1763,7 @@ Public Class frmConfiguration
         End If
 
         If blnRemoveOnly = True Then
-            If MessageBox.Show("This will permanently remove the relation: " & strRelatedTable & "." & strRelatedField & Environment.NewLine & Core.Message.strContinue, Core.Message.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Return False
+            If MessageBox.Show("This will permanently remove the relation: " & strRelatedTable & "." & strRelatedField & Environment.NewLine & basCode.Message.strContinue, basCode.Message.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Return False
         End If
 
         'remove existing node

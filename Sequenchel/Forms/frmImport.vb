@@ -135,11 +135,11 @@ Public Class frmImport
     End Sub
 
     Private Sub ImportFile()
-        If SeqData.dhdText.CheckFile(SeqData.dhdText.PathConvert(SeqData.CheckFilePath(SeqData.dhdText.ImportFile))) = False Then
+        If SeqData.dhdText.CheckFile(SeqData.dhdText.PathConvert(basCode.CheckFilePath(SeqData.dhdText.ImportFile))) = False Then
             WriteStatus("The file was not found. Check the file path and name", 2, lblStatusText)
             Exit Sub
         End If
-        dtsImport = SeqData.ImportFile(SeqData.dhdText.PathConvert(SeqData.CheckFilePath(SeqData.dhdText.ImportFile)), chkHasHeaders.Checked, txtDelimiter.Text)
+        dtsImport = SeqData.ImportFile(SeqData.dhdText.PathConvert(basCode.CheckFilePath(SeqData.dhdText.ImportFile)), chkHasHeaders.Checked, txtDelimiter.Text)
 
         If SeqData.dhdText.DatasetCheck(dtsImport) = False Then
             WriteStatus("File extension or delimiter not recognised or unable to load file .", 2, lblStatusText)
@@ -208,7 +208,7 @@ Public Class frmImport
                 End If
             Next
             If dtsUpload.Tables.Count > 0 Then
-                If SeqData.ExportFile(dtsUpload, SeqData.CheckFilePath(txtFileName.Text, True), SeqData.curVar.ConvertToText, SeqData.curVar.ConvertToNull, SeqData.curVar.ShowFile, chkHasHeaders.Checked, txtDelimiter.Text, SeqData.curVar.QuoteValues, SeqData.curVar.CreateDir) = False Then
+                If SeqData.ExportFile(dtsUpload, basCode.CheckFilePath(txtFileName.Text, True), SeqData.curVar.ConvertToText, SeqData.curVar.ConvertToNull, SeqData.curVar.ShowFile, chkHasHeaders.Checked, txtDelimiter.Text, SeqData.curVar.QuoteValues, SeqData.curVar.CreateDir) = False Then
                     WriteStatus("There was an error exporting the file. PLease check the log.", 1, lblStatusText)
                 Else
                     WriteStatus("File uploaded.", 0, lblStatusText)

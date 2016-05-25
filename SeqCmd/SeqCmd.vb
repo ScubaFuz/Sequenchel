@@ -2,7 +2,7 @@
 Imports System.IO
 
 Module SeqCmd
-    Friend Core As New SeqCore.Core
+    Friend basCode As SeqCore.BaseCode
     Friend SeqData As New SeqCore.Data
 
     Friend xmlSDBASettings As New XmlDocument
@@ -24,14 +24,14 @@ Module SeqCmd
 
     Sub Main()
         ParseCommands()
-        SeqData.SetDefaults()
-        Dim strReturn As String = SeqData.LoadSDBASettingsXml(xmlSDBASettings)
+        basCode.SetDefaults()
+        Dim strReturn As String = basCode.LoadSDBASettingsXml(xmlSDBASettings)
         If strReturn = False Then
             Console.WriteLine(SeqData.ErrorMessage)
             Console.ReadLine()
             Exit Sub
         End If
-        Dim strReturnGen As String = SeqData.LoadGeneralSettingsXml(xmlGeneralSettings)
+        Dim strReturnGen As String = basCode.LoadGeneralSettingsXml(xmlGeneralSettings)
         If strReturnGen = False Then
             Console.WriteLine(SeqData.ErrorMessage)
             Console.ReadLine()
@@ -39,9 +39,9 @@ Module SeqCmd
         End If
 
         LoadConnections()
-        SeqData.LoadConnection(xmlConnections, SeqData.curStatus.Connection)
+        basCode.LoadConnection(xmlConnections, SeqData.curStatus.Connection)
         LoadTableSets()
-        SeqData.LoadTableSet(xmlTableSets, SeqData.curStatus.TableSet)
+        basCode.LoadTableSet(xmlTableSets, SeqData.curStatus.TableSet)
         LoadTables()
 
         If RunImport = True AndAlso SeqData.dhdText.ImportFile.Length > 0 AndAlso SeqData.curStatus.Table.Length > 0 Then
@@ -58,7 +58,7 @@ Module SeqCmd
                     ImportFiles(SeqData.dhdText.ImportFile)
                 End If
             Else
-                dtsInput = ImportFile(SeqData.CheckFilePath(SeqData.dhdText.ImportFile))
+                dtsInput = ImportFile(basCode.CheckFilePath(SeqData.dhdText.ImportFile))
                 Dim intRecords As Integer = 0
                 If ImportTable <> "" And ImportTable = SeqData.curStatus.Table Then
                     intRecords = UploadFile(dtsInput)
@@ -164,7 +164,7 @@ Module SeqCmd
 
     Friend Sub LoadConnections()
         Console.WriteLine("Loading Connection: " & SeqData.curStatus.Connection)
-        lstConnections = SeqData.LoadConnectionsXml(xmlConnections)
+        lstConnections = basCode.LoadConnections(xmlConnections)
         If lstConnections Is Nothing Then Environment.Exit(0)
         If lstConnections.Contains(SeqData.curStatus.Connection) = False Or SeqData.curStatus.Connection = "" Then
             If SeqData.curVar.ConnectionDefault.Length > 0 Then
@@ -180,7 +180,7 @@ Module SeqCmd
 
     Friend Sub LoadTableSets()
         Console.WriteLine("Loading TableSet: " & SeqData.curStatus.TableSet)
-        lstTableSets = SeqData.LoadTableSetsXml(xmlTableSets)
+        lstTableSets = basCode.LoadTableSets(xmlTableSets)
         If lstTableSets Is Nothing Then Exit Sub
         If lstTableSets.Contains(SeqData.curStatus.TableSet) = False Or SeqData.curStatus.TableSet = "" Then
             If SeqData.curVar.TableSetDefault.Length > 0 Then
@@ -220,7 +220,7 @@ Module SeqCmd
         Dim strFileFilter As String = strImportFiles.Substring(strImportFiles.LastIndexOf("\") + 1, strImportFiles.Length - (strImportFiles.LastIndexOf("\") + 1))
         Dim FilesArray As ArrayList = SeqData.dhdText.GetFiles(strFolder, strFileFilter)
         For Each strFile As String In FilesArray
-            Dim dtsInput As DataSet = ImportFile(SeqData.CheckFilePath(strFile))
+            Dim dtsInput As DataSet = ImportFile(basCode.CheckFilePath(strFile))
             Dim intRecords As Integer = UploadFile(dtsInput)
         Next
     End Sub

@@ -74,7 +74,6 @@
     <Compile Include="BaseCode.vb" />
     <Compile Include="BaseField.vb" />
     <Compile Include="BaseTable.vb" />
-    <Compile Include="Core.vb" />
     <Compile Include="CurrentStatus.vb" />
     <Compile Include="Data.vb" />
     <Compile Include="Excel.vb" />

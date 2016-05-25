@@ -1,4 +1,4 @@
-﻿Module sec
+﻿Public Module sec
     Friend LicensedName As String = "Thicor Services Demo License"
     Friend MajorVersion As Integer = 1
     Friend ExpiryDate As Date = "2015-01-01"
@@ -6,13 +6,19 @@
     Friend blnLicensedName As Boolean = True
     Friend blnMajorVersion As Boolean = True
     Friend blnExpiryDate As Boolean = False
-    'Friend blnLicenseValidated = False
 
     Private ReadOnly _strKeyCharacters As String = "AB5CDE3FGHJK9LM65NPQRSTUV74W2XY8Z"
+    Private _LicenseValidated As Boolean = False
 
     Private ReadOnly Property strKeyCharacters() As String
         Get
             Return _strKeyCharacters
+        End Get
+    End Property
+
+    Public ReadOnly Property LicenseValidated() As Boolean
+        Get
+            Return _LicenseValidated
         End Get
     End Property
 
@@ -49,7 +55,7 @@
         KeyAlgorythm = strLicenseKey
     End Function
 
-    Friend Function CheckLicenseKey(ByVal strLicenseKey As String, Optional ByVal strLicensedName As String = "Thicor Services Demo License", Optional ByVal intMajorVersion As Integer = 1, Optional ByVal datExpiryDate As Date = Nothing) As Boolean
+    Public Function CheckLicenseKey(ByVal strLicenseKey As String, Optional ByVal strLicensedName As String = "Thicor Services Demo License", Optional ByVal intMajorVersion As Integer = 1, Optional ByVal datExpiryDate As Date = Nothing) As Boolean
         Dim strLicenseText As String = ""
         If blnMajorVersion = True Then strLicenseText &= intMajorVersion
         If blnExpiryDate = True And datExpiryDate = Nothing Then Return False
@@ -57,9 +63,11 @@
         If blnLicensedName = True Then strLicenseText &= strLicensedName
         If strLicenseText.Length = 0 Then strLicenseText = "Thicor Services Demo License"
         If strLicenseKey = KeyAlgorythm(strLicenseText) Then
-            Return True
+            _LicenseValidated = True
         Else
-            Return False
+            _LicenseValidated = False
         End If
+        Return LicenseValidated
     End Function
+
 End Module

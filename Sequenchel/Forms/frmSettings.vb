@@ -2,7 +2,7 @@
 
     Private Sub frmSettings_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         System.Windows.Forms.Application.CurrentCulture = New System.Globalization.CultureInfo("EN-US")
-        txtLicenseName.Text = Core.LicenseName
+        txtLicenseName.Text = basCode.curVar.LicenseName
         DatabaseShow()
         SeqData.dhdMainDB.CheckDB()
         If SeqData.dhdMainDB.DataBaseOnline = True Then
@@ -312,7 +312,7 @@
         End If
 
         If blnSettingsChanged = True Then
-            If SeqData.SaveSDBASettingsXml(xmlSDBASettings) = False Then
+            If basCode.SaveSDBASettingsXml(xmlSDBASettings) = False Then
                 WriteStatus("Error saving settings file. please check the log.", 1, lblStatusText)
             Else
                 WriteStatus("Settings file saved", 0, lblStatusText)
@@ -321,7 +321,7 @@
 
         End If
         If blnGeneralSettingsChanged = True Then
-            If SeqData.SaveGeneralSettingsXml(xmlGeneralSettings) = False Then
+            If basCode.SaveGeneralSettingsXml(xmlGeneralSettings) = False Then
                 WriteStatus("Error saving settings file. please check the log.", 1, lblStatusText)
             Else
                 WriteStatus("Settings file saved", 0, lblStatusText)
@@ -494,28 +494,28 @@
         CursorControl("Wait")
         WriteStatus("", 0, lblStatusText)
         Dim strLocation As String = ""
-        If Core.CheckLicense(txtLicenseKey.Text, txtLicenseName.Text, Core.GetVersion("M"), Nothing) = False Then
+        If SeqCore.CheckLicenseKey(txtLicenseKey.Text, txtLicenseName.Text, basCode.GetVersion("M"), Nothing) = False Then
             'MessageBox.Show(strMessages.strLicenseError)
-            WriteStatus("Your license validated: " & Core.LicenseValidated, 2, lblStatusText)
+            WriteStatus("Your license validated: " & SeqCore.LicenseValidated, 2, lblStatusText)
         End If
-        If Core.LicenseValidated = True Then
+        If SeqCore.LicenseValidated = True Then
             Try
-                Core.dhdReg.AddLMRegKey("LicenseName", txtLicenseName.Text)
-                If Core.dhdReg.ErrorLevel = -1 Then
-                    Core.dhdReg.AddCURRegKey("LicenseName", txtLicenseName.Text)
+                basCode.dhdReg.AddLMRegKey("LicenseName", txtLicenseName.Text)
+                If basCode.dhdReg.ErrorLevel = -1 Then
+                    basCode.dhdReg.AddCURRegKey("LicenseName", txtLicenseName.Text)
                     strLocation = "HK Current User"
                 Else
                     strLocation = "HKLM"
                 End If
-                If SeqData.curVar.DebugMode And Core.dhdReg.ErrorLevel = -1 Then MessageBox.Show(Core.dhdReg.RegMessage)
-                Core.dhdReg.AddLMRegKey("LicenseKey", txtLicenseKey.Text)
-                If Core.dhdReg.ErrorLevel = -1 Then
-                    Core.dhdReg.AddCURRegKey("LicenseKey", txtLicenseKey.Text)
+                If SeqData.curVar.DebugMode And basCode.dhdReg.ErrorLevel = -1 Then MessageBox.Show(basCode.dhdReg.RegMessage)
+                basCode.dhdReg.AddLMRegKey("LicenseKey", txtLicenseKey.Text)
+                If basCode.dhdReg.ErrorLevel = -1 Then
+                    basCode.dhdReg.AddCURRegKey("LicenseKey", txtLicenseKey.Text)
                     strLocation = "HK Current User"
                 Else
                     strLocation = "HKLM"
                 End If
-                If SeqData.curVar.DebugMode And Core.dhdReg.ErrorLevel = -1 Then MessageBox.Show(Core.dhdReg.RegMessage)
+                If SeqData.curVar.DebugMode And basCode.dhdReg.ErrorLevel = -1 Then MessageBox.Show(basCode.dhdReg.RegMessage)
                 WriteStatus("Your License information has been saved to " & strLocation, 0, lblStatusText)
             Catch ex As Exception
                 WriteStatus("Errror saving license. Please check the log. ", 1, lblStatusText)
@@ -528,8 +528,8 @@
     Private Sub btnValidateLicense_Click(sender As Object, e As EventArgs) Handles btnValidateLicense.Click
         CursorControl("Wait")
         WriteStatus("", 0, lblStatusText)
-        Core.CheckLicense(txtLicenseKey.Text, txtLicenseName.Text, Core.GetVersion("M"), Nothing)
-        WriteStatus("Your license validated: " & Core.LicenseValidated, 2, lblStatusText)
+        SeqCore.CheckLicenseKey(txtLicenseKey.Text, txtLicenseName.Text, basCode.GetVersion("M"), Nothing)
+        WriteStatus("Your license validated: " & SeqCore.LicenseValidated, 2, lblStatusText)
         CursorControl()
     End Sub
 
@@ -599,7 +599,7 @@
         Else
             SeqData.dhdText.AutoDelete = False
         End If
-        If SeqData.SaveGeneralSettingsXml(xmlGeneralSettings) = False Then
+        If basCode.SaveGeneralSettingsXml(xmlGeneralSettings) = False Then
             WriteStatus("General Settings file not saved. Please check the log.", 1, lblStatusText)
         Else
             WriteStatus("General Settings file saved.", 0, lblStatusText)
@@ -682,7 +682,7 @@
         WriteStatus("", 0, lblStatusText)
         If MessageBox.Show("This will update all standard Sequenchel Views, Stored Procedures and Functions to their latest version. " & Environment.NewLine _
             & "Your Tables will not be changed." & Environment.NewLine _
-            & Core.Message.strAreYouSure, Core.Message.strWarning, MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.No Then Exit Sub
+            & basCode.Message.strAreYouSure, basCode.Message.strWarning, MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.No Then Exit Sub
         CursorControl("Wait")
         CreateDatabase(False)
         CursorControl()
@@ -801,7 +801,7 @@
             txtUpgradeDatabase.Tag = strTarget
             tabSettings.SelectTab(tpgDatabase)
             btnUpgradeDatabase.BackColor = clrWarning
-            MessageBox.Show(Core.Message.strUpdateDatabase)
+            MessageBox.Show(basCode.Message.strUpdateDatabase)
             Return True
         Else
             btnUpgradeDatabase.Enabled = False
@@ -824,7 +824,7 @@
         CursorControl("Wait")
         WriteStatus("", 0, lblStatusText)
         If cbxDataProvider.Items.Contains(cbxDataProvider.Text) = False Or cbxLoginMethod.Items.Contains(cbxLoginMethod.Text) = False Then
-            MessageBox.Show(Core.Message.strPreconfigured & Environment.NewLine & Core.Message.strCheckSettings)
+            MessageBox.Show(basCode.Message.strPreconfigured & Environment.NewLine & basCode.Message.strCheckSettings)
             Exit Sub
         End If
         'If SeqData.dhdMainDB.DataLocation <> txtDatabaseLocation.Text Or _
@@ -846,7 +846,7 @@
                     Exit Sub
                 End If
             End If
-            If SeqData.SaveGeneralSettingsXml(xmlGeneralSettings) = False Then
+            If basCode.SaveGeneralSettingsXml(xmlGeneralSettings) = False Then
                 WriteStatus("General Settings file not saved. Please check the log.", 1, lblStatusText)
             Else
                 WriteStatus("General Settings file saved.", 0, lblStatusText)
@@ -856,7 +856,7 @@
         Catch ex As Exception
             SeqData.WriteLog("An error occured saving database settings: " & ex.Message, 1)
             WriteStatus("Error saving database settings. Please check the log.", 1, lblStatusText)
-            SeqData.LoadGeneralSettingsXml(xmlGeneralSettings)
+            basCode.LoadGeneralSettingsXml(xmlGeneralSettings)
             DatabaseShow()
             WriteStatus("Error saving database settings. Please check the log.", 1, lblStatusText)
         End Try
@@ -973,7 +973,7 @@
     End Sub
 
     Private Sub btnCreateExtraProcs_Click(sender As Object, e As EventArgs) Handles btnCreateExtraProcs.Click
-        If MessageBox.Show("This will create extra procedures with the power to damage your data or database. Create these procedures in a secure database." & Environment.NewLine & Core.Message.strContinue, Core.Message.strWarning, MessageBoxButtons.YesNo, MessageBoxIcon.Hand, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.No Then Exit Sub
+        If MessageBox.Show("This will create extra procedures with the power to damage your data or database. Create these procedures in a secure database." & Environment.NewLine & basCode.Message.strContinue, basCode.Message.strWarning, MessageBoxButtons.YesNo, MessageBoxIcon.Hand, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.No Then Exit Sub
         CursorControl("Wait")
         WriteStatus("", 0, lblStatusText)
 
@@ -1509,7 +1509,7 @@
         SeqData.dhdText.SmtpReply = txtSmtpReply.Text
         SeqData.dhdText.SmtpPort = txtSmtpPortNumber.Text
         SeqData.dhdText.SmtpSsl = chkUseSslEncryption.Checked
-        If SeqData.SaveGeneralSettingsXml(xmlGeneralSettings) = False Then
+        If basCode.SaveGeneralSettingsXml(xmlGeneralSettings) = False Then
             WriteStatus("Error saving Settings file. Please check the log.", 1, lblStatusText)
         Else
             WriteStatus("Settings file saved.", 0, lblStatusText)

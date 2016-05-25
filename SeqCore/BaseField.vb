@@ -84,54 +84,64 @@
 #End Region
 
 #Region "Relations"
-    Private _FieldRelationTable As String = ""
-    Private _FieldRelationTableAlias As String = ""
-    Private _FieldRelationField As String = ""
-    Private _FieldRelatedField As String = ""
-    Private _FieldRelatedFieldList As Boolean = False
+    Private _RelationTable As String = ""
+    Private _RelationTableAlias As String = ""
+    Private _RelationField As String = ""
+    Private _RelatedFieldName As String = ""
+    Private _RelatedFieldAlias As String = ""
+    Private _RelatedFieldList As Boolean = False
 
-    Public Property FieldRelationTable() As String
+    Public Property RelationTable() As String
         Get
-            Return _FieldRelationTable
+            Return _RelationTable
         End Get
         Set(ByVal Value As String)
-            _FieldRelationTable = Value
+            _RelationTable = Value
         End Set
     End Property
 
-    Public Property FieldRelationTableAlias() As String
+    Public Property RelationTableAlias() As String
         Get
-            Return _FieldRelationTableAlias
+            Return _RelationTableAlias
         End Get
         Set(ByVal Value As String)
-            _FieldRelationTableAlias = Value
+            _RelationTableAlias = Value
         End Set
     End Property
 
-    Public Property FieldRelationField() As String
+    Public Property RelationField() As String
         Get
-            Return _FieldRelationField
+            Return _RelationField
         End Get
         Set(ByVal Value As String)
-            _FieldRelationField = Value
+            _RelationField = Value
         End Set
     End Property
 
-    Public Property FieldRelatedField() As String
+    Public Property RelatedFieldName() As String
         Get
-            Return _FieldRelatedField
+            Return _RelatedFieldName
         End Get
         Set(ByVal Value As String)
-            _FieldRelatedField = Value
+            _RelatedFieldName = Value
         End Set
     End Property
 
-    Public Property FieldRelatedFieldList() As Boolean
+    Public Property RelatedFieldAlias() As String
         Get
-            Return _FieldRelatedFieldList
+            Return _RelatedFieldAlias
+        End Get
+        Set(ByVal Value As String)
+            _RelatedFieldAlias = Value
+        End Set
+    End Property
+
+    Public Property RelatedFieldList() As Boolean
+        Get
+            Return _RelatedFieldList
         End Get
         Set(ByVal Value As Boolean)
-            _FieldRelatedFieldList = Value
+            _RelatedFieldList = Value
         End Set
     End Property
 #End Region

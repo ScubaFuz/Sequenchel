@@ -7,37 +7,36 @@ Public Class frmSequenchel
         System.Windows.Forms.Application.CurrentCulture = New System.Globalization.CultureInfo("EN-US")
         'dgvTable1.BackgroundImageLayout = ImageLayout.Center
 
-        ParseCommands()
+        basCode.ParseCommands(My.Application.CommandLineArgs)
         Me.Text = My.Application.Info.Title
-        If SeqData.CurStatus.Status = SeqCore.CurrentStatus.StatusList.ControlSearch Then Me.Text &= " ControlMode"
-        If SeqData.curVar.DebugMode Then Me.Text &= " Debug"
-        If SeqData.CurVar.DevMode Then Me.Text &= " Development"
-        If SeqData.CurVar.Encryption = False Then Me.Text &= " NoEncryption"
+        If basCode.curStatus.Status = SeqCore.CurrentStatus.StatusList.ControlSearch Then Me.Text &= " ControlMode"
+        If basCode.curVar.DebugMode Then Me.Text &= " Debug"
+        If basCode.curVar.DevMode Then Me.Text &= " Development"
+        If basCode.curVar.Encryption = False Then Me.Text &= " NoEncryption"
 
         DebugSettings()
-        Core.SetDefaults()
-        SeqData.SetDefaults()
+        basCode.SetDefaults()
+        'SeqData.SetDefaults()
         LoadLicense(lblStatusText)
         Me.Hide()
         frmAbout.Show()
         frmAbout.Refresh()
 
-        lblLicense.Text = "Licensed to: " & Core.LicenseName
-        lblLicense.Left = Me.Width - lblLicense.Width - (SeqData.CurVar.BuildMargin * 5)
+        lblLicense.Text = "Licensed to: " & basCode.curVar.LicenseName
+        lblLicense.Left = Me.Width - lblLicense.Width - (basCode.curVar.BuildMargin * 5)
 
-        If SeqData.LoadSDBASettingsXml(xmlSDBASettings) = False Then
-            If SeqData.SaveSDBASettingsXml(xmlSDBASettings) = False Then WriteStatus("There was an error loading the main settings. please check the logfile", 1, lblStatusText)
+        If basCode.LoadSDBASettingsXml(xmlSDBASettings) = False Then
+            If basCode.SaveSDBASettingsXml(xmlSDBASettings) = False Then WriteStatus("There was an error loading the main settings. please check the logfile", 1, lblStatusText)
         End If
         SetTimer()
         SecuritySet()
-        If SeqData.LoadGeneralSettingsXml(xmlGeneralSettings) = False Then WriteStatus("There was an error loading the settings. please check the logfile", 1, lblStatusText)
-        'Core.DeleteOldLogs()
+        If basCode.LoadGeneralSettingsXml(xmlGeneralSettings) = False Then WriteStatus("There was an error loading the settings. please check the logfile", 1, lblStatusText)
         LoadConnections()
 
-        If SeqData.curVar.SecurityOverride = True Then Me.Text &= " SecurityOverride"
+        If basCode.curVar.SecurityOverride = True Then Me.Text &= " SecurityOverride"
 
         Me.Show()
-        If Core.LicenseValidated Then
+        If SeqCore.LicenseValidated Then
             frmAbout.Hide()
         Else
             frmAbout.TopMost = True
@@ -47,16 +46,16 @@ Public Class frmSequenchel
 
     Private Sub frmSequenchel_Activated(sender As Object, e As EventArgs) Handles Me.Activated
         SecuritySet()
-        If SeqData.curStatus.ConnectionReload = True Then
+        If basCode.curStatus.ConnectionReload = True Then
             LoadConnections()
-            SeqData.CurStatus.ConnectionReload = False
-            SeqData.CurStatus.TableSetReload = False
-            SeqData.CurStatus.TableReload = False
+            basCode.curStatus.ConnectionReload = False
+            basCode.curStatus.TableSetReload = False
+            basCode.curStatus.TableReload = False
         Else
             If Not cbxConnection.SelectedItem Is Nothing Then
-                If SeqData.curStatus.Connection <> cbxConnection.SelectedItem Then
-                    SeqData.curStatus.Connection = cbxConnection.SelectedItem
-                    SeqData.LoadConnection(xmlConnections, SeqData.curStatus.Connection)
+                If basCode.curStatus.Connection <> cbxConnection.SelectedItem Then
+                    basCode.curStatus.Connection = cbxConnection.SelectedItem
+                    basCode.LoadConnection(xmlConnections, basCode.curStatus.Connection)
                 End If
             End If
         End If
@@ -66,9 +65,9 @@ Public Class frmSequenchel
             SeqData.CurStatus.TableReload = False
         Else
             If Not cbxTableSet.SelectedItem Is Nothing Then
-                If SeqData.curStatus.TableSet <> cbxTableSet.SelectedItem Then
-                    SeqData.curStatus.TableSet = cbxTableSet.SelectedItem
-                    SeqData.LoadTableSet(xmlTableSets, SeqData.curStatus.TableSet)
+                If basCode.curStatus.TableSet <> cbxTableSet.SelectedItem Then
+                    basCode.curStatus.TableSet = cbxTableSet.SelectedItem
+                    basCode.LoadTableSet(xmlTableSets, basCode.curStatus.TableSet)
                 End If
             End If
         End If
@@ -88,23 +87,23 @@ Public Class frmSequenchel
 #Region "Common routines"
 
     Private Sub DebugSettings()
-        If SeqData.curVar.DebugMode Then
+        If basCode.curVar.DebugMode Then
             btnTest.Visible = True
         End If
-        If SeqData.curVar.DevMode Then
+        If basCode.curVar.DevMode Then
             'mnuMain.Visible = True
         End If
     End Sub
 
     Private Sub SecuritySet()
-        If SeqData.curVar.AllowSettingsChange = False And SeqData.curVar.SecurityOverride = False Then mnuMainEditSettings.Enabled = False
-        If SeqData.curVar.AllowConfiguration = False And SeqData.curVar.SecurityOverride = False Then mnuMainEditConfiguration.Enabled = False
-        If SeqData.curVar.AllowLinkedServers = False And SeqData.curVar.SecurityOverride = False Then mnuMainEditLinkedServers.Enabled = False
-        If SeqData.curVar.AllowDataImport = False And SeqData.curVar.SecurityOverride = False Then mnuMainToolsImport.Enabled = False
-        If SeqData.curVar.AllowSmartUpdate = False And SeqData.curVar.SecurityOverride = False Then mnuMainToolsSmartUpdate.Enabled = False
-        If SeqData.curVar.AllowUpdate = False And SeqData.curVar.SecurityOverride = False Then btnUpdate.Enabled = False
-        If SeqData.curVar.AllowInsert = False And SeqData.curVar.SecurityOverride = False Then btnAdd.Enabled = False
-        If SeqData.curVar.AllowDelete = False And SeqData.curVar.SecurityOverride = False Then btnDelete.Enabled = False
+        If basCode.curVar.AllowSettingsChange = False And basCode.curVar.SecurityOverride = False Then mnuMainEditSettings.Enabled = False
+        If basCode.curVar.AllowConfiguration = False And basCode.curVar.SecurityOverride = False Then mnuMainEditConfiguration.Enabled = False
+        If basCode.curVar.AllowLinkedServers = False And basCode.curVar.SecurityOverride = False Then mnuMainEditLinkedServers.Enabled = False
+        If basCode.curVar.AllowDataImport = False And basCode.curVar.SecurityOverride = False Then mnuMainToolsImport.Enabled = False
+        If basCode.curVar.AllowSmartUpdate = False And basCode.curVar.SecurityOverride = False Then mnuMainToolsSmartUpdate.Enabled = False
+        If basCode.curVar.AllowUpdate = False And basCode.curVar.SecurityOverride = False Then btnUpdate.Enabled = False
+        If basCode.curVar.AllowInsert = False And basCode.curVar.SecurityOverride = False Then btnAdd.Enabled = False
+        If basCode.curVar.AllowDelete = False And basCode.curVar.SecurityOverride = False Then btnDelete.Enabled = False
     End Sub
 
     Private Sub btnTest_Click(sender As Object, e As EventArgs) Handles btnTest.Click
@@ -218,8 +217,8 @@ Public Class frmSequenchel
         WriteStatus("", 0, lblStatusText)
         If cbxConnection.SelectedIndex >= -1 Then
             CursorControl("Wait")
-            SeqData.curStatus.Connection = cbxConnection.SelectedItem
-            SeqData.LoadConnection(xmlConnections, SeqData.curStatus.Connection)
+            basCode.curStatus.Connection = cbxConnection.SelectedItem
+            basCode.LoadConnection(xmlConnections, basCode.curStatus.Connection)
             LoadTableSets()
             CursorControl()
         End If
@@ -235,7 +234,7 @@ Public Class frmSequenchel
         If cbxTableSet.SelectedIndex >= -1 Then
             CursorControl("Wait")
             SeqData.curStatus.TableSet = cbxTableSet.SelectedItem
-            SeqData.LoadTableSet(xmlTableSets, SeqData.curStatus.TableSet)
+            basCode.LoadTableSet(xmlTableSets, SeqData.curStatus.TableSet)
             LoadTables()
             CursorControl()
         End If
@@ -325,14 +324,19 @@ Public Class frmSequenchel
 
     Private Sub AllClear(intLevel As Integer)
         If intLevel >= 4 Then
+            xmlConnections.RemoveAll()
             cbxConnection.Items.Clear()
             cbxConnection.Text = ""
         End If
         If intLevel >= 3 Then
+            xmlTableSets.RemoveAll()
+            basCode.curVar.TableSetsFile = ""
             cbxTableSet.Items.Clear()
             cbxTableSet.Text = ""
         End If
         If intLevel >= 2 Then
+            xmlTables.RemoveAll()
+            basCode.curVar.TablesFile = ""
             cbxTable.Items.Clear()
             cbxTable.Text = ""
         End If
@@ -342,9 +346,9 @@ Public Class frmSequenchel
     End Sub
 
     Private Sub FieldsDispose()
-        SeqData.curStatus.SuspendActions = True
+        basCode.curStatus.SuspendActions = True
 
-        tblTable.Clear()
+        TableClear()
         arrLabels.Clear()
         PanelControlsDispose(sptFields1.Panel1)
         PanelControlsDispose(sptFields1.Panel2)
@@ -353,7 +357,7 @@ Public Class frmSequenchel
         sptFields1.SplitterDistance = 150
         dgvTable1.Columns.Clear()
         lblListCountNumber.Text = 0
-        SeqData.curStatus.SuspendActions = False
+        basCode.curStatus.SuspendActions = False
 
         sptFields1.Panel1.VerticalScroll.Minimum = sptFields1.Panel2.VerticalScroll.Minimum
         sptFields1.Panel1.VerticalScroll.Maximum = sptFields1.Panel2.VerticalScroll.Maximum
@@ -365,46 +369,31 @@ Public Class frmSequenchel
 
     Private Sub LoadConnections()
         AllClear(4)
-        Dim lstConnections As List(Of String) = SeqData.LoadConnectionsXml(xmlConnections)
+        Dim lstConnections As List(Of String) = basCode.LoadConnections(xmlConnections)
         If lstConnections Is Nothing Then
-            xmlConnections.RemoveAll()
-            xmlTableSets.RemoveAll()
-            SeqData.curVar.TableSetsFile = ""
-            xmlTables.RemoveAll()
-            SeqData.curVar.TablesFile = ""
-            TableClear()
-            SeqData.dhdConnection = SeqData.dhdMainDB
+            basCode.UseMainConnection()
             Exit Sub
         End If
         For Each lstItem As String In lstConnections
             cbxConnection.Items.Add(lstItem)
         Next
-        cbxConnection.SelectedItem = SeqData.curStatus.Connection
+        cbxConnection.SelectedItem = basCode.curStatus.Connection
     End Sub
 
     Private Sub LoadTableSets()
         AllClear(3)
-        Dim lstTableSets As List(Of String) = SeqData.LoadTableSetsXml(xmlTableSets)
-        If lstTableSets Is Nothing Then
-            xmlTableSets.RemoveAll()
-            xmlTables.RemoveAll()
-            SeqData.curVar.TablesFile = ""
-            TableClear()
-            Exit Sub
-        End If
+        Dim lstTableSets As List(Of String) = basCode.LoadTableSets(xmlTableSets)
+        If lstTableSets Is Nothing Then Exit Sub
         For Each lstItem As String In lstTableSets
             cbxTableSet.Items.Add(lstItem)
         Next
-        cbxTableSet.SelectedItem = SeqData.curStatus.TableSet
+        cbxTableSet.SelectedItem = basCode.curStatus.TableSet
     End Sub
 
     Private Sub LoadTables()
         AllClear(2)
         Dim lstTables As List(Of String) = SeqData.LoadTablesXml(xmlTables)
-        If lstTables Is Nothing Then
-            xmlTables.RemoveAll()
-            Exit Sub
-        End If
+        If lstTables Is Nothing Then Exit Sub
         For Each lstItem As String In lstTables
             cbxTable.Items.Add(lstItem)
         Next
@@ -833,7 +822,7 @@ Public Class frmSequenchel
             WriteStatus("You need to select 1 item from the list to use this function", 2, lblStatusText)
             Exit Sub
         End If
-        If MessageBox.Show("This will permanently delete the selected Item from the database." & Environment.NewLine & Core.Message.strContinue, Core.Message.strAreYouSure, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.No Then
+        If MessageBox.Show("This will permanently delete the selected Item from the database." & Environment.NewLine & basCode.Message.strContinue, basCode.Message.strAreYouSure, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.No Then
             WriteStatus("Delete cancelled", 0, lblStatusText)
             Exit Sub
         End If
@@ -1418,7 +1407,7 @@ Public Class frmSequenchel
         strQuery = Replace(strQuery, "(,", "(")
 
         If SeqData.curVar.DebugMode Then
-            If MessageBox.Show("The query to be executed is: " & Environment.NewLine & strQuery & Environment.NewLine & Core.Message.strContinue, Core.Message.strAreYouSure, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.No Then
+            If MessageBox.Show("The query to be executed is: " & Environment.NewLine & strQuery & Environment.NewLine & basCode.Message.strContinue, basCode.Message.strAreYouSure, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.No Then
                 WriteStatus("Insert cancelled", 0, lblStatusText)
                 Exit Sub
             End If
@@ -1498,7 +1487,7 @@ Public Class frmSequenchel
         strQuery = Replace(strQuery, ",,", "")
 
         If SeqData.curVar.DebugMode Then
-            If MessageBox.Show("The query to be executed is: " & Environment.NewLine & strQuery & Environment.NewLine & Core.Message.strContinue, Core.Message.strAreYouSure, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.No Then
+            If MessageBox.Show("The query to be executed is: " & Environment.NewLine & strQuery & Environment.NewLine & basCode.Message.strContinue, basCode.Message.strAreYouSure, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.No Then
                 WriteStatus("Update cancelled", 0, lblStatusText)
                 Exit Sub
             End If
@@ -1549,7 +1538,7 @@ Public Class frmSequenchel
         strQuery = strQuery & strQueryWhere
 
         If SeqData.curVar.DebugMode Then
-            If MessageBox.Show("The query to be executed is: " & Environment.NewLine & strQuery & Environment.NewLine & Core.Message.strContinue, Core.Message.strAreYouSure, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.No Then
+            If MessageBox.Show("The query to be executed is: " & Environment.NewLine & strQuery & Environment.NewLine & basCode.Message.strContinue, basCode.Message.strAreYouSure, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.No Then
                 WriteStatus("Delete cancelled", 0, lblStatusText)
                 Exit Sub
             End If
@@ -1627,7 +1616,7 @@ Public Class frmSequenchel
         Dim xNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlSearch, "Search", "SearchName", strSelection)
         If Not xNode Is Nothing Then
             If UpdateMode = False Then
-                If MessageBox.Show("This will permanently remove the Item: " & strSelection & Environment.NewLine & Core.Message.strContinue, Core.Message.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Exit Sub
+                If MessageBox.Show("This will permanently remove the Item: " & strSelection & Environment.NewLine & basCode.Message.strContinue, basCode.Message.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Exit Sub
             End If
             xNode.ParentNode.RemoveChild(xNode)
         End If

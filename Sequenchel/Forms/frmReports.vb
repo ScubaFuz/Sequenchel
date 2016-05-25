@@ -5,7 +5,7 @@ Public Class frmReports
     Private fontSize As Integer = 20
 
     Private Sub frmReports_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        lblLicense.Text = "Licensed to: " & Core.LicenseName
+        lblLicense.Text = "Licensed to: " & basCode.curVar.LicenseName
         lblLicense.Left = Me.Width - lblLicense.Width - (SeqData.curVar.BuildMargin * 5)
 
         mousePath = New System.Drawing.Drawing2D.GraphicsPath()
@@ -21,13 +21,13 @@ Public Class frmReports
 
     Private Sub frmReports_Activated(sender As Object, e As EventArgs) Handles Me.Activated
         If cbxConnection.SelectedIndex <> -1 Then
-            SeqData.curStatus.Connection = cbxConnection.SelectedItem
-            If Not SeqData.curStatus.Connection = Nothing Then
-                SeqData.LoadConnection(xmlConnections, SeqData.curStatus.Connection)
+            basCode.curStatus.Connection = cbxConnection.SelectedItem
+            If Not basCode.curStatus.Connection = Nothing Then
+                basCode.LoadConnection(xmlConnections, basCode.curStatus.Connection)
                 If cbxTableSet.SelectedIndex <> -1 Then
-                    SeqData.curStatus.TableSet = cbxTableSet.SelectedItem
+                    basCode.curStatus.TableSet = cbxTableSet.SelectedItem
                     If Not SeqData.curStatus.TableSet = Nothing Then
-                        SeqData.LoadTableSet(xmlTableSets, SeqData.curStatus.TableSet)
+                        basCode.LoadTableSet(xmlTableSets, basCode.curStatus.TableSet)
                     End If
                 End If
             End If
@@ -70,8 +70,8 @@ Public Class frmReports
         WriteStatus("", 0, lblStatusText)
         If cbxConnection.SelectedIndex >= -1 Then
             CursorControl("Wait")
-            SeqData.curStatus.Connection = cbxConnection.SelectedItem
-            SeqData.LoadConnection(xmlConnections, SeqData.curStatus.Connection)
+            basCode.curStatus.Connection = cbxConnection.SelectedItem
+            basCode.LoadConnection(xmlConnections, basCode.curStatus.Connection)
             LoadTableSets()
             CursorControl()
         End If
@@ -87,7 +87,7 @@ Public Class frmReports
         If cbxTableSet.SelectedIndex >= -1 Then
             CursorControl("Wait")
             SeqData.curStatus.TableSet = cbxTableSet.SelectedItem
-            SeqData.LoadTableSet(xmlTableSets, SeqData.curStatus.TableSet)
+            basCode.LoadTableSet(xmlTableSets, SeqData.curStatus.TableSet)
             LoadTables()
             LoadTableFields()
             ReportsLoad()
@@ -243,7 +243,7 @@ Public Class frmReports
 
     Private Sub LoadConnections()
         AllClear(4)
-        Dim lstConnections As List(Of String) = SeqData.LoadConnectionsXml(xmlConnections)
+        Dim lstConnections As List(Of String) = basCode.LoadConnections(xmlConnections)
         If lstConnections Is Nothing Then
             xmlConnections.RemoveAll()
             xmlTableSets.RemoveAll()
@@ -262,7 +262,7 @@ Public Class frmReports
 
     Private Sub LoadTableSets()
         AllClear(3)
-        Dim lstTableSets As List(Of String) = SeqData.LoadTableSetsXml(xmlTableSets)
+        Dim lstTableSets As List(Of String) = basCode.LoadTableSets(xmlTableSets)
         If lstTableSets Is Nothing Then
             xmlTableSets.RemoveAll()
             xmlTables.RemoveAll()
@@ -1051,7 +1051,7 @@ Public Class frmReports
             WriteStatus("No report is selected. Select a report before deleting it.", 2, lblStatusText)
             Exit Sub
         End If
-        If MessageBox.Show("This will permanently remove the Item: " & cbxReportName.SelectedItem & Environment.NewLine & Core.Message.strContinue, Core.Message.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then
+        If MessageBox.Show("This will permanently remove the Item: " & cbxReportName.SelectedItem & Environment.NewLine & basCode.Message.strContinue, basCode.Message.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then
             WriteStatus("Report deletion aborted.", 0, lblStatusText)
             Exit Sub
         End If
