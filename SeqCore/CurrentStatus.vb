@@ -1,34 +1,11 @@
 ﻿Public Class CurrentStatus
+
+#Region "Connection"
     Private _Connection As String = ""
     Private _TableSet As String = ""
     Private _Table As String = ""
     Private _TableAlias As String = ""
     Private _Report As String = ""
-    Private _Status As Short
-    Private _SuspendActions As Boolean = False
-    'Private _SelectedItem As DataGridViewRow
-    Private _SelectedValue As String = ""
-    Private _ConnectionChanged As Boolean = False
-    Private _ConnectionReload As Boolean = False
-    Private _TableSetChanged As Boolean = False
-    Private _TableSetReload As Boolean = False
-    Private _TableChanged As Boolean = False
-    Private _TableReload As Boolean = False
-    Private _ReportLabelWidth As Integer = 0
-    Private _ReportComboboxWidth As Integer = 0
-    Private _ReportTextboxWidth As Integer = 0
-    Private _ReportMaxTop As Integer = 0
-    Private _RelationLabelWidth As Integer = 0
-    Private _RelationMaxTop As Integer = 0
-
-    Enum StatusList As Short
-        Search = 1
-        Edit = 2
-        Add = 3
-        ControlSearch = 4
-        ControlEdit = 5
-        ControlAdd = 6
-    End Enum
 
     Public Property Connection() As String
         Get
@@ -74,44 +51,15 @@
             _Report = Value
         End Set
     End Property
+#End Region
 
-    Property Status() As StatusList
-
-        Get
-            Return CType(_Status, StatusList)
-        End Get
-
-        Set(ByVal value As StatusList)
-            _Status = value
-        End Set
-    End Property
-
-    Public Property SuspendActions() As Boolean
-        Get
-            Return _SuspendActions
-        End Get
-        Set(ByVal Value As Boolean)
-            _SuspendActions = Value
-        End Set
-    End Property
-
-    'Public Property SelectedItem() As System.Windows.forms.DataGridViewRow
-    '    Get
-    '        Return _SelectedItem
-    '    End Get
-    '    Set(ByVal Value As System.Windows.forms.DataGridViewRow)
-    '        _SelectedItem = Value
-    '    End Set
-    'End Property
-
-    Public Property SelectedValue() As String
-        Get
-            Return _SelectedValue
-        End Get
-        Set(ByVal Value As String)
-            _SelectedValue = Value
-        End Set
-    End Property
+#Region "ConnectionChange"
+    Private _ConnectionChanged As Boolean = False
+    Private _ConnectionReload As Boolean = False
+    Private _TableSetChanged As Boolean = False
+    Private _TableSetReload As Boolean = False
+    Private _TableChanged As Boolean = False
+    Private _TableReload As Boolean = False
 
     Public Property ConnectionChanged() As Boolean
         Get
@@ -166,6 +114,15 @@
             _TableReload = Value
         End Set
     End Property
+#End Region
+
+#Region "Display"
+    Private _ReportLabelWidth As Integer = 0
+    'Private _ReportComboboxWidth As Integer = 0
+    'Private _ReportTextboxWidth As Integer = 0
+    Private _ReportMaxTop As Integer = 0
+    Private _RelationLabelWidth As Integer = 0
+    Private _RelationMaxTop As Integer = 0
 
     Public Property ReportLabelWidth() As Integer
         Get
@@ -200,6 +157,75 @@
         End Get
         Set(ByVal Value As Integer)
             _RelationMaxTop = Value
+        End Set
+    End Property
+
+#End Region
+
+#Region "Actions"
+    Private _SuspendActions As Boolean = False
+    Private _RunReport As Boolean = False
+    Private _RunImport As Boolean = False
+
+    Public Property SuspendActions() As Boolean
+        Get
+            Return _SuspendActions
+        End Get
+        Set(ByVal Value As Boolean)
+            _SuspendActions = Value
+        End Set
+    End Property
+
+    Public Property RunReport() As Boolean
+        Get
+            Return _RunReport
+        End Get
+        Set(ByVal Value As Boolean)
+            _RunReport = Value
+        End Set
+    End Property
+
+    Public Property RunImport() As Boolean
+        Get
+            Return _RunImport
+        End Get
+        Set(ByVal Value As Boolean)
+            _RunImport = Value
+        End Set
+    End Property
+#End Region
+
+#Region "Status"
+    Private _Status As Short
+
+    Enum StatusList As Short
+        Search = 1
+        Edit = 2
+        Add = 3
+        ControlSearch = 4
+        ControlEdit = 5
+        ControlAdd = 6
+    End Enum
+
+    Property Status() As StatusList
+        Get
+            Return CType(_Status, StatusList)
+        End Get
+
+        Set(ByVal value As StatusList)
+            _Status = value
+        End Set
+    End Property
+#End Region
+
+    Private _SelectedValue As String = ""
+
+    Public Property SelectedValue() As String
+        Get
+            Return _SelectedValue
+        End Get
+        Set(ByVal Value As String)
+            _SelectedValue = Value
         End Set
     End Property
 
