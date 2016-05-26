@@ -278,7 +278,7 @@ Public Class frmReports
 
     Private Sub LoadTables()
         AllClear(2)
-        Dim lstTables As List(Of String) = SeqData.LoadTablesXml(xmlTables)
+        Dim lstTables As List(Of String) = basCode.LoadTables(xmlTables, False)
         If lstTables Is Nothing Then
             xmlTables.RemoveAll()
             Exit Sub
@@ -1120,7 +1120,7 @@ Public Class frmReports
     Private Sub ReportsLoad()
         cbxReportName.Items.Clear()
         cbxReportName.Text = ""
-        Dim lstReports As List(Of String) = SeqData.LoadReportsXml(xmlReports)
+        Dim lstReports As List(Of String) = basCode.LoadReports(xmlReports)
         If lstReports Is Nothing Then
             xmlReports.RemoveAll()
             Exit Sub

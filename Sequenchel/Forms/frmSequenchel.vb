@@ -392,7 +392,7 @@ Public Class frmSequenchel
 
     Private Sub LoadTables()
         AllClear(2)
-        Dim lstTables As List(Of String) = SeqData.LoadTablesXml(xmlTables)
+        Dim lstTables As List(Of String) = basCode.LoadTables(xmlTables, False)
         If lstTables Is Nothing Then Exit Sub
         For Each lstItem As String In lstTables
             cbxTable.Items.Add(lstItem)
@@ -1602,9 +1602,9 @@ Public Class frmSequenchel
     Private Sub SearchListLoad(strTable As String)
         cbxSearch.Text = ""
         cbxSearch.Items.Clear()
-        Dim lstTables As List(Of String) = SeqData.LoadSearchXml(xmlSearch, strTable)
-        If lstTables Is Nothing Then Exit Sub
-        For Each lstItem As String In lstTables
+        Dim lstSearches As List(Of String) = basCode.LoadSearches(xmlSearch, strTable)
+        If lstSearches Is Nothing Then Exit Sub
+        For Each lstItem As String In lstSearches
             cbxSearch.Items.Add(lstItem)
         Next
     End Sub

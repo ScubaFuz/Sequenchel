@@ -529,7 +529,7 @@ Public Class BaseCode
             Catch ex As Exception
                 ErrorLevel = -1
                 ErrorMessage = "There was an error reading the XML file. Please check the log."
-                WriteLog("There was an error reading the XML file. Please check the file" & Environment.NewLine & dhdText.PathConvert(curVar.TableSetsFile) & Environment.NewLine & ex.Message, 1)
+                WriteLog("There was an error reading the XML file. Please check the file" & Environment.NewLine & dhdText.PathConvert(CheckFilePath(curVar.TableSetsFile)) & Environment.NewLine & ex.Message, 1)
                 Return Nothing
             End Try
         Else
@@ -549,6 +549,133 @@ Public Class BaseCode
         If dhdText.CheckNodeElement(xmlTSNode, "Search") Then curVar.SearchFile = xmlTSNode.Item("Search").InnerText
     End Sub
 
+    Public Function LoadTables(xmlTables As XmlDocument, blnUseFullName As Boolean) As List(Of String)
+        ResetError()
+        If curStatus.TablesReload = True Then
+            xmlTables = LoadTablesXml(xmlTables)
+        End If
+        Dim ReturnValue As New List(Of String)
+        Try
+            Dim blnTableExists As Boolean = False
+            curVar.TableDefault = ""
+
+            Dim TableNode As XmlNode
+            For Each TableNode In xmlTables.SelectNodes("//Table")
+                If TableNode.Item("Name").InnerText = curStatus.Table Then blnTableExists = True
+                If blnUseFullName = True Then
+                    ReturnValue.Add(TableNode.Item("Alias").InnerText & " (" & TableNode.Item("Name").InnerText & ")")
+                Else
+                    ReturnValue.Add(TableNode.Item("Alias").InnerText)
+                End If
+                If TableNode.Attributes("Default").Value = "True" Then
+                    curVar.TableDefault = TableNode.Item("Alias").InnerText
+                End If
+            Next
+            If blnTableExists = False And curStatus.Table = "" Then curStatus.Table = curVar.TableDefault
+        Catch ex As Exception
+            ErrorMessage = "There was an error loading the tables list. Please check the log."
+            WriteLog("There was an error loading the tables list." & Environment.NewLine & ex.Message, 1)
+            Return Nothing
+        End Try
+        Return ReturnValue
+    End Function
+
+    Public Function LoadTablesXml(xmlTables As XmlDocument) As XmlDocument
+        ResetError()
+        If dhdText.CheckFile(dhdText.PathConvert(CheckFilePath(curVar.TablesFile))) = True Then
+            Try
+                xmlTables.Load(dhdText.PathConvert(CheckFilePath(curVar.TablesFile)))
+                curStatus.TablesReload = False
+            Catch ex As Exception
+                ErrorMessage = "There was an error reading the XML file. Please check the log."
+                WriteLog("There was an error reading the XML file. Please check the file" & Environment.NewLine & dhdText.PathConvert(CheckFilePath(curVar.TablesFile)) & Environment.NewLine & ex.Message, 1)
+                Return Nothing
+            End Try
+        Else
+            ErrorLevel = 5
+            ErrorMessage = "Invalid file path: " & dhdText.PathConvert(CheckFilePath(curVar.TablesFile))
+        End If
+        Return xmlTables
+    End Function
+
+    Public Function LoadReports(xmlReports As XmlDocument) As List(Of String)
+        ResetError()
+        If curStatus.ReportsReload = True Then
+            xmlReports = LoadReportsXml(xmlReports)
+        End If
+        Dim ReturnValue As New List(Of String)
+        Try
+            Dim xNode As XmlNode
+            For Each xNode In xmlReports.SelectNodes("//Report")
+                ReturnValue.Add(xNode.Item("ReportName").InnerText)
+            Next
+        Catch ex As Exception
+            ErrorLevel = -1
+            ErrorMessage = "There was an error reading the Reports list. Please check the log."
+            WriteLog("There was an error reading the Reports list." & Environment.NewLine & ex.Message, 1)
+            Return Nothing
+        End Try
+        Return ReturnValue
+    End Function
+
+    Public Function LoadReportsXml(xmlReports As XmlDocument) As XmlDocument
+        ResetError()
+        If dhdText.CheckFile(dhdText.PathConvert(CheckFilePath(curVar.ReportSetFile))) = True Then
+            Try
+                xmlReports.Load(dhdText.PathConvert(CheckFilePath(curVar.ReportSetFile)))
+                curStatus.ReportsReload = False
+            Catch ex As Exception
+                ErrorLevel = -1
+                ErrorMessage = "There was an error reading the XML file. Please check the log."
+                WriteLog("There was an error reading the XML file. Please check the file:" & Environment.NewLine & dhdText.PathConvert(CheckFilePath(curVar.ReportSetFile)) & Environment.NewLine & ex.Message, 1)
+                Return Nothing
+            End Try
+        Else
+            ErrorLevel = 5
+            ErrorMessage = "Invalid file path: " & dhdText.PathConvert(CheckFilePath(curVar.ReportSetFile))
+        End If
+        Return xmlReports
+    End Function
+
+    Public Function LoadSearches(xmlSearch As XmlDocument, strTable As String) As List(Of String)
+        ResetError()
+        If curStatus.SearchesReload = True Then
+            xmlSearch = LoadSearchXml(xmlSearch)
+        End If
+        Dim ReturnValue As New List(Of String)
+        Try
+            Dim xNode As XmlNode
+            For Each xNode In dhdText.FindXmlNodes(xmlSearch, "Searches/Search", "TableName", strTable)
+                ReturnValue.Add(xNode.Item("SearchName").InnerText)
+            Next
+        Catch ex As Exception
+            ErrorLevel = -1
+            ErrorMessage = "There was an error loading the searches. Please check the log."
+            WriteLog("There was an error loading the searches:" & Environment.NewLine & ex.Message, 1)
+            Return Nothing
+        End Try
+        Return ReturnValue
+    End Function
+
+    Public Function LoadSearchXml(xmlSearch As XmlDocument) As XmlDocument
+        ResetError()
+        If dhdText.CheckFile(dhdText.PathConvert(CheckFilePath(curVar.SearchFile))) = True Then
+            Try
+                xmlSearch.Load(dhdText.PathConvert(CheckFilePath(curVar.SearchFile)))
+                curStatus.SearchesReload = False
+            Catch ex As Exception
+                ErrorLevel = -1
+                ErrorMessage = "There was an error reading the XML file. Please check the log."
+                WriteLog("There was an error reading the XML file. Please check the file" & Environment.NewLine & dhdText.PathConvert(CheckFilePath(curVar.SearchFile)) & Environment.NewLine & ex.Message, 1)
+            End Try
+        Else
+            ErrorLevel = 5
+            ErrorMessage = "Invalid file path: " & dhdText.PathConvert(CheckFilePath(curVar.SearchFile))
+            xmlSearch.RemoveAll()
+        End If
+        Return Nothing
+    End Function
 
 #End Region
+
 End Class

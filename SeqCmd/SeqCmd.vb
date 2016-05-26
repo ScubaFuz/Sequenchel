@@ -196,7 +196,7 @@ Module SeqCmd
 
     Friend Sub LoadTables()
         Console.WriteLine("Loading Table: " & SeqData.curStatus.Table)
-        lstTables = SeqData.LoadTablesXml(xmlTables)
+        lstTables = basCode.LoadTables(xmlTables, False)
         If lstTables Is Nothing Then Exit Sub
         If SeqData.curVar.TableDefault = SeqData.curStatus.Table And ImportTable <> SeqData.curStatus.Table And ImportTable <> "" Then
             Console.WriteLine("The specified Table was not found. please check your settings")
@@ -206,7 +206,7 @@ Module SeqCmd
     End Sub
 
     Friend Sub LoadReports()
-        lstReports = SeqData.LoadReportsXml(xmlReports)
+        lstReports = basCode.LoadReports(xmlReports)
         If lstReports Is Nothing Then Environment.Exit(0)
         If lstReports.Contains(SeqData.curStatus.Report) = False Or SeqData.curStatus.Report = "" Then
             Console.WriteLine("The specified Report was not found. please check your settings")

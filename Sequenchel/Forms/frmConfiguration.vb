@@ -309,7 +309,7 @@ Public Class frmConfiguration
             'End If
             basCode.LoadTableSet(xmlTableSets, SeqData.curStatus.TableSet)
             TableSetsLoad()
-            SeqData.LoadTablesXml(xmlTables)
+            basCode.LoadTables(xmlTables, False)
             TablesLoad()
             'End If
 
@@ -590,7 +590,7 @@ Public Class frmConfiguration
                 basCode.curStatus.TableSetReload = True
                 basCode.curStatus.TableSet = lvwTableSets.SelectedItems.Item(0).Tag
                 basCode.LoadTableSet(xmlTableSets, SeqData.curStatus.TableSet)
-                SeqData.LoadTablesXml(xmlTables)
+                basCode.LoadTables(xmlTables, False)
                 TablesLoad()
             End If
             Dim xNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlTableSets, "TableSet", "TableSetName", basCode.curStatus.TableSet)
@@ -1511,7 +1511,7 @@ Public Class frmConfiguration
 
     Private Sub btnShowRelationTables_Click(sender As Object, e As EventArgs) Handles btnShowRelationTables.Click
         CursorControl("Wait")
-        Dim lstFindTables As List(Of String) = SeqData.LoadTablesListXml(xmlTables, True)
+        Dim lstFindTables As List(Of String) = basCode.LoadTables(xmlTables, True)
 
         If lstFindTables Is Nothing Then
             CursorControl()

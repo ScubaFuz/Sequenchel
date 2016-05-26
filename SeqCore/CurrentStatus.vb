@@ -57,11 +57,14 @@
     Private _ConnectionsReload As Boolean = True
     Private _ConnectionChanged As Boolean = False
     Private _ConnectionReload As Boolean = False
-    Private _TableSetsReload As Boolean = False
+    Private _TableSetsReload As Boolean = True
     Private _TableSetChanged As Boolean = False
     Private _TableSetReload As Boolean = False
+    Private _TablesReload As Boolean = True
     Private _TableChanged As Boolean = False
     Private _TableReload As Boolean = False
+    Private _ReportsReload As Boolean = True
+    Private _SearchesReload As Boolean = True
 
     Public Property ConnectionsReload() As Boolean
         Get
@@ -117,6 +120,15 @@
         End Set
     End Property
 
+    Public Property TablesReload() As Boolean
+        Get
+            Return _TablesReload
+        End Get
+        Set(ByVal Value As Boolean)
+            _TablesReload = Value
+        End Set
+    End Property
+
     Public Property TableChanged() As Boolean
         Get
             Return _TableChanged
@@ -132,6 +144,24 @@
         End Get
         Set(ByVal Value As Boolean)
             _TableReload = Value
+        End Set
+    End Property
+
+    Public Property ReportsReload() As Boolean
+        Get
+            Return _ReportsReload
+        End Get
+        Set(ByVal Value As Boolean)
+            _ReportsReload = Value
+        End Set
+    End Property
+
+    Public Property SearchesReload() As Boolean
+        Get
+            Return _SearchesReload
+        End Get
+        Set(ByVal Value As Boolean)
+            _SearchesReload = Value
         End Set
     End Property
 #End Region
