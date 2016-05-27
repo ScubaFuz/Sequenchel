@@ -45,7 +45,7 @@ Partial Class frmReports
         Me.lblSelectedTables = New System.Windows.Forms.Label()
         Me.pnlSplitFields2 = New System.Windows.Forms.Panel()
         Me.lvwSelectedTables = New System.Windows.Forms.ListView()
-        Me.colTable = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.colTableAlias = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.sptReport = New System.Windows.Forms.SplitContainer()
         Me.pnlSelectedFieldsMain = New System.Windows.Forms.Panel()
         Me.pnlSelectedFields = New System.Windows.Forms.Panel()
@@ -73,9 +73,9 @@ Partial Class frmReports
         Me.btnReportFieldUp = New System.Windows.Forms.Button()
         Me.pnlRelationsMain = New System.Windows.Forms.Panel()
         Me.pnlRelations = New System.Windows.Forms.Panel()
+        Me.pnlRelationsTargetTable = New System.Windows.Forms.Panel()
         Me.pnlRelationsTargetField = New System.Windows.Forms.Panel()
         Me.pnlRelationsJoinType = New System.Windows.Forms.Panel()
-        Me.pnlRelationsTargetTable = New System.Windows.Forms.Panel()
         Me.pnlRelationsField = New System.Windows.Forms.Panel()
         Me.pnlRelationsUse = New System.Windows.Forms.Panel()
         Me.pnlRelationsLabel = New System.Windows.Forms.Panel()
@@ -134,6 +134,7 @@ Partial Class frmReports
         Me.lblStatusText = New System.Windows.Forms.Label()
         Me.lblStatusTitle = New System.Windows.Forms.Label()
         Me.dgvReport = New Sequenchel.usrDataGridView()
+        Me.colTableName = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.tabReports.SuspendLayout()
         Me.tpgReportDefinition.SuspendLayout()
         CType(Me.sptReports, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -403,7 +404,7 @@ Partial Class frmReports
         Me.lvwSelectedTables.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lvwSelectedTables.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.colTable})
+        Me.lvwSelectedTables.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.colTableAlias, Me.colTableName})
         Me.lvwSelectedTables.FullRowSelect = True
         Me.lvwSelectedTables.Location = New System.Drawing.Point(38, 24)
         Me.lvwSelectedTables.Name = "lvwSelectedTables"
@@ -412,10 +413,10 @@ Partial Class frmReports
         Me.lvwSelectedTables.UseCompatibleStateImageBehavior = False
         Me.lvwSelectedTables.View = System.Windows.Forms.View.Details
         '
-        'colTable
+        'colTableAlias
         '
-        Me.colTable.Text = "Table"
-        Me.colTable.Width = 50
+        Me.colTableAlias.Text = "Table Alias"
+        Me.colTableAlias.Width = 75
         '
         'sptReport
         '
@@ -691,6 +692,13 @@ Partial Class frmReports
         Me.pnlRelations.Size = New System.Drawing.Size(800, 48)
         Me.pnlRelations.TabIndex = 7
         '
+        'pnlRelationsTargetTable
+        '
+        Me.pnlRelationsTargetTable.Location = New System.Drawing.Point(353, 0)
+        Me.pnlRelationsTargetTable.Name = "pnlRelationsTargetTable"
+        Me.pnlRelationsTargetTable.Size = New System.Drawing.Size(175, 48)
+        Me.pnlRelationsTargetTable.TabIndex = 10
+        '
         'pnlRelationsTargetField
         '
         Me.pnlRelationsTargetField.Location = New System.Drawing.Point(528, 0)
@@ -704,13 +712,6 @@ Partial Class frmReports
         Me.pnlRelationsJoinType.Name = "pnlRelationsJoinType"
         Me.pnlRelationsJoinType.Size = New System.Drawing.Size(120, 48)
         Me.pnlRelationsJoinType.TabIndex = 9
-        '
-        'pnlRelationsTargetTable
-        '
-        Me.pnlRelationsTargetTable.Location = New System.Drawing.Point(353, 0)
-        Me.pnlRelationsTargetTable.Name = "pnlRelationsTargetTable"
-        Me.pnlRelationsTargetTable.Size = New System.Drawing.Size(175, 48)
-        Me.pnlRelationsTargetTable.TabIndex = 10
         '
         'pnlRelationsField
         '
@@ -1306,6 +1307,11 @@ Partial Class frmReports
         Me.dgvReport.Size = New System.Drawing.Size(1243, 563)
         Me.dgvReport.TabIndex = 0
         '
+        'colTableName
+        '
+        Me.colTableName.Text = "Table Name"
+        Me.colTableName.Width = 75
+        '
         'frmReports
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1450,7 +1456,7 @@ Partial Class frmReports
     Friend WithEvents colSeltableName As System.Windows.Forms.ColumnHeader
     Friend WithEvents colSelFieldAlias As System.Windows.Forms.ColumnHeader
     Friend WithEvents lvwSelectedTables As System.Windows.Forms.ListView
-    Friend WithEvents colTable As System.Windows.Forms.ColumnHeader
+    Friend WithEvents colTableAlias As System.Windows.Forms.ColumnHeader
     Friend WithEvents lblElapsedTime As System.Windows.Forms.Label
     Friend WithEvents tmrElapsedTime As System.Windows.Forms.Timer
     Friend WithEvents dgvReport As Sequenchel.usrDataGridView
@@ -1476,4 +1482,5 @@ Partial Class frmReports
     Friend WithEvents pnlRelationsTargetTable As System.Windows.Forms.Panel
     Friend WithEvents lblRelationsTargetField As System.Windows.Forms.Label
     Friend WithEvents lblRelationsTargetTable As System.Windows.Forms.Label
+    Friend WithEvents colTableName As System.Windows.Forms.ColumnHeader
 End Class

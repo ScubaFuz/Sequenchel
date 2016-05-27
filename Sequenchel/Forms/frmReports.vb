@@ -702,9 +702,10 @@ Public Class frmReports
         Dim intMaxNumber As Integer = 0
         SeqData.CurStatus.ReportMaxTop = SeqData.CurVar.BuildMargin
         For incCount As Integer = 0 To lstSource.Items.Count - 1
-            strFieldName = lstSource.Items.Item(incCount).Name
+            strFieldName = lstSource.Items.Item(incCount).Tag
             intMaxNumber = 0
             For Each ctrControl In pnlTarget.Controls
+                Dim strControl As String = ctrControl.Tag
                 If ctrControl.Tag = strFieldName Then
                     intControlNumber = ctrControl.Name.ToString.Substring(ctrControl.Name.ToString.Length - strFieldName.Length - 1, 1)
                     If SinglePanel = True And intControlNumber = 1 Then
@@ -737,6 +738,7 @@ Public Class frmReports
             lvwAddItem.Name = strTable & "_" & strAlias
             lvwAddItem.Tag = strTable
             lvwAddItem.Text = strAlias
+            lvwAddItem.SubItems.Add(strTable)
             lvwSelectedTables.Items.Add(lvwAddItem)
             RelationLabelAdd(strTable, strAlias)
             RelationUseAdd(strTable, 0)
