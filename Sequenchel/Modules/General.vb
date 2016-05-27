@@ -35,7 +35,7 @@
 #Region "Shutdown"
     Friend Sub SetTimer()
         AddHandler tmrShutdown.Elapsed, AddressOf TimedShutdown
-        Dim intShutdown As Integer = SeqData.curVar.TimedShutdown
+        Dim intShutdown As Integer = basCode.curVar.TimedShutdown
         If intShutdown > 60000 Then intShutdown -= 60000
         If intShutdown > 0 Then tmrShutdown.Interval = intShutdown
         If intShutdown <= 60000 Then

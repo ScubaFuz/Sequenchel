@@ -3,7 +3,6 @@ Imports System.IO
 
 Module SeqCmd
     Friend basCode As SeqCore.BaseCode
-    Friend SeqData As New SeqCore.Data
 
     Friend xmlSDBASettings As New XmlDocument
     Friend xmlGeneralSettings As New XmlDocument
@@ -27,65 +26,65 @@ Module SeqCmd
         basCode.SetDefaults()
         Dim strReturn As String = basCode.LoadSDBASettingsXml(xmlSDBASettings)
         If strReturn = False Then
-            Console.WriteLine(SeqData.ErrorMessage)
+            Console.WriteLine(basCode.ErrorMessage)
             Console.ReadLine()
             Exit Sub
         End If
         Dim strReturnGen As String = basCode.LoadGeneralSettingsXml(xmlGeneralSettings)
         If strReturnGen = False Then
-            Console.WriteLine(SeqData.ErrorMessage)
+            Console.WriteLine(basCode.ErrorMessage)
             Console.ReadLine()
             Exit Sub
         End If
 
         LoadConnections()
-        basCode.LoadConnection(xmlConnections, SeqData.curStatus.Connection)
+        basCode.LoadConnection(xmlConnections, basCode.curStatus.Connection)
         LoadTableSets()
-        basCode.LoadTableSet(xmlTableSets, SeqData.curStatus.TableSet)
+        basCode.LoadTableSet(xmlTableSets, basCode.curStatus.TableSet)
         LoadTables()
 
-        If RunImport = True AndAlso SeqData.dhdText.ImportFile.Length > 0 AndAlso SeqData.curStatus.Table.Length > 0 Then
+        If RunImport = True AndAlso basCode.dhdText.ImportFile.Length > 0 AndAlso basCode.curStatus.Table.Length > 0 Then
             'Import file
-            If SeqData.dhdText.ImportFile.Contains("\") = False Then
+            If basCode.dhdText.ImportFile.Contains("\") = False Then
                 Console.WriteLine("You need to provide a valid filepath and filename")
                 Console.ReadLine()
                 Environment.Exit(0)
             End If
             Dim dtsInput As DataSet = Nothing
-            If SeqData.dhdText.ImportFile.Contains("*") Then
-                If ImportTable <> "" And ImportTable = SeqData.curStatus.Table Then
+            If basCode.dhdText.ImportFile.Contains("*") Then
+                If ImportTable <> "" And ImportTable = basCode.curStatus.Table Then
                     Console.WriteLine("Importing multiple files")
-                    ImportFiles(SeqData.dhdText.ImportFile)
+                    ImportFiles(basCode.dhdText.ImportFile)
                 End If
             Else
-                dtsInput = ImportFile(basCode.CheckFilePath(SeqData.dhdText.ImportFile))
+                dtsInput = ImportFile(basCode.CheckFilePath(basCode.dhdText.ImportFile))
                 Dim intRecords As Integer = 0
-                If ImportTable <> "" And ImportTable = SeqData.curStatus.Table Then
+                If ImportTable <> "" And ImportTable = basCode.curStatus.Table Then
                     intRecords = UploadFile(dtsInput)
                     Console.WriteLine(intRecords & " Records Uploaded")
                 End If
-                If Not SeqData.dhdText.ExportFile Is Nothing AndAlso RunReport = False AndAlso SeqData.dhdText.ExportFile.Length > 0 Then
+                If Not basCode.dhdText.ExportFile Is Nothing AndAlso RunReport = False AndAlso basCode.dhdText.ExportFile.Length > 0 Then
                     'export imported file
-                    SeqData.ExportFile(dtsInput, SeqData.dhdText.ExportFile, SeqData.curVar.ConvertToText, SeqData.curVar.ConvertToNull, SeqData.curVar.ShowFile, SeqData.curVar.HasHeaders, SeqData.curVar.Delimiter, SeqData.curVar.QuoteValues, SeqData.curVar.CreateDir)
+                    basCode.ExportFile(dtsInput, basCode.dhdText.ExportFile, basCode.curVar.ConvertToText, basCode.curVar.ConvertToNull, basCode.curVar.ShowFile, basCode.curVar.HasHeaders, basCode.curVar.Delimiter, basCode.curVar.QuoteValues, basCode.curVar.CreateDir)
                 End If
             End If
         End If
-        If Not SeqData.dhdText.ExportFile Is Nothing AndAlso RunReport = True AndAlso SeqData.dhdText.ExportFile.Length > 0 Then
+        If Not basCode.dhdText.ExportFile Is Nothing AndAlso RunReport = True AndAlso basCode.dhdText.ExportFile.Length > 0 Then
             'Export Report
-            Dim strExportFile As String = SeqData.GetExportFileName(SeqData.dhdText.ExportFile)
-            Console.WriteLine("Exporting Report: " & SeqData.curStatus.Report & " to " & strExportFile)
+            Dim strExportFile As String = basCode.GetExportFileName(basCode.dhdText.ExportFile)
+            Console.WriteLine("Exporting Report: " & basCode.curStatus.Report & " to " & strExportFile)
             LoadReports()
-            Dim strQuery As String = SeqData.ReportQueryBuild(xmlReports, xmlTables, SeqData.curStatus.Report, SeqData.curVar.DateTimeStyle)
-            Dim dtsData As DataSet = SeqData.QueryDb(SeqData.dhdConnection, strQuery, True, 5)
+            Dim strQuery As String = basCode.ReportQueryBuild(xmlReports, xmlTables, basCode.curStatus.Report, basCode.curVar.DateTimeStyle)
+            Dim dtsData As DataSet = basCode.QueryDb(basCode.dhdConnection, strQuery, True, 5)
             'If dtsData Is Nothing Then Environment.Exit(0)
-            SeqData.ExportFile(dtsData, strExportFile, SeqData.curVar.ConvertToText, SeqData.curVar.ConvertToNull, SeqData.curVar.ShowFile, SeqData.curVar.HasHeaders, SeqData.curVar.Delimiter, SeqData.curVar.QuoteValues, SeqData.curVar.CreateDir)
-            If SeqData.dhdText.SmtpRecipient.Length > 0 AndAlso SeqData.dhdText.SmtpRecipient.Contains("@") Then
+            basCode.ExportFile(dtsData, strExportFile, basCode.curVar.ConvertToText, basCode.curVar.ConvertToNull, basCode.curVar.ShowFile, basCode.curVar.HasHeaders, basCode.curVar.Delimiter, basCode.curVar.QuoteValues, basCode.curVar.CreateDir)
+            If basCode.dhdText.SmtpRecipient.Length > 0 AndAlso basCode.dhdText.SmtpRecipient.Contains("@") Then
                 'Email Report
-                Console.WriteLine("Emailing Report: " & SeqData.curStatus.Report & " to " & SeqData.dhdText.SmtpRecipient)
-                Dim strRecepientName As String = SeqData.dhdText.SmtpRecipient.Substring(0, SeqData.dhdText.SmtpRecipient.IndexOf("@"))
-                Dim strSenderName As String = SeqData.dhdText.SmtpReply.Substring(0, SeqData.dhdText.SmtpReply.IndexOf("@"))
-                Dim strBody As String = "Sequenchel Report: " & SeqData.curStatus.Report
-                SeqData.dhdText.SendSMTP(SeqData.dhdText.SmtpReply, strSenderName, SeqData.dhdText.SmtpRecipient, strRecepientName, SeqData.dhdText.SmtpReply, strSenderName, SeqData.curStatus.Report, strBody, strExportFile)
+                Console.WriteLine("Emailing Report: " & basCode.curStatus.Report & " to " & basCode.dhdText.SmtpRecipient)
+                Dim strRecepientName As String = basCode.dhdText.SmtpRecipient.Substring(0, basCode.dhdText.SmtpRecipient.IndexOf("@"))
+                Dim strSenderName As String = basCode.dhdText.SmtpReply.Substring(0, basCode.dhdText.SmtpReply.IndexOf("@"))
+                Dim strBody As String = "Sequenchel Report: " & basCode.curStatus.Report
+                basCode.dhdText.SendSMTP(basCode.dhdText.SmtpReply, strSenderName, basCode.dhdText.SmtpRecipient, strRecepientName, basCode.dhdText.SmtpReply, strSenderName, basCode.curStatus.Report, strBody, strExportFile)
             End If
         End If
     End Sub
@@ -106,70 +105,70 @@ Module SeqCmd
                 Case "/silent"
                     'Start wihtout any windows / forms
                 Case "/debug"
-                    SeqData.curVar.DebugMode = True
+                    basCode.curVar.DebugMode = True
                     'Case "/control"
                     '    CurStatus.Status = CurrentStatus.StatusList.ControlSearch
                 Case "/dev"
-                    SeqData.curVar.DevMode = True
+                    basCode.curVar.DevMode = True
                     'Case "/noencryption"
                     '    CurVar.Encryption = False
                 Case "/securityoverride"
                     If Command.Length > intPosition + 1 Then
-                        SeqData.curVar.OverridePassword = SeqData.dhdText.MD5Encrypt(Command.Substring(intPosition + 1, Command.Length - (intPosition + 1)))
+                        basCode.curVar.OverridePassword = basCode.dhdText.MD5Encrypt(Command.Substring(intPosition + 1, Command.Length - (intPosition + 1)))
                     End If
                 Case "/report"
                     'Run Report
                     RunReport = True
                 Case "/connection"
                     'Use the chosen connection
-                    SeqData.curStatus.Connection = strInput
+                    basCode.curStatus.Connection = strInput
                 Case "/tableset"
                     'Use the chosen TableSet
-                    SeqData.curStatus.TableSet = strInput
+                    basCode.curStatus.TableSet = strInput
                 Case "/table"
                     'Use the chosen Table
-                    SeqData.curStatus.Table = strInput
+                    basCode.curStatus.Table = strInput
                     ImportTable = strInput
                 Case "/reportname"
                     'Open the report if found
-                    SeqData.curStatus.Report = strInput
+                    basCode.curStatus.Report = strInput
                 Case "/exportfile"
                     'Export the report to the chosen file
-                    SeqData.dhdText.ExportFile = strInput
+                    basCode.dhdText.ExportFile = strInput
                 Case "/import"
                     'Run Import
                     RunImport = True
                 Case "/importfile"
                     'Export the report to the chosen file
-                    SeqData.dhdText.ImportFile = strInput
+                    basCode.dhdText.ImportFile = strInput
                 Case "/converttotext"
                     'Export the report to the chosen file
-                    SeqData.curVar.ConvertToText = strInput
+                    basCode.curVar.ConvertToText = strInput
                 Case "/converttonull"
                     'Export the report to the chosen file
-                    SeqData.curVar.ConvertToNull = strInput
+                    basCode.curVar.ConvertToNull = strInput
                 Case "/hasheaders"
                     'Export the report to the chosen file
-                    SeqData.curVar.HasHeaders = strInput
+                    basCode.curVar.HasHeaders = strInput
                 Case "/delimiter"
                     'Export the report to the chosen file
-                    SeqData.curVar.Delimiter = strInput
+                    basCode.curVar.Delimiter = strInput
                 Case "/emailrecipient"
                     'Export the report to the chosen file
-                    SeqData.dhdText.SmtpRecipient = strInput
+                    basCode.dhdText.SmtpRecipient = strInput
             End Select
         Next
 
     End Sub
 
     Friend Sub LoadConnections()
-        Console.WriteLine("Loading Connection: " & SeqData.curStatus.Connection)
+        Console.WriteLine("Loading Connection: " & basCode.curStatus.Connection)
         lstConnections = basCode.LoadConnections(xmlConnections)
         If lstConnections Is Nothing Then Environment.Exit(0)
-        If lstConnections.Contains(SeqData.curStatus.Connection) = False Or SeqData.curStatus.Connection = "" Then
-            If SeqData.curVar.ConnectionDefault.Length > 0 Then
-                SeqData.curStatus.Connection = SeqData.curVar.ConnectionDefault
-                Console.WriteLine("Connection Loaded: " & SeqData.curStatus.Connection)
+        If lstConnections.Contains(basCode.curStatus.Connection) = False Or basCode.curStatus.Connection = "" Then
+            If basCode.curVar.ConnectionDefault.Length > 0 Then
+                basCode.curStatus.Connection = basCode.curVar.ConnectionDefault
+                Console.WriteLine("Connection Loaded: " & basCode.curStatus.Connection)
             Else
                 Console.WriteLine("The specified Connection was not found. please check your settings")
                 Console.ReadLine()
@@ -179,13 +178,13 @@ Module SeqCmd
     End Sub
 
     Friend Sub LoadTableSets()
-        Console.WriteLine("Loading TableSet: " & SeqData.curStatus.TableSet)
+        Console.WriteLine("Loading TableSet: " & basCode.curStatus.TableSet)
         lstTableSets = basCode.LoadTableSets(xmlTableSets)
         If lstTableSets Is Nothing Then Exit Sub
-        If lstTableSets.Contains(SeqData.curStatus.TableSet) = False Or SeqData.curStatus.TableSet = "" Then
-            If SeqData.curVar.TableSetDefault.Length > 0 Then
-                SeqData.curStatus.TableSet = SeqData.curVar.TableSetDefault
-                Console.WriteLine("TableSet Loaded: " & SeqData.curStatus.TableSet)
+        If lstTableSets.Contains(basCode.curStatus.TableSet) = False Or basCode.curStatus.TableSet = "" Then
+            If basCode.curVar.TableSetDefault.Length > 0 Then
+                basCode.curStatus.TableSet = basCode.curVar.TableSetDefault
+                Console.WriteLine("TableSet Loaded: " & basCode.curStatus.TableSet)
             Else
                 Console.WriteLine("The specified TableSet was not found. please check your settings")
                 Console.ReadLine()
@@ -195,10 +194,10 @@ Module SeqCmd
     End Sub
 
     Friend Sub LoadTables()
-        Console.WriteLine("Loading Table: " & SeqData.curStatus.Table)
+        Console.WriteLine("Loading Table: " & basCode.curStatus.Table)
         lstTables = basCode.LoadTables(xmlTables, False)
         If lstTables Is Nothing Then Exit Sub
-        If SeqData.curVar.TableDefault = SeqData.curStatus.Table And ImportTable <> SeqData.curStatus.Table And ImportTable <> "" Then
+        If basCode.curVar.TableDefault = basCode.curStatus.Table And ImportTable <> basCode.curStatus.Table And ImportTable <> "" Then
             Console.WriteLine("The specified Table was not found. please check your settings")
             Console.ReadLine()
             Environment.Exit(0)
@@ -208,7 +207,7 @@ Module SeqCmd
     Friend Sub LoadReports()
         lstReports = basCode.LoadReports(xmlReports)
         If lstReports Is Nothing Then Environment.Exit(0)
-        If lstReports.Contains(SeqData.curStatus.Report) = False Or SeqData.curStatus.Report = "" Then
+        If lstReports.Contains(basCode.curStatus.Report) = False Or basCode.curStatus.Report = "" Then
             Console.WriteLine("The specified Report was not found. please check your settings")
             Console.ReadLine()
             Environment.Exit(0)
@@ -218,7 +217,7 @@ Module SeqCmd
     Friend Sub ImportFiles(strImportFiles As String)
         Dim strFolder As String = strImportFiles.Substring(0, strImportFiles.LastIndexOf("\") + 1)
         Dim strFileFilter As String = strImportFiles.Substring(strImportFiles.LastIndexOf("\") + 1, strImportFiles.Length - (strImportFiles.LastIndexOf("\") + 1))
-        Dim FilesArray As ArrayList = SeqData.dhdText.GetFiles(strFolder, strFileFilter)
+        Dim FilesArray As ArrayList = basCode.dhdText.GetFiles(strFolder, strFileFilter)
         For Each strFile As String In FilesArray
             Dim dtsInput As DataSet = ImportFile(basCode.CheckFilePath(strFile))
             Dim intRecords As Integer = UploadFile(dtsInput)
@@ -227,25 +226,25 @@ Module SeqCmd
 
     Friend Function ImportFile(strImportFile As String) As DataSet
         Console.WriteLine("Importing file: " & strImportFile)
-        Dim dtsImport As DataSet = SeqData.ImportFile(strImportFile, SeqData.curVar.HasHeaders, SeqData.curVar.Delimiter)
+        Dim dtsImport As DataSet = basCode.ImportFile(strImportFile, basCode.curVar.HasHeaders, basCode.curVar.Delimiter)
         Return dtsImport
     End Function
 
     Friend Function UploadFile(dtsInput As DataSet) As Integer
         Try
             Dim dhdDB As New DataHandler.db
-            dhdDB.DataLocation = SeqData.dhdConnection.DataLocation
-            dhdDB.DatabaseName = SeqData.dhdConnection.DatabaseName
-            dhdDB.DataTableName = SeqData.dhdConnection.DataTableName
-            dhdDB.DataProvider = SeqData.dhdConnection.DataProvider
-            dhdDB.LoginMethod = SeqData.dhdConnection.LoginMethod
-            dhdDB.LoginName = SeqData.dhdConnection.LoginName
-            dhdDB.Password = SeqData.dhdConnection.Password
+            dhdDB.DataLocation = basCode.dhdConnection.DataLocation
+            dhdDB.DatabaseName = basCode.dhdConnection.DatabaseName
+            dhdDB.DataTableName = basCode.dhdConnection.DataTableName
+            dhdDB.DataProvider = basCode.dhdConnection.DataProvider
+            dhdDB.LoginMethod = basCode.dhdConnection.LoginMethod
+            dhdDB.LoginName = basCode.dhdConnection.LoginName
+            dhdDB.Password = basCode.dhdConnection.Password
 
-            If dhdDB.DataTableName <> SeqData.curStatus.Table Then dhdDB.DataTableName = SeqData.curStatus.Table
-            Dim intRecords As Integer = SeqData.SaveToDatabase(dhdDB, dtsInput, SeqData.curVar.ConvertToText, SeqData.curVar.ConvertToNull)
+            If dhdDB.DataTableName <> basCode.curStatus.Table Then dhdDB.DataTableName = basCode.curStatus.Table
+            Dim intRecords As Integer = basCode.SaveToDatabase(dhdDB, dtsInput, basCode.curVar.ConvertToText, basCode.curVar.ConvertToNull)
             If intRecords = -1 Then
-                Console.WriteLine(SeqData.dhdConnection.ErrorMessage)
+                Console.WriteLine(basCode.dhdConnection.ErrorMessage)
                 Console.ReadLine()
                 Environment.Exit(0)
             End If

@@ -1,14 +1,57 @@
 ﻿Public Class BaseField
-    Private _FieldCategory As Integer = 0
 
-    Public Property FieldCategory() As Integer
+#Region "General"
+    Private _Category As Integer = 0
+    Private _ControlName As String = ""
+    Private _CurrentValue As String = ""
+    Private _Index As Integer = 0
+    Private _Name As String = ""
+
+    Public Property Category() As Integer
         Get
-            Return _FieldCategory
+            Return _Category
         End Get
         Set(ByVal Value As Integer)
-            _FieldCategory = Value
+            _Category = Value
         End Set
     End Property
+
+    Public Property ControlName() As String
+        Get
+            Return _ControlName
+        End Get
+        Set(ByVal Value As String)
+            _ControlName = Value
+        End Set
+    End Property
+
+    Public Property CurrentValue() As String
+        Get
+            Return _CurrentValue
+        End Get
+        Set(ByVal Value As String)
+            _CurrentValue = Value
+        End Set
+    End Property
+
+    Public Property Index() As Integer
+        Get
+            Return _Index
+        End Get
+        Set(ByVal Value As Integer)
+            _Index = Value
+        End Set
+    End Property
+
+    Public Property Name() As String
+        Get
+            Return _Name
+        End Get
+        Set(ByVal Value As String)
+            _Name = Value
+        End Set
+    End Property
+#End Region
 
 #Region "Base"
     Private _FieldName As String = ""
@@ -153,6 +196,7 @@
     Private _ControlMode As Boolean = False
     Private _DefaultButton As Boolean = False
     Private _DefaultValue As String = ""
+    Private _FieldWidth As Integer = 0
     Private _FieldList As Boolean = False
     Private _FieldListOrder As Integer = 0
     Private _FieldListWidth As Integer = 0
@@ -212,6 +256,15 @@
         End Get
         Set(ByVal Value As String)
             _DefaultValue = Value
+        End Set
+    End Property
+
+    Public Property FieldWidth() As Integer
+        Get
+            Return _FieldWidth
+        End Get
+        Set(ByVal Value As Integer)
+            _FieldWidth = Value
         End Set
     End Property
 

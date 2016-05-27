@@ -28,7 +28,7 @@ Public Class frmImport
     Private Sub btnUploadFile_Click(sender As Object, e As EventArgs) Handles btnUploadFile.Click
         CursorControl("Wait")
         WriteStatus("", 0, lblStatusText)
-        If SeqData.dhdText.DatasetCheck(dtsImport) = False Then Exit Sub
+        If basCode.dhdText.DatasetCheck(dtsImport) = False Then Exit Sub
         UploadFile(dtsImport)
         CursorControl()
     End Sub
@@ -43,7 +43,7 @@ Public Class frmImport
             UploadFile(dtsUpload)
         Catch ex As Exception
             WriteStatus("Table Upload failed. Check the log for more information.", 1, lblStatusText)
-            SeqData.WriteLog("Table Upload failed. Check if the columns match and try again" & Environment.NewLine & ex.Message, 1)
+            basCode.WriteLog("Table Upload failed. Check if the columns match and try again" & Environment.NewLine & ex.Message, 1)
             Exit Sub
         End Try
         CursorControl()
@@ -80,11 +80,11 @@ Public Class frmImport
     End Sub
 
     Private Sub chkCovertToText_CheckedChanged(sender As Object, e As EventArgs) Handles chkCovertToText.CheckedChanged
-        SeqData.curVar.ConvertToText = chkCovertToText.Checked
+        basCode.curVar.ConvertToText = chkCovertToText.Checked
     End Sub
 
     Private Sub chkCovertToNull_CheckedChanged(sender As Object, e As EventArgs) Handles chkCovertToNull.CheckedChanged
-        SeqData.curVar.ConvertToNull = chkCovertToNull.Checked
+        basCode.curVar.ConvertToNull = chkCovertToNull.Checked
     End Sub
 
     Private Sub txtDelimiter_MouseHover(sender As Object, e As EventArgs) Handles txtDelimiter.MouseHover
@@ -103,16 +103,16 @@ Public Class frmImport
 #End Region
 
     Private Sub LoadDefaults()
-        txtServer.Text = SeqData.dhdConnection.DataLocation
-        txtDatabase.Text = SeqData.dhdConnection.DatabaseName
-        txtTable.Text = SeqData.curStatus.Table
-        If SeqData.dhdConnection.LoginMethod = "Windows" Then
+        txtServer.Text = basCode.dhdConnection.DataLocation
+        txtDatabase.Text = basCode.dhdConnection.DatabaseName
+        txtTable.Text = basCode.curStatus.Table
+        If basCode.dhdConnection.LoginMethod = "Windows" Then
             chkWinAuth.Checked = True
         Else
             chkWinAuth.Checked = False
         End If
-        txtUser.Text = SeqData.dhdConnection.LoginName
-        txtPassword.Text = SeqData.dhdConnection.Password
+        txtUser.Text = basCode.dhdConnection.LoginName
+        txtPassword.Text = basCode.dhdConnection.Password
     End Sub
 
     Private Sub SelectFile()
@@ -128,20 +128,20 @@ Public Class frmImport
             Return
         End If
 
-        SeqData.dhdText.ImportFile = ofdFile.FileName
-        txtCurrentFile.Text = SeqData.dhdText.ImportFile
+        basCode.dhdText.ImportFile = ofdFile.FileName
+        txtCurrentFile.Text = basCode.dhdText.ImportFile
         WriteStatus("File Selected for Import", 0, lblStatusText)
         ImportFile()
     End Sub
 
     Private Sub ImportFile()
-        If SeqData.dhdText.CheckFile(SeqData.dhdText.PathConvert(basCode.CheckFilePath(SeqData.dhdText.ImportFile))) = False Then
+        If basCode.dhdText.CheckFile(basCode.dhdText.PathConvert(basCode.CheckFilePath(basCode.dhdText.ImportFile))) = False Then
             WriteStatus("The file was not found. Check the file path and name", 2, lblStatusText)
             Exit Sub
         End If
-        dtsImport = SeqData.ImportFile(SeqData.dhdText.PathConvert(basCode.CheckFilePath(SeqData.dhdText.ImportFile)), chkHasHeaders.Checked, txtDelimiter.Text)
+        dtsImport = basCode.ImportFile(basCode.dhdText.PathConvert(basCode.CheckFilePath(basCode.dhdText.ImportFile)), chkHasHeaders.Checked, txtDelimiter.Text)
 
-        If SeqData.dhdText.DatasetCheck(dtsImport) = False Then
+        If basCode.dhdText.DatasetCheck(dtsImport) = False Then
             WriteStatus("File extension or delimiter not recognised or unable to load file .", 2, lblStatusText)
             Exit Sub
         End If
@@ -157,15 +157,15 @@ Public Class frmImport
             End If
         Catch ex As Exception
             WriteStatus("There was an error displaying or uploading the file. Please check the log", 1, lblStatusText)
-            SeqData.WriteLog("There was an error displaying or uploading the file." & Environment.NewLine & ex.Message, 1)
+            basCode.WriteLog("There was an error displaying or uploading the file." & Environment.NewLine & ex.Message, 1)
         End Try
     End Sub
 
     Private Sub DisplayData(Optional intTable As Integer = 0)
-        If SeqData.dhdText.DatasetCheck(dtsImport) = False Then Exit Sub
+        If basCode.dhdText.DatasetCheck(dtsImport) = False Then Exit Sub
         dgvImport.DataSource = Nothing
-        If SeqData.curVar.ConvertToText = True Then
-            Dim dttConvert As DataTable = SeqData.dhdMainDB.ConvertToText(dtsImport.Tables(intTable))
+        If basCode.curVar.ConvertToText = True Then
+            Dim dttConvert As DataTable = basCode.dhdMainDB.ConvertToText(dtsImport.Tables(intTable))
             dgvImport.DataSource = dttConvert
         Else
             dgvImport.DataSource = dtsImport.Tables(intTable)
@@ -208,7 +208,7 @@ Public Class frmImport
                 End If
             Next
             If dtsUpload.Tables.Count > 0 Then
-                If SeqData.ExportFile(dtsUpload, basCode.CheckFilePath(txtFileName.Text, True), SeqData.curVar.ConvertToText, SeqData.curVar.ConvertToNull, SeqData.curVar.ShowFile, chkHasHeaders.Checked, txtDelimiter.Text, SeqData.curVar.QuoteValues, SeqData.curVar.CreateDir) = False Then
+                If basCode.ExportFile(dtsUpload, basCode.CheckFilePath(txtFileName.Text, True), basCode.curVar.ConvertToText, basCode.curVar.ConvertToNull, basCode.curVar.ShowFile, chkHasHeaders.Checked, txtDelimiter.Text, basCode.curVar.QuoteValues, basCode.curVar.CreateDir) = False Then
                     WriteStatus("There was an error exporting the file. PLease check the log.", 1, lblStatusText)
                 Else
                     WriteStatus("File uploaded.", 0, lblStatusText)
@@ -216,7 +216,7 @@ Public Class frmImport
             End If
         Catch ex As Exception
             WriteStatus("There was an error writng to " & txtFileName.Text & " Please check the log", 1, lblStatusText)
-            SeqData.WriteLog("There was an error writng to " & txtFileName.Text & Environment.NewLine & ex.Message, 1)
+            basCode.WriteLog("There was an error writng to " & txtFileName.Text & Environment.NewLine & ex.Message, 1)
         End Try
     End Sub
 
@@ -226,7 +226,7 @@ Public Class frmImport
 
         dhdDB.DataLocation = txtServer.Text
         dhdDB.DatabaseName = txtDatabase.Text
-        dhdDB.DataTableName = SeqData.GetTableNameFromAlias(xmlTables, txtTable.Text)
+        dhdDB.DataTableName = basCode.GetTableNameFromAlias(xmlTables, txtTable.Text)
         dhdDB.DataProvider = "SQL"
         If chkWinAuth.Checked = True Then
             dhdDB.LoginMethod = "Windows"
@@ -235,10 +235,10 @@ Public Class frmImport
         End If
         dhdDB.LoginName = txtUser.Text
         dhdDB.Password = txtPassword.Text
-        intRecordsAffected = SeqData.SaveToDatabase(dhdDB, dtsUpload, SeqData.curVar.ConvertToText, SeqData.curVar.ConvertToNull)
+        intRecordsAffected = basCode.SaveToDatabase(dhdDB, dtsUpload, basCode.curVar.ConvertToText, basCode.curVar.ConvertToNull)
         If intRecordsAffected = -1 Then
             WriteStatus("Export to database failed.", 1, lblStatusText)
-            SeqData.WriteLog("Export to database failed. Check if the columns match and try again" & Environment.NewLine & "If you are importing more than 1 table, make sure they have identical columns" & Environment.NewLine & dhdDB.ErrorMessage, 1)
+            basCode.WriteLog("Export to database failed. Check if the columns match and try again" & Environment.NewLine & "If you are importing more than 1 table, make sure they have identical columns" & Environment.NewLine & dhdDB.ErrorMessage, 1)
             MessageBox.Show("Export to database failed. Check if the columns match and try again" & Environment.NewLine & "If you are importing more than 1 table, make sure they have identical columns" & Environment.NewLine & dhdDB.ErrorMessage)
             Exit Sub
         Else

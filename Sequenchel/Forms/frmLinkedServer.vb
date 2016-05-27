@@ -3,7 +3,7 @@
 #Region "Controls"
 
     Private Sub frmLinkedServer_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        txtHostServer.Text = SeqData.dhdConnection.DataLocation
+        txtHostServer.Text = basCode.dhdConnection.DataLocation
     End Sub
 
     Private Sub txtServer_TextChanged(sender As Object, e As EventArgs) Handles txtServer.TextChanged
@@ -141,7 +141,7 @@
     End Sub
 
     Private Sub ClearAll()
-        txtHostServer.Text = SeqData.dhdConnection.DataLocation
+        txtHostServer.Text = basCode.dhdConnection.DataLocation
         txtLinkedServerName.Text = ""
         txtServer.Text = ""
         txtInstance.Text = ""
@@ -188,9 +188,9 @@
         Dim intInstance As Integer = 0, intInstanceLength As Integer = 0
         Dim intPort As Integer = 0, intPortLength As Integer = 0
 
-        Dim objData As DataSet = SeqData.QueryDb(SeqData.dhdConnection, strQuery, True)
-        If SeqData.dhdText.DatasetCheck(objData) = False Then
-            SeqData.WriteLog("No Linked Servers were found. Please check your settings. Connection:" & strDataSource, 1)
+        Dim objData As DataSet = basCode.QueryDb(basCode.dhdConnection, strQuery, True)
+        If basCode.dhdText.DatasetCheck(objData) = False Then
+            basCode.WriteLog("No Linked Servers were found. Please check your settings. Connection:" & strDataSource, 1)
             WriteStatus("No Linked Servers were found. Please check your settings.", 2, lblStatusText)
             Return False
         End If
@@ -260,7 +260,7 @@
 
                 'End If
             Catch ex As Exception
-                SeqData.WriteLog("There was a problem processing the Linked Server with datasource:" & strDataSource & Environment.NewLine & ex.Message, 1)
+                basCode.WriteLog("There was a problem processing the Linked Server with datasource:" & strDataSource & Environment.NewLine & ex.Message, 1)
                 WriteStatus("There was a problem processing the Linked Server with datasource:" & strDataSource & ". Please check the log", 1, lblStatusText)
                 If MessageBox.Show("There was a problem processing the Linked Server with datasource:" & strDataSource & Environment.NewLine & ex.Message & Environment.NewLine & Environment.NewLine & "Do you wish to continue loading Linked Servers?", "Error Loading Linked Server", MessageBoxButtons.YesNo, MessageBoxIcon.Error) = Windows.Forms.DialogResult.No Then
                     Return False
@@ -312,10 +312,10 @@
         strQuery &= " EXEC master.dbo.sp_serveroption @server=@LinkedServerName, @optname=N'use remote collation', @optvalue=N'" & chkRemoteCollation.Checked & "';" & Environment.NewLine
         strQuery &= " EXEC master.dbo.sp_serveroption @server=@LinkedServerName, @optname=N'remote proc transaction promotion', @optvalue=N'" & chkRPTPromotion.Checked & "';" & Environment.NewLine
 
-        SeqData.QueryDb(SeqData.dhdConnection, strQuery, False)
-        If SeqData.dhdConnection.ErrorLevel = -1 Then
+        basCode.QueryDb(basCode.dhdConnection, strQuery, False)
+        If basCode.dhdConnection.ErrorLevel = -1 Then
             WriteStatus("There was an error saving the Linked Server. Please check the log.", 1, lblStatusText)
-            SeqData.WriteLog("There was an error saving the Linked Server. " & SeqData.dhdConnection.ErrorMessage, 1)
+            basCode.WriteLog("There was an error saving the Linked Server. " & basCode.dhdConnection.ErrorMessage, 1)
         Else
             WriteStatus("Linked Server saved", 0, lblStatusText)
             LinkedServersLoad()
@@ -333,10 +333,10 @@
         If MessageBox.Show("This will permanently remove the Item: " & strSelection & Environment.NewLine & basCode.Message.strContinue, basCode.Message.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Exit Sub
 
         strQuery = "master.dbo.sp_dropserver @server=N'" & strSelection & "', @droplogins='droplogins'"
-        SeqData.QueryDb(SeqData.dhdConnection, strQuery, False)
-        If SeqData.dhdConnection.ErrorLevel = -1 Then
+        basCode.QueryDb(basCode.dhdConnection, strQuery, False)
+        If basCode.dhdConnection.ErrorLevel = -1 Then
             WriteStatus("There was an error deleting the Linked Server. Please check the log.", 1, lblStatusText)
-            SeqData.WriteLog("There was an error deleting the Linked Server. " & SeqData.dhdConnection.ErrorMessage, 1)
+            basCode.WriteLog("There was an error deleting the Linked Server. " & basCode.dhdConnection.ErrorMessage, 1)
         Else
             WriteStatus("Linked Server deleted", 0, lblStatusText)
             txtLinkedServerName.Text = ""
@@ -357,7 +357,7 @@
             strQuery &= " AND server_id = " & lvwLinkedServers.SelectedItems(0).Tag
             strQuery &= " ORDER BY [name] ASC"
 
-            Dim objData As DataSet = SeqData.QueryDb(SeqData.dhdConnection, strQuery, True)
+            Dim objData As DataSet = basCode.QueryDb(basCode.dhdConnection, strQuery, True)
             If objData Is Nothing Then Exit Sub
             If objData.Tables.Count = 0 Then Exit Sub
             If objData.Tables(0).Rows.Count = 0 Then Exit Sub

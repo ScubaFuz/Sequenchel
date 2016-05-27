@@ -13,7 +13,7 @@ Module Common
 
     'Friend Core As New SeqCore.Core
     Friend Excel As New SeqCore.Excel
-    Friend SeqData As New SeqCore.Data
+    'Friend basCode As New SeqCore.Data
 
     Friend xmlDoc As New XmlDocument
     Friend xmlSDBASettings As New XmlDocument
@@ -53,9 +53,10 @@ Module Common
     End Property
 
     Public Sub FieldTextHandler(sender As Object)
-        If SeqData.curStatus.SuspendActions = False Then
+        If basCode.curStatus.SuspendActions = False Then
             Select Case sender.FieldCategory
                 Case 1
+                    'TextField
                     If sender.Text <> sender.Tag.ToString Then
                         sender.BackColor = clrMarked
                     Else
@@ -66,6 +67,7 @@ Module Common
                         End If
                     End If
                 Case 2
+                    'CheckField
                     If sender.Checked.ToString <> sender.Tag.ToString Then
                         sender.BackColor = clrMarked
                     Else
@@ -75,7 +77,8 @@ Module Common
                             sender.BackColor = clrDisabled
                         End If
                     End If
-                    'Case 3
+                Case 3
+                    'ComboField
                     '    If tblTable.TableName = sender.Name.Substring(0, sender.Name.LastIndexOf(".")) Then
                     '        If sender.SelectedItem Is Nothing Then
                     '            LoadLookupList(sender, True, False)
@@ -101,7 +104,8 @@ Module Common
                     '            End If
                     '        End If
                     '    End If
-                    'Case 4
+                Case 4
+                    'ComboField as related lookup
                     '    'related Lookup with default list
                     '    If sender.SelectedItem Is Nothing Then
                     '        LoadLookupList(sender, True, False)
@@ -204,8 +208,8 @@ Module Common
     End Sub
 
     Friend Function GetSaveFileName(strFileName As String) As String
-        If SeqData.curVar.IncludeDate = True Then
-            strFileName = strFileName & "_" & SeqData.FormatFileDate(Now)
+        If basCode.curVar.IncludeDate = True Then
+            strFileName = strFileName & "_" & basCode.FormatFileDate(Now)
         End If
 
         Dim sfdFile As New SaveFileDialog
@@ -222,20 +226,20 @@ Module Common
         Dim strTargetFile As String = sfdFile.FileName
         Select Case sfdFile.FilterIndex
             Case 1
-                SeqData.curVar.ConvertToText = False
-                SeqData.curVar.ConvertToNull = False
+                basCode.curVar.ConvertToText = False
+                basCode.curVar.ConvertToNull = False
             Case 2
-                SeqData.curVar.ConvertToText = True
-                SeqData.curVar.ConvertToNull = False
+                basCode.curVar.ConvertToText = True
+                basCode.curVar.ConvertToNull = False
             Case 3
-                SeqData.curVar.ConvertToText = True
-                SeqData.curVar.ConvertToNull = False
+                basCode.curVar.ConvertToText = True
+                basCode.curVar.ConvertToNull = False
             Case 4
-                SeqData.curVar.ConvertToText = True
-                SeqData.curVar.ConvertToNull = False
+                basCode.curVar.ConvertToText = True
+                basCode.curVar.ConvertToNull = False
             Case Else
                 'unknown selection, do not try to save or show file
-                SeqData.curVar.ShowFile = False
+                basCode.curVar.ShowFile = False
                 Return Nothing
         End Select
 
@@ -245,10 +249,10 @@ Module Common
     Friend Function ExportFile(dtsInput As DataSet, strFileName As String) As Boolean
         CursorControl("Wait")
         Try
-            SeqData.ExportFile(dtsInput, strFileName, SeqData.curVar.ConvertToText, SeqData.curVar.ConvertToNull, SeqData.curVar.ShowFile, SeqData.curVar.HasHeaders, SeqData.curVar.Delimiter, SeqData.curVar.QuoteValues, SeqData.curVar.CreateDir)
+            basCode.ExportFile(dtsInput, strFileName, basCode.curVar.ConvertToText, basCode.curVar.ConvertToNull, basCode.curVar.ShowFile, basCode.curVar.HasHeaders, basCode.curVar.Delimiter, basCode.curVar.QuoteValues, basCode.curVar.CreateDir)
         Catch ex As Exception
-            SeqData.curVar.ShowFile = False
-            SeqData.WriteLog("An error occured while creating the file." & Environment.NewLine & ex.Message, 1)
+            basCode.curVar.ShowFile = False
+            basCode.WriteLog("An error occured while creating the file." & Environment.NewLine & ex.Message, 1)
             Return False
         End Try
         CursorControl()
@@ -299,9 +303,9 @@ Module Common
     End Sub
 
     Friend Function SaveXmlFile(xmlDoc As XmlDocument, FilePathName As String, CreateDir As Boolean) As Boolean
-        If SeqData.dhdText.CheckDir(SeqData.dhdText.PathConvert(basCode.CheckFilePath(FilePathName)).Substring(0, SeqData.dhdText.PathConvert(basCode.CheckFilePath(FilePathName)).LastIndexOf("\")), False) = False Then
+        If basCode.dhdText.CheckDir(basCode.dhdText.PathConvert(basCode.CheckFilePath(FilePathName)).Substring(0, basCode.dhdText.PathConvert(basCode.CheckFilePath(FilePathName)).LastIndexOf("\")), False) = False Then
             If CreateDir = True Then
-                If MessageBox.Show("The folder " & SeqData.dhdText.PathConvert(basCode.CheckFilePath(FilePathName)).Substring(0, SeqData.dhdText.PathConvert(basCode.CheckFilePath(FilePathName)).LastIndexOf("\")) & " does not exist." & Environment.NewLine & "do you wish to create it?", "Folder does not exist", MessageBoxButtons.YesNo, MessageBoxIcon.Hand, MessageBoxDefaultButton.Button1) = DialogResult.No Then
+                If MessageBox.Show("The folder " & basCode.dhdText.PathConvert(basCode.CheckFilePath(FilePathName)).Substring(0, basCode.dhdText.PathConvert(basCode.CheckFilePath(FilePathName)).LastIndexOf("\")) & " does not exist." & Environment.NewLine & "do you wish to create it?", "Folder does not exist", MessageBoxButtons.YesNo, MessageBoxIcon.Hand, MessageBoxDefaultButton.Button1) = DialogResult.No Then
                     Return False
                 End If
             Else
@@ -309,9 +313,9 @@ Module Common
             End If
         End If
         Try
-            SeqData.dhdText.SaveXmlFile(xmlDoc, SeqData.dhdText.PathConvert(basCode.CheckFilePath(FilePathName)), True)
+            basCode.dhdText.SaveXmlFile(xmlDoc, basCode.dhdText.PathConvert(basCode.CheckFilePath(FilePathName)), True)
         Catch ex As Exception
-            SeqData.WriteLog("There was an error saving the XML file: " & SeqData.dhdText.PathConvert(basCode.CheckFilePath(FilePathName)) & Environment.NewLine & ex.Message, 1)
+            basCode.WriteLog("There was an error saving the XML file: " & basCode.dhdText.PathConvert(basCode.CheckFilePath(FilePathName)) & Environment.NewLine & ex.Message, 1)
             Return False
         End Try
         Return True
@@ -323,7 +327,7 @@ Module Common
 #Region "Database"
 
     Friend Function DatabaseTest(dhdConnect As DataHandler.db) As Boolean
-        If SeqData.curVar.DebugMode Then
+        If basCode.curVar.DebugMode Then
             MessageBox.Show("Sequenchel v " & Application.ProductVersion & " Database Settings" & Environment.NewLine _
              & "   DatabaseServer = " & dhdConnect.DataLocation & Environment.NewLine _
              & "   Database Name = " & dhdConnect.DatabaseName & Environment.NewLine _
@@ -344,28 +348,28 @@ Module Common
 
     Friend Function CheckSqlVersion(dhdConnect As DataHandler.db) As Boolean
         Try
-            Dim intSqlVersion As Integer = SeqData.GetSqlVersion(dhdConnect)
+            Dim intSqlVersion As Integer = basCode.GetSqlVersion(dhdConnect)
             Select Case intSqlVersion
                 Case 0
                     MessageBox.Show("SQL Server not found or not accessible" & Environment.NewLine & "Please check your settings" & Environment.NewLine & "Error: " & dhdConnect.ErrorMessage)
-                    SeqData.WriteLog("SQL Server not found or not accessible" & Environment.NewLine & "Please check your settings" & Environment.NewLine & "Error: " & dhdConnect.ErrorMessage, 1)
+                    basCode.WriteLog("SQL Server not found or not accessible" & Environment.NewLine & "Please check your settings" & Environment.NewLine & "Error: " & dhdConnect.ErrorMessage, 1)
                     Return False
                 Case 7, 8
                     MessageBox.Show("SQL Server 2000 or older is not supported")
-                    SeqData.WriteLog("SQL Server 2000 or older is not supported", 1)
+                    basCode.WriteLog("SQL Server 2000 or older is not supported", 1)
                     Return False
                 Case 9, 10, 11, 12, 13, 14
-                    SeqData.WriteLog("SQL Version " & intSqlVersion & " detected.", 3)
+                    basCode.WriteLog("SQL Version " & intSqlVersion & " detected.", 3)
                     'Just do it
                     Return True
                 Case Else
                     MessageBox.Show("SQL Server version is not recognised" & Environment.NewLine & "Version detected = " & intSqlVersion)
-                    SeqData.WriteLog("SQL Server version is not recognised" & Environment.NewLine & "Version detected = " & intSqlVersion, 1)
+                    basCode.WriteLog("SQL Server version is not recognised" & Environment.NewLine & "Version detected = " & intSqlVersion, 1)
                     Return False
             End Select
         Catch ex As Exception
             MessageBox.Show("SQL Server not found or not accessible." & Environment.NewLine & "Please check the log.")
-            SeqData.WriteLog("SQL Server not found or not accessible." & Environment.NewLine & "Please check your settings." & Environment.NewLine & ex.Message, 1)
+            basCode.WriteLog("SQL Server not found or not accessible." & Environment.NewLine & "Please check your settings." & Environment.NewLine & ex.Message, 1)
             Return False
         End Try
     End Function
@@ -377,15 +381,15 @@ Module Common
         strDateTime = Now.ToString("yyyyMMdd_HHmmss")
         strQuery = ""
         strQuery = "exec usp_BackupHandle 'CREATE','" & dhdConnect.DatabaseName & "','" & strPath & "','" & strDateTime & "'"
-        If SeqData.curVar.DebugMode Then MessageBox.Show("DatabaseName = " & dhdConnect.DatabaseName & Environment.NewLine & _
+        If basCode.curVar.DebugMode Then MessageBox.Show("DatabaseName = " & dhdConnect.DatabaseName & Environment.NewLine & _
                                             "strPath = " & strPath & Environment.NewLine & _
                                             "strDateTime = " & strDateTime & Environment.NewLine & _
                                             strQuery)
         Try
-            SeqData.QueryDb(dhdConnect, strQuery, False)
+            basCode.QueryDb(dhdConnect, strQuery, False)
         Catch ex As Exception
-            SeqData.dhdText.LogLocation = ""
-            SeqData.WriteLog(ex.Message, 1)
+            basCode.dhdText.LogLocation = ""
+            basCode.WriteLog(ex.Message, 1)
             MessageBox.Show(ex.Message)
         End Try
     End Sub
@@ -397,13 +401,13 @@ Module Common
         Else
             strQuery &= ",'" & strRemarks & "'"
         End If
-        SeqData.QueryDb(SeqData.dhdMainDB, strQuery, False)
+        basCode.QueryDb(basCode.dhdMainDB, strQuery, False)
     End Sub
 
     Friend Function LoadConfigSetting(ByVal strCategory As String, ByVal strConfigName As String) As String
         strQuery = "exec usp_ConfigHandle 'Get','" & strCategory & "',NULL,'" & strConfigName & "'"
         Dim objData As DataSet
-        objData = SeqData.QueryDb(SeqData.dhdMainDB, strQuery, True)
+        objData = basCode.QueryDb(basCode.dhdMainDB, strQuery, True)
         Dim strReturn As String = Nothing
 
         If objData Is Nothing Then
@@ -432,10 +436,10 @@ Module Common
         strQuery = "exec usp_LoggingHandle 'Del','" & FormatDate(dtmDate) & "'"
 
         Try
-            SeqData.QueryDb(SeqData.dhdMainDB, strQuery, False)
+            basCode.QueryDb(basCode.dhdMainDB, strQuery, False)
         Catch ex As Exception
-            SeqData.dhdText.LogLocation = ""
-            SeqData.WriteLog("Error deleting old logs: " & ex.Message, 1)
+            basCode.dhdText.LogLocation = ""
+            basCode.WriteLog("Error deleting old logs: " & ex.Message, 1)
             Return False
         End Try
         Return True
@@ -458,8 +462,8 @@ Module Common
 
         CursorControl("Wait")
 
-        Dim dtsData As DataSet = SeqData.QueryDb(dhdConnect, strQuery, True)
-        If SeqData.dhdText.DatasetCheck(dtsData) = False Then Return Nothing
+        Dim dtsData As DataSet = basCode.QueryDb(dhdConnect, strQuery, True)
+        If basCode.dhdText.DatasetCheck(dtsData) = False Then Return Nothing
 
         Dim ReturnValue As New List(Of String)
         For intRowCount = 0 To dtsData.Tables(0).Rows.Count - 1
@@ -477,7 +481,7 @@ Module Common
         strQuery = "EXECUTE [dbo].[usp_ScheduleCreate] "
         strQuery &= "@JobName = '" & JobName & "'"
         strQuery &= ",@SqlCommand = '" & SqlCommand & "'"
-        strQuery &= ",@DatabaseName = '" & SeqData.dhdMainDB.DatabaseName & "'"
+        strQuery &= ",@DatabaseName = '" & basCode.dhdMainDB.DatabaseName & "'"
         strQuery &= ",@OutputPath = '" & OutputPath & "'"
         strQuery &= ",@FreqType = " & FreqType
         strQuery &= ",@FreqInterval = " & FreqInterval
@@ -487,8 +491,8 @@ Module Common
         strQuery &= ",@StartTime = " & StartTime
         strQuery &= ",@EndTime = " & EndTime
 
-        SeqData.QueryDb(SeqData.dhdMainDB, strQuery, False)
-        If SeqData.dhdMainDB.ErrorLevel = -1 Then
+        basCode.QueryDb(basCode.dhdMainDB, strQuery, False)
+        If basCode.dhdMainDB.ErrorLevel = -1 Then
             Return False
         End If
         Return True
@@ -498,10 +502,10 @@ Module Common
         strQuery = "SELECT coalesce(serverproperty('InstanceDefaultLogPath'),LEFT(physical_name,LEN(physical_name) - charindex('\',reverse(physical_name)))) AS InstanceDefaultLogPath FROM sys.master_files where name = 'mastlog' "
 
         Dim objData As DataSet
-        objData = SeqData.QueryDb(dhdConnect, strQuery, True)
+        objData = basCode.QueryDb(dhdConnect, strQuery, True)
         Dim strReturn As String = ""
 
-        If SeqData.dhdText.DatasetCheck(objData) = False Then
+        If basCode.dhdText.DatasetCheck(objData) = False Then
             strReturn = ""
         Else
             strReturn = objData.Tables.Item(0).Rows(0).Item("InstanceDefaultLogPath")
@@ -515,10 +519,10 @@ Module Common
         strQuery = "select [name] AS JobName from msdb.dbo.sysjobs where name like '%" & strPattern & "%'"
 
         Dim objData As DataSet
-        objData = SeqData.QueryDb(dhdConnect, strQuery, True)
+        objData = basCode.QueryDb(dhdConnect, strQuery, True)
         Dim strReturn As String = ""
 
-        If SeqData.dhdText.DatasetCheck(objData) = False Then
+        If basCode.dhdText.DatasetCheck(objData) = False Then
             strReturn = ""
         Else
             strReturn = objData.Tables.Item(0).Rows(0).Item("JobName")
@@ -532,15 +536,15 @@ Module Common
         Try
             strQuery = "select COUNT(*) AS StepsCount FROM [msdb].[dbo].[sysjobs] AS [job] INNER JOIN [msdb].[dbo].[sysjobsteps] AS [stp] ON [job].[job_id] = [stp].[job_id] WHERE [job].name = 'Sequenchel SmartUpdate'"
             Dim objData As DataSet
-            objData = SeqData.QueryDb(dhdConnect, strQuery, True)
+            objData = basCode.QueryDb(dhdConnect, strQuery, True)
 
-            If SeqData.dhdText.DatasetCheck(objData) = False Then
+            If basCode.dhdText.DatasetCheck(objData) = False Then
                 intReturn = -1
             Else
                 intReturn = objData.Tables.Item(0).Rows(0).Item("StepsCount")
             End If
         Catch ex As Exception
-            SeqData.WriteLog("Error retrieving Job Information" & Environment.NewLine & ex.Message, 1)
+            basCode.WriteLog("Error retrieving Job Information" & Environment.NewLine & ex.Message, 1)
             Return -1
         End Try
 
@@ -570,7 +574,7 @@ Module Common
                 If strFieldValue = "NULL" Or strFieldValue = "" Then
                     strOutput = " (COALESCE([" & strTableName.Replace(".", "].[") & "].[" & strFieldName & "],0) = 0) "
                 Else
-                    strOutput = " ((CONVERT([nvarchar](" & strFieldWidth & "), [" & strTableName.Replace(".", "].[") & "].[" & strFieldName & "], " & SeqData.curVar.DateTimeStyle & ")) IN ('" & strFieldValue.Replace(",", "','") & "') OR (CONVERT([nvarchar](" & strFieldWidth & "), [" & strTableName.Replace(".", "].[") & "].[" & strFieldName & "], " & SeqData.curVar.DateTimeStyle & ")) LIKE '%" & strFieldValue & "%')"
+                    strOutput = " ((CONVERT([nvarchar](" & strFieldWidth & "), [" & strTableName.Replace(".", "].[") & "].[" & strFieldName & "], " & basCode.curVar.DateTimeStyle & ")) IN ('" & strFieldValue.Replace(",", "','") & "') OR (CONVERT([nvarchar](" & strFieldWidth & "), [" & strTableName.Replace(".", "].[") & "].[" & strFieldName & "], " & basCode.curVar.DateTimeStyle & ")) LIKE '%" & strFieldValue & "%')"
                 End If
             Case "BINARY", "XML", "GEO", "TEXT", "GUID", "TIME", "TIMESTAMP"
                 If strFieldValue = "NULL" Or strFieldValue = "" Then
@@ -624,7 +628,7 @@ Module Common
                     Case "INTEGER", "BIT"
                         strOutput = " (" & strTableField & " IN (" & strFieldValue & "))" & Environment.NewLine
                     Case "DATETIME"
-                        strOutput = " ((CONVERT([nvarchar](" & strFieldWidth & "), " & strTableField & ", " & SeqData.curVar.DateTimeStyle & ")) IN ('" & strFieldValue.Replace(",", "','") & "'))" & Environment.NewLine
+                        strOutput = " ((CONVERT([nvarchar](" & strFieldWidth & "), " & strTableField & ", " & basCode.curVar.DateTimeStyle & ")) IN ('" & strFieldValue.Replace(",", "','") & "'))" & Environment.NewLine
                     Case "IMAGE"
                         'do nothing. cannot search on an image data type.
                     Case Else
@@ -654,7 +658,7 @@ Module Common
                         Case "INTEGER"
                             strOutput = " (" & strTableField & " LIKE '%" & strFieldValue & "%')"
                         Case "DATETIME"
-                            strOutput = " (CONVERT([nvarchar](" & strFieldWidth & "), " & strTableField & ", " & SeqData.curVar.DateTimeStyle & ")) LIKE '%" & strFieldValue & "%')"
+                            strOutput = " (CONVERT([nvarchar](" & strFieldWidth & "), " & strTableField & ", " & basCode.curVar.DateTimeStyle & ")) LIKE '%" & strFieldValue & "%')"
                         Case "BINARY", "XML", "GEO", "TEXT", "GUID", "TIME", "TIMESTAMP"
                             strOutput = " (CONVERT([nvarchar](" & strFieldWidth & "), " & strTableField & ")) LIKE '%" & strFieldValue & "%')"
                         Case "BIT"
@@ -821,7 +825,7 @@ Module Common
         For i = 0 To dgvTarget.Columns.Count - 1
             'store autosized widths
             Dim colw As Integer = dgvTarget.Columns(i).Width
-            If colw > SeqData.curVar.MaxColumnWidth Then colw = SeqData.curVar.MaxColumnWidth
+            If colw > basCode.curVar.MaxColumnWidth Then colw = basCode.curVar.MaxColumnWidth
             'remove autosizing
             dgvTarget.Columns(i).AutoSizeMode = DataGridViewAutoSizeColumnMode.None
             'set width to calculated by autosize
