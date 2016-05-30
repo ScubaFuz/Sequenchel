@@ -123,7 +123,8 @@ Public Class frmReports
 
             MasterPanelControlsDispose(pnlSelectedFields, lvwItem.Name)
             PanelsFieldSort()
-            ReportTableRemove(lvwItem.Tag)
+            Dim strTag As String = lvwItem.Text
+            ReportTableRemove(lvwItem.Text)
 
             ResizeColumns()
         Next
@@ -756,19 +757,22 @@ Public Class frmReports
         End If
     End Sub
 
-    Private Sub ReportTableRemove(strTable As String)
+    Private Sub ReportTableRemove(strTableAlias As String)
         'Dim strTabel As String = strFieldName.Substring(0, strFieldName.LastIndexOf("."))
-        Dim strTableRemove As String = ""
         Dim intCount As Integer = 0
         Dim lvwItem As ListViewItem = Nothing
-        For Each strItem As ListViewItem In lvwSelectedFields.Items
-            If strTable = strItem.Tag Then
+        For Each lvwFindItem As ListViewItem In lvwSelectedFields.Items
+            If strTableAlias = lvwFindItem.Text Then
                 intCount += 1
             End If
         Next
         If intCount = 0 Then
-            lvwSelectedTables.Items.RemoveByKey(strTable)
-            MasterPanelControlsDispose(pnlRelations, strTable)
+            For Each lvwRemoveItem In lvwSelectedTables.Items
+                If lvwRemoveItem.text = strTableAlias Then
+                    lvwSelectedTables.Items.Remove(lvwRemoveItem)
+                    MasterPanelControlsDispose(pnlRelations, strTableAlias)
+                End If
+            Next
             PanelsRelationSort()
         End If
     End Sub
@@ -1246,27 +1250,54 @@ Public Class frmReports
                 End Try
             Next
 
+            Dim intRelationCount As Integer = 0
             For Each xRNode As XmlNode In SeqData.dhdText.FindXmlChildNodes(xNode, "Relations/Relation")
                 strTable = xRNode.Item("TableName").InnerText
+                strTableAlias = xRNode.Item("TableAlias").InnerText
                 intRelationNumber = xRNode.Item("RelationNumber").InnerText
+                If intRelationNumber = 1 Then intRelationCount += 1
                 'lstAvailableFields.SelectedItem = strTable & "." & strField
                 'btnReportFieldAdd_Click(Nothing, Nothing)
                 SetCtrText(pnlRelationsUse, strTable, xRNode.Item("RelationEnabled").InnerText, intRelationNumber)
                 SetCtrText(pnlRelationsField, strTable, xRNode.Item("RelationSource").InnerText, intRelationNumber)
+
+                Dim strTargetTable As String = "", strTargetTableAlias As String = "", strTargetField As String = ""
                 If SeqData.dhdText.CheckNodeElement(xRNode, "RelationTarget") Then
                     Dim strRelationTarget As String = xRNode.Item("RelationTarget").InnerText
                     If String.IsNullOrEmpty(strRelationTarget) = False Then
-                        SetCtrText(pnlRelationsTargetField, strTable, strRelationTarget.Substring(strRelationTarget.LastIndexOf(".") + 1, strRelationTarget.Length - strRelationTarget.LastIndexOf(".") - 1), intRelationNumber)
-                        SetCtrText(pnlRelationsTargetTable, strTable, SeqData.GetTableAliasFromString(strRelationTarget) & " (" & SeqData.GetTableNameFromString(strRelationTarget) & ")", intRelationNumber)
+                        strTargetField = strRelationTarget.Substring(strRelationTarget.LastIndexOf(".") + 1, strRelationTarget.Length - strRelationTarget.LastIndexOf(".") - 1)
+                        strTargetTableAlias = SeqData.GetTableAliasFromString(strRelationTarget)
+                        strTargetTable = SeqData.GetTableNameFromString(strRelationTarget)
                     End If
                 End If
-                If SeqData.dhdText.CheckNodeElement(xRNode, "RelationTargetTable") Then
-                    Dim strTargetTable As String = xRNode.Item("RelationTargetAlias").InnerText & " (" & xRNode.Item("RelationTargetTable").InnerText & ")"
-                    If strTargetTable = " ()" Then strTargetTable = ""
-                    SetCtrText(pnlRelationsTargetTable, strTable, strTargetTable, intRelationNumber)
+                If SeqData.dhdText.CheckNodeElement(xRNode, "RelationTargetField") Then strTargetField = xRNode.Item("RelationTargetField").InnerText
+                If SeqData.dhdText.CheckNodeElement(xRNode, "RelationTargetTable") Then strTargetTable = xRNode.Item("RelationTargetTable").InnerText
+                If SeqData.dhdText.CheckNodeElement(xRNode, "RelationTargetAlias") Then strTargetTableAlias = xRNode.Item("RelationTargetAlias").InnerText
+                If strTargetTableAlias = "" Then strTargetTableAlias = strTargetTable
+
+                If intRelationNumber = 1 Then
+                    For Each lvwSortItem As ListViewItem In lvwSelectedTables.Items
+                        If lvwSortItem.Text = strTableAlias Then
+                            lvwSelectedTables.SelectedItems.Clear()
+                            lvwSelectedTables.Items(lvwSortItem.Index).Selected = True
+                            Try
+                                While lvwSortItem.Index + 1 > intRelationCount
+                                    btnReportTableUp_Click(lvwSelectedTables, Nothing)
+                                End While
+                                While lvwSortItem.Index + 1 < intRelationCount
+                                    btnReportTableDown_Click(lvwSelectedTables, Nothing)
+                                End While
+                            Catch ex As Exception
+                                WriteStatus("An error occured sorting the tables in the report. Please check the log", 1, lblStatusText)
+                                SeqData.WriteLog("An error occured sorting the tables in the report. " & Environment.NewLine & ex.Message, 1)
+                            End Try
+                        End If
+                    Next
                 End If
-                If SeqData.dhdText.CheckNodeElement(xRNode, "RelationTargetField") Then SetCtrText(pnlRelationsTargetField, strTable, xRNode.Item("RelationTargetField").InnerText, intRelationNumber)
+                SetCtrText(pnlRelationsTargetField, strTable, strTargetField, intRelationNumber)
+                SetCtrText(pnlRelationsTargetTable, strTable, strTargetTableAlias & " (" & strTargetTable & ")", intRelationNumber)
                 SetCtrText(pnlRelationsJoinType, strTable, xRNode.Item("RelationJoinType").InnerText, intRelationNumber)
+
 
             Next
             WriteStatus("Report loading completed.", 0, lblStatusText)
