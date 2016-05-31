@@ -588,6 +588,12 @@ Public Class frmReports
                         cbxTarget.Items.Add(lvwItem.SubItems(1).Text)
                     End If
                 Next
+                For Each lvwItem As ListViewItem In lvwSelectedFields.Items
+                    If lvwItem.Text = strSource Then
+                        cbxTarget.Items.Add(lvwItem.SubItems(1).Text)
+                    End If
+                Next
+                cbxTarget.Sorted = True
             Case "JoinType"
                 cbxTarget.Items.Clear()
                 cbxTarget.Items.Add("")
@@ -1253,7 +1259,7 @@ Public Class frmReports
             Dim intRelationCount As Integer = 0
             For Each xRNode As XmlNode In SeqData.dhdText.FindXmlChildNodes(xNode, "Relations/Relation")
                 strTable = xRNode.Item("TableName").InnerText
-                strTableAlias = xRNode.Item("TableAlias").InnerText
+                If SeqData.dhdText.CheckNodeElement(xRNode, "TableAlias") Then strTableAlias = xRNode.Item("TableAlias").InnerText
                 intRelationNumber = xRNode.Item("RelationNumber").InnerText
                 If intRelationNumber = 1 Then intRelationCount += 1
                 'lstAvailableFields.SelectedItem = strTable & "." & strField
@@ -1295,7 +1301,7 @@ Public Class frmReports
                     Next
                 End If
                 SetCtrText(pnlRelationsTargetField, strTable, strTargetField, intRelationNumber)
-                SetCtrText(pnlRelationsTargetTable, strTable, strTargetTableAlias & " (" & strTargetTable & ")", intRelationNumber)
+                If strTargetTable.Length > 0 Then SetCtrText(pnlRelationsTargetTable, strTable, strTargetTableAlias & " (" & strTargetTable & ")", intRelationNumber)
                 SetCtrText(pnlRelationsJoinType, strTable, xRNode.Item("RelationJoinType").InnerText, intRelationNumber)
 
 
