@@ -1,5 +1,5 @@
 ﻿Module General
-    Friend basCode As SeqCore.BaseCode
+    Friend basCode As New SeqCore.BaseCode
 
     Friend tmrShutdown As New Timers.Timer
 

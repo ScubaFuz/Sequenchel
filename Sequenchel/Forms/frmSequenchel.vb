@@ -7,7 +7,7 @@ Public Class frmSequenchel
         System.Windows.Forms.Application.CurrentCulture = New System.Globalization.CultureInfo("EN-US")
         'dgvTable1.BackgroundImageLayout = ImageLayout.Center
 
-        basCode.ParseCommands(My.Application.CommandLineArgs)
+        If My.Application.CommandLineArgs.Count > 0 Then basCode.ParseCommands(My.Application.CommandLineArgs)
         Me.Text = My.Application.Info.Title
         If basCode.curStatus.Status = SeqCore.CurrentStatus.StatusList.ControlSearch Then Me.Text &= " ControlMode"
         If basCode.curVar.DebugMode Then Me.Text &= " Debug"
@@ -78,7 +78,8 @@ Public Class frmSequenchel
             If Not cbxTable.SelectedItem Is Nothing Then
                 If basCode.CurStatus.Table <> cbxTable.SelectedItem Then
                     basCode.CurStatus.Table = cbxTable.SelectedItem
-                    LoadTable(basCode.CurStatus.Table)
+                    LoadOneTable(basCode.curStatus.Table)
+                    'LoadTable(basCode.curStatus.Table)
                 End If
             End If
         End If
@@ -215,7 +216,7 @@ Public Class frmSequenchel
 
     Private Sub cbxConnection_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbxConnection.SelectedIndexChanged
         WriteStatus("", 0, lblStatusText)
-        If cbxConnection.SelectedIndex >= -1 Then
+        If cbxConnection.SelectedIndex > -1 Then
             CursorControl("Wait")
             basCode.curStatus.Connection = cbxConnection.SelectedItem
             basCode.LoadConnection(xmlConnections, basCode.curStatus.Connection)
@@ -250,7 +251,8 @@ Public Class frmSequenchel
         If cbxTable.SelectedIndex >= -1 Then
             CursorControl("Wait")
             basCode.curStatus.Table = cbxTable.SelectedItem
-            LoadTable(basCode.curStatus.Table)
+            LoadOneTable(basCode.curStatus.Table)
+            'LoadTable(basCode.curStatus.Table)
             CursorControl()
         End If
     End Sub
@@ -325,18 +327,18 @@ Public Class frmSequenchel
     Private Sub AllClear(intLevel As Integer)
         If intLevel >= 4 Then
             xmlConnections.RemoveAll()
+            basCode.curVar.TableSetsFile = ""
             cbxConnection.Items.Clear()
             cbxConnection.Text = ""
         End If
         If intLevel >= 3 Then
             xmlTableSets.RemoveAll()
-            basCode.curVar.TableSetsFile = ""
+            basCode.curVar.TablesFile = ""
             cbxTableSet.Items.Clear()
             cbxTableSet.Text = ""
         End If
         If intLevel >= 2 Then
             xmlTables.RemoveAll()
-            basCode.curVar.TablesFile = ""
             cbxTable.Items.Clear()
             cbxTable.Text = ""
         End If
@@ -349,6 +351,7 @@ Public Class frmSequenchel
         basCode.curStatus.SuspendActions = True
 
         TableClear()
+        basCode.TableClear()
         arrLabels.Clear()
         PanelControlsDispose(sptFields1.Panel1)
         PanelControlsDispose(sptFields1.Panel2)
@@ -403,8 +406,126 @@ Public Class frmSequenchel
     Friend Sub LoadOneTable(strTable As String)
         Try
             FieldsDispose()
-            Dim xPNode As System.Xml.XmlNode = basCode.dhdText.FindXmlNode(xmlTables, "Table", "Alias", strTable)
-            If xPNode Is Nothing Then Exit Sub
+            If basCode.LoadTable(xmlTables, strTable) = False Then
+                WriteStatus("Loading the table " & strTable & " failed. Check your configuration", 2, lblStatusText)
+                Exit Sub
+            End If
+
+            For intCount = 0 To basCode.basTable.Count - 1
+                Dim fldField As Object = Nothing
+                Select Case basCode.basTable.Item(intCount).Category
+                    Case 1
+                        fldField = New TextBox
+                    Case 2
+                        fldField = New CheckBox
+                    Case 5
+                        fldField = New ManagedSelectField
+                        fldField.DataConn.DataLocation = basCode.dhdConnection.DataLocation
+                        fldField.DataConn.DatabaseName = basCode.dhdConnection.DatabaseName
+                        fldField.DataConn.DataProvider = basCode.dhdConnection.DataProvider
+                        fldField.DataConn.LoginMethod = basCode.dhdConnection.LoginMethod
+                        fldField.DataConn.LoginName = basCode.dhdConnection.LoginName
+                        fldField.DataConn.Password = basCode.dhdConnection.Password
+                        fldField.Table = basCode.basTable.TableName
+                        fldField.SearchField = fldField.FieldName
+                    Case 6
+                        fldField = New ManagedSelectField
+                End Select
+                fldField.Name = basCode.basTable.Item(intCount).Name
+                fldField.Tag = basCode.basTable.Item(intCount).Name
+
+                If basCode.basTable.Item(intCount).FieldVisible = True Then
+                    sptFields1.Panel2.Controls.Add(fldField)
+                    fldField.Top = ((sptFields1.Panel2.Controls.Count - 1) * fldField.Height) + (sptFields1.Panel2.Controls.Count * basCode.curVar.BuildMargin)
+                    fldField.Width = basCode.basTable.Item(intCount).FieldWidth
+
+                    If fldField.top > sptFields1.Panel2.Height And fldField.Width >= sptFields1.Panel2.Width - (basCode.curVar.BuildMargin * 3) - SystemInformation.VerticalScrollBarWidth Then
+                        fldField.width = sptFields1.Panel2.Width - (basCode.curVar.BuildMargin * 3) - SystemInformation.VerticalScrollBarWidth
+                    End If
+                    Dim lblLabel As New Label
+                    arrLabels.Add(lblLabel)
+                    lblLabel.Name = "lbl" & fldField.Name
+                    sptFields1.Panel1.Controls.Add(lblLabel)
+                    lblLabel.Text = basCode.basTable.Item(intCount).FieldAlias
+                    lblLabel.Top = fldField.Top + basCode.curVar.BuildMargin
+                    lblLabel.AutoSize = True
+                    lblLabel.Anchor = AnchorStyles.Right Or AnchorStyles.Top
+                    lblLabel.Left = sptFields1.Panel1.Width - lblLabel.Width - 25 - basCode.curVar.BuildMargin
+                    If lblLabel.Left < 0 Then
+                        sptTable1.SplitterDistance += lblLabel.Left
+                        sptFields1.SplitterDistance += (lblLabel.Left * -1)
+                    End If
+                    If basCode.basTable.Item(intCount).FieldSearchList = True And basCode.basTable.Item(intCount).FieldDataType.ToString.ToUpper <> "BIT" Then
+                        Dim btnButton As New Button
+                        btnButton.Name = "btn" & fldField.Name
+                        sptFields1.Panel1.Controls.Add(btnButton)
+                        btnButton.Text = ""
+                        btnButton.Image = My.Resources.reload16
+                        btnButton.ImageAlign = ContentAlignment.MiddleCenter
+                        btnButton.Size = New System.Drawing.Size(25, 23)
+                        btnButton.Top = fldField.Top - basCode.curVar.BuildMargin / 2
+                        btnButton.Left = sptFields1.Panel1.Width - btnButton.Width
+                        btnButton.Anchor = AnchorStyles.Right Or AnchorStyles.Top
+                        btnButton.UseVisualStyleBackColor = True
+                        AddHandler btnButton.Click, AddressOf Me.btnReload_Click
+                    End If
+
+                    If basCode.basTable.Item(intCount).DefaultButton = True And Not (basCode.basTable.Item(intCount).FieldSearchList = True And basCode.basTable.Item(intCount).FieldDataType.ToString.ToUpper <> "BIT") Then
+                        Dim btnButton As New Button
+                        btnButton.Name = "btn" & fldField.Name
+                        sptFields1.Panel1.Controls.Add(btnButton)
+                        btnButton.Text = ""
+                        btnButton.Image = My.Resources.TSfavicon
+                        btnButton.ImageAlign = ContentAlignment.MiddleCenter
+                        btnButton.Size = New System.Drawing.Size(25, 23)
+                        btnButton.Top = fldField.Top - basCode.curVar.BuildMargin / 2
+                        btnButton.Left = sptFields1.Panel1.Width - btnButton.Width
+                        btnButton.Anchor = AnchorStyles.Right Or AnchorStyles.Top
+                        btnButton.UseVisualStyleBackColor = True
+                        AddHandler btnButton.Click, AddressOf Me.btnDefault_Click
+                    End If
+
+                    If basCode.basTable.Item(intCount).Count > 0 Then
+                        For intRel As Integer = 1 To basCode.basTable.Item(intCount).Count
+                            MessageBox.Show(basCode.basTable.Item(intCount).Item(intRel).Name)
+                        Next
+                    End If
+                    If basCode.basTable.Item(intCount).FieldRelatedField.ToString.Length > 0 And basCode.basTable.Item(intCount).FieldRelation.ToString.Length > 0 Then
+                        'Dim objRelatedField As New ComboField
+                        Dim msfRelatedField As New ManagedSelectField
+                        'AddHandler msfRelatedField.SelectedIndexChanged, AddressOf Me.cbxRelatedField_SelectedIndexChanged
+                        msfRelatedField.Name = fldField.FieldRelationTable & "." & fldField.FieldRelatedField
+
+                        msfRelatedField.DataConn.DataLocation = basCode.dhdConnection.DataLocation
+                        msfRelatedField.DataConn.DatabaseName = basCode.dhdConnection.DatabaseName
+                        msfRelatedField.DataConn.DataProvider = basCode.dhdConnection.DataProvider
+                        msfRelatedField.DataConn.LoginMethod = basCode.dhdConnection.LoginMethod
+                        msfRelatedField.DataConn.LoginName = basCode.dhdConnection.LoginName
+                        msfRelatedField.DataConn.Password = basCode.dhdConnection.Password
+                        msfRelatedField.Table = fldField.FieldRelation.Substring(0, fldField.FieldRelation.LastIndexOf("."))
+                        msfRelatedField.SearchField = fldField.FieldRelatedField
+                        msfRelatedField.IdentifierField = fldField.FieldRelation.Substring(fldField.FieldRelation.LastIndexOf(".") + 1, fldField.FieldRelation.length - (fldField.FieldRelation.LastIndexOf(".") + 1))
+
+                        sptFields1.Panel2.Controls.Add(msfRelatedField)
+                        msfRelatedField.Top = fldField.Top
+                        msfRelatedField.Left = fldField.Left + fldField.Width + basCode.curVar.BuildMargin
+                        If fldField.top > sptFields1.Panel2.Height Then
+                            msfRelatedField.Width = sptFields1.Panel2.Width - msfRelatedField.Left - (basCode.curVar.BuildMargin * 3) - SystemInformation.VerticalScrollBarWidth
+                        Else
+                            msfRelatedField.Width = sptFields1.Panel2.Width - msfRelatedField.Left - (basCode.curVar.BuildMargin * 3)
+                        End If
+
+                        msfRelatedField.Width = sptFields1.Panel2.Width - msfRelatedField.Left - (basCode.curVar.BuildMargin * 3) - SystemInformation.VerticalScrollBarWidth
+                        msfRelatedField.Anchor = AnchorStyles.Top Or AnchorStyles.Left Or AnchorStyles.Right
+                        msfRelatedField.Visible = True
+                        'If basCode.dhdConnection.DataBaseOnline = True Then msfRelatedField.RunSearch()
+                    End If
+
+
+
+                End If
+
+            Next
 
 
         Catch ex As Exception

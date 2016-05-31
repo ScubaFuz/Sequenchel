@@ -1,4 +1,28 @@
 ﻿Public Class BaseField
+    Inherits System.Collections.CollectionBase
+
+#Region "Procedures"
+    Public Overloads Sub Add(ByVal AddField As BaseRelation)
+        Me.List.Add(AddField)
+    End Sub
+
+    Public Overloads Sub Remove(ByVal removeField As BaseRelation)
+        Me.List.Remove(removeField)
+    End Sub
+
+    Public Overloads Sub Remove(ByVal strFieldName As String)
+        Me.List.Remove(strFieldName)
+    End Sub
+
+    Default Public Property Item(ByVal index As Double) As Object
+        Get
+            Return Me.List.Item(index)
+        End Get
+        Set(ByVal Value As Object)
+            Me.List.Item(index) = Value
+        End Set
+    End Property
+#End Region
 
 #Region "General"
     Private _Category As Integer = 0
@@ -122,69 +146,6 @@
         End Get
         Set(ByVal Value As Boolean)
             _PrimaryKey = Value
-        End Set
-    End Property
-#End Region
-
-#Region "Relations"
-    Private _RelationTable As String = ""
-    Private _RelationTableAlias As String = ""
-    Private _RelationField As String = ""
-    Private _RelatedFieldName As String = ""
-    Private _RelatedFieldAlias As String = ""
-    Private _RelatedFieldList As Boolean = False
-
-    Public Property RelationTable() As String
-        Get
-            Return _RelationTable
-        End Get
-        Set(ByVal Value As String)
-            _RelationTable = Value
-        End Set
-    End Property
-
-    Public Property RelationTableAlias() As String
-        Get
-            Return _RelationTableAlias
-        End Get
-        Set(ByVal Value As String)
-            _RelationTableAlias = Value
-        End Set
-    End Property
-
-    Public Property RelationField() As String
-        Get
-            Return _RelationField
-        End Get
-        Set(ByVal Value As String)
-            _RelationField = Value
-        End Set
-    End Property
-
-    Public Property RelatedFieldName() As String
-        Get
-            Return _RelatedFieldName
-        End Get
-        Set(ByVal Value As String)
-            _RelatedFieldName = Value
-        End Set
-    End Property
-
-    Public Property RelatedFieldAlias() As String
-        Get
-            Return _RelatedFieldAlias
-        End Get
-        Set(ByVal Value As String)
-            _RelatedFieldAlias = Value
-        End Set
-    End Property
-
-    Public Property RelatedFieldList() As Boolean
-        Get
-            Return _RelatedFieldList
-        End Get
-        Set(ByVal Value As Boolean)
-            _RelatedFieldList = Value
         End Set
     End Property
 #End Region
