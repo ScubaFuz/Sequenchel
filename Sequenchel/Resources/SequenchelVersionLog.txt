@@ -1,7 +1,7 @@
 Version 3.8.0
 New: In Reports: table alias is used instead of table name to enable multiple instances of the same table in a future release.
-		Relations and reports will be converted to a new markup when saving them. All should be converted before using version 4.0
 Enhanced: In Reports: Select lists for related tables and fields.
+Enhanced: In Reports: Replaced Close button with Close menu to avoid accidentally closing the report screen
 Fixed: Import to table now uses table name instead of alias.
 Fixed: Fields with a related ManagedSelectField were emptied when adding a new item to the database.
 

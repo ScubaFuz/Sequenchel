@@ -34,8 +34,13 @@ Public Class frmReports
         End If
     End Sub
 
-    Private Sub btnClose_Click(sender As Object, e As EventArgs) Handles btnClose.Click
+    Private Sub mnuReportsFileClose_Click(sender As Object, e As EventArgs) Handles mnuReportsFileClose.Click
         Me.Close()
+    End Sub
+
+    Private Sub mnuReportsHelpManual_Click(sender As Object, e As EventArgs) Handles mnuReportsHelpManual.Click
+        WriteStatus("", 0, lblStatusText)
+        System.Diagnostics.Process.Start("http://www.sequenchel.com/service/manual/reports/report-definition/")
     End Sub
 
     Private Sub btnTest_Click(sender As Object, e As EventArgs) Handles btnTest.Click
@@ -709,7 +714,12 @@ Public Class frmReports
         Dim intMaxNumber As Integer = 0
         SeqData.CurStatus.ReportMaxTop = SeqData.CurVar.BuildMargin
         For incCount As Integer = 0 To lstSource.Items.Count - 1
-            strFieldName = lstSource.Items.Item(incCount).Tag
+            Dim strColumnName As String = lstSource.Columns(1).Text
+            If strColumnName = "Table Name" Then
+                strFieldName = lstSource.Items.Item(incCount).SubItems(1).Text
+            Else
+                strFieldName = lstSource.Items.Item(incCount).Name
+            End If
             intMaxNumber = 0
             For Each ctrControl In pnlTarget.Controls
                 Dim strControl As String = ctrControl.Tag
@@ -730,7 +740,7 @@ Public Class frmReports
 
                 End If
             Next
-            SeqData.CurStatus.ReportMaxTop += intMaxNumber * SeqData.CurVar.FieldHeight + intMaxNumber * SeqData.CurVar.BuildMargin
+            SeqData.curStatus.ReportMaxTop += intMaxNumber * SeqData.curVar.FieldHeight + intMaxNumber * SeqData.curVar.BuildMargin
         Next
     End Sub
 

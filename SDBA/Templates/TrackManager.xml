@@ -3,7 +3,7 @@
   <Tables>
     <Table Default="False">
       <Name>dbo.tbl_Appointment</Name>
-      <Alias>dbo.tbl_Appointment</Alias>
+      <Alias>Appointment</Alias>
       <Visible>True</Visible>
       <Search>True</Search>
       <Update>True</Update>
@@ -28,7 +28,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>AppDate</FldName>
@@ -48,7 +48,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>AppType</FldName>
@@ -68,7 +68,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>FK_ClientId</FldName>
@@ -88,7 +88,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
           <Relations>
             <Relation RelatedField="ClientName">dbo.tbl_Clients.PK_ClientID</Relation>
           </Relations>
@@ -111,7 +111,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
           <Relations>
             <Relation RelatedField="TrackName">dbo.tbl_Tracks.PK_TrackID</Relation>
           </Relations>
@@ -134,7 +134,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>FK_LessonTypeId</FldName>
@@ -154,7 +154,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
           <Relations>
             <Relation RelatedField="LessonTypeName">dbo.tbl_LessonTypes.PK_LessonTypeID</Relation>
           </Relations>
@@ -177,7 +177,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
           <Relations>
             <Relation RelatedField="LevelName">dbo.tbl_Levels.PK_LevelID</Relation>
           </Relations>
@@ -200,7 +200,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>ExtraCount</FldName>
@@ -220,7 +220,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>FK_LoginId</FldName>
@@ -240,7 +240,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
           <Relations>
             <Relation RelatedField="LoginName">dbo.tbl_Logins.PK_LoginID</Relation>
           </Relations>
@@ -269,7 +269,7 @@
     </Table>
     <Table Default="False">
       <Name>dbo.tbl_Arguments</Name>
-      <Alias>dbo.tbl_Arguments</Alias>
+      <Alias>Arguments</Alias>
       <Visible>True</Visible>
       <Search>True</Search>
       <Update>True</Update>
@@ -294,7 +294,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>ArgumentName</FldName>
@@ -314,13 +314,13 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
       </Fields>
     </Table>
     <Table Default="False">
       <Name>dbo.tbl_ClientLevels</Name>
-      <Alias>dbo.tbl_ClientLevels</Alias>
+      <Alias>ClientLevels</Alias>
       <Visible>True</Visible>
       <Search>True</Search>
       <Update>True</Update>
@@ -345,7 +345,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>FK_ClientID</FldName>
@@ -365,7 +365,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
           <Relations>
             <Relation RelatedField="ClientName">dbo.tbl_Clients.PK_ClientID</Relation>
           </Relations>
@@ -388,7 +388,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
           <Relations>
             <Relation RelatedField="LessonTypeName">dbo.tbl_LessonTypes.PK_LessonTypeID</Relation>
           </Relations>
@@ -411,7 +411,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
           <Relations>
             <Relation RelatedField="LevelName">dbo.tbl_Levels.PK_LevelID</Relation>
           </Relations>
@@ -434,7 +434,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>ExtraCount</FldName>
@@ -454,7 +454,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>PrimaryType</FldName>
@@ -474,7 +474,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>LastAction</FldName>
@@ -494,7 +494,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>Active</FldName>
@@ -520,7 +520,7 @@
     </Table>
     <Table Default="True">
       <Name>dbo.tbl_Clients</Name>
-      <Alias>dbo.tbl_Clients</Alias>
+      <Alias>Clients</Alias>
       <Visible>True</Visible>
       <Search>True</Search>
       <Update>True</Update>
@@ -545,7 +545,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>FirstName</FldName>
@@ -565,7 +565,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>MiddleName</FldName>
@@ -585,7 +585,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>FamilyName</FldName>
@@ -605,7 +605,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>ClientName</FldName>
@@ -625,7 +625,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>FK_GroupID</FldName>
@@ -645,7 +645,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
           <Relations>
             <Relation RelatedField="GroupName">dbo.tbl_Groups.PK_GroupID</Relation>
           </Relations>
@@ -668,7 +668,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>Street</FldName>
@@ -688,7 +688,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>HouseNumber</FldName>
@@ -708,7 +708,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>PostalCode</FldName>
@@ -728,7 +728,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>City</FldName>
@@ -748,7 +748,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>Country</FldName>
@@ -768,7 +768,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>TelePhone</FldName>
@@ -788,7 +788,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>Fax</FldName>
@@ -808,7 +808,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>Mobile</FldName>
@@ -828,7 +828,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>Email</FldName>
@@ -848,7 +848,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>MailingList</FldName>
@@ -868,7 +868,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>FK_PrContactID</FldName>
@@ -888,7 +888,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
           <Relations>
             <Relation RelatedField="PrContactName">dbo.tbl_PrContacts.PK_PrContactID</Relation>
           </Relations>
@@ -911,7 +911,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>BankAccount</FldName>
@@ -931,7 +931,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>CreditCard</FldName>
@@ -951,7 +951,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>CreditCardCcv</FldName>
@@ -971,7 +971,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>CreditCardExpire</FldName>
@@ -991,7 +991,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>Remarks</FldName>
@@ -1011,7 +1011,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>CustomField1</FldName>
@@ -1031,7 +1031,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>CustomField2</FldName>
@@ -1051,7 +1051,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>CustomField3</FldName>
@@ -1071,7 +1071,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>CustomField4</FldName>
@@ -1091,7 +1091,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>Active</FldName>
@@ -1117,7 +1117,7 @@
     </Table>
     <Table Default="False">
       <Name>dbo.tbl_Config</Name>
-      <Alias>dbo.tbl_Config</Alias>
+      <Alias>Config</Alias>
       <Visible>True</Visible>
       <Search>True</Search>
       <Update>True</Update>
@@ -1142,7 +1142,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>Category</FldName>
@@ -1162,7 +1162,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>ConfigName</FldName>
@@ -1182,7 +1182,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>ConfigValue</FldName>
@@ -1222,7 +1222,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>DateStop</FldName>
@@ -1242,7 +1242,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>DateChange</FldName>
@@ -1262,7 +1262,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>Remarks</FldName>
@@ -1282,7 +1282,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>Active</FldName>
@@ -1308,7 +1308,7 @@
     </Table>
     <Table Default="False">
       <Name>dbo.tbl_Groups</Name>
-      <Alias>dbo.tbl_Groups</Alias>
+      <Alias>Groups</Alias>
       <Visible>True</Visible>
       <Search>True</Search>
       <Update>True</Update>
@@ -1333,7 +1333,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>GroupName</FldName>
@@ -1353,7 +1353,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>Active</FldName>
@@ -1379,7 +1379,7 @@
     </Table>
     <Table Default="False">
       <Name>dbo.tbl_Invoice</Name>
-      <Alias>dbo.tbl_Invoice</Alias>
+      <Alias>Invoice</Alias>
       <Visible>True</Visible>
       <Search>True</Search>
       <Update>True</Update>
@@ -1404,7 +1404,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>InvoiceName</FldName>
@@ -1424,7 +1424,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>InvoiceNumber</FldName>
@@ -1444,7 +1444,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>InvoiceDate</FldName>
@@ -1464,7 +1464,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>FK_ClientID</FldName>
@@ -1484,7 +1484,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
           <Relations>
             <Relation RelatedField="ClientName">dbo.tbl_Clients.PK_ClientID</Relation>
           </Relations>
@@ -1507,7 +1507,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
           <Relations>
             <Relation RelatedField="LoginName">dbo.tbl_Logins.PK_LoginID</Relation>
           </Relations>
@@ -1530,7 +1530,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>Active</FldName>
@@ -1556,7 +1556,7 @@
     </Table>
     <Table Default="False">
       <Name>dbo.tbl_InvoiceLine</Name>
-      <Alias>dbo.tbl_InvoiceLine</Alias>
+      <Alias>InvoiceLine</Alias>
       <Visible>True</Visible>
       <Search>True</Search>
       <Update>True</Update>
@@ -1581,7 +1581,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>FK_InvoiceID</FldName>
@@ -1601,7 +1601,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
           <Relations>
             <Relation RelatedField="InvoiceNumber">dbo.tbl_Invoice.PK_InvoiceID</Relation>
           </Relations>
@@ -1624,7 +1624,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
           <Relations>
             <Relation>dbo.tbl_Clients.PK_ClientID</Relation>
           </Relations>
@@ -1647,7 +1647,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
           <Relations>
             <Relation RelatedField="LoginName">dbo.tbl_Logins.PK_LoginID</Relation>
           </Relations>
@@ -1670,7 +1670,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>Count</FldName>
@@ -1690,7 +1690,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>Amount</FldName>
@@ -1710,7 +1710,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>FK_Tax</FldName>
@@ -1730,7 +1730,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
           <Relations>
             <Relation RelatedField="TaxValue">dbo.tbl_Tax.PK_Tax</Relation>
           </Relations>
@@ -1759,7 +1759,7 @@
     </Table>
     <Table Default="False">
       <Name>dbo.tbl_InvoicePayment</Name>
-      <Alias>dbo.tbl_InvoicePayment</Alias>
+      <Alias>InvoicePayment</Alias>
       <Visible>True</Visible>
       <Search>True</Search>
       <Update>True</Update>
@@ -1784,7 +1784,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>PayDate</FldName>
@@ -1804,7 +1804,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>FK_InvoiceID</FldName>
@@ -1824,7 +1824,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
           <Relations>
             <Relation RelatedField="InvoiceNumber">dbo.tbl_Invoice.PK_InvoiceID</Relation>
           </Relations>
@@ -1847,7 +1847,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
           <Relations>
             <Relation RelatedField="ClientName">dbo.tbl_Clients.PK_ClientID</Relation>
           </Relations>
@@ -1870,7 +1870,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
           <Relations>
             <Relation RelatedField="LoginName">dbo.tbl_Logins.PK_LoginID</Relation>
           </Relations>
@@ -1893,7 +1893,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>FK_PaymentMethodID</FldName>
@@ -1913,7 +1913,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
           <Relations>
             <Relation RelatedField="PaymentMethodName">dbo.tbl_PaymentMethods.PK_PaymentMethodID</Relation>
           </Relations>
@@ -1942,10 +1942,10 @@
     </Table>
     <Table Default="False">
       <Name>dbo.tbl_Language</Name>
-      <Alias>dbo.tbl_Language</Alias>
+      <Alias>Language</Alias>
       <Visible>True</Visible>
       <Search>True</Search>
-      <Update>False</Update>
+      <Update>True</Update>
       <Insert>False</Insert>
       <Delete>False</Delete>
       <Fields>
@@ -1967,7 +1967,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>Language</FldName>
@@ -1987,7 +1987,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>LanguageForm</FldName>
@@ -2007,7 +2007,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>LanguageItem</FldName>
@@ -2027,7 +2027,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>LanguageText</FldName>
@@ -2047,7 +2047,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>LanguageType</FldName>
@@ -2067,13 +2067,13 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
       </Fields>
     </Table>
     <Table Default="False">
       <Name>dbo.tbl_LessonTypes</Name>
-      <Alias>dbo.tbl_LessonTypes</Alias>
+      <Alias>LessonTypes</Alias>
       <Visible>True</Visible>
       <Search>True</Search>
       <Update>True</Update>
@@ -2098,7 +2098,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>LessonTypeName</FldName>
@@ -2118,7 +2118,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>Color</FldName>
@@ -2138,7 +2138,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>Active</FldName>
@@ -2164,7 +2164,7 @@
     </Table>
     <Table Default="False">
       <Name>dbo.tbl_Levels</Name>
-      <Alias>dbo.tbl_Levels</Alias>
+      <Alias>Levels</Alias>
       <Visible>True</Visible>
       <Search>True</Search>
       <Update>True</Update>
@@ -2189,7 +2189,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>LevelName</FldName>
@@ -2209,7 +2209,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>Color</FldName>
@@ -2229,7 +2229,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>LevelCount</FldName>
@@ -2249,7 +2249,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>Active</FldName>
@@ -2275,7 +2275,7 @@
     </Table>
     <Table Default="False">
       <Name>dbo.tbl_Logging</Name>
-      <Alias>dbo.tbl_Logging</Alias>
+      <Alias>Logging</Alias>
       <Visible>True</Visible>
       <Search>True</Search>
       <Update>False</Update>
@@ -2300,7 +2300,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>Logtext</FldName>
@@ -2320,7 +2320,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>ClientPC</FldName>
@@ -2340,13 +2340,13 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
       </Fields>
     </Table>
     <Table Default="False">
       <Name>dbo.tbl_Logins</Name>
-      <Alias>dbo.tbl_Logins</Alias>
+      <Alias>Logins</Alias>
       <Visible>True</Visible>
       <Search>True</Search>
       <Update>True</Update>
@@ -2371,7 +2371,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>LoginName</FldName>
@@ -2391,7 +2391,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>LoginPassword</FldName>
@@ -2411,7 +2411,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>DateStart</FldName>
@@ -2491,7 +2491,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>Security_Change</FldName>
@@ -2511,7 +2511,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>Security_Delete</FldName>
@@ -2531,7 +2531,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>Finance_Add</FldName>
@@ -2551,7 +2551,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>Finance_Change</FldName>
@@ -2571,7 +2571,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>Finance_Delete</FldName>
@@ -2591,7 +2591,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>Settings_Add</FldName>
@@ -2611,7 +2611,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>Settings_Change</FldName>
@@ -2631,7 +2631,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>Settings_Delete</FldName>
@@ -2651,7 +2651,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>Groups_Delete</FldName>
@@ -2671,7 +2671,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>Clients_Delete</FldName>
@@ -2691,7 +2691,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>Active</FldName>
@@ -2717,10 +2717,10 @@
     </Table>
     <Table Default="False">
       <Name>dbo.tbl_Memo</Name>
-      <Alias>dbo.tbl_Memo</Alias>
+      <Alias>Memo</Alias>
       <Visible>True</Visible>
       <Search>True</Search>
-      <Update>False</Update>
+      <Update>True</Update>
       <Insert>False</Insert>
       <Delete>False</Delete>
       <Fields>
@@ -2742,7 +2742,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>Type</FldName>
@@ -2762,7 +2762,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>FK_GroupId</FldName>
@@ -2782,7 +2782,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>MemoDate</FldName>
@@ -2802,7 +2802,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>MemoText</FldName>
@@ -2822,13 +2822,13 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
       </Fields>
     </Table>
     <Table Default="False">
       <Name>dbo.tbl_PaymentMethods</Name>
-      <Alias>dbo.tbl_PaymentMethods</Alias>
+      <Alias>PaymentMethods</Alias>
       <Visible>True</Visible>
       <Search>True</Search>
       <Update>True</Update>
@@ -2853,7 +2853,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>PaymentMethodName</FldName>
@@ -2873,7 +2873,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>Active</FldName>
@@ -2899,7 +2899,7 @@
     </Table>
     <Table Default="False">
       <Name>dbo.tbl_PrContacts</Name>
-      <Alias>dbo.tbl_PrContacts</Alias>
+      <Alias>PrContacts</Alias>
       <Visible>True</Visible>
       <Search>True</Search>
       <Update>True</Update>
@@ -2924,7 +2924,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>PrContactName</FldName>
@@ -2944,7 +2944,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>Active</FldName>
@@ -2970,7 +2970,7 @@
     </Table>
     <Table Default="False">
       <Name>dbo.tbl_Products</Name>
-      <Alias>dbo.tbl_Products</Alias>
+      <Alias>Products</Alias>
       <Visible>True</Visible>
       <Search>True</Search>
       <Update>True</Update>
@@ -2995,7 +2995,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>ProductText</FldName>
@@ -3015,7 +3015,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>ProductCount</FldName>
@@ -3035,7 +3035,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>ProductAmount</FldName>
@@ -3055,7 +3055,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>Tax</FldName>
@@ -3075,7 +3075,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>Sort</FldName>
@@ -3095,7 +3095,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>Active</FldName>
@@ -3121,7 +3121,7 @@
     </Table>
     <Table Default="False">
       <Name>dbo.tbl_ReportArguments</Name>
-      <Alias>dbo.tbl_ReportArguments</Alias>
+      <Alias>ReportArguments</Alias>
       <Visible>True</Visible>
       <Search>True</Search>
       <Update>True</Update>
@@ -3146,7 +3146,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>FK_ReportId</FldName>
@@ -3166,7 +3166,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
           <Relations>
             <Relation>dbo.tbl_Reports.PK_ReportId</Relation>
           </Relations>
@@ -3189,7 +3189,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
           <Relations>
             <Relation>dbo.tbl_Arguments.PK_ArgumentId</Relation>
           </Relations>
@@ -3212,7 +3212,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>IsSelected</FldName>
@@ -3232,13 +3232,13 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
       </Fields>
     </Table>
     <Table Default="False">
       <Name>dbo.tbl_ReportFields</Name>
-      <Alias>dbo.tbl_ReportFields</Alias>
+      <Alias>ReportFields</Alias>
       <Visible>True</Visible>
       <Search>True</Search>
       <Update>True</Update>
@@ -3263,7 +3263,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>FK_ReportId</FldName>
@@ -3283,7 +3283,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
           <Relations>
             <Relation>dbo.tbl_Reports.PK_ReportId</Relation>
           </Relations>
@@ -3306,7 +3306,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>FieldAlias</FldName>
@@ -3326,7 +3326,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>FieldWidth</FldName>
@@ -3346,7 +3346,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>FieldShow</FldName>
@@ -3366,7 +3366,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>FieldType</FldName>
@@ -3386,7 +3386,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>FieldDefault</FldName>
@@ -3406,7 +3406,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>FieldOrder</FldName>
@@ -3426,13 +3426,13 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
       </Fields>
     </Table>
     <Table Default="False">
       <Name>dbo.tbl_Reports</Name>
-      <Alias>dbo.tbl_Reports</Alias>
+      <Alias>Reports</Alias>
       <Visible>True</Visible>
       <Search>True</Search>
       <Update>True</Update>
@@ -3457,7 +3457,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>ReportName</FldName>
@@ -3477,7 +3477,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>ReportType</FldName>
@@ -3497,7 +3497,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>PrimaryMenu</FldName>
@@ -3517,7 +3517,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>SecondaryMenu</FldName>
@@ -3537,7 +3537,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>ProcedureName</FldName>
@@ -3557,7 +3557,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>Visible</FldName>
@@ -3577,7 +3577,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>Active</FldName>
@@ -3597,13 +3597,13 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
       </Fields>
     </Table>
     <Table Default="False">
       <Name>dbo.tbl_Tax</Name>
-      <Alias>dbo.tbl_Tax</Alias>
+      <Alias>Tax</Alias>
       <Visible>True</Visible>
       <Search>True</Search>
       <Update>True</Update>
@@ -3628,7 +3628,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>TaxValue</FldName>
@@ -3648,7 +3648,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>TaxDescription</FldName>
@@ -3668,7 +3668,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>Active</FldName>
@@ -3688,13 +3688,13 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
       </Fields>
     </Table>
     <Table Default="False">
       <Name>dbo.tbl_Tracks</Name>
-      <Alias>dbo.tbl_Tracks</Alias>
+      <Alias>Tracks</Alias>
       <Visible>True</Visible>
       <Search>True</Search>
       <Update>True</Update>
@@ -3719,7 +3719,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>TrackName</FldName>
@@ -3739,7 +3739,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>TrackOffset</FldName>
@@ -3759,7 +3759,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>Active</FldName>
