@@ -297,7 +297,7 @@ Public Class Data
                     Return 200
                 End If
             Case "INTEGER"
-                Return intMaxLength * 10
+                Return Math.Max(intMaxLength, 5) * 10
             Case "BIT"
                 Return 25
             Case "GUID", "XML", "TEXT", "IMAGE"

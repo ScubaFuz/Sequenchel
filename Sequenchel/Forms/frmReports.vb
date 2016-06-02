@@ -444,8 +444,10 @@ Public Class frmReports
         chkNewShow.Tag = strFieldName
         'chkNewShow.ThreeState = True
         pnlReportDisplay.Controls.Add(chkNewShow)
-        chkNewShow.Top = ((lvwSelectedFields.Items.Count - 1) * SeqData.CurVar.FieldHeight) + ((lvwSelectedFields.Items.Count - 1) * SeqData.CurVar.BuildMargin)
+        chkNewShow.Checked = True
+        chkNewShow.Top = ((lvwSelectedFields.Items.Count - 1) * SeqData.curVar.FieldHeight) + ((lvwSelectedFields.Items.Count - 1) * SeqData.curVar.BuildMargin)
         chkNewShow.Left = SeqData.CurVar.BuildMargin
+        AddHandler chkNewShow.CheckedChanged, AddressOf Me.chkShowField_CheckChanged
 
         Dim cbxNewShowMode As New ComboField
         cbxNewShowMode.Name = pnlReportShowMode.Name & "1" & strFieldName
@@ -1411,7 +1413,10 @@ Public Class frmReports
         'strReportText &= vbCrLf
         lblListCountNumber.Text = "0"
         lblErrorMessage.Text = strErrorMessage
-        If SeqData.dhdText.DatasetCheck(dtsData) = False Then Exit Sub
+        If SeqData.dhdText.DatasetCheck(dtsData) = False Then
+            WriteStatus("No data was found", 0, lblStatusText)
+            Exit Sub
+        End If
 
         Try
             If DataSet2DataGridView(dtsData, 0, dgvReport, True) = False Then
@@ -1745,10 +1750,29 @@ Public Class frmReports
     '    End If
     'End Sub
 
-    Private Sub chkShow_CheckedChanged(sender As Object, e As EventArgs) Handles chkReportShow.CheckedChanged
-        For Each chkBox As CheckBox In pnlReportDisplay.Controls
-            chkBox.Checked = chkReportShow.Checked
-        Next
+    Private Sub chkShow_CheckedStateChanged(sender As Object, e As EventArgs) Handles chkReportShow.CheckStateChanged
+        If SeqData.curStatus.SuspendActions = False Then
+            SeqData.curStatus.SuspendActions = True
+            If chkReportShow.CheckState = CheckState.Indeterminate Then chkReportShow.CheckState = CheckState.Unchecked
+            For Each chkBox As CheckBox In pnlReportDisplay.Controls
+                chkBox.Checked = chkReportShow.Checked
+            Next
+            SeqData.curStatus.SuspendActions = False
+        End If
+    End Sub
+
+    Private Sub chkShowField_CheckChanged(sender As Object, e As EventArgs)
+        If SeqData.curStatus.SuspendActions = False Then
+            SeqData.curStatus.SuspendActions = True
+            Dim intCount As Integer = 0
+            For Each chkBox As CheckBox In pnlReportDisplay.Controls
+                If chkBox.Checked = True Then intCount += 1
+            Next
+            If intCount = 0 Then chkReportShow.CheckState = CheckState.Unchecked
+            If intCount > 0 And intCount < pnlReportDisplay.Controls.Count Then chkReportShow.CheckState = CheckState.Indeterminate
+            If intCount = pnlReportDisplay.Controls.Count Then chkReportShow.CheckState = CheckState.Checked
+            SeqData.curStatus.SuspendActions = False
+        End If
     End Sub
 
     Private Sub btnEmailResults_Click(sender As Object, e As EventArgs) Handles btnEmailResults.Click

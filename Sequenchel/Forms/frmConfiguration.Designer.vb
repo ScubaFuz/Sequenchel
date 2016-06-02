@@ -199,6 +199,8 @@ Partial Class frmConfiguration
         Me.btnCancel = New System.Windows.Forms.Button()
         Me.lblStatusTitle = New System.Windows.Forms.Label()
         Me.lblStatusText = New System.Windows.Forms.Label()
+        Me.btnNodeUp = New System.Windows.Forms.Button()
+        Me.btnNodeDown = New System.Windows.Forms.Button()
         Me.tabConfiguration.SuspendLayout()
         Me.tpgConnections.SuspendLayout()
         Me.tpgTableSets.SuspendLayout()
@@ -969,6 +971,8 @@ Partial Class frmConfiguration
         '
         'tpgTables
         '
+        Me.tpgTables.Controls.Add(Me.btnNodeUp)
+        Me.tpgTables.Controls.Add(Me.btnNodeDown)
         Me.tpgTables.Controls.Add(Me.pnlFieldSettings)
         Me.tpgTables.Controls.Add(Me.lstTables)
         Me.tpgTables.Controls.Add(Me.chkImportAllTables)
@@ -1794,9 +1798,10 @@ Partial Class frmConfiguration
         Me.tvwTable.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.tvwTable.HideSelection = False
         Me.tvwTable.Location = New System.Drawing.Point(25, 302)
         Me.tvwTable.Name = "tvwTable"
-        Me.tvwTable.Size = New System.Drawing.Size(392, 397)
+        Me.tvwTable.Size = New System.Drawing.Size(377, 397)
         Me.tvwTable.TabIndex = 16
         '
         'lblTables
@@ -1817,7 +1822,7 @@ Partial Class frmConfiguration
         Me.lvwTables.FullRowSelect = True
         Me.lvwTables.Location = New System.Drawing.Point(25, 36)
         Me.lvwTables.Name = "lvwTables"
-        Me.lvwTables.Size = New System.Drawing.Size(392, 214)
+        Me.lvwTables.Size = New System.Drawing.Size(377, 214)
         Me.lvwTables.Sorting = System.Windows.Forms.SortOrder.Ascending
         Me.lvwTables.TabIndex = 0
         Me.lvwTables.UseCompatibleStateImageBehavior = False
@@ -2017,6 +2022,26 @@ Partial Class frmConfiguration
         Me.lblStatusText.Name = "lblStatusText"
         Me.lblStatusText.Size = New System.Drawing.Size(432, 23)
         Me.lblStatusText.TabIndex = 10
+        '
+        'btnNodeUp
+        '
+        Me.btnNodeUp.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnNodeUp.Image = Global.Sequenchel.My.Resources.Resources.button_up
+        Me.btnNodeUp.Location = New System.Drawing.Point(408, 470)
+        Me.btnNodeUp.Name = "btnNodeUp"
+        Me.btnNodeUp.Size = New System.Drawing.Size(30, 23)
+        Me.btnNodeUp.TabIndex = 163
+        Me.btnNodeUp.UseVisualStyleBackColor = True
+        '
+        'btnNodeDown
+        '
+        Me.btnNodeDown.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnNodeDown.Image = Global.Sequenchel.My.Resources.Resources.button_down
+        Me.btnNodeDown.Location = New System.Drawing.Point(408, 499)
+        Me.btnNodeDown.Name = "btnNodeDown"
+        Me.btnNodeDown.Size = New System.Drawing.Size(30, 23)
+        Me.btnNodeDown.TabIndex = 164
+        Me.btnNodeDown.UseVisualStyleBackColor = True
         '
         'frmConfiguration
         '
@@ -2227,4 +2252,6 @@ Partial Class frmConfiguration
     Friend WithEvents cbxRelationFields As System.Windows.Forms.ComboBox
     Friend WithEvents lstRelatedFields As System.Windows.Forms.ListBox
     Friend WithEvents btnShowRelatedFields As System.Windows.Forms.Button
+    Friend WithEvents btnNodeUp As System.Windows.Forms.Button
+    Friend WithEvents btnNodeDown As System.Windows.Forms.Button
 End Class

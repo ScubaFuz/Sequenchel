@@ -1004,6 +1004,7 @@ Public Class frmConfiguration
                      blnShowField, intColCount, intWidth, True, True, chkFieldSearchList.Checked, chkFieldUpdate.Checked, blnReload)
 
             If Not dtsRelations Is Nothing Then
+                SeqData.curStatus.SuspendActions = True
                 If dtsRelations.Tables.Count > 0 Then
                     If dtsRelations.Tables(0).Rows.Count > 0 Then
                         For intRowCountRel = 0 To dtsRelations.Tables(0).Rows.Count - 1
@@ -1022,6 +1023,7 @@ Public Class frmConfiguration
                         Next
                     End If
                 End If
+                SeqData.curStatus.SuspendActions = False
             End If
 
             'End If
@@ -1081,26 +1083,32 @@ Public Class frmConfiguration
         Dim strFieldValue As String = ""
         Dim trnNode As TreeNode = Nothing
 
-        If tvwTable.SelectedNode.Parent Is Nothing Then
-            trnNode = tvwTable.SelectedNode.Nodes(7).FirstNode
-        Else
-            If tvwTable.SelectedNode.Parent.Parent Is Nothing Then
-                trnNode = tvwTable.SelectedNode.Parent.Nodes(7).FirstNode
-            Else
-                If tvwTable.SelectedNode.Text = "Fields" Then
-                    trnNode = tvwTable.SelectedNode.FirstNode
-                ElseIf tvwTable.SelectedNode.Text = "Field" Then
-                    trnNode = tvwTable.SelectedNode
-                ElseIf tvwTable.SelectedNode.Parent.Text = "Field" Then
-                    trnNode = tvwTable.SelectedNode.Parent
-                ElseIf tvwTable.SelectedNode.Parent.Parent.Text = "Field" Then
-                    trnNode = tvwTable.SelectedNode.Parent.Parent
-                Else
-                    Exit Sub
-                End If
+        Try
 
+            If tvwTable.SelectedNode.Parent Is Nothing Then
+                trnNode = tvwTable.SelectedNode.Nodes(8).FirstNode
+            Else
+                If tvwTable.SelectedNode.Parent.Parent Is Nothing Then
+                    trnNode = tvwTable.SelectedNode.Parent.Nodes(8).FirstNode
+                Else
+                    If tvwTable.SelectedNode.Text = "Fields" Then
+                        trnNode = tvwTable.SelectedNode.FirstNode
+                    ElseIf tvwTable.SelectedNode.Text = "Field" Then
+                        trnNode = tvwTable.SelectedNode
+                    ElseIf tvwTable.SelectedNode.Parent.Text = "Field" Then
+                        trnNode = tvwTable.SelectedNode.Parent
+                    ElseIf tvwTable.SelectedNode.Parent.Parent.Text = "Field" Then
+                        trnNode = tvwTable.SelectedNode.Parent.Parent
+                    Else
+                        Exit Sub
+                    End If
+
+                End If
             End If
-        End If
+        Catch ex As Exception
+            WriteStatus("Unable to select a field. Check the log.", 1, lblStatusText)
+            SeqData.WriteLog("Unable to select a field. " & Environment.NewLine & ex.Message, 1)
+        End Try
 
         NodeDisplay(trnNode)
     End Sub
@@ -1832,11 +1840,13 @@ Public Class frmConfiguration
             Return False
         End Try
 
-        tvwTable.Nodes.Clear()
-        DisplayXmlNode(xPNode, tvwTable.Nodes)
-        tvwTable.Nodes(0).Expand()
-        tvwTable.SelectedNode = tvwTable.Nodes.Find("Fields", True)(0)
-        tvwTable.SelectedNode.Expand()
+        If SeqData.curStatus.SuspendActions = False Then
+            tvwTable.Nodes.Clear()
+            DisplayXmlNode(xPNode, tvwTable.Nodes)
+            tvwTable.Nodes(0).Expand()
+            tvwTable.SelectedNode = tvwTable.Nodes.Find("Fields", True)(0)
+            tvwTable.SelectedNode.Expand()
+        End If
         Return True
 
     End Function
@@ -1860,4 +1870,82 @@ Public Class frmConfiguration
 
 #End Region
 
+    Private Sub btnNodeDown_Click(sender As Object, e As EventArgs) Handles btnNodeDown.Click
+        WriteStatus("", 0, lblStatusText)
+        MoveNodeUpOrDown("Down")
+    End Sub
+
+    Private Sub MoveNodeUpOrDown(Direction As String)
+        If txtTableName.Text.Length = 0 Then Exit Sub
+        If txtFieldName.Text.Length = 0 Then Exit Sub
+        Dim strTable As String = txtTableName.Text
+        Dim strField As String = txtFieldName.Text
+
+        Dim xTNode As XmlNode = SeqData.dhdText.FindXmlNode(xmlTables, "Table", "Name", strTable)
+        If xTNode Is Nothing Then
+            WriteStatus("The table to which this field belongs was not found.", 2, lblStatusText)
+            Exit Sub
+        End If
+
+        Dim xPNode As XmlNode = SeqData.dhdText.CreateAppendElement(xTNode, "Fields", Nothing, True)
+        Dim xFNode As XmlNode = SeqData.dhdText.FindXmlChildNode(xPNode, "Field", "FldName", strField)
+        If xFNode Is Nothing Then
+            WriteStatus("The field to move was not found.", 2, lblStatusText)
+            Exit Sub
+        End If
+
+        Dim blnMoved As Boolean = MoveNode(xFNode, Direction)
+
+        If blnMoved Then
+            tvwTable.Nodes.Clear()
+            DisplayXmlNode(xTNode, tvwTable.Nodes)
+            tvwTable.Nodes(0).Expand()
+            tvwTable.SelectedNode = tvwTable.Nodes.Find("Fields", True)(0)
+            tvwTable.SelectedNode.Expand()
+            'tvwTable.SelectedNode = tvwTable.SelectedNode.Nodes.Find("Field", True)(0)
+
+            For Each tPNode As TreeNode In tvwTable.SelectedNode.Nodes
+                For Each tCNode As TreeNode In tPNode.Nodes
+                    If tCNode.Text = "FldName" Then
+                        If tCNode.Nodes(0).Text = strField Then
+                            tvwTable.SelectedNode = tPNode
+                            tvwTable.SelectedNode.Collapse()
+                            'Exit For
+                        End If
+                    End If
+                Next
+            Next
+
+
+            SeqData.curStatus.TableChanged = True
+            ConfigurationSave()
+            WriteStatus("Field moved", 0, lblStatusText)
+        Else
+            WriteStatus("Field not moved", 2, lblStatusText)
+        End If
+    End Sub
+
+    Private Function MoveNode(xNode As XmlNode, Direction As String) As Boolean
+        Dim xPNode As XmlNode = xNode.PreviousSibling
+        Dim xNNode As XmlNode = xNode.NextSibling
+        Dim XMNode As XmlNode = xNode.ParentNode
+
+        If XMNode Is Nothing Then
+            Return False
+        ElseIf Direction = "Up" And Not xPNode Is Nothing Then
+            XMNode.RemoveChild(xNode)
+            XMNode.InsertBefore(xNode, xPNode)
+        ElseIf Direction = "Down" And Not xNNode Is Nothing Then
+            XMNode.RemoveChild(xNode)
+            XMNode.InsertAfter(xNode, xNNode)
+        Else
+            Return False
+        End If
+        Return True
+    End Function
+
+    Private Sub btnNodeUp_Click(sender As Object, e As EventArgs) Handles btnNodeUp.Click
+        WriteStatus("", 0, lblStatusText)
+        MoveNodeUpOrDown("Up")
+    End Sub
 End Class

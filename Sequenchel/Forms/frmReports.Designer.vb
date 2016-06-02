@@ -129,16 +129,16 @@ Partial Class frmReports
         Me.btnSaveQuery = New System.Windows.Forms.Button()
         Me.btnExecuteQuery = New System.Windows.Forms.Button()
         Me.rtbQuery = New System.Windows.Forms.RichTextBox()
+        Me.dgvReport = New Sequenchel.usrDataGridView()
         Me.btnTest = New System.Windows.Forms.Button()
         Me.tmrElapsedTime = New System.Windows.Forms.Timer(Me.components)
-        Me.lblStatusText = New System.Windows.Forms.Label()
         Me.lblStatusTitle = New System.Windows.Forms.Label()
         Me.mnuReports = New System.Windows.Forms.MenuStrip()
         Me.mnuReportsFile = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuReportsFileClose = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuReportsHelp = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuReportsHelpManual = New System.Windows.Forms.ToolStripMenuItem()
-        Me.dgvReport = New Sequenchel.usrDataGridView()
+        Me.lblStatusText = New System.Windows.Forms.TextBox()
         Me.tabReports.SuspendLayout()
         Me.tpgReportDefinition.SuspendLayout()
         CType(Me.sptReports, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -170,8 +170,8 @@ Partial Class frmReports
         Me.pnlReportButtons.SuspendLayout()
         Me.pnlReportConnection.SuspendLayout()
         Me.tpgReportResult.SuspendLayout()
-        Me.mnuReports.SuspendLayout()
         CType(Me.dgvReport, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.mnuReports.SuspendLayout()
         Me.SuspendLayout()
         '
         'lblLicense
@@ -573,6 +573,7 @@ Partial Class frmReports
         Me.chkReportShow.Size = New System.Drawing.Size(53, 17)
         Me.chkReportShow.TabIndex = 0
         Me.chkReportShow.Text = "Show"
+        Me.chkReportShow.ThreeState = True
         Me.chkReportShow.UseVisualStyleBackColor = True
         '
         'lblReportSortOrder
@@ -1253,6 +1254,23 @@ Partial Class frmReports
         Me.rtbQuery.TabIndex = 0
         Me.rtbQuery.Text = ""
         '
+        'dgvReport
+        '
+        Me.dgvReport.AllowUserToAddRows = False
+        Me.dgvReport.AllowUserToDeleteRows = False
+        Me.dgvReport.AllowUserToOrderColumns = True
+        Me.dgvReport.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.dgvReport.BackgroundColor = System.Drawing.SystemColors.Control
+        Me.dgvReport.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
+        Me.dgvReport.BackImage = CType(resources.GetObject("dgvReport.BackImage"), System.Drawing.Image)
+        Me.dgvReport.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dgvReport.Location = New System.Drawing.Point(6, 6)
+        Me.dgvReport.Name = "dgvReport"
+        Me.dgvReport.Size = New System.Drawing.Size(1243, 543)
+        Me.dgvReport.TabIndex = 0
+        '
         'btnTest
         '
         Me.btnTest.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
@@ -1268,16 +1286,6 @@ Partial Class frmReports
         'tmrElapsedTime
         '
         Me.tmrElapsedTime.Interval = 1000
-        '
-        'lblStatusText
-        '
-        Me.lblStatusText.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lblStatusText.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblStatusText.Location = New System.Drawing.Point(66, 780)
-        Me.lblStatusText.Name = "lblStatusText"
-        Me.lblStatusText.Size = New System.Drawing.Size(1061, 23)
-        Me.lblStatusText.TabIndex = 173
         '
         'lblStatusTitle
         '
@@ -1326,22 +1334,19 @@ Partial Class frmReports
         Me.mnuReportsHelpManual.Size = New System.Drawing.Size(157, 22)
         Me.mnuReportsHelpManual.Text = "&Manual Reports"
         '
-        'dgvReport
+        'lblStatusText
         '
-        Me.dgvReport.AllowUserToAddRows = False
-        Me.dgvReport.AllowUserToDeleteRows = False
-        Me.dgvReport.AllowUserToOrderColumns = True
-        Me.dgvReport.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
+        Me.lblStatusText.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.dgvReport.BackgroundColor = System.Drawing.SystemColors.Control
-        Me.dgvReport.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
-        Me.dgvReport.BackImage = CType(resources.GetObject("dgvReport.BackImage"), System.Drawing.Image)
-        Me.dgvReport.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvReport.Location = New System.Drawing.Point(6, 6)
-        Me.dgvReport.Name = "dgvReport"
-        Me.dgvReport.Size = New System.Drawing.Size(1243, 543)
-        Me.dgvReport.TabIndex = 0
+        Me.lblStatusText.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.lblStatusText.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblStatusText.Location = New System.Drawing.Point(66, 781)
+        Me.lblStatusText.Multiline = True
+        Me.lblStatusText.Name = "lblStatusText"
+        Me.lblStatusText.ReadOnly = True
+        Me.lblStatusText.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
+        Me.lblStatusText.Size = New System.Drawing.Size(1055, 20)
+        Me.lblStatusText.TabIndex = 175
         '
         'frmReports
         '
@@ -1399,9 +1404,9 @@ Partial Class frmReports
         Me.pnlReportConnection.PerformLayout()
         Me.tpgReportResult.ResumeLayout(False)
         Me.tpgReportResult.PerformLayout()
+        CType(Me.dgvReport, System.ComponentModel.ISupportInitialize).EndInit()
         Me.mnuReports.ResumeLayout(False)
         Me.mnuReports.PerformLayout()
-        CType(Me.dgvReport, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -1509,7 +1514,6 @@ Partial Class frmReports
     Friend WithEvents pnlSplitSelectedTables As System.Windows.Forms.Panel
     Friend WithEvents pnlSplitTables As System.Windows.Forms.Panel
     Friend WithEvents pnlReportButtons As System.Windows.Forms.Panel
-    Friend WithEvents lblStatusText As System.Windows.Forms.Label
     Friend WithEvents lblStatusTitle As System.Windows.Forms.Label
     Friend WithEvents pnlRelationsTargetField As System.Windows.Forms.Panel
     Friend WithEvents pnlRelationsTargetTable As System.Windows.Forms.Panel
@@ -1521,4 +1525,5 @@ Partial Class frmReports
     Friend WithEvents mnuReportsFileClose As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents mnuReportsHelp As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents mnuReportsHelpManual As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents lblStatusText As System.Windows.Forms.TextBox
 End Class
