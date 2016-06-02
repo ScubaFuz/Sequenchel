@@ -436,7 +436,7 @@ Public Class frmSequenchel
 
                 If basCode.basTable.Item(intCount).FieldVisible = True Then
                     sptFields1.Panel2.Controls.Add(fldField)
-                    fldField.Top = ((sptFields1.Panel2.Controls.Count - 1) * fldField.Height) + (sptFields1.Panel2.Controls.Count * basCode.curVar.BuildMargin)
+                    fldField.Top = ((sptFields1.Panel2.Controls.Count - 1) * basCode.curVar.FieldHeight) + (sptFields1.Panel2.Controls.Count * basCode.curVar.BuildMargin)
                     fldField.Width = basCode.basTable.Item(intCount).FieldWidth
 
                     If fldField.top > sptFields1.Panel2.Height And fldField.Width >= sptFields1.Panel2.Width - (basCode.curVar.BuildMargin * 3) - SystemInformation.VerticalScrollBarWidth Then
@@ -488,37 +488,37 @@ Public Class frmSequenchel
                     If basCode.basTable.Item(intCount).Count > 0 Then
                         For intRel As Integer = 1 To basCode.basTable.Item(intCount).Count
                             MessageBox.Show(basCode.basTable.Item(intCount).Item(intRel).Name)
-                        Next
-                    End If
-                    If basCode.basTable.Item(intCount).FieldRelatedField.ToString.Length > 0 And basCode.basTable.Item(intCount).FieldRelation.ToString.Length > 0 Then
-                        'Dim objRelatedField As New ComboField
-                        Dim msfRelatedField As New ManagedSelectField
-                        'AddHandler msfRelatedField.SelectedIndexChanged, AddressOf Me.cbxRelatedField_SelectedIndexChanged
-                        msfRelatedField.Name = fldField.FieldRelationTable & "." & fldField.FieldRelatedField
 
-                        msfRelatedField.DataConn.DataLocation = basCode.dhdConnection.DataLocation
-                        msfRelatedField.DataConn.DatabaseName = basCode.dhdConnection.DatabaseName
-                        msfRelatedField.DataConn.DataProvider = basCode.dhdConnection.DataProvider
-                        msfRelatedField.DataConn.LoginMethod = basCode.dhdConnection.LoginMethod
-                        msfRelatedField.DataConn.LoginName = basCode.dhdConnection.LoginName
-                        msfRelatedField.DataConn.Password = basCode.dhdConnection.Password
-                        msfRelatedField.Table = fldField.FieldRelation.Substring(0, fldField.FieldRelation.LastIndexOf("."))
-                        msfRelatedField.SearchField = fldField.FieldRelatedField
-                        msfRelatedField.IdentifierField = fldField.FieldRelation.Substring(fldField.FieldRelation.LastIndexOf(".") + 1, fldField.FieldRelation.length - (fldField.FieldRelation.LastIndexOf(".") + 1))
+                            'If basCode.basTable.Item(intCount).FieldRelatedField.ToString.Length > 0 And basCode.basTable.Item(intCount).FieldRelation.ToString.Length > 0 Then
+                            'End If
 
-                        sptFields1.Panel2.Controls.Add(msfRelatedField)
-                        msfRelatedField.Top = fldField.Top
-                        msfRelatedField.Left = fldField.Left + fldField.Width + basCode.curVar.BuildMargin
-                        If fldField.top > sptFields1.Panel2.Height Then
+                            Dim msfRelatedField As New ManagedSelectField
+                            'AddHandler msfRelatedField.SelectedIndexChanged, AddressOf Me.cbxRelatedField_SelectedIndexChanged
+                            msfRelatedField.Name = basCode.basTable.Item(intCount).Item(intRel).RelationTableAlias & "." & basCode.basTable.Item(intCount).Item(intRel).RelationField
+
+                            msfRelatedField.DataConn.DataLocation = basCode.dhdConnection.DataLocation
+                            msfRelatedField.DataConn.DatabaseName = basCode.dhdConnection.DatabaseName
+                            msfRelatedField.DataConn.DataProvider = basCode.dhdConnection.DataProvider
+                            msfRelatedField.DataConn.LoginMethod = basCode.dhdConnection.LoginMethod
+                            msfRelatedField.DataConn.LoginName = basCode.dhdConnection.LoginName
+                            msfRelatedField.DataConn.Password = basCode.dhdConnection.Password
+                            msfRelatedField.Table = fldField.FieldRelation.Substring(0, fldField.FieldRelation.LastIndexOf("."))
+                            msfRelatedField.SearchField = fldField.FieldRelatedField
+                            msfRelatedField.IdentifierField = fldField.FieldRelation.Substring(fldField.FieldRelation.LastIndexOf(".") + 1, fldField.FieldRelation.length - (fldField.FieldRelation.LastIndexOf(".") + 1))
+
+                            sptFields1.Panel2.Controls.Add(msfRelatedField)
+                            msfRelatedField.Top = fldField.Top
+                            msfRelatedField.Left = fldField.Left + fldField.Width + basCode.curVar.BuildMargin
+                            If fldField.top > sptFields1.Panel2.Height Then
+                                msfRelatedField.Width = sptFields1.Panel2.Width - msfRelatedField.Left - (basCode.curVar.BuildMargin * 3) - SystemInformation.VerticalScrollBarWidth
+                            Else
+                                msfRelatedField.Width = sptFields1.Panel2.Width - msfRelatedField.Left - (basCode.curVar.BuildMargin * 3)
+                            End If
+
                             msfRelatedField.Width = sptFields1.Panel2.Width - msfRelatedField.Left - (basCode.curVar.BuildMargin * 3) - SystemInformation.VerticalScrollBarWidth
-                        Else
-                            msfRelatedField.Width = sptFields1.Panel2.Width - msfRelatedField.Left - (basCode.curVar.BuildMargin * 3)
-                        End If
-
-                        msfRelatedField.Width = sptFields1.Panel2.Width - msfRelatedField.Left - (basCode.curVar.BuildMargin * 3) - SystemInformation.VerticalScrollBarWidth
-                        msfRelatedField.Anchor = AnchorStyles.Top Or AnchorStyles.Left Or AnchorStyles.Right
-                        msfRelatedField.Visible = True
-                        'If basCode.dhdConnection.DataBaseOnline = True Then msfRelatedField.RunSearch()
+                            msfRelatedField.Anchor = AnchorStyles.Top Or AnchorStyles.Left Or AnchorStyles.Right
+                            msfRelatedField.Visible = True
+                        Next
                     End If
 
 
@@ -529,7 +529,8 @@ Public Class frmSequenchel
 
 
         Catch ex As Exception
-
+            WriteStatus("There was an error reading the Table file. Please check the log.", 1, lblStatusText)
+            basCode.WriteLog("There was an error reading the Table file. Please check the file for Table: " & Environment.NewLine & strTable & Environment.NewLine & ex.Message, 1)
         End Try
     End Sub
 
@@ -1155,7 +1156,7 @@ Public Class frmSequenchel
 
     Friend Sub LoadList(blnRefine As Boolean)
         If basCode.dhdConnection.DataBaseOnline = False Then Exit Sub
-        If tblTable.TableName.Length < 1 Then Exit Sub
+        'If tblTable.TableName.Length < 1 Then Exit Sub
         basCode.curStatus.SuspendActions = True
         Dim strQuerySelect As String = SelectBuild()
         Dim strQueryOrder As String = OrderBuild()
