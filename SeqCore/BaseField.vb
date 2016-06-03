@@ -81,11 +81,11 @@
     Private _FieldName As String = ""
     Private _FieldAlias As String = ""
     Private _FieldTableName As String = ""
-    Private _FieldTableAlias As String = ""
     Private _FieldDataType As String = ""
     Private _Identity As Boolean = False
     Private _PrimaryKey As Boolean = False
 
+    Private _FieldTableAlias As String = ""
     Public Property FieldName() As String
         Get
             Return _FieldName

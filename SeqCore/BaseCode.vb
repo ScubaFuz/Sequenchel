@@ -119,7 +119,7 @@ Public Class BaseCode
     End Sub
 
     Public Sub SetDefaults()
-        dhdReg.RegistryPath = "Software\Thicor\Sequenchel\3.0"
+        dhdReg.RegistryPath = "Software\Thicor\Sequenchel\4.0"
 
         dhdText.InputFile = "SequenchelDBA.xml"
         dhdText.LogFileName = "Sequenchel.Log"
