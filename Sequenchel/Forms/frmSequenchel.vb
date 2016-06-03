@@ -521,8 +521,32 @@ Public Class frmSequenchel
                         Next
                     End If
 
+                End If
 
-
+                If basCode.basTable.Item(intCount).FieldList = True Or basCode.basTable.Item(intCount).Identity = True Or basCode.basTable.Item(intCount).PrimaryKey = True Then
+                    Dim dgvColumn As New DataGridViewTextBoxColumn
+                    dgvColumn.Name = basCode.basTable.Item(intCount).FieldName
+                    dgvColumn.HeaderText = basCode.basTable.Item(intCount).FieldAlias
+                    Select Case basCode.basTable.Item(intCount).FieldDataType.ToUpper
+                        Case "BIT"
+                            dgvColumn.ValueType = GetType(Boolean)
+                        Case "INTEGER"
+                            dgvColumn.ValueType = GetType(Integer)
+                        Case Else
+                            dgvColumn.ValueType = GetType(String)
+                    End Select
+                    dgvColumn.Width = basCode.basTable.Item(intCount).FieldListWidth
+                    dgvTable1.Columns.Add(dgvColumn)
+                    If basCode.basTable.Item(intCount).FieldList = True Then
+                        dgvColumn.Visible = True
+                    Else
+                        dgvColumn.Visible = False
+                    End If
+                    If basCode.basTable.Item(intCount).Identity = True Or basCode.basTable.Item(intCount).PrimaryKey = True Then
+                        dgvColumn.Tag = "Identity"
+                    Else
+                        dgvColumn.Tag = ""
+                    End If
                 End If
 
             Next
@@ -1122,20 +1146,29 @@ Public Class frmSequenchel
     End Sub
 
     Private Sub FieldsClear(Optional blnIdentityOnly As Boolean = False)
-        For intField As Integer = tblTable.Count - 1 To 0 Step -1
-            Select Case tblTable.Item(intField).FieldCategory
-                Case 1, 3, 4
-                    If blnIdentityOnly = False Or tblTable.Item(intField).Identity = True Or tblTable.Item(intField).PrimaryKey = True Then
-                        tblTable.Item(intField).Text = ""
-                    End If
-                Case 2
-                    tblTable.Item(intField).Checked = False
-                Case 5, 6
-                    If blnIdentityOnly = False Or tblTable.Item(intField).Identity = True Or tblTable.Item(intField).PrimaryKey = True Then
-                        tblTable.Item(intField).Text = ""
-                        tblTable.Item(intField).DropDown(2)
-                    End If
-            End Select
+        For intControl As Integer = sptFields1.Panel2.Controls.Count - 1 To 0 Step -1
+            Dim strName As String = sptFields1.Panel2.Controls(intControl).Name
+            For intField As Integer = 0 To basCode.basTable.Count - 1
+                If basCode.basTable.Item(intField).Name = strName Then
+                    Select Case basCode.basTable.Item(intField).Category
+                        Case 1, 3, 4
+                            If blnIdentityOnly = False Or basCode.basTable.Item(intField).Identity = True Or basCode.basTable.Item(intField).PrimaryKey = True Then
+                                sptFields1.Panel2.Controls(intControl).Text = ""
+                            End If
+                        Case 2
+                            Dim chkTemp As CheckBox = TryCast(sptFields1.Panel2.Controls(intControl), CheckBox)
+                            If chkTemp IsNot Nothing Then chkTemp.Checked = False
+                        Case 5, 6
+                            If blnIdentityOnly = False Or basCode.basTable.Item(intField).Identity = True Or basCode.basTable.Item(intField).PrimaryKey = True Then
+                                Dim msfTemp As ManagedSelectField = TryCast(sptFields1.Panel2.Controls(intControl), ManagedSelectField)
+                                If msfTemp IsNot Nothing Then
+                                    msfTemp.DropDown(2)
+                                    msfTemp.Text = ""
+                                End If
+                            End If
+                    End Select
+                End If
+            Next
         Next
         btnAdd.Text = "New Item"
         btnAdd.BackColor = clrControl
@@ -1165,21 +1198,26 @@ Public Class frmSequenchel
         lblListCountNumber.Text = 0
 
         strQuery = strQuerySelect
-        strQuery &= " FROM [" & tblTable.TableName.Replace(".", "].[") & "] " & tblTable.TableAlias & " "
+        strQuery &= " FROM [" & basCode.basTable.TableName.Replace(".", "].[") & "] " & basCode.basTable.TableAlias & " "
         strQuery &= " WHERE 1=1 "
 
         If blnRefine = True Then
-            For intField As Integer = 0 To tblTable.Count - 1
-                If tblTable.Item(intField).BackColor = clrMarked Then
+            For intField As Integer = 0 To sptFields1.Panel2.Controls.Count - 1
+                If sptFields1.Panel2.Controls(intField).BackColor = clrMarked Then
                     Dim strWhere As String = Nothing
                     Dim strValue As String = Nothing
-                    Select Case tblTable.Item(intField).FieldDataType.ToUpper
-                        Case "BIT"
-                            strValue = tblTable.Item(intField).CheckState
-                        Case Else
-                            strValue = tblTable.Item(intField).Text
-                    End Select
-                    strQuery &= " AND " & FormatFieldWhere1(tblTable.Item(intField).FieldName, tblTable.TableAlias, tblTable.Item(intField).Width, tblTable.Item(intField).FieldDataType, strValue)
+                    If TypeOf sptFields1.Panel2.Controls(intField) Is CheckBox Then
+                        Dim chkTemp As CheckBox = TryCast(sptFields1.Panel2.Controls(intField), CheckBox)
+                        If chkTemp IsNot Nothing Then strValue = chkTemp.CheckState
+                    Else
+                        strValue = sptFields1.Panel2.Controls(intField).Text
+                    End If
+                    Dim strName As String = sptFields1.Panel2.Controls(intField).Name
+                    For intCount As Integer = 0 To basCode.basTable.Count - 1
+                        If basCode.basTable.Item(intField).Name = strName Then
+                            strQuery &= " AND " & FormatFieldWhere1(basCode.basTable.Item(intField).FieldName, basCode.basTable.Item(intField).TableAlias, basCode.basTable.Item(intField).FieldWidth, basCode.basTable.Item(intField).FieldDataType, strValue)
+                        End If
+                    Next
                 End If
             Next
         End If
@@ -1204,9 +1242,9 @@ Public Class frmSequenchel
             For Each column In dgvTable1.Columns
                 Dim strColumn As String = column.Name
                 If intOrder = column.displayindex Then
-                    For intField As Integer = 0 To tblTable.Count - 1
-                        If tblTable.Item(intField).FieldName = column.Name Then
-                            strQuery &= ", " & basCode.FormatField(tblTable.TableName, tblTable.TableAlias, tblTable.Item(intField).FieldName, tblTable.Item(intField).FieldAlias, tblTable.Item(intField).FieldDataType, tblTable.Item(intField).Width, Nothing, True, True, basCode.curVar.DateTimeStyle)
+                    For intField As Integer = 0 To basCode.basTable.Count - 1
+                        If basCode.basTable.Item(intField).FieldName = column.Name Then
+                            strQuery &= ", " & basCode.FormatField(basCode.basTable.TableName, basCode.basTable.TableAlias, basCode.basTable.Item(intField).FieldName, basCode.basTable.Item(intField).FieldAlias, basCode.basTable.Item(intField).FieldDataType, basCode.basTable.Item(intField).FieldWidth, Nothing, True, True, basCode.curVar.DateTimeStyle)
                             Exit For
                         End If
                     Next
@@ -1228,13 +1266,13 @@ Public Class frmSequenchel
 
             For Each column In dgvTable1.Columns
                 If intOrder = column.displayindex And column.Visible = True Then
-                    For intField As Integer = 0 To tblTable.Count - 1
-                        If tblTable.Item(intField).FieldName = column.Name Then
-                            Select Case tblTable.Item(intField).FieldDataType
+                    For intField As Integer = 0 To basCode.basTable.Count - 1
+                        If basCode.basTable.Item(intField).FieldName = column.Name Then
+                            Select Case basCode.basTable.Item(intField).FieldDataType
                                 Case "BINARY", "XML", "GEO", "TEXT", "IMAGE"
                                     'No sort order
                                 Case Else
-                                    strQuery &= ", " & basCode.FormatField(tblTable.TableName, tblTable.TableAlias, tblTable.Item(intField).FieldName, Nothing, tblTable.Item(intField).FieldDataType, tblTable.Item(intField).Width, Nothing, False, False, basCode.curVar.DateTimeStyle)
+                                    strQuery &= ", " & basCode.FormatField(basCode.basTable.TableName, basCode.basTable.TableAlias, basCode.basTable.Item(intField).FieldName, Nothing, basCode.basTable.Item(intField).FieldDataType, basCode.basTable.Item(intField).FieldWidth, Nothing, False, False, basCode.curVar.DateTimeStyle)
                                     If chkReversedSortOrder.Checked = True Then
                                         strQuery &= " DESC "
                                     End If
@@ -1263,35 +1301,40 @@ Public Class frmSequenchel
     Private Sub LoadItem(dgrSelection As DataGridViewRow)
         Dim strQueryWhere As String = " WHERE 1=1 "
         Dim strQueryWhere2 As String = ""
-        Dim strQueryFrom As String = " FROM [" & tblTable.TableName.Replace(".", "].[") & "] " & tblTable.TableAlias & " "
+        Dim strQueryFrom As String = " FROM [" & basCode.basTable.TableName.Replace(".", "].[") & "] " & basCode.basTable.TableAlias & " "
         'strQuery = "SELECT TOP 1 ,"
         strQuery = "SELECT ,"
-        For intField As Integer = 0 To tblTable.Count - 1
+        For intField As Integer = 0 To basCode.basTable.Count - 1
             'strQuery &= ",COALESCE([" & tblTable.Item(intField).FieldName & "],'') AS [" & tblTable.Item(intField).FieldName & "]"
-            If tblTable.Item(intField).Name.Substring(0, tblTable.Item(intField).Name.LastIndexOf(".")) = tblTable.TableName Then
+            'If basCode.basTable.Item(intField).TableName = basCode.basTable.TableName Then
 
-                strQuery &= ", " & basCode.FormatField(tblTable.TableName, tblTable.TableAlias, tblTable.Item(intField).FieldName, tblTable.Item(intField).FieldAlias, tblTable.Item(intField).FieldDataType, tblTable.Item(intField).Width, Nothing, True, True, basCode.curVar.DateTimeStyle)
+            strQuery &= ", " & basCode.FormatField(basCode.basTable.TableName, basCode.basTable.TableAlias, basCode.basTable.Item(intField).FieldName, basCode.basTable.Item(intField).FieldAlias, basCode.basTable.Item(intField).FieldDataType, basCode.basTable.Item(intField).FieldWidth, Nothing, True, True, basCode.curVar.DateTimeStyle)
 
-                If tblTable.Item(intField).FieldRelatedField.Length > 0 Then
-                    Dim strRelation As String = tblTable.Item(intField).FieldRelation
-                    strQuery &= ",[" & tblTable.Item(intField).FieldRelation.Substring(0, tblTable.Item(intField).FieldRelation.LastIndexOf(".")).Replace(".", "].[") & "].[" & tblTable.Item(intField).FieldRelatedField & "] AS [" & tblTable.Item(intField).FieldRelatedField & "]"
-                    strQueryFrom &= " LEFT OUTER JOIN " & tblTable.Item(intField).FieldRelation.Substring(0, tblTable.Item(intField).FieldRelation.LastIndexOf(".")) & " ON " & "[" & tblTable.TableAlias & "]." & tblTable.Item(intField).FieldName & " = " & tblTable.Item(intField).FieldRelation.Substring(0, tblTable.Item(intField).FieldRelation.LastIndexOf(".")) & "." & tblTable.Item(intField).FieldRelation.Substring(tblTable.Item(intField).FieldRelation.LastIndexOf(".") + 1, tblTable.Item(intField).FieldRelation.Length - tblTable.Item(intField).FieldRelation.LastIndexOf(".") - 1)
-                End If
-
-                For Each cell In dgrSelection.Cells
-                    If cell.OwningColumn.HeaderText = tblTable.Item(intField).FieldName Then
-                        If Not cell.Value Is Nothing Then
-                            If tblTable.Item(intField).Identity = True Or tblTable.Item(intField).PrimaryKey = True Then
-                                'strQueryWhere &= " AND [" & tblTable.TableName.Replace(".", "].[") & "].[" & tblTable.Item(intField).FieldName & "] = " & SetDelimiters(cell.Value.ToString, tblTable.Item(intField).FieldDataType, "=")
-                                strQueryWhere &= " AND " & basCode.FormatField(tblTable.TableName, tblTable.TableAlias, tblTable.Item(intField).FieldName, Nothing, tblTable.Item(intField).FieldDataType, tblTable.Item(intField).Width, Nothing, False, False, basCode.curVar.DateTimeStyle) & " = " & basCode.SetDelimiters(cell.Value.ToString, tblTable.Item(intField).FieldDataType, "=")
-
-                            End If
-                            'strQueryWhere2 &= " AND [" & tblTable.TableName.Replace(".", "].[") & "].[" & tblTable.Item(intField).FieldName & "] = " & SetDelimiters(cell.Value.ToString, tblTable.Item(intField).FieldDataType, "=")
-                            strQueryWhere2 &= " AND " & basCode.FormatField(tblTable.TableName, tblTable.TableAlias, tblTable.Item(intField).FieldName, Nothing, tblTable.Item(intField).FieldDataType, tblTable.Item(intField).Width, Nothing, False, False, basCode.curVar.DateTimeStyle) & " = " & basCode.SetDelimiters(cell.Value.ToString, tblTable.Item(intField).FieldDataType, "=")
-                        End If
+            If basCode.basTable.Item(intField).Count > 0 Then
+                'Relations exist
+                For intRel As Integer = 0 To basCode.basTable.Item(intField).Count - 1
+                    If basCode.basTable.Item(intField).Item(intRel).RelatedField.Length > 0 Then
+                        Dim strRelation As String = basCode.basTable.Item(intField).Item(intRel).RelationField
+                        strQuery &= ",[" & basCode.basTable.Item(intField).Item(intRel).RelationTable.Replace(".", "].[") & "].[" & basCode.basTable.Item(intField).Item(intRel).RelatedFieldName & "] AS [" & basCode.basTable.Item(intField).Item(intRel).RelatedFieldAlias & "]"
+                        strQueryFrom &= " LEFT OUTER JOIN " & basCode.basTable.Item(intField).Item(intRel).RelationTable & " ON " & "[" & basCode.basTable.TableAlias & "]." & basCode.basTable.Item(intField).FieldName & " = " & basCode.basTable.Item(intField).Item(intRel).RelationTable & "." & basCode.basTable.Item(intField).Item(intRel).RelationField
                     End If
                 Next
             End If
+
+            For Each cell In dgrSelection.Cells
+                If cell.OwningColumn.HeaderText = basCode.basTable.Item(intField).FieldAlias Then
+                    If Not cell.Value Is Nothing Then
+                        If basCode.basTable.Item(intField).Identity = True Or basCode.basTable.Item(intField).PrimaryKey = True Then
+                            'strQueryWhere &= " AND [" & tblTable.TableName.Replace(".", "].[") & "].[" & tblTable.Item(intField).FieldName & "] = " & SetDelimiters(cell.Value.ToString, tblTable.Item(intField).FieldDataType, "=")
+                            strQueryWhere &= " AND " & basCode.FormatField(basCode.basTable.TableName, basCode.basTable.TableAlias, basCode.basTable.Item(intField).FieldName, Nothing, basCode.basTable.Item(intField).FieldDataType, basCode.basTable.Item(intField).FieldWidth, Nothing, False, False, basCode.curVar.DateTimeStyle) & " = " & basCode.SetDelimiters(cell.Value.ToString, basCode.basTable.Item(intField).FieldDataType, "=")
+
+                        End If
+                        'strQueryWhere2 &= " AND [" & tblTable.TableName.Replace(".", "].[") & "].[" & tblTable.Item(intField).FieldName & "] = " & SetDelimiters(cell.Value.ToString, tblTable.Item(intField).FieldDataType, "=")
+                        strQueryWhere2 &= " AND " & basCode.FormatField(basCode.basTable.TableName, basCode.basTable.TableAlias, basCode.basTable.Item(intField).FieldName, Nothing, basCode.basTable.Item(intField).FieldDataType, basCode.basTable.Item(intField).FieldWidth, Nothing, False, False, basCode.curVar.DateTimeStyle) & " = " & basCode.SetDelimiters(cell.Value.ToString, basCode.basTable.Item(intField).FieldDataType, "=")
+                    End If
+                End If
+            Next
+            'End If
         Next
         strQuery &= strQueryFrom
         If strQueryWhere = " WHERE 1=1 " Then strQueryWhere &= strQueryWhere2
@@ -1306,23 +1349,30 @@ Public Class frmSequenchel
         If objData.Tables(0).Rows.Count = 0 Then Exit Sub
         basCode.curStatus.SuspendActions = True
         Try
-            For intField As Integer = 0 To tblTable.Count - 1
-                If objData.Tables.Item(0).Rows(0).Item(tblTable.Item(intField).FieldAlias).GetType().ToString = "System.DBNull" Then
-                    tblTable.Item(intField).BackColor = clrEmpty
-                    tblTable.Item(intField).Tag = ""
-                Else
-                    Select Case tblTable.Item(intField).FieldCategory
-                        Case 1, 3, 4
-                            tblTable.Item(intField).Text = objData.Tables.Item(0).Rows(0).Item(tblTable.Item(intField).FieldAlias)
-                        Case 2
-                            tblTable.Item(intField).Checked = objData.Tables.Item(0).Rows(0).Item(tblTable.Item(intField).FieldAlias)
-                        Case 5, 6
-                            tblTable.Item(intField).Text = objData.Tables.Item(0).Rows(0).Item(tblTable.Item(intField).FieldAlias)
-                            tblTable.Item(intField).DropDown(2)
-                    End Select
-                    tblTable.Item(intField).Tag = objData.Tables.Item(0).Rows(0).Item(tblTable.Item(intField).FieldAlias).ToString
-                End If
+            For intField As Integer = 0 To basCode.basTable.Count - 1
+                For Each ctrl As Control In sptFields1.Panel2.Controls
+                    If basCode.basTable.Item(intField).Name = ctrl.Name Then
+                        If objData.Tables.Item(0).Rows(0).Item(basCode.basTable.Item(intField).FieldAlias).GetType().ToString = "System.DBNull" Then
+                            ctrl.BackColor = clrEmpty
+                            ctrl.Tag = ""
+                        Else
+                            Select Case basCode.basTable.Item(intField).Category
+                                Case 1, 3, 4
+                                    ctrl.Text = objData.Tables.Item(0).Rows(0).Item(basCode.basTable.Item(intField).FieldAlias)
+                                Case 2
+                                    Dim chkTemp As CheckBox = TryCast(ctrl, CheckBox)
+                                    If chkTemp IsNot Nothing Then chkTemp.Checked = objData.Tables.Item(0).Rows(0).Item(basCode.basTable.Item(intField).FieldAlias)
+                                Case 5, 6
+                                    Dim msfTemp As ManagedSelectField = TryCast(ctrl, ManagedSelectField)
+                                    msfTemp.Text = objData.Tables.Item(0).Rows(0).Item(basCode.basTable.Item(intField).FieldAlias)
+                                    msfTemp.DropDown(2)
+                            End Select
+                            ctrl.Tag = objData.Tables.Item(0).Rows(0).Item(basCode.basTable.Item(intField).FieldAlias).ToString
+                        End If
+                    End If
+                Next
             Next
+
             'End If
             'Next
             If objData.Tables(0).Rows.Count > 1 Then lblMultipleRows.Visible = True
