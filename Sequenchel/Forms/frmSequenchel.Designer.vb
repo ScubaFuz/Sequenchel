@@ -488,12 +488,14 @@ Partial Class frmSequenchel
         '
         'btnLoadSearchCriteria
         '
+        Me.btnLoadSearchCriteria.Enabled = False
         Me.btnLoadSearchCriteria.Location = New System.Drawing.Point(612, 6)
         Me.btnLoadSearchCriteria.Name = "btnLoadSearchCriteria"
         Me.btnLoadSearchCriteria.Size = New System.Drawing.Size(135, 23)
         Me.btnLoadSearchCriteria.TabIndex = 7
         Me.btnLoadSearchCriteria.Text = "(Re)Load Search Criteria"
         Me.btnLoadSearchCriteria.UseVisualStyleBackColor = True
+        Me.btnLoadSearchCriteria.Visible = False
         '
         'btnSearch
         '

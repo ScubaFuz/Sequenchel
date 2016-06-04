@@ -558,22 +558,22 @@ Public Class frmSequenchel
                                 sptTable1.SplitterDistance += lblLabel.Left
                                 sptFields1.SplitterDistance += (lblLabel.Left * -1)
                             End If
-                            If fldField.FieldSearchList = True And fldField.FieldDataType.ToString.ToUpper <> "BIT" Then
-                                Dim btnButton As New Button
-                                btnButton.Name = "btn" & fldField.FieldName
-                                sptFields1.Panel1.Controls.Add(btnButton)
-                                btnButton.Text = ""
-                                btnButton.Image = My.Resources.reload16
-                                btnButton.ImageAlign = ContentAlignment.MiddleCenter
-                                btnButton.Size = New System.Drawing.Size(25, 23)
-                                btnButton.Top = fldField.Top - SeqData.curVar.BuildMargin / 2
-                                btnButton.Left = sptFields1.Panel1.Width - btnButton.Width
-                                btnButton.Anchor = AnchorStyles.Right Or AnchorStyles.Top
-                                btnButton.UseVisualStyleBackColor = True
-                                AddHandler btnButton.Click, AddressOf Me.btnReload_Click
-                            End If
+                            'If fldField.FieldSearchList = True And fldField.FieldDataType.ToString.ToUpper <> "BIT" Then
+                            '    Dim btnButton As New Button
+                            '    btnButton.Name = "btn" & fldField.FieldName
+                            '    sptFields1.Panel1.Controls.Add(btnButton)
+                            '    btnButton.Text = ""
+                            '    btnButton.Image = My.Resources.reload16
+                            '    btnButton.ImageAlign = ContentAlignment.MiddleCenter
+                            '    btnButton.Size = New System.Drawing.Size(25, 23)
+                            '    btnButton.Top = fldField.Top - SeqData.curVar.BuildMargin / 2
+                            '    btnButton.Left = sptFields1.Panel1.Width - btnButton.Width
+                            '    btnButton.Anchor = AnchorStyles.Right Or AnchorStyles.Top
+                            '    btnButton.UseVisualStyleBackColor = True
+                            '    AddHandler btnButton.Click, AddressOf Me.btnReload_Click
+                            'End If
 
-                            If fldField.DefaultButton = True And Not (fldField.FieldSearchList = True And fldField.FieldDataType.ToString.ToUpper <> "BIT") Then
+                            If fldField.DefaultButton = True And Not (fldField.FieldDataType.ToString.ToUpper <> "BIT") Then
                                 Dim btnButton As New Button
                                 btnButton.Name = "btn" & fldField.FieldName
                                 sptFields1.Panel1.Controls.Add(btnButton)
@@ -589,9 +589,7 @@ Public Class frmSequenchel
                             End If
 
                             If fldField.FieldRelatedField.ToString.Length > 0 And fldField.FieldRelation.ToString.Length > 0 Then
-                                'Dim objRelatedField As New ComboField
                                 Dim msfRelatedField As New ManagedSelectField
-                                'AddHandler msfRelatedField.SelectedIndexChanged, AddressOf Me.cbxRelatedField_SelectedIndexChanged
                                 tblTable.Add(msfRelatedField)
                                 msfRelatedField.Name = fldField.FieldRelationTable & "." & fldField.FieldRelatedField
                                 msfRelatedField.FieldName = fldField.FieldRelatedField
@@ -1194,8 +1192,10 @@ Public Class frmSequenchel
                         Case 2
                             tblTable.Item(intField).Checked = objData.Tables.Item(0).Rows(0).Item(tblTable.Item(intField).FieldAlias)
                         Case 5, 6
+                            tblTable.Item(intField).SuspendActions = True
                             tblTable.Item(intField).Text = objData.Tables.Item(0).Rows(0).Item(tblTable.Item(intField).FieldAlias)
-                            tblTable.Item(intField).DropDown(2)
+                            'tblTable.Item(intField).DropDown(2)
+                            tblTable.Item(intField).SuspendActions = False
                     End Select
                     tblTable.Item(intField).Tag = objData.Tables.Item(0).Rows(0).Item(tblTable.Item(intField).FieldAlias).ToString
                 End If
@@ -1227,7 +1227,7 @@ Public Class frmSequenchel
                 strQuery = ""
                 strQuery2 = " WHERE 1=1 "
                 strQuery3 = ""
-                If tblTable.Item(intField).FieldSearchList = True Then
+                If tblTable.Item(intField).Fieldcategory = 5 Or tblTable.Item(intField).Fieldcategory = 6 Then
                     tblTable.Item(intField).RunSearch()
                 End If
             Next
