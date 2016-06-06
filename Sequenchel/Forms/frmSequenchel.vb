@@ -486,7 +486,7 @@ Public Class frmSequenchel
                     End If
 
                     If basCode.basTable.Item(intCount).Count > 0 Then
-                        For intRel As Integer = 1 To basCode.basTable.Item(intCount).Count
+                        For intRel As Integer = 0 To basCode.basTable.Item(intCount).Count - 1
                             MessageBox.Show(basCode.basTable.Item(intCount).Item(intRel).Name)
 
                             'If basCode.basTable.Item(intCount).FieldRelatedField.ToString.Length > 0 And basCode.basTable.Item(intCount).FieldRelation.ToString.Length > 0 Then

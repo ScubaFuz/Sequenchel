@@ -1001,7 +1001,7 @@ Public Class frmConfiguration
             intWidth = basCode.GetWidth(strDataType, dtsData.Tables.Item(0).Rows(intRowCount).Item("MaxLength"))
             If intRowCount = dtsData.Tables(0).Rows.Count - 1 And blnReloadAll = True Then blnReload = True
             FieldAddOrUpdate(strSchemaName & "." & strTableName, dtsData.Tables.Item(0).Rows(intRowCount).Item("colName"), dtsData.Tables.Item(0).Rows(intRowCount).Item("colName"), _
-                     strDataType, blnIdentity, blnPrimaryKey, intWidth, "", "", "", "", False, txtControlField.Text, txtControlValue.Text, chkControlUpdate.Checked, chkControlMode.Checked, False, "", _
+                     strDataType, blnIdentity, blnPrimaryKey, intWidth, "", "", "", "", "", False, txtControlField.Text, txtControlValue.Text, chkControlUpdate.Checked, chkControlMode.Checked, False, "", _
                      blnShowField, intColCount, intWidth, True, True, chkFieldSearchList.Checked, chkFieldUpdate.Checked, blnReload)
 
             If Not dtsRelations Is Nothing Then
@@ -1016,8 +1016,8 @@ Public Class frmConfiguration
                             And dtsRelations.Tables.Item(0).Rows(intRowCountRel).Item("FK_Column") = dtsData.Tables.Item(0).Rows(intRowCount).Item("colName") Then
                                 RelationAdd(strSchemaName & "." & strTableName, dtsData.Tables.Item(0).Rows(intRowCount).Item("colName"), _
                                     dtsRelations.Tables.Item(0).Rows(intRowCountRel).Item("PK_Schema") & "." & dtsRelations.Tables.Item(0).Rows(intRowCountRel).Item("PK_Table"), _
-                                    dtsRelations.Tables.Item(0).Rows(intRowCountRel).Item("PK_Schema") & "." & dtsRelations.Tables.Item(0).Rows(intRowCountRel).Item("PK_Table"), _
-                                    dtsRelations.Tables.Item(0).Rows(intRowCountRel).Item("PK_Column"), "", False)
+                                    dtsRelations.Tables.Item(0).Rows(intRowCountRel).Item("PK_Schema") & "_" & dtsRelations.Tables.Item(0).Rows(intRowCountRel).Item("PK_Table"), _
+                                    dtsRelations.Tables.Item(0).Rows(intRowCountRel).Item("PK_Column"), "", "", False)
                                 'Add Relations for this column
                             End If
                         Next
@@ -1142,7 +1142,7 @@ Public Class frmConfiguration
             strTableName = cbxRelationTables.Text
             strTableAlias = cbxRelationTables.Text
         End If
-        FieldAddOrUpdate(basCode.curStatus.Table, txtFieldName.Text, txtFieldAlias.Text, cbxDataType.SelectedItem, chkIdentity.Checked, chkPrimaryKey.Checked, txtFieldWidth.Text, strTableName, strTableAlias, cbxRelationFields.Text, txtRelatedField.Text, chkRelatedField.Checked, txtControlField.Text, txtControlValue.Text, chkControlUpdate.Checked, _
+        FieldAddOrUpdate(basCode.curStatus.Table, txtFieldName.Text, txtFieldAlias.Text, cbxDataType.SelectedItem, chkIdentity.Checked, chkPrimaryKey.Checked, txtFieldWidth.Text, strTableName, strTableAlias, cbxRelationFields.Text, txtRelatedField.Text, txtRelatedField.Text.Replace(".", "_"), chkRelatedField.Checked, txtControlField.Text, txtControlValue.Text, chkControlUpdate.Checked, _
                          chkControlMode.Checked, chkDefaultButton.Checked, txtDefaultButton.Text, chkFieldList.Checked, txtFieldListOrder.Text, txtFieldListWidth.Text, chkFieldVisible.Checked, chkFieldSearch.Checked, chkFieldSearchList.Checked, chkFieldUpdate.Checked, True)
         CursorControl()
     End Sub
@@ -1190,7 +1190,7 @@ Public Class frmConfiguration
         FieldsClear()
         Dim strFieldName As String = ""
         Dim strFieldValue As String = ""
-        Dim strTableName As String = "", strTableAlias As String = "", strRelatedField As String = ""
+        Dim strTableName As String = "", strTableAlias As String = "", strRelatedFieldName As String = "", strRelatedFieldAlias As String = ""
 
         For Each xNode As TreeNode In PNode.Nodes
             strFieldName = xNode.Text
@@ -1242,7 +1242,7 @@ Public Class frmConfiguration
                                 'dont know yet
                                 strTableName = xRnode.Nodes(0).Nodes(0).Text
                                 strTableAlias = xRnode.Nodes(1).Nodes(0).Text
-                                strRelatedField = xRnode.Nodes(2).Nodes(0).Text
+                                strRelatedFieldName = xRnode.Nodes(2).Nodes(0).Text
                                 strFieldValue = strTableAlias & " (" & strTableName & ")"
                             Else
                                 strFieldValue = xRnode.Nodes(0).Text
@@ -1320,9 +1320,9 @@ Public Class frmConfiguration
         chkFieldUpdate.Checked = False
     End Sub
 
-    Private Sub FieldAddOrUpdate(TableName As String, FldName As String, FldAlias As String, DataType As String, Identity As Boolean, PrimaryKey As Boolean, FldWidth As String, RelationTable As String, RelationTableAlias As String, RelationField As String, RelatedField As String, RelatedFieldList As String, ControlField As String, _
+    Private Sub FieldAddOrUpdate(TableName As String, FldName As String, FldAlias As String, DataType As String, Identity As Boolean, PrimaryKey As Boolean, FldWidth As String, RelationTable As String, RelationTableAlias As String, RelationField As String, RelatedField As String, RelatedFieldAlias As String, RelatedFieldList As String, ControlField As String, _
                          ControlValue As String, ControlUpdate As Boolean, ControlMode As Boolean, DefaultButton As Boolean, DefaultValue As String, FldList As Boolean, Order As String, Width As String, _
-                         FldVisible As Boolean, FldSearch As Boolean, FldSearchList As Boolean, FldUpdate As Boolean, Optional Reload As Boolean = False)
+                         FldVisible As Boolean, FldSearch As Boolean, FldSearchList As Boolean, FldUpdate As Boolean, Reload As Boolean)
 
         Dim xTNode As XmlNode = basCode.dhdText.FindXmlNode(xmlTables, "Table", "Name", TableName)
         If xTNode Is Nothing Then
@@ -1362,7 +1362,7 @@ Public Class frmConfiguration
         basCode.dhdText.CreateAppendElement(xFNode, "FldSearchList", FldSearchList, True)
         basCode.dhdText.CreateAppendElement(xFNode, "FldUpdate", FldUpdate, True)
 
-        RelationAdd(TableName, FldName, RelationTable, RelationTableAlias, RelationField, RelatedField, RelatedFieldList)
+        RelationAdd(TableName, FldName, RelationTable, RelationTableAlias, RelationField, RelatedField, RelatedFieldAlias, RelatedFieldList)
 
         If Reload = True Then
             tvwTable.Nodes.Clear()
@@ -1550,6 +1550,7 @@ Public Class frmConfiguration
         If basCode.curStatus.SuspendActions = False Then
             If cbxRelationTables.Text.Length = 0 Then Exit Sub
 
+            'get table name; get fieldname; get relationname; find relation in basetable/basefield/baserelation; load baserelation to screen.
             Dim strTableName As String = "", strTableAlias As String = ""
             If cbxRelationTables.Text.IndexOf("(") > 0 Then
                 strTableName = cbxRelationTables.Text.Substring(cbxRelationTables.Text.IndexOf("(") + 1, cbxRelationTables.Text.Length - (cbxRelationTables.Text.IndexOf("(") + 1) - 1)
@@ -1796,7 +1797,7 @@ Public Class frmConfiguration
 
     End Function
 
-    Private Function RelationAdd(strTableSource As String, strFieldSource As String, strTableRelation As String, strTableAliasRelation As String, strFieldRelation As String, strRelatedField As String, blnRelatedFieldList As Boolean) As Boolean
+    Private Function RelationAdd(strTableSource As String, strFieldSource As String, strTableRelation As String, strTableAliasRelation As String, strFieldRelation As String, strRelatedField As String, strRelatedFieldAlias As String, blnRelatedFieldList As Boolean) As Boolean
         If strFieldRelation.Length = 0 Then Return False
 
         If RelationRemove(strTableSource, strFieldSource, strTableRelation, strFieldRelation, False) = False Then
@@ -1821,7 +1822,8 @@ Public Class frmConfiguration
             basCode.dhdText.CreateAppendElement(xRNode, "RelationTable", strTableRelation, True)
             basCode.dhdText.CreateAppendElement(xRNode, "RelationTableAlias", strTableAliasRelation, True)
             basCode.dhdText.CreateAppendElement(xRNode, "RelationField", strFieldRelation, True)
-            basCode.dhdText.CreateAppendElement(xRNode, "RelatedField", strRelatedField, True)
+            basCode.dhdText.CreateAppendElement(xRNode, "RelatedFieldName", strRelatedField, True)
+            basCode.dhdText.CreateAppendElement(xRNode, "RelatedFieldAlias", strRelatedFieldAlias, True)
             basCode.dhdText.CreateAppendElement(xRNode, "RelatedFieldList", blnRelatedFieldList, True)
 
             WriteStatus("Add/Update Relation completed succesfully", 0, lblStatusText)
@@ -1853,7 +1855,7 @@ Public Class frmConfiguration
             strTableName = cbxRelationTables.Text
             strTableAlias = cbxRelationTables.Text
         End If
-        RelationAdd(basCode.curStatus.Table, txtFieldName.Tag, strTableName, strTableAlias, cbxRelationFields.Text, txtRelatedField.Text, chkRelatedField.Checked)
+        RelationAdd(basCode.curStatus.Table, txtFieldName.Tag, strTableName, strTableAlias, cbxRelationFields.Text, txtRelatedField.Text, txtRelatedField.Text.Replace(".", "_"), chkRelatedField.Checked)
 
         'If Not cbxRelations.Items.Contains(cbxRelations.Text) Then cbxRelations.Items.Add(cbxRelations.Text)
         CursorControl()

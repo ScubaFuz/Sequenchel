@@ -629,19 +629,23 @@ Public Class BaseCode
             End If
 
             If dhdText.CheckNodeElement(xNode, "Relations") Then
-                For Each xRnode As XmlNode In xNode.Item("Relations").ChildNodes
-                    Dim basRelation As New BaseRelation
-                    If dhdText.CheckNodeElement(xRnode, "RelationTable") Then basRelation.RelationTable = xRnode.Item("RelationTable").InnerText
-                    If dhdText.CheckNodeElement(xRnode, "RelationTableAlias") Then basRelation.RelationTableAlias = xRnode.Item("RelationTableAlias").InnerText
-                    If String.IsNullOrEmpty(basRelation.RelationTableAlias) Then basRelation.RelationTableAlias = basRelation.RelationTable.ToString.Replace(".", "_")
-                    If dhdText.CheckNodeElement(xRnode, "RelationField") Then basRelation.RelationField = xRnode.Item("RelationField").InnerText
-                    If dhdText.CheckNodeElement(xRnode, "RelatedFieldName") Then basRelation.RelatedFieldName = xRnode.Item("RelatedFieldName").InnerText
-                    If dhdText.CheckNodeElement(xRnode, "RelatedFieldAlias") Then basRelation.RelatedFieldAlias = xRnode.Item("RelatedFieldAlias").InnerText
-                    If dhdText.CheckNodeElement(xRnode, "RelatedFieldList") Then basRelation.RelatedFieldList = xRnode.Item("RelatedFieldList").InnerText
-                    basRelation.Name = basRelation.RelationField & "_" & basRelation.RelatedFieldName
-                    basField.Add(basRelation)
-                    basRelation.Index = basField.Count
-                Next
+                If xNode.Item("Relations").ChildNodes.Count > 0 Then
+                    For Each xRnode As XmlNode In xNode.Item("Relations").ChildNodes
+                        If xRnode.ChildNodes.Count > 1 Then
+                            Dim basRelation As New BaseRelation
+                            If dhdText.CheckNodeElement(xRnode, "RelationTable") Then basRelation.RelationTable = xRnode.Item("RelationTable").InnerText
+                            If dhdText.CheckNodeElement(xRnode, "RelationTableAlias") Then basRelation.RelationTableAlias = xRnode.Item("RelationTableAlias").InnerText
+                            If String.IsNullOrEmpty(basRelation.RelationTableAlias) Then basRelation.RelationTableAlias = basRelation.RelationTable.ToString.Replace(".", "_")
+                            If dhdText.CheckNodeElement(xRnode, "RelationField") Then basRelation.RelationField = xRnode.Item("RelationField").InnerText
+                            If dhdText.CheckNodeElement(xRnode, "RelatedFieldName") Then basRelation.RelatedFieldName = xRnode.Item("RelatedFieldName").InnerText
+                            If dhdText.CheckNodeElement(xRnode, "RelatedFieldAlias") Then basRelation.RelatedFieldAlias = xRnode.Item("RelatedFieldAlias").InnerText
+                            If dhdText.CheckNodeElement(xRnode, "RelatedFieldList") Then basRelation.RelatedFieldList = xRnode.Item("RelatedFieldList").InnerText
+                            basRelation.Name = basRelation.RelationTableAlias & "_" & basRelation.RelationField
+                            basField.Add(basRelation)
+                            basRelation.Index = basField.Count
+                        End If
+                    Next
+                End If
             End If
 
             If dhdText.CheckNodeElement(xNode, "DefaultButton") Then basField.DefaultButton = xNode.Item("DefaultButton").InnerText

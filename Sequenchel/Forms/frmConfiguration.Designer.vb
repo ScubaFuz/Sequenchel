@@ -199,6 +199,7 @@ Partial Class frmConfiguration
         Me.btnCancel = New System.Windows.Forms.Button()
         Me.lblStatusTitle = New System.Windows.Forms.Label()
         Me.lblStatusText = New System.Windows.Forms.Label()
+        Me.Label1 = New System.Windows.Forms.Label()
         Me.tabConfiguration.SuspendLayout()
         Me.tpgConnections.SuspendLayout()
         Me.tpgTableSets.SuspendLayout()
@@ -1010,6 +1011,7 @@ Partial Class frmConfiguration
         Me.pnlFieldSettings.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.pnlFieldSettings.AutoScroll = True
+        Me.pnlFieldSettings.Controls.Add(Me.Label1)
         Me.pnlFieldSettings.Controls.Add(Me.lstRelatedFields)
         Me.pnlFieldSettings.Controls.Add(Me.btnShowRelatedFields)
         Me.pnlFieldSettings.Controls.Add(Me.lstRelationFields)
@@ -2018,6 +2020,15 @@ Partial Class frmConfiguration
         Me.lblStatusText.Size = New System.Drawing.Size(432, 23)
         Me.lblStatusText.TabIndex = 10
         '
+        'Label1
+        '
+        Me.Label1.Location = New System.Drawing.Point(3, 181)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(96, 16)
+        Me.Label1.TabIndex = 169
+        Me.Label1.Text = "Related Field Alias"
+        Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        '
         'frmConfiguration
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -2227,4 +2238,5 @@ Partial Class frmConfiguration
     Friend WithEvents cbxRelationFields As System.Windows.Forms.ComboBox
     Friend WithEvents lstRelatedFields As System.Windows.Forms.ListBox
     Friend WithEvents btnShowRelatedFields As System.Windows.Forms.Button
+    Friend WithEvents Label1 As System.Windows.Forms.Label
 End Class
