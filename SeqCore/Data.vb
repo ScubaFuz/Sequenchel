@@ -943,6 +943,34 @@ Public Class Data
         Return strFieldDataType
     End Function
 
+    Public Function GetFieldNameFromAlias(xmlTables As XmlDocument, strTableName As String, strFieldAlias As String) As String
+        Dim strFieldName As String = strFieldAlias
+        If String.IsNullOrEmpty(strTableName) = False Then
+            Dim xPNode As XmlNode = dhdText.FindXmlNode(xmlTables, "Table", "Name", strTableName)
+            If xPNode IsNot Nothing Then
+                Dim xNode As XmlNode = dhdText.FindXmlChildNode(xPNode, "Fields/Field", "FldAlias", strFieldAlias)
+                If xNode IsNot Nothing Then
+                    If dhdText.CheckNodeElement(xNode, "FldName") Then strFieldName = xNode.Item("FldName").InnerText
+                End If
+            End If
+        End If
+        Return strFieldName
+    End Function
+
+    Public Function GetFieldAliasFromName(xmlTables As XmlDocument, strTableName As String, strFieldName As String) As String
+        Dim strFieldAlias As String = strFieldName
+        If String.IsNullOrEmpty(strTableName) = False Then
+            Dim xPNode As XmlNode = dhdText.FindXmlNode(xmlTables, "Table", "Name", strTableName)
+            If xPNode IsNot Nothing Then
+                Dim xNode As XmlNode = dhdText.FindXmlChildNode(xPNode, "Fields/Field", "FldName", strFieldName)
+                If xNode IsNot Nothing Then
+                    If dhdText.CheckNodeElement(xNode, "FldAlias") Then strFieldAlias = xNode.Item("FldAlias").InnerText
+                End If
+            End If
+        End If
+        Return strFieldAlias
+    End Function
+
     Public Function FormatFieldXML(xmlTablesDoc As XmlDocument, strTableName As String, strTableAlias As String, strFieldName As String, strShowMode As String, blnUseAlias As Boolean, blnSelect As Boolean, blnConvert As Boolean, DateTimeStyle As Integer) As String
         Dim strOutput As String = ""
         Dim xNode As XmlNode = dhdText.FindXmlNode(xmlTablesDoc, "Table", "Name", strTableName)

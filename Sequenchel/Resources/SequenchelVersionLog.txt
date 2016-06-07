@@ -3,6 +3,7 @@ New: In Reports: table alias is used instead of table name to enable multiple in
 Enhanced: In Reports: Select lists for related tables and fields.
 Enhanced: In Reports: Replaced Close button with Close menu to avoid accidentally closing the report screen.
 Enhanced: Removed Reload Criteria buttons because they don't serve any purpose anymore.
+Enhanced: Duplicate column names in queries and reports is now allowed. Names are altered automatically with a number.
 Fixed: Import to table now uses table name instead of alias.
 Fixed: Fields with a related ManagedSelectField were emptied when adding a new item to the database.
 

@@ -815,7 +815,9 @@ Public Class frmReports
         If intCount = 0 Then
             intCount += 1
             For Each ctrControl In pnlRelationsUse.Controls
-                If ctrControl.Name.ToString.Substring(ctrControl.Name.ToString.Length - strTableName.Length, strTableName.Length) = strTableName Then intCount += 1
+                If ctrControl.Name.ToString.Length > strTableName.Length Then
+                    If ctrControl.Name.ToString.Substring(ctrControl.Name.ToString.Length - strTableName.Length, strTableName.Length) = strTableName Then intCount += 1
+                End If
             Next
         End If
 
@@ -1288,9 +1290,9 @@ Public Class frmReports
                         strTargetTable = SeqData.GetTableNameFromString(strRelationTarget)
                     End If
                 End If
-                If SeqData.dhdText.CheckNodeElement(xRNode, "RelationTargetField") Then strTargetField = xRNode.Item("RelationTargetField").InnerText
                 If SeqData.dhdText.CheckNodeElement(xRNode, "RelationTargetTable") Then strTargetTable = xRNode.Item("RelationTargetTable").InnerText
                 If SeqData.dhdText.CheckNodeElement(xRNode, "RelationTargetAlias") Then strTargetTableAlias = xRNode.Item("RelationTargetAlias").InnerText
+                If SeqData.dhdText.CheckNodeElement(xRNode, "RelationTargetField") Then strTargetField = SeqData.GetFieldAliasFromName(xmlTables, strTargetTable, xRNode.Item("RelationTargetField").InnerText)
                 If strTargetTableAlias = "" Then strTargetTableAlias = strTargetTable
 
                 If intRelationNumber = 1 Then
@@ -1570,9 +1572,10 @@ Public Class frmReports
                     SeqData.dhdText.CreateAppendElement(NewRelationNode, "RelationEnabled", ctrRelation.Checked.ToString)
                     SeqData.dhdText.CreateAppendElement(NewRelationNode, "RelationSource", GetCtrText(pnlRelationsField, strTableName, intControlNumber))
                     'SeqData.dhdText.CreateAppendElement(NewRelationNode, "RelationTarget", GetCtrText(pnlRelationsRelation, strTableName, intControlNumber))
-                    SeqData.dhdText.CreateAppendElement(NewRelationNode, "RelationTargetTable", SeqData.GetTableNameFromString(GetCtrText(pnlRelationsTargetTable, strTableName, intControlNumber)))
+                    Dim strTable As String = SeqData.GetTableNameFromString(GetCtrText(pnlRelationsTargetTable, strTableName, intControlNumber))
+                    SeqData.dhdText.CreateAppendElement(NewRelationNode, "RelationTargetTable", strTable)
                     SeqData.dhdText.CreateAppendElement(NewRelationNode, "RelationTargetAlias", SeqData.GetTableAliasFromString(GetCtrText(pnlRelationsTargetTable, strTableName, intControlNumber)))
-                    SeqData.dhdText.CreateAppendElement(NewRelationNode, "RelationTargetField", GetCtrText(pnlRelationsTargetField, strTableName, intControlNumber))
+                    SeqData.dhdText.CreateAppendElement(NewRelationNode, "RelationTargetField", SeqData.GetFieldNameFromAlias(xmlTables, strTable, GetCtrText(pnlRelationsTargetField, strTableName, intControlNumber)))
                     SeqData.dhdText.CreateAppendElement(NewRelationNode, "RelationJoinType", GetCtrText(pnlRelationsJoinType, strTableName, intControlNumber))
                 End If
             Next
