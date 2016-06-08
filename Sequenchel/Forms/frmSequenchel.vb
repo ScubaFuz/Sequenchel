@@ -326,19 +326,19 @@ Public Class frmSequenchel
 
     Private Sub AllClear(intLevel As Integer)
         If intLevel >= 4 Then
-            xmlConnections.RemoveAll()
+            If basCode.curStatus.ConnectionsReload = True Then xmlConnections.RemoveAll()
             basCode.curVar.TableSetsFile = ""
             cbxConnection.Items.Clear()
             cbxConnection.Text = ""
         End If
         If intLevel >= 3 Then
-            xmlTableSets.RemoveAll()
+            If basCode.curStatus.TableSetsReload = True Then xmlTableSets.RemoveAll()
             basCode.curVar.TablesFile = ""
             cbxTableSet.Items.Clear()
             cbxTableSet.Text = ""
         End If
         If intLevel >= 2 Then
-            xmlTables.RemoveAll()
+            If basCode.curStatus.TablesReload = True Then xmlTables.RemoveAll()
             cbxTable.Items.Clear()
             cbxTable.Text = ""
         End If

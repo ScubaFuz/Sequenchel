@@ -98,7 +98,17 @@ Partial Class frmConfiguration
         Me.colTableSetName = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.colTablesFile = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.tpgTables = New System.Windows.Forms.TabPage()
+        Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
+        Me.lblTables = New System.Windows.Forms.Label()
+        Me.lvwTables = New System.Windows.Forms.ListView()
+        Me.colTableName = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.colTableAlias = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.tvwTable = New System.Windows.Forms.TreeView()
+        Me.lblSelectedTable = New System.Windows.Forms.Label()
+        Me.btnTablesShow = New System.Windows.Forms.Button()
+        Me.btnTableDefault = New System.Windows.Forms.Button()
         Me.pnlFieldSettings = New System.Windows.Forms.Panel()
+        Me.Label1 = New System.Windows.Forms.Label()
         Me.lstRelatedFields = New System.Windows.Forms.ListBox()
         Me.btnShowRelatedFields = New System.Windows.Forms.Button()
         Me.lstRelationFields = New System.Windows.Forms.ListBox()
@@ -153,35 +163,28 @@ Partial Class frmConfiguration
         Me.btnFieldAddOrUpdate = New System.Windows.Forms.Button()
         Me.chkFieldUpdate = New System.Windows.Forms.CheckBox()
         Me.lblFieldUpdate = New System.Windows.Forms.Label()
-        Me.lstTables = New System.Windows.Forms.ListBox()
-        Me.chkImportAllTables = New System.Windows.Forms.CheckBox()
-        Me.lblTableDelete = New System.Windows.Forms.Label()
-        Me.chkTableDelete = New System.Windows.Forms.CheckBox()
-        Me.btnColumnsImport = New System.Windows.Forms.Button()
-        Me.btnCrawlTables = New System.Windows.Forms.Button()
-        Me.lblTableSearch = New System.Windows.Forms.Label()
-        Me.chkTableSearch = New System.Windows.Forms.CheckBox()
-        Me.lblTableUpdate = New System.Windows.Forms.Label()
+        Me.pnlTableSettings = New System.Windows.Forms.Panel()
+        Me.lblTableName = New System.Windows.Forms.Label()
         Me.chkTableUpdate = New System.Windows.Forms.CheckBox()
         Me.lblTableInsert = New System.Windows.Forms.Label()
+        Me.txtTableAlias = New System.Windows.Forms.TextBox()
+        Me.lblTableUpdate = New System.Windows.Forms.Label()
+        Me.lstTables = New System.Windows.Forms.ListBox()
         Me.chkTableInsert = New System.Windows.Forms.CheckBox()
+        Me.lblTableAlias = New System.Windows.Forms.Label()
+        Me.chkTableSearch = New System.Windows.Forms.CheckBox()
+        Me.chkImportAllTables = New System.Windows.Forms.CheckBox()
         Me.lblTableVisible = New System.Windows.Forms.Label()
+        Me.txtTableName = New System.Windows.Forms.TextBox()
+        Me.lblTableSearch = New System.Windows.Forms.Label()
+        Me.lblTableDelete = New System.Windows.Forms.Label()
         Me.chkTableVisible = New System.Windows.Forms.CheckBox()
+        Me.btnTableAddOrUpdate = New System.Windows.Forms.Button()
+        Me.btnCrawlTables = New System.Windows.Forms.Button()
+        Me.chkTableDelete = New System.Windows.Forms.CheckBox()
         Me.btnTableDelete = New System.Windows.Forms.Button()
         Me.btnTableClear = New System.Windows.Forms.Button()
-        Me.btnTableAddOrUpdate = New System.Windows.Forms.Button()
-        Me.btnTableDefault = New System.Windows.Forms.Button()
-        Me.lblTableName = New System.Windows.Forms.Label()
-        Me.txtTableName = New System.Windows.Forms.TextBox()
-        Me.lblTableAlias = New System.Windows.Forms.Label()
-        Me.txtTableAlias = New System.Windows.Forms.TextBox()
-        Me.btnTablesShow = New System.Windows.Forms.Button()
-        Me.lblSelectedTable = New System.Windows.Forms.Label()
-        Me.tvwTable = New System.Windows.Forms.TreeView()
-        Me.lblTables = New System.Windows.Forms.Label()
-        Me.lvwTables = New System.Windows.Forms.ListView()
-        Me.colTableName = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.colTableAlias = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.btnColumnsImport = New System.Windows.Forms.Button()
         Me.tpgTableTemplates = New System.Windows.Forms.TabPage()
         Me.tbnSearchSequenchelTemplates = New System.Windows.Forms.Button()
         Me.btnUseTemplate = New System.Windows.Forms.Button()
@@ -199,12 +202,17 @@ Partial Class frmConfiguration
         Me.btnCancel = New System.Windows.Forms.Button()
         Me.lblStatusTitle = New System.Windows.Forms.Label()
         Me.lblStatusText = New System.Windows.Forms.Label()
-        Me.Label1 = New System.Windows.Forms.Label()
+        Me.txtRelatedFieldAlias = New System.Windows.Forms.TextBox()
         Me.tabConfiguration.SuspendLayout()
         Me.tpgConnections.SuspendLayout()
         Me.tpgTableSets.SuspendLayout()
         Me.tpgTables.SuspendLayout()
+        CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.SplitContainer1.Panel1.SuspendLayout()
+        Me.SplitContainer1.Panel2.SuspendLayout()
+        Me.SplitContainer1.SuspendLayout()
         Me.pnlFieldSettings.SuspendLayout()
+        Me.pnlTableSettings.SuspendLayout()
         Me.tpgTableTemplates.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -970,34 +978,7 @@ Partial Class frmConfiguration
         '
         'tpgTables
         '
-        Me.tpgTables.Controls.Add(Me.pnlFieldSettings)
-        Me.tpgTables.Controls.Add(Me.lstTables)
-        Me.tpgTables.Controls.Add(Me.chkImportAllTables)
-        Me.tpgTables.Controls.Add(Me.lblTableDelete)
-        Me.tpgTables.Controls.Add(Me.chkTableDelete)
-        Me.tpgTables.Controls.Add(Me.btnColumnsImport)
-        Me.tpgTables.Controls.Add(Me.btnCrawlTables)
-        Me.tpgTables.Controls.Add(Me.lblTableSearch)
-        Me.tpgTables.Controls.Add(Me.chkTableSearch)
-        Me.tpgTables.Controls.Add(Me.lblTableUpdate)
-        Me.tpgTables.Controls.Add(Me.chkTableUpdate)
-        Me.tpgTables.Controls.Add(Me.lblTableInsert)
-        Me.tpgTables.Controls.Add(Me.chkTableInsert)
-        Me.tpgTables.Controls.Add(Me.lblTableVisible)
-        Me.tpgTables.Controls.Add(Me.chkTableVisible)
-        Me.tpgTables.Controls.Add(Me.btnTableDelete)
-        Me.tpgTables.Controls.Add(Me.btnTableClear)
-        Me.tpgTables.Controls.Add(Me.btnTableAddOrUpdate)
-        Me.tpgTables.Controls.Add(Me.btnTableDefault)
-        Me.tpgTables.Controls.Add(Me.lblTableName)
-        Me.tpgTables.Controls.Add(Me.txtTableName)
-        Me.tpgTables.Controls.Add(Me.lblTableAlias)
-        Me.tpgTables.Controls.Add(Me.txtTableAlias)
-        Me.tpgTables.Controls.Add(Me.btnTablesShow)
-        Me.tpgTables.Controls.Add(Me.lblSelectedTable)
-        Me.tpgTables.Controls.Add(Me.tvwTable)
-        Me.tpgTables.Controls.Add(Me.lblTables)
-        Me.tpgTables.Controls.Add(Me.lvwTables)
+        Me.tpgTables.Controls.Add(Me.SplitContainer1)
         Me.tpgTables.Location = New System.Drawing.Point(4, 22)
         Me.tpgTables.Name = "tpgTables"
         Me.tpgTables.Padding = New System.Windows.Forms.Padding(3)
@@ -1006,10 +987,102 @@ Partial Class frmConfiguration
         Me.tpgTables.Text = "Tables"
         Me.tpgTables.UseVisualStyleBackColor = True
         '
+        'SplitContainer1
+        '
+        Me.SplitContainer1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.SplitContainer1.Location = New System.Drawing.Point(3, 3)
+        Me.SplitContainer1.Name = "SplitContainer1"
+        '
+        'SplitContainer1.Panel1
+        '
+        Me.SplitContainer1.Panel1.Controls.Add(Me.lblTables)
+        Me.SplitContainer1.Panel1.Controls.Add(Me.lvwTables)
+        Me.SplitContainer1.Panel1.Controls.Add(Me.tvwTable)
+        Me.SplitContainer1.Panel1.Controls.Add(Me.lblSelectedTable)
+        Me.SplitContainer1.Panel1.Controls.Add(Me.btnTablesShow)
+        Me.SplitContainer1.Panel1.Controls.Add(Me.btnTableDefault)
+        '
+        'SplitContainer1.Panel2
+        '
+        Me.SplitContainer1.Panel2.Controls.Add(Me.pnlFieldSettings)
+        Me.SplitContainer1.Panel2.Controls.Add(Me.pnlTableSettings)
+        Me.SplitContainer1.Size = New System.Drawing.Size(762, 753)
+        Me.SplitContainer1.SplitterDistance = 424
+        Me.SplitContainer1.TabIndex = 163
+        '
+        'lblTables
+        '
+        Me.lblTables.AutoSize = True
+        Me.lblTables.Location = New System.Drawing.Point(3, 2)
+        Me.lblTables.Name = "lblTables"
+        Me.lblTables.Size = New System.Drawing.Size(39, 13)
+        Me.lblTables.TabIndex = 79
+        Me.lblTables.Text = "Tables"
+        Me.lblTables.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        '
+        'lvwTables
+        '
+        Me.lvwTables.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lvwTables.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.colTableName, Me.colTableAlias})
+        Me.lvwTables.FullRowSelect = True
+        Me.lvwTables.Location = New System.Drawing.Point(3, 18)
+        Me.lvwTables.Name = "lvwTables"
+        Me.lvwTables.Size = New System.Drawing.Size(418, 214)
+        Me.lvwTables.Sorting = System.Windows.Forms.SortOrder.Ascending
+        Me.lvwTables.TabIndex = 0
+        Me.lvwTables.UseCompatibleStateImageBehavior = False
+        Me.lvwTables.View = System.Windows.Forms.View.Details
+        '
+        'colTableName
+        '
+        Me.colTableName.Text = "Table Name"
+        Me.colTableName.Width = 120
+        '
+        'colTableAlias
+        '
+        Me.colTableAlias.Text = "Table Alias"
+        Me.colTableAlias.Width = 263
+        '
+        'tvwTable
+        '
+        Me.tvwTable.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.tvwTable.Location = New System.Drawing.Point(3, 284)
+        Me.tvwTable.Name = "tvwTable"
+        Me.tvwTable.Size = New System.Drawing.Size(418, 404)
+        Me.tvwTable.TabIndex = 16
+        '
+        'lblSelectedTable
+        '
+        Me.lblSelectedTable.AutoSize = True
+        Me.lblSelectedTable.Location = New System.Drawing.Point(3, 268)
+        Me.lblSelectedTable.Name = "lblSelectedTable"
+        Me.lblSelectedTable.Size = New System.Drawing.Size(79, 13)
+        Me.lblSelectedTable.TabIndex = 81
+        Me.lblSelectedTable.Text = "Selected Table"
+        Me.lblSelectedTable.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        '
+        'btnTablesShow
+        '
+        Me.btnTablesShow.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.btnTablesShow.Location = New System.Drawing.Point(3, 694)
+        Me.btnTablesShow.Name = "btnTablesShow"
+        Me.btnTablesShow.Size = New System.Drawing.Size(164, 20)
+        Me.btnTablesShow.TabIndex = 17
+        Me.btnTablesShow.Text = "Show All Tables"
+        '
+        'btnTableDefault
+        '
+        Me.btnTableDefault.Location = New System.Drawing.Point(3, 238)
+        Me.btnTableDefault.Name = "btnTableDefault"
+        Me.btnTableDefault.Size = New System.Drawing.Size(164, 20)
+        Me.btnTableDefault.TabIndex = 15
+        Me.btnTableDefault.Text = "Set as Default Table"
+        '
         'pnlFieldSettings
         '
-        Me.pnlFieldSettings.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.pnlFieldSettings.AutoScroll = True
         Me.pnlFieldSettings.Controls.Add(Me.Label1)
         Me.pnlFieldSettings.Controls.Add(Me.lstRelatedFields)
@@ -1066,17 +1139,29 @@ Partial Class frmConfiguration
         Me.pnlFieldSettings.Controls.Add(Me.btnFieldAddOrUpdate)
         Me.pnlFieldSettings.Controls.Add(Me.chkFieldUpdate)
         Me.pnlFieldSettings.Controls.Add(Me.lblFieldUpdate)
-        Me.pnlFieldSettings.Location = New System.Drawing.Point(444, 304)
+        Me.pnlFieldSettings.Controls.Add(Me.txtRelatedFieldAlias)
+        Me.pnlFieldSettings.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.pnlFieldSettings.Location = New System.Drawing.Point(0, 279)
         Me.pnlFieldSettings.Name = "pnlFieldSettings"
-        Me.pnlFieldSettings.Size = New System.Drawing.Size(318, 453)
+        Me.pnlFieldSettings.Size = New System.Drawing.Size(334, 474)
         Me.pnlFieldSettings.TabIndex = 162
+        '
+        'Label1
+        '
+        Me.Label1.Location = New System.Drawing.Point(3, 190)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(96, 16)
+        Me.Label1.TabIndex = 169
+        Me.Label1.Text = "Related Field Alias"
+        Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'lstRelatedFields
         '
-        Me.lstRelatedFields.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lstRelatedFields.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lstRelatedFields.FormattingEnabled = True
         Me.lstRelatedFields.HorizontalScrollbar = True
-        Me.lstRelatedFields.Location = New System.Drawing.Point(104, 164)
+        Me.lstRelatedFields.Location = New System.Drawing.Point(106, 161)
         Me.lstRelatedFields.Name = "lstRelatedFields"
         Me.lstRelatedFields.Size = New System.Drawing.Size(145, 95)
         Me.lstRelatedFields.TabIndex = 168
@@ -1088,7 +1173,7 @@ Partial Class frmConfiguration
         Me.btnShowRelatedFields.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnShowRelatedFields.BackgroundImage = Global.Sequenchel.My.Resources.Resources.button_down
         Me.btnShowRelatedFields.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
-        Me.btnShowRelatedFields.Location = New System.Drawing.Point(260, 164)
+        Me.btnShowRelatedFields.Location = New System.Drawing.Point(261, 161)
         Me.btnShowRelatedFields.Name = "btnShowRelatedFields"
         Me.btnShowRelatedFields.Size = New System.Drawing.Size(30, 20)
         Me.btnShowRelatedFields.TabIndex = 167
@@ -1096,10 +1181,11 @@ Partial Class frmConfiguration
         '
         'lstRelationFields
         '
-        Me.lstRelationFields.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lstRelationFields.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lstRelationFields.FormattingEnabled = True
         Me.lstRelationFields.HorizontalScrollbar = True
-        Me.lstRelationFields.Location = New System.Drawing.Point(104, 136)
+        Me.lstRelationFields.Location = New System.Drawing.Point(106, 134)
         Me.lstRelationFields.Name = "lstRelationFields"
         Me.lstRelationFields.Size = New System.Drawing.Size(145, 95)
         Me.lstRelationFields.TabIndex = 166
@@ -1108,10 +1194,11 @@ Partial Class frmConfiguration
         '
         'lstRelationTables
         '
-        Me.lstRelationTables.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lstRelationTables.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lstRelationTables.FormattingEnabled = True
         Me.lstRelationTables.HorizontalScrollbar = True
-        Me.lstRelationTables.Location = New System.Drawing.Point(104, 109)
+        Me.lstRelationTables.Location = New System.Drawing.Point(106, 108)
         Me.lstRelationTables.Name = "lstRelationTables"
         Me.lstRelationTables.Size = New System.Drawing.Size(145, 95)
         Me.lstRelationTables.TabIndex = 163
@@ -1120,8 +1207,10 @@ Partial Class frmConfiguration
         '
         'cbxRelationFields
         '
+        Me.cbxRelationFields.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.cbxRelationFields.FormattingEnabled = True
-        Me.cbxRelationFields.Location = New System.Drawing.Point(104, 136)
+        Me.cbxRelationFields.Location = New System.Drawing.Point(106, 134)
         Me.cbxRelationFields.Name = "cbxRelationFields"
         Me.cbxRelationFields.Size = New System.Drawing.Size(150, 21)
         Me.cbxRelationFields.TabIndex = 163
@@ -1131,7 +1220,7 @@ Partial Class frmConfiguration
         Me.btnShowRelationFields.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnShowRelationFields.BackgroundImage = Global.Sequenchel.My.Resources.Resources.button_down
         Me.btnShowRelationFields.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
-        Me.btnShowRelationFields.Location = New System.Drawing.Point(260, 136)
+        Me.btnShowRelationFields.Location = New System.Drawing.Point(261, 134)
         Me.btnShowRelationFields.Name = "btnShowRelationFields"
         Me.btnShowRelationFields.Size = New System.Drawing.Size(30, 20)
         Me.btnShowRelationFields.TabIndex = 165
@@ -1142,7 +1231,7 @@ Partial Class frmConfiguration
         Me.btnShowRelationTables.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnShowRelationTables.BackgroundImage = Global.Sequenchel.My.Resources.Resources.button_down
         Me.btnShowRelationTables.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
-        Me.btnShowRelationTables.Location = New System.Drawing.Point(260, 109)
+        Me.btnShowRelationTables.Location = New System.Drawing.Point(261, 108)
         Me.btnShowRelationTables.Name = "btnShowRelationTables"
         Me.btnShowRelationTables.Size = New System.Drawing.Size(30, 20)
         Me.btnShowRelationTables.TabIndex = 163
@@ -1151,7 +1240,7 @@ Partial Class frmConfiguration
         'chkRelatedField
         '
         Me.chkRelatedField.AutoSize = True
-        Me.chkRelatedField.Location = New System.Drawing.Point(107, 169)
+        Me.chkRelatedField.Location = New System.Drawing.Point(106, 166)
         Me.chkRelatedField.Name = "chkRelatedField"
         Me.chkRelatedField.Size = New System.Drawing.Size(15, 14)
         Me.chkRelatedField.TabIndex = 7
@@ -1168,7 +1257,7 @@ Partial Class frmConfiguration
         '
         'lblIdentity
         '
-        Me.lblIdentity.Location = New System.Drawing.Point(173, 273)
+        Me.lblIdentity.Location = New System.Drawing.Point(173, 295)
         Me.lblIdentity.Name = "lblIdentity"
         Me.lblIdentity.Size = New System.Drawing.Size(96, 16)
         Me.lblIdentity.TabIndex = 161
@@ -1177,7 +1266,9 @@ Partial Class frmConfiguration
         '
         'txtFieldName
         '
-        Me.txtFieldName.Location = New System.Drawing.Point(107, 6)
+        Me.txtFieldName.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.txtFieldName.Location = New System.Drawing.Point(106, 6)
         Me.txtFieldName.Name = "txtFieldName"
         Me.txtFieldName.Size = New System.Drawing.Size(183, 20)
         Me.txtFieldName.TabIndex = 0
@@ -1185,7 +1276,7 @@ Partial Class frmConfiguration
         'chkIdentity
         '
         Me.chkIdentity.AutoSize = True
-        Me.chkIdentity.Location = New System.Drawing.Point(277, 275)
+        Me.chkIdentity.Location = New System.Drawing.Point(277, 297)
         Me.chkIdentity.Name = "chkIdentity"
         Me.chkIdentity.Size = New System.Drawing.Size(15, 14)
         Me.chkIdentity.TabIndex = 14
@@ -1193,14 +1284,16 @@ Partial Class frmConfiguration
         '
         'txtFieldAlias
         '
-        Me.txtFieldAlias.Location = New System.Drawing.Point(107, 32)
+        Me.txtFieldAlias.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.txtFieldAlias.Location = New System.Drawing.Point(106, 31)
         Me.txtFieldAlias.Name = "txtFieldAlias"
         Me.txtFieldAlias.Size = New System.Drawing.Size(183, 20)
         Me.txtFieldAlias.TabIndex = 1
         '
         'lblPrimaryKey
         '
-        Me.lblPrimaryKey.Location = New System.Drawing.Point(173, 299)
+        Me.lblPrimaryKey.Location = New System.Drawing.Point(173, 320)
         Me.lblPrimaryKey.Name = "lblPrimaryKey"
         Me.lblPrimaryKey.Size = New System.Drawing.Size(96, 16)
         Me.lblPrimaryKey.TabIndex = 159
@@ -1209,7 +1302,7 @@ Partial Class frmConfiguration
         '
         'lblFieldAlias
         '
-        Me.lblFieldAlias.Location = New System.Drawing.Point(3, 36)
+        Me.lblFieldAlias.Location = New System.Drawing.Point(3, 35)
         Me.lblFieldAlias.Name = "lblFieldAlias"
         Me.lblFieldAlias.Size = New System.Drawing.Size(96, 16)
         Me.lblFieldAlias.TabIndex = 110
@@ -1219,7 +1312,7 @@ Partial Class frmConfiguration
         'chkPrimaryKey
         '
         Me.chkPrimaryKey.AutoSize = True
-        Me.chkPrimaryKey.Location = New System.Drawing.Point(277, 301)
+        Me.chkPrimaryKey.Location = New System.Drawing.Point(277, 322)
         Me.chkPrimaryKey.Name = "chkPrimaryKey"
         Me.chkPrimaryKey.Size = New System.Drawing.Size(15, 14)
         Me.chkPrimaryKey.TabIndex = 16
@@ -1227,7 +1320,7 @@ Partial Class frmConfiguration
         '
         'lblDataType
         '
-        Me.lblDataType.Location = New System.Drawing.Point(3, 62)
+        Me.lblDataType.Location = New System.Drawing.Point(3, 60)
         Me.lblDataType.Name = "lblDataType"
         Me.lblDataType.Size = New System.Drawing.Size(96, 16)
         Me.lblDataType.TabIndex = 112
@@ -1236,7 +1329,7 @@ Partial Class frmConfiguration
         '
         'lblRelatedField
         '
-        Me.lblRelatedField.Location = New System.Drawing.Point(3, 169)
+        Me.lblRelatedField.Location = New System.Drawing.Point(3, 166)
         Me.lblRelatedField.Name = "lblRelatedField"
         Me.lblRelatedField.Size = New System.Drawing.Size(96, 16)
         Me.lblRelatedField.TabIndex = 157
@@ -1245,37 +1338,45 @@ Partial Class frmConfiguration
         '
         'cbxDataType
         '
+        Me.cbxDataType.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.cbxDataType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cbxDataType.FormattingEnabled = True
-        Me.cbxDataType.Location = New System.Drawing.Point(107, 58)
+        Me.cbxDataType.Location = New System.Drawing.Point(106, 56)
         Me.cbxDataType.Name = "cbxDataType"
         Me.cbxDataType.Size = New System.Drawing.Size(183, 21)
         Me.cbxDataType.TabIndex = 2
         '
         'txtRelatedField
         '
-        Me.txtRelatedField.Location = New System.Drawing.Point(128, 165)
+        Me.txtRelatedField.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.txtRelatedField.Location = New System.Drawing.Point(128, 162)
         Me.txtRelatedField.Name = "txtRelatedField"
         Me.txtRelatedField.Size = New System.Drawing.Size(127, 20)
         Me.txtRelatedField.TabIndex = 8
         '
         'txtFieldWidth
         '
-        Me.txtFieldWidth.Location = New System.Drawing.Point(249, 85)
+        Me.txtFieldWidth.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.txtFieldWidth.Location = New System.Drawing.Point(249, 81)
         Me.txtFieldWidth.Name = "txtFieldWidth"
         Me.txtFieldWidth.Size = New System.Drawing.Size(41, 20)
         Me.txtFieldWidth.TabIndex = 3
         '
         'txtDefaultButton
         '
-        Me.txtDefaultButton.Location = New System.Drawing.Point(128, 191)
+        Me.txtDefaultButton.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.txtDefaultButton.Location = New System.Drawing.Point(126, 215)
         Me.txtDefaultButton.Name = "txtDefaultButton"
         Me.txtDefaultButton.Size = New System.Drawing.Size(163, 20)
         Me.txtDefaultButton.TabIndex = 10
         '
         'lblFieldWidth
         '
-        Me.lblFieldWidth.Location = New System.Drawing.Point(173, 89)
+        Me.lblFieldWidth.Location = New System.Drawing.Point(173, 85)
         Me.lblFieldWidth.Name = "lblFieldWidth"
         Me.lblFieldWidth.Size = New System.Drawing.Size(70, 16)
         Me.lblFieldWidth.TabIndex = 115
@@ -1285,7 +1386,7 @@ Partial Class frmConfiguration
         '
         'lblDefaultButton
         '
-        Me.lblDefaultButton.Location = New System.Drawing.Point(3, 192)
+        Me.lblDefaultButton.Location = New System.Drawing.Point(3, 216)
         Me.lblDefaultButton.Name = "lblDefaultButton"
         Me.lblDefaultButton.Size = New System.Drawing.Size(96, 16)
         Me.lblDefaultButton.TabIndex = 154
@@ -1294,7 +1395,7 @@ Partial Class frmConfiguration
         '
         'lblRelations
         '
-        Me.lblRelations.Location = New System.Drawing.Point(3, 115)
+        Me.lblRelations.Location = New System.Drawing.Point(3, 114)
         Me.lblRelations.Name = "lblRelations"
         Me.lblRelations.Size = New System.Drawing.Size(96, 16)
         Me.lblRelations.TabIndex = 117
@@ -1304,7 +1405,7 @@ Partial Class frmConfiguration
         'chkDefaultButton
         '
         Me.chkDefaultButton.AutoSize = True
-        Me.chkDefaultButton.Location = New System.Drawing.Point(107, 194)
+        Me.chkDefaultButton.Location = New System.Drawing.Point(106, 219)
         Me.chkDefaultButton.Name = "chkDefaultButton"
         Me.chkDefaultButton.Size = New System.Drawing.Size(15, 14)
         Me.chkDefaultButton.TabIndex = 9
@@ -1312,7 +1413,9 @@ Partial Class frmConfiguration
         '
         'txtControlField
         '
-        Me.txtControlField.Location = New System.Drawing.Point(107, 217)
+        Me.txtControlField.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.txtControlField.Location = New System.Drawing.Point(106, 241)
         Me.txtControlField.Name = "txtControlField"
         Me.txtControlField.Size = New System.Drawing.Size(183, 20)
         Me.txtControlField.TabIndex = 11
@@ -1320,7 +1423,7 @@ Partial Class frmConfiguration
         'btnRelationAdd
         '
         Me.btnRelationAdd.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnRelationAdd.Location = New System.Drawing.Point(11, 139)
+        Me.btnRelationAdd.Location = New System.Drawing.Point(11, 137)
         Me.btnRelationAdd.Name = "btnRelationAdd"
         Me.btnRelationAdd.Size = New System.Drawing.Size(20, 20)
         Me.btnRelationAdd.TabIndex = 5
@@ -1329,7 +1432,7 @@ Partial Class frmConfiguration
         '
         'lblControlField
         '
-        Me.lblControlField.Location = New System.Drawing.Point(3, 221)
+        Me.lblControlField.Location = New System.Drawing.Point(3, 245)
         Me.lblControlField.Name = "lblControlField"
         Me.lblControlField.Size = New System.Drawing.Size(96, 16)
         Me.lblControlField.TabIndex = 119
@@ -1338,14 +1441,16 @@ Partial Class frmConfiguration
         '
         'txtControlValue
         '
-        Me.txtControlValue.Location = New System.Drawing.Point(107, 243)
+        Me.txtControlValue.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.txtControlValue.Location = New System.Drawing.Point(106, 266)
         Me.txtControlValue.Name = "txtControlValue"
         Me.txtControlValue.Size = New System.Drawing.Size(183, 20)
         Me.txtControlValue.TabIndex = 12
         '
         'lblControlValue
         '
-        Me.lblControlValue.Location = New System.Drawing.Point(3, 247)
+        Me.lblControlValue.Location = New System.Drawing.Point(3, 270)
         Me.lblControlValue.Name = "lblControlValue"
         Me.lblControlValue.Size = New System.Drawing.Size(96, 16)
         Me.lblControlValue.TabIndex = 121
@@ -1355,7 +1460,7 @@ Partial Class frmConfiguration
         'btnRelationRemove
         '
         Me.btnRelationRemove.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnRelationRemove.Location = New System.Drawing.Point(37, 139)
+        Me.btnRelationRemove.Location = New System.Drawing.Point(37, 137)
         Me.btnRelationRemove.Name = "btnRelationRemove"
         Me.btnRelationRemove.Size = New System.Drawing.Size(20, 20)
         Me.btnRelationRemove.TabIndex = 6
@@ -1364,8 +1469,10 @@ Partial Class frmConfiguration
         '
         'cbxRelationTables
         '
+        Me.cbxRelationTables.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.cbxRelationTables.FormattingEnabled = True
-        Me.cbxRelationTables.Location = New System.Drawing.Point(104, 109)
+        Me.cbxRelationTables.Location = New System.Drawing.Point(106, 108)
         Me.cbxRelationTables.Name = "cbxRelationTables"
         Me.cbxRelationTables.Size = New System.Drawing.Size(150, 21)
         Me.cbxRelationTables.TabIndex = 4
@@ -1373,7 +1480,7 @@ Partial Class frmConfiguration
         'chkControlUpdate
         '
         Me.chkControlUpdate.AutoSize = True
-        Me.chkControlUpdate.Location = New System.Drawing.Point(107, 275)
+        Me.chkControlUpdate.Location = New System.Drawing.Point(106, 297)
         Me.chkControlUpdate.Name = "chkControlUpdate"
         Me.chkControlUpdate.Size = New System.Drawing.Size(15, 14)
         Me.chkControlUpdate.TabIndex = 13
@@ -1381,7 +1488,7 @@ Partial Class frmConfiguration
         '
         'lblControlUpdate
         '
-        Me.lblControlUpdate.Location = New System.Drawing.Point(3, 273)
+        Me.lblControlUpdate.Location = New System.Drawing.Point(3, 295)
         Me.lblControlUpdate.Name = "lblControlUpdate"
         Me.lblControlUpdate.Size = New System.Drawing.Size(96, 16)
         Me.lblControlUpdate.TabIndex = 123
@@ -1391,7 +1498,7 @@ Partial Class frmConfiguration
         'chkControlMode
         '
         Me.chkControlMode.AutoSize = True
-        Me.chkControlMode.Location = New System.Drawing.Point(107, 301)
+        Me.chkControlMode.Location = New System.Drawing.Point(106, 322)
         Me.chkControlMode.Name = "chkControlMode"
         Me.chkControlMode.Size = New System.Drawing.Size(15, 14)
         Me.chkControlMode.TabIndex = 15
@@ -1399,7 +1506,7 @@ Partial Class frmConfiguration
         '
         'lblControlMode
         '
-        Me.lblControlMode.Location = New System.Drawing.Point(3, 299)
+        Me.lblControlMode.Location = New System.Drawing.Point(3, 320)
         Me.lblControlMode.Name = "lblControlMode"
         Me.lblControlMode.Size = New System.Drawing.Size(96, 16)
         Me.lblControlMode.TabIndex = 125
@@ -1409,7 +1516,7 @@ Partial Class frmConfiguration
         'chkFieldList
         '
         Me.chkFieldList.AutoSize = True
-        Me.chkFieldList.Location = New System.Drawing.Point(107, 325)
+        Me.chkFieldList.Location = New System.Drawing.Point(106, 345)
         Me.chkFieldList.Name = "chkFieldList"
         Me.chkFieldList.Size = New System.Drawing.Size(15, 14)
         Me.chkFieldList.TabIndex = 17
@@ -1417,7 +1524,7 @@ Partial Class frmConfiguration
         '
         'lblFieldList
         '
-        Me.lblFieldList.Location = New System.Drawing.Point(3, 323)
+        Me.lblFieldList.Location = New System.Drawing.Point(3, 343)
         Me.lblFieldList.Name = "lblFieldList"
         Me.lblFieldList.Size = New System.Drawing.Size(96, 16)
         Me.lblFieldList.TabIndex = 127
@@ -1427,7 +1534,7 @@ Partial Class frmConfiguration
         'txtFieldListOrder
         '
         Me.txtFieldListOrder.Enabled = False
-        Me.txtFieldListOrder.Location = New System.Drawing.Point(104, 376)
+        Me.txtFieldListOrder.Location = New System.Drawing.Point(106, 394)
         Me.txtFieldListOrder.Name = "txtFieldListOrder"
         Me.txtFieldListOrder.Size = New System.Drawing.Size(44, 20)
         Me.txtFieldListOrder.TabIndex = 21
@@ -1435,7 +1542,7 @@ Partial Class frmConfiguration
         'chkFieldVisible
         '
         Me.chkFieldVisible.AutoSize = True
-        Me.chkFieldVisible.Location = New System.Drawing.Point(107, 89)
+        Me.chkFieldVisible.Location = New System.Drawing.Point(106, 86)
         Me.chkFieldVisible.Name = "chkFieldVisible"
         Me.chkFieldVisible.Size = New System.Drawing.Size(15, 14)
         Me.chkFieldVisible.TabIndex = 18
@@ -1444,14 +1551,14 @@ Partial Class frmConfiguration
         'txtFieldListWidth
         '
         Me.txtFieldListWidth.Enabled = False
-        Me.txtFieldListWidth.Location = New System.Drawing.Point(104, 349)
+        Me.txtFieldListWidth.Location = New System.Drawing.Point(106, 368)
         Me.txtFieldListWidth.Name = "txtFieldListWidth"
         Me.txtFieldListWidth.Size = New System.Drawing.Size(44, 20)
         Me.txtFieldListWidth.TabIndex = 19
         '
         'lblFieldVisible
         '
-        Me.lblFieldVisible.Location = New System.Drawing.Point(3, 88)
+        Me.lblFieldVisible.Location = New System.Drawing.Point(3, 85)
         Me.lblFieldVisible.Name = "lblFieldVisible"
         Me.lblFieldVisible.Size = New System.Drawing.Size(96, 16)
         Me.lblFieldVisible.TabIndex = 129
@@ -1460,7 +1567,7 @@ Partial Class frmConfiguration
         '
         'lblFieldListOrder
         '
-        Me.lblFieldListOrder.Location = New System.Drawing.Point(3, 377)
+        Me.lblFieldListOrder.Location = New System.Drawing.Point(3, 395)
         Me.lblFieldListOrder.Name = "lblFieldListOrder"
         Me.lblFieldListOrder.Size = New System.Drawing.Size(96, 16)
         Me.lblFieldListOrder.TabIndex = 141
@@ -1470,7 +1577,7 @@ Partial Class frmConfiguration
         'chkFieldSearch
         '
         Me.chkFieldSearch.AutoSize = True
-        Me.chkFieldSearch.Location = New System.Drawing.Point(277, 325)
+        Me.chkFieldSearch.Location = New System.Drawing.Point(277, 345)
         Me.chkFieldSearch.Name = "chkFieldSearch"
         Me.chkFieldSearch.Size = New System.Drawing.Size(15, 14)
         Me.chkFieldSearch.TabIndex = 20
@@ -1478,7 +1585,7 @@ Partial Class frmConfiguration
         '
         'lblFieldListWidth
         '
-        Me.lblFieldListWidth.Location = New System.Drawing.Point(3, 350)
+        Me.lblFieldListWidth.Location = New System.Drawing.Point(3, 369)
         Me.lblFieldListWidth.Name = "lblFieldListWidth"
         Me.lblFieldListWidth.Size = New System.Drawing.Size(96, 16)
         Me.lblFieldListWidth.TabIndex = 140
@@ -1487,7 +1594,7 @@ Partial Class frmConfiguration
         '
         'lblFieldSearch
         '
-        Me.lblFieldSearch.Location = New System.Drawing.Point(173, 323)
+        Me.lblFieldSearch.Location = New System.Drawing.Point(173, 343)
         Me.lblFieldSearch.Name = "lblFieldSearch"
         Me.lblFieldSearch.Size = New System.Drawing.Size(96, 16)
         Me.lblFieldSearch.TabIndex = 131
@@ -1496,7 +1603,7 @@ Partial Class frmConfiguration
         '
         'btnFieldDelete
         '
-        Me.btnFieldDelete.Location = New System.Drawing.Point(161, 402)
+        Me.btnFieldDelete.Location = New System.Drawing.Point(161, 420)
         Me.btnFieldDelete.Name = "btnFieldDelete"
         Me.btnFieldDelete.Size = New System.Drawing.Size(131, 20)
         Me.btnFieldDelete.TabIndex = 25
@@ -1505,7 +1612,7 @@ Partial Class frmConfiguration
         'chkFieldSearchList
         '
         Me.chkFieldSearchList.AutoSize = True
-        Me.chkFieldSearchList.Location = New System.Drawing.Point(277, 352)
+        Me.chkFieldSearchList.Location = New System.Drawing.Point(277, 371)
         Me.chkFieldSearchList.Name = "chkFieldSearchList"
         Me.chkFieldSearchList.Size = New System.Drawing.Size(15, 14)
         Me.chkFieldSearchList.TabIndex = 22
@@ -1513,7 +1620,7 @@ Partial Class frmConfiguration
         '
         'btnFieldClear
         '
-        Me.btnFieldClear.Location = New System.Drawing.Point(11, 428)
+        Me.btnFieldClear.Location = New System.Drawing.Point(11, 446)
         Me.btnFieldClear.Name = "btnFieldClear"
         Me.btnFieldClear.Size = New System.Drawing.Size(131, 20)
         Me.btnFieldClear.TabIndex = 26
@@ -1521,7 +1628,7 @@ Partial Class frmConfiguration
         '
         'lblFieldSearchList
         '
-        Me.lblFieldSearchList.Location = New System.Drawing.Point(173, 350)
+        Me.lblFieldSearchList.Location = New System.Drawing.Point(173, 369)
         Me.lblFieldSearchList.Name = "lblFieldSearchList"
         Me.lblFieldSearchList.Size = New System.Drawing.Size(96, 16)
         Me.lblFieldSearchList.TabIndex = 133
@@ -1530,7 +1637,7 @@ Partial Class frmConfiguration
         '
         'btnFieldAddOrUpdate
         '
-        Me.btnFieldAddOrUpdate.Location = New System.Drawing.Point(11, 402)
+        Me.btnFieldAddOrUpdate.Location = New System.Drawing.Point(11, 420)
         Me.btnFieldAddOrUpdate.Name = "btnFieldAddOrUpdate"
         Me.btnFieldAddOrUpdate.Size = New System.Drawing.Size(131, 20)
         Me.btnFieldAddOrUpdate.TabIndex = 24
@@ -1539,7 +1646,7 @@ Partial Class frmConfiguration
         'chkFieldUpdate
         '
         Me.chkFieldUpdate.AutoSize = True
-        Me.chkFieldUpdate.Location = New System.Drawing.Point(277, 379)
+        Me.chkFieldUpdate.Location = New System.Drawing.Point(277, 397)
         Me.chkFieldUpdate.Name = "chkFieldUpdate"
         Me.chkFieldUpdate.Size = New System.Drawing.Size(15, 14)
         Me.chkFieldUpdate.TabIndex = 23
@@ -1547,113 +1654,55 @@ Partial Class frmConfiguration
         '
         'lblFieldUpdate
         '
-        Me.lblFieldUpdate.Location = New System.Drawing.Point(173, 377)
+        Me.lblFieldUpdate.Location = New System.Drawing.Point(173, 395)
         Me.lblFieldUpdate.Name = "lblFieldUpdate"
         Me.lblFieldUpdate.Size = New System.Drawing.Size(96, 16)
         Me.lblFieldUpdate.TabIndex = 135
         Me.lblFieldUpdate.Text = "Field Update"
         Me.lblFieldUpdate.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
-        'lstTables
+        'pnlTableSettings
         '
-        Me.lstTables.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lstTables.FormattingEnabled = True
-        Me.lstTables.HorizontalScrollbar = True
-        Me.lstTables.Location = New System.Drawing.Point(552, 35)
-        Me.lstTables.Name = "lstTables"
-        Me.lstTables.Size = New System.Drawing.Size(147, 95)
-        Me.lstTables.TabIndex = 2
-        Me.lstTables.TabStop = False
-        Me.lstTables.Visible = False
+        Me.pnlTableSettings.Controls.Add(Me.lblTableName)
+        Me.pnlTableSettings.Controls.Add(Me.chkTableUpdate)
+        Me.pnlTableSettings.Controls.Add(Me.lblTableInsert)
+        Me.pnlTableSettings.Controls.Add(Me.lblTableUpdate)
+        Me.pnlTableSettings.Controls.Add(Me.lstTables)
+        Me.pnlTableSettings.Controls.Add(Me.chkTableInsert)
+        Me.pnlTableSettings.Controls.Add(Me.lblTableAlias)
+        Me.pnlTableSettings.Controls.Add(Me.chkTableSearch)
+        Me.pnlTableSettings.Controls.Add(Me.chkImportAllTables)
+        Me.pnlTableSettings.Controls.Add(Me.lblTableVisible)
+        Me.pnlTableSettings.Controls.Add(Me.txtTableName)
+        Me.pnlTableSettings.Controls.Add(Me.lblTableSearch)
+        Me.pnlTableSettings.Controls.Add(Me.lblTableDelete)
+        Me.pnlTableSettings.Controls.Add(Me.chkTableVisible)
+        Me.pnlTableSettings.Controls.Add(Me.btnTableAddOrUpdate)
+        Me.pnlTableSettings.Controls.Add(Me.btnCrawlTables)
+        Me.pnlTableSettings.Controls.Add(Me.chkTableDelete)
+        Me.pnlTableSettings.Controls.Add(Me.btnTableDelete)
+        Me.pnlTableSettings.Controls.Add(Me.btnTableClear)
+        Me.pnlTableSettings.Controls.Add(Me.btnColumnsImport)
+        Me.pnlTableSettings.Controls.Add(Me.txtTableAlias)
+        Me.pnlTableSettings.Dock = System.Windows.Forms.DockStyle.Top
+        Me.pnlTableSettings.Location = New System.Drawing.Point(0, 0)
+        Me.pnlTableSettings.Name = "pnlTableSettings"
+        Me.pnlTableSettings.Size = New System.Drawing.Size(334, 279)
+        Me.pnlTableSettings.TabIndex = 163
         '
-        'chkImportAllTables
+        'lblTableName
         '
-        Me.chkImportAllTables.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.chkImportAllTables.AutoSize = True
-        Me.chkImportAllTables.Location = New System.Drawing.Point(453, 209)
-        Me.chkImportAllTables.Name = "chkImportAllTables"
-        Me.chkImportAllTables.Size = New System.Drawing.Size(72, 17)
-        Me.chkImportAllTables.TabIndex = 10
-        Me.chkImportAllTables.Text = "All Tables"
-        Me.chkImportAllTables.UseVisualStyleBackColor = True
-        '
-        'lblTableDelete
-        '
-        Me.lblTableDelete.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lblTableDelete.Location = New System.Drawing.Point(450, 185)
-        Me.lblTableDelete.Name = "lblTableDelete"
-        Me.lblTableDelete.Size = New System.Drawing.Size(96, 16)
-        Me.lblTableDelete.TabIndex = 148
-        Me.lblTableDelete.Text = "Table Delete"
-        Me.lblTableDelete.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
-        '
-        'chkTableDelete
-        '
-        Me.chkTableDelete.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.chkTableDelete.AutoSize = True
-        Me.chkTableDelete.Location = New System.Drawing.Point(554, 187)
-        Me.chkTableDelete.Name = "chkTableDelete"
-        Me.chkTableDelete.Size = New System.Drawing.Size(15, 14)
-        Me.chkTableDelete.TabIndex = 9
-        Me.chkTableDelete.UseVisualStyleBackColor = True
-        '
-        'btnColumnsImport
-        '
-        Me.btnColumnsImport.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnColumnsImport.Location = New System.Drawing.Point(554, 207)
-        Me.btnColumnsImport.Name = "btnColumnsImport"
-        Me.btnColumnsImport.Size = New System.Drawing.Size(180, 20)
-        Me.btnColumnsImport.TabIndex = 11
-        Me.btnColumnsImport.Text = "Import Columns for this table"
-        '
-        'btnCrawlTables
-        '
-        Me.btnCrawlTables.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnCrawlTables.BackgroundImage = Global.Sequenchel.My.Resources.Resources.button_down
-        Me.btnCrawlTables.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
-        Me.btnCrawlTables.Location = New System.Drawing.Point(707, 35)
-        Me.btnCrawlTables.Name = "btnCrawlTables"
-        Me.btnCrawlTables.Size = New System.Drawing.Size(30, 20)
-        Me.btnCrawlTables.TabIndex = 3
-        Me.btnCrawlTables.Text = "..."
-        '
-        'lblTableSearch
-        '
-        Me.lblTableSearch.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lblTableSearch.Location = New System.Drawing.Point(450, 112)
-        Me.lblTableSearch.Name = "lblTableSearch"
-        Me.lblTableSearch.Size = New System.Drawing.Size(96, 16)
-        Me.lblTableSearch.TabIndex = 106
-        Me.lblTableSearch.Text = "Table Search"
-        Me.lblTableSearch.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
-        '
-        'chkTableSearch
-        '
-        Me.chkTableSearch.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.chkTableSearch.AutoSize = True
-        Me.chkTableSearch.Checked = True
-        Me.chkTableSearch.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.chkTableSearch.Location = New System.Drawing.Point(554, 114)
-        Me.chkTableSearch.Name = "chkTableSearch"
-        Me.chkTableSearch.Size = New System.Drawing.Size(15, 14)
-        Me.chkTableSearch.TabIndex = 6
-        Me.chkTableSearch.UseVisualStyleBackColor = True
-        '
-        'lblTableUpdate
-        '
-        Me.lblTableUpdate.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lblTableUpdate.Location = New System.Drawing.Point(450, 136)
-        Me.lblTableUpdate.Name = "lblTableUpdate"
-        Me.lblTableUpdate.Size = New System.Drawing.Size(96, 16)
-        Me.lblTableUpdate.TabIndex = 104
-        Me.lblTableUpdate.Text = "Table Update"
-        Me.lblTableUpdate.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.lblTableName.Location = New System.Drawing.Point(3, 10)
+        Me.lblTableName.Name = "lblTableName"
+        Me.lblTableName.Size = New System.Drawing.Size(96, 16)
+        Me.lblTableName.TabIndex = 89
+        Me.lblTableName.Text = "Table Name"
+        Me.lblTableName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'chkTableUpdate
         '
-        Me.chkTableUpdate.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.chkTableUpdate.AutoSize = True
-        Me.chkTableUpdate.Location = New System.Drawing.Point(554, 138)
+        Me.chkTableUpdate.Location = New System.Drawing.Point(107, 108)
         Me.chkTableUpdate.Name = "chkTableUpdate"
         Me.chkTableUpdate.Size = New System.Drawing.Size(15, 14)
         Me.chkTableUpdate.TabIndex = 7
@@ -1661,50 +1710,161 @@ Partial Class frmConfiguration
         '
         'lblTableInsert
         '
-        Me.lblTableInsert.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lblTableInsert.Location = New System.Drawing.Point(450, 160)
+        Me.lblTableInsert.Location = New System.Drawing.Point(3, 130)
         Me.lblTableInsert.Name = "lblTableInsert"
         Me.lblTableInsert.Size = New System.Drawing.Size(96, 16)
         Me.lblTableInsert.TabIndex = 102
         Me.lblTableInsert.Text = "Table Insert"
         Me.lblTableInsert.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
+        'txtTableAlias
+        '
+        Me.txtTableAlias.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.txtTableAlias.Location = New System.Drawing.Point(107, 30)
+        Me.txtTableAlias.Name = "txtTableAlias"
+        Me.txtTableAlias.Size = New System.Drawing.Size(183, 20)
+        Me.txtTableAlias.TabIndex = 4
+        '
+        'lblTableUpdate
+        '
+        Me.lblTableUpdate.Location = New System.Drawing.Point(3, 106)
+        Me.lblTableUpdate.Name = "lblTableUpdate"
+        Me.lblTableUpdate.Size = New System.Drawing.Size(96, 16)
+        Me.lblTableUpdate.TabIndex = 104
+        Me.lblTableUpdate.Text = "Table Update"
+        Me.lblTableUpdate.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        '
+        'lstTables
+        '
+        Me.lstTables.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lstTables.FormattingEnabled = True
+        Me.lstTables.HorizontalScrollbar = True
+        Me.lstTables.Location = New System.Drawing.Point(105, 5)
+        Me.lstTables.Name = "lstTables"
+        Me.lstTables.Size = New System.Drawing.Size(147, 95)
+        Me.lstTables.TabIndex = 2
+        Me.lstTables.TabStop = False
+        Me.lstTables.Visible = False
+        '
         'chkTableInsert
         '
-        Me.chkTableInsert.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.chkTableInsert.AutoSize = True
-        Me.chkTableInsert.Location = New System.Drawing.Point(554, 162)
+        Me.chkTableInsert.Location = New System.Drawing.Point(107, 132)
         Me.chkTableInsert.Name = "chkTableInsert"
         Me.chkTableInsert.Size = New System.Drawing.Size(15, 14)
         Me.chkTableInsert.TabIndex = 8
         Me.chkTableInsert.UseVisualStyleBackColor = True
         '
+        'lblTableAlias
+        '
+        Me.lblTableAlias.Location = New System.Drawing.Point(3, 34)
+        Me.lblTableAlias.Name = "lblTableAlias"
+        Me.lblTableAlias.Size = New System.Drawing.Size(96, 16)
+        Me.lblTableAlias.TabIndex = 85
+        Me.lblTableAlias.Text = "Table Alias"
+        Me.lblTableAlias.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        '
+        'chkTableSearch
+        '
+        Me.chkTableSearch.AutoSize = True
+        Me.chkTableSearch.Checked = True
+        Me.chkTableSearch.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.chkTableSearch.Location = New System.Drawing.Point(107, 84)
+        Me.chkTableSearch.Name = "chkTableSearch"
+        Me.chkTableSearch.Size = New System.Drawing.Size(15, 14)
+        Me.chkTableSearch.TabIndex = 6
+        Me.chkTableSearch.UseVisualStyleBackColor = True
+        '
+        'chkImportAllTables
+        '
+        Me.chkImportAllTables.AutoSize = True
+        Me.chkImportAllTables.Location = New System.Drawing.Point(6, 179)
+        Me.chkImportAllTables.Name = "chkImportAllTables"
+        Me.chkImportAllTables.Size = New System.Drawing.Size(72, 17)
+        Me.chkImportAllTables.TabIndex = 10
+        Me.chkImportAllTables.Text = "All Tables"
+        Me.chkImportAllTables.UseVisualStyleBackColor = True
+        '
         'lblTableVisible
         '
-        Me.lblTableVisible.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lblTableVisible.Location = New System.Drawing.Point(450, 88)
+        Me.lblTableVisible.Location = New System.Drawing.Point(3, 58)
         Me.lblTableVisible.Name = "lblTableVisible"
         Me.lblTableVisible.Size = New System.Drawing.Size(96, 16)
         Me.lblTableVisible.TabIndex = 100
         Me.lblTableVisible.Text = "Table Visible"
         Me.lblTableVisible.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
+        'txtTableName
+        '
+        Me.txtTableName.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.txtTableName.Location = New System.Drawing.Point(107, 6)
+        Me.txtTableName.Name = "txtTableName"
+        Me.txtTableName.Size = New System.Drawing.Size(147, 20)
+        Me.txtTableName.TabIndex = 1
+        '
+        'lblTableSearch
+        '
+        Me.lblTableSearch.Location = New System.Drawing.Point(3, 82)
+        Me.lblTableSearch.Name = "lblTableSearch"
+        Me.lblTableSearch.Size = New System.Drawing.Size(96, 16)
+        Me.lblTableSearch.TabIndex = 106
+        Me.lblTableSearch.Text = "Table Search"
+        Me.lblTableSearch.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        '
+        'lblTableDelete
+        '
+        Me.lblTableDelete.Location = New System.Drawing.Point(3, 155)
+        Me.lblTableDelete.Name = "lblTableDelete"
+        Me.lblTableDelete.Size = New System.Drawing.Size(96, 16)
+        Me.lblTableDelete.TabIndex = 148
+        Me.lblTableDelete.Text = "Table Delete"
+        Me.lblTableDelete.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        '
         'chkTableVisible
         '
-        Me.chkTableVisible.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.chkTableVisible.AutoSize = True
         Me.chkTableVisible.Checked = True
         Me.chkTableVisible.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.chkTableVisible.Location = New System.Drawing.Point(554, 90)
+        Me.chkTableVisible.Location = New System.Drawing.Point(107, 60)
         Me.chkTableVisible.Name = "chkTableVisible"
         Me.chkTableVisible.Size = New System.Drawing.Size(15, 14)
         Me.chkTableVisible.TabIndex = 5
         Me.chkTableVisible.UseVisualStyleBackColor = True
         '
+        'btnTableAddOrUpdate
+        '
+        Me.btnTableAddOrUpdate.Location = New System.Drawing.Point(6, 226)
+        Me.btnTableAddOrUpdate.Name = "btnTableAddOrUpdate"
+        Me.btnTableAddOrUpdate.Size = New System.Drawing.Size(131, 20)
+        Me.btnTableAddOrUpdate.TabIndex = 12
+        Me.btnTableAddOrUpdate.Text = "Add/Update Table"
+        '
+        'btnCrawlTables
+        '
+        Me.btnCrawlTables.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnCrawlTables.BackgroundImage = Global.Sequenchel.My.Resources.Resources.button_down
+        Me.btnCrawlTables.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
+        Me.btnCrawlTables.Location = New System.Drawing.Point(260, 5)
+        Me.btnCrawlTables.Name = "btnCrawlTables"
+        Me.btnCrawlTables.Size = New System.Drawing.Size(30, 20)
+        Me.btnCrawlTables.TabIndex = 3
+        Me.btnCrawlTables.Text = "..."
+        '
+        'chkTableDelete
+        '
+        Me.chkTableDelete.AutoSize = True
+        Me.chkTableDelete.Location = New System.Drawing.Point(107, 157)
+        Me.chkTableDelete.Name = "chkTableDelete"
+        Me.chkTableDelete.Size = New System.Drawing.Size(15, 14)
+        Me.chkTableDelete.TabIndex = 9
+        Me.chkTableDelete.UseVisualStyleBackColor = True
+        '
         'btnTableDelete
         '
-        Me.btnTableDelete.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnTableDelete.Location = New System.Drawing.Point(603, 256)
+        Me.btnTableDelete.Location = New System.Drawing.Point(156, 226)
         Me.btnTableDelete.Name = "btnTableDelete"
         Me.btnTableDelete.Size = New System.Drawing.Size(131, 20)
         Me.btnTableDelete.TabIndex = 13
@@ -1712,128 +1872,19 @@ Partial Class frmConfiguration
         '
         'btnTableClear
         '
-        Me.btnTableClear.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnTableClear.Location = New System.Drawing.Point(453, 282)
+        Me.btnTableClear.Location = New System.Drawing.Point(6, 252)
         Me.btnTableClear.Name = "btnTableClear"
         Me.btnTableClear.Size = New System.Drawing.Size(131, 20)
         Me.btnTableClear.TabIndex = 14
         Me.btnTableClear.Text = "Clear"
         '
-        'btnTableAddOrUpdate
+        'btnColumnsImport
         '
-        Me.btnTableAddOrUpdate.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnTableAddOrUpdate.Location = New System.Drawing.Point(453, 256)
-        Me.btnTableAddOrUpdate.Name = "btnTableAddOrUpdate"
-        Me.btnTableAddOrUpdate.Size = New System.Drawing.Size(131, 20)
-        Me.btnTableAddOrUpdate.TabIndex = 12
-        Me.btnTableAddOrUpdate.Text = "Add/Update Table"
-        '
-        'btnTableDefault
-        '
-        Me.btnTableDefault.Location = New System.Drawing.Point(25, 256)
-        Me.btnTableDefault.Name = "btnTableDefault"
-        Me.btnTableDefault.Size = New System.Drawing.Size(164, 20)
-        Me.btnTableDefault.TabIndex = 15
-        Me.btnTableDefault.Text = "Set as Default Table"
-        '
-        'lblTableName
-        '
-        Me.lblTableName.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lblTableName.Location = New System.Drawing.Point(450, 40)
-        Me.lblTableName.Name = "lblTableName"
-        Me.lblTableName.Size = New System.Drawing.Size(96, 16)
-        Me.lblTableName.TabIndex = 89
-        Me.lblTableName.Text = "Table Name"
-        Me.lblTableName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
-        '
-        'txtTableName
-        '
-        Me.txtTableName.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.txtTableName.Location = New System.Drawing.Point(554, 36)
-        Me.txtTableName.Name = "txtTableName"
-        Me.txtTableName.Size = New System.Drawing.Size(147, 20)
-        Me.txtTableName.TabIndex = 1
-        '
-        'lblTableAlias
-        '
-        Me.lblTableAlias.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lblTableAlias.Location = New System.Drawing.Point(450, 64)
-        Me.lblTableAlias.Name = "lblTableAlias"
-        Me.lblTableAlias.Size = New System.Drawing.Size(96, 16)
-        Me.lblTableAlias.TabIndex = 85
-        Me.lblTableAlias.Text = "Table Alias"
-        Me.lblTableAlias.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
-        '
-        'txtTableAlias
-        '
-        Me.txtTableAlias.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.txtTableAlias.Location = New System.Drawing.Point(554, 60)
-        Me.txtTableAlias.Name = "txtTableAlias"
-        Me.txtTableAlias.Size = New System.Drawing.Size(183, 20)
-        Me.txtTableAlias.TabIndex = 4
-        '
-        'btnTablesShow
-        '
-        Me.btnTablesShow.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.btnTablesShow.Location = New System.Drawing.Point(25, 705)
-        Me.btnTablesShow.Name = "btnTablesShow"
-        Me.btnTablesShow.Size = New System.Drawing.Size(164, 20)
-        Me.btnTablesShow.TabIndex = 17
-        Me.btnTablesShow.Text = "Show All Tables"
-        '
-        'lblSelectedTable
-        '
-        Me.lblSelectedTable.AutoSize = True
-        Me.lblSelectedTable.Location = New System.Drawing.Point(25, 286)
-        Me.lblSelectedTable.Name = "lblSelectedTable"
-        Me.lblSelectedTable.Size = New System.Drawing.Size(79, 13)
-        Me.lblSelectedTable.TabIndex = 81
-        Me.lblSelectedTable.Text = "Selected Table"
-        Me.lblSelectedTable.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
-        '
-        'tvwTable
-        '
-        Me.tvwTable.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.tvwTable.Location = New System.Drawing.Point(25, 302)
-        Me.tvwTable.Name = "tvwTable"
-        Me.tvwTable.Size = New System.Drawing.Size(392, 397)
-        Me.tvwTable.TabIndex = 16
-        '
-        'lblTables
-        '
-        Me.lblTables.AutoSize = True
-        Me.lblTables.Location = New System.Drawing.Point(25, 20)
-        Me.lblTables.Name = "lblTables"
-        Me.lblTables.Size = New System.Drawing.Size(39, 13)
-        Me.lblTables.TabIndex = 79
-        Me.lblTables.Text = "Tables"
-        Me.lblTables.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
-        '
-        'lvwTables
-        '
-        Me.lvwTables.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lvwTables.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.colTableName, Me.colTableAlias})
-        Me.lvwTables.FullRowSelect = True
-        Me.lvwTables.Location = New System.Drawing.Point(25, 36)
-        Me.lvwTables.Name = "lvwTables"
-        Me.lvwTables.Size = New System.Drawing.Size(392, 214)
-        Me.lvwTables.Sorting = System.Windows.Forms.SortOrder.Ascending
-        Me.lvwTables.TabIndex = 0
-        Me.lvwTables.UseCompatibleStateImageBehavior = False
-        Me.lvwTables.View = System.Windows.Forms.View.Details
-        '
-        'colTableName
-        '
-        Me.colTableName.Text = "Table Name"
-        Me.colTableName.Width = 120
-        '
-        'colTableAlias
-        '
-        Me.colTableAlias.Text = "Table Alias"
-        Me.colTableAlias.Width = 263
+        Me.btnColumnsImport.Location = New System.Drawing.Point(107, 177)
+        Me.btnColumnsImport.Name = "btnColumnsImport"
+        Me.btnColumnsImport.Size = New System.Drawing.Size(180, 20)
+        Me.btnColumnsImport.TabIndex = 11
+        Me.btnColumnsImport.Text = "Import Columns for this table"
         '
         'tpgTableTemplates
         '
@@ -2020,14 +2071,14 @@ Partial Class frmConfiguration
         Me.lblStatusText.Size = New System.Drawing.Size(432, 23)
         Me.lblStatusText.TabIndex = 10
         '
-        'Label1
+        'txtRelatedFieldAlias
         '
-        Me.Label1.Location = New System.Drawing.Point(3, 181)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(96, 16)
-        Me.Label1.TabIndex = 169
-        Me.Label1.Text = "Related Field Alias"
-        Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.txtRelatedFieldAlias.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.txtRelatedFieldAlias.Location = New System.Drawing.Point(106, 189)
+        Me.txtRelatedFieldAlias.Name = "txtRelatedFieldAlias"
+        Me.txtRelatedFieldAlias.Size = New System.Drawing.Size(183, 20)
+        Me.txtRelatedFieldAlias.TabIndex = 170
         '
         'frmConfiguration
         '
@@ -2042,20 +2093,26 @@ Partial Class frmConfiguration
         Me.Controls.Add(Me.btnTest)
         Me.Controls.Add(Me.tabConfiguration)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
-        Me.MaximizeBox = False
-        Me.MinimumSize = New System.Drawing.Size(713, 575)
+        Me.MinimumSize = New System.Drawing.Size(816, 880)
         Me.Name = "frmConfiguration"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
         Me.Text = "Configuration"
+        Me.TopMost = True
         Me.tabConfiguration.ResumeLayout(False)
         Me.tpgConnections.ResumeLayout(False)
         Me.tpgConnections.PerformLayout()
         Me.tpgTableSets.ResumeLayout(False)
         Me.tpgTableSets.PerformLayout()
         Me.tpgTables.ResumeLayout(False)
-        Me.tpgTables.PerformLayout()
+        Me.SplitContainer1.Panel1.ResumeLayout(False)
+        Me.SplitContainer1.Panel1.PerformLayout()
+        Me.SplitContainer1.Panel2.ResumeLayout(False)
+        CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.SplitContainer1.ResumeLayout(False)
         Me.pnlFieldSettings.ResumeLayout(False)
         Me.pnlFieldSettings.PerformLayout()
+        Me.pnlTableSettings.ResumeLayout(False)
+        Me.pnlTableSettings.PerformLayout()
         Me.tpgTableTemplates.ResumeLayout(False)
         Me.tpgTableTemplates.PerformLayout()
         Me.ResumeLayout(False)
@@ -2239,4 +2296,7 @@ Partial Class frmConfiguration
     Friend WithEvents lstRelatedFields As System.Windows.Forms.ListBox
     Friend WithEvents btnShowRelatedFields As System.Windows.Forms.Button
     Friend WithEvents Label1 As System.Windows.Forms.Label
+    Friend WithEvents SplitContainer1 As System.Windows.Forms.SplitContainer
+    Friend WithEvents pnlTableSettings As System.Windows.Forms.Panel
+    Friend WithEvents txtRelatedFieldAlias As System.Windows.Forms.TextBox
 End Class

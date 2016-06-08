@@ -598,81 +598,9 @@ Public Class BaseCode
 
         Dim xNode As System.Xml.XmlNode
         For Each xNode In xPNode.SelectNodes(".//Field")
-
-            Dim basField As New BaseField
-            If xNode.Item("FldSearchList").InnerText = True And xNode.Item("DataType").InnerText.ToUpper <> "BIT" Then
-                basField.Category = 5
-            ElseIf xNode.Item("DataType").InnerText.ToUpper = "BIT" Then
-                basField.Category = 2
-            Else
-                basField.Category = 1
-            End If
-
+            Dim basField As BaseField = LoadField(xNode, basTable.TableName, basTable.TableAlias)
             basTable.Add(basField)
             basField.Index = basTable.Count
-
-            basField.FieldTableName = basTable.TableName
-            basField.FieldTableAlias = basTable.TableAlias
-            If dhdText.CheckNodeElement(xNode, "FldName") Then basField.FieldName = xNode.Item("FldName").InnerText
-            If dhdText.CheckNodeElement(xNode, "FldAlias") Then basField.FieldAlias = xNode.Item("FldAlias").InnerText
-            If basField.FieldAlias = "" Then basField.FieldAlias = basField.FieldName
-            basField.Name = basTable.TableName & "." & basField.FieldAlias
-            If dhdText.CheckNodeElement(xNode, "FldName") Then basField.Name = basTable.TableName & "." & xNode.Item("FldName").InnerText
-            If dhdText.CheckNodeElement(xNode, "DataType") Then basField.FieldDataType = xNode.Item("DataType").InnerText
-            If dhdText.CheckNodeElement(xNode, "Identity") Then basField.Identity = xNode.Item("Identity").InnerText
-            If dhdText.CheckNodeElement(xNode, "PrimaryKey") Then basField.PrimaryKey = xNode.Item("PrimaryKey").InnerText
-            If dhdText.CheckNodeElement(xNode, "FldWidth") Then basField.FieldWidth = xNode.Item("FldWidth").InnerText
-
-            If basField.Category = 5 Then
-                basField.FieldTableName = basTable.TableName
-                'basField.RelationField = basField.Name
-            End If
-
-            If dhdText.CheckNodeElement(xNode, "Relations") Then
-                If xNode.Item("Relations").ChildNodes.Count > 0 Then
-                    For Each xRnode As XmlNode In xNode.Item("Relations").ChildNodes
-                        If xRnode.ChildNodes.Count > 1 Then
-                            Dim basRelation As New BaseRelation
-                            If dhdText.CheckNodeElement(xRnode, "RelationTable") Then basRelation.RelationTable = xRnode.Item("RelationTable").InnerText
-                            If dhdText.CheckNodeElement(xRnode, "RelationTableAlias") Then basRelation.RelationTableAlias = xRnode.Item("RelationTableAlias").InnerText
-                            If String.IsNullOrEmpty(basRelation.RelationTableAlias) Then basRelation.RelationTableAlias = basRelation.RelationTable.ToString.Replace(".", "_")
-                            If dhdText.CheckNodeElement(xRnode, "RelationField") Then basRelation.RelationField = xRnode.Item("RelationField").InnerText
-                            If dhdText.CheckNodeElement(xRnode, "RelatedFieldName") Then basRelation.RelatedFieldName = xRnode.Item("RelatedFieldName").InnerText
-                            If dhdText.CheckNodeElement(xRnode, "RelatedFieldAlias") Then basRelation.RelatedFieldAlias = xRnode.Item("RelatedFieldAlias").InnerText
-                            If dhdText.CheckNodeElement(xRnode, "RelatedFieldList") Then basRelation.RelatedFieldList = xRnode.Item("RelatedFieldList").InnerText
-                            basRelation.Name = basRelation.RelationTableAlias & "_" & basRelation.RelationField
-                            basField.Add(basRelation)
-                            basRelation.Index = basField.Count
-                        End If
-                    Next
-                End If
-            End If
-
-            If dhdText.CheckNodeElement(xNode, "DefaultButton") Then basField.DefaultButton = xNode.Item("DefaultButton").InnerText
-            If dhdText.CheckNodeElement(xNode, "DefaultValue") Then basField.DefaultValue = xNode.Item("DefaultValue").InnerText
-
-            If dhdText.CheckNodeElement(xNode, "FldList") Then basField.FieldList = xNode.Item("FldList").InnerText
-            If basField.FieldList = True Then
-                Try
-                    basField.FieldListOrder = xNode.Item("FldList").Attributes("Order").Value
-                    basField.FieldListWidth = xNode.Item("FldList").Attributes("Width").Value
-                Catch ex As Exception
-                    basField.FieldListOrder = 0
-                    basField.FieldListWidth = 0
-                    WriteLog("there was an error setting the value for ListOrder or ListWidth: " & Environment.NewLine & ex.Message, 1)
-                End Try
-            End If
-
-            If dhdText.CheckNodeElement(xNode, "FldSearch") Then basField.FieldSearch = xNode.Item("FldSearch").InnerText
-            If dhdText.CheckNodeElement(xNode, "FldSearchList") Then basField.FieldSearchList = xNode.Item("FldSearchList").InnerText
-            If dhdText.CheckNodeElement(xNode, "FldUpdate") Then basField.FieldUpdate = xNode.Item("FldUpdate").InnerText
-            If dhdText.CheckNodeElement(xNode, "FldVisible") Then basField.FieldVisible = xNode.Item("FldVisible").InnerText
-
-            If dhdText.CheckNodeElement(xNode, "ControlField") Then basField.ControlField = xNode.Item("ControlField").InnerText
-            If dhdText.CheckNodeElement(xNode, "ControlValue") Then basField.ControlValue = xNode.Item("ControlValue").InnerText
-            If dhdText.CheckNodeElement(xNode, "ControlUpdate") Then basField.ControlUpdate = xNode.Item("ControlUpdate").InnerText
-            If dhdText.CheckNodeElement(xNode, "ControlMode") Then basField.ControlMode = xNode.Item("ControlMode").InnerText
-
         Next
 
         Return True
@@ -694,6 +622,107 @@ Public Class BaseCode
             ErrorMessage = "Invalid file path: " & dhdText.PathConvert(CheckFilePath(curVar.TablesFile))
         End If
         Return xmlTables
+    End Function
+
+    Public Function LoadField(xNode As XmlNode, strTableName As String, strTableAlias As String) As BaseField
+        Dim basfield As New BaseField
+        If xNode.Item("FldSearchList").InnerText = True And xNode.Item("DataType").InnerText.ToUpper <> "BIT" Then
+            basfield.Category = 5
+        ElseIf xNode.Item("DataType").InnerText.ToUpper = "BIT" Then
+            basfield.Category = 2
+        Else
+            basfield.Category = 1
+        End If
+
+        basfield.FieldTableName = strTableName
+        basfield.FieldTableAlias = strTableAlias
+        If dhdText.CheckNodeElement(xNode, "FldName") Then basfield.FieldName = xNode.Item("FldName").InnerText
+        If dhdText.CheckNodeElement(xNode, "FldAlias") Then basfield.FieldAlias = xNode.Item("FldAlias").InnerText
+        If basfield.FieldAlias = "" Then basfield.FieldAlias = basfield.FieldName
+        basfield.Name = strTableName & "." & basfield.FieldAlias
+        If dhdText.CheckNodeElement(xNode, "FldName") Then basfield.Name = strTableName & "." & xNode.Item("FldName").InnerText
+        If dhdText.CheckNodeElement(xNode, "DataType") Then basfield.FieldDataType = xNode.Item("DataType").InnerText
+        If dhdText.CheckNodeElement(xNode, "Identity") Then basfield.Identity = xNode.Item("Identity").InnerText
+        If dhdText.CheckNodeElement(xNode, "PrimaryKey") Then basfield.PrimaryKey = xNode.Item("PrimaryKey").InnerText
+        If dhdText.CheckNodeElement(xNode, "FldWidth") Then basfield.FieldWidth = xNode.Item("FldWidth").InnerText
+
+        If basfield.Category = 5 Then
+            basfield.FieldTableName = strTableName
+            'basField.RelationField = basField.Name
+        End If
+
+        If dhdText.CheckNodeElement(xNode, "Relations") Then
+            If xNode.Item("Relations").ChildNodes.Count > 0 Then
+                For Each xRnode As XmlNode In xNode.Item("Relations").ChildNodes
+                    If xRnode.ChildNodes.Count > 1 Then
+                        Dim basRelation As BaseRelation = LoadRelation(xRnode)
+                        basfield.Add(basRelation)
+                        basRelation.Index = basfield.Count
+                    End If
+                Next
+            End If
+        End If
+
+        If dhdText.CheckNodeElement(xNode, "DefaultButton") Then basfield.DefaultButton = xNode.Item("DefaultButton").InnerText
+        If dhdText.CheckNodeElement(xNode, "DefaultValue") Then basfield.DefaultValue = xNode.Item("DefaultValue").InnerText
+
+        If dhdText.CheckNodeElement(xNode, "FldList") Then basfield.FieldList = xNode.Item("FldList").InnerText
+        If basfield.FieldList = True Then
+            Try
+                basfield.FieldListOrder = xNode.Item("FldList").Attributes("Order").Value
+                basfield.FieldListWidth = xNode.Item("FldList").Attributes("Width").Value
+            Catch ex As Exception
+                basfield.FieldListOrder = 0
+                basfield.FieldListWidth = 0
+                WriteLog("there was an error setting the value for ListOrder or ListWidth: " & Environment.NewLine & ex.Message, 1)
+            End Try
+        End If
+
+        If dhdText.CheckNodeElement(xNode, "FldSearch") Then basfield.FieldSearch = xNode.Item("FldSearch").InnerText
+        If dhdText.CheckNodeElement(xNode, "FldSearchList") Then basfield.FieldSearchList = xNode.Item("FldSearchList").InnerText
+        If dhdText.CheckNodeElement(xNode, "FldUpdate") Then basfield.FieldUpdate = xNode.Item("FldUpdate").InnerText
+        If dhdText.CheckNodeElement(xNode, "FldVisible") Then basfield.FieldVisible = xNode.Item("FldVisible").InnerText
+
+        If dhdText.CheckNodeElement(xNode, "ControlField") Then basfield.ControlField = xNode.Item("ControlField").InnerText
+        If dhdText.CheckNodeElement(xNode, "ControlValue") Then basfield.ControlValue = xNode.Item("ControlValue").InnerText
+        If dhdText.CheckNodeElement(xNode, "ControlUpdate") Then basfield.ControlUpdate = xNode.Item("ControlUpdate").InnerText
+        If dhdText.CheckNodeElement(xNode, "ControlMode") Then basfield.ControlMode = xNode.Item("ControlMode").InnerText
+        Return basfield
+    End Function
+
+    Public Function LoadRelation(XRNode As XmlNode) As BaseRelation
+        Dim basRelation As New BaseRelation
+        If dhdText.CheckNodeElement(XRNode, "RelationTable") Then basRelation.RelationTable = XRNode.Item("RelationTable").InnerText
+        If dhdText.CheckNodeElement(XRNode, "RelationTableAlias") Then basRelation.RelationTableAlias = XRNode.Item("RelationTableAlias").InnerText
+        If String.IsNullOrEmpty(basRelation.RelationTableAlias) Then basRelation.RelationTableAlias = basRelation.RelationTable.ToString.Replace(".", "_")
+        If dhdText.CheckNodeElement(XRNode, "RelationField") Then basRelation.RelationField = XRNode.Item("RelationField").InnerText
+        If dhdText.CheckNodeElement(XRNode, "RelatedFieldName") Then basRelation.RelatedFieldName = XRNode.Item("RelatedFieldName").InnerText
+        If dhdText.CheckNodeElement(XRNode, "RelatedFieldAlias") Then basRelation.RelatedFieldAlias = XRNode.Item("RelatedFieldAlias").InnerText
+        If dhdText.CheckNodeElement(XRNode, "RelatedFieldList") Then basRelation.RelatedFieldList = XRNode.Item("RelatedFieldList").InnerText
+        basRelation.Name = basRelation.RelationTableAlias & "_" & basRelation.RelationField
+        Return basRelation
+    End Function
+
+    Public Function GetFieldNode(xmlTables As XmlDocument, strTableName As String, strFieldName As String) As XmlNode
+        Dim xTNode As XmlNode = dhdText.FindXmlNode(xmlTables, "Table", "Name", strTableName)
+        Dim xFNode As XmlNode = dhdText.FindXmlChildNode(xTNode, "Fields/Field", "FldName", strFieldName)
+        Return xFnode
+    End Function
+
+    Public Function GetRelationNode(xmlTables As XmlDocument, strTableName As String, strFieldName As String, strRelationTable As String, strRelationField As String) As XmlNode
+        Dim xFNode As XmlNode = GetFieldNode(xmlTables, strTableName, strFieldName)
+        Dim xRelNode As XmlNode = GetRelationNode(xFNode, strRelationTable, strRelationField)
+        Return xRelNode
+    End Function
+
+    Public Function GetRelationNode(FieldNode As XmlNode, strRelationTable As String, strRelationField As String) As XmlNode
+        Dim xRNode As XmlNode = dhdText.FindXmlChildNode(FieldNode, "Relations", Nothing, Nothing)
+        For Each xRelNode In xRNode.ChildNodes
+            If xRelNode.item("RelationTable").innertext = strRelationTable And xRelNode.item("RelationField").innertext = strRelationField Then
+                Return xRelNode
+            End If
+        Next
+        Return Nothing
     End Function
 
     Public Function LoadReports(xmlReports As XmlDocument) As List(Of String)

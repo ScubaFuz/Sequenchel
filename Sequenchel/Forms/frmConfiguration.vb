@@ -409,6 +409,8 @@ Public Class frmConfiguration
         basCode.curStatus.TableSet = ""
         basCode.curStatus.Table = ""
         basCode.curStatus.ConnectionsReload = True
+        basCode.curStatus.TableSetsReload = True
+        basCode.curStatus.TablesReload = True
         basCode.curStatus.ConnectionChanged = True
         ConfigurationSave()
         ConnectionsLoad()
@@ -425,6 +427,10 @@ Public Class frmConfiguration
             xNode.ParentNode.RemoveChild(xNode)
 
             basCode.curStatus.ConnectionChanged = True
+            basCode.curStatus.ConnectionsReload = True
+            basCode.curStatus.TableSetsReload = True
+            basCode.curStatus.TablesReload = True
+
             ConfigurationSave()
             ConnectionClear()
             ConnectionsLoad()
@@ -508,6 +514,7 @@ Public Class frmConfiguration
             xNode2.Attributes("Default").InnerText = "True"
 
             basCode.curStatus.TableSetChanged = True
+            basCode.curStatus.TableSetsReload = True
             ConfigurationSave()
             TableSetLoad()
             WriteStatus("Default TableSet Set", 0, lblStatusText)
@@ -548,8 +555,10 @@ Public Class frmConfiguration
             xNode.ParentNode.RemoveChild(xNode)
 
             basCode.curStatus.TableSetChanged = True
+            basCode.curStatus.TableSetsReload = True
+            basCode.curStatus.TablesReload = True
             ConfigurationSave()
-            btnTableSetClear_Click(Nothing, Nothing)
+            TableSetClear()
             TableSetsLoad()
             WriteStatus("TableSet Deleted", 0, lblStatusText)
         Else
@@ -666,6 +675,8 @@ Public Class frmConfiguration
         basCode.curStatus.Table = ""
         basCode.curStatus.TableSetReload = True
         basCode.curStatus.TableSetChanged = True
+        basCode.curStatus.TableSetsReload = True
+        basCode.curStatus.TablesReload = True
         ConfigurationSave()
         TableSetsLoad()
         WriteStatus("TableSet Saved", 0, lblStatusText)
@@ -1090,11 +1101,11 @@ Public Class frmConfiguration
             Else
                 If tvwTable.SelectedNode.Text = "Fields" Then
                     trnNode = tvwTable.SelectedNode.FirstNode
-                ElseIf tvwTable.SelectedNode.Text = "Field" Then
+                ElseIf tvwTable.SelectedNode.Text.Substring(0, 5) = "Field" Then
                     trnNode = tvwTable.SelectedNode
-                ElseIf tvwTable.SelectedNode.Parent.Text = "Field" Then
+                ElseIf tvwTable.SelectedNode.Parent.Text.Substring(0, 5) = "Field" Then
                     trnNode = tvwTable.SelectedNode.Parent
-                ElseIf tvwTable.SelectedNode.Parent.Parent.Text = "Field" Then
+                ElseIf tvwTable.SelectedNode.Parent.Parent.Text.Substring(0, 5) = "Field" Then
                     trnNode = tvwTable.SelectedNode.Parent.Parent
                 Else
                     Exit Sub
@@ -1142,7 +1153,7 @@ Public Class frmConfiguration
             strTableName = cbxRelationTables.Text
             strTableAlias = cbxRelationTables.Text
         End If
-        FieldAddOrUpdate(basCode.curStatus.Table, txtFieldName.Text, txtFieldAlias.Text, cbxDataType.SelectedItem, chkIdentity.Checked, chkPrimaryKey.Checked, txtFieldWidth.Text, strTableName, strTableAlias, cbxRelationFields.Text, txtRelatedField.Text, txtRelatedField.Text.Replace(".", "_"), chkRelatedField.Checked, txtControlField.Text, txtControlValue.Text, chkControlUpdate.Checked, _
+        FieldAddOrUpdate(basCode.curStatus.Table, txtFieldName.Text, txtFieldAlias.Text, cbxDataType.SelectedItem, chkIdentity.Checked, chkPrimaryKey.Checked, txtFieldWidth.Text, strTableName, strTableAlias, cbxRelationFields.Text, txtRelatedField.Text, txtRelatedFieldAlias.Text, chkRelatedField.Checked, txtControlField.Text, txtControlValue.Text, chkControlUpdate.Checked, _
                          chkControlMode.Checked, chkDefaultButton.Checked, txtDefaultButton.Text, chkFieldList.Checked, txtFieldListOrder.Text, txtFieldListWidth.Text, chkFieldVisible.Checked, chkFieldSearch.Checked, chkFieldSearchList.Checked, chkFieldUpdate.Checked, True)
         CursorControl()
     End Sub
@@ -1192,102 +1203,94 @@ Public Class frmConfiguration
         Dim strFieldValue As String = ""
         Dim strTableName As String = "", strTableAlias As String = "", strRelatedFieldName As String = "", strRelatedFieldAlias As String = ""
 
-        For Each xNode As TreeNode In PNode.Nodes
-            strFieldName = xNode.Text
+        'find field name
+        'find xml node
+        'display xml node
 
-            If xNode.Nodes.Count > 0 Then
-                'For iNode = 0 To xNode.nodes.count - 1
-                '    MessageBox.Show(strFieldName & Environment.NewLine & xNode.Nodes(iNode).Text)
-                'Next
-                If strFieldName = "FldList" And xNode.Nodes(0).Text = "(ATTRIBUTES)" Then
-                    'MessageBox.Show(xNode.Nodes(0).Nodes.Count)
-                    txtFieldListOrder.Text = Replace(Replace(xNode.Nodes(0).Nodes(0).Text, "Order = '", ""), "'", "")
-                    txtFieldListWidth.Text = Replace(Replace(xNode.Nodes(0).Nodes(1).Text, "Width = '", ""), "'", "")
-                    strFieldValue = xNode.Nodes(1).Text
-                ElseIf strFieldName = "DefaultButton" And xNode.Nodes(0).Text = "(ATTRIBUTES)" Then
-                    'MessageBox.Show(xNode.Nodes(0).Nodes.Count)
-                    txtDefaultButton.Text = Replace(Replace(xNode.Nodes(0).Nodes(0).Text, "DefaultValue = '", ""), "'", "")
-                    strFieldValue = xNode.Nodes(1).Text
-                Else
-                    strFieldValue = xNode.Nodes(0).Text
-                End If
-            Else
-                strFieldValue = ""
+        For Each tvNode As TreeNode In PNode.Nodes
+            strFieldName = tvNode.Text
+            strFieldValue = tvNode.Nodes(0).Text
+
+            If tvNode.Text = "FldName" Then
+                strFieldValue = tvNode.Nodes(0).Text
+                Exit For
             End If
-            'Do something...
-            'MessageBox.Show(strFieldName & Environment.NewLine & strFieldValue)
-            Select Case strFieldName
-                Case "FldName"
-                    If strFieldValue.Length > 0 Then
-                        txtFieldName.Text = strFieldValue
-                        txtFieldName.Tag = strFieldValue
-                    End If
-                Case "FldAlias"
-                    If strFieldValue.Length > 0 Then txtFieldAlias.Text = strFieldValue
-                Case "DataType"
-                    If strFieldValue.Length > 0 Then cbxDataType.SelectedItem = strFieldValue
-                Case "Identity"
-                    If strFieldValue.Length > 0 Then chkIdentity.Checked = strFieldValue
-                Case "PrimaryKey"
-                    If strFieldValue.Length > 0 Then chkPrimaryKey.Checked = strFieldValue
-                Case "FldWidth"
-                    If strFieldValue.Length > 0 Then txtFieldWidth.Text = strFieldValue
-                Case "Relations"
-                    For Each xRnode As TreeNode In xNode.Nodes
-                        If xRnode.Nodes.Count > 0 Then
-                            If xRnode.Nodes(0).Text = "(ATTRIBUTES)" Then
-                                'MessageBox.Show(xNode.Nodes(0).Nodes.Count)
-                                strFieldValue = xRnode.Nodes(1).Text
-                            ElseIf xRnode.Nodes(0).Text = "RelationTable" Then
-                                'dont know yet
-                                strTableName = xRnode.Nodes(0).Nodes(0).Text
-                                strTableAlias = xRnode.Nodes(1).Nodes(0).Text
-                                strRelatedFieldName = xRnode.Nodes(2).Nodes(0).Text
-                                strFieldValue = strTableAlias & " (" & strTableName & ")"
-                            Else
-                                strFieldValue = xRnode.Nodes(0).Text
-                                If strFieldValue.IndexOf(".") > 0 Then
-                                    strFieldValue = strFieldValue.Substring(0, strFieldValue.LastIndexOf(".")) & " (" & strFieldValue.Substring(0, strFieldValue.LastIndexOf(".")) & ")"
-                                End If
-                            End If
-                        End If
-
-                        If xRnode.Nodes.Count > 0 Then
-                            cbxRelationTables.Items.Add(strFieldValue)
-                        End If
-                    Next
-                    If cbxRelationTables.Items.Count > 0 Then cbxRelationTables.SelectedIndex = 0
-                    ''If strFieldValue.Length > 0 Then txtRelations.Text = strFieldValue
-                    'If strFieldValue.Length > 0 Then cbxRelations.Items.Add(strFieldValue)
-                    'If cbxRelations.Items.Count > 0 Then cbxRelations.SelectedIndex = 0
-                Case "ControlField"
-                    If strFieldValue.Length > 0 Then txtControlField.Text = strFieldValue
-                Case "ControlValue"
-                    If strFieldValue.Length > 0 Then txtControlValue.Text = strFieldValue
-                Case "ControlUpdate"
-                    If strFieldValue.Length > 0 Then chkControlUpdate.Checked = strFieldValue
-                Case "ControlMode"
-                    If strFieldValue.Length > 0 Then chkControlMode.Checked = strFieldValue
-                Case "FldList"
-                    If strFieldValue.Length > 0 Then chkFieldList.Checked = strFieldValue
-                Case "DefaultButton"
-                    If strFieldValue.Length > 0 Then chkDefaultButton.Checked = strFieldValue
-                    'Case "Width"
-                    '    If strFieldValue.Length > 0 Then txtFieldListWidth.Text = strFieldValue
-                    'Case "Order"
-                    '    If strFieldValue.Length > 0 Then txtFieldListOrder.Text = strFieldValue
-                Case "FldVisible"
-                    If strFieldValue.Length > 0 Then chkFieldVisible.Checked = strFieldValue
-                Case "FldSearch"
-                    If strFieldValue.Length > 0 Then chkFieldSearch.Checked = strFieldValue
-                Case "FldSearchList"
-                    If strFieldValue.Length > 0 Then chkFieldSearchList.Checked = strFieldValue
-                Case "FldUpdate"
-                    If strFieldValue.Length > 0 Then chkFieldUpdate.Checked = strFieldValue
-                Case Else
-                    MessageBox.Show("Unknown Field detected: " & strFieldName)
-            End Select
         Next
+
+        If strFieldValue.Length > 0 Then
+            Dim xNode As XmlNode = basCode.GetFieldNode(xmlTables, basCode.curStatus.Table, strFieldValue)
+            If Not xNode Is Nothing Then
+                'If basCode.dhdText.CheckNodeElement(xNode, "FldName") Then basfield.FieldName = xNode.Item("FldName").InnerText
+                txtFieldName.Text = strFieldValue
+                txtFieldAlias.Text = xNode.Item("FldAlias").InnerText
+
+                If basCode.dhdText.CheckNodeElement(xNode, "FldAlias") Then txtFieldAlias.Text = xNode.Item("FldAlias").InnerText
+                If txtFieldAlias.Text = "" Then txtFieldAlias.Text = txtFieldName.Text
+                If basCode.dhdText.CheckNodeElement(xNode, "DataType") Then cbxDataType.Text = xNode.Item("DataType").InnerText
+                If basCode.dhdText.CheckNodeElement(xNode, "Identity") Then chkIdentity.Checked = xNode.Item("Identity").InnerText
+                If basCode.dhdText.CheckNodeElement(xNode, "PrimaryKey") Then chkPrimaryKey.Checked = xNode.Item("PrimaryKey").InnerText
+                If basCode.dhdText.CheckNodeElement(xNode, "FldWidth") Then txtFieldWidth.Text = xNode.Item("FldWidth").InnerText
+
+                If basCode.dhdText.CheckNodeElement(xNode, "DefaultButton") Then chkDefaultButton.Checked = xNode.Item("DefaultButton").InnerText
+                If basCode.dhdText.CheckNodeElement(xNode, "DefaultValue") Then txtDefaultButton.Text = xNode.Item("DefaultValue").InnerText
+                'txtDefaultButton.Text = xNode.Item("DefaultButton").Attributes("DefaultValue").Value
+
+                If basCode.dhdText.CheckNodeElement(xNode, "FldList") Then chkFieldList.Checked = xNode.Item("FldList").InnerText
+                If chkFieldList.Checked = True Then
+                    Try
+                        txtFieldListOrder.Text = xNode.Item("FldList").Attributes("Order").Value
+                        txtFieldListWidth.Text = xNode.Item("FldList").Attributes("Width").Value
+                    Catch ex As Exception
+                        txtFieldListOrder.Text = 0
+                        txtFieldListWidth.Text = 0
+                        basCode.WriteLog("There was an error reading the value for ListOrder or ListWidth: " & Environment.NewLine & ex.Message, 1)
+                    End Try
+                End If
+
+                If basCode.dhdText.CheckNodeElement(xNode, "FldSearch") Then chkFieldSearch.Checked = xNode.Item("FldSearch").InnerText
+                If basCode.dhdText.CheckNodeElement(xNode, "FldSearchList") Then chkFieldSearchList.Checked = xNode.Item("FldSearchList").InnerText
+                If basCode.dhdText.CheckNodeElement(xNode, "FldUpdate") Then chkFieldUpdate.Checked = xNode.Item("FldUpdate").InnerText
+                If basCode.dhdText.CheckNodeElement(xNode, "FldVisible") Then chkFieldVisible.Checked = xNode.Item("FldVisible").InnerText
+
+                If basCode.dhdText.CheckNodeElement(xNode, "ControlField") Then txtControlField.Text = xNode.Item("ControlField").InnerText
+                If basCode.dhdText.CheckNodeElement(xNode, "ControlValue") Then txtControlValue.Text = xNode.Item("ControlValue").InnerText
+                If basCode.dhdText.CheckNodeElement(xNode, "ControlUpdate") Then chkControlUpdate.Checked = xNode.Item("ControlUpdate").InnerText
+                If basCode.dhdText.CheckNodeElement(xNode, "ControlMode") Then chkControlMode.Checked = xNode.Item("ControlMode").InnerText
+
+                If basCode.dhdText.CheckNodeElement(xNode, "Relations") Then
+                    If xNode.Item("Relations").ChildNodes.Count > 0 Then
+                        For Each xRnode As XmlNode In xNode.Item("Relations").ChildNodes
+                            If xRnode.ChildNodes.Count > 1 Then
+                                cbxRelationTables.Items.Add(xRnode.Item("RelationTableAlias").InnerText & " (" & xRnode.Item("RelationTable").InnerText & ")")
+                            End If
+                        Next
+                    End If
+                End If
+                If cbxRelationTables.Items.Count > 0 Then cbxRelationTables.SelectedIndex = 0
+            End If
+
+            '<Field>
+
+            '<Relations>
+            '  <Relation>
+            '    <RelationTable>dbo.tbl_Servers</RelationTable>
+            '    <RelationTableAlias>dbo.tbl_Servers</RelationTableAlias>
+            '    <RelationField>LinkedServer</RelationField>
+            '    <RelatedField>
+            '    </RelatedField>
+            '    <RelatedFieldList>False</RelatedFieldList>
+            '  </Relation>
+            '  <Relation>
+            '    <RelationTable>dbo.vw_Servers</RelationTable>
+            '    <RelationTableAlias>LiveServers</RelationTableAlias>
+            '    <RelationField>LinkedServer</RelationField>
+            '    <RelatedField>ServerID</RelatedField>
+            '    <RelatedFieldList>True</RelatedFieldList>
+            '  </Relation>
+            '</Relations>
+            '</Field>
+
+        End If
     End Sub
 
     Private Sub FieldsClear()
@@ -1553,8 +1556,10 @@ Public Class frmConfiguration
             'get table name; get fieldname; get relationname; find relation in basetable/basefield/baserelation; load baserelation to screen.
             Dim strTableName As String = "", strTableAlias As String = ""
             If cbxRelationTables.Text.IndexOf("(") > 0 Then
-                strTableName = cbxRelationTables.Text.Substring(cbxRelationTables.Text.IndexOf("(") + 1, cbxRelationTables.Text.Length - (cbxRelationTables.Text.IndexOf("(") + 1) - 1)
-                strTableAlias = cbxRelationTables.Text.Substring(0, cbxRelationTables.Text.IndexOf("(") - 2)
+                'strTableName = cbxRelationTables.Text.Substring(cbxRelationTables.Text.IndexOf("(") + 1, cbxRelationTables.Text.Length - (cbxRelationTables.Text.IndexOf("(") + 1) - 1)
+                strTableName = basCode.GetTableNameFromString(cbxRelationTables.Text)
+                'strTableAlias = cbxRelationTables.Text.Substring(0, cbxRelationTables.Text.IndexOf("(") - 2)
+                strTableAlias = basCode.GetTableAliasFromString(cbxRelationTables.Text)
             Else
                 strTableName = cbxRelationTables.Text
                 strTableAlias = cbxRelationTables.Text
