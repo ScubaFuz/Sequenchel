@@ -73,9 +73,9 @@ Partial Class frmReports
         Me.btnReportFieldUp = New System.Windows.Forms.Button()
         Me.pnlRelationsMain = New System.Windows.Forms.Panel()
         Me.pnlRelations = New System.Windows.Forms.Panel()
+        Me.pnlRelationsTargetTable = New System.Windows.Forms.Panel()
         Me.pnlRelationsTargetField = New System.Windows.Forms.Panel()
         Me.pnlRelationsJoinType = New System.Windows.Forms.Panel()
-        Me.pnlRelationsTargetTable = New System.Windows.Forms.Panel()
         Me.pnlRelationsField = New System.Windows.Forms.Panel()
         Me.pnlRelationsUse = New System.Windows.Forms.Panel()
         Me.pnlRelationsLabel = New System.Windows.Forms.Panel()
@@ -128,12 +128,12 @@ Partial Class frmReports
         Me.btnSaveQuery = New System.Windows.Forms.Button()
         Me.btnExecuteQuery = New System.Windows.Forms.Button()
         Me.rtbQuery = New System.Windows.Forms.RichTextBox()
+        Me.dgvReport = New Sequenchel.usrDataGridView()
         Me.btnTest = New System.Windows.Forms.Button()
         Me.btnClose = New System.Windows.Forms.Button()
         Me.tmrElapsedTime = New System.Windows.Forms.Timer(Me.components)
         Me.lblStatusText = New System.Windows.Forms.Label()
         Me.lblStatusTitle = New System.Windows.Forms.Label()
-        Me.dgvReport = New Sequenchel.usrDataGridView()
         Me.tabReports.SuspendLayout()
         Me.tpgReportDefinition.SuspendLayout()
         CType(Me.sptReports, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -691,6 +691,13 @@ Partial Class frmReports
         Me.pnlRelations.Size = New System.Drawing.Size(800, 48)
         Me.pnlRelations.TabIndex = 7
         '
+        'pnlRelationsTargetTable
+        '
+        Me.pnlRelationsTargetTable.Location = New System.Drawing.Point(353, 0)
+        Me.pnlRelationsTargetTable.Name = "pnlRelationsTargetTable"
+        Me.pnlRelationsTargetTable.Size = New System.Drawing.Size(175, 48)
+        Me.pnlRelationsTargetTable.TabIndex = 10
+        '
         'pnlRelationsTargetField
         '
         Me.pnlRelationsTargetField.Location = New System.Drawing.Point(528, 0)
@@ -704,13 +711,6 @@ Partial Class frmReports
         Me.pnlRelationsJoinType.Name = "pnlRelationsJoinType"
         Me.pnlRelationsJoinType.Size = New System.Drawing.Size(120, 48)
         Me.pnlRelationsJoinType.TabIndex = 9
-        '
-        'pnlRelationsTargetTable
-        '
-        Me.pnlRelationsTargetTable.Location = New System.Drawing.Point(353, 0)
-        Me.pnlRelationsTargetTable.Name = "pnlRelationsTargetTable"
-        Me.pnlRelationsTargetTable.Size = New System.Drawing.Size(175, 48)
-        Me.pnlRelationsTargetTable.TabIndex = 10
         '
         'pnlRelationsField
         '
@@ -854,7 +854,7 @@ Partial Class frmReports
         'btnQueryShow
         '
         Me.btnQueryShow.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnQueryShow.Location = New System.Drawing.Point(1073, 7)
+        Me.btnQueryShow.Location = New System.Drawing.Point(903, 33)
         Me.btnQueryShow.Name = "btnQueryShow"
         Me.btnQueryShow.Size = New System.Drawing.Size(164, 20)
         Me.btnQueryShow.TabIndex = 7
@@ -863,7 +863,7 @@ Partial Class frmReports
         'btnReportClear
         '
         Me.btnReportClear.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnReportClear.Location = New System.Drawing.Point(903, 33)
+        Me.btnReportClear.Location = New System.Drawing.Point(1073, 33)
         Me.btnReportClear.Name = "btnReportClear"
         Me.btnReportClear.Size = New System.Drawing.Size(164, 20)
         Me.btnReportClear.TabIndex = 8
@@ -952,7 +952,7 @@ Partial Class frmReports
         'btnRevertChanges
         '
         Me.btnRevertChanges.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnRevertChanges.Location = New System.Drawing.Point(1073, 33)
+        Me.btnRevertChanges.Location = New System.Drawing.Point(1073, 7)
         Me.btnRevertChanges.Name = "btnRevertChanges"
         Me.btnRevertChanges.Size = New System.Drawing.Size(164, 20)
         Me.btnRevertChanges.TabIndex = 9
@@ -1242,6 +1242,23 @@ Partial Class frmReports
         Me.rtbQuery.TabIndex = 0
         Me.rtbQuery.Text = ""
         '
+        'dgvReport
+        '
+        Me.dgvReport.AllowUserToAddRows = False
+        Me.dgvReport.AllowUserToDeleteRows = False
+        Me.dgvReport.AllowUserToOrderColumns = True
+        Me.dgvReport.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.dgvReport.BackgroundColor = System.Drawing.SystemColors.Control
+        Me.dgvReport.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
+        Me.dgvReport.BackImage = CType(resources.GetObject("dgvReport.BackImage"), System.Drawing.Image)
+        Me.dgvReport.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dgvReport.Location = New System.Drawing.Point(6, 6)
+        Me.dgvReport.Name = "dgvReport"
+        Me.dgvReport.Size = New System.Drawing.Size(1243, 563)
+        Me.dgvReport.TabIndex = 0
+        '
         'btnTest
         '
         Me.btnTest.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
@@ -1288,23 +1305,6 @@ Partial Class frmReports
         Me.lblStatusTitle.Size = New System.Drawing.Size(51, 16)
         Me.lblStatusTitle.TabIndex = 172
         Me.lblStatusTitle.Text = "Status"
-        '
-        'dgvReport
-        '
-        Me.dgvReport.AllowUserToAddRows = False
-        Me.dgvReport.AllowUserToDeleteRows = False
-        Me.dgvReport.AllowUserToOrderColumns = True
-        Me.dgvReport.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.dgvReport.BackgroundColor = System.Drawing.SystemColors.Control
-        Me.dgvReport.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
-        Me.dgvReport.BackImage = CType(resources.GetObject("dgvReport.BackImage"), System.Drawing.Image)
-        Me.dgvReport.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvReport.Location = New System.Drawing.Point(6, 6)
-        Me.dgvReport.Name = "dgvReport"
-        Me.dgvReport.Size = New System.Drawing.Size(1243, 563)
-        Me.dgvReport.TabIndex = 0
         '
         'frmReports
         '
