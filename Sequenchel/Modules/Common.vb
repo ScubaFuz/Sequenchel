@@ -54,9 +54,9 @@ Module Common
 
     Public Sub FieldTextHandler(sender As Object)
         If basCode.curStatus.SuspendActions = False Then
-            Select Case sender.FieldCategory
-                Case 1
-                    'TextField
+
+            Select Case sender.[GetType]().Name
+                Case "TextBox"
                     If sender.Text <> sender.Tag.ToString Then
                         sender.BackColor = clrMarked
                     Else
@@ -66,8 +66,7 @@ Module Common
                             sender.BackColor = clrDisabled
                         End If
                     End If
-                Case 2
-                    'CheckField
+                Case "CheckBox"
                     If sender.Checked.ToString <> sender.Tag.ToString Then
                         sender.BackColor = clrMarked
                     Else
@@ -77,45 +76,9 @@ Module Common
                             sender.BackColor = clrDisabled
                         End If
                     End If
-                Case 3
-                    'ComboField
-                    '    If tblTable.TableName = sender.Name.Substring(0, sender.Name.LastIndexOf(".")) Then
-                    '        If sender.SelectedItem Is Nothing Then
-                    '            LoadLookupList(sender, True, False)
-                    '            If sender.Text.ToString <> sender.Tag.ToString Then
-                    '                sender.BackColor = clrMarked
-                    '            Else
-                    '                If sender.Enabled = True Then
-                    '                    sender.BackColor = clrOriginal
-                    '                Else
-                    '                    sender.BackColor = clrDisabled
-                    '                End If
-                    '            End If
-                    '        Else
-                    '            sender.DropDownStyle = ComboBoxStyle.DropDown
-                    '            If sender.SelectedItem.ToString <> sender.Tag.ToString And sender.Text.ToString <> sender.Tag.ToString Then
-                    '                sender.BackColor = clrMarked
-                    '            Else
-                    '                If sender.Enabled = True Then
-                    '                    sender.BackColor = clrOriginal
-                    '                Else
-                    '                    sender.BackColor = clrDisabled
-                    '                End If
-                    '            End If
-                    '        End If
-                    '    End If
-                Case 4
-                    'ComboField as related lookup
-                    '    'related Lookup with default list
-                    '    If sender.SelectedItem Is Nothing Then
-                    '        LoadLookupList(sender, True, False)
-                    '    Else
-                    '        sender.DropDownStyle = ComboBoxStyle.DropDown
-
-                    '    End If
-
-                Case 5
-                    'ManagedSelectField 
+                Case "ComboBox"
+                    'not used
+                Case "ManagedSelectList"
                     For intField As Integer = 0 To tblTable.Count - 1
                         If tblTable.Item(intField).Name = sender.Name Then
                             If sender.Text.ToString <> sender.Tag.ToString Then
@@ -129,8 +92,8 @@ Module Common
                             End If
                         End If
                     Next
-                Case 6
-                    'ManagedSelectField as related field
+
+                    'As related field
                     For intField As Integer = 0 To tblTable.Count - 1
                         If tblTable.Item(intField).FieldName = sender.FieldRelatedField Then
                             Select Case tblTable.Item(intField).FieldCategory
@@ -141,6 +104,7 @@ Module Common
                             End Select
                         End If
                     Next
+
             End Select
         End If
     End Sub

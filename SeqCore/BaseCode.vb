@@ -303,8 +303,8 @@ Public Class BaseCode
                 Return False
             End If
         Catch ex As Exception
-            ''WriteLog(Message.strXmlError & " " & ex.Message, 1)
-            'ErrorMessage = Message.strXmlError & " " & ex.Message
+            WriteLog("There was an error creating or saving the Settings file. " & Environment.NewLine & ex.Message, 1)
+            ErrorMessage = "There was an error creating or saving the Settings file. Please check the log "
             Return False
         End Try
         Return True
@@ -356,12 +356,13 @@ Public Class BaseCode
                 If dhdText.CheckElement(xmlLoadDoc, "SmtpSsl") Then dhdText.SmtpSsl = xmlLoadDoc.Item("Sequenchel").Item("Email").Item("SmtpSsl").InnerText
 
             Catch ex As Exception
-                ErrorMessage = "There was an error reading the XML file. Please check the file: " & curVar.GeneralSettings & " " & ex.Message
-                WriteLog("There was an error reading the XML file. Please check the file" & Environment.NewLine & curVar.GeneralSettings & Environment.NewLine & ex.Message, 1)
+                ErrorMessage = "There was an error reading the XML Settings file. Please check the log."
+                WriteLog("There was an error reading the XML Settings file. Please check the file" & Environment.NewLine & curVar.GeneralSettings & Environment.NewLine & ex.Message, 1)
                 Return False
             End Try
         Else
             If SaveGeneralSettingsXml(xmlLoadDoc) = False Then
+                ErrorMessage = "The XML Settings file was not found. Please check the file: " & curVar.GeneralSettings
                 Return False
             End If
         End If
@@ -492,6 +493,7 @@ Public Class BaseCode
         dhdConnection.LoginName = xmlConnNode.Item("LoginName").InnerText
         If dhdText.CheckNodeElement(xmlConnNode, "Password") Then dhdConnection.Password = DataHandler.txt.DecryptText(xmlConnNode.Item("Password").InnerText)
         curVar.TableSetsFile = xmlConnNode.Item("TableSets").InnerText
+        curStatus.TableSetsReload = True
 
         dhdConnection.CheckDB()
     End Sub
@@ -548,6 +550,7 @@ Public Class BaseCode
         If xmlTSNode Is Nothing Then Exit Sub
         'curStatus.TableSet = xmlTSNode.Item("TableSetName").InnerText
         curVar.TablesFile = xmlTSNode.Item("TablesFile").InnerText
+        curStatus.TablesReload = True
         dhdText.OutputFile = xmlTSNode.Item("OutputPath").InnerText
         curVar.ReportSetFile = xmlTSNode.Item("ReportSet").InnerText
         If dhdText.CheckNodeElement(xmlTSNode, "Search") Then curVar.SearchFile = xmlTSNode.Item("Search").InnerText
@@ -1598,6 +1601,45 @@ Public Class BaseCode
         'End Try
         Return intRecordsAffected
     End Function
+
+    Public Function MainSelectBuild(intTop As Integer) As String
+        Dim strQuery As String = "SELECT "
+
+        For intField As Integer = 0 To basTable.Count - 1
+            If basTable.Item(intField).FieldList = True Or basTable.Item(intField).Identity = True Or basTable.Item(intField).PrimaryKey = True Then
+                strQuery &= ", " & FormatField(basTable.TableName, basTable.TableAlias, basTable.Item(intField).FieldName, basTable.Item(intField).FieldAlias, basTable.Item(intField).FieldDataType, basTable.Item(intField).FieldWidth, Nothing, True, True, curVar.DateTimeStyle)
+            End If
+        Next
+        strQuery = strQuery.Replace("SELECT ,", "SELECT ")
+        If IsNumeric(intTop) AndAlso intTop >= 0 Then strQuery = strQuery.Replace("SELECT ", "SELECT TOP " & intTop & " ")
+
+        Return strQuery
+    End Function
+
+    Public Function MainOrderBuild(blnReverseOrder As Boolean) As String
+        Dim intColumnCount As Integer = 0
+        Dim strQuery As String = "ORDER BY "
+        For intCount As Integer = 1 To curVar.MaxColumnSort
+            For intField As Integer = 0 To basTable.Count - 1
+                If basTable.Item(intField).FieldList = True And basTable.Item(intField).FieldListOrder = intCount Then
+                    Select Case basTable.Item(intField).FieldDataType
+                        Case "BINARY", "XML", "GEO", "TEXT", "IMAGE"
+                            'No sort order
+                        Case Else
+                            strQuery &= ", " & FormatField(basTable.TableName, basTable.TableAlias, basTable.Item(intField).FieldName, Nothing, basTable.Item(intField).FieldDataType, basTable.Item(intField).FieldWidth, Nothing, False, False, curVar.DateTimeStyle)
+                            If blnReverseOrder = True Then
+                                strQuery &= " DESC"
+                            End If
+                    End Select
+                End If
+            Next
+        Next
+
+        strQuery = strQuery.Replace("ORDER BY ,", "ORDER BY ")
+        Return strQuery
+    End Function
+
+
 #End Region
 
 #Region "Import & Export"
