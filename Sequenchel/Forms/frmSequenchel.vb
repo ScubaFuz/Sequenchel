@@ -354,7 +354,7 @@ Public Class frmSequenchel
 
         TableClear()
         basCode.TableClear()
-        arrLabels.Clear()
+        'arrLabels.Clear()
         PanelControlsDispose(sptFields1.Panel1)
         PanelControlsDispose(sptFields1.Panel2)
 
@@ -417,13 +417,17 @@ Public Class frmSequenchel
                 Dim fldField As Object = Nothing
                 Select Case basCode.basTable.Item(intCount).Category
                     Case 1
-                        fldField = New TextBox
-                        Dim txtTemp As TextBox = TryCast(fldField, TextBox)
+                        fldField = New TextField
+                        Dim txtTemp As TextField = TryCast(fldField, TextField)
                         If txtTemp IsNot Nothing Then AddHandler txtTemp.TextChanged, AddressOf TextHandler
+                        fldField.Tag = ""
+                        fldField.Field = basCode.basTable.Item(intCount)
                     Case 2
-                        fldField = New CheckBox
-                        Dim chkTemp As CheckBox = TryCast(fldField, CheckBox)
+                        fldField = New CheckField
+                        Dim chkTemp As CheckField = TryCast(fldField, CheckField)
                         If chkTemp IsNot Nothing Then AddHandler chkTemp.CheckedChanged, AddressOf TextHandler
+                        fldField.Tag = chkTemp.Checked.ToString
+                        fldField.Field = basCode.basTable.Item(intCount)
                     Case 5
                         fldField = New ManagedSelectField
                         fldField.DataConn.DataLocation = basCode.dhdConnection.DataLocation
@@ -433,23 +437,34 @@ Public Class frmSequenchel
                         fldField.DataConn.LoginName = basCode.dhdConnection.LoginName
                         fldField.DataConn.Password = basCode.dhdConnection.Password
                         fldField.Table = basCode.basTable.TableName
-                        fldField.SearchField = fldField.FieldName
+                        fldField.SearchField = basCode.basTable.Item(intCount).Name
+                        Dim mslTemp As ManagedSelectField = TryCast(fldField, ManagedSelectField)
+                        If mslTemp IsNot Nothing Then AddHandler mslTemp.TextChanged, AddressOf TextHandler
+                        fldField.Tag = ""
+                        fldField.Field = basCode.basTable.Item(intCount)
                     Case 6
                         fldField = New ManagedSelectField
                 End Select
                 fldField.Name = basCode.basTable.Item(intCount).Name
-                fldField.Tag = basCode.basTable.Item(intCount).Name
+
 
                 If basCode.basTable.Item(intCount).FieldVisible = True Then
                     sptFields1.Panel2.Controls.Add(fldField)
-                    fldField.Top = ((sptFields1.Panel2.Controls.Count - 1) * basCode.curVar.FieldHeight) + (sptFields1.Panel2.Controls.Count * basCode.curVar.BuildMargin)
+                    'fldField.Top = ((sptFields1.Panel2.Controls.Count - 1) * basCode.curVar.FieldHeight) + (sptFields1.Panel2.Controls.Count * basCode.curVar.BuildMargin)
+                    If sptFields1.Panel2.Controls.Count > 1 Then
+                        fldField.Top = sptFields1.Panel2.Controls(sptFields1.Panel2.Controls.Count - 2).Top + basCode.curVar.FieldHeight + basCode.curVar.BuildMargin
+                    Else
+                        fldField.top = basCode.curVar.BuildMargin
+                    End If
                     fldField.Width = basCode.basTable.Item(intCount).FieldWidth
 
                     If fldField.top > sptFields1.Panel2.Height And fldField.Width >= sptFields1.Panel2.Width - (basCode.curVar.BuildMargin * 3) - SystemInformation.VerticalScrollBarWidth Then
                         fldField.width = sptFields1.Panel2.Width - (basCode.curVar.BuildMargin * 3) - SystemInformation.VerticalScrollBarWidth
                     End If
                     Dim lblLabel As New Label
-                    arrLabels.Add(lblLabel)
+                    'arrLabels.Add(lblLabel)
+                    AddHandler lblLabel.Click, AddressOf LabelClickHandler
+
                     lblLabel.Name = "lbl" & fldField.Name
                     sptFields1.Panel1.Controls.Add(lblLabel)
                     lblLabel.Text = basCode.basTable.Item(intCount).FieldAlias
@@ -564,6 +579,25 @@ Public Class frmSequenchel
 
     Public Sub TextHandler(ByVal sender As Object, ByVal e As System.EventArgs)
         FieldTextHandler(sender)
+    End Sub
+
+    Public Sub LabelClickHandler(ByVal sender As Object, ByVal e As System.EventArgs)
+        Dim lblTemp As Label = sender
+        For Each ctrl As Object In sptFields1.Panel2.Controls
+            If ctrl.Name = lblTemp.Name.Substring(3, lblTemp.Name.Length - 3) Then
+                If ctrl.Enabled = True Then
+                    If ctrl.BackColor = clrMarked Then
+                        If ctrl.Field.FieldDataType = "BIT" Then
+                            ctrl.backColor = clrControl
+                        Else
+                            ctrl.backColor = clrOriginal
+                        End If
+                    Else
+                        ctrl.BackColor = clrMarked
+                    End If
+                End If
+            End If
+        Next
     End Sub
 
     'Friend Sub LoadTable(strTable As String)
@@ -999,7 +1033,7 @@ Public Class frmSequenchel
 
     Private Sub btnSearchAddOrUpdate_Click(sender As Object, e As EventArgs) Handles btnSearchAddOrUpdate.Click
         WriteStatus("", 0, lblStatusText)
-        If tblTable.TableName.Length < 1 Then Exit Sub
+        If basCode.basTable.TableName.Length < 1 Then Exit Sub
         If cbxSearch.Text.Length < 1 Then
             WriteStatus("The Name of the Search must be at least 1 character long", 2, lblStatusText)
             Exit Sub
@@ -1020,9 +1054,9 @@ Public Class frmSequenchel
 
     Private Sub btnDeleteSearch_Click(sender As Object, e As EventArgs) Handles btnDeleteSearch.Click
         WriteStatus("", 0, lblStatusText)
-        If tblTable.TableName.Length < 1 Then Exit Sub
+        If basCode.basTable.TableName.Length < 1 Then Exit Sub
         If cbxSearch.Text.Length < 1 Then
-            WriteStatus("The Name of the Search must be at least 1 character long", 2, lblStatusText)
+            WriteStatus("Select a Search to delete.", 2, lblStatusText)
             Exit Sub
         End If
         CursorControl("Wait")
@@ -1062,10 +1096,10 @@ Public Class frmSequenchel
             If basCode.curStatus.Status = SeqCore.CurrentStatus.StatusList.Search And tblTable.TableSearch = True Then
                 btnSearch.Enabled = True
             End If
-            If dgvTable1.SelectedRows.Count = 1 And basCode.curStatus.Status = SeqCore.CurrentStatus.StatusList.Edit And tblTable.TableUpdate = True And (basCode.curVar.AllowUpdate = True Or basCode.curVar.SecurityOverride = True) Then
+            If dgvTable1.SelectedRows.Count = 1 And basCode.curStatus.Status = SeqCore.CurrentStatus.StatusList.Edit And basCode.basTable.TableUpdate = True And (basCode.curVar.AllowUpdate = True Or basCode.curVar.SecurityOverride = True) Then
                 btnUpdate.Enabled = True
             End If
-            If tblTable.TableInsert = True And (basCode.curVar.AllowInsert = True Or basCode.curVar.SecurityOverride = True) Then
+            If basCode.basTable.TableInsert = True And (basCode.curVar.AllowInsert = True Or basCode.curVar.SecurityOverride = True) Then
                 btnAdd.Enabled = True
             End If
             If basCode.curStatus.Status = SeqCore.CurrentStatus.StatusList.ControlSearch Then
@@ -1074,7 +1108,7 @@ Public Class frmSequenchel
             If dgvTable1.SelectedRows.Count = 1 And basCode.curStatus.Status = SeqCore.CurrentStatus.StatusList.ControlEdit And (basCode.curVar.AllowUpdate = True Or basCode.curVar.SecurityOverride = True) Then
                 btnUpdate.Enabled = True
             End If
-            If dgvTable1.SelectedRows.Count = 1 And tblTable.TableDelete = True And (basCode.curVar.AllowDelete = True Or basCode.curVar.SecurityOverride = True) Then
+            If dgvTable1.SelectedRows.Count = 1 And basCode.basTable.TableDelete = True And (basCode.curVar.AllowDelete = True Or basCode.curVar.SecurityOverride = True) Then
                 btnDelete.Enabled = True
             End If
         End If
@@ -1099,8 +1133,8 @@ Public Class frmSequenchel
     End Sub
 
     Private Sub FieldsDisable()
-        For intField As Integer = 0 To tblTable.Count - 1
-            FieldEnableHandler(tblTable.Item(intField), False)
+        For Each ctrl As Object In sptFields1.Panel2.Controls
+            FieldEnableHandler(ctrl, False)
         Next
     End Sub
 
@@ -1108,26 +1142,26 @@ Public Class frmSequenchel
 
         Select Case basCode.curStatus.Status
             Case SeqCore.CurrentStatus.StatusList.Search, SeqCore.CurrentStatus.StatusList.ControlSearch
-                For intField As Integer = 0 To tblTable.Count - 1
-                    FieldEnableHandler(tblTable.Item(intField), tblTable.Item(intField).FieldSearch)
+                For Each ctrl As Object In sptFields1.Panel2.Controls
+                    FieldEnableHandler(ctrl, ctrl.Field.FieldSearch)
                 Next
             Case SeqCore.CurrentStatus.StatusList.Edit
                 FieldsDisable()
-                If tblTable.TableUpdate = True Then
-                    For intField As Integer = 0 To tblTable.Count - 1
-                        Dim strControl As String = tblTable.Item(intField).ControlField
-                        Dim strControlValue As String = tblTable.Item(intField).ControlValue
+                If basCode.basTable.TableUpdate = True Then
+                    For Each ctrl As Object In sptFields1.Panel2.Controls
+                        Dim strControl As String = ctrl.Field.ControlField
+                        Dim strControlValue As String = ctrl.Field.ControlValue
                         If strControl.Length > 0 Then
-                            For intField2 As Integer = 0 To tblTable.Count - 1
-                                If tblTable.Item(intField2).FieldName = strControl Then
-                                    Select Case tblTable.Item(intField2).FieldCategory
+                            For Each ctrl2 As Object In sptFields1.Panel2.Controls
+                                If ctrl2.Field.FieldName = strControl Then
+                                    Select Case ctrl2.Field.Category
                                         Case 1, 3, 4, 5, 6
-                                            If tblTable.Item(intField2).Text = strControlValue Then
-                                                FieldEnableHandler(tblTable.Item(intField), tblTable.Item(intField).ControlUpdate)
+                                            If ctrl2.Text = strControlValue Then
+                                                FieldEnableHandler(ctrl, ctrl.Field.ControlUpdate)
                                             End If
                                         Case 2
-                                            If tblTable.Item(intField2).Checked = strControlValue Then
-                                                FieldEnableHandler(tblTable.Item(intField), tblTable.Item(intField).ControlUpdate)
+                                            If ctrl2.Checked = strControlValue Then
+                                                FieldEnableHandler(ctrl, ctrl.Field.ControlUpdate)
                                             End If
                                     End Select
 
@@ -1135,62 +1169,63 @@ Public Class frmSequenchel
                                 End If
                             Next
                         Else
-                            FieldEnableHandler(tblTable.Item(intField), tblTable.Item(intField).FieldUpdate)
+                            FieldEnableHandler(ctrl, ctrl.Field.FieldUpdate)
                         End If
                     Next
                 End If
             Case SeqCore.CurrentStatus.StatusList.Add, SeqCore.CurrentStatus.StatusList.ControlAdd
-                For intField As Integer = 0 To tblTable.Count - 1
-                    If tblTable.Item(intField).Identity = False Or blnEnableIdentity = True Then
-                        FieldEnableHandler(tblTable.Item(intField), tblTable.Item(intField).FieldSearch)
+                For Each ctrl As Object In sptFields1.Panel2.Controls
+                    If ctrl.Field.Identity = False Or blnEnableIdentity = True Then
+                        FieldEnableHandler(ctrl, ctrl.Field.FieldSearch)
                     End If
                 Next
             Case SeqCore.CurrentStatus.StatusList.ControlEdit
-                For intField As Integer = 0 To tblTable.Count - 1
-                    FieldEnableHandler(tblTable.Item(intField), tblTable.Item(intField).ControlMode)
+                For Each ctrl As Object In sptFields1.Panel2.Controls
+                    FieldEnableHandler(ctrl, ctrl.Field.ControlMode)
                 Next
         End Select
         ColorReset()
     End Sub
 
     Private Sub FieldsClear(Optional blnIdentityOnly As Boolean = False)
+        TagsClear()
         For intControl As Integer = sptFields1.Panel2.Controls.Count - 1 To 0 Step -1
-            Dim strName As String = sptFields1.Panel2.Controls(intControl).Name
-            For intField As Integer = 0 To basCode.basTable.Count - 1
-                If basCode.basTable.Item(intField).Name = strName Then
-                    Select Case basCode.basTable.Item(intField).Category
-                        Case 1, 3, 4
-                            If blnIdentityOnly = False Or basCode.basTable.Item(intField).Identity = True Or basCode.basTable.Item(intField).PrimaryKey = True Then
-                                sptFields1.Panel2.Controls(intControl).Text = ""
-                            End If
-                        Case 2
-                            Dim chkTemp As CheckBox = TryCast(sptFields1.Panel2.Controls(intControl), CheckBox)
-                            If chkTemp IsNot Nothing Then chkTemp.Checked = False
-                        Case 5, 6
-                            If blnIdentityOnly = False Or basCode.basTable.Item(intField).Identity = True Or basCode.basTable.Item(intField).PrimaryKey = True Then
-                                Dim msfTemp As ManagedSelectField = TryCast(sptFields1.Panel2.Controls(intControl), ManagedSelectField)
-                                If msfTemp IsNot Nothing Then
-                                    msfTemp.DropDown(2)
-                                    msfTemp.Text = ""
-                                End If
-                            End If
-                    End Select
-                End If
-            Next
+
+            Dim fldField As Object = sptFields1.Panel2.Controls(intControl)
+            Dim intCategory As Integer = basCode.GetCategory(fldField)
+
+            Select Case intCategory
+                Case 1, 3, 4
+                    If blnIdentityOnly = False Or fldField.Field.Identity = True Or fldField.Field.PrimaryKey = True Then
+                        fldField.Text = ""
+                    End If
+                Case 2
+                    fldField.Checked = False
+                Case 5, 6
+                    If blnIdentityOnly = False Or fldField.Field.Identity = True Or fldField.Field.PrimaryKey = True Then
+                        fldField.DropDown(2)
+                        fldField.Text = ""
+                    End If
+            End Select
+            '    End If
+            'Next
         Next
         btnAdd.Text = "New Item"
         btnAdd.BackColor = clrControl
         lblMultipleRows.Visible = False
-        TagsClear()
     End Sub
 
     Private Sub TagsClear()
-        For intField As Integer = 0 To tblTable.Count - 1
-            Select Case tblTable.Item(intField).FieldCategory
+        For intControl As Integer = sptFields1.Panel2.Controls.Count - 1 To 0 Step -1
+
+            Dim fldField As Object = sptFields1.Panel2.Controls(intControl)
+            Dim intCategory As Integer = basCode.GetCategory(fldField)
+
+            Select Case intCategory
                 Case 1, 3, 4, 5, 6
-                    tblTable.Item(intField).Tag = ""
+                    fldField.Tag = ""
                 Case 2
-                    tblTable.Item(intField).Tag = False
+                    fldField.Tag = False
             End Select
         Next
     End Sub
@@ -1212,22 +1247,24 @@ Public Class frmSequenchel
 
         If blnRefine = True Then
             For intField As Integer = 0 To sptFields1.Panel2.Controls.Count - 1
+                Dim fldField As Object = sptFields1.Panel2.Controls(intField)
                 If sptFields1.Panel2.Controls(intField).BackColor = clrMarked Then
-                    Dim strWhere As String = Nothing
+                    'Dim strWhere As String = Nothing
                     Dim strValue As String = Nothing
-                    If TypeOf sptFields1.Panel2.Controls(intField) Is CheckBox Then
-                        Dim chkTemp As CheckBox = TryCast(sptFields1.Panel2.Controls(intField), CheckBox)
+                    If TypeOf fldField Is CheckField Then
+                        Dim chkTemp As CheckField = TryCast(fldField, CheckField)
                         If chkTemp IsNot Nothing Then strValue = chkTemp.CheckState
                     Else
-                        strValue = sptFields1.Panel2.Controls(intField).Text
+                        strValue = fldField.Text
                     End If
-                    Dim strName As String = sptFields1.Panel2.Controls(intField).Name
-                    For intCount As Integer = 0 To basCode.basTable.Count - 1
-                        If basCode.basTable.Item(intField).Name = strName Then
-                            strQuery &= " AND " & FormatFieldWhere1(basCode.basTable.Item(intField).FieldName, basCode.basTable.Item(intField).TableAlias, basCode.basTable.Item(intField).FieldWidth, basCode.basTable.Item(intField).FieldDataType, strValue)
-                            Exit For
-                        End If
-                    Next
+                    Dim strName As String = fldField.Name
+                    strQuery &= " AND " & FormatFieldWhere1(fldField.Field.FieldName, fldField.Field.FieldTableAlias, fldField.Field.FieldWidth, fldField.Field.FieldDataType, strValue)
+                    'For intCount As Integer = 0 To basCode.basTable.Count - 1
+                    '    If basCode.basTable.Item(intField).Name = strName Then
+                    '        strQuery &= " AND " & FormatFieldWhere1(basCode.basTable.Item(intField).FieldName, basCode.basTable.Item(intField).TableAlias, basCode.basTable.Item(intField).FieldWidth, basCode.basTable.Item(intField).FieldDataType, strValue)
+                    '        Exit For
+                    '    End If
+                    'Next
                 End If
             Next
         End If
@@ -1529,40 +1566,40 @@ Public Class frmSequenchel
     'End Sub
 
     Private Sub LoadDefaultValue(strFieldName As String)
-        For Each Field In tblTable
-            If Field.FieldName = strFieldName Then
-                Dim strValue As String = basCode.ProcessDefaultValue(Field.DefaultValue)
-                Select Case Field.FieldDataType.ToUpper
+        For Each ctrl As Object In sptFields1.Panel2.Controls
+            If ctrl.Field.FieldName = strFieldName Then
+                Dim strValue As String = basCode.ProcessDefaultValue(ctrl.Field.DefaultValue)
+                Select Case ctrl.Field.FieldDataType.ToUpper
                     Case "BIT"
-                        Field.Checked = strValue
+                        ctrl.Checked = strValue
                     Case Else
-                        Field.Text = strValue
+                        ctrl.Text = strValue
                 End Select
             End If
         Next
     End Sub
 
     Private Sub ColorReset()
-        For intField As Integer = 0 To tblTable.Count - 1
-            If FieldEnabledCheck(tblTable.Item(intField)) = True Then
-                If tblTable.Item(intField).FieldDataType = "BIT" Then
-                    tblTable.Item(intField).BackColor = clrControl
+        For Each ctrl As Object In sptFields1.Panel2.Controls
+            If FieldEnabledCheck(ctrl) = True Then
+                If ctrl.Field.FieldDataType = "BIT" Then
+                    ctrl.BackColor = clrControl
                 Else
-                    tblTable.Item(intField).BackColor = clrOriginal
+                    ctrl.BackColor = clrOriginal
                 End If
             Else
-                tblTable.Item(intField).BackColor = clrDisabled
+                ctrl.BackColor = clrDisabled
             End If
         Next
 
     End Sub
 
     Private Sub ColorSet()
-        For intField As Integer = 0 To tblTable.Count - 1
-            If FieldEnabledCheck(tblTable.Item(intField)) = True Then
-                FieldTextHandler(tblTable.Item(intField))
+        For Each ctrl As Control In sptFields1.Panel2.Controls
+            If FieldEnabledCheck(ctrl) = True Then
+                FieldTextHandler(ctrl)
             Else
-                tblTable.Item(intField).text = ""
+                ctrl.Text = ""
             End If
         Next
     End Sub
@@ -1570,25 +1607,25 @@ Public Class frmSequenchel
     Private Sub ItemAdd()
         strQuery = ""
         Dim strQuery1 As String = "", strQuery2 As String = ""
-        strQuery = " INSERT INTO [" & tblTable.TableName.Replace(".", "].[") & "] ("
+        strQuery = " INSERT INTO [" & basCode.basTable.TableName.Replace(".", "].[") & "] ("
 
-        For intField As Integer = 0 To tblTable.Count - 1
-            If tblTable.Item(intField).BackColor = clrMarked And FieldEnabledCheck(tblTable.Item(intField)) = True Then
-                Select Case tblTable.Item(intField).FieldDataType.ToUpper
+        For Each ctrl As Object In sptFields1.Panel2.Controls
+            If ctrl.BackColor = clrMarked And FieldEnabledCheck(ctrl) = True Then
+                Select Case ctrl.Field.FieldDataType.ToUpper
                     Case "BIT"
-                        strQuery1 &= ", [" & tblTable.Item(intField).FieldName & "]"
-                        strQuery2 &= ", " & tblTable.Item(intField).CheckState
+                        strQuery1 &= ", [" & ctrl.Field.FieldName & "]"
+                        strQuery2 &= ", " & ctrl.CheckState
                     Case "INTEGER"
-                        If Not (tblTable.Item(intField).Text = "NULL" Or tblTable.Item(intField).Text = "") Then
-                            strQuery1 &= ", [" & tblTable.Item(intField).FieldName & "]"
-                            strQuery2 &= ", " & tblTable.Item(intField).Text
+                        If Not (ctrl.Text = "NULL" Or ctrl.Text = "") Then
+                            strQuery1 &= ", [" & ctrl.Field.FieldName & "]"
+                            strQuery2 &= ", " & ctrl.Text
                         End If
                     Case "BINARY", "IMAGE", "TIMESTAMP"
                         'do nothing
                     Case Else
-                        If Not (tblTable.Item(intField).Text = "NULL" Or tblTable.Item(intField).Text = "") Then
-                            strQuery1 &= ", [" & tblTable.Item(intField).FieldName & "]"
-                            strQuery2 &= ", N'" & tblTable.Item(intField).Text & "'"
+                        If Not (ctrl.Text = "NULL" Or ctrl.Text = "") Then
+                            strQuery1 &= ", [" & ctrl.Field.FieldName & "]"
+                            strQuery2 &= ", N'" & ctrl.Text & "'"
                         End If
                 End Select
             End If
@@ -1636,34 +1673,34 @@ Public Class frmSequenchel
         strQuery = ""
         Dim strQueryUpdate As String = ""
         Dim strQueryWhere As String = " WHERE 1=1 "
-        strQuery = " UPDATE [" & tblTable.TableName.Replace(".", "].[") & "] SET ,"
+        strQuery = " UPDATE [" & basCode.basTable.TableName.Replace(".", "].[") & "] SET ,"
 
-        For intField As Integer = 0 To tblTable.Count - 1
-            If tblTable.Item(intField).BackColor = clrMarked And FieldEnabledCheck(tblTable.Item(intField)) = True Then
-                Select Case tblTable.Item(intField).FieldDataType.ToUpper
+        For Each ctrl As Object In sptFields1.Panel2.Controls
+            If ctrl.BackColor = clrMarked And FieldEnabledCheck(ctrl) = True Then
+                Select Case ctrl.Field.FieldDataType.ToUpper
                     Case "BIT"
-                        strQueryUpdate &= ", [" & tblTable.Item(intField).FieldName & "] = " & tblTable.Item(intField).CheckState
+                        strQueryUpdate &= ", [" & ctrl.Field.FieldName & "] = " & ctrl.CheckState
                     Case "INTEGER"
-                        If tblTable.Item(intField).Text = "NULL" Or tblTable.Item(intField).Text = "" Then
-                            strQueryUpdate &= ", [" & tblTable.Item(intField).FieldName & "] = NULL "
+                        If ctrl.Text = "NULL" Or ctrl.Text = "" Then
+                            strQueryUpdate &= ", [" & ctrl.Field.FieldName & "] = NULL "
                         Else
-                            strQueryUpdate &= ", [" & tblTable.Item(intField).FieldName & "] = " & tblTable.Item(intField).Text
+                            strQueryUpdate &= ", [" & ctrl.Field.FieldName & "] = " & ctrl.Text
                         End If
                     Case "BINARY", "IMAGE", "TIMESTAMP"
                         'do nothing
                     Case Else
-                        If tblTable.Item(intField).Text = "NULL" Or tblTable.Item(intField).Text = "" Then
-                            strQueryUpdate &= ", [" & tblTable.Item(intField).FieldName & "] = NULL "
+                        If ctrl.Text = "NULL" Or ctrl.Text = "" Then
+                            strQueryUpdate &= ", [" & ctrl.Field.FieldName & "] = NULL "
                         Else
-                            strQueryUpdate &= ", [" & tblTable.Item(intField).FieldName & "] = N'" & tblTable.Item(intField).Text & "'"
+                            strQueryUpdate &= ", [" & ctrl.Field.FieldName & "] = N'" & ctrl.Text & "'"
                         End If
                 End Select
             End If
 
-            If tblTable.Item(intField).Identity = True Or tblTable.Item(intField).PrimaryKey = True Then
+            If ctrl.Field.Identity = True Or ctrl.Field.PrimaryKey = True Then
                 For Each cell In dgvTable1.SelectedRows(0).Cells
-                    If cell.OwningColumn.Name = tblTable.Item(intField).FieldName Then
-                        strQueryWhere &= " AND [" & tblTable.Item(intField).FieldName & "] = " & basCode.SetDelimiters(cell.Value, tblTable.Item(intField).FieldDataType, "=")
+                    If cell.OwningColumn.Name = ctrl.Field.FieldName Then
+                        strQueryWhere &= " AND [" & ctrl.Field.FieldName & "] = " & basCode.SetDelimiters(cell.Value, ctrl.Field.FieldDataType, "=")
                     End If
                 Next
             End If
@@ -1713,18 +1750,18 @@ Public Class frmSequenchel
 
         strQuery = ""
         Dim strQueryWhere As String = " WHERE 1=1 "
-        strQuery = " DELETE FROM [" & tblTable.TableName.Replace(".", "].[") & "] "
+        strQuery = " DELETE FROM [" & basCode.basTable.TableName.Replace(".", "].[") & "] "
 
-        For intField As Integer = 0 To tblTable.Count - 1
-            If tblTable.Item(intField).Identity = True Or tblTable.Item(intField).PrimaryKey = True Then
+        For intField As Integer = 0 To basCode.basTable.Count - 1
+            If basCode.basTable.Item(intField).Identity = True Or basCode.basTable.Item(intField).PrimaryKey = True Then
                 For Each cell In dgvTable1.SelectedRows(0).Cells
-                    If cell.OwningColumn.Name = tblTable.Item(intField).FieldName Then
-                        strQueryWhere &= " AND [" & tblTable.Item(intField).FieldName & "] = " & basCode.SetDelimiters(cell.Value, tblTable.Item(intField).FieldDataType, "=")
+                    If cell.OwningColumn.Name = basCode.basTable.Item(intField).FieldName Then
+                        strQueryWhere &= " AND [" & basCode.basTable.Item(intField).FieldName & "] = " & basCode.SetDelimiters(cell.Value, basCode.basTable.Item(intField).FieldDataType, "=")
                     End If
                 Next
             End If
-
         Next
+
         If strQueryWhere = " WHERE 1=1 " Then
             WriteStatus("You need an AUTOID or Primary Key field in order to delete an item", 2, lblStatusText)
             Exit Sub
@@ -1766,7 +1803,7 @@ Public Class frmSequenchel
         End If
 
         Dim NewNode As XmlNode = basCode.dhdText.CreateAppendElement(xmlSearch.Item("Sequenchel").Item("Searches"), "Search")
-        basCode.dhdText.CreateAppendElement(NewNode, "TableName", tblTable.TableName)
+        basCode.dhdText.CreateAppendElement(NewNode, "TableName", basCode.basTable.TableName)
         basCode.dhdText.CreateAppendElement(NewNode, "SearchName", cbxSearch.Text)
 
         basCode.dhdText.CreateAppendElement(NewNode, "UseTop", chkUseTop.Checked)
@@ -1775,18 +1812,18 @@ Public Class frmSequenchel
 
         Dim FieldsNode As XmlNode = basCode.dhdText.CreateAppendElement(NewNode, "Fields", "")
 
-        For intField As Integer = 0 To tblTable.Count - 1
-            If tblTable.Item(intField).BackColor = clrMarked Then
+        For Each ctrl As Object In sptFields1.Panel2.Controls
+            If ctrl.BackColor = clrMarked Then
 
                 Dim newAttribute1 As XmlAttribute = xmlSearch.CreateAttribute("FieldName")
-                newAttribute1.Value = tblTable.Item(intField).FieldName
+                newAttribute1.Value = ctrl.Field.FieldName
 
-                Select Case tblTable.Item(intField).FieldDataType.ToUpper
+                Select Case ctrl.Field.FieldDataType.ToUpper
                     Case "BIT"
-                        Dim NewFieldNode As XmlNode = basCode.dhdText.CreateAppendElement(FieldsNode, "Field", tblTable.Item(intField).CheckState)
+                        Dim NewFieldNode As XmlNode = basCode.dhdText.CreateAppendElement(FieldsNode, "Field", ctrl.CheckState)
                         NewFieldNode.Attributes.Append(newAttribute1)
                     Case Else
-                        Dim NewFieldNode As XmlNode = basCode.dhdText.CreateAppendElement(FieldsNode, "Field", tblTable.Item(intField).Text)
+                        Dim NewFieldNode As XmlNode = basCode.dhdText.CreateAppendElement(FieldsNode, "Field", ctrl.Text)
                         NewFieldNode.Attributes.Append(newAttribute1)
                 End Select
             End If

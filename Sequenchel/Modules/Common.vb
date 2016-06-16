@@ -25,7 +25,7 @@ Module Common
     Friend xmlSearch As New XmlDocument
 
     Friend tblTable As New Table
-    Friend arrLabels As New LabelArray
+    'Friend arrLabels As New LabelArray
     Friend dtsTable As New DataSet
     Friend dtsReport As New DataSet
     Friend dtsImport As New DataSet
@@ -56,7 +56,7 @@ Module Common
         If basCode.curStatus.SuspendActions = False Then
 
             Select Case sender.[GetType]().Name
-                Case "TextBox"
+                Case "TextField"
                     If sender.Text <> sender.Tag.ToString Then
                         sender.BackColor = clrMarked
                     Else
@@ -66,7 +66,7 @@ Module Common
                             sender.BackColor = clrDisabled
                         End If
                     End If
-                Case "CheckBox"
+                Case "CheckField"
                     If sender.Checked.ToString <> sender.Tag.ToString Then
                         sender.BackColor = clrMarked
                     Else
@@ -76,41 +76,37 @@ Module Common
                             sender.BackColor = clrDisabled
                         End If
                     End If
-                Case "ComboBox"
+                Case "ComboField"
                     'not used
-                Case "ManagedSelectList"
-                    For intField As Integer = 0 To tblTable.Count - 1
-                        If tblTable.Item(intField).Name = sender.Name Then
-                            If sender.Text.ToString <> sender.Tag.ToString Then
-                                sender.BackColor = clrMarked
-                            Else
-                                If sender.Enabled = True Then
-                                    sender.BackColor = clrOriginal
-                                Else
-                                    sender.BackColor = clrDisabled
-                                End If
-                            End If
+                Case "ManagedSelectField"
+                    If sender.Text.ToString <> sender.Tag.ToString Then
+                        sender.BackColor = clrMarked
+                    Else
+                        If sender.Enabled = True Then
+                            sender.BackColor = clrOriginal
+                        Else
+                            sender.BackColor = clrDisabled
                         End If
-                    Next
+                    End If
 
                     'As related field
-                    For intField As Integer = 0 To tblTable.Count - 1
-                        If tblTable.Item(intField).FieldName = sender.FieldRelatedField Then
-                            Select Case tblTable.Item(intField).FieldCategory
-                                Case 1, 3, 4, 5
-                                    If Not sender.value = Nothing Then tblTable.Item(intField).Text = sender.Value
-                                Case 2
-                                    tblTable.Item(intField).Checked = sender.Value
-                            End Select
-                        End If
-                    Next
+                    'For intField As Integer = 0 To tblTable.Count - 1
+                    '    If tblTable.Item(intField).FieldName = sender.FieldRelatedField Then
+                    '        Select Case tblTable.Item(intField).FieldCategory
+                    '            Case 1, 3, 4, 5
+                    '                If Not sender.value = Nothing Then tblTable.Item(intField).Text = sender.Value
+                    '            Case 2
+                    '                tblTable.Item(intField).Checked = sender.Value
+                    '        End Select
+                    '    End If
+                    'Next
 
             End Select
         End If
     End Sub
 
     Friend Sub FieldEnableHandler(sender As Object, blnEnabled As Boolean)
-        Select Case sender.FieldCategory
+        Select Case sender.Field.Category
             Case 1
                 If blnEnabled = True Then
                     sender.ReadOnly = False
@@ -119,14 +115,21 @@ Module Common
                     sender.ReadOnly = True
                     sender.BackColor = clrDisabled
                 End If
-            Case 2, 3, 4, 5, 6
+            Case 2, 3, 4
                 sender.Enabled = blnEnabled
+            Case 5, 6
+                sender.Enabled = blnEnabled
+                If blnEnabled = True Then
+                    sender.BackColor = clrOriginal
+                Else
+                    sender.BackColor = clrDisabled
+                End If
         End Select
     End Sub
 
     Friend Function FieldEnabledCheck(sender As Object) As Boolean
         Dim blnReturn As Boolean = False
-        Select Case sender.FieldCategory
+        Select Case sender.Field.Category
             Case 1
                 If sender.ReadOnly = False Then
                     blnReturn = True
@@ -141,24 +144,24 @@ Module Common
         Return blnReturn
     End Function
 
-    Public Sub LabelClickHandler(sender As Object)
-        Dim lblTemp As Label = sender
-        For intField As Integer = 0 To tblTable.Count - 1
-            If tblTable.Item(intField).Name = lblTemp.Name.Substring(3, lblTemp.Name.Length - 3) Then
-                If tblTable.Item(intField).Enabled = True Then
-                    If tblTable.Item(intField).BackColor = clrMarked Then
-                        If tblTable.Item(intField).FieldDataType = "BIT" Then
-                            tblTable.Item(intField).backColor = clrControl
-                        Else
-                            tblTable.Item(intField).backColor = clrOriginal
-                        End If
-                    Else
-                        tblTable.Item(intField).BackColor = clrMarked
-                    End If
-                End If
-            End If
-        Next
-    End Sub
+    'Public Sub LabelClickHandler(sender As Object)
+    '    Dim lblTemp As Label = sender
+    '    For intField As Integer = 0 To tblTable.Count - 1
+    '        If tblTable.Item(intField).Name = lblTemp.Name.Substring(3, lblTemp.Name.Length - 3) Then
+    '            If tblTable.Item(intField).Enabled = True Then
+    '                If tblTable.Item(intField).BackColor = clrMarked Then
+    '                    If tblTable.Item(intField).FieldDataType = "BIT" Then
+    '                        tblTable.Item(intField).backColor = clrControl
+    '                    Else
+    '                        tblTable.Item(intField).backColor = clrOriginal
+    '                    End If
+    '                Else
+    '                    tblTable.Item(intField).BackColor = clrMarked
+    '                End If
+    '            End If
+    '        End If
+    '    Next
+    'End Sub
 
     Friend Sub TableClear()
         tblTable.Clear()

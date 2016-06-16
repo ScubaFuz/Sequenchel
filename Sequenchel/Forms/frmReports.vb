@@ -443,7 +443,7 @@ Public Class frmReports
 
         Dim cbxNewShowMode As New ComboField
         cbxNewShowMode.Name = pnlReportShowMode.Name & "1" & strFieldName
-        cbxNewShowMode.FieldDataType = strFieldType
+        cbxNewShowMode.Field.FieldDataType = strFieldType
         cbxNewShowMode.Tag = strFieldName
         cbxNewShowMode.Width = 75
         pnlReportShowMode.Controls.Add(cbxNewShowMode)
@@ -475,7 +475,7 @@ Public Class frmReports
 
         Dim chkNewFilter As New CheckField
         chkNewFilter.Name = pnlReportFilter.Name & intCount.ToString & strFieldName
-        chkNewFilter.FieldDataType = strFieldType
+        chkNewFilter.Field.FieldDataType = strFieldType
         chkNewFilter.Tag = strFieldName
         chkNewFilter.ThreeState = True
         pnlReportFilter.Controls.Add(chkNewFilter)
@@ -505,7 +505,7 @@ Public Class frmReports
 
         Dim txtNewFilter As New TextField
         txtNewFilter.Name = pnlReportFilterText.Name & intCount.ToString & strFieldName
-        txtNewFilter.FieldDataType = strFieldType
+        txtNewFilter.Field.FieldDataType = strFieldType
         txtNewFilter.Tag = strFieldName
         txtNewFilter.Width = 190
         pnlReportFilterText.Controls.Add(txtNewFilter)
@@ -526,13 +526,13 @@ Public Class frmReports
                 cbxTarget.Items.Add("MAX")
                 cbxTarget.Items.Add("AVG")
                 cbxTarget.Items.Add("COUNT")
-                If cbxTarget.FieldDataType = "DATETIME" Then
+                If cbxTarget.Field.FieldDataType = "DATETIME" Then
                     cbxTarget.Items.Add("DATE")
                     cbxTarget.Items.Add("YEAR")
                     cbxTarget.Items.Add("MONTH")
                     cbxTarget.Items.Add("DAY")
                 End If
-                If cbxTarget.FieldDataType = "DATETIME" Or cbxTarget.FieldDataType = "TIME" Or cbxTarget.FieldDataType = "TIMESTAMP" Then
+                If cbxTarget.Field.FieldDataType = "DATETIME" Or cbxTarget.Field.FieldDataType = "TIME" Or cbxTarget.Field.FieldDataType = "TIMESTAMP" Then
                     cbxTarget.Items.Add("TIME")
                     cbxTarget.Items.Add("HOUR")
                     cbxTarget.Items.Add("MINUTE")

@@ -233,6 +233,61 @@ Public Class BaseCode
         End If
     End Sub
 
+#Region "BaseObjects"
+    Public Function GetBaseField(strFieldName As String) As BaseField
+        Dim tmpField As BaseField = Nothing
+        For intCount As Integer = 0 To basTable.Count - 1
+            If basTable.Item(intCount).Name = strFieldName Then
+                tmpField = basTable.Item(intCount)
+            End If
+        Next
+        Return tmpField
+    End Function
+
+    Public Function GetBaseRelation(strFieldName As String, strRelationName As String) As BaseRelation
+        Dim tmpField As BaseField = GetBaseField(strFieldName)
+        Dim tmpRelation As BaseRelation = Nothing
+        If Not tmpField Is Nothing Then
+            tmpRelation = GetBaseRelation(tmpField, strRelationName)
+        End If
+        Return tmpRelation
+    End Function
+
+    Public Function GetBaseRelation(basField As BaseField, strRelationName As String) As BaseRelation
+        Dim tmpRelation As BaseRelation = Nothing
+        For intCount As Integer = 0 To basField.Count - 1
+            If basField.Item(intCount).Name = strRelationName Then
+                tmpRelation = basField.Item(intCount)
+            End If
+        Next
+        Return tmpRelation
+    End Function
+
+    Public Function GetCategory(fldField As Object) As Integer
+        Dim intCategory As Integer = 0
+        Try
+            Select Case fldField.[GetType]().Name
+                Case "TextField"
+                    intCategory = fldField.Field.Category
+                Case "CheckField"
+                    intCategory = fldField.Field.Category
+                Case "ComboField"
+                    'not used
+                Case "ManagedSelectField"
+                    intCategory = fldField.Field.Category
+                Case Else
+                    'Not a type with a category.
+            End Select
+        Catch ex As Exception
+            ErrorLevel = -1
+            ErrorMessage = "Retrieving the catagory failed. " & ex.Message
+            intCategory = 0
+        End Try
+        Return intCategory
+    End Function
+
+#End Region
+
 #Region "XML"
     Public Function LoadSDBASettingsXml(xmlLoadDoc As XmlDocument) As Boolean
         If dhdText.CheckFile(System.AppDomain.CurrentDomain.BaseDirectory & dhdText.InputFile) = True Then
@@ -1604,12 +1659,23 @@ Public Class BaseCode
 
     Public Function MainSelectBuild(intTop As Integer) As String
         Dim strQuery As String = "SELECT "
+        Dim strQuery2 As String = ""
+        Dim strQuery3 As String = ""
 
         For intField As Integer = 0 To basTable.Count - 1
-            If basTable.Item(intField).FieldList = True Or basTable.Item(intField).Identity = True Or basTable.Item(intField).PrimaryKey = True Then
-                strQuery &= ", " & FormatField(basTable.TableName, basTable.TableAlias, basTable.Item(intField).FieldName, basTable.Item(intField).FieldAlias, basTable.Item(intField).FieldDataType, basTable.Item(intField).FieldWidth, Nothing, True, True, curVar.DateTimeStyle)
+            If basTable.Item(intField).FieldList = True And (basTable.Item(intField).FieldListOrder < 1 Or basTable.Item(intField).FieldListOrder > basTable.Count) Then
+                strQuery2 &= ", " & FormatField(basTable.TableName, basTable.TableAlias, basTable.Item(intField).FieldName, basTable.Item(intField).FieldAlias, basTable.Item(intField).FieldDataType, basTable.Item(intField).FieldWidth, Nothing, True, True, curVar.DateTimeStyle)
             End If
+            If basTable.Item(intField).FieldList = False And (basTable.Item(intField).Identity = True Or basTable.Item(intField).PrimaryKey = True) Then
+                strQuery3 &= ", " & FormatField(basTable.TableName, basTable.TableAlias, basTable.Item(intField).FieldName, basTable.Item(intField).FieldAlias, basTable.Item(intField).FieldDataType, basTable.Item(intField).FieldWidth, Nothing, True, True, curVar.DateTimeStyle)
+            End If
+            For intField2 As Integer = 0 To basTable.Count - 1
+                If basTable.Item(intField2).FieldList = True And basTable.Item(intField2).FieldListOrder = intField + 1 Then
+                    strQuery &= ", " & FormatField(basTable.TableName, basTable.TableAlias, basTable.Item(intField2).FieldName, basTable.Item(intField2).FieldAlias, basTable.Item(intField2).FieldDataType, basTable.Item(intField2).FieldWidth, Nothing, True, True, curVar.DateTimeStyle)
+                End If
+            Next
         Next
+        strQuery = strQuery & strQuery2 & strQuery3
         strQuery = strQuery.Replace("SELECT ,", "SELECT ")
         If IsNumeric(intTop) AndAlso intTop >= 0 Then strQuery = strQuery.Replace("SELECT ", "SELECT TOP " & intTop & " ")
 
