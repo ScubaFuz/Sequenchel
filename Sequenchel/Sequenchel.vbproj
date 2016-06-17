@@ -129,7 +129,6 @@
     <Compile Include="Classes\TextField.vb">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Classes\Table.vb" />
     <Compile Include="Classes\usrDataGridView.vb">
       <SubType>Component</SubType>
     </Compile>

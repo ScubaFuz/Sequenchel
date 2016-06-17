@@ -13,6 +13,15 @@ Public Class BaseCode
     Public Message As New Messages
     Public basTable As New BaseTable
 
+    Public xmlTemplates As New XmlDocument
+    Public xmlSDBASettings As New XmlDocument
+    Public xmlGeneralSettings As New XmlDocument
+    Public xmlConnections As New XmlDocument
+    Public xmlTableSets As New XmlDocument
+    Public xmlTables As New XmlDocument
+    Public xmlReports As New XmlDocument
+    Public xmlSearch As New XmlDocument
+
 #Region "Errors"
     Private _ErrorLevel As Integer = 0
     Private _ErrorMessage As String = ""
@@ -286,6 +295,24 @@ Public Class BaseCode
         Return intCategory
     End Function
 
+#End Region
+
+#Region "Formatting"
+    Public Function FormatDate(ByVal dtmInput As Date) As String
+        If dtmInput = Nothing Then
+            FormatDate = ""
+        Else
+            FormatDate = dtmInput.ToString("yyyy-MM-dd")
+        End If
+    End Function
+
+    'Public Function FormatDateTime(ByVal dtmInput As Date) As String
+    '    If dtmInput = Nothing Then
+    '        FormatDateTime = ""
+    '    Else
+    '        FormatDateTime = dtmInput.ToString("yyyyMMdd_HHmm")
+    '    End If
+    'End Function
 #End Region
 
 #Region "XML"
@@ -765,7 +792,7 @@ Public Class BaseCode
     Public Function GetFieldNode(xmlTables As XmlDocument, strTableName As String, strFieldName As String) As XmlNode
         Dim xTNode As XmlNode = dhdText.FindXmlNode(xmlTables, "Table", "Name", strTableName)
         Dim xFNode As XmlNode = dhdText.FindXmlChildNode(xTNode, "Fields/Field", "FldName", strFieldName)
-        Return xFnode
+        Return xFNode
     End Function
 
     Public Function GetRelationNode(xmlTables As XmlDocument, strTableName As String, strFieldName As String, strRelationTable As String, strRelationField As String) As XmlNode
@@ -959,6 +986,83 @@ Public Class BaseCode
             If Not strFieldAlias Is Nothing Then
                 If strFieldAlias.Length > 0 Then
                     strOutput &= " AS [" & strFieldAlias & "]"
+                End If
+            End If
+        End If
+
+        Return strOutput
+    End Function
+
+    Public Function FormatFieldWhere(strFieldName As String, strTableAlias As String, strFieldWidth As String, strFieldType As String, strFieldValue As String) As String
+        Dim strOutput As String = ""
+        Dim strTableField As String = " [" & strTableAlias.Replace(".", "].[") & "].[" & strFieldName & "]"
+
+        If strFieldValue = "NULL" Or strFieldValue = "" Then
+            Select Case strFieldType.ToUpper
+                Case "CHAR", "BINARY", "XML", "GEO", "TEXT", "GUID", "TIME", "TIMESTAMP"
+                    strOutput = " (COALESCE(" & strTableField & ",'') = '') " & Environment.NewLine
+                Case "INTEGER", "DATETIME", "BIT"
+                    strOutput = " (COALESCE(" & strTableField & ",0) = 0) " & Environment.NewLine
+                Case "IMAGE"
+                    'do nothing. cannot search on an image data type.
+                Case Else
+                    'try the default CHAR action
+                    strOutput = " (COALESCE(" & strTableField & ",'') = '') " & Environment.NewLine
+            End Select
+            Return strOutput
+        Else
+            If strFieldValue.Contains(",") Then
+                strFieldValue = strFieldValue.Trim(",")
+                If strFieldValue.Length = 0 Then Return strOutput
+                Select Case strFieldType.ToUpper
+                    Case "CHAR", "BINARY", "XML", "GEO", "TEXT", "GUID", "TIME", "TIMESTAMP"
+                        strOutput = " (" & strTableField & " IN ('" & Replace(strFieldValue, ",", "','") & "'))" & Environment.NewLine
+                    Case "INTEGER", "BIT"
+                        strOutput = " (" & strTableField & " IN (" & strFieldValue & "))" & Environment.NewLine
+                    Case "DATETIME"
+                        strOutput = " ((CONVERT([nvarchar](" & strFieldWidth & "), " & strTableField & ", " & curVar.DateTimeStyle & ")) IN ('" & strFieldValue.Replace(",", "','") & "'))" & Environment.NewLine
+                    Case "IMAGE"
+                        'do nothing. cannot search on an image data type.
+                    Case Else
+                        'try the default CHAR action
+                        strOutput = " (" & strTableField & " IN ('" & Replace(strFieldValue, ",", "','") & "'))" & Environment.NewLine
+                End Select
+                Return strOutput
+            Else
+                If strFieldValue.Trim().Contains(" ") Then
+                    Dim strArgs As String() = strFieldValue.Trim().Split(New String() {" "}, StringSplitOptions.RemoveEmptyEntries)
+                    For Each strArg As String In strArgs
+                        If strArg IsNot Nothing AndAlso strArg.Trim().Length > 0 Then
+                            strOutput &= " AND (" & strTableField & " LIKE ('%" & strArg.Trim() & "%'))" & Environment.NewLine
+                        End If
+                    Next
+                    Dim strTest As String = strOutput.Substring(0, 4)
+                    If strOutput.Substring(0, 4) = " AND" Then
+                        'if the value starts with AND, remove it.
+                        strOutput = strOutput.Remove(0, 4)
+                    End If
+                    Return strOutput
+                Else
+
+                    Select Case strFieldType.ToUpper
+                        Case "CHAR"
+                            strOutput = " (" & strTableField & " LIKE '%" & strFieldValue & "%')"
+                        Case "INTEGER"
+                            strOutput = " (" & strTableField & " LIKE '%" & strFieldValue & "%')"
+                        Case "DATETIME"
+                            strOutput = " (CONVERT([nvarchar](" & strFieldWidth & "), " & strTableField & ", " & curVar.DateTimeStyle & ")) LIKE '%" & strFieldValue & "%')"
+                        Case "BINARY", "XML", "GEO", "TEXT", "GUID", "TIME", "TIMESTAMP"
+                            strOutput = " (CONVERT([nvarchar](" & strFieldWidth & "), " & strTableField & ")) LIKE '%" & strFieldValue & "%')"
+                        Case "BIT"
+                            strOutput = " (COALESCE(" & strTableField & ",0) = " & strFieldValue & ") "
+                        Case "IMAGE"
+                            'do nothing. cannot search on an image data type.
+                        Case Else
+                            'try the default CHAR action
+                            strOutput = " (" & strTableField & " LIKE '%" & strFieldValue & "%')"
+                    End Select
+                    Return strOutput
+
                 End If
             End If
         End If
@@ -1733,6 +1837,31 @@ Public Class BaseCode
 
         strQuery = strQuery.Replace("ORDER BY ,", "ORDER BY ")
         Return strQuery
+    End Function
+
+    Public Function LoadTablesList(ByVal dhdConnect As DataHandler.db, Optional blnCrawlViews As Boolean = True) As List(Of String)
+        Dim strQuery As String = "SELECT "
+        strQuery &= " sch.[name] + '.' + "
+        strQuery &= " tbl.[name] AS TableName FROM sys.tables tbl"
+        strQuery &= " INNER JOIN sys.schemas sch"
+        strQuery &= " ON tbl.[schema_id] = sch.[schema_id]"
+        If blnCrawlViews = True Then
+            strQuery &= " UNION SELECT "
+            strQuery &= " sch.[name] + '.' + "
+            strQuery &= " vw.[name] AS TableName FROM sys.views vw"
+            strQuery &= " INNER JOIN sys.schemas sch"
+            strQuery &= " ON vw.[schema_id] = sch.[schema_id]"
+        End If
+        strQuery &= " ORDER BY TableName"
+
+        Dim dtsData As DataSet = QueryDb(dhdConnect, strQuery, True)
+        If dhdText.DatasetCheck(dtsData) = False Then Return Nothing
+
+        Dim ReturnValue As New List(Of String)
+        For intRowCount = 0 To dtsData.Tables(0).Rows.Count - 1
+            ReturnValue.Add(dtsData.Tables.Item(0).Rows(intRowCount).Item("TableName"))
+        Next
+        Return ReturnValue
     End Function
 
 

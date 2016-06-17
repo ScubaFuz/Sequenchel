@@ -45,17 +45,17 @@ Public Class frmConfiguration
     Private Sub ConfigurationSave()
         If basCode.curStatus.ConnectionChanged = True Then
             basCode.curStatus.ConnectionReload = True
-            basCode.dhdText.SaveXmlFile(xmlConnections, basCode.dhdText.PathConvert(basCode.CheckFilePath(basCode.curVar.ConnectionsFile)), True)
+            basCode.dhdText.SaveXmlFile(basCode.xmlConnections, basCode.dhdText.PathConvert(basCode.CheckFilePath(basCode.curVar.ConnectionsFile)), True)
             basCode.curStatus.ConnectionChanged = False
         End If
         If basCode.curStatus.TableSetChanged = True Then
             basCode.curStatus.TableSetReload = True
-            basCode.dhdText.SaveXmlFile(xmlTableSets, basCode.dhdText.PathConvert(basCode.CheckFilePath(basCode.curVar.TableSetsFile)), True)
+            basCode.dhdText.SaveXmlFile(basCode.xmlTableSets, basCode.dhdText.PathConvert(basCode.CheckFilePath(basCode.curVar.TableSetsFile)), True)
             basCode.curStatus.TableSetChanged = False
         End If
         If basCode.curStatus.TableChanged = True Then
             basCode.curStatus.TableReload = True
-            basCode.dhdText.SaveXmlFile(xmlTables, basCode.dhdText.PathConvert(basCode.CheckFilePath(basCode.curVar.TablesFile)), True)
+            basCode.dhdText.SaveXmlFile(basCode.xmlTables, basCode.dhdText.PathConvert(basCode.CheckFilePath(basCode.curVar.TablesFile)), True)
             basCode.curStatus.TableChanged = False
         End If
     End Sub
@@ -186,7 +186,7 @@ Public Class frmConfiguration
     Private Sub btnConnectionsShow_Click(sender As Object, e As EventArgs) Handles btnConnectionsShow.Click
         CursorControl("Wait")
         WriteStatus("", 0, lblStatusText)
-        DisplayXmlFile(xmlConnections, tvwConnection)
+        DisplayXmlFile(basCode.xmlConnections, tvwConnection)
         CursorControl()
     End Sub
 
@@ -197,7 +197,7 @@ Public Class frmConfiguration
             Dim strSelection As String = lvwConnections.SelectedItems.Item(0).Tag
 
             'Get the ParentNode
-            Dim xNode0 As XmlNode = basCode.dhdText.FindXmlNode(xmlConnections, "Connections")
+            Dim xNode0 As XmlNode = basCode.dhdText.FindXmlNode(basCode.xmlConnections, "Connections")
             'Update all attribuites to False
             Dim xNode As XmlNode
             For Each xNode In xNode0
@@ -205,7 +205,7 @@ Public Class frmConfiguration
             Next
 
             'Slect the correct Node
-            Dim xNode2 As XmlNode = basCode.dhdText.FindXmlNode(xmlConnections, "Connection", "ConnectionName", strSelection)
+            Dim xNode2 As XmlNode = basCode.dhdText.FindXmlNode(basCode.xmlConnections, "Connection", "ConnectionName", strSelection)
             'Update this attribute to true
             xNode2.Attributes("Default").InnerText = "True"
             basCode.curStatus.ConnectionChanged = True
@@ -264,7 +264,7 @@ Public Class frmConfiguration
     Private Sub ConnectionsLoad()
         lvwConnections.Items.Clear()
         Dim lstXml As XmlNodeList
-        lstXml = basCode.dhdText.FindXmlNodes(xmlConnections, "//Connection")
+        lstXml = basCode.dhdText.FindXmlNodes(basCode.xmlConnections, "//Connection")
         If lstXml Is Nothing Then Exit Sub
         Dim xNode As XmlNode
         For Each xNode In lstXml
@@ -297,9 +297,9 @@ Public Class frmConfiguration
             'If CurStatus.Connection <> lvwConnections.SelectedItems.Item(0).Tag Then
             basCode.curStatus.ConnectionReload = True
             basCode.curStatus.Connection = lvwConnections.SelectedItems.Item(0).Tag
-            basCode.LoadConnection(xmlConnections, basCode.curStatus.Connection)
+            basCode.LoadConnection(basCode.xmlConnections, basCode.curStatus.Connection)
             TableSetClear()
-            basCode.LoadTableSetsXml(xmlTableSets)
+            basCode.LoadTableSetsXml(basCode.xmlTableSets)
             'If lstTableSets Is Nothing Then
             '    xmlTableSets.RemoveAll()
             '    xmlTables.RemoveAll()
@@ -307,13 +307,13 @@ Public Class frmConfiguration
             '    TableClear()
             '    Exit Sub
             'End If
-            basCode.LoadTableSet(xmlTableSets, basCode.curStatus.TableSet)
+            basCode.LoadTableSet(basCode.xmlTableSets, basCode.curStatus.TableSet)
             TableSetsLoad()
-            basCode.LoadTables(xmlTables, False)
+            basCode.LoadTables(basCode.xmlTables, False)
             TablesLoad()
             'End If
 
-            Dim xNode As XmlNode = basCode.dhdText.FindXmlNode(xmlConnections, "Connection", "ConnectionName", basCode.curStatus.Connection)
+            Dim xNode As XmlNode = basCode.dhdText.FindXmlNode(basCode.xmlConnections, "Connection", "ConnectionName", basCode.curStatus.Connection)
             tvwConnection.Nodes.Clear()
             DisplayXmlNode(xNode, tvwConnection.Nodes)
             tvwConnection.ExpandAll()
@@ -350,7 +350,7 @@ Public Class frmConfiguration
         If lvwConnections.SelectedItems.Count = 1 Then
             Dim strConnection As String = lvwConnections.SelectedItems.Item(0).Tag
 
-            Dim xNode As XmlNode = basCode.dhdText.FindXmlNode(xmlConnections, "Connection", "ConnectionName", strConnection)
+            Dim xNode As XmlNode = basCode.dhdText.FindXmlNode(basCode.xmlConnections, "Connection", "ConnectionName", strConnection)
             txtConnectionName.Text = xNode.Item("ConnectionName").InnerText
             txtConnectionName.Tag = xNode.Item("ConnectionName").InnerText
             txtDataBaseName.Text = xNode.Item("DataBaseName").InnerText
@@ -378,10 +378,10 @@ Public Class frmConfiguration
     End Sub
 
     Private Sub ConnectionAddOrUpdate()
-        'dhdText.RemoveNode(xmlConnections, "Connections", "ConnectionName", txtConnectionName.Text)
-        Dim root As XmlElement = xmlConnections.DocumentElement
+        'dhdText.RemoveNode(basCode.xmlConnections, "Connections", "ConnectionName", txtConnectionName.Text)
+        Dim root As XmlElement = basCode.xmlConnections.DocumentElement
         If root Is Nothing Then
-            xmlConnections = basCode.dhdText.CreateRootDocument(xmlConnections, "Sequenchel", "Connections", True)
+            basCode.xmlConnections = basCode.dhdText.CreateRootDocument(basCode.xmlConnections, "Sequenchel", "Connections", True)
         End If
 
         If txtConnectionName.Text.Length < 2 Or txtDataLocation.Text.Length < 2 Or txtDataBaseName.Text.Length < 2 Or txtTableSetsFile.Text.Length < 2 Then
@@ -389,9 +389,9 @@ Public Class frmConfiguration
             Exit Sub
         End If
 
-        Dim xCNode As XmlNode = basCode.dhdText.FindXmlNode(xmlConnections, "Connection", "ConnectionName", txtConnectionName.Text)
+        Dim xCNode As XmlNode = basCode.dhdText.FindXmlNode(basCode.xmlConnections, "Connection", "ConnectionName", txtConnectionName.Text)
         If xCNode Is Nothing Then
-            xCNode = basCode.dhdText.CreateAppendElement(xmlConnections.Item("Sequenchel").Item("Connections"), "Connection", Nothing, False)
+            xCNode = basCode.dhdText.CreateAppendElement(basCode.xmlConnections.Item("Sequenchel").Item("Connections"), "Connection", Nothing, False)
         End If
 
         basCode.dhdText.CreateAppendAttribute(xCNode, "Default", "False", True)
@@ -421,7 +421,7 @@ Public Class frmConfiguration
         Dim strSelection As String = txtConnectionName.Text
 
         If strSelection.Length = 0 Then Exit Sub
-        Dim xNode As XmlNode = basCode.dhdText.FindXmlNode(xmlConnections, "Connection", "ConnectionName", strSelection)
+        Dim xNode As XmlNode = basCode.dhdText.FindXmlNode(basCode.xmlConnections, "Connection", "ConnectionName", strSelection)
         If Not xNode Is Nothing Then
             If MessageBox.Show("This will permanently remove the Item: " & strSelection & Environment.NewLine & basCode.Message.strContinue, basCode.Message.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Exit Sub
             xNode.ParentNode.RemoveChild(xNode)
@@ -501,7 +501,7 @@ Public Class frmConfiguration
             Dim strSelection As String = lvwTableSets.SelectedItems.Item(0).Tag
 
             'Get the ParentNode
-            Dim xNode0 As XmlNode = basCode.dhdText.FindXmlNode(xmlTableSets, "TableSets")
+            Dim xNode0 As XmlNode = basCode.dhdText.FindXmlNode(basCode.xmlTableSets, "TableSets")
             'Update all attribuites to False
             Dim xNode As XmlNode
             For Each xNode In xNode0
@@ -509,7 +509,7 @@ Public Class frmConfiguration
             Next
 
             'Slect the correct Node
-            Dim xNode2 As XmlNode = basCode.dhdText.FindXmlNode(xmlTableSets, "TableSet", "TableSetName", strSelection)
+            Dim xNode2 As XmlNode = basCode.dhdText.FindXmlNode(basCode.xmlTableSets, "TableSet", "TableSetName", strSelection)
             'Update this attribute to true
             xNode2.Attributes("Default").InnerText = "True"
 
@@ -525,7 +525,7 @@ Public Class frmConfiguration
     Private Sub btnTableSetsShow_Click(sender As Object, e As EventArgs) Handles btnTableSetsShow.Click
         CursorControl("Wait")
         WriteStatus("", 0, lblStatusText)
-        DisplayXmlFile(xmlTableSets, tvwTableSet)
+        DisplayXmlFile(basCode.xmlTableSets, tvwTableSet)
         CursorControl()
     End Sub
 
@@ -549,7 +549,7 @@ Public Class frmConfiguration
         Dim strSelection As String = txtTableSetName.Text
 
         If strSelection.Length = 0 Then Exit Sub
-        Dim xNode As XmlNode = basCode.dhdText.FindXmlNode(xmlTableSets, "TableSet", "TableSetName", strSelection)
+        Dim xNode As XmlNode = basCode.dhdText.FindXmlNode(basCode.xmlTableSets, "TableSet", "TableSetName", strSelection)
         If Not xNode Is Nothing Then
             If MessageBox.Show("This will permanently remove the Item: " & strSelection & Environment.NewLine & basCode.Message.strContinue, basCode.Message.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Exit Sub
             xNode.ParentNode.RemoveChild(xNode)
@@ -572,10 +572,10 @@ Public Class frmConfiguration
     Private Sub TableSetsLoad()
         lvwTableSets.Items.Clear()
         tvwTableSet.Nodes.Clear()
-        If xmlTableSets.OuterXml.Length = 0 Then Exit Sub
+        If basCode.xmlTableSets.OuterXml.Length = 0 Then Exit Sub
 
         Dim lstXml As XmlNodeList
-        lstXml = basCode.dhdText.FindXmlNodes(xmlTableSets, "//TableSet")
+        lstXml = basCode.dhdText.FindXmlNodes(basCode.xmlTableSets, "//TableSet")
         Dim xNode As XmlNode
         For Each xNode In lstXml
             Dim lsvItem As New ListViewItem
@@ -598,11 +598,11 @@ Public Class frmConfiguration
             If basCode.curStatus.TableSet <> lvwTableSets.SelectedItems.Item(0).Tag Then
                 basCode.curStatus.TableSetReload = True
                 basCode.curStatus.TableSet = lvwTableSets.SelectedItems.Item(0).Tag
-                basCode.LoadTableSet(xmlTableSets, basCode.curStatus.TableSet)
-                basCode.LoadTables(xmlTables, False)
+                basCode.LoadTableSet(basCode.xmlTableSets, basCode.curStatus.TableSet)
+                basCode.LoadTables(basCode.xmlTables, False)
                 TablesLoad()
             End If
-            Dim xNode As XmlNode = basCode.dhdText.FindXmlNode(xmlTableSets, "TableSet", "TableSetName", basCode.curStatus.TableSet)
+            Dim xNode As XmlNode = basCode.dhdText.FindXmlNode(basCode.xmlTableSets, "TableSet", "TableSetName", basCode.curStatus.TableSet)
             tvwTableSet.Nodes.Clear()
             DisplayXmlNode(xNode, tvwTableSet.Nodes)
             tvwTableSet.ExpandAll()
@@ -635,7 +635,7 @@ Public Class frmConfiguration
         If lvwTableSets.SelectedItems.Count = 1 Then
             Dim strSelection As String = lvwTableSets.SelectedItems.Item(0).Tag
 
-            Dim xNode As XmlNode = basCode.dhdText.FindXmlNode(xmlTableSets, "TableSet", "TableSetName", strSelection)
+            Dim xNode As XmlNode = basCode.dhdText.FindXmlNode(basCode.xmlTableSets, "TableSet", "TableSetName", strSelection)
             txtTableSetName.Text = xNode.Item("TableSetName").InnerText
             txtTableSetName.Tag = xNode.Item("TableSetName").InnerText
             txtTablesFile.Text = xNode.Item("TablesFile").InnerText
@@ -647,20 +647,20 @@ Public Class frmConfiguration
     End Sub
 
     Private Sub TableSetAddOrUpdate()
-        'dhdText.RemoveNode(xmlConnections, "Connections", "ConnectionName", txtConnectionName.Text)
+        'dhdText.RemoveNode(basCode.xmlConnections, "Connections", "ConnectionName", txtConnectionName.Text)
         If txtTableSetName.Text.Length < 2 Or txtTablesFile.Text.Length < 2 Then
             WriteStatus(basCode.Message.strAllData, 2, lblStatusText)
             Exit Sub
         End If
 
-        Dim root As XmlElement = xmlTableSets.DocumentElement
+        Dim root As XmlElement = basCode.xmlTableSets.DocumentElement
         If root Is Nothing Then
-            xmlTableSets = basCode.dhdText.CreateRootDocument(xmlTableSets, "Sequenchel", "TableSets", True)
+            basCode.xmlTableSets = basCode.dhdText.CreateRootDocument(basCode.xmlTableSets, "Sequenchel", "TableSets", True)
         End If
 
-        Dim xTNode As XmlNode = basCode.dhdText.FindXmlNode(xmlTableSets, "TableSet", "TableSetName", txtTableSetName.Text)
+        Dim xTNode As XmlNode = basCode.dhdText.FindXmlNode(basCode.xmlTableSets, "TableSet", "TableSetName", txtTableSetName.Text)
         If xTNode Is Nothing Then
-            xTNode = basCode.dhdText.CreateAppendElement(xmlTableSets.Item("Sequenchel").Item("TableSets"), "TableSet", Nothing, False)
+            xTNode = basCode.dhdText.CreateAppendElement(basCode.xmlTableSets.Item("Sequenchel").Item("TableSets"), "TableSet", Nothing, False)
         End If
 
         basCode.dhdText.CreateAppendAttribute(xTNode, "Default", "False", True)
@@ -711,7 +711,7 @@ Public Class frmConfiguration
 
         If CheckSqlVersion(basCode.dhdConnection) = False Then Exit Sub
 
-        Dim lstNewTables As List(Of String) = LoadTablesList(basCode.dhdConnection)
+        Dim lstNewTables As List(Of String) = basCode.LoadTablesList(basCode.dhdConnection)
 
         If lstNewTables Is Nothing Then
             CursorControl()
@@ -786,7 +786,7 @@ Public Class frmConfiguration
             Dim strSelection As String = lvwTables.SelectedItems.Item(0).Tag
 
             'Get the ParentNode
-            Dim xNode0 As XmlNode = basCode.dhdText.FindXmlNode(xmlTables, "Tables")
+            Dim xNode0 As XmlNode = basCode.dhdText.FindXmlNode(basCode.xmlTables, "Tables")
             'Update all attribuites to False
             Dim xNode As XmlNode
             For Each xNode In xNode0
@@ -794,7 +794,7 @@ Public Class frmConfiguration
             Next
 
             'Slect the correct Node
-            Dim xNode2 As XmlNode = basCode.dhdText.FindXmlNode(xmlTables, "Table", "Name", strSelection)
+            Dim xNode2 As XmlNode = basCode.dhdText.FindXmlNode(basCode.xmlTables, "Table", "Name", strSelection)
             'Update this attribute to true
             xNode2.Attributes("Default").InnerText = "True"
             basCode.curStatus.TableChanged = True
@@ -808,7 +808,7 @@ Public Class frmConfiguration
     Private Sub btnTablesShow_Click(sender As Object, e As EventArgs) Handles btnTablesShow.Click
         CursorControl("Wait")
         WriteStatus("", 0, lblStatusText)
-        DisplayXmlFile(xmlTables, tvwTable)
+        DisplayXmlFile(basCode.xmlTables, tvwTable)
         CursorControl()
     End Sub
 
@@ -840,7 +840,7 @@ Public Class frmConfiguration
         Dim strSelection As String = txtTableName.Text
 
         If strSelection.Length = 0 Then Exit Sub
-        Dim xNode As XmlNode = basCode.dhdText.FindXmlNode(xmlTables, "Table", "Name", strSelection)
+        Dim xNode As XmlNode = basCode.dhdText.FindXmlNode(basCode.xmlTables, "Table", "Name", strSelection)
         If Not xNode Is Nothing Then
             If MessageBox.Show("This will permanently remove the Item: " & strSelection & Environment.NewLine & basCode.Message.strContinue, basCode.Message.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Exit Sub
             xNode.ParentNode.RemoveChild(xNode)
@@ -862,10 +862,10 @@ Public Class frmConfiguration
     Private Sub TablesLoad()
         lvwTables.Items.Clear()
         tvwTable.Nodes.Clear()
-        If xmlTables.OuterXml.Length = 0 Then Exit Sub
+        If basCode.xmlTables.OuterXml.Length = 0 Then Exit Sub
 
         Dim lstXml As XmlNodeList
-        lstXml = basCode.dhdText.FindXmlNodes(xmlTables, "//Table")
+        lstXml = basCode.dhdText.FindXmlNodes(basCode.xmlTables, "//Table")
         If lstXml Is Nothing Then Exit Sub
         Dim xNode As XmlNode
         For Each xNode In lstXml
@@ -889,7 +889,7 @@ Public Class frmConfiguration
                 basCode.curStatus.TableReload = True
             End If
 
-            Dim xNode As XmlNode = basCode.dhdText.FindXmlNode(xmlTables, "Table", "Name", basCode.curStatus.Table)
+            Dim xNode As XmlNode = basCode.dhdText.FindXmlNode(basCode.xmlTables, "Table", "Name", basCode.curStatus.Table)
             tvwTable.Nodes.Clear()
             DisplayXmlNode(xNode, tvwTable.Nodes)
             tvwTable.Nodes(0).Expand()
@@ -913,7 +913,7 @@ Public Class frmConfiguration
     End Sub
 
     Private Sub ImportAllTables()
-        Dim lstNewTables As List(Of String) = LoadTablesList(basCode.dhdConnection)
+        Dim lstNewTables As List(Of String) = basCode.LoadTablesList(basCode.dhdConnection)
 
         If lstNewTables Is Nothing Then
             WriteStatus("No tables found", 2, lblStatusText)
@@ -1047,7 +1047,7 @@ Public Class frmConfiguration
         If lvwTables.SelectedItems.Count = 1 Then
             Dim strSelection As String = lvwTables.SelectedItems.Item(0).Tag
 
-            Dim xNode As XmlNode = basCode.dhdText.FindXmlNode(xmlTables, "Table", "Name", strSelection)
+            Dim xNode As XmlNode = basCode.dhdText.FindXmlNode(basCode.xmlTables, "Table", "Name", strSelection)
             If basCode.dhdText.CheckNodeElement(xNode, "Name") Then txtTableName.Tag = xNode.Item("Name").InnerText
             If basCode.dhdText.CheckNodeElement(xNode, "Name") Then txtTableName.Text = xNode.Item("Name").InnerText
             If basCode.dhdText.CheckNodeElement(xNode, "Alias") Then txtTableAlias.Text = xNode.Item("Alias").InnerText
@@ -1060,15 +1060,15 @@ Public Class frmConfiguration
     End Sub
 
     Private Sub TableAddOrUpdate(strTableName As String, strAlias As String, blnVisible As Boolean, blnSearch As Boolean, blnUpdate As Boolean, blnInsert As Boolean, blnDelete As Boolean, Optional blnReload As Boolean = True)
-        Dim root As XmlElement = xmlTables.DocumentElement
+        Dim root As XmlElement = basCode.xmlTables.DocumentElement
         If root Is Nothing Then
-            xmlTables = basCode.dhdText.CreateRootDocument(xmlTables, "Sequenchel", "Tables", True)
+            basCode.xmlTables = basCode.dhdText.CreateRootDocument(basCode.xmlTables, "Sequenchel", "Tables", True)
         End If
 
         If strAlias.Length = 0 Then strAlias = strTableName
 
-        Dim xTNode As XmlNode = basCode.dhdText.FindXmlNode(xmlTables, "Table", "Name", strTableName)
-        If xTNode Is Nothing Then xTNode = basCode.dhdText.CreateAppendElement(xmlTables.Item("Sequenchel").Item("Tables"), "Table")
+        Dim xTNode As XmlNode = basCode.dhdText.FindXmlNode(basCode.xmlTables, "Table", "Name", strTableName)
+        If xTNode Is Nothing Then xTNode = basCode.dhdText.CreateAppendElement(basCode.xmlTables.Item("Sequenchel").Item("Tables"), "Table")
 
         basCode.dhdText.CreateAppendAttribute(xTNode, "Default", "False", True)
         basCode.dhdText.CreateAppendElement(xTNode, "Name", strTableName, True)
@@ -1177,7 +1177,7 @@ Public Class frmConfiguration
         Dim strSelection As String = txtFieldName.Text
 
         If strSelection.Length = 0 Then Exit Sub
-        Dim xNode As XmlNode = basCode.dhdText.FindXmlNode(xmlTables, "Field", "FldName", strSelection)
+        Dim xNode As XmlNode = basCode.dhdText.FindXmlNode(basCode.xmlTables, "Field", "FldName", strSelection)
         If Not xNode Is Nothing Then
             If MessageBox.Show("This will permanently remove the Item: " & strSelection & Environment.NewLine & basCode.Message.strContinue, basCode.Message.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Exit Sub
             xNode.ParentNode.RemoveChild(xNode)
@@ -1234,7 +1234,7 @@ Public Class frmConfiguration
         Next
 
         If strFieldValue.Length > 0 Then
-            Dim xNode As XmlNode = basCode.GetFieldNode(xmlTables, basCode.curStatus.Table, strFieldValue)
+            Dim xNode As XmlNode = basCode.GetFieldNode(basCode.xmlTables, basCode.curStatus.Table, strFieldValue)
             If Not xNode Is Nothing Then
                 'If basCode.dhdText.CheckNodeElement(xNode, "FldName") Then basfield.FieldName = xNode.Item("FldName").InnerText
                 txtFieldName.Text = strFieldValue
@@ -1343,7 +1343,7 @@ Public Class frmConfiguration
                          ControlValue As String, ControlUpdate As Boolean, ControlMode As Boolean, DefaultButton As Boolean, DefaultValue As String, FldList As Boolean, Order As String, Width As String, _
                          FldVisible As Boolean, FldSearch As Boolean, FldSearchList As Boolean, FldUpdate As Boolean, Reload As Boolean)
 
-        Dim xTNode As XmlNode = basCode.dhdText.FindXmlNode(xmlTables, "Table", "Name", TableName)
+        Dim xTNode As XmlNode = basCode.dhdText.FindXmlNode(basCode.xmlTables, "Table", "Name", TableName)
         If xTNode Is Nothing Then
             WriteStatus("The table to which this field belongs was not found", 2, lblStatusText)
             Exit Sub
@@ -1402,7 +1402,7 @@ Public Class frmConfiguration
         Dim strTable As String = txtTableName.Text
         Dim strField As String = txtFieldName.Text
 
-        Dim xTNode As XmlNode = basCode.dhdText.FindXmlNode(xmlTables, "Table", "Name", strTable)
+        Dim xTNode As XmlNode = basCode.dhdText.FindXmlNode(basCode.xmlTables, "Table", "Name", strTable)
         If xTNode Is Nothing Then
             WriteStatus("The table to which this field belongs was not found.", 2, lblStatusText)
             Exit Sub
@@ -1482,7 +1482,7 @@ Public Class frmConfiguration
     Private Sub lstAvailableTemplates_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lstAvailableTemplates.SelectedIndexChanged
         CursorControl("Wait")
         Dim MydbRef As New SDBA.DBRef
-        xmlDoc.LoadXml(MydbRef.GetScript(lstAvailableTemplates.SelectedItem))
+        basCode.xmlTemplates.LoadXml(MydbRef.GetScript(lstAvailableTemplates.SelectedItem))
         TemplateShow()
         CursorControl()
     End Sub
@@ -1490,7 +1490,7 @@ Public Class frmConfiguration
     Private Sub btnUseTemplate_Click(sender As Object, e As EventArgs) Handles btnUseTemplate.Click
         CursorControl("Wait")
         WriteStatus("", 0, lblStatusText)
-        xmlTables = xmlDoc
+        basCode.xmlTables = basCode.xmlTemplates
         basCode.curStatus.TableChanged = True
         ConfigurationSave()
         tabConfiguration.SelectedTab = tpgTables
@@ -1507,7 +1507,7 @@ Public Class frmConfiguration
         loadFile1.Filter = "Sequenchel Config Files|*.xml"
 
         If (loadFile1.ShowDialog() = System.Windows.Forms.DialogResult.OK) And (loadFile1.FileName.Length) > 0 Then
-            xmlDoc.Load(loadFile1.FileName)
+            basCode.xmlTemplates.Load(loadFile1.FileName)
             TemplateShow()
         Else
             tvwSelectedTemplate.Nodes.Clear()
@@ -1535,7 +1535,7 @@ Public Class frmConfiguration
     End Sub
 
     Private Sub TemplateShow()
-        Dim xNode As XmlNode = basCode.dhdText.FindXmlNode(xmlDoc, "Tables")
+        Dim xNode As XmlNode = basCode.dhdText.FindXmlNode(basCode.xmlTemplates, "Tables")
         tvwSelectedTemplate.Nodes.Clear()
         If xNode Is Nothing Then Exit Sub
         DisplayXmlNode(xNode, tvwSelectedTemplate.Nodes)
@@ -1598,7 +1598,7 @@ Public Class frmConfiguration
 
     Private Sub btnShowRelationTables_Click(sender As Object, e As EventArgs) Handles btnShowRelationTables.Click
         CursorControl("Wait")
-        Dim lstFindTables As List(Of String) = basCode.LoadTables(xmlTables, True)
+        Dim lstFindTables As List(Of String) = basCode.LoadTables(basCode.xmlTables, True)
 
         If lstFindTables Is Nothing Then
             CursorControl()
@@ -1653,7 +1653,7 @@ Public Class frmConfiguration
             txtRelatedField.Text = ""
 
             Dim strFieldName As String = txtFieldName.Text
-            Dim xMNode As XmlNode = basCode.dhdText.FindXmlNode(xmlTables, "Table", "Name", txtTableName.Text)
+            Dim xMNode As XmlNode = basCode.dhdText.FindXmlNode(basCode.xmlTables, "Table", "Name", txtTableName.Text)
             If xMNode Is Nothing Then Exit Sub
             Dim xPNode As XmlNode = basCode.dhdText.FindXmlChildNode(xMNode, "Fields/Field", "FldName", txtFieldName.Text)
             If xPNode Is Nothing Then Exit Sub
@@ -1760,7 +1760,7 @@ Public Class frmConfiguration
             strTable = strTable.Substring(strTable.IndexOf("(") + 1, strTable.Length - strTable.IndexOf("(") - 2)
         End If
         Dim lstFindFields As New List(Of String)
-        lstFindFields = basCode.dhdText.LoadItemList(xmlTables, "Table", "Name", strTable, "Field", "FldName")
+        lstFindFields = basCode.dhdText.LoadItemList(basCode.xmlTables, "Table", "Name", strTable, "Field", "FldName")
 
         If lstFindFields Is Nothing Then
             CursorControl()
@@ -1816,7 +1816,7 @@ Public Class frmConfiguration
             Exit Sub
         End If
 
-        Dim xPNode As XmlNode = basCode.dhdText.FindXmlNode(xmlTables, "Table", "Name", basCode.curStatus.Table)
+        Dim xPNode As XmlNode = basCode.dhdText.FindXmlNode(basCode.xmlTables, "Table", "Name", basCode.curStatus.Table)
 
         tvwTable.Nodes.Clear()
         DisplayXmlNode(xPNode, tvwTable.Nodes)
@@ -1830,7 +1830,7 @@ Public Class frmConfiguration
     End Sub
 
     Private Function RelationRemove(strTableSource As String, strFieldSource As String, strRelatedTable As String, strRelatedField As String, blnRemoveOnly As Boolean) As Boolean
-        Dim xPNode As XmlNode = basCode.dhdText.FindXmlNode(xmlTables, "Table", "Name", strTableSource)
+        Dim xPNode As XmlNode = basCode.dhdText.FindXmlNode(basCode.xmlTables, "Table", "Name", strTableSource)
         If xPNode Is Nothing Then
             WriteStatus("The Table " & strTableSource & " was not found. Aborting action", 2, lblStatusText)
             Return False
@@ -1893,7 +1893,7 @@ Public Class frmConfiguration
             Return False
         End If
 
-        Dim xPNode As XmlNode = basCode.dhdText.FindXmlNode(xmlTables, "Table", "Name", strTableSource)
+        Dim xPNode As XmlNode = basCode.dhdText.FindXmlNode(basCode.xmlTables, "Table", "Name", strTableSource)
         If xPNode Is Nothing Then
             WriteStatus("The Table " & strTableSource & " was not found. Aborting action", 2, lblStatusText)
             Return False

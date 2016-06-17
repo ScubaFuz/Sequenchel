@@ -4,13 +4,6 @@ Imports System.IO
 Module SeqCmd
     Friend basCode As SeqCore.BaseCode
 
-    Friend xmlSDBASettings As New XmlDocument
-    Friend xmlGeneralSettings As New XmlDocument
-    Friend xmlConnections As New XmlDocument
-    Friend xmlTableSets As New XmlDocument
-    Friend xmlTables As New XmlDocument
-    Friend xmlReports As New XmlDocument
-
     Friend RunReport As Boolean = False
     Friend RunImport As Boolean = False
     'Friend ConvertToText As Boolean = False
@@ -22,15 +15,15 @@ Module SeqCmd
     Dim lstReports As List(Of String)
 
     Sub Main()
-        ParseCommands()
+        basCode.ParseCommands(My.Application.CommandLineArgs)
         basCode.SetDefaults()
-        Dim strReturn As String = basCode.LoadSDBASettingsXml(xmlSDBASettings)
+        Dim strReturn As String = basCode.LoadSDBASettingsXml(basCode.xmlSDBASettings)
         If strReturn = False Then
             Console.WriteLine(basCode.ErrorMessage)
             Console.ReadLine()
             Exit Sub
         End If
-        Dim strReturnGen As String = basCode.LoadGeneralSettingsXml(xmlGeneralSettings)
+        Dim strReturnGen As String = basCode.LoadGeneralSettingsXml(basCode.xmlGeneralSettings)
         If strReturnGen = False Then
             Console.WriteLine(basCode.ErrorMessage)
             Console.ReadLine()
@@ -38,9 +31,9 @@ Module SeqCmd
         End If
 
         LoadConnections()
-        basCode.LoadConnection(xmlConnections, basCode.curStatus.Connection)
+        basCode.LoadConnection(basCode.xmlConnections, basCode.curStatus.Connection)
         LoadTableSets()
-        basCode.LoadTableSet(xmlTableSets, basCode.curStatus.TableSet)
+        basCode.LoadTableSet(basCode.xmlTableSets, basCode.curStatus.TableSet)
         LoadTables()
 
         If RunImport = True AndAlso basCode.dhdText.ImportFile.Length > 0 AndAlso basCode.curStatus.Table.Length > 0 Then
@@ -74,7 +67,7 @@ Module SeqCmd
             Dim strExportFile As String = basCode.GetExportFileName(basCode.dhdText.ExportFile)
             Console.WriteLine("Exporting Report: " & basCode.curStatus.Report & " to " & strExportFile)
             LoadReports()
-            Dim strQuery As String = basCode.ReportQueryBuild(xmlReports, xmlTables, basCode.curStatus.Report, basCode.curVar.DateTimeStyle)
+            Dim strQuery As String = basCode.ReportQueryBuild(basCode.xmlReports, basCode.xmlTables, basCode.curStatus.Report, basCode.curVar.DateTimeStyle)
             Dim dtsData As DataSet = basCode.QueryDb(basCode.dhdConnection, strQuery, True, 5)
             'If dtsData Is Nothing Then Environment.Exit(0)
             basCode.ExportFile(dtsData, strExportFile, basCode.curVar.ConvertToText, basCode.curVar.ConvertToNull, basCode.curVar.ShowFile, basCode.curVar.HasHeaders, basCode.curVar.Delimiter, basCode.curVar.QuoteValues, basCode.curVar.CreateDir)
@@ -89,81 +82,9 @@ Module SeqCmd
         End If
     End Sub
 
-    Friend Sub ParseCommands()
-        Dim intLength As Integer = 0
-
-        For Each Command As String In My.Application.CommandLineArgs
-            Dim intPosition As Integer = Command.IndexOf(":")
-            Dim strInput As String = ""
-            If intPosition < 0 Then
-                intPosition = Command.Length
-            Else
-                strInput = Command.Substring(intPosition + 1, Command.Length - (intPosition + 1))
-            End If
-            Dim strCommand As String = Command.ToLower.Substring(0, intPosition)
-            Select Case strCommand
-                Case "/silent"
-                    'Start wihtout any windows / forms
-                Case "/debug"
-                    basCode.curVar.DebugMode = True
-                    'Case "/control"
-                    '    CurStatus.Status = CurrentStatus.StatusList.ControlSearch
-                Case "/dev"
-                    basCode.curVar.DevMode = True
-                    'Case "/noencryption"
-                    '    CurVar.Encryption = False
-                Case "/securityoverride"
-                    If Command.Length > intPosition + 1 Then
-                        basCode.curVar.OverridePassword = basCode.dhdText.MD5Encrypt(Command.Substring(intPosition + 1, Command.Length - (intPosition + 1)))
-                    End If
-                Case "/report"
-                    'Run Report
-                    RunReport = True
-                Case "/connection"
-                    'Use the chosen connection
-                    basCode.curStatus.Connection = strInput
-                Case "/tableset"
-                    'Use the chosen TableSet
-                    basCode.curStatus.TableSet = strInput
-                Case "/table"
-                    'Use the chosen Table
-                    basCode.curStatus.Table = strInput
-                    ImportTable = strInput
-                Case "/reportname"
-                    'Open the report if found
-                    basCode.curStatus.Report = strInput
-                Case "/exportfile"
-                    'Export the report to the chosen file
-                    basCode.dhdText.ExportFile = strInput
-                Case "/import"
-                    'Run Import
-                    RunImport = True
-                Case "/importfile"
-                    'Export the report to the chosen file
-                    basCode.dhdText.ImportFile = strInput
-                Case "/converttotext"
-                    'Export the report to the chosen file
-                    basCode.curVar.ConvertToText = strInput
-                Case "/converttonull"
-                    'Export the report to the chosen file
-                    basCode.curVar.ConvertToNull = strInput
-                Case "/hasheaders"
-                    'Export the report to the chosen file
-                    basCode.curVar.HasHeaders = strInput
-                Case "/delimiter"
-                    'Export the report to the chosen file
-                    basCode.curVar.Delimiter = strInput
-                Case "/emailrecipient"
-                    'Export the report to the chosen file
-                    basCode.dhdText.SmtpRecipient = strInput
-            End Select
-        Next
-
-    End Sub
-
     Friend Sub LoadConnections()
         Console.WriteLine("Loading Connection: " & basCode.curStatus.Connection)
-        lstConnections = basCode.LoadConnections(xmlConnections)
+        lstConnections = basCode.LoadConnections(basCode.xmlConnections)
         If lstConnections Is Nothing Then Environment.Exit(0)
         If lstConnections.Contains(basCode.curStatus.Connection) = False Or basCode.curStatus.Connection = "" Then
             If basCode.curVar.ConnectionDefault.Length > 0 Then
@@ -179,7 +100,7 @@ Module SeqCmd
 
     Friend Sub LoadTableSets()
         Console.WriteLine("Loading TableSet: " & basCode.curStatus.TableSet)
-        lstTableSets = basCode.LoadTableSets(xmlTableSets)
+        lstTableSets = basCode.LoadTableSets(basCode.xmlTableSets)
         If lstTableSets Is Nothing Then Exit Sub
         If lstTableSets.Contains(basCode.curStatus.TableSet) = False Or basCode.curStatus.TableSet = "" Then
             If basCode.curVar.TableSetDefault.Length > 0 Then
@@ -195,7 +116,7 @@ Module SeqCmd
 
     Friend Sub LoadTables()
         Console.WriteLine("Loading Table: " & basCode.curStatus.Table)
-        lstTables = basCode.LoadTables(xmlTables, False)
+        lstTables = basCode.LoadTables(basCode.xmlTables, False)
         If lstTables Is Nothing Then Exit Sub
         If basCode.curVar.TableDefault = basCode.curStatus.Table And ImportTable <> basCode.curStatus.Table And ImportTable <> "" Then
             Console.WriteLine("The specified Table was not found. please check your settings")
@@ -205,7 +126,7 @@ Module SeqCmd
     End Sub
 
     Friend Sub LoadReports()
-        lstReports = basCode.LoadReports(xmlReports)
+        lstReports = basCode.LoadReports(basCode.xmlReports)
         If lstReports Is Nothing Then Environment.Exit(0)
         If lstReports.Contains(basCode.curStatus.Report) = False Or basCode.curStatus.Report = "" Then
             Console.WriteLine("The specified Report was not found. please check your settings")

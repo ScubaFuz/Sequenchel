@@ -312,7 +312,7 @@
         End If
 
         If blnSettingsChanged = True Then
-            If basCode.SaveSDBASettingsXml(xmlSDBASettings) = False Then
+            If basCode.SaveSDBASettingsXml(basCode.xmlSDBASettings) = False Then
                 WriteStatus("Error saving settings file. please check the log.", 1, lblStatusText)
             Else
                 WriteStatus("Settings file saved", 0, lblStatusText)
@@ -321,7 +321,7 @@
 
         End If
         If blnGeneralSettingsChanged = True Then
-            If basCode.SaveGeneralSettingsXml(xmlGeneralSettings) = False Then
+            If basCode.SaveGeneralSettingsXml(basCode.xmlGeneralSettings) = False Then
                 WriteStatus("Error saving settings file. please check the log.", 1, lblStatusText)
             Else
                 WriteStatus("Settings file saved", 0, lblStatusText)
@@ -599,7 +599,7 @@
         Else
             basCode.dhdText.AutoDelete = False
         End If
-        If basCode.SaveGeneralSettingsXml(xmlGeneralSettings) = False Then
+        If basCode.SaveGeneralSettingsXml(basCode.xmlGeneralSettings) = False Then
             WriteStatus("General Settings file not saved. Please check the log.", 1, lblStatusText)
         Else
             WriteStatus("General Settings file saved.", 0, lblStatusText)
@@ -846,7 +846,7 @@
                     Exit Sub
                 End If
             End If
-            If basCode.SaveGeneralSettingsXml(xmlGeneralSettings) = False Then
+            If basCode.SaveGeneralSettingsXml(basCode.xmlGeneralSettings) = False Then
                 WriteStatus("General Settings file not saved. Please check the log.", 1, lblStatusText)
             Else
                 WriteStatus("General Settings file saved.", 0, lblStatusText)
@@ -856,7 +856,7 @@
         Catch ex As Exception
             basCode.WriteLog("An error occured saving database settings: " & ex.Message, 1)
             WriteStatus("Error saving database settings. Please check the log.", 1, lblStatusText)
-            basCode.LoadGeneralSettingsXml(xmlGeneralSettings)
+            basCode.LoadGeneralSettingsXml(basCode.xmlGeneralSettings)
             DatabaseShow()
             WriteStatus("Error saving database settings. Please check the log.", 1, lblStatusText)
         End Try
@@ -1509,7 +1509,7 @@
         basCode.dhdText.SmtpReply = txtSmtpReply.Text
         basCode.dhdText.SmtpPort = txtSmtpPortNumber.Text
         basCode.dhdText.SmtpSsl = chkUseSslEncryption.Checked
-        If basCode.SaveGeneralSettingsXml(xmlGeneralSettings) = False Then
+        If basCode.SaveGeneralSettingsXml(basCode.xmlGeneralSettings) = False Then
             WriteStatus("Error saving Settings file. Please check the log.", 1, lblStatusText)
         Else
             WriteStatus("Settings file saved.", 0, lblStatusText)

@@ -2,6 +2,7 @@
 Imports System.Xml
 
 Public Class frmSequenchel
+    Private dtsTable As New DataSet
 
     Private Sub frmSequenchel_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         System.Windows.Forms.Application.CurrentCulture = New System.Globalization.CultureInfo("EN-US")
@@ -25,12 +26,12 @@ Public Class frmSequenchel
         lblLicense.Text = "Licensed to: " & basCode.curVar.LicenseName
         lblLicense.Left = Me.Width - lblLicense.Width - (basCode.curVar.BuildMargin * 5)
 
-        If basCode.LoadSDBASettingsXml(xmlSDBASettings) = False Then
-            If basCode.SaveSDBASettingsXml(xmlSDBASettings) = False Then WriteStatus("There was an error loading the main settings. please check the logfile", 1, lblStatusText)
+        If basCode.LoadSDBASettingsXml(basCode.xmlSDBASettings) = False Then
+            If basCode.SaveSDBASettingsXml(basCode.xmlSDBASettings) = False Then WriteStatus("There was an error loading the main settings. please check the logfile", 1, lblStatusText)
         End If
         SetTimer()
         SecuritySet()
-        If basCode.LoadGeneralSettingsXml(xmlGeneralSettings) = False Then WriteStatus("There was an error loading the settings. please check the logfile", 1, lblStatusText)
+        If basCode.LoadGeneralSettingsXml(basCode.xmlGeneralSettings) = False Then WriteStatus("There was an error loading the settings. please check the logfile", 1, lblStatusText)
         LoadConnections()
 
         If basCode.curVar.SecurityOverride = True Then Me.Text &= " SecurityOverride"
@@ -55,7 +56,7 @@ Public Class frmSequenchel
             If Not cbxConnection.SelectedItem Is Nothing Then
                 If basCode.curStatus.Connection <> cbxConnection.SelectedItem Then
                     basCode.curStatus.Connection = cbxConnection.SelectedItem
-                    basCode.LoadConnection(xmlConnections, basCode.curStatus.Connection)
+                    basCode.LoadConnection(basCode.xmlConnections, basCode.curStatus.Connection)
                 End If
             End If
         End If
@@ -67,7 +68,7 @@ Public Class frmSequenchel
             If Not cbxTableSet.SelectedItem Is Nothing Then
                 If basCode.curStatus.TableSet <> cbxTableSet.SelectedItem Then
                     basCode.curStatus.TableSet = cbxTableSet.SelectedItem
-                    basCode.LoadTableSet(xmlTableSets, basCode.curStatus.TableSet)
+                    basCode.LoadTableSet(basCode.xmlTableSets, basCode.curStatus.TableSet)
                 End If
             End If
         End If
@@ -219,7 +220,7 @@ Public Class frmSequenchel
         If cbxConnection.SelectedIndex > -1 Then
             CursorControl("Wait")
             basCode.curStatus.Connection = cbxConnection.SelectedItem
-            basCode.LoadConnection(xmlConnections, basCode.curStatus.Connection)
+            basCode.LoadConnection(basCode.xmlConnections, basCode.curStatus.Connection)
             basCode.curStatus.TableSet = ""
             LoadTableSets()
             CursorControl()
@@ -236,7 +237,7 @@ Public Class frmSequenchel
         If cbxTableSet.SelectedIndex > -1 Then
             CursorControl("Wait")
             basCode.curStatus.TableSet = cbxTableSet.SelectedItem
-            basCode.LoadTableSet(xmlTableSets, basCode.curStatus.TableSet)
+            basCode.LoadTableSet(basCode.xmlTableSets, basCode.curStatus.TableSet)
             basCode.curStatus.Table = ""
             LoadTables()
             CursorControl()
@@ -255,7 +256,7 @@ Public Class frmSequenchel
             basCode.curStatus.Table = cbxTable.SelectedItem
             LoadTable(basCode.curStatus.Table)
             SortColumns()
-            SearchListLoad(cbxTable.SelectedItem)
+            SearchListLoad()
             CursorControl()
         End If
     End Sub
@@ -302,46 +303,29 @@ Public Class frmSequenchel
         End If
     End Sub
 
-    Private Sub btnReload_Click(sender As Object, e As EventArgs)
-        WriteStatus("", 0, lblStatusText)
-        Dim strReload As String = sender.name.ToString.Substring(3, sender.name.ToString.Length - 3)
-        LoadSearchCriteria(strReload)
-    End Sub
-
     Private Sub btnDefault_Click(sender As Object, e As EventArgs)
         WriteStatus("", 0, lblStatusText)
         Dim strDefault As String = sender.name.ToString.Substring(3, sender.name.ToString.Length - 3)
         LoadDefaultValue(strDefault)
     End Sub
 
-    Private Sub cbxRelatedField_SelectedIndexChanged(sender As Object, e As EventArgs)
-        WriteStatus("", 0, lblStatusText)
-        Dim strRelatedField As String = sender.FieldRelatedField
-        Dim strSelectedItem As String = sender.SelectedItem.ToString.Substring(0, sender.SelectedItem.ToString.IndexOf("|") - 1)
-        For intFieldCount As Integer = 0 To tblTable.Count - 1
-            If tblTable.Item(intFieldCount).FieldName = strRelatedField Then
-                tblTable.Item(intFieldCount).Text = strSelectedItem
-            End If
-        Next
-    End Sub
-
 #End Region
 
     Private Sub AllClear(intLevel As Integer)
         If intLevel >= 4 Then
-            If basCode.curStatus.ConnectionsReload = True Then xmlConnections.RemoveAll()
+            If basCode.curStatus.ConnectionsReload = True Then basCode.xmlConnections.RemoveAll()
             basCode.curVar.TableSetsFile = ""
             cbxConnection.Items.Clear()
             cbxConnection.Text = ""
         End If
         If intLevel >= 3 Then
-            If basCode.curStatus.TableSetsReload = True Then xmlTableSets.RemoveAll()
+            If basCode.curStatus.TableSetsReload = True Then basCode.xmlTableSets.RemoveAll()
             basCode.curVar.TablesFile = ""
             cbxTableSet.Items.Clear()
             cbxTableSet.Text = ""
         End If
         If intLevel >= 2 Then
-            If basCode.curStatus.TablesReload = True Then xmlTables.RemoveAll()
+            If basCode.curStatus.TablesReload = True Then basCode.xmlTables.RemoveAll()
             cbxTable.Items.Clear()
             cbxTable.Text = ""
         End If
@@ -353,7 +337,7 @@ Public Class frmSequenchel
     Private Sub FieldsDispose()
         basCode.curStatus.SuspendActions = True
 
-        TableClear()
+        'TableClear()
         basCode.TableClear()
         'arrLabels.Clear()
         PanelControlsDispose(sptFields1.Panel1)
@@ -375,7 +359,7 @@ Public Class frmSequenchel
 
     Private Sub LoadConnections()
         AllClear(4)
-        Dim lstConnections As List(Of String) = basCode.LoadConnections(xmlConnections)
+        Dim lstConnections As List(Of String) = basCode.LoadConnections(basCode.xmlConnections)
         If lstConnections Is Nothing Then
             basCode.UseMainConnection()
             Exit Sub
@@ -388,7 +372,7 @@ Public Class frmSequenchel
 
     Private Sub LoadTableSets()
         AllClear(3)
-        Dim lstTableSets As List(Of String) = basCode.LoadTableSets(xmlTableSets)
+        Dim lstTableSets As List(Of String) = basCode.LoadTableSets(basCode.xmlTableSets)
         If lstTableSets Is Nothing Then Exit Sub
         For Each lstItem As String In lstTableSets
             cbxTableSet.Items.Add(lstItem)
@@ -398,7 +382,7 @@ Public Class frmSequenchel
 
     Private Sub LoadTables()
         AllClear(2)
-        Dim lstTables As List(Of String) = basCode.LoadTables(xmlTables, False)
+        Dim lstTables As List(Of String) = basCode.LoadTables(basCode.xmlTables, False)
         If lstTables Is Nothing Then Exit Sub
         For Each lstItem As String In lstTables
             cbxTable.Items.Add(lstItem)
@@ -409,7 +393,7 @@ Public Class frmSequenchel
     Friend Sub LoadTable(strTable As String)
         Try
             FieldsDispose()
-            If basCode.LoadTable(xmlTables, strTable) = False Then
+            If basCode.LoadTable(basCode.xmlTables, strTable) = False Then
                 WriteStatus("Loading the table " & strTable & " failed. Check your configuration", 2, lblStatusText)
                 Exit Sub
             End If
@@ -922,13 +906,6 @@ Public Class frmSequenchel
         CursorControl()
     End Sub
 
-    Private Sub btnLoadSearchCriteria_Click(sender As Object, e As EventArgs) Handles btnLoadSearchCriteria.Click
-        CursorControl("Wait")
-        WriteStatus("", 0, lblStatusText)
-        LoadSearchCriteria()
-        CursorControl()
-    End Sub
-
     Private Sub btnSearch_Click(sender As Object, e As EventArgs) Handles btnSearch.Click
         CursorControl("Wait")
         WriteStatus("", 0, lblStatusText)
@@ -1038,7 +1015,7 @@ Public Class frmSequenchel
         CursorControl("Wait")
         SearchDelete(True)
         SearchAdd()
-        If SaveXmlFile(xmlSearch, basCode.curVar.SearchFile, True) = False Then
+        If SaveXmlFile(basCode.xmlSearch, basCode.curVar.SearchFile, True) = False Then
             WriteStatus("The file " & basCode.curVar.SearchFile & " was not saved.", 1, lblStatusText)
         Else
             If cbxSearch.Items.Contains(cbxSearch.Text) = False Then cbxSearch.Items.Add(cbxSearch.Text)
@@ -1059,12 +1036,12 @@ Public Class frmSequenchel
         End If
         CursorControl("Wait")
         SearchDelete(False)
-        If SaveXmlFile(xmlSearch, basCode.curVar.SearchFile, True) = False Then
+        If SaveXmlFile(basCode.xmlSearch, basCode.curVar.SearchFile, True) = False Then
             WriteStatus("The file " & basCode.curVar.SearchFile & " was not saved.", 1, lblStatusText)
         Else
             WriteStatus("Search deleted", 0, lblStatusText)
         End If
-        SearchListLoad(tblTable.TableName)
+        SearchListLoad()
         FieldsClearAll(True)
         cbxSearch.SelectedIndex = -1
         cbxSearch.Text = ""
@@ -1257,7 +1234,7 @@ Public Class frmSequenchel
                         strValue = fldField.Text
                     End If
                     Dim strName As String = fldField.Name
-                    strQuery &= " AND " & FormatFieldWhere1(fldField.Field.FieldName, fldField.Field.FieldTableAlias, fldField.Field.FieldWidth, fldField.Field.FieldDataType, strValue)
+                    strQuery &= " AND " & basCode.FormatFieldWhere(fldField.Field.FieldName, fldField.Field.FieldTableAlias, fldField.Field.FieldWidth, fldField.Field.FieldDataType, strValue)
                     'For intCount As Integer = 0 To basCode.basTable.Count - 1
                     '    If basCode.basTable.Item(intField).Name = strName Then
                     '        strQuery &= " AND " & FormatFieldWhere1(basCode.basTable.Item(intField).FieldName, basCode.basTable.Item(intField).TableAlias, basCode.basTable.Item(intField).FieldWidth, basCode.basTable.Item(intField).FieldDataType, strValue)
@@ -1337,8 +1314,7 @@ Public Class frmSequenchel
         If basCode.curStatus.SuspendActions = False Then
             FieldsClear()
             If dgvTable1.SelectedRows.Count = 1 Then
-                SelectedItem = dgvTable1.SelectedRows(0)
-                LoadItem(SelectedItem)
+                LoadItem(dgvTable1.SelectedRows(0))
             End If
             ButtonHandle()
         End If
@@ -1441,19 +1417,19 @@ Public Class frmSequenchel
         FieldsEnable()
     End Sub
 
-    Private Sub LoadSearchCriteria(Optional strCriterium As String = "")
-        If basCode.dhdConnection.DataBaseOnline = True Then
-            Dim strQuery2 As String = " WHERE 1=1 ", strQuery3 As String = ""
-            For intField As Integer = 0 To tblTable.Count - 1
-                strQuery = ""
-                strQuery2 = " WHERE 1=1 "
-                strQuery3 = ""
-                If tblTable.Item(intField).Category = 5 Or tblTable.Item(intField).Category = 6 Then
-                    tblTable.Item(intField).RunSearch()
-                End If
-            Next
-        End If
-    End Sub
+    'Private Sub LoadSearchCriteria(Optional strCriterium As String = "")
+    '    If basCode.dhdConnection.DataBaseOnline = True Then
+    '        Dim strQuery2 As String = " WHERE 1=1 ", strQuery3 As String = ""
+    '        For intField As Integer = 0 To tblTable.Count - 1
+    '            strQuery = ""
+    '            strQuery2 = " WHERE 1=1 "
+    '            strQuery3 = ""
+    '            If tblTable.Item(intField).Category = 5 Or tblTable.Item(intField).Category = 6 Then
+    '                tblTable.Item(intField).RunSearch()
+    '            End If
+    '        Next
+    '    End If
+    'End Sub
 
     'Private Sub LoadRelatedSearchCriteria(Optional strCriterium As String = "", Optional blnRefine As Boolean = False)
     '    If dhdConnection.DataBaseOnline = True Then
@@ -1798,12 +1774,12 @@ Public Class frmSequenchel
 
     Private Sub SearchAdd()
 
-        Dim root As XmlElement = xmlSearch.DocumentElement
+        Dim root As XmlElement = basCode.xmlSearch.DocumentElement
         If root Is Nothing Then
-            xmlTables = basCode.dhdText.CreateRootDocument(xmlSearch, "Sequenchel", "Searches", True)
+            basCode.xmlTables = basCode.dhdText.CreateRootDocument(basCode.xmlSearch, "Sequenchel", "Searches", True)
         End If
 
-        Dim NewNode As XmlNode = basCode.dhdText.CreateAppendElement(xmlSearch.Item("Sequenchel").Item("Searches"), "Search")
+        Dim NewNode As XmlNode = basCode.dhdText.CreateAppendElement(basCode.xmlSearch.Item("Sequenchel").Item("Searches"), "Search")
         basCode.dhdText.CreateAppendElement(NewNode, "TableName", basCode.basTable.TableName)
         basCode.dhdText.CreateAppendElement(NewNode, "SearchName", cbxSearch.Text)
 
@@ -1816,7 +1792,7 @@ Public Class frmSequenchel
         For Each ctrl As Object In sptFields1.Panel2.Controls
             If ctrl.BackColor = clrMarked Then
 
-                Dim newAttribute1 As XmlAttribute = xmlSearch.CreateAttribute("FieldName")
+                Dim newAttribute1 As XmlAttribute = basCode.xmlSearch.CreateAttribute("FieldName")
                 newAttribute1.Value = ctrl.Field.FieldName
 
                 Select Case ctrl.Field.FieldDataType.ToUpper
@@ -1831,10 +1807,10 @@ Public Class frmSequenchel
         Next
     End Sub
 
-    Private Sub SearchListLoad(strTable As String)
+    Private Sub SearchListLoad()
         cbxSearch.Text = ""
         cbxSearch.Items.Clear()
-        Dim lstSearches As List(Of String) = basCode.LoadSearches(xmlSearch, basCode.basTable.TableName)
+        Dim lstSearches As List(Of String) = basCode.LoadSearches(basCode.xmlSearch, basCode.basTable.TableName)
         If lstSearches Is Nothing Then Exit Sub
         For Each lstItem As String In lstSearches
             cbxSearch.Items.Add(lstItem)
@@ -1845,7 +1821,7 @@ Public Class frmSequenchel
         Dim strSelection As String = cbxSearch.Text
 
         If strSelection.Length = 0 Then Exit Sub
-        Dim xNode As XmlNode = basCode.dhdText.FindXmlNode(xmlSearch, "Search", "SearchName", strSelection)
+        Dim xNode As XmlNode = basCode.dhdText.FindXmlNode(basCode.xmlSearch, "Search", "SearchName", strSelection)
         If Not xNode Is Nothing Then
             If UpdateMode = False Then
                 If MessageBox.Show("This will permanently remove the Item: " & strSelection & Environment.NewLine & basCode.Message.strContinue, basCode.Message.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Exit Sub
@@ -1860,7 +1836,7 @@ Public Class frmSequenchel
         Dim strFieldName As String = "", strFieldValue As String = ""
 
         If strSelection.Length = 0 Then Exit Sub
-        Dim xPNode As XmlNode = basCode.dhdText.FindXmlNode(xmlSearch, "Search", "SearchName", strSelection)
+        Dim xPNode As XmlNode = basCode.dhdText.FindXmlNode(basCode.xmlSearch, "Search", "SearchName", strSelection)
         If Not xPNode Is Nothing Then
 
             If basCode.dhdText.CheckNodeElement(xPNode, "UseTop") Then chkUseTop.Checked = xPNode.Item("UseTop").InnerText

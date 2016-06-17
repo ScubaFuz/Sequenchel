@@ -1,5 +1,6 @@
 ﻿
 Public Class frmImport
+    Private dtsImport As New DataSet
 
     Private Sub frmImport_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         LoadDefaults()
@@ -226,7 +227,7 @@ Public Class frmImport
 
         dhdDB.DataLocation = txtServer.Text
         dhdDB.DatabaseName = txtDatabase.Text
-        dhdDB.DataTableName = basCode.GetTableNameFromAlias(xmlTables, txtTable.Text)
+        dhdDB.DataTableName = basCode.GetTableNameFromAlias(basCode.xmlTables, txtTable.Text)
         dhdDB.DataProvider = "SQL"
         If chkWinAuth.Checked = True Then
             dhdDB.LoginMethod = "Windows"

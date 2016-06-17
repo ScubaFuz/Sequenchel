@@ -7,50 +7,8 @@ Imports System.Environment.SpecialFolder
 
 Module Common
     Friend ErrorMode As Boolean = False
-
     Friend strErrorMessage As String = ""
     Friend strQuery As String = Nothing
-
-    'Friend Core As New SeqCore.Core
-    Friend Excel As New SeqCore.Excel
-    'Friend basCode As New SeqCore.Data
-
-    Friend xmlDoc As New XmlDocument
-    Friend xmlSDBASettings As New XmlDocument
-    Friend xmlGeneralSettings As New XmlDocument
-    Friend xmlConnections As New XmlDocument
-    Friend xmlTableSets As New XmlDocument
-    Friend xmlTables As New XmlDocument
-    Friend xmlReports As New XmlDocument
-    Friend xmlSearch As New XmlDocument
-
-    Friend tblTable As New Table
-    'Friend arrLabels As New LabelArray
-    Friend dtsTable As New DataSet
-    Friend dtsReport As New DataSet
-    Friend dtsImport As New DataSet
-
-    Friend clrOriginal As Color = System.Drawing.SystemColors.Window
-    Friend clrControl As Color = System.Drawing.SystemColors.Control
-    Friend clrDisabled As Color = System.Drawing.SystemColors.ControlLight
-    Friend clrMarked As Color = System.Drawing.Color.LightSkyBlue
-    Friend clrWarning As Color = System.Drawing.Color.IndianRed
-    Friend clrEmpty As Color = System.Drawing.Color.LemonChiffon
-
-    Friend strReport As String = "Sequenchel " & vbTab & " version: " & basCode.GetVersion("B") & "  Licensed by: " & basCode.curVar.LicenseName
-    Friend dtmElapsedTime As DateTime
-    Friend tmsElapsedTime As TimeSpan
-
-    Private _SelectedItem As DataGridViewRow
-
-    Public Property SelectedItem() As System.Windows.Forms.DataGridViewRow
-        Get
-            Return _SelectedItem
-        End Get
-        Set(ByVal Value As System.Windows.Forms.DataGridViewRow)
-            _SelectedItem = Value
-        End Set
-    End Property
 
     Public Sub FieldTextHandler(sender As Object)
         If basCode.curStatus.SuspendActions = False Then
@@ -143,36 +101,6 @@ Module Common
         End Select
         Return blnReturn
     End Function
-
-    'Public Sub LabelClickHandler(sender As Object)
-    '    Dim lblTemp As Label = sender
-    '    For intField As Integer = 0 To tblTable.Count - 1
-    '        If tblTable.Item(intField).Name = lblTemp.Name.Substring(3, lblTemp.Name.Length - 3) Then
-    '            If tblTable.Item(intField).Enabled = True Then
-    '                If tblTable.Item(intField).BackColor = clrMarked Then
-    '                    If tblTable.Item(intField).FieldDataType = "BIT" Then
-    '                        tblTable.Item(intField).backColor = clrControl
-    '                    Else
-    '                        tblTable.Item(intField).backColor = clrOriginal
-    '                    End If
-    '                Else
-    '                    tblTable.Item(intField).BackColor = clrMarked
-    '                End If
-    '            End If
-    '        End If
-    '    Next
-    'End Sub
-
-    Friend Sub TableClear()
-        tblTable.Clear()
-        tblTable.TableName = ""
-        tblTable.TableAlias = ""
-        tblTable.TableVisible = False
-        tblTable.TableSearch = False
-        tblTable.TableUpdate = False
-        tblTable.TableInsert = False
-        tblTable.TableDelete = False
-    End Sub
 
     Friend Function GetSaveFileName(strFileName As String) As String
         If basCode.curVar.IncludeDate = True Then
@@ -290,7 +218,6 @@ Module Common
         Return True
     End Function
 
-
 #End Region
 
 #Region "Database"
@@ -402,7 +329,7 @@ Module Common
 
     Friend Function ClearDBLog(ByVal dtmDate As Date) As Boolean
         strQuery = ""
-        strQuery = "exec usp_LoggingHandle 'Del','" & FormatDate(dtmDate) & "'"
+        strQuery = "exec usp_LoggingHandle 'Del','" & basCode.FormatDate(dtmDate) & "'"
 
         Try
             basCode.QueryDb(basCode.dhdMainDB, strQuery, False)
@@ -412,33 +339,6 @@ Module Common
             Return False
         End Try
         Return True
-    End Function
-
-    Friend Function LoadTablesList(ByVal dhdConnect As DataHandler.db, Optional blnCrawlViews As Boolean = True) As List(Of String)
-        strQuery = "SELECT "
-        strQuery &= " sch.[name] + '.' + "
-        strQuery &= " tbl.[name] AS TableName FROM sys.tables tbl"
-        strQuery &= " INNER JOIN sys.schemas sch"
-        strQuery &= " ON tbl.[schema_id] = sch.[schema_id]"
-        If blnCrawlViews = True Then
-            strQuery &= " UNION SELECT "
-            strQuery &= " sch.[name] + '.' + "
-            strQuery &= " vw.[name] AS TableName FROM sys.views vw"
-            strQuery &= " INNER JOIN sys.schemas sch"
-            strQuery &= " ON vw.[schema_id] = sch.[schema_id]"
-        End If
-        strQuery &= " ORDER BY TableName"
-
-        CursorControl("Wait")
-
-        Dim dtsData As DataSet = basCode.QueryDb(dhdConnect, strQuery, True)
-        If basCode.dhdText.DatasetCheck(dtsData) = False Then Return Nothing
-
-        Dim ReturnValue As New List(Of String)
-        For intRowCount = 0 To dtsData.Tables(0).Rows.Count - 1
-            ReturnValue.Add(dtsData.Tables.Item(0).Rows(intRowCount).Item("TableName"))
-        Next
-        Return ReturnValue
     End Function
 
     Friend Function ScheduleCreate(JobName As String, SqlCommand As String, FreqType As Integer, FreqInterval As Integer, FreqSubType As Integer, FreqSubTypeInt As Integer, StartTime As Integer, EndTime As Integer, OutputPath As String) As Boolean
@@ -522,133 +422,6 @@ Module Common
 
 #End Region
 
-#Region "DataTypes"
-
-    Friend Function FormatFieldWhere(strFieldName As String, strTableName As String, strFieldWidth As String, strFieldType As String, strFieldValue As String) As String
-        Dim strOutput As String = ""
-        Select Case strFieldType.ToUpper
-            Case "CHAR"
-                If strFieldValue = "NULL" Or strFieldValue = "" Then
-                    strOutput = " (COALESCE([" & strTableName.Replace(".", "].[") & "].[" & strFieldName & "],'') = '') "
-                Else
-                    strOutput = " ([" & strTableName.Replace(".", "].[") & "].[" & strFieldName & "] IN ('" & Replace(strFieldValue, ",", "','") & "') OR [" & tblTable.TableName.Replace(".", "].[") & "].[" & strFieldName & "] LIKE '%" & strFieldValue & "%')"
-                End If
-            Case "INTEGER"
-                If strFieldValue = "NULL" Or strFieldValue = "" Then
-                    strOutput = " (COALESCE([" & strTableName.Replace(".", "].[") & "].[" & strFieldName & "],0) = 0) "
-                Else
-                    strOutput = " ([" & tblTable.TableName.Replace(".", "].[") & "].[" & strFieldName & "] IN (" & strFieldValue & ") OR [" & tblTable.TableName.Replace(".", "].[") & "].[" & strFieldName & "] LIKE '%" & strFieldValue & "%')"
-                End If
-            Case "DATETIME"
-                If strFieldValue = "NULL" Or strFieldValue = "" Then
-                    strOutput = " (COALESCE([" & strTableName.Replace(".", "].[") & "].[" & strFieldName & "],0) = 0) "
-                Else
-                    strOutput = " ((CONVERT([nvarchar](" & strFieldWidth & "), [" & strTableName.Replace(".", "].[") & "].[" & strFieldName & "], " & basCode.curVar.DateTimeStyle & ")) IN ('" & strFieldValue.Replace(",", "','") & "') OR (CONVERT([nvarchar](" & strFieldWidth & "), [" & strTableName.Replace(".", "].[") & "].[" & strFieldName & "], " & basCode.curVar.DateTimeStyle & ")) LIKE '%" & strFieldValue & "%')"
-                End If
-            Case "BINARY", "XML", "GEO", "TEXT", "GUID", "TIME", "TIMESTAMP"
-                If strFieldValue = "NULL" Or strFieldValue = "" Then
-                    strOutput = " (COALESCE([" & strTableName.Replace(".", "].[") & "].[" & strFieldName & "],'') = '') "
-                Else
-                    strOutput = " ((CONVERT([nvarchar](" & strFieldWidth & "), [" & strTableName.Replace(".", "].[") & "].[" & strFieldName & "])) IN (" & strFieldValue.Replace(",", "','") & ") OR (CONVERT([nvarchar](" & strFieldWidth & "), [" & strTableName.Replace(".", "].[") & "].[" & strFieldName & "])) LIKE '%" & strFieldValue & "%')"
-                End If
-            Case "BIT"
-                If strFieldValue = 0 Then
-                    strOutput = " (COALESCE([" & strTableName.Replace(".", "].[") & "].[" & strFieldName & "],0) = 0) "
-                Else
-                    strOutput = " [" & strTableName.Replace(".", "].[") & "].[" & strFieldName & "] = " & strFieldValue
-                End If
-            Case "IMAGE"
-                'do nothing. cannot search on an image data type.
-            Case Else
-                'try the default CHAR action
-                If strFieldValue = "NULL" Or strFieldValue = "" Then
-                    strOutput = " (COALESCE([" & strTableName.Replace(".", "].[") & "].[" & strFieldName & "],'') = '') "
-                Else
-                    strOutput = " ([" & strTableName.Replace(".", "].[") & "].[" & strFieldName & "] IN ('" & Replace(strFieldValue, ",", "','") & "') OR [" & tblTable.TableName.Replace(".", "].[") & "].[" & strFieldName & "] LIKE '%" & strFieldValue & "%')"
-                End If
-        End Select
-        Return strOutput
-    End Function
-
-    Friend Function FormatFieldWhere1(strFieldName As String, strTableAlias As String, strFieldWidth As String, strFieldType As String, strFieldValue As String) As String
-        Dim strOutput As String = ""
-        Dim strTableField As String = " [" & strTableAlias.Replace(".", "].[") & "].[" & strFieldName & "]"
-
-        If strFieldValue = "NULL" Or strFieldValue = "" Then
-            Select Case strFieldType.ToUpper
-                Case "CHAR", "BINARY", "XML", "GEO", "TEXT", "GUID", "TIME", "TIMESTAMP"
-                    strOutput = " (COALESCE(" & strTableField & ",'') = '') " & Environment.NewLine
-                Case "INTEGER", "DATETIME", "BIT"
-                    strOutput = " (COALESCE(" & strTableField & ",0) = 0) " & Environment.NewLine
-                Case "IMAGE"
-                    'do nothing. cannot search on an image data type.
-                Case Else
-                    'try the default CHAR action
-                    strOutput = " (COALESCE(" & strTableField & ",'') = '') " & Environment.NewLine
-            End Select
-            Return strOutput
-        Else
-            If strFieldValue.Contains(",") Then
-                strFieldValue = strFieldValue.Trim(",")
-                If strFieldValue.Length = 0 Then Return strOutput
-                Select Case strFieldType.ToUpper
-                    Case "CHAR", "BINARY", "XML", "GEO", "TEXT", "GUID", "TIME", "TIMESTAMP"
-                        strOutput = " (" & strTableField & " IN ('" & Replace(strFieldValue, ",", "','") & "'))" & Environment.NewLine
-                    Case "INTEGER", "BIT"
-                        strOutput = " (" & strTableField & " IN (" & strFieldValue & "))" & Environment.NewLine
-                    Case "DATETIME"
-                        strOutput = " ((CONVERT([nvarchar](" & strFieldWidth & "), " & strTableField & ", " & basCode.curVar.DateTimeStyle & ")) IN ('" & strFieldValue.Replace(",", "','") & "'))" & Environment.NewLine
-                    Case "IMAGE"
-                        'do nothing. cannot search on an image data type.
-                    Case Else
-                        'try the default CHAR action
-                        strOutput = " (" & strTableField & " IN ('" & Replace(strFieldValue, ",", "','") & "'))" & Environment.NewLine
-                End Select
-                Return strOutput
-            Else
-                If strFieldValue.Trim().Contains(" ") Then
-                    Dim strArgs As String() = strFieldValue.Trim().Split(New String() {" "}, StringSplitOptions.RemoveEmptyEntries)
-                    For Each strArg As String In strArgs
-                        If strArg IsNot Nothing AndAlso strArg.Trim().Length > 0 Then
-                            strOutput &= " AND (" & strTableField & " LIKE ('%" & strArg.Trim() & "%'))" & Environment.NewLine
-                        End If
-                    Next
-                    Dim strTest As String = strOutput.Substring(0, 4)
-                    If strOutput.Substring(0, 4) = " AND" Then
-                        'if the value starts with AND, remove it.
-                        strOutput = strOutput.Remove(0, 4)
-                    End If
-                    Return strOutput
-                Else
-
-                    Select Case strFieldType.ToUpper
-                        Case "CHAR"
-                            strOutput = " (" & strTableField & " LIKE '%" & strFieldValue & "%')"
-                        Case "INTEGER"
-                            strOutput = " (" & strTableField & " LIKE '%" & strFieldValue & "%')"
-                        Case "DATETIME"
-                            strOutput = " (CONVERT([nvarchar](" & strFieldWidth & "), " & strTableField & ", " & basCode.curVar.DateTimeStyle & ")) LIKE '%" & strFieldValue & "%')"
-                        Case "BINARY", "XML", "GEO", "TEXT", "GUID", "TIME", "TIMESTAMP"
-                            strOutput = " (CONVERT([nvarchar](" & strFieldWidth & "), " & strTableField & ")) LIKE '%" & strFieldValue & "%')"
-                        Case "BIT"
-                            strOutput = " (COALESCE(" & strTableField & ",0) = " & strFieldValue & ") "
-                        Case "IMAGE"
-                            'do nothing. cannot search on an image data type.
-                        Case Else
-                            'try the default CHAR action
-                            strOutput = " (" & strTableField & " LIKE '%" & strFieldValue & "%')"
-                    End Select
-                    Return strOutput
-
-                End If
-            End If
-        End If
-
-        Return strOutput
-    End Function
-
-#End Region
-
     Friend Sub MasterPanelControlsDispose(pnlMaster As Panel, Optional strTag As String = "")
         For Each pnlTarget In pnlMaster.Controls
             If pnlTarget.Name.Substring(0, 3) = "pnl" Then
@@ -680,22 +453,6 @@ Module Common
     End Sub
 
 #Region "Formatting"
-
-    Friend Function FormatDate(ByVal dtmInput As Date) As String
-        If dtmInput = Nothing Then
-            FormatDate = ""
-        Else
-            FormatDate = dtmInput.ToString("yyyy-MM-dd")
-        End If
-    End Function
-
-    Friend Function FormatDateTime(ByVal dtmInput As Date) As String
-        If dtmInput = Nothing Then
-            FormatDateTime = ""
-        Else
-            FormatDateTime = dtmInput.ToString("yyyyMMdd_HHmm")
-        End If
-    End Function
 
     Friend Sub CursorControl(Optional strStyle As String = "Default")
         ShutdownDelay()

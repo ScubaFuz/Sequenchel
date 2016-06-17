@@ -25,13 +25,13 @@
         CursorControl("Wait")
         If cbxConnection.SelectedIndex >= -1 Then
             basCode.curStatus.Connection = cbxConnection.SelectedItem
-            basCode.LoadConnection(xmlConnections, basCode.curStatus.Connection)
+            basCode.LoadConnection(basCode.xmlConnections, basCode.curStatus.Connection)
             LoadTables()
             PanelsClear()
             txtSourceTable.Text = ""
             txtTargetTable.Text = ""
-            'dhdText.FindXmlNode(xmlConnections, "Connection", "DatabasdeName", strConnection)
-            'Dim xmlConnNode As xmlnode = xmlConnections.SelectSingleNode("\\Connection", "descendant::Connection[DataBaseName='" & strConnection & "']")
+            'dhdText.FindXmlNode(basCode.xmlConnections, "Connection", "DatabasdeName", strConnection)
+            'Dim xmlConnNode As xmlnode = basCode.xmlConnections.SelectSingleNode("\\Connection", "descendant::Connection[DataBaseName='" & strConnection & "']")
             'dhdConnection.DatabaseName = strConnection
         End If
         CursorControl()
@@ -328,15 +328,15 @@
 #End Region
 
     Private Sub LoadConnections()
-        Dim lstConnections As List(Of String) = basCode.LoadConnections(xmlConnections)
+        Dim lstConnections As List(Of String) = basCode.LoadConnections(basCode.xmlConnections)
         If lstConnections Is Nothing Then
             'AllClear(4)
-            xmlConnections.RemoveAll()
-            xmlTableSets.RemoveAll()
+            basCode.xmlConnections.RemoveAll()
+            basCode.xmlTableSets.RemoveAll()
             basCode.curVar.TableSetsFile = ""
-            xmlTables.RemoveAll()
+            basCode.xmlTables.RemoveAll()
             basCode.curVar.TablesFile = ""
-            TableClear()
+            basCode.TableClear()
             basCode.dhdConnection = basCode.dhdMainDB
             Exit Sub
         End If
@@ -354,7 +354,7 @@
     Private Sub CrawlTables(blnCrawlViews As Boolean, lstTarget As ListBox)
         If CheckSqlVersion(basCode.dhdConnection) = False Then Exit Sub
 
-        Dim lstNewTables As List(Of String) = LoadTablesList(basCode.dhdConnection, blnCrawlViews)
+        Dim lstNewTables As List(Of String) = basCode.LoadTablesList(basCode.dhdConnection, blnCrawlViews)
 
         If lstNewTables Is Nothing Then
             lblStatusText.Text = "No tables found"

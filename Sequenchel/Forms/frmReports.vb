@@ -1,6 +1,10 @@
 ﻿Imports System.Xml
 
 Public Class frmReports
+    Private dtsReport As New DataSet
+    Private dtmElapsedTime As DateTime
+    Private tmsElapsedTime As TimeSpan
+
     Private mousePath As System.Drawing.Drawing2D.GraphicsPath
     Private fontSize As Integer = 20
 
@@ -23,11 +27,11 @@ Public Class frmReports
         If cbxConnection.SelectedIndex <> -1 Then
             basCode.curStatus.Connection = cbxConnection.SelectedItem
             If Not basCode.curStatus.Connection = Nothing Then
-                basCode.LoadConnection(xmlConnections, basCode.curStatus.Connection)
+                basCode.LoadConnection(basCode.xmlConnections, basCode.curStatus.Connection)
                 If cbxTableSet.SelectedIndex <> -1 Then
                     basCode.curStatus.TableSet = cbxTableSet.SelectedItem
                     If Not basCode.curStatus.TableSet = Nothing Then
-                        basCode.LoadTableSet(xmlTableSets, basCode.curStatus.TableSet)
+                        basCode.LoadTableSet(basCode.xmlTableSets, basCode.curStatus.TableSet)
                     End If
                 End If
             End If
@@ -76,7 +80,7 @@ Public Class frmReports
         If cbxConnection.SelectedIndex >= -1 Then
             CursorControl("Wait")
             basCode.curStatus.Connection = cbxConnection.SelectedItem
-            basCode.LoadConnection(xmlConnections, basCode.curStatus.Connection)
+            basCode.LoadConnection(basCode.xmlConnections, basCode.curStatus.Connection)
             LoadTableSets()
             CursorControl()
         End If
@@ -92,7 +96,7 @@ Public Class frmReports
         If cbxTableSet.SelectedIndex >= -1 Then
             CursorControl("Wait")
             basCode.curStatus.TableSet = cbxTableSet.SelectedItem
-            basCode.LoadTableSet(xmlTableSets, basCode.curStatus.TableSet)
+            basCode.LoadTableSet(basCode.xmlTableSets, basCode.curStatus.TableSet)
             LoadTables()
             LoadTableFields()
             ReportsLoad()
@@ -178,7 +182,7 @@ Public Class frmReports
         Dim strFieldName As String = Nothing
         strFieldName = sender.Tag
 
-        Dim xNode As XmlNode = basCode.dhdText.FindXmlNode(xmlTables, "Table", "Name", strFieldName.Substring(0, strFieldName.LastIndexOf(".")))
+        Dim xNode As XmlNode = basCode.dhdText.FindXmlNode(basCode.xmlTables, "Table", "Name", strFieldName.Substring(0, strFieldName.LastIndexOf(".")))
         Dim xCNode As XmlNode = basCode.dhdText.FindXmlChildNode(xNode, "Fields/Field", "FldName", strFieldName.Substring(strFieldName.LastIndexOf(".") + 1, strFieldName.Length - (strFieldName.LastIndexOf(".") + 1)))
         Dim strFieldType As String = xCNode.Item("DataType").InnerText
 
@@ -248,14 +252,14 @@ Public Class frmReports
 
     Private Sub LoadConnections()
         AllClear(4)
-        Dim lstConnections As List(Of String) = basCode.LoadConnections(xmlConnections)
+        Dim lstConnections As List(Of String) = basCode.LoadConnections(basCode.xmlConnections)
         If lstConnections Is Nothing Then
-            xmlConnections.RemoveAll()
-            xmlTableSets.RemoveAll()
+            basCode.xmlConnections.RemoveAll()
+            basCode.xmlTableSets.RemoveAll()
             basCode.curVar.TableSetsFile = ""
-            xmlTables.RemoveAll()
+            basCode.xmlTables.RemoveAll()
             basCode.curVar.TablesFile = ""
-            TableClear()
+            basCode.TableClear()
             basCode.dhdConnection = basCode.dhdMainDB
             Exit Sub
         End If
@@ -267,12 +271,12 @@ Public Class frmReports
 
     Private Sub LoadTableSets()
         AllClear(3)
-        Dim lstTableSets As List(Of String) = basCode.LoadTableSets(xmlTableSets)
+        Dim lstTableSets As List(Of String) = basCode.LoadTableSets(basCode.xmlTableSets)
         If lstTableSets Is Nothing Then
-            xmlTableSets.RemoveAll()
-            xmlTables.RemoveAll()
+            basCode.xmlTableSets.RemoveAll()
+            basCode.xmlTables.RemoveAll()
             basCode.curVar.TablesFile = ""
-            TableClear()
+            basCode.TableClear()
             Exit Sub
         End If
         For Each lstItem As String In lstTableSets
@@ -283,9 +287,9 @@ Public Class frmReports
 
     Private Sub LoadTables()
         AllClear(2)
-        Dim lstTables As List(Of String) = basCode.LoadTables(xmlTables, False)
+        Dim lstTables As List(Of String) = basCode.LoadTables(basCode.xmlTables, False)
         If lstTables Is Nothing Then
-            xmlTables.RemoveAll()
+            basCode.xmlTables.RemoveAll()
             Exit Sub
         End If
         For Each lstItem As String In lstTables
@@ -295,7 +299,7 @@ Public Class frmReports
     End Sub
 
     Private Sub LoadTableFields()
-        For Each TableNode As Xml.XmlNode In xmlTables.SelectNodes("//Field")
+        For Each TableNode As Xml.XmlNode In basCode.xmlTables.SelectNodes("//Field")
             Dim lsvItem As New ListViewItem
             lsvItem.Tag = TableNode.Item("DataType").InnerText
             'lsvItem.Tag = TableNode.ParentNode.ParentNode.Item("Name").InnerText
@@ -393,7 +397,7 @@ Public Class frmReports
     End Sub
 
     Private Sub FieldAdd(strFieldName As String, strFieldAlias As String, strTableAlias As String)
-        Dim xNode As XmlNode = basCode.dhdText.FindXmlNode(xmlTables, "Table", "Name", strFieldName.Substring(0, strFieldName.LastIndexOf(".")))
+        Dim xNode As XmlNode = basCode.dhdText.FindXmlNode(basCode.xmlTables, "Table", "Name", strFieldName.Substring(0, strFieldName.LastIndexOf(".")))
         Dim xCNode As XmlNode = basCode.dhdText.FindXmlChildNode(xNode, "Fields/Field", "FldName", strFieldName.Substring(strFieldName.LastIndexOf(".") + 1, strFieldName.Length - (strFieldName.LastIndexOf(".") + 1)))
         Dim strFieldType As String = xCNode.Item("DataType").InnerText
 
@@ -573,7 +577,7 @@ Public Class frmReports
                 cbxTarget.Items.Add("OR")
                 cbxTarget.Items.Add("OR NOT")
             Case "RelationField"
-                Dim lstFields As List(Of String) = basCode.dhdText.LoadItemList(xmlTables, "Table", "Name", strSource, "Field", "FldName")
+                Dim lstFields As List(Of String) = basCode.dhdText.LoadItemList(basCode.xmlTables, "Table", "Name", strSource, "Field", "FldName")
                 If lstFields Is Nothing Then Exit Sub
                 For Each lstItem As String In lstFields
                     cbxTarget.Items.Add(lstItem)
@@ -877,7 +881,7 @@ Public Class frmReports
     End Sub
 
     Private Sub RelationsLoad(strTable As String)
-        Dim xPNode As System.Xml.XmlNode = basCode.dhdText.FindXmlNode(xmlTables, "Table", "Name", strTable)
+        Dim xPNode As System.Xml.XmlNode = basCode.dhdText.FindXmlNode(basCode.xmlTables, "Table", "Name", strTable)
         Dim xmlFieldList As System.Xml.XmlNodeList = basCode.dhdText.FindXmlChildNodes(xPNode, "Fields/Field/Relations", "Relation")
         Dim intCount As Integer = 0
         For Each xmlCNode As System.Xml.XmlNode In xmlFieldList
@@ -1004,7 +1008,7 @@ Public Class frmReports
         If strReportName = "" Then strReportName = "TempReport"
         'ReportAdd(xmlReportShow, strReportName)
         ReportToXML(xmlReportShow, strReportName)
-        strQuery = basCode.ReportQueryBuild(xmlReportShow, xmlTables, strReportName, basCode.curVar.DateTimeStyle)
+        strQuery = basCode.ReportQueryBuild(xmlReportShow, basCode.xmlTables, strReportName, basCode.curVar.DateTimeStyle)
         If strQuery = Nothing Then
             WriteStatus("No fields were selected. Select at least 1 field to be shown in your report", 2, lblStatusText)
             Return False
@@ -1059,11 +1063,11 @@ Public Class frmReports
             Exit Sub
         End If
         ReportDelete(cbxReportName.Text)
-        ReportToXML(xmlReports, cbxReportName.Text)
+        ReportToXML(basCode.xmlReports, cbxReportName.Text)
         'ReportAdd(xmlReports, cbxReportName.Text)
         If Not cbxReportName.Items.Contains(cbxReportName.Text) Then cbxReportName.Items.Add(cbxReportName.Text)
 
-        If SaveXmlFile(xmlReports, basCode.curVar.ReportSetFile, True) = False Then
+        If SaveXmlFile(basCode.xmlReports, basCode.curVar.ReportSetFile, True) = False Then
             WriteStatus("The file " & basCode.curVar.ReportSetFile & " was not saved. please check the log.", 1, lblStatusText)
         Else
             WriteStatus("Report Saved", 0, lblStatusText)
@@ -1088,7 +1092,7 @@ Public Class frmReports
         cbxReportName.Text = ""
         ReportFieldsDispose(False)
 
-        If SaveXmlFile(xmlReports, basCode.curVar.ReportSetFile, True) = False Then
+        If SaveXmlFile(basCode.xmlReports, basCode.curVar.ReportSetFile, True) = False Then
             WriteStatus("The file " & basCode.curVar.ReportSetFile & " was not saved. please check the log.", 1, lblStatusText)
         Else
             WriteStatus("Report Deleted", 0, lblStatusText)
@@ -1102,7 +1106,7 @@ Public Class frmReports
         PanelsSuspendLayout()
         If cbxReportName.SelectedIndex >= 0 Then
             ReportFieldsDispose(False)
-            ReportLoad(xmlReports, cbxReportName.SelectedItem)
+            ReportLoad(basCode.xmlReports, cbxReportName.SelectedItem)
         End If
         pnlSelectedFieldsMain.Focus()
         pnlSelectedFieldsMain.Invalidate()
@@ -1118,7 +1122,7 @@ Public Class frmReports
         End If
         CursorControl("Wait")
         ReportFieldsDispose(False)
-        ReportLoad(xmlReports, cbxReportName.SelectedItem)
+        ReportLoad(basCode.xmlReports, cbxReportName.SelectedItem)
         CursorControl()
     End Sub
 
@@ -1146,9 +1150,9 @@ Public Class frmReports
     Private Sub ReportsLoad()
         cbxReportName.Items.Clear()
         cbxReportName.Text = ""
-        Dim lstReports As List(Of String) = basCode.LoadReports(xmlReports)
+        Dim lstReports As List(Of String) = basCode.LoadReports(basCode.xmlReports)
         If lstReports Is Nothing Then
-            xmlReports.RemoveAll()
+            basCode.xmlReports.RemoveAll()
             Exit Sub
         End If
         For Each lstItem As String In lstReports
@@ -1291,7 +1295,7 @@ Public Class frmReports
                 End If
                 If basCode.dhdText.CheckNodeElement(xRNode, "RelationTargetTable") Then strTargetTable = xRNode.Item("RelationTargetTable").InnerText
                 If basCode.dhdText.CheckNodeElement(xRNode, "RelationTargetAlias") Then strTargetTableAlias = xRNode.Item("RelationTargetAlias").InnerText
-                If basCode.dhdText.CheckNodeElement(xRNode, "RelationTargetField") Then strTargetField = basCode.GetFieldAliasFromName(xmlTables, strTargetTable, xRNode.Item("RelationTargetField").InnerText)
+                If basCode.dhdText.CheckNodeElement(xRNode, "RelationTargetField") Then strTargetField = basCode.GetFieldAliasFromName(basCode.xmlTables, strTargetTable, xRNode.Item("RelationTargetField").InnerText)
                 If strTargetTableAlias = "" Then strTargetTableAlias = strTargetTable
 
                 If intRelationNumber = 1 Then
@@ -1569,7 +1573,7 @@ Public Class frmReports
                     Dim strTable As String = basCode.GetTableNameFromString(GetCtrText(pnlRelationsTargetTable, strTableName, intControlNumber))
                     basCode.dhdText.CreateAppendElement(NewRelationNode, "RelationTargetTable", strTable)
                     basCode.dhdText.CreateAppendElement(NewRelationNode, "RelationTargetAlias", basCode.GetTableAliasFromString(GetCtrText(pnlRelationsTargetTable, strTableName, intControlNumber)))
-                    basCode.dhdText.CreateAppendElement(NewRelationNode, "RelationTargetField", basCode.GetFieldNameFromAlias(xmlTables, strTable, GetCtrText(pnlRelationsTargetField, strTableName, intControlNumber)))
+                    basCode.dhdText.CreateAppendElement(NewRelationNode, "RelationTargetField", basCode.GetFieldNameFromAlias(basCode.xmlTables, strTable, GetCtrText(pnlRelationsTargetField, strTableName, intControlNumber)))
                     basCode.dhdText.CreateAppendElement(NewRelationNode, "RelationJoinType", GetCtrText(pnlRelationsJoinType, strTableName, intControlNumber))
                 End If
             Next
@@ -1578,7 +1582,7 @@ Public Class frmReports
     End Function
 
     Private Sub ReportDelete(strSelection As String)
-        basCode.dhdText.RemoveNode(xmlReports, "Report", "ReportName", strSelection)
+        basCode.dhdText.RemoveNode(basCode.xmlReports, "Report", "ReportName", strSelection)
     End Sub
 
     Private Sub SaveQuery()
@@ -1813,7 +1817,7 @@ Public Class frmReports
                     strBody &= Environment.NewLine & basCode.dhdText.DataSetToHtml(dtsReport)
                 Case "Excel"
                     strTargetName &= ".xlsx"
-                    Excel.CreateExcelDocument(dtsReport, strTargetName)
+                    basCode.Excel.CreateExcelDocument(dtsReport, strTargetName)
                 Case "XML"
                     strTargetName &= ".xml"
                     basCode.dhdText.ExportDataSetToXML(basCode.dhdMainDB.ConvertToText(dtsReport), strTargetName)

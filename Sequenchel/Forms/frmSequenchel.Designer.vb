@@ -66,7 +66,6 @@ Partial Class frmSequenchel
         Me.chkUseTop = New System.Windows.Forms.CheckBox()
         Me.btnLoadList = New System.Windows.Forms.Button()
         Me.btnExportList = New System.Windows.Forms.Button()
-        Me.btnLoadSearchCriteria = New System.Windows.Forms.Button()
         Me.btnSearch = New System.Windows.Forms.Button()
         Me.btnUpdate = New System.Windows.Forms.Button()
         Me.btnClear = New System.Windows.Forms.Button()
@@ -383,7 +382,6 @@ Partial Class frmSequenchel
         Me.pnlFooterControls.Controls.Add(Me.chkUseTop)
         Me.pnlFooterControls.Controls.Add(Me.btnLoadList)
         Me.pnlFooterControls.Controls.Add(Me.btnExportList)
-        Me.pnlFooterControls.Controls.Add(Me.btnLoadSearchCriteria)
         Me.pnlFooterControls.Controls.Add(Me.btnSearch)
         Me.pnlFooterControls.Controls.Add(Me.btnUpdate)
         Me.pnlFooterControls.Controls.Add(Me.btnClear)
@@ -485,17 +483,6 @@ Partial Class frmSequenchel
         Me.btnExportList.TabIndex = 10
         Me.btnExportList.Text = "Export List to File"
         Me.btnExportList.UseVisualStyleBackColor = True
-        '
-        'btnLoadSearchCriteria
-        '
-        Me.btnLoadSearchCriteria.Enabled = False
-        Me.btnLoadSearchCriteria.Location = New System.Drawing.Point(612, 6)
-        Me.btnLoadSearchCriteria.Name = "btnLoadSearchCriteria"
-        Me.btnLoadSearchCriteria.Size = New System.Drawing.Size(135, 23)
-        Me.btnLoadSearchCriteria.TabIndex = 7
-        Me.btnLoadSearchCriteria.Text = "(Re)Load Search Criteria"
-        Me.btnLoadSearchCriteria.UseVisualStyleBackColor = True
-        Me.btnLoadSearchCriteria.Visible = False
         '
         'btnSearch
         '
@@ -678,7 +665,6 @@ Partial Class frmSequenchel
     Friend WithEvents chkUseTop As System.Windows.Forms.CheckBox
     Friend WithEvents btnLoadList As System.Windows.Forms.Button
     Friend WithEvents btnExportList As System.Windows.Forms.Button
-    Friend WithEvents btnLoadSearchCriteria As System.Windows.Forms.Button
     Friend WithEvents btnSearch As System.Windows.Forms.Button
     Friend WithEvents btnUpdate As System.Windows.Forms.Button
     Friend WithEvents btnClear As System.Windows.Forms.Button

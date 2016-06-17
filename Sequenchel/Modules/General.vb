@@ -2,6 +2,14 @@
     Friend basCode As New SeqCore.BaseCode
 
     Friend tmrShutdown As New Timers.Timer
+    'Friend strReport As String = "Sequenchel " & vbTab & " version: " & basCode.GetVersion("B") & "  Licensed by: " & basCode.curVar.LicenseName
+
+    Friend clrOriginal As Color = System.Drawing.SystemColors.Window
+    Friend clrControl As Color = System.Drawing.SystemColors.Control
+    Friend clrDisabled As Color = System.Drawing.SystemColors.ControlLight
+    Friend clrMarked As Color = System.Drawing.Color.LightSkyBlue
+    Friend clrWarning As Color = System.Drawing.Color.IndianRed
+    Friend clrEmpty As Color = System.Drawing.Color.LemonChiffon
 
 #Region "General"
     Friend Sub LoadLicense(lblTarget As Label)
@@ -10,8 +18,7 @@
         Else
             WriteStatus("License loaded succesfully", 2, lblTarget)
         End If
-        strReport = "Sequenchel " & vbTab & " version: " & basCode.GetVersion("B") & vbTab & "  Licensed to: " & basCode.curVar.LicenseName
-
+        'strReport = "Sequenchel " & vbTab & " version: " & basCode.GetVersion("B") & vbTab & "  Licensed to: " & basCode.curVar.LicenseName
     End Sub
 
     Friend Sub WriteStatus(strStatusText As String, intStatusLevel As Integer, lblTarget As Label)
