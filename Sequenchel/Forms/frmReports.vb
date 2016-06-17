@@ -34,8 +34,13 @@ Public Class frmReports
         End If
     End Sub
 
-    Private Sub btnClose_Click(sender As Object, e As EventArgs) Handles btnClose.Click
+    Private Sub mnuReportsFileClose_Click(sender As Object, e As EventArgs) Handles mnuReportsFileClose.Click
         Me.Close()
+    End Sub
+
+    Private Sub mnuReportsHelpManual_Click(sender As Object, e As EventArgs) Handles mnuReportsHelpManual.Click
+        WriteStatus("", 0, lblStatusText)
+        System.Diagnostics.Process.Start("http://www.sequenchel.com/service/manual/reports/report-definition/")
     End Sub
 
     Private Sub btnTest_Click(sender As Object, e As EventArgs) Handles btnTest.Click
@@ -123,7 +128,7 @@ Public Class frmReports
 
             MasterPanelControlsDispose(pnlSelectedFields, lvwItem.Name)
             PanelsFieldSort()
-            ReportTableRemove(lvwItem.Tag)
+            ReportTableRemove(lvwItem.Text)
 
             ResizeColumns()
         Next
@@ -438,8 +443,10 @@ Public Class frmReports
         chkNewShow.Tag = strFieldName
         'chkNewShow.ThreeState = True
         pnlReportDisplay.Controls.Add(chkNewShow)
+        chkNewShow.Checked = True
         chkNewShow.Top = ((lvwSelectedFields.Items.Count - 1) * basCode.CurVar.FieldHeight) + ((lvwSelectedFields.Items.Count - 1) * basCode.CurVar.BuildMargin)
         chkNewShow.Left = basCode.CurVar.BuildMargin
+        AddHandler chkNewShow.CheckedChanged, AddressOf Me.chkShowField_CheckChanged
 
         Dim cbxNewShowMode As New ComboField
         cbxNewShowMode.Name = pnlReportShowMode.Name & "1" & strFieldName
@@ -587,6 +594,12 @@ Public Class frmReports
                         cbxTarget.Items.Add(lvwItem.SubItems(1).Text)
                     End If
                 Next
+                For Each lvwItem As ListViewItem In lvwSelectedFields.Items
+                    If lvwItem.Text = strSource Then
+                        cbxTarget.Items.Add(lvwItem.SubItems(1).Text)
+                    End If
+                Next
+                cbxTarget.Sorted = True
             Case "JoinType"
                 cbxTarget.Items.Clear()
                 cbxTarget.Items.Add("")
@@ -702,9 +715,15 @@ Public Class frmReports
         Dim intMaxNumber As Integer = 0
         basCode.CurStatus.ReportMaxTop = basCode.CurVar.BuildMargin
         For incCount As Integer = 0 To lstSource.Items.Count - 1
-            strFieldName = lstSource.Items.Item(incCount).Name
+            Dim strColumnName As String = lstSource.Columns(1).Text
+            If strColumnName = "Table Name" Then
+                strFieldName = lstSource.Items.Item(incCount).SubItems(1).Text
+            Else
+                strFieldName = lstSource.Items.Item(incCount).Name
+            End If
             intMaxNumber = 0
             For Each ctrControl In pnlTarget.Controls
+                'Dim strControl As String = ctrControl.Tag
                 If ctrControl.Tag = strFieldName Then
                     intControlNumber = ctrControl.Name.ToString.Substring(ctrControl.Name.ToString.Length - strFieldName.Length - 1, 1)
                     If SinglePanel = True And intControlNumber = 1 Then
@@ -722,7 +741,7 @@ Public Class frmReports
 
                 End If
             Next
-            basCode.CurStatus.ReportMaxTop += intMaxNumber * basCode.CurVar.FieldHeight + intMaxNumber * basCode.CurVar.BuildMargin
+            basCode.curStatus.ReportMaxTop += intMaxNumber * basCode.curVar.FieldHeight + intMaxNumber * basCode.curVar.BuildMargin
         Next
     End Sub
 
@@ -737,6 +756,7 @@ Public Class frmReports
             lvwAddItem.Name = strTable & "_" & strAlias
             lvwAddItem.Tag = strTable
             lvwAddItem.Text = strAlias
+            lvwAddItem.SubItems.Add(strTable)
             lvwSelectedTables.Items.Add(lvwAddItem)
             RelationLabelAdd(strTable, strAlias)
             RelationUseAdd(strTable, 0)
@@ -754,19 +774,23 @@ Public Class frmReports
         End If
     End Sub
 
-    Private Sub ReportTableRemove(strTable As String)
+    Private Sub ReportTableRemove(strTableAlias As String)
         'Dim strTabel As String = strFieldName.Substring(0, strFieldName.LastIndexOf("."))
         Dim strTableRemove As String = ""
         Dim intCount As Integer = 0
-        Dim lvwItem As ListViewItem = Nothing
-        For Each strItem As ListViewItem In lvwSelectedFields.Items
-            If strTable = strItem.Tag Then
+        'Dim lvwItem As ListViewItem = Nothing
+        For Each lvwFindItem As ListViewItem In lvwSelectedFields.Items
+            If strTableAlias = lvwFindItem.Text Then
                 intCount += 1
             End If
         Next
         If intCount = 0 Then
-            lvwSelectedTables.Items.RemoveByKey(strTable)
-            MasterPanelControlsDispose(pnlRelations, strTable)
+            For Each lvwRemoveItem In lvwSelectedTables.Items
+                If lvwRemoveItem.Text = strTableAlias Then
+                    lvwSelectedTables.Items.RemoveByKey(lvwRemoveItem)
+                    MasterPanelControlsDispose(pnlRelations, strTableAlias)
+                End If
+            Next
             PanelsRelationSort()
         End If
     End Sub
@@ -791,7 +815,9 @@ Public Class frmReports
         If intCount = 0 Then
             intCount += 1
             For Each ctrControl In pnlRelationsUse.Controls
-                If ctrControl.Name.ToString.Substring(ctrControl.Name.ToString.Length - strTableName.Length, strTableName.Length) = strTableName Then intCount += 1
+                If ctrControl.Name.ToString.Length > strTableName.Length Then
+                    If ctrControl.Name.ToString.Substring(ctrControl.Name.ToString.Length - strTableName.Length, strTableName.Length) = strTableName Then intCount += 1
+                End If
             Next
         End If
 
@@ -1133,79 +1159,80 @@ Public Class frmReports
     Private Sub ReportLoad(xmlReports As XmlDocument, strReportName As String)
         Dim xNode As XmlNode = basCode.dhdText.FindXmlNode(xmlReports, "Report", "ReportName", strReportName)
         If Not xNode Is Nothing Then
-            Dim xFNode As XmlNode = basCode.dhdText.FindXmlChildNode(xNode, "Tables/Table")
-            If xFNode Is Nothing Then
-                XmlToReport(xmlReports, strReportName)
-            Else
-                XmlToReport_old(xmlReports, strReportName)
-            End If
+            XmlToReport(xmlReports, strReportName)
+            'Dim xFNode As XmlNode = basCode.dhdText.FindXmlChildNode(xNode, "Tables/Table")
+            'If xFNode Is Nothing Then
+            'Else
+            '    XmlToReport_old(xmlReports, strReportName)
+            'End If
             WriteStatus("Report loaded.", 0, lblStatusText)
         Else
             WriteStatus("The selected report was not found.", 2, lblStatusText)
         End If
     End Sub
 
-    Private Sub XmlToReport_old(xmlReports As XmlDocument, strReportName As String)
-        Dim xNode As XmlNode = basCode.dhdText.FindXmlNode(xmlReports, "Report", "ReportName", strReportName)
-        Dim strTable As String = "", strField As String = "", intRelationNumber As Integer = 0
+    'Private Sub XmlToReport_old(xmlReports As XmlDocument, strReportName As String)
+    '    Dim xNode As XmlNode = basCode.dhdText.FindXmlNode(xmlReports, "Report", "ReportName", strReportName)
+    '    Dim strTable As String = "", strField As String = "", intRelationNumber As Integer = 0
 
-        If Not xNode Is Nothing Then
-            If basCode.dhdText.CheckNodeElement(xNode, "Description") Then txtDescription.Text = xNode.Item("Description").InnerText
-            chkTop.Checked = xNode.Item("UseTop").InnerText
-            txtTop.Text = xNode.Item("UseTopNumber").InnerText
-            chkDistinct.Checked = xNode.Item("UseDistinct").InnerText
-            For Each xCNode As XmlNode In basCode.dhdText.FindXmlChildNodes(xNode, "Tables/Table/Fields/Field")
-                strTable = xCNode.ParentNode.ParentNode.Item("TableName").InnerText
-                If strTable.IndexOf(".") = -1 Then strTable = "dbo." & strTable
-                strField = xCNode.Item("FieldName").InnerText
-                Try
-                    lvwAvailableFields.Items(strTable & "." & strField).Selected = True
-                    btnReportFieldAdd_Click(Nothing, Nothing)
-                    SetCtrText(pnlReportDisplay, strTable & "." & strField, xCNode.Item("FieldShow").InnerText)
-                    SetCtrText(pnlReportShowMode, strTable & "." & strField, xCNode.Item("FieldShowMode").InnerText)
-                    SetCtrText(pnlReportSort, strTable & "." & strField, xCNode.Item("FieldSort").InnerText)
-                    SetCtrText(pnlReportSortOrder, strTable & "." & strField, xCNode.Item("FieldSortOrder").InnerText)
+    '    If Not xNode Is Nothing Then
+    '        If basCode.dhdText.CheckNodeElement(xNode, "Description") Then txtDescription.Text = xNode.Item("Description").InnerText
+    '        chkTop.Checked = xNode.Item("UseTop").InnerText
+    '        txtTop.Text = xNode.Item("UseTopNumber").InnerText
+    '        chkDistinct.Checked = xNode.Item("UseDistinct").InnerText
+    '        For Each xCNode As XmlNode In basCode.dhdText.FindXmlChildNodes(xNode, "Tables/Table/Fields/Field")
+    '            strTable = xCNode.ParentNode.ParentNode.Item("TableName").InnerText
+    '            If strTable.IndexOf(".") = -1 Then strTable = "dbo." & strTable
+    '            strField = xCNode.Item("FieldName").InnerText
+    '            Try
+    '                lvwAvailableFields.Items(strTable & "." & strField).Selected = True
+    '                btnReportFieldAdd_Click(Nothing, Nothing)
+    '                SetCtrText(pnlReportDisplay, strTable & "." & strField, xCNode.Item("FieldShow").InnerText)
+    '                SetCtrText(pnlReportShowMode, strTable & "." & strField, xCNode.Item("FieldShowMode").InnerText)
+    '                SetCtrText(pnlReportSort, strTable & "." & strField, xCNode.Item("FieldSort").InnerText)
+    '                SetCtrText(pnlReportSortOrder, strTable & "." & strField, xCNode.Item("FieldSortOrder").InnerText)
 
-                    For Each xFnode In basCode.dhdText.FindXmlChildNodes(xCNode, "Filters/Filter")
-                        SetCtrText(pnlReportFilter, strTable & "." & strField, xFnode.Item("FilterEnabled").InnerText, xFnode.Item("FilterNumber").InnerText)
-                        SetCtrText(pnlReportFilterMode, strTable & "." & strField, xFnode.Item("FilterMode").InnerText, xFnode.Item("FilterNumber").InnerText)
-                        SetCtrText(pnlReportFilterType, strTable & "." & strField, xFnode.Item("FilterType").InnerText, xFnode.Item("FilterNumber").InnerText)
-                        SetCtrText(pnlReportFilterText, strTable & "." & strField, xFnode.Item("FilterText").InnerText, xFnode.Item("FilterNumber").InnerText)
-                    Next
-                Catch ex As Exception
-                    If MessageBox.Show("Unable to load the Field " & strTable & "." & strField & Environment.NewLine & "Do you wish to keep loading the report?", "Error Loading Report", MessageBoxButtons.YesNo, MessageBoxIcon.Error, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.No Then
-                        WriteStatus("Report loading aborted.", 0, lblStatusText)
-                        Exit Sub
-                    End If
-                End Try
-            Next
+    '                For Each xFnode In basCode.dhdText.FindXmlChildNodes(xCNode, "Filters/Filter")
+    '                    SetCtrText(pnlReportFilter, strTable & "." & strField, xFnode.Item("FilterEnabled").InnerText, xFnode.Item("FilterNumber").InnerText)
+    '                    SetCtrText(pnlReportFilterMode, strTable & "." & strField, xFnode.Item("FilterMode").InnerText, xFnode.Item("FilterNumber").InnerText)
+    '                    SetCtrText(pnlReportFilterType, strTable & "." & strField, xFnode.Item("FilterType").InnerText, xFnode.Item("FilterNumber").InnerText)
+    '                    SetCtrText(pnlReportFilterText, strTable & "." & strField, xFnode.Item("FilterText").InnerText, xFnode.Item("FilterNumber").InnerText)
+    '                Next
+    '            Catch ex As Exception
+    '                If MessageBox.Show("Unable to load the Field " & strTable & "." & strField & Environment.NewLine & "Do you wish to keep loading the report?", "Error Loading Report", MessageBoxButtons.YesNo, MessageBoxIcon.Error, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.No Then
+    '                    WriteStatus("Report loading aborted.", 0, lblStatusText)
+    '                    Exit Sub
+    '                End If
+    '            End Try
+    '        Next
 
-            For Each xRNode As XmlNode In basCode.dhdText.FindXmlChildNodes(xNode, "Relations/Relation")
-                strTable = xRNode.Item("TableName").InnerText
-                intRelationNumber = xRNode.Item("RelationNumber").InnerText
-                'lstAvailableFields.SelectedItem = strTable & "." & strField
-                'btnReportFieldAdd_Click(Nothing, Nothing)
-                SetCtrText(pnlRelationsUse, strTable, xRNode.Item("RelationEnabled").InnerText, intRelationNumber)
-                SetCtrText(pnlRelationsField, strTable, xRNode.Item("RelationSource").InnerText, intRelationNumber)
-                If basCode.dhdText.CheckNodeElement(xRNode, "RelationTarget") Then
-                    Dim strRelationTarget As String = xRNode.Item("RelationTarget").InnerText
-                    SetCtrText(pnlRelationsTargetField, strTable, strRelationTarget.Substring(strRelationTarget.LastIndexOf("."), strRelationTarget.Length - strRelationTarget.LastIndexOf(".")), intRelationNumber)
-                    SetCtrText(pnlRelationsTargetTable, strTable, basCode.GetTableAliasFromString(strRelationTarget) & " (" & basCode.GetTableNameFromString(strRelationTarget) & ")", intRelationNumber)
-                End If
-                If basCode.dhdText.CheckNodeElement(xRNode, "RelationTargetTable") Then
-                    Dim strTargetTable As String = xRNode.Item("RelationTargetAlias").InnerText & " (" & xRNode.Item("RelationTargetTable").InnerText & ")"
-                    If strTargetTable = " ()" Then strTargetTable = ""
-                    SetCtrText(pnlRelationsTargetTable, strTable, strTargetTable, intRelationNumber)
-                End If
-                If basCode.dhdText.CheckNodeElement(xRNode, "RelationTargetField") Then SetCtrText(pnlRelationsTargetField, strTable, xRNode.Item("RelationTargetField").InnerText, intRelationNumber)
-                SetCtrText(pnlRelationsJoinType, strTable, xRNode.Item("RelationJoinType").InnerText, intRelationNumber)
+    '        For Each xRNode As XmlNode In basCode.dhdText.FindXmlChildNodes(xNode, "Relations/Relation")
+    '            strTable = xRNode.Item("TableName").InnerText
+    '            'strTableAlias = xRNode.Item("TableAlias").InnerText
+    '            intRelationNumber = xRNode.Item("RelationNumber").InnerText
+    '            'lstAvailableFields.SelectedItem = strTable & "." & strField
+    '            'btnReportFieldAdd_Click(Nothing, Nothing)
+    '            SetCtrText(pnlRelationsUse, strTable, xRNode.Item("RelationEnabled").InnerText, intRelationNumber)
+    '            SetCtrText(pnlRelationsField, strTable, xRNode.Item("RelationSource").InnerText, intRelationNumber)
+    '            If basCode.dhdText.CheckNodeElement(xRNode, "RelationTarget") Then
+    '                Dim strRelationTarget As String = xRNode.Item("RelationTarget").InnerText
+    '                SetCtrText(pnlRelationsTargetField, strTable, strRelationTarget.Substring(strRelationTarget.LastIndexOf("."), strRelationTarget.Length - strRelationTarget.LastIndexOf(".")), intRelationNumber)
+    '                SetCtrText(pnlRelationsTargetTable, strTable, basCode.GetTableAliasFromString(strRelationTarget) & " (" & basCode.GetTableNameFromString(strRelationTarget) & ")", intRelationNumber)
+    '            End If
+    '            If basCode.dhdText.CheckNodeElement(xRNode, "RelationTargetTable") Then
+    '                Dim strTargetTable As String = xRNode.Item("RelationTargetAlias").InnerText & " (" & xRNode.Item("RelationTargetTable").InnerText & ")"
+    '                If strTargetTable = " ()" Then strTargetTable = ""
+    '                SetCtrText(pnlRelationsTargetTable, strTable, strTargetTable, intRelationNumber)
+    '            End If
+    '            If basCode.dhdText.CheckNodeElement(xRNode, "RelationTargetField") Then SetCtrText(pnlRelationsTargetField, strTable, xRNode.Item("RelationTargetField").InnerText, intRelationNumber)
+    '            SetCtrText(pnlRelationsJoinType, strTable, xRNode.Item("RelationJoinType").InnerText, intRelationNumber)
 
-            Next
-            WriteStatus("Report loading completed.", 0, lblStatusText)
-        Else
-            WriteStatus("Selected report not found.", 0, lblStatusText)
-        End If
-    End Sub
+    '        Next
+    '        WriteStatus("Report loading completed.", 0, lblStatusText)
+    '    Else
+    '        WriteStatus("Selected report not found.", 0, lblStatusText)
+    '    End If
+    'End Sub
 
     Private Sub XmlToReport(xmlReports As XmlDocument, strReportName As String)
         Dim xNode As XmlNode = basCode.dhdText.FindXmlNode(xmlReports, "Report", "ReportName", strReportName)
@@ -1244,26 +1271,50 @@ Public Class frmReports
                 End Try
             Next
 
+            Dim intRelationCount As Integer = 0
             For Each xRNode As XmlNode In basCode.dhdText.FindXmlChildNodes(xNode, "Relations/Relation")
                 strTable = xRNode.Item("TableName").InnerText
+                If basCode.dhdText.CheckNodeElement(xRNode, "TableAlias") Then strTableAlias = xRNode.Item("TableAlias").InnerText
                 intRelationNumber = xRNode.Item("RelationNumber").InnerText
-                'lstAvailableFields.SelectedItem = strTable & "." & strField
-                'btnReportFieldAdd_Click(Nothing, Nothing)
+                If intRelationNumber = 1 Then intRelationCount += 1
                 SetCtrText(pnlRelationsUse, strTable, xRNode.Item("RelationEnabled").InnerText, intRelationNumber)
                 SetCtrText(pnlRelationsField, strTable, xRNode.Item("RelationSource").InnerText, intRelationNumber)
+
+                Dim strTargetTable As String = "", strTargetTableAlias As String = "", strTargetField As String = ""
                 If basCode.dhdText.CheckNodeElement(xRNode, "RelationTarget") Then
                     Dim strRelationTarget As String = xRNode.Item("RelationTarget").InnerText
                     If String.IsNullOrEmpty(strRelationTarget) = False Then
-                        SetCtrText(pnlRelationsTargetField, strTable, strRelationTarget.Substring(strRelationTarget.LastIndexOf(".") + 1, strRelationTarget.Length - strRelationTarget.LastIndexOf(".") - 1), intRelationNumber)
-                        SetCtrText(pnlRelationsTargetTable, strTable, basCode.GetTableAliasFromString(strRelationTarget) & " (" & basCode.GetTableNameFromString(strRelationTarget) & ")", intRelationNumber)
+                        strTargetField = strRelationTarget.Substring(strRelationTarget.LastIndexOf(".") + 1, strRelationTarget.Length - strRelationTarget.LastIndexOf(".") - 1)
+                        strTargetTableAlias = basCode.GetTableAliasFromString(strRelationTarget)
+                        strTargetTable = basCode.GetTableNameFromString(strRelationTarget)
                     End If
                 End If
-                If basCode.dhdText.CheckNodeElement(xRNode, "RelationTargetTable") Then
-                    Dim strTargetTable As String = xRNode.Item("RelationTargetAlias").InnerText & " (" & xRNode.Item("RelationTargetTable").InnerText & ")"
-                    If strTargetTable = " ()" Then strTargetTable = ""
-                    SetCtrText(pnlRelationsTargetTable, strTable, strTargetTable, intRelationNumber)
+                If basCode.dhdText.CheckNodeElement(xRNode, "RelationTargetTable") Then strTargetTable = xRNode.Item("RelationTargetTable").InnerText
+                If basCode.dhdText.CheckNodeElement(xRNode, "RelationTargetAlias") Then strTargetTableAlias = xRNode.Item("RelationTargetAlias").InnerText
+                If basCode.dhdText.CheckNodeElement(xRNode, "RelationTargetField") Then strTargetField = basCode.GetFieldAliasFromName(xmlTables, strTargetTable, xRNode.Item("RelationTargetField").InnerText)
+                If strTargetTableAlias = "" Then strTargetTableAlias = strTargetTable
+
+                If intRelationNumber = 1 Then
+                    For Each lvwSortItem As ListViewItem In lvwSelectedTables.Items
+                        If lvwSortItem.Text = strTableAlias Then
+                            lvwSelectedTables.SelectedItems.Clear()
+                            lvwSelectedTables.Items(lvwSortItem.Index).Selected = True
+                            Try
+                                While lvwSortItem.Index + 1 > intRelationCount
+                                    btnReportTableUp_Click(lvwSelectedTables, Nothing)
+                                End While
+                                While lvwSortItem.Index + 1 < intRelationCount
+                                    btnReportTableDown_Click(lvwSelectedTables, Nothing)
+                                End While
+                            Catch ex As Exception
+                                WriteStatus("An error occured sorting the tables in the report. Please check the log", 1, lblStatusText)
+                                basCode.WriteLog("An error occured sorting the tables in the report. " & Environment.NewLine & ex.Message, 1)
+                            End Try
+                        End If
+                    Next
                 End If
-                If basCode.dhdText.CheckNodeElement(xRNode, "RelationTargetField") Then SetCtrText(pnlRelationsTargetField, strTable, xRNode.Item("RelationTargetField").InnerText, intRelationNumber)
+                SetCtrText(pnlRelationsTargetField, strTable, strTargetField, intRelationNumber)
+                If strTargetTable.Length > 0 Then SetCtrText(pnlRelationsTargetTable, strTable, strTargetTableAlias & " (" & strTargetTable & ")", intRelationNumber)
                 SetCtrText(pnlRelationsJoinType, strTable, xRNode.Item("RelationJoinType").InnerText, intRelationNumber)
 
             Next
@@ -1515,10 +1566,10 @@ Public Class frmReports
                     basCode.dhdText.CreateAppendElement(NewRelationNode, "RelationNumber", intControlNumber)
                     basCode.dhdText.CreateAppendElement(NewRelationNode, "RelationEnabled", ctrRelation.Checked.ToString)
                     basCode.dhdText.CreateAppendElement(NewRelationNode, "RelationSource", GetCtrText(pnlRelationsField, strTableName, intControlNumber))
-                    'basCode.dhdText.CreateAppendElement(NewRelationNode, "RelationTarget", GetCtrText(pnlRelationsRelation, strTableName, intControlNumber))
-                    basCode.dhdText.CreateAppendElement(NewRelationNode, "RelationTargetTable", basCode.GetTableNameFromString(GetCtrText(pnlRelationsTargetTable, strTableName, intControlNumber)))
+                    Dim strTable As String = basCode.GetTableNameFromString(GetCtrText(pnlRelationsTargetTable, strTableName, intControlNumber))
+                    basCode.dhdText.CreateAppendElement(NewRelationNode, "RelationTargetTable", strTable)
                     basCode.dhdText.CreateAppendElement(NewRelationNode, "RelationTargetAlias", basCode.GetTableAliasFromString(GetCtrText(pnlRelationsTargetTable, strTableName, intControlNumber)))
-                    basCode.dhdText.CreateAppendElement(NewRelationNode, "RelationTargetField", GetCtrText(pnlRelationsTargetField, strTableName, intControlNumber))
+                    basCode.dhdText.CreateAppendElement(NewRelationNode, "RelationTargetField", basCode.GetFieldNameFromAlias(xmlTables, strTable, GetCtrText(pnlRelationsTargetField, strTableName, intControlNumber)))
                     basCode.dhdText.CreateAppendElement(NewRelationNode, "RelationJoinType", GetCtrText(pnlRelationsJoinType, strTableName, intControlNumber))
                 End If
             Next
@@ -1696,10 +1747,35 @@ Public Class frmReports
     '    End If
     'End Sub
 
-    Private Sub chkShow_CheckedChanged(sender As Object, e As EventArgs) Handles chkReportShow.CheckedChanged
-        For Each chkBox As CheckBox In pnlReportDisplay.Controls
-            chkBox.Checked = chkReportShow.Checked
-        Next
+    'Private Sub chkShow_CheckedChanged(sender As Object, e As EventArgs) Handles chkReportShow.CheckedChanged
+    '    For Each chkBox As CheckBox In pnlReportDisplay.Controls
+    '        chkBox.Checked = chkReportShow.Checked
+    '    Next
+    'End Sub
+
+    Private Sub chkShow_CheckedStateChanged(sender As Object, e As EventArgs) Handles chkReportShow.CheckStateChanged
+        If basCode.curStatus.SuspendActions = False Then
+            basCode.curStatus.SuspendActions = True
+            If chkReportShow.CheckState = CheckState.Indeterminate Then chkReportShow.CheckState = CheckState.Unchecked
+            For Each chkBox As CheckBox In pnlReportDisplay.Controls
+                chkBox.Checked = chkReportShow.Checked
+            Next
+            basCode.curStatus.SuspendActions = False
+        End If
+    End Sub
+
+    Private Sub chkShowField_CheckChanged(sender As Object, e As EventArgs)
+        If basCode.curStatus.SuspendActions = False Then
+            basCode.curStatus.SuspendActions = True
+            Dim intCount As Integer = 0
+            For Each chkBox As CheckBox In pnlReportDisplay.Controls
+                If chkBox.Checked = True Then intCount += 1
+            Next
+            If intCount = 0 Then chkReportShow.CheckState = CheckState.Unchecked
+            If intCount > 0 And intCount < pnlReportDisplay.Controls.Count Then chkReportShow.CheckState = CheckState.Indeterminate
+            If intCount = pnlReportDisplay.Controls.Count Then chkReportShow.CheckState = CheckState.Checked
+            basCode.curStatus.SuspendActions = False
+        End If
     End Sub
 
     Private Sub btnEmailResults_Click(sender As Object, e As EventArgs) Handles btnEmailResults.Click
@@ -1946,5 +2022,6 @@ Public Class frmReports
         End If
 
     End Sub
+
 
 End Class

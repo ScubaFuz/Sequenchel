@@ -30,6 +30,22 @@
         lblTarget.BackColor = clrStatus
     End Sub
 
+    Friend Sub WriteStatus(strStatusText As String, intStatusLevel As Integer, lblTarget As TextBox)
+        Dim clrStatus As Color = clrControl
+        Select Case intStatusLevel
+            Case 0
+                clrStatus = clrControl
+            Case 1
+                clrStatus = clrWarning
+            Case 2
+                clrStatus = clrMarked
+            Case 3, 4, 5
+                clrStatus = clrControl
+        End Select
+        lblTarget.Text = strStatusText
+        lblTarget.BackColor = clrStatus
+    End Sub
+
 #End Region
 
 #Region "Shutdown"

@@ -163,11 +163,11 @@ Partial Class frmConfiguration
         Me.btnFieldAddOrUpdate = New System.Windows.Forms.Button()
         Me.chkFieldUpdate = New System.Windows.Forms.CheckBox()
         Me.lblFieldUpdate = New System.Windows.Forms.Label()
+        Me.txtRelatedFieldAlias = New System.Windows.Forms.TextBox()
         Me.pnlTableSettings = New System.Windows.Forms.Panel()
         Me.lblTableName = New System.Windows.Forms.Label()
         Me.chkTableUpdate = New System.Windows.Forms.CheckBox()
         Me.lblTableInsert = New System.Windows.Forms.Label()
-        Me.txtTableAlias = New System.Windows.Forms.TextBox()
         Me.lblTableUpdate = New System.Windows.Forms.Label()
         Me.lstTables = New System.Windows.Forms.ListBox()
         Me.chkTableInsert = New System.Windows.Forms.CheckBox()
@@ -185,6 +185,7 @@ Partial Class frmConfiguration
         Me.btnTableDelete = New System.Windows.Forms.Button()
         Me.btnTableClear = New System.Windows.Forms.Button()
         Me.btnColumnsImport = New System.Windows.Forms.Button()
+        Me.txtTableAlias = New System.Windows.Forms.TextBox()
         Me.tpgTableTemplates = New System.Windows.Forms.TabPage()
         Me.tbnSearchSequenchelTemplates = New System.Windows.Forms.Button()
         Me.btnUseTemplate = New System.Windows.Forms.Button()
@@ -202,7 +203,8 @@ Partial Class frmConfiguration
         Me.btnCancel = New System.Windows.Forms.Button()
         Me.lblStatusTitle = New System.Windows.Forms.Label()
         Me.lblStatusText = New System.Windows.Forms.Label()
-        Me.txtRelatedFieldAlias = New System.Windows.Forms.TextBox()
+        Me.btnNodeDown = New System.Windows.Forms.Button()
+        Me.btnNodeUp = New System.Windows.Forms.Button()
         Me.tabConfiguration.SuspendLayout()
         Me.tpgConnections.SuspendLayout()
         Me.tpgTableSets.SuspendLayout()
@@ -995,6 +997,8 @@ Partial Class frmConfiguration
         '
         'SplitContainer1.Panel1
         '
+        Me.SplitContainer1.Panel1.Controls.Add(Me.btnNodeDown)
+        Me.SplitContainer1.Panel1.Controls.Add(Me.btnNodeUp)
         Me.SplitContainer1.Panel1.Controls.Add(Me.lblTables)
         Me.SplitContainer1.Panel1.Controls.Add(Me.lvwTables)
         Me.SplitContainer1.Panel1.Controls.Add(Me.tvwTable)
@@ -1028,7 +1032,7 @@ Partial Class frmConfiguration
         Me.lvwTables.FullRowSelect = True
         Me.lvwTables.Location = New System.Drawing.Point(3, 18)
         Me.lvwTables.Name = "lvwTables"
-        Me.lvwTables.Size = New System.Drawing.Size(418, 214)
+        Me.lvwTables.Size = New System.Drawing.Size(385, 214)
         Me.lvwTables.Sorting = System.Windows.Forms.SortOrder.Ascending
         Me.lvwTables.TabIndex = 0
         Me.lvwTables.UseCompatibleStateImageBehavior = False
@@ -1051,7 +1055,7 @@ Partial Class frmConfiguration
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.tvwTable.Location = New System.Drawing.Point(3, 284)
         Me.tvwTable.Name = "tvwTable"
-        Me.tvwTable.Size = New System.Drawing.Size(418, 404)
+        Me.tvwTable.Size = New System.Drawing.Size(385, 404)
         Me.tvwTable.TabIndex = 16
         '
         'lblSelectedTable
@@ -1661,6 +1665,15 @@ Partial Class frmConfiguration
         Me.lblFieldUpdate.Text = "Field Update"
         Me.lblFieldUpdate.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
+        'txtRelatedFieldAlias
+        '
+        Me.txtRelatedFieldAlias.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.txtRelatedFieldAlias.Location = New System.Drawing.Point(106, 189)
+        Me.txtRelatedFieldAlias.Name = "txtRelatedFieldAlias"
+        Me.txtRelatedFieldAlias.Size = New System.Drawing.Size(183, 20)
+        Me.txtRelatedFieldAlias.TabIndex = 170
+        '
         'pnlTableSettings
         '
         Me.pnlTableSettings.Controls.Add(Me.lblTableName)
@@ -1716,15 +1729,6 @@ Partial Class frmConfiguration
         Me.lblTableInsert.TabIndex = 102
         Me.lblTableInsert.Text = "Table Insert"
         Me.lblTableInsert.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
-        '
-        'txtTableAlias
-        '
-        Me.txtTableAlias.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.txtTableAlias.Location = New System.Drawing.Point(107, 30)
-        Me.txtTableAlias.Name = "txtTableAlias"
-        Me.txtTableAlias.Size = New System.Drawing.Size(183, 20)
-        Me.txtTableAlias.TabIndex = 4
         '
         'lblTableUpdate
         '
@@ -1885,6 +1889,15 @@ Partial Class frmConfiguration
         Me.btnColumnsImport.Size = New System.Drawing.Size(180, 20)
         Me.btnColumnsImport.TabIndex = 11
         Me.btnColumnsImport.Text = "Import Columns for this table"
+        '
+        'txtTableAlias
+        '
+        Me.txtTableAlias.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.txtTableAlias.Location = New System.Drawing.Point(107, 30)
+        Me.txtTableAlias.Name = "txtTableAlias"
+        Me.txtTableAlias.Size = New System.Drawing.Size(183, 20)
+        Me.txtTableAlias.TabIndex = 4
         '
         'tpgTableTemplates
         '
@@ -2071,14 +2084,25 @@ Partial Class frmConfiguration
         Me.lblStatusText.Size = New System.Drawing.Size(432, 23)
         Me.lblStatusText.TabIndex = 10
         '
-        'txtRelatedFieldAlias
+        'btnNodeDown
         '
-        Me.txtRelatedFieldAlias.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.txtRelatedFieldAlias.Location = New System.Drawing.Point(106, 189)
-        Me.txtRelatedFieldAlias.Name = "txtRelatedFieldAlias"
-        Me.txtRelatedFieldAlias.Size = New System.Drawing.Size(183, 20)
-        Me.txtRelatedFieldAlias.TabIndex = 170
+        Me.btnNodeDown.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnNodeDown.Image = Global.Sequenchel.My.Resources.Resources.button_down
+        Me.btnNodeDown.Location = New System.Drawing.Point(390, 467)
+        Me.btnNodeDown.Name = "btnNodeDown"
+        Me.btnNodeDown.Size = New System.Drawing.Size(30, 23)
+        Me.btnNodeDown.TabIndex = 83
+        Me.btnNodeDown.UseVisualStyleBackColor = True
+        '
+        'btnNodeUp
+        '
+        Me.btnNodeUp.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnNodeUp.Image = Global.Sequenchel.My.Resources.Resources.button_up
+        Me.btnNodeUp.Location = New System.Drawing.Point(390, 438)
+        Me.btnNodeUp.Name = "btnNodeUp"
+        Me.btnNodeUp.Size = New System.Drawing.Size(30, 23)
+        Me.btnNodeUp.TabIndex = 82
+        Me.btnNodeUp.UseVisualStyleBackColor = True
         '
         'frmConfiguration
         '
@@ -2299,4 +2323,6 @@ Partial Class frmConfiguration
     Friend WithEvents SplitContainer1 As System.Windows.Forms.SplitContainer
     Friend WithEvents pnlTableSettings As System.Windows.Forms.Panel
     Friend WithEvents txtRelatedFieldAlias As System.Windows.Forms.TextBox
+    Friend WithEvents btnNodeDown As System.Windows.Forms.Button
+    Friend WithEvents btnNodeUp As System.Windows.Forms.Button
 End Class

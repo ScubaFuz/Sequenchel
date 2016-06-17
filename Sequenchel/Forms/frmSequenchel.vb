@@ -255,6 +255,7 @@ Public Class frmSequenchel
             basCode.curStatus.Table = cbxTable.SelectedItem
             LoadTable(basCode.curStatus.Table)
             SortColumns()
+            SearchListLoad(cbxTable.SelectedItem)
             CursorControl()
         End If
     End Sub
@@ -476,22 +477,22 @@ Public Class frmSequenchel
                         sptTable1.SplitterDistance += lblLabel.Left
                         sptFields1.SplitterDistance += (lblLabel.Left * -1)
                     End If
-                    If basCode.basTable.Item(intCount).FieldSearchList = True And basCode.basTable.Item(intCount).FieldDataType.ToString.ToUpper <> "BIT" Then
-                        Dim btnButton As New Button
-                        btnButton.Name = "btn" & fldField.Name
-                        sptFields1.Panel1.Controls.Add(btnButton)
-                        btnButton.Text = ""
-                        btnButton.Image = My.Resources.reload16
-                        btnButton.ImageAlign = ContentAlignment.MiddleCenter
-                        btnButton.Size = New System.Drawing.Size(25, 23)
-                        btnButton.Top = fldField.Top - basCode.curVar.BuildMargin / 2
-                        btnButton.Left = sptFields1.Panel1.Width - btnButton.Width
-                        btnButton.Anchor = AnchorStyles.Right Or AnchorStyles.Top
-                        btnButton.UseVisualStyleBackColor = True
-                        AddHandler btnButton.Click, AddressOf Me.btnReload_Click
-                    End If
+                    'If basCode.basTable.Item(intCount).FieldSearchList = True And basCode.basTable.Item(intCount).FieldDataType.ToString.ToUpper <> "BIT" Then
+                    '    Dim btnButton As New Button
+                    '    btnButton.Name = "btn" & fldField.Name
+                    '    sptFields1.Panel1.Controls.Add(btnButton)
+                    '    btnButton.Text = ""
+                    '    btnButton.Image = My.Resources.reload16
+                    '    btnButton.ImageAlign = ContentAlignment.MiddleCenter
+                    '    btnButton.Size = New System.Drawing.Size(25, 23)
+                    '    btnButton.Top = fldField.Top - basCode.curVar.BuildMargin / 2
+                    '    btnButton.Left = sptFields1.Panel1.Width - btnButton.Width
+                    '    btnButton.Anchor = AnchorStyles.Right Or AnchorStyles.Top
+                    '    btnButton.UseVisualStyleBackColor = True
+                    '    AddHandler btnButton.Click, AddressOf Me.btnReload_Click
+                    'End If
 
-                    If basCode.basTable.Item(intCount).DefaultButton = True And Not (basCode.basTable.Item(intCount).FieldSearchList = True And basCode.basTable.Item(intCount).FieldDataType.ToString.ToUpper <> "BIT") Then
+                    If basCode.basTable.Item(intCount).DefaultButton = True And Not (basCode.basTable.Item(intCount).FieldDataType.ToString.ToUpper <> "BIT") Then
                         Dim btnButton As New Button
                         btnButton.Name = "btn" & fldField.Name
                         sptFields1.Panel1.Controls.Add(btnButton)
@@ -508,11 +509,7 @@ Public Class frmSequenchel
 
                     If basCode.basTable.Item(intCount).Count > 0 Then
                         For intRel As Integer = 0 To basCode.basTable.Item(intCount).Count - 1
-                            'If basCode.basTable.Item(intCount).FieldRelatedField.ToString.Length > 0 And basCode.basTable.Item(intCount).FieldRelation.ToString.Length > 0 Then
-                            'End If
-
                             Dim msfRelatedField As New ManagedSelectField
-                            'AddHandler msfRelatedField.SelectedIndexChanged, AddressOf Me.cbxRelatedField_SelectedIndexChanged
                             msfRelatedField.Name = basCode.basTable.Item(intCount).Item(intRel).RelationTableAlias & "." & basCode.basTable.Item(intCount).Item(intRel).RelationField
 
                             msfRelatedField.DataConn.DataLocation = basCode.dhdConnection.DataLocation
@@ -1045,6 +1042,7 @@ Public Class frmSequenchel
             WriteStatus("The file " & basCode.curVar.SearchFile & " was not saved.", 1, lblStatusText)
         Else
             If cbxSearch.Items.Contains(cbxSearch.Text) = False Then cbxSearch.Items.Add(cbxSearch.Text)
+            basCode.curStatus.SearchesReload = True
             WriteStatus("Search saved", 0, lblStatusText)
         End If
         CursorControl()
@@ -1080,6 +1078,7 @@ Public Class frmSequenchel
             FieldsClearAll()
             SearchLoad()
             LoadList(True)
+            ButtonHandle()
             CursorControl()
         End If
     End Sub
@@ -1093,7 +1092,7 @@ Public Class frmSequenchel
         btnDelete.Enabled = False
 
         If basCode.dhdConnection.DataBaseOnline = True Then
-            If basCode.curStatus.Status = SeqCore.CurrentStatus.StatusList.Search And tblTable.TableSearch = True Then
+            If basCode.curStatus.Status = SeqCore.CurrentStatus.StatusList.Search And basCode.basTable.TableSearch = True Then
                 btnSearch.Enabled = True
             End If
             If dgvTable1.SelectedRows.Count = 1 And basCode.curStatus.Status = SeqCore.CurrentStatus.StatusList.Edit And basCode.basTable.TableUpdate = True And (basCode.curVar.AllowUpdate = True Or basCode.curVar.SecurityOverride = True) Then
@@ -1411,8 +1410,10 @@ Public Class frmSequenchel
                                     If chkTemp IsNot Nothing Then chkTemp.Checked = objData.Tables.Item(0).Rows(0).Item(basCode.basTable.Item(intField).FieldAlias)
                                 Case 5, 6
                                     Dim msfTemp As ManagedSelectField = TryCast(ctrl, ManagedSelectField)
+                                    msfTemp.SuspendActions = True
                                     msfTemp.Text = objData.Tables.Item(0).Rows(0).Item(basCode.basTable.Item(intField).FieldAlias)
-                                    msfTemp.DropDown(2)
+                                    msfTemp.SuspendActions = False
+                                    'msfTemp.DropDown(2)
                             End Select
                             ctrl.Tag = objData.Tables.Item(0).Rows(0).Item(basCode.basTable.Item(intField).FieldAlias).ToString
                         End If
@@ -1447,7 +1448,7 @@ Public Class frmSequenchel
                 strQuery = ""
                 strQuery2 = " WHERE 1=1 "
                 strQuery3 = ""
-                If tblTable.Item(intField).FieldSearchList = True Then
+                If tblTable.Item(intField).Category = 5 Or tblTable.Item(intField).Category = 6 Then
                     tblTable.Item(intField).RunSearch()
                 End If
             Next
@@ -1833,7 +1834,7 @@ Public Class frmSequenchel
     Private Sub SearchListLoad(strTable As String)
         cbxSearch.Text = ""
         cbxSearch.Items.Clear()
-        Dim lstSearches As List(Of String) = basCode.LoadSearches(xmlSearch, strTable)
+        Dim lstSearches As List(Of String) = basCode.LoadSearches(xmlSearch, basCode.basTable.TableName)
         If lstSearches Is Nothing Then Exit Sub
         For Each lstItem As String In lstSearches
             cbxSearch.Items.Add(lstItem)
@@ -1870,15 +1871,23 @@ Public Class frmSequenchel
                 strFieldName = xNode.Attributes("FieldName").Value
                 strFieldValue = xNode.InnerText
 
-                For intField As Integer = 0 To tblTable.Count - 1
-                    If tblTable.Item(intField).FieldName = strFieldName Then
-                        tblTable.Item(intField).BackColor = clrMarked
-                        Select Case tblTable.Item(intField).FieldDataType.ToUpper
-                            Case "BIT"
-                                tblTable.Item(intField).Checked = strFieldValue
-                            Case Else
-                                tblTable.Item(intField).Text = strFieldValue
+                For Each ctrl As Object In sptFields1.Panel2.Controls
+                    If ctrl.Field.FieldName = strFieldName Then
+                        ctrl.BackColor = clrMarked
+                        Select Case ctrl.Field.Category
+                            Case 1, 3, 4
+                                ctrl.Text = strFieldValue
+                            Case 2
+                                Dim chkTemp As CheckBox = TryCast(ctrl, CheckBox)
+                                If chkTemp IsNot Nothing Then chkTemp.Checked = strFieldValue
+                            Case 5, 6
+                                Dim msfTemp As ManagedSelectField = TryCast(ctrl, ManagedSelectField)
+                                msfTemp.SuspendActions = True
+                                msfTemp.Text = strFieldValue
+                                msfTemp.SuspendActions = False
+                                'msfTemp.DropDown(2)
                         End Select
+
                     End If
                 Next
             Next
@@ -1887,4 +1896,7 @@ Public Class frmSequenchel
 
 #End Region
 
+    Private Sub dgvTable1_DoubleClick(sender As Object, e As EventArgs) Handles dgvTable1.DoubleClick
+
+    End Sub
 End Class

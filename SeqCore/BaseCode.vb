@@ -609,6 +609,7 @@ Public Class BaseCode
         dhdText.OutputFile = xmlTSNode.Item("OutputPath").InnerText
         curVar.ReportSetFile = xmlTSNode.Item("ReportSet").InnerText
         If dhdText.CheckNodeElement(xmlTSNode, "Search") Then curVar.SearchFile = xmlTSNode.Item("Search").InnerText
+        curStatus.SearchesReload = True
     End Sub
 
     Public Function LoadTables(xmlTables As XmlDocument, blnUseFullName As Boolean) As List(Of String)
@@ -852,13 +853,14 @@ Public Class BaseCode
                 ErrorLevel = -1
                 ErrorMessage = "There was an error reading the XML file. Please check the log."
                 WriteLog("There was an error reading the XML file. Please check the file" & Environment.NewLine & dhdText.PathConvert(CheckFilePath(curVar.SearchFile)) & Environment.NewLine & ex.Message, 1)
+                Return Nothing
             End Try
         Else
             ErrorLevel = 5
             ErrorMessage = "Invalid file path: " & dhdText.PathConvert(CheckFilePath(curVar.SearchFile))
             xmlSearch.RemoveAll()
         End If
-        Return Nothing
+        Return xmlSearch
     End Function
 
     Public Sub TableClear()
@@ -1194,6 +1196,34 @@ Public Class BaseCode
         Return strReturn
     End Function
 
+    Public Function GetFieldNameFromAlias(xmlTables As XmlDocument, strTableName As String, strFieldAlias As String) As String
+        Dim strFieldName As String = strFieldAlias
+        If String.IsNullOrEmpty(strTableName) = False Then
+            Dim xPNode As XmlNode = dhdText.FindXmlNode(xmlTables, "Table", "Name", strTableName)
+            If xPNode IsNot Nothing Then
+                Dim xNode As XmlNode = dhdText.FindXmlChildNode(xPNode, "Fields/Field", "FldAlias", strFieldAlias)
+                If xNode IsNot Nothing Then
+                    If dhdText.CheckNodeElement(xNode, "FldName") Then strFieldName = xNode.Item("FldName").InnerText
+                End If
+            End If
+        End If
+        Return strFieldName
+    End Function
+
+    Public Function GetFieldAliasFromName(xmlTables As XmlDocument, strTableName As String, strFieldName As String) As String
+        Dim strFieldAlias As String = strFieldName
+        If String.IsNullOrEmpty(strTableName) = False Then
+            Dim xPNode As XmlNode = dhdText.FindXmlNode(xmlTables, "Table", "Name", strTableName)
+            If xPNode IsNot Nothing Then
+                Dim xNode As XmlNode = dhdText.FindXmlChildNode(xPNode, "Fields/Field", "FldName", strFieldName)
+                If xNode IsNot Nothing Then
+                    If dhdText.CheckNodeElement(xNode, "FldAlias") Then strFieldAlias = xNode.Item("FldAlias").InnerText
+                End If
+            End If
+        End If
+        Return strFieldAlias
+    End Function
+
 #End Region
 
 #Region "DataBase"
@@ -1383,7 +1413,7 @@ Public Class BaseCode
                     Return 200
                 End If
             Case "INTEGER"
-                Return intMaxLength * 10
+                Return Math.Max(intMaxLength, 5) * 10
             Case "BIT"
                 Return 25
             Case "GUID", "XML", "TEXT", "IMAGE"
