@@ -1346,7 +1346,8 @@ Public Class BaseCode
         Dim dtsData As DataSet
         Try
             dtsData = dhdConnect.QueryDatabase(strQueryData, ReturnValue)
-            If dhdConnect.DataBaseOnline = False Then
+            ErrorLevel = dhdConnect.ErrorLevel
+            If ErrorLevel <> 0 Then
                 ErrorMessage = dhdConnect.ErrorMessage
                 Return Nothing
             End If

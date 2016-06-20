@@ -741,32 +741,42 @@
             strSQL = MydbRef.GetScript(arrScripts(0))
             strSQL = strSQL.Replace("Sequenchel", strDBName)
             If basCode.CurVar.Encryption = False Then strSQL = strSQL.Replace("WITH ENCRYPTION", "")
-            If basCode.CurVar.DevMode Then MessageBox.Show(strSQL)
+            'If basCode.CurVar.DevMode Then MessageBox.Show(strSQL)
             basCode.QueryDb(basCode.dhdMainDB, strSQL, False, 10)
             basCode.dhdMainDB.DatabaseName = strDBName
             txtJobNamePrefix.Text = basCode.dhdMainDB.DatabaseName
             prbCreateDatabase.PerformStep()
 
-            For i = 1 To arrScripts.GetUpperBound(0)
-                strSQL = MydbRef.GetScript(arrScripts(i))
-                If Not strSQL = "-1" Then
-                    'strSQL = Replace(strSQL, "Sequenchel", strDBName)
-                    strSQL = strSQL.Replace("Sequenchel", strDBName)
-                    If basCode.CurVar.Encryption = False Then strSQL = strSQL.Replace("WITH ENCRYPTION", "")
-                    If blnIncludeTables = False Then strSQL = Replace(strSQL, "CREATE", "ALTER", 1, 1)
-                    If basCode.CurVar.DevMode Then MessageBox.Show(strSQL)
-                    basCode.QueryDb(basCode.dhdMainDB, strSQL, False, 5)
-                Else
-                    If basCode.CurVar.DebugMode Then MessageBox.Show("The script: " & arrScripts(i) & " returned: " & strSQL)
+            If basCode.ErrorLevel = 0 Then
+                For i = 1 To arrScripts.GetUpperBound(0)
+                    strSQL = MydbRef.GetScript(arrScripts(i))
+                    If Not strSQL = "-1" Then
+                        'strSQL = Replace(strSQL, "Sequenchel", strDBName)
+                        strSQL = strSQL.Replace("Sequenchel", strDBName)
+                        If basCode.curVar.Encryption = False Then strSQL = strSQL.Replace("WITH ENCRYPTION", "")
+                        If blnIncludeTables = False Then strSQL = Replace(strSQL, "CREATE", "ALTER", 1, 1)
+                        'If basCode.CurVar.DevMode Then MessageBox.Show(strSQL)
+                        basCode.QueryDb(basCode.dhdMainDB, strSQL, False, 10)
+                        If basCode.ErrorLevel <> 0 Then
+                            basCode.WriteLog("Error creating database. " & basCode.ErrorMessage, 1)
+                            WriteStatus("Error creating database. Please check the log.", 0, lblStatusText)
+                            Exit For
+                        End If
+                    Else
+                        If basCode.curVar.DebugMode Then MessageBox.Show("The script: " & arrScripts(i) & " returned: " & strSQL)
+                    End If
+                    prbCreateDatabase.PerformStep()
+                Next
+
+                If basCode.ErrorLevel = 0 Then
+                    prbCreateDatabase.PerformStep()
+                    SaveConfigSetting("Database", "Version", My.Application.Info.Version.ToString)
+                    WriteStatus("Database created/updated.", 0, lblStatusText)
                 End If
-                prbCreateDatabase.PerformStep()
-            Next
-            prbCreateDatabase.PerformStep()
-
-            SaveConfigSetting("Database", "Version", My.Application.Info.Version.ToString)
-            'btnCreateDemoData.Visible = True
-
-            WriteStatus("Database created/updated.", 0, lblStatusText)
+            Else
+                basCode.WriteLog("Error creating database. " & basCode.ErrorMessage, 1)
+                WriteStatus("Error creating database. Please check the log.", 0, lblStatusText)
+            End If
         Catch ex As Exception
             basCode.dhdMainDB.DatabaseName = strDBName
             txtJobNamePrefix.Text = basCode.dhdMainDB.DatabaseName
@@ -776,9 +786,10 @@
 
         lblStatusDatabase.Visible = False
         prbCreateDatabase.Visible = False
-        btnCreateExtraProcs.Visible = True
-
-        VersionLoad()
+        If basCode.ErrorLevel = 0 Then
+            btnCreateExtraProcs.Visible = True
+            VersionLoad()
+        End If
     End Sub
 
     Private Function VersionLoad() As Boolean
