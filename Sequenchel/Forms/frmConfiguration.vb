@@ -297,16 +297,11 @@ Public Class frmConfiguration
             'If CurStatus.Connection <> lvwConnections.SelectedItems.Item(0).Tag Then
             basCode.curStatus.ConnectionReload = True
             basCode.curStatus.Connection = lvwConnections.SelectedItems.Item(0).Tag
+            txtConnection.Text = basCode.curStatus.Connection
             basCode.LoadConnection(basCode.xmlConnections, basCode.curStatus.Connection)
             TableSetClear()
-            basCode.LoadTableSetsXml(basCode.xmlTableSets)
-            'If lstTableSets Is Nothing Then
-            '    xmlTableSets.RemoveAll()
-            '    xmlTables.RemoveAll()
-            '    basCode.curVar.TablesFile = ""
-            '    TableClear()
-            '    Exit Sub
-            'End If
+            basCode.curStatus.TableSetsReload = True
+            basCode.LoadTableSets(basCode.xmlTableSets)
             basCode.LoadTableSet(basCode.xmlTableSets, basCode.curStatus.TableSet)
             TableSetsLoad()
             basCode.LoadTables(basCode.xmlTables, False)
@@ -414,6 +409,8 @@ Public Class frmConfiguration
         basCode.curStatus.ConnectionChanged = True
         ConfigurationSave()
         ConnectionsLoad()
+        txtConnection.Text = basCode.curStatus.Connection
+        ConnectionLoad()
         WriteStatus("Connection Saved", 0, lblStatusText)
     End Sub
 
@@ -608,6 +605,7 @@ Public Class frmConfiguration
             tvwTableSet.ExpandAll()
             TableSetEdit()
         End If
+        lblTableSet.Text = basCode.curStatus.TableSet
     End Sub
 
     Private Sub DefaultPathBrowse()
@@ -679,6 +677,8 @@ Public Class frmConfiguration
         basCode.curStatus.TablesReload = True
         ConfigurationSave()
         TableSetsLoad()
+        lblTableSet.Text = basCode.curStatus.TableSet
+        TableSetLoad()
         WriteStatus("TableSet Saved", 0, lblStatusText)
 
     End Sub
@@ -1091,6 +1091,7 @@ Public Class frmConfiguration
 #Region "Controls"
 
     Private Sub tvwTable_AfterSelect(sender As Object, e As TreeViewEventArgs) Handles tvwTable.AfterSelect
+        WriteStatus("", 0, lblStatusText)
         Dim strFieldName As String = ""
         Dim strFieldValue As String = ""
         Dim trnNode As TreeNode = Nothing
@@ -1104,11 +1105,11 @@ Public Class frmConfiguration
                 Else
                     If tvwTable.SelectedNode.Text = "Fields" Then
                         trnNode = tvwTable.SelectedNode.FirstNode
-                    ElseIf tvwTable.SelectedNode.Text = "Field" Then
+                    ElseIf tvwTable.SelectedNode.Text.Substring(0, 6) = "Field " Then
                         trnNode = tvwTable.SelectedNode
-                    ElseIf tvwTable.SelectedNode.Parent.Text = "Field" Then
+                    ElseIf tvwTable.SelectedNode.Parent.Text.Substring(0, 6) = "Field " Then
                         trnNode = tvwTable.SelectedNode.Parent
-                    ElseIf tvwTable.SelectedNode.Parent.Parent.Text = "Field" Then
+                    ElseIf tvwTable.SelectedNode.Parent.Parent.Text.Substring(0, 6) = "Field " Then
                         trnNode = tvwTable.SelectedNode.Parent.Parent
                     Else
                         Exit Sub
@@ -1215,6 +1216,7 @@ Public Class frmConfiguration
 
     Private Sub NodeDisplay(PNode As TreeNode)
         FieldsClear()
+        If PNode Is Nothing Then Exit Sub
         Dim strFieldName As String = ""
         Dim strFieldValue As String = ""
         Dim strTableName As String = "", strTableAlias As String = "", strRelatedFieldName As String = "", strRelatedFieldAlias As String = ""
@@ -1322,6 +1324,7 @@ Public Class frmConfiguration
         cbxRelationFields.Items.Clear()
         cbxRelationFields.Text = ""
         txtRelatedField.Text = ""
+        txtRelatedFieldAlias.Text = ""
         chkRelatedField.Checked = False
         chkDefaultButton.Checked = False
         txtDefaultButton.Text = ""
@@ -1662,32 +1665,34 @@ Public Class frmConfiguration
             If xlmRNodes Is Nothing Then Exit Sub
 
             For Each xRNode As XmlNode In xlmRNodes
-                If basCode.dhdText.CheckNodeElement(xRNode, "RelationField") = True Then
+                If basCode.dhdText.CheckNodeElement(xRNode, "RelationTable") = True Then
                     If xRNode.Item("RelationTable").InnerText = strTableName Then
-                        cbxRelationFields.Text = xRNode.Item("RelationField").InnerText
-                        chkRelatedField.Checked = xRNode.Item("RelatedFieldList").InnerText
-                        txtRelatedField.Text = xRNode.Item("RelatedField").InnerText
+                        If basCode.dhdText.CheckNodeElement(xRNode, "RelationField") = True Then cbxRelationFields.Text = xRNode.Item("RelationField").InnerText
+                        If basCode.dhdText.CheckNodeElement(xRNode, "RelatedFieldList") = True Then chkRelatedField.Checked = xRNode.Item("RelatedFieldList").InnerText
+                        If basCode.dhdText.CheckNodeElement(xRNode, "RelatedFieldName") = True Then txtRelatedField.Text = xRNode.Item("RelatedFieldName").InnerText
+                        If basCode.dhdText.CheckNodeElement(xRNode, "RelatedFieldAlias") = True Then txtRelatedFieldAlias.Text = xRNode.Item("RelatedFieldAlias").InnerText
                     End If
-                Else
-                    Dim strRelation As String = xRNode.InnerText
-                    Dim strRelationField As String = ""
-                    If strRelation.Length > 0 Then
-                        If strRelation.IndexOf(".") > 0 Then
-                            strRelationField = strRelation.Substring(strRelation.LastIndexOf(".") + 1, strRelation.Length - (strRelation.LastIndexOf(".") + 1))
-                            strRelation = strRelation.Substring(0, strRelation.LastIndexOf(".")) & " (" & strRelation.Substring(0, strRelation.LastIndexOf(".")) & ")"
-                        End If
+                    'Else
+                    '    'old style. Delete before deployment
+                    '    Dim strRelation As String = xRNode.InnerText
+                    '    Dim strRelationField As String = ""
+                    '    If strRelation.Length > 0 Then
+                    '        If strRelation.IndexOf(".") > 0 Then
+                    '            strRelationField = strRelation.Substring(strRelation.LastIndexOf(".") + 1, strRelation.Length - (strRelation.LastIndexOf(".") + 1))
+                    '            strRelation = strRelation.Substring(0, strRelation.LastIndexOf(".")) & " (" & strRelation.Substring(0, strRelation.LastIndexOf(".")) & ")"
+                    '        End If
 
-                        If strRelation = cbxRelationTables.SelectedItem Then
-                            cbxRelationFields.Text = strRelationField
-                            If xRNode.Attributes.Count > 0 Then
-                                If xRNode.Attributes(0).Name = "RelatedField" Then txtRelatedField.Text = xRNode.Attributes("RelatedField").InnerText
-                                If xRNode.Attributes.Count > 1 Then
-                                    If xRNode.Attributes(1).Name = "RelatedFieldList" Then chkRelatedField.Checked = xRNode.Attributes("RelatedFieldList").InnerText
-                                End If
-                                Exit For
-                            End If
-                        End If
-                    End If
+                    '        If strRelation = cbxRelationTables.SelectedItem Then
+                    '            cbxRelationFields.Text = strRelationField
+                    '            If xRNode.Attributes.Count > 0 Then
+                    '                If xRNode.Attributes(0).Name = "RelatedField" Then txtRelatedField.Text = xRNode.Attributes("RelatedField").InnerText
+                    '                If xRNode.Attributes.Count > 1 Then
+                    '                    If xRNode.Attributes(1).Name = "RelatedFieldList" Then chkRelatedField.Checked = xRNode.Attributes("RelatedFieldList").InnerText
+                    '                End If
+                    '                Exit For
+                    '            End If
+                    '        End If
+                    '    End If
                 End If
             Next
         End If
@@ -1888,6 +1893,7 @@ Public Class frmConfiguration
 
     Private Function RelationAdd(strTableSource As String, strFieldSource As String, strTableRelation As String, strTableAliasRelation As String, strFieldRelation As String, strRelatedField As String, strRelatedFieldAlias As String, blnRelatedFieldList As Boolean) As Boolean
         If strFieldRelation.Length = 0 Then Return False
+        If String.IsNullOrEmpty(strRelatedFieldAlias) Then strRelatedFieldAlias = strRelatedField
 
         If RelationRemove(strTableSource, strFieldSource, strTableRelation, strFieldRelation, False) = False Then
             Return False
@@ -1937,6 +1943,7 @@ Public Class frmConfiguration
 
     Private Sub btnRelationAdd_Click(sender As Object, e As EventArgs) Handles btnRelationAdd.Click
         CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
         If cbxRelationFields.Text.Length = 0 Then Exit Sub
         Dim strTableName As String = "", strTableAlias As String = ""
         If cbxRelationTables.Text.IndexOf("(") > 0 Then
@@ -1946,7 +1953,7 @@ Public Class frmConfiguration
             strTableName = cbxRelationTables.Text
             strTableAlias = cbxRelationTables.Text
         End If
-        RelationAdd(basCode.curStatus.Table, txtFieldName.Tag, strTableName, strTableAlias, cbxRelationFields.Text, txtRelatedField.Text, txtRelatedField.Text.Replace(".", "_"), chkRelatedField.Checked)
+        RelationAdd(basCode.curStatus.Table, txtFieldName.Text, strTableName, strTableAlias, cbxRelationFields.Text, txtRelatedField.Text, txtRelatedFieldAlias.Text, chkRelatedField.Checked)
 
         'If Not cbxRelations.Items.Contains(cbxRelations.Text) Then cbxRelations.Items.Add(cbxRelations.Text)
         CursorControl()

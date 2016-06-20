@@ -615,12 +615,14 @@ Public Class BaseCode
                 xmlTableSets.Load(dhdText.PathConvert(CheckFilePath(curVar.TableSetsFile)))
                 curStatus.TableSetsReload = False
             Catch ex As Exception
+                xmlTableSets.RemoveAll()
                 ErrorLevel = -1
                 ErrorMessage = "There was an error reading the XML file. Please check the log."
                 WriteLog("There was an error reading the XML file. Please check the file" & Environment.NewLine & dhdText.PathConvert(CheckFilePath(curVar.TableSetsFile)) & Environment.NewLine & ex.Message, 1)
                 Return Nothing
             End Try
         Else
+            xmlTableSets.RemoveAll()
             ErrorLevel = 5
             ErrorMessage = "Invalid file path: " & dhdText.PathConvert(CheckFilePath(curVar.TableSetsFile))
         End If
@@ -699,11 +701,13 @@ Public Class BaseCode
                 xmlTables.Load(dhdText.PathConvert(CheckFilePath(curVar.TablesFile)))
                 curStatus.TablesReload = False
             Catch ex As Exception
+                xmlTables.RemoveAll()
                 ErrorMessage = "There was an error reading the XML file. Please check the log."
                 WriteLog("There was an error reading the XML file. Please check the file" & Environment.NewLine & dhdText.PathConvert(CheckFilePath(curVar.TablesFile)) & Environment.NewLine & ex.Message, 1)
                 Return Nothing
             End Try
         Else
+            xmlTables.RemoveAll()
             ErrorLevel = 5
             ErrorMessage = "Invalid file path: " & dhdText.PathConvert(CheckFilePath(curVar.TablesFile))
         End If
@@ -1017,8 +1021,14 @@ Public Class BaseCode
                 Select Case strFieldType.ToUpper
                     Case "CHAR", "BINARY", "XML", "GEO", "TEXT", "GUID", "TIME", "TIMESTAMP"
                         strOutput = " (" & strTableField & " IN ('" & Replace(strFieldValue, ",", "','") & "'))" & Environment.NewLine
-                    Case "INTEGER", "BIT"
+                    Case "INTEGER"
                         strOutput = " (" & strTableField & " IN (" & strFieldValue & "))" & Environment.NewLine
+                    Case "BIT"
+                        If IsNumeric(strFieldValue.Replace(",", "")) Then
+                            strOutput = " (" & strTableField & " IN (" & strFieldValue & "))" & Environment.NewLine
+                        Else
+                            strOutput = " (" & strTableField & " IN ('" & Replace(strFieldValue, ",", "','") & "'))" & Environment.NewLine
+                        End If
                     Case "DATETIME"
                         strOutput = " ((CONVERT([nvarchar](" & strFieldWidth & "), " & strTableField & ", " & curVar.DateTimeStyle & ")) IN ('" & strFieldValue.Replace(",", "','") & "'))" & Environment.NewLine
                     Case "IMAGE"
@@ -1028,42 +1038,42 @@ Public Class BaseCode
                         strOutput = " (" & strTableField & " IN ('" & Replace(strFieldValue, ",", "','") & "'))" & Environment.NewLine
                 End Select
                 Return strOutput
-            Else
-                If strFieldValue.Trim().Contains(" ") Then
-                    Dim strArgs As String() = strFieldValue.Trim().Split(New String() {" "}, StringSplitOptions.RemoveEmptyEntries)
-                    For Each strArg As String In strArgs
-                        If strArg IsNot Nothing AndAlso strArg.Trim().Length > 0 Then
-                            strOutput &= " AND (" & strTableField & " LIKE ('%" & strArg.Trim() & "%'))" & Environment.NewLine
-                        End If
-                    Next
-                    Dim strTest As String = strOutput.Substring(0, 4)
-                    If strOutput.Substring(0, 4) = " AND" Then
-                        'if the value starts with AND, remove it.
-                        strOutput = strOutput.Remove(0, 4)
+            ElseIf strFieldValue.Trim().Contains(" ") Then
+                Dim strArgs As String() = strFieldValue.Trim().Split(New String() {" "}, StringSplitOptions.RemoveEmptyEntries)
+                For Each strArg As String In strArgs
+                    If strArg IsNot Nothing AndAlso strArg.Trim().Length > 0 Then
+                        strOutput &= " AND (" & strTableField & " LIKE ('%" & strArg.Trim() & "%'))" & Environment.NewLine
                     End If
-                    Return strOutput
-                Else
-
-                    Select Case strFieldType.ToUpper
-                        Case "CHAR"
-                            strOutput = " (" & strTableField & " LIKE '%" & strFieldValue & "%')"
-                        Case "INTEGER"
-                            strOutput = " (" & strTableField & " LIKE '%" & strFieldValue & "%')"
-                        Case "DATETIME"
-                            strOutput = " (CONVERT([nvarchar](" & strFieldWidth & "), " & strTableField & ", " & curVar.DateTimeStyle & ")) LIKE '%" & strFieldValue & "%')"
-                        Case "BINARY", "XML", "GEO", "TEXT", "GUID", "TIME", "TIMESTAMP"
-                            strOutput = " (CONVERT([nvarchar](" & strFieldWidth & "), " & strTableField & ")) LIKE '%" & strFieldValue & "%')"
-                        Case "BIT"
-                            strOutput = " (COALESCE(" & strTableField & ",0) = " & strFieldValue & ") "
-                        Case "IMAGE"
-                            'do nothing. cannot search on an image data type.
-                        Case Else
-                            'try the default CHAR action
-                            strOutput = " (" & strTableField & " LIKE '%" & strFieldValue & "%')"
-                    End Select
-                    Return strOutput
-
+                Next
+                Dim strTest As String = strOutput.Substring(0, 4)
+                If strOutput.Substring(0, 4) = " AND" Then
+                    'if the value starts with AND, remove it.
+                    strOutput = strOutput.Remove(0, 4)
                 End If
+                Return strOutput
+            Else
+                Select Case strFieldType.ToUpper
+                    Case "CHAR"
+                        strOutput = " (" & strTableField & " LIKE '%" & strFieldValue & "%')"
+                    Case "INTEGER"
+                        strOutput = " (" & strTableField & " LIKE '%" & strFieldValue & "%')"
+                    Case "DATETIME"
+                        strOutput = " (CONVERT([nvarchar](" & strFieldWidth & "), " & strTableField & ", " & curVar.DateTimeStyle & ")) LIKE '%" & strFieldValue & "%')"
+                    Case "BINARY", "XML", "GEO", "TEXT", "GUID", "TIME", "TIMESTAMP"
+                        strOutput = " (CONVERT([nvarchar](" & strFieldWidth & "), " & strTableField & ")) LIKE '%" & strFieldValue & "%')"
+                    Case "BIT"
+                        If IsNumeric(strFieldValue) Then
+                            strOutput = " (COALESCE(" & strTableField & ",0) = " & strFieldValue & ") "
+                        Else
+                            strOutput = " (COALESCE(" & strTableField & ",0) = '" & strFieldValue & "') "
+                        End If
+                    Case "IMAGE"
+                        'do nothing. cannot search on an image data type.
+                    Case Else
+                        'try the default CHAR action
+                        strOutput = " (" & strTableField & " LIKE '%" & strFieldValue & "%')"
+                End Select
+                Return strOutput
             End If
         End If
 
@@ -1272,6 +1282,15 @@ Public Class BaseCode
         Return strReturn
     End Function
 
+    Public Function GetTableAliasFromName(xmlTables As XmlDocument, strInput As String) As String
+        Dim strReturn As String = strInput
+        Dim xNode As XmlNode = dhdText.FindXmlNode(xmlTables, "Table", "Name", strInput)
+        If Not xNode Is Nothing Then
+            If dhdText.CheckNodeElement(xNode, "Alias") = True Then strReturn = xNode.Item("Alias").InnerText
+        End If
+        Return strReturn
+    End Function
+
     Public Function GetTableNameFromString(strInput As String) As String
         If String.IsNullOrEmpty(strInput) Then Return strInput
         Dim strReturn As String = strInput
@@ -1461,6 +1480,7 @@ Public Class BaseCode
 
     Public Function SetDelimiters(strInput As String, strDataType As String, strCompare As String, Optional strShowMode As String = Nothing) As String
         If strInput = Nothing Then strInput = ""
+        If IsNumeric(strInput) = False And strDataType = "BIT" Then strDataType = "CHAR"
         If strInput.Length > 2 Then
             If strInput.Substring(0, 2) = "f:" Then
                 Return "(" & strInput.Replace("f:", "") & ")"

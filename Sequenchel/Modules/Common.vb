@@ -10,59 +10,6 @@ Module Common
     Friend strErrorMessage As String = ""
     Friend strQuery As String = Nothing
 
-    Public Sub FieldTextHandler(sender As Object)
-        If basCode.curStatus.SuspendActions = False Then
-
-            Select Case sender.[GetType]().Name
-                Case "TextField"
-                    If sender.Text <> sender.Tag.ToString Then
-                        sender.BackColor = clrMarked
-                    Else
-                        If sender.ReadOnly = False Then
-                            sender.BackColor = clrOriginal
-                        Else
-                            sender.BackColor = clrDisabled
-                        End If
-                    End If
-                Case "CheckField"
-                    If sender.Checked.ToString <> sender.Tag.ToString Then
-                        sender.BackColor = clrMarked
-                    Else
-                        If sender.Enabled = True Then
-                            sender.BackColor = clrControl
-                        Else
-                            sender.BackColor = clrDisabled
-                        End If
-                    End If
-                Case "ComboField"
-                    'not used
-                Case "ManagedSelectField"
-                    If sender.Text.ToString <> sender.Tag.ToString Then
-                        sender.BackColor = clrMarked
-                    Else
-                        If sender.Enabled = True Then
-                            sender.BackColor = clrOriginal
-                        Else
-                            sender.BackColor = clrDisabled
-                        End If
-                    End If
-
-                    'As related field
-                    'For intField As Integer = 0 To tblTable.Count - 1
-                    '    If tblTable.Item(intField).FieldName = sender.FieldRelatedField Then
-                    '        Select Case tblTable.Item(intField).FieldCategory
-                    '            Case 1, 3, 4, 5
-                    '                If Not sender.value = Nothing Then tblTable.Item(intField).Text = sender.Value
-                    '            Case 2
-                    '                tblTable.Item(intField).Checked = sender.Value
-                    '        End Select
-                    '    End If
-                    'Next
-
-            End Select
-        End If
-    End Sub
-
     Friend Sub FieldEnableHandler(sender As Object, blnEnabled As Boolean)
         Select Case sender.Field.Category
             Case 1

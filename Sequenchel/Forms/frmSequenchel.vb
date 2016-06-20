@@ -425,6 +425,7 @@ Public Class frmSequenchel
                         fldField.SearchField = basCode.basTable.Item(intCount).Name
                         Dim mslTemp As ManagedSelectField = TryCast(fldField, ManagedSelectField)
                         If mslTemp IsNot Nothing Then AddHandler mslTemp.TextChanged, AddressOf TextHandler
+                        If mslTemp IsNot Nothing Then AddHandler mslTemp.ValueChanged, AddressOf TextHandler
                         fldField.Tag = ""
                         fldField.Field = basCode.basTable.Item(intCount)
                     Case 6
@@ -494,7 +495,9 @@ Public Class frmSequenchel
                     If basCode.basTable.Item(intCount).Count > 0 Then
                         For intRel As Integer = 0 To basCode.basTable.Item(intCount).Count - 1
                             Dim msfRelatedField As New ManagedSelectField
+                            If msfRelatedField IsNot Nothing Then AddHandler msfRelatedField.ValueChanged, AddressOf TextHandler
                             msfRelatedField.Name = basCode.basTable.Item(intCount).Item(intRel).RelationTableAlias & "." & basCode.basTable.Item(intCount).Item(intRel).RelationField
+                            msfRelatedField.Tag = ""
 
                             msfRelatedField.DataConn.DataLocation = basCode.dhdConnection.DataLocation
                             msfRelatedField.DataConn.DatabaseName = basCode.dhdConnection.DatabaseName
@@ -505,6 +508,16 @@ Public Class frmSequenchel
                             msfRelatedField.Table = basCode.basTable.Item(intCount).Item(intRel).RelationTable
                             msfRelatedField.SearchField = basCode.basTable.Item(intCount).Item(intRel).RelatedFieldName
                             msfRelatedField.IdentifierField = basCode.basTable.Item(intCount).Item(intRel).RelationField
+
+                            msfRelatedField.Field = New SeqCore.BaseField
+                            msfRelatedField.Field.Category = 6
+                            msfRelatedField.Field.Name = msfRelatedField.Name
+                            msfRelatedField.Field.FieldName = msfRelatedField.IdentifierField
+                            msfRelatedField.Field.FieldTableName = msfRelatedField.Table
+                            msfRelatedField.Field.FieldTableAlias = basCode.GetTableAliasFromName(basCode.xmlTables, msfRelatedField.Field.FieldTableName)
+                            msfRelatedField.Field.FieldDataType = basCode.basTable.Item(intCount).FieldDataType
+                            msfRelatedField.Field.FieldVisible = basCode.basTable.Item(intCount).FieldVisible
+                            msfRelatedField.Field.FieldSearch = basCode.basTable.Item(intCount).FieldSearch
 
                             sptFields1.Panel2.Controls.Add(msfRelatedField)
                             msfRelatedField.Top = fldField.Top
@@ -580,275 +593,6 @@ Public Class frmSequenchel
             End If
         Next
     End Sub
-
-    'Friend Sub LoadTable(strTable As String)
-    '    Try
-    '        FieldsDispose()
-    '        Dim xPNode As System.Xml.XmlNode = basCode.dhdText.FindXmlNode(xmlTables, "Table", "Alias", strTable)
-
-    '        If Not xPNode Is Nothing Then
-    '            'If basCode.dhdText.CheckNodeElement(xPNode, "Alias") Then tabTables.TabPages("tpgTable1").Text = xPNode.Item("Alias").InnerText
-    '            If basCode.dhdText.CheckNodeElement(xPNode, "Name") Then tblTable.TableName = xPNode.Item("Name").InnerText
-    '            If basCode.dhdText.CheckNodeElement(xPNode, "Alias") Then tblTable.TableAlias = xPNode.Item("Alias").InnerText.Replace(".", "_")
-    '            If basCode.dhdText.CheckNodeElement(xPNode, "Visible") Then tblTable.TableVisible = xPNode.Item("Visible").InnerText
-    '            If basCode.dhdText.CheckNodeElement(xPNode, "Update") Then tblTable.TableUpdate = xPNode.Item("Update").InnerText
-    '            If basCode.dhdText.CheckNodeElement(xPNode, "Search") Then tblTable.TableSearch = xPNode.Item("Search").InnerText
-    '            If basCode.dhdText.CheckNodeElement(xPNode, "Insert") Then tblTable.TableInsert = xPNode.Item("Insert").InnerText
-    '            If basCode.dhdText.CheckNodeElement(xPNode, "Delete") Then tblTable.TableDelete = xPNode.Item("Delete").InnerText
-
-    '            If tblTable.TableVisible = True Then
-    '                Dim xNode As System.Xml.XmlNode
-    '                For Each xNode In xPNode.SelectNodes(".//Field")
-    '                    Dim fldField As Object = Nothing
-    '                    If xNode.Item("FldSearchList").InnerText = True And xNode.Item("DataType").InnerText.ToUpper <> "BIT" Then
-    '                        'fldField = New ComboField
-    '                        fldField = New ManagedSelectField
-    '                        fldField.FieldCategory = 5
-    '                        'fldField.AutoCompleteMode = AutoCompleteMode.Suggest
-    '                        'fldField.AutoCompleteSource = AutoCompleteSource.ListItems
-    '                    ElseIf xNode.Item("DataType").InnerText.ToUpper = "BIT" Then
-    '                        fldField = New CheckField
-    '                    Else
-    '                        fldField = New TextField
-    '                    End If
-    '                    tblTable.Add(fldField)
-    '                    fldField.TabIndex = tblTable.Count
-    '                    If basCode.dhdText.CheckNodeElement(xNode, "FldName") Then fldField.FieldName = xNode.Item("FldName").InnerText
-    '                    If basCode.dhdText.CheckNodeElement(xNode, "FldAlias") Then fldField.FieldAlias = xNode.Item("FldAlias").InnerText
-    '                    If fldField.FieldAlias = "" Then fldField.FieldAlias = fldField.FieldName
-    '                    If basCode.dhdText.CheckNodeElement(xNode, "FldName") Then fldField.Name = tblTable.TableName & "." & xNode.Item("FldName").InnerText
-    '                    If basCode.dhdText.CheckNodeElement(xNode, "DataType") Then fldField.FieldDataType = xNode.Item("DataType").InnerText
-    '                    If basCode.dhdText.CheckNodeElement(xNode, "Identity") Then fldField.Identity = xNode.Item("Identity").InnerText
-    '                    If basCode.dhdText.CheckNodeElement(xNode, "PrimaryKey") Then fldField.PrimaryKey = xNode.Item("PrimaryKey").InnerText
-
-    '                    fldField.Left = basCode.curVar.BuildMargin
-    '                    If basCode.dhdText.CheckNodeElement(xNode, "FldWidth") Then
-    '                        If xNode.Item("FldWidth").InnerText >= sptFields1.Panel2.Width - basCode.curVar.BuildMargin * 3 Then
-    '                            fldField.Width = sptFields1.Panel2.Width - basCode.curVar.BuildMargin * 3
-    '                            fldField.Anchor = AnchorStyles.Top Or AnchorStyles.Left Or AnchorStyles.Right
-    '                        Else
-    '                            fldField.Width = xNode.Item("FldWidth").InnerText
-    '                        End If
-    '                    End If
-
-    '                    If fldField.FieldCategory = 5 Then
-    '                        fldField.DataConn.DataLocation = basCode.dhdConnection.DataLocation
-    '                        fldField.DataConn.DatabaseName = basCode.dhdConnection.DatabaseName
-    '                        fldField.DataConn.DataProvider = basCode.dhdConnection.DataProvider
-    '                        fldField.DataConn.LoginMethod = basCode.dhdConnection.LoginMethod
-    '                        fldField.DataConn.LoginName = basCode.dhdConnection.LoginName
-    '                        fldField.DataConn.Password = basCode.dhdConnection.Password
-    '                        fldField.Table = tblTable.TableName
-    '                        fldField.SearchField = fldField.FieldName
-    '                    End If
-
-    '                    If basCode.dhdText.CheckNodeElement(xNode, "Relations") Then
-    '                        For Each xRnode As XmlNode In xNode.Item("Relations").ChildNodes
-
-    '                            'New relation style...
-    '                            Dim strRelTable As String = "", strRelField As String = "", strRelation As String = ""
-
-    '                            If basCode.dhdText.CheckNodeElement(xRnode, "RelationTable") Then fldField.FieldRelationTable = xRnode.Item("RelationTable").InnerText
-    '                            If basCode.dhdText.CheckNodeElement(xRnode, "RelationTableAlias") Then fldField.FieldRelationTableAlias = xRnode.Item("RelationTableAlias").InnerText
-    '                            If String.IsNullOrEmpty(fldField.FieldRelationTableAlias) Then fldField.FieldRelationTableAlias = fldField.FieldRelationTable.ToString.Replace(".", "_")
-    '                            If basCode.dhdText.CheckNodeElement(xRnode, "RelationField") Then fldField.FieldRelationField = xRnode.Item("RelationField").InnerText
-    '                            fldField.FieldRelation = fldField.FieldRelationTable & "." & fldField.FieldRelationField
-    '                            If basCode.dhdText.CheckNodeElement(xRnode, "RelatedField") Then fldField.FieldRelatedField = xRnode.Item("RelatedField").InnerText
-    '                            If basCode.dhdText.CheckNodeElement(xRnode, "RelatedFieldList") Then fldField.FieldRelatedFieldList = xRnode.Item("RelatedFieldList").InnerText
-    '                            If xRnode.ChildNodes.Count = 1 Then
-    '                                strRelation = xRnode.InnerText
-    '                                If strRelation.Length > 0 Then
-    '                                    fldField.FieldRelationTable = strRelation.Substring(0, strRelation.LastIndexOf("."))
-    '                                    fldField.FieldRelationField = strRelation.Substring(strRelation.LastIndexOf(".") + 1, strRelation.Length - (strRelation.LastIndexOf(".") + 1))
-    '                                    If xRnode.Attributes.Count > 0 Then
-    '                                        If xRnode.Attributes(0).Name = "RelatedField" Then fldField.FieldRelatedField = xRnode.Attributes("RelatedField").InnerText
-    '                                        If xRnode.Attributes.Count > 1 Then
-    '                                            If xRnode.Attributes(1).Name = "RelatedFieldList" Then fldField.FieldRelatedFieldList = xRnode.Attributes("RelatedFieldList").InnerText
-    '                                        End If
-    '                                        fldField.FieldRelation = xRnode.InnerText
-    '                                        'If basCode.dhdText.CheckNodeElement(xRnode, "RelatedField") Then fldField.FieldRelatedField = xRnode.Attributes("RelatedField").InnerText
-    '                                        Exit For
-    '                                    End If
-    '                                End If
-    '                            End If
-    '                        Next
-    '                    End If
-    '                    'fldField.FieldRelation = xNode.Item("Relations").InnerText
-    '                    If basCode.dhdText.CheckNodeElement(xNode, "DefaultButton") Then fldField.DefaultButton = xNode.Item("DefaultButton").InnerText
-    '                    If fldField.DefaultButton = True Then
-    '                        Try
-    '                            fldField.DefaultValue = xNode.Item("DefaultButton").Attributes("DefaultValue").Value
-    '                        Catch ex As Exception
-    '                            fldField.DefaultValue = ""
-    '                            basCode.WriteLog("there was an error setting the value for DefaultValue: " & Environment.NewLine & ex.Message, 1)
-    '                        End Try
-    '                    End If
-
-    '                    If basCode.dhdText.CheckNodeElement(xNode, "FldList") Then fldField.FieldList = xNode.Item("FldList").InnerText
-    '                    If fldField.FieldList = True Then
-    '                        Try
-    '                            fldField.FieldListOrder = xNode.Item("FldList").Attributes("Order").Value
-    '                            fldField.FieldListWidth = xNode.Item("FldList").Attributes("Width").Value
-    '                        Catch ex As Exception
-    '                            fldField.FieldListOrder = 0
-    '                            fldField.FieldListWidth = 0
-    '                            basCode.WriteLog("there was an error setting the value for ListOrder or ListWidth: " & Environment.NewLine & ex.Message, 1)
-    '                        End Try
-    '                    End If
-    '                    If basCode.dhdText.CheckNodeElement(xNode, "FldSearch") Then fldField.FieldSearch = xNode.Item("FldSearch").InnerText
-    '                    If basCode.dhdText.CheckNodeElement(xNode, "FldSearchList") Then fldField.FieldSearchList = xNode.Item("FldSearchList").InnerText
-    '                    If basCode.dhdText.CheckNodeElement(xNode, "FldUpdate") Then fldField.FieldUpdate = xNode.Item("FldUpdate").InnerText
-    '                    If basCode.dhdText.CheckNodeElement(xNode, "FldVisible") Then fldField.FieldVisible = xNode.Item("FldVisible").InnerText
-
-    '                    If basCode.dhdText.CheckNodeElement(xNode, "ControlField") Then fldField.ControlField = xNode.Item("ControlField").InnerText
-    '                    If basCode.dhdText.CheckNodeElement(xNode, "ControlValue") Then fldField.ControlValue = xNode.Item("ControlValue").InnerText
-    '                    If basCode.dhdText.CheckNodeElement(xNode, "ControlUpdate") Then fldField.ControlUpdate = xNode.Item("ControlUpdate").InnerText
-    '                    If basCode.dhdText.CheckNodeElement(xNode, "ControlMode") Then fldField.ControlMode = xNode.Item("ControlMode").InnerText
-
-    '                    If fldField.FieldVisible = True Then
-    '                        sptFields1.Panel2.Controls.Add(fldField)
-    '                        If tblTable.Count = 1 Then
-    '                            fldField.Top = basCode.curVar.BuildMargin
-    '                        Else
-    '                            fldField.Top = tblTable(tblTable.Count - 2).Top + fldField.Height + basCode.curVar.BuildMargin
-    '                        End If
-    '                        If fldField.top > sptFields1.Panel2.Height And fldField.Width >= sptFields1.Panel2.Width - (basCode.curVar.BuildMargin * 3) - SystemInformation.VerticalScrollBarWidth Then
-    '                            fldField.width = sptFields1.Panel2.Width - (basCode.curVar.BuildMargin * 3) - SystemInformation.VerticalScrollBarWidth
-    '                        End If
-    '                        Dim lblLabel As New Label
-    '                        arrLabels.Add(lblLabel)
-    '                        lblLabel.Name = "lbl" & fldField.Name
-    '                        sptFields1.Panel1.Controls.Add(lblLabel)
-    '                        lblLabel.Text = fldField.FieldAlias
-    '                        lblLabel.Top = fldField.Top + basCode.curVar.BuildMargin
-    '                        lblLabel.AutoSize = True
-    '                        lblLabel.Anchor = AnchorStyles.Right Or AnchorStyles.Top
-    '                        lblLabel.Left = sptFields1.Panel1.Width - lblLabel.Width - 25 - basCode.curVar.BuildMargin
-    '                        If lblLabel.Left < 0 Then
-    '                            sptTable1.SplitterDistance += lblLabel.Left
-    '                            sptFields1.SplitterDistance += (lblLabel.Left * -1)
-    '                        End If
-    '                        If fldField.FieldSearchList = True And fldField.FieldDataType.ToString.ToUpper <> "BIT" Then
-    '                            Dim btnButton As New Button
-    '                            btnButton.Name = "btn" & fldField.FieldName
-    '                            sptFields1.Panel1.Controls.Add(btnButton)
-    '                            btnButton.Text = ""
-    '                            btnButton.Image = My.Resources.reload16
-    '                            btnButton.ImageAlign = ContentAlignment.MiddleCenter
-    '                            btnButton.Size = New System.Drawing.Size(25, 23)
-    '                            btnButton.Top = fldField.Top - basCode.curVar.BuildMargin / 2
-    '                            btnButton.Left = sptFields1.Panel1.Width - btnButton.Width
-    '                            btnButton.Anchor = AnchorStyles.Right Or AnchorStyles.Top
-    '                            btnButton.UseVisualStyleBackColor = True
-    '                            AddHandler btnButton.Click, AddressOf Me.btnReload_Click
-    '                        End If
-
-    '                        If fldField.DefaultButton = True And Not (fldField.FieldSearchList = True And fldField.FieldDataType.ToString.ToUpper <> "BIT") Then
-    '                            Dim btnButton As New Button
-    '                            btnButton.Name = "btn" & fldField.FieldName
-    '                            sptFields1.Panel1.Controls.Add(btnButton)
-    '                            btnButton.Text = ""
-    '                            btnButton.Image = My.Resources.TSfavicon
-    '                            btnButton.ImageAlign = ContentAlignment.MiddleCenter
-    '                            btnButton.Size = New System.Drawing.Size(25, 23)
-    '                            btnButton.Top = fldField.Top - basCode.curVar.BuildMargin / 2
-    '                            btnButton.Left = sptFields1.Panel1.Width - btnButton.Width
-    '                            btnButton.Anchor = AnchorStyles.Right Or AnchorStyles.Top
-    '                            btnButton.UseVisualStyleBackColor = True
-    '                            AddHandler btnButton.Click, AddressOf Me.btnDefault_Click
-    '                        End If
-
-    '                        If fldField.FieldRelatedField.ToString.Length > 0 And fldField.FieldRelation.ToString.Length > 0 Then
-    '                            'Dim objRelatedField As New ComboField
-    '                            Dim msfRelatedField As New ManagedSelectField
-    '                            'AddHandler msfRelatedField.SelectedIndexChanged, AddressOf Me.cbxRelatedField_SelectedIndexChanged
-    '                            tblTable.Add(msfRelatedField)
-    '                            msfRelatedField.Name = fldField.FieldRelationTable & "." & fldField.FieldRelatedField
-    '                            msfRelatedField.FieldName = fldField.FieldRelatedField
-    '                            msfRelatedField.FieldAlias = fldField.FieldRelatedField
-    '                            msfRelatedField.FieldRelatedField = fldField.FieldName
-    '                            msfRelatedField.FieldSearch = fldField.FieldSearch
-    '                            msfRelatedField.FieldUpdate = fldField.FieldUpdate
-    '                            msfRelatedField.FieldVisible = fldField.FieldVisible
-    '                            msfRelatedField.ControlField = fldField.ControlField
-    '                            msfRelatedField.ControlValue = fldField.ControlValue
-    '                            msfRelatedField.ControlUpdate = fldField.ControlUpdate
-    '                            msfRelatedField.ControlMode = fldField.ControlMode
-
-    '                            msfRelatedField.DataConn.DataLocation = basCode.dhdConnection.DataLocation
-    '                            msfRelatedField.DataConn.DatabaseName = basCode.dhdConnection.DatabaseName
-    '                            msfRelatedField.DataConn.DataProvider = basCode.dhdConnection.DataProvider
-    '                            msfRelatedField.DataConn.LoginMethod = basCode.dhdConnection.LoginMethod
-    '                            msfRelatedField.DataConn.LoginName = basCode.dhdConnection.LoginName
-    '                            msfRelatedField.DataConn.Password = basCode.dhdConnection.Password
-    '                            msfRelatedField.Table = fldField.FieldRelation.Substring(0, fldField.FieldRelation.LastIndexOf("."))
-    '                            msfRelatedField.SearchField = fldField.FieldRelatedField
-    '                            msfRelatedField.IdentifierField = fldField.FieldRelation.Substring(fldField.FieldRelation.LastIndexOf(".") + 1, fldField.FieldRelation.length - (fldField.FieldRelation.LastIndexOf(".") + 1))
-
-    '                            sptFields1.Panel2.Controls.Add(msfRelatedField)
-    '                            msfRelatedField.Top = fldField.Top
-    '                            msfRelatedField.Left = fldField.Left + fldField.Width + basCode.curVar.BuildMargin
-    '                            If fldField.top > sptFields1.Panel2.Height Then
-    '                                msfRelatedField.Width = sptFields1.Panel2.Width - msfRelatedField.Left - (basCode.curVar.BuildMargin * 3) - SystemInformation.VerticalScrollBarWidth
-    '                            Else
-    '                                msfRelatedField.Width = sptFields1.Panel2.Width - msfRelatedField.Left - (basCode.curVar.BuildMargin * 3)
-    '                            End If
-
-    '                            msfRelatedField.Width = sptFields1.Panel2.Width - msfRelatedField.Left - (basCode.curVar.BuildMargin * 3) - SystemInformation.VerticalScrollBarWidth
-    '                            msfRelatedField.Anchor = AnchorStyles.Top Or AnchorStyles.Left Or AnchorStyles.Right
-    '                            msfRelatedField.Visible = True
-    '                            'If basCode.dhdConnection.DataBaseOnline = True Then msfRelatedField.RunSearch()
-    '                        End If
-    '                    End If
-    '                    FieldEnableHandler(fldField, fldField.FieldSearch)
-
-    '                    If fldField.FieldList = True Or fldField.Identity = True Or fldField.PrimaryKey = True Then
-    '                        Dim dgvColumn As New DataGridViewTextBoxColumn
-    '                        dgvColumn.Name = fldField.FieldName
-    '                        dgvColumn.HeaderText = fldField.FieldAlias
-    '                        Select Case fldField.FieldDataType.ToUpper
-    '                            Case "BIT"
-    '                                dgvColumn.ValueType = GetType(Boolean)
-    '                            Case "INTEGER"
-    '                                dgvColumn.ValueType = GetType(Integer)
-    '                            Case Else
-    '                                dgvColumn.ValueType = GetType(String)
-    '                        End Select
-    '                        dgvColumn.Width = fldField.FieldListWidth
-    '                        dgvTable1.Columns.Add(dgvColumn)
-    '                        If fldField.FieldList = True Then
-    '                            dgvColumn.Visible = True
-    '                        Else
-    '                            dgvColumn.Visible = False
-    '                        End If
-    '                        If fldField.Identity = True Or fldField.PrimaryKey = True Then
-    '                            dgvColumn.Tag = "Identity"
-    '                        Else
-    '                            dgvColumn.Tag = ""
-    '                        End If
-    '                    End If
-
-    '                Next
-    '            End If
-    '        End If
-    '        FieldsClear()
-    '        SetWidth()
-    '        SortColumns()
-    '        'LoadSearchCriteria()
-    '        'LoadRelatedSearchCriteria()
-    '        SearchListLoad(tblTable.TableName)
-    '        If basCode.curStatus.Status > 3 Then
-    '            basCode.curStatus.Status = SeqCore.CurrentStatus.StatusList.ControlSearch
-    '        Else
-    '            basCode.curStatus.Status = SeqCore.CurrentStatus.StatusList.Search
-    '        End If
-    '        ButtonHandle()
-    '    Catch ex As Exception
-    '        WriteStatus("There was an error reading the Table file. Please check the log.", 1, lblStatusText)
-    '        basCode.WriteLog("There was an error reading the Table file. Please check the file for Table: " & Environment.NewLine & strTable & Environment.NewLine & ex.Message, 1)
-    '    End Try
-
-    'End Sub
 
     Private Sub SortColumns()
         Dim intColumns As Integer = dgvTable1.Columns.Count
@@ -1335,7 +1079,7 @@ Public Class frmSequenchel
             If basCode.basTable.Item(intField).Count > 0 Then
                 'Relations exist
                 For intRel As Integer = 0 To basCode.basTable.Item(intField).Count - 1
-                    If basCode.basTable.Item(intField).Item(intRel).RelatedField.Length > 0 Then
+                    If basCode.basTable.Item(intField).Item(intRel).RelatedFieldName.Length > 0 Then
                         Dim strRelation As String = basCode.basTable.Item(intField).Item(intRel).RelationField
                         strQuery &= ",[" & basCode.basTable.Item(intField).Item(intRel).RelationTable.Replace(".", "].[") & "].[" & basCode.basTable.Item(intField).Item(intRel).RelatedFieldName & "] AS [" & basCode.basTable.Item(intField).Item(intRel).RelatedFieldAlias & "]"
                         strQueryFrom &= " LEFT OUTER JOIN " & basCode.basTable.Item(intField).Item(intRel).RelationTable & " ON " & "[" & basCode.basTable.TableAlias & "]." & basCode.basTable.Item(intField).FieldName & " = " & basCode.basTable.Item(intField).Item(intRel).RelationTable & "." & basCode.basTable.Item(intField).Item(intRel).RelationField
@@ -1870,6 +1614,59 @@ Public Class frmSequenchel
         End If
     End Sub
 
+    Public Sub FieldTextHandler(sender As Object)
+        If basCode.curStatus.SuspendActions = False Then
+
+            Select Case sender.[GetType]().Name
+                Case "TextField"
+                    If sender.Text <> sender.Tag.ToString Then
+                        sender.BackColor = clrMarked
+                    Else
+                        If sender.ReadOnly = False Then
+                            sender.BackColor = clrOriginal
+                        Else
+                            sender.BackColor = clrDisabled
+                        End If
+                    End If
+                Case "CheckField"
+                    If sender.Checked.ToString <> sender.Tag.ToString Then
+                        sender.BackColor = clrMarked
+                    Else
+                        If sender.Enabled = True Then
+                            sender.BackColor = clrControl
+                        Else
+                            sender.BackColor = clrDisabled
+                        End If
+                    End If
+                Case "ComboField"
+                    'not used
+                Case "ManagedSelectField"
+                    If sender.Text.ToString <> sender.Tag.ToString Then
+                        sender.BackColor = clrMarked
+                    Else
+                        If sender.Enabled = True Then
+                            sender.BackColor = clrOriginal
+                        Else
+                            sender.BackColor = clrDisabled
+                        End If
+                    End If
+
+                    'As related field
+                    For Each ctrl In sptFields1.Panel2.Controls
+                        'For intField As Integer = 0 To tblTable.Count - 1
+                        If ctrl.Field.FieldName = sender.IdentifierField Then
+                            Select Case ctrl.Field.Category
+                                Case 1, 3, 4, 5
+                                    If Not sender.value = Nothing Then ctrl.Text = sender.Value
+                                Case 2
+                                    ctrl.Checked = sender.Value
+                            End Select
+                        End If
+                    Next
+
+            End Select
+        End If
+    End Sub
 #End Region
 
 End Class
