@@ -68,6 +68,8 @@ Partial Class frmConfiguration
         Me.colDataBaseName = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.colDataLocation = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.tpgTableSets = New System.Windows.Forms.TabPage()
+        Me.lblConnection = New System.Windows.Forms.Label()
+        Me.txtConnection = New System.Windows.Forms.TextBox()
         Me.btnDefaultPathSet = New System.Windows.Forms.Button()
         Me.btnDefaultPathBrowse = New System.Windows.Forms.Button()
         Me.lblDefaultPath = New System.Windows.Forms.Label()
@@ -99,6 +101,7 @@ Partial Class frmConfiguration
         Me.colTablesFile = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.tpgTables = New System.Windows.Forms.TabPage()
         Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
+        Me.lblTableSet = New System.Windows.Forms.Label()
         Me.btnNodeDown = New System.Windows.Forms.Button()
         Me.btnNodeUp = New System.Windows.Forms.Button()
         Me.lblTables = New System.Windows.Forms.Label()
@@ -167,11 +170,10 @@ Partial Class frmConfiguration
         Me.lblFieldUpdate = New System.Windows.Forms.Label()
         Me.txtRelatedFieldAlias = New System.Windows.Forms.TextBox()
         Me.pnlTableSettings = New System.Windows.Forms.Panel()
+        Me.lstTables = New System.Windows.Forms.ListBox()
         Me.lblTableName = New System.Windows.Forms.Label()
-        Me.chkTableUpdate = New System.Windows.Forms.CheckBox()
         Me.lblTableInsert = New System.Windows.Forms.Label()
         Me.lblTableUpdate = New System.Windows.Forms.Label()
-        Me.lstTables = New System.Windows.Forms.ListBox()
         Me.chkTableInsert = New System.Windows.Forms.CheckBox()
         Me.lblTableAlias = New System.Windows.Forms.Label()
         Me.chkTableSearch = New System.Windows.Forms.CheckBox()
@@ -188,6 +190,7 @@ Partial Class frmConfiguration
         Me.btnTableClear = New System.Windows.Forms.Button()
         Me.btnColumnsImport = New System.Windows.Forms.Button()
         Me.txtTableAlias = New System.Windows.Forms.TextBox()
+        Me.chkTableUpdate = New System.Windows.Forms.CheckBox()
         Me.tpgTableTemplates = New System.Windows.Forms.TabPage()
         Me.tbnSearchSequenchelTemplates = New System.Windows.Forms.Button()
         Me.btnUseTemplate = New System.Windows.Forms.Button()
@@ -205,9 +208,6 @@ Partial Class frmConfiguration
         Me.btnCancel = New System.Windows.Forms.Button()
         Me.lblStatusTitle = New System.Windows.Forms.Label()
         Me.lblStatusText = New System.Windows.Forms.Label()
-        Me.lblConnection = New System.Windows.Forms.Label()
-        Me.txtConnection = New System.Windows.Forms.TextBox()
-        Me.lblTableSet = New System.Windows.Forms.Label()
         Me.tabConfiguration.SuspendLayout()
         Me.tpgConnections.SuspendLayout()
         Me.tpgTableSets.SuspendLayout()
@@ -718,6 +718,25 @@ Partial Class frmConfiguration
         Me.tpgTableSets.Text = "Table Sets"
         Me.tpgTableSets.UseVisualStyleBackColor = True
         '
+        'lblConnection
+        '
+        Me.lblConnection.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lblConnection.Location = New System.Drawing.Point(450, 28)
+        Me.lblConnection.Name = "lblConnection"
+        Me.lblConnection.Size = New System.Drawing.Size(96, 16)
+        Me.lblConnection.TabIndex = 107
+        Me.lblConnection.Text = "Connection"
+        Me.lblConnection.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        '
+        'txtConnection
+        '
+        Me.txtConnection.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.txtConnection.Location = New System.Drawing.Point(567, 24)
+        Me.txtConnection.Name = "txtConnection"
+        Me.txtConnection.ReadOnly = True
+        Me.txtConnection.Size = New System.Drawing.Size(170, 20)
+        Me.txtConnection.TabIndex = 106
+        '
         'btnDefaultPathSet
         '
         Me.btnDefaultPathSet.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
@@ -1019,6 +1038,15 @@ Partial Class frmConfiguration
         Me.SplitContainer1.Size = New System.Drawing.Size(762, 753)
         Me.SplitContainer1.SplitterDistance = 424
         Me.SplitContainer1.TabIndex = 163
+        '
+        'lblTableSet
+        '
+        Me.lblTableSet.AutoSize = True
+        Me.lblTableSet.Location = New System.Drawing.Point(115, 2)
+        Me.lblTableSet.Name = "lblTableSet"
+        Me.lblTableSet.Size = New System.Drawing.Size(0, 13)
+        Me.lblTableSet.TabIndex = 84
+        Me.lblTableSet.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'btnNodeDown
         '
@@ -1731,6 +1759,19 @@ Partial Class frmConfiguration
         Me.pnlTableSettings.Size = New System.Drawing.Size(334, 279)
         Me.pnlTableSettings.TabIndex = 163
         '
+        'lstTables
+        '
+        Me.lstTables.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lstTables.FormattingEnabled = True
+        Me.lstTables.HorizontalScrollbar = True
+        Me.lstTables.Location = New System.Drawing.Point(105, 5)
+        Me.lstTables.Name = "lstTables"
+        Me.lstTables.Size = New System.Drawing.Size(147, 95)
+        Me.lstTables.TabIndex = 2
+        Me.lstTables.TabStop = False
+        Me.lstTables.Visible = False
+        '
         'lblTableName
         '
         Me.lblTableName.Location = New System.Drawing.Point(3, 10)
@@ -1739,15 +1780,6 @@ Partial Class frmConfiguration
         Me.lblTableName.TabIndex = 89
         Me.lblTableName.Text = "Table Name"
         Me.lblTableName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
-        '
-        'chkTableUpdate
-        '
-        Me.chkTableUpdate.AutoSize = True
-        Me.chkTableUpdate.Location = New System.Drawing.Point(107, 108)
-        Me.chkTableUpdate.Name = "chkTableUpdate"
-        Me.chkTableUpdate.Size = New System.Drawing.Size(15, 14)
-        Me.chkTableUpdate.TabIndex = 7
-        Me.chkTableUpdate.UseVisualStyleBackColor = True
         '
         'lblTableInsert
         '
@@ -1766,19 +1798,6 @@ Partial Class frmConfiguration
         Me.lblTableUpdate.TabIndex = 104
         Me.lblTableUpdate.Text = "Table Update"
         Me.lblTableUpdate.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
-        '
-        'lstTables
-        '
-        Me.lstTables.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lstTables.FormattingEnabled = True
-        Me.lstTables.HorizontalScrollbar = True
-        Me.lstTables.Location = New System.Drawing.Point(105, 5)
-        Me.lstTables.Name = "lstTables"
-        Me.lstTables.Size = New System.Drawing.Size(147, 95)
-        Me.lstTables.TabIndex = 2
-        Me.lstTables.TabStop = False
-        Me.lstTables.Visible = False
         '
         'chkTableInsert
         '
@@ -1926,6 +1945,15 @@ Partial Class frmConfiguration
         Me.txtTableAlias.Name = "txtTableAlias"
         Me.txtTableAlias.Size = New System.Drawing.Size(183, 20)
         Me.txtTableAlias.TabIndex = 4
+        '
+        'chkTableUpdate
+        '
+        Me.chkTableUpdate.AutoSize = True
+        Me.chkTableUpdate.Location = New System.Drawing.Point(107, 108)
+        Me.chkTableUpdate.Name = "chkTableUpdate"
+        Me.chkTableUpdate.Size = New System.Drawing.Size(15, 14)
+        Me.chkTableUpdate.TabIndex = 7
+        Me.chkTableUpdate.UseVisualStyleBackColor = True
         '
         'tpgTableTemplates
         '
@@ -2111,34 +2139,6 @@ Partial Class frmConfiguration
         Me.lblStatusText.Name = "lblStatusText"
         Me.lblStatusText.Size = New System.Drawing.Size(432, 23)
         Me.lblStatusText.TabIndex = 10
-        '
-        'lblConnection
-        '
-        Me.lblConnection.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lblConnection.Location = New System.Drawing.Point(450, 28)
-        Me.lblConnection.Name = "lblConnection"
-        Me.lblConnection.Size = New System.Drawing.Size(96, 16)
-        Me.lblConnection.TabIndex = 107
-        Me.lblConnection.Text = "Connection"
-        Me.lblConnection.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
-        '
-        'txtConnection
-        '
-        Me.txtConnection.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.txtConnection.Location = New System.Drawing.Point(567, 24)
-        Me.txtConnection.Name = "txtConnection"
-        Me.txtConnection.ReadOnly = True
-        Me.txtConnection.Size = New System.Drawing.Size(170, 20)
-        Me.txtConnection.TabIndex = 106
-        '
-        'lblTableSet
-        '
-        Me.lblTableSet.AutoSize = True
-        Me.lblTableSet.Location = New System.Drawing.Point(115, 2)
-        Me.lblTableSet.Name = "lblTableSet"
-        Me.lblTableSet.Size = New System.Drawing.Size(0, 13)
-        Me.lblTableSet.TabIndex = 84
-        Me.lblTableSet.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'frmConfiguration
         '

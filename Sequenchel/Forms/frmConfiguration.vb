@@ -14,8 +14,8 @@ Public Class frmConfiguration
         ConnectionsLoad()
         TableSetsLoad()
         TablesLoad()
-        txtDefaultPath.Text = basCode.curVar.DefaultConfigFilePath
-        txtTableSetName.Text = basCode.curVar.TableSetName
+        'txtDefaultPath.Text = basCode.curVar.DefaultConfigFilePath
+        'txtTableSetName.Text = basCode.curVar.TableSetName
         If lvwConnections.Items.Count = 0 Then ConnectionEdit()
     End Sub
 
@@ -42,22 +42,30 @@ Public Class frmConfiguration
         If basCode.curVar.AllowDelete = False Then chkTableDelete.Enabled = False
     End Sub
 
+    Private Sub DefaultsSet()
+        basCode.curStatus.SuspendActions = True
+        chkDefaultValues.Checked = True
+        basCode.curStatus.SuspendActions = False
+    End Sub
+
     Private Sub ConfigurationSave()
-        If basCode.curStatus.ConnectionChanged = True Then
-            basCode.curStatus.ConnectionReload = True
-            basCode.dhdText.SaveXmlFile(basCode.xmlConnections, basCode.dhdText.PathConvert(basCode.CheckFilePath(basCode.curVar.ConnectionsFile)), True)
-            basCode.curStatus.ConnectionChanged = False
-        End If
-        If basCode.curStatus.TableSetChanged = True Then
-            basCode.curStatus.TableSetReload = True
-            basCode.dhdText.SaveXmlFile(basCode.xmlTableSets, basCode.dhdText.PathConvert(basCode.CheckFilePath(basCode.curVar.TableSetsFile)), True)
-            basCode.curStatus.TableSetChanged = False
-        End If
-        If basCode.curStatus.TableChanged = True Then
-            basCode.curStatus.TableReload = True
-            basCode.dhdText.SaveXmlFile(basCode.xmlTables, basCode.dhdText.PathConvert(basCode.CheckFilePath(basCode.curVar.TablesFile)), True)
-            basCode.curStatus.TableChanged = False
-        End If
+        Try
+            If basCode.curStatus.ConnectionChanged = True Then
+                basCode.dhdText.SaveXmlFile(basCode.xmlConnections, basCode.dhdText.PathConvert(basCode.CheckFilePath(basCode.curVar.ConnectionsFile)), True)
+                basCode.curStatus.ConnectionChanged = False
+            End If
+            If basCode.curStatus.TableSetChanged = True Then
+                basCode.dhdText.SaveXmlFile(basCode.xmlTableSets, basCode.dhdText.PathConvert(basCode.CheckFilePath(basCode.curVar.TableSetsFile)), True)
+                basCode.curStatus.TableSetChanged = False
+            End If
+            If basCode.curStatus.TableChanged = True Then
+                basCode.dhdText.SaveXmlFile(basCode.xmlTables, basCode.dhdText.PathConvert(basCode.CheckFilePath(basCode.curVar.TablesFile)), True)
+                basCode.curStatus.TableChanged = False
+            End If
+        Catch ex As Exception
+            WriteStatus("There was an error saving the configuration. Check the log.", 1, lblStatusText)
+            basCode.WriteLog("There was an error saving the configuration. " & ex.Message, 1)
+        End Try
     End Sub
 
     Private Sub DataTypesLoad()
@@ -261,8 +269,49 @@ Public Class frmConfiguration
 
 #End Region
 
+    Private Sub AllClear(intLevel As Integer)
+        If intLevel >= 4 Then
+            'Reload all connections
+            basCode.xmlConnections.RemoveAll()
+            lvwConnections.Items.Clear()
+            basCode.curStatus.ConnectionsReload = True
+        End If
+        If intLevel >= 3 Then
+            'Reload 1 connection and all tablesets
+            basCode.xmlTableSets.RemoveAll()
+            basCode.curStatus.ConnectionReload = True
+            ConnectionClear()
+
+            basCode.curStatus.TableSetsReload = True
+            basCode.curStatus.TableSet = ""
+            lvwTableSets.Items.Clear()
+            tvwTableSet.Nodes.Clear()
+        End If
+        If intLevel >= 2 Then
+            'Reload 1 tableset and all tables
+            basCode.xmlTables.RemoveAll()
+            basCode.xmlSearch.RemoveAll()
+            basCode.xmlReports.RemoveAll()
+            TableSetClear()
+            basCode.curStatus.TableSetReload = True
+
+            basCode.curStatus.ReportsReload = True
+            basCode.curStatus.SearchesReload = True
+            basCode.curStatus.TablesReload = True
+            basCode.curStatus.Table = ""
+            lvwTables.Items.Clear()
+            tvwTable.Nodes.Clear()
+        End If
+        If intLevel >= 1 Then
+            'Reload 1 table
+            basCode.curStatus.TableReload = True
+            TablesClear()
+            FieldsClear()
+        End If
+    End Sub
+
     Private Sub ConnectionsLoad()
-        lvwConnections.Items.Clear()
+        AllClear(4)
         Dim lstXml As XmlNodeList
         lstXml = basCode.dhdText.FindXmlNodes(basCode.xmlConnections, "//Connection")
         If lstXml Is Nothing Then Exit Sub
@@ -294,19 +343,17 @@ Public Class frmConfiguration
 
     Private Sub ConnectionLoad()
         If lvwConnections.SelectedItems.Count = 1 Then
-            'If CurStatus.Connection <> lvwConnections.SelectedItems.Item(0).Tag Then
-            basCode.curStatus.ConnectionReload = True
+            AllClear(3)
+
             basCode.curStatus.Connection = lvwConnections.SelectedItems.Item(0).Tag
             txtConnection.Text = basCode.curStatus.Connection
             basCode.LoadConnection(basCode.xmlConnections, basCode.curStatus.Connection)
-            TableSetClear()
-            basCode.curStatus.TableSetsReload = True
+
             basCode.LoadTableSets(basCode.xmlTableSets)
             basCode.LoadTableSet(basCode.xmlTableSets, basCode.curStatus.TableSet)
             TableSetsLoad()
             basCode.LoadTables(basCode.xmlTables, False)
             TablesLoad()
-            'End If
 
             Dim xNode As XmlNode = basCode.dhdText.FindXmlNode(basCode.xmlConnections, "Connection", "ConnectionName", basCode.curStatus.Connection)
             tvwConnection.Nodes.Clear()
@@ -389,6 +436,9 @@ Public Class frmConfiguration
             xCNode = basCode.dhdText.CreateAppendElement(basCode.xmlConnections.Item("Sequenchel").Item("Connections"), "Connection", Nothing, False)
         End If
 
+        basCode.curStatus.Connection = txtConnectionName.Text
+        basCode.curVar.TableSetsFile = txtTableSetsFile.Text
+
         basCode.dhdText.CreateAppendAttribute(xCNode, "Default", "False", True)
         basCode.dhdText.CreateAppendElement(xCNode, "ConnectionName", txtConnectionName.Text, True)
         basCode.dhdText.CreateAppendElement(xCNode, "DataBaseName", txtDataBaseName.Text, True)
@@ -399,13 +449,7 @@ Public Class frmConfiguration
         basCode.dhdText.CreateAppendElement(xCNode, "LoginMethod", cbxLoginMethod.Text, True)
         basCode.dhdText.CreateAppendElement(xCNode, "Timeout", txtTimeOut.Text, True)
         basCode.dhdText.CreateAppendElement(xCNode, "TableSets", txtTableSetsFile.Text, True)
-        basCode.curStatus.Connection = txtConnectionName.Text
-        basCode.curVar.TableSetsFile = txtTableSetsFile.Text
-        basCode.curStatus.TableSet = ""
-        basCode.curStatus.Table = ""
-        basCode.curStatus.ConnectionsReload = True
-        basCode.curStatus.TableSetsReload = True
-        basCode.curStatus.TablesReload = True
+
         basCode.curStatus.ConnectionChanged = True
         ConfigurationSave()
         ConnectionsLoad()
@@ -424,12 +468,10 @@ Public Class frmConfiguration
             xNode.ParentNode.RemoveChild(xNode)
 
             basCode.curStatus.ConnectionChanged = True
-            basCode.curStatus.ConnectionsReload = True
-            basCode.curStatus.TableSetsReload = True
-            basCode.curStatus.TablesReload = True
-
             ConfigurationSave()
-            ConnectionClear()
+
+            basCode.curStatus.Connection = ""
+            AllClear(4)
             ConnectionsLoad()
             WriteStatus("Connection Deleted", 0, lblStatusText)
         End If
@@ -567,8 +609,6 @@ Public Class frmConfiguration
 #End Region
 
     Private Sub TableSetsLoad()
-        lvwTableSets.Items.Clear()
-        tvwTableSet.Nodes.Clear()
         If basCode.xmlTableSets.OuterXml.Length = 0 Then Exit Sub
 
         Dim lstXml As XmlNodeList
@@ -590,10 +630,9 @@ Public Class frmConfiguration
     End Sub
 
     Private Sub TableSetLoad()
-        TableSetClear()
+        AllClear(2)
         If lvwTableSets.SelectedItems.Count = 1 Then
             If basCode.curStatus.TableSet <> lvwTableSets.SelectedItems.Item(0).Tag Then
-                basCode.curStatus.TableSetReload = True
                 basCode.curStatus.TableSet = lvwTableSets.SelectedItems.Item(0).Tag
                 basCode.LoadTableSet(basCode.xmlTableSets, basCode.curStatus.TableSet)
                 basCode.LoadTables(basCode.xmlTables, False)
@@ -616,17 +655,21 @@ Public Class frmConfiguration
     End Sub
 
     Private Sub AutoFillDefaults()
-        Dim strSeparator As String = "\"
-        If txtDefaultPath.Text.Length = 0 Then
-            strSeparator = ""
-            txtOutputPath.Text = "."
-        Else
-            txtOutputPath.Text = txtDefaultPath.Text
+        If basCode.curStatus.SuspendActions = False Then
+            If txtConnection.Text.Length > 0 And txtTableSetName.Text.Length > 0 Then
+                Dim strSeparator As String = "\"
+                If txtDefaultPath.Text.Length = 0 Then
+                    strSeparator = ""
+                    txtOutputPath.Text = "."
+                Else
+                    txtOutputPath.Text = txtDefaultPath.Text
+                End If
+                txtTablesFile.Text = txtDefaultPath.Text & strSeparator & basCode.curStatus.Connection.Replace(" ", "_") & txtTableSetName.Text.Replace(" ", "_") & "Tables.xml"
+                txtReportsSetName.Text = txtTableSetName.Text.Replace(" ", "_") & "_Reports"
+                txtReportsFile.Text = txtDefaultPath.Text & strSeparator & basCode.curStatus.Connection.Replace(" ", "_") & txtTableSetName.Text.Replace(" ", "_") & "Reports.xml"
+                txtSearchFile.Text = txtDefaultPath.Text & strSeparator & basCode.curStatus.Connection.Replace(" ", "_") & txtTableSetName.Text.Replace(" ", "_") & "Search.xml"
+            End If
         End If
-        txtTablesFile.Text = txtDefaultPath.Text & strSeparator & basCode.curStatus.Connection.Replace(" ", "_") & txtTableSetName.Text.Replace(" ", "_") & "Tables.xml"
-        txtReportsSetName.Text = txtTableSetName.Text.Replace(" ", "_") & "_Reports"
-        txtReportsFile.Text = txtDefaultPath.Text & strSeparator & basCode.curStatus.Connection.Replace(" ", "_") & txtTableSetName.Text.Replace(" ", "_") & "Reports.xml"
-        txtSearchFile.Text = txtDefaultPath.Text & strSeparator & basCode.curStatus.Connection.Replace(" ", "_") & txtTableSetName.Text.Replace(" ", "_") & "Search.xml"
     End Sub
 
     Private Sub TableSetEdit()
@@ -646,6 +689,10 @@ Public Class frmConfiguration
 
     Private Sub TableSetAddOrUpdate()
         'dhdText.RemoveNode(basCode.xmlConnections, "Connections", "ConnectionName", txtConnectionName.Text)
+        If txtConnection.Text.Length = 0 Then
+            WriteStatus("No connection is selected", 2, lblStatusText)
+            Exit Sub
+        End If
         If txtTableSetName.Text.Length < 2 Or txtTablesFile.Text.Length < 2 Then
             WriteStatus(basCode.Message.strAllData, 2, lblStatusText)
             Exit Sub
@@ -670,12 +717,12 @@ Public Class frmConfiguration
         basCode.dhdText.CreateAppendElement(xTNode, "Search", txtSearchFile.Text, True)
         basCode.curStatus.TableSet = txtTableSetName.Text
         basCode.curVar.TablesFile = txtTablesFile.Text
-        basCode.curStatus.Table = ""
-        basCode.curStatus.TableSetReload = True
+
         basCode.curStatus.TableSetChanged = True
-        basCode.curStatus.TableSetsReload = True
-        basCode.curStatus.TablesReload = True
         ConfigurationSave()
+
+        AllClear(2)
+        'basCode.curStatus.TableSetsReload = True
         TableSetsLoad()
         lblTableSet.Text = basCode.curStatus.TableSet
         TableSetLoad()
@@ -684,6 +731,7 @@ Public Class frmConfiguration
     End Sub
 
     Private Sub TableSetClear()
+        basCode.curStatus.SuspendActions = True
         txtTableSetName.Text = ""
         txtDefaultPath.Text = ""
         txtTablesFile.Text = ""
@@ -691,6 +739,7 @@ Public Class frmConfiguration
         txtReportsSetName.Text = ""
         txtReportsFile.Text = ""
         txtSearchFile.Text = ""
+        basCode.curStatus.SuspendActions = False
     End Sub
 
 #End Region
@@ -860,8 +909,7 @@ Public Class frmConfiguration
 #End Region
 
     Private Sub TablesLoad()
-        lvwTables.Items.Clear()
-        tvwTable.Nodes.Clear()
+        AllClear(2)
         If basCode.xmlTables.OuterXml.Length = 0 Then Exit Sub
 
         Dim lstXml As XmlNodeList
@@ -883,6 +931,7 @@ Public Class frmConfiguration
     End Sub
 
     Private Sub TableLoad()
+        AllClear(1)
         If lvwTables.SelectedItems.Count = 1 Then
             If basCode.curStatus.Table <> lvwTables.SelectedItems.Item(0).Tag Then
                 basCode.curStatus.Table = lvwTables.SelectedItems.Item(0).Tag
@@ -1044,6 +1093,7 @@ Public Class frmConfiguration
     End Sub
 
     Private Sub TableEdit()
+        AllClear(1)
         If lvwTables.SelectedItems.Count = 1 Then
             Dim strSelection As String = lvwTables.SelectedItems.Item(0).Tag
 
@@ -1059,7 +1109,19 @@ Public Class frmConfiguration
         End If
     End Sub
 
+    Private Sub TablesClear()
+        txtTableName.Tag = ""
+        txtTableName.Text = ""
+        txtTableAlias.Text = ""
+        chkTableVisible.Checked = False
+        chkTableSearch.Checked = False
+        chkTableUpdate.Checked = False
+        chkTableInsert.Checked = False
+        chkTableDelete.Checked = False
+    End Sub
+
     Private Sub TableAddOrUpdate(strTableName As String, strAlias As String, blnVisible As Boolean, blnSearch As Boolean, blnUpdate As Boolean, blnInsert As Boolean, blnDelete As Boolean, Optional blnReload As Boolean = True)
+        AllClear(1)
         Dim root As XmlElement = basCode.xmlTables.DocumentElement
         If root Is Nothing Then
             basCode.xmlTables = basCode.dhdText.CreateRootDocument(basCode.xmlTables, "Sequenchel", "Tables", True)
@@ -1286,27 +1348,6 @@ Public Class frmConfiguration
                 End If
                 If cbxRelationTables.Items.Count > 0 Then cbxRelationTables.SelectedIndex = 0
             End If
-
-            '<Field>
-
-            '<Relations>
-            '  <Relation>
-            '    <RelationTable>dbo.tbl_Servers</RelationTable>
-            '    <RelationTableAlias>dbo.tbl_Servers</RelationTableAlias>
-            '    <RelationField>LinkedServer</RelationField>
-            '    <RelatedField>
-            '    </RelatedField>
-            '    <RelatedFieldList>False</RelatedFieldList>
-            '  </Relation>
-            '  <Relation>
-            '    <RelationTable>dbo.vw_Servers</RelationTable>
-            '    <RelationTableAlias>LiveServers</RelationTableAlias>
-            '    <RelationField>LinkedServer</RelationField>
-            '    <RelatedField>ServerID</RelatedField>
-            '    <RelatedFieldList>True</RelatedFieldList>
-            '  </Relation>
-            '</Relations>
-            '</Field>
 
         End If
     End Sub
