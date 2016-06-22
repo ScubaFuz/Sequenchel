@@ -12,10 +12,17 @@ Public Class frmConfiguration
         DataTypesLoad()
         'SetDefaultText(txtPassword)
         ConnectionsLoad()
+        ConnectionSelect()
+        ConnectionShow()
+        'ConnectionLoad()
+
         TableSetsLoad()
+        TableSetSelect()
+        TableSetShow()
+
         TablesLoad()
-        'txtDefaultPath.Text = basCode.curVar.DefaultConfigFilePath
-        'txtTableSetName.Text = basCode.curVar.TableSetName
+        TableSelect()
+        TableShow()
         If lvwConnections.Items.Count = 0 Then ConnectionEdit()
     End Sub
 
@@ -81,7 +88,14 @@ Public Class frmConfiguration
 
     Private Sub lvwConnections_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lvwConnections.SelectedIndexChanged
         CursorControl("Wait")
-        ConnectionLoad()
+        If lvwConnections.SelectedItems.Count = 1 Then
+            If Not basCode.curStatus.Connection = lvwConnections.SelectedItems.Item(0).Tag Then
+                basCode.curStatus.Connection = lvwConnections.SelectedItems.Item(0).Tag
+                AllClear(3)
+                ConnectionLoad()
+                ConnectionShow()
+            End If
+        End If
         CursorControl()
     End Sub
 
@@ -275,17 +289,20 @@ Public Class frmConfiguration
             basCode.xmlConnections.RemoveAll()
             lvwConnections.Items.Clear()
             basCode.curStatus.ConnectionsReload = True
+            basCode.curStatus.Connection = ""
+            basCode.curVar.ConnectionsFile = ""
         End If
         If intLevel >= 3 Then
             'Reload 1 connection and all tablesets
             basCode.xmlTableSets.RemoveAll()
             basCode.curStatus.ConnectionReload = True
             ConnectionClear()
+            tvwConnection.Nodes.Clear()
 
             basCode.curStatus.TableSetsReload = True
             basCode.curStatus.TableSet = ""
+            basCode.curVar.TableSetsFile = ""
             lvwTableSets.Items.Clear()
-            tvwTableSet.Nodes.Clear()
         End If
         If intLevel >= 2 Then
             'Reload 1 tableset and all tables
@@ -293,26 +310,28 @@ Public Class frmConfiguration
             basCode.xmlSearch.RemoveAll()
             basCode.xmlReports.RemoveAll()
             TableSetClear()
+            tvwTableSet.Nodes.Clear()
             basCode.curStatus.TableSetReload = True
 
             basCode.curStatus.ReportsReload = True
             basCode.curStatus.SearchesReload = True
             basCode.curStatus.TablesReload = True
             basCode.curStatus.Table = ""
+            basCode.curVar.TablesFile = ""
             lvwTables.Items.Clear()
-            tvwTable.Nodes.Clear()
         End If
         If intLevel >= 1 Then
             'Reload 1 table
             basCode.curStatus.TableReload = True
             TablesClear()
+            tvwTable.Nodes.Clear()
             FieldsClear()
         End If
     End Sub
 
     Private Sub ConnectionsLoad()
-        AllClear(4)
         Dim lstXml As XmlNodeList
+        lvwConnections.Items.Clear()
         lstXml = basCode.dhdText.FindXmlNodes(basCode.xmlConnections, "//Connection")
         If lstXml Is Nothing Then Exit Sub
         Dim xNode As XmlNode
@@ -333,35 +352,39 @@ Public Class frmConfiguration
                 If basCode.dhdText.CheckNodeElement(xNode, "Password") Then basCode.dhdConnection.Password = DataHandler.txt.DecryptText(xNode.Item("Password").InnerText)
             End If
         Next
+    End Sub
+
+    Private Sub ConnectionSelect()
         For Each lstItem In lvwConnections.Items
             If lstItem.Tag = basCode.curStatus.Connection Then
                 lstItem.Selected = True
             End If
         Next
-        'lvwConnections.SelectedItems(0)
     End Sub
 
     Private Sub ConnectionLoad()
-        If lvwConnections.SelectedItems.Count = 1 Then
-            AllClear(3)
+        basCode.LoadConnection(basCode.xmlConnections, basCode.curStatus.Connection)
+        basCode.LoadTableSets(basCode.xmlTableSets)
+        basCode.LoadTableSet(basCode.xmlTableSets, basCode.curStatus.TableSet)
+        TableSetsLoad()
+        TableSetSelect()
+        TableSetShow()
+        basCode.LoadTables(basCode.xmlTables, False)
+        TablesLoad()
+        TableSelect()
+        TableShow()
+    End Sub
 
-            basCode.curStatus.Connection = lvwConnections.SelectedItems.Item(0).Tag
-            txtConnection.Text = basCode.curStatus.Connection
-            basCode.LoadConnection(basCode.xmlConnections, basCode.curStatus.Connection)
-
-            basCode.LoadTableSets(basCode.xmlTableSets)
-            basCode.LoadTableSet(basCode.xmlTableSets, basCode.curStatus.TableSet)
-            TableSetsLoad()
-            basCode.LoadTables(basCode.xmlTables, False)
-            TablesLoad()
-
+    Private Sub ConnectionShow()
+        txtConnection.Text = basCode.curStatus.Connection
+        If basCode.curStatus.Connection.Length > 0 Then
             Dim xNode As XmlNode = basCode.dhdText.FindXmlNode(basCode.xmlConnections, "Connection", "ConnectionName", basCode.curStatus.Connection)
             tvwConnection.Nodes.Clear()
+            If xNode Is Nothing Then Exit Sub
             DisplayXmlNode(xNode, tvwConnection.Nodes)
             tvwConnection.ExpandAll()
             ConnectionEdit()
         End If
-
     End Sub
 
     Friend Sub GetSqlInstances()
@@ -452,9 +475,12 @@ Public Class frmConfiguration
 
         basCode.curStatus.ConnectionChanged = True
         ConfigurationSave()
+        AllClear(3)
         ConnectionsLoad()
-        txtConnection.Text = basCode.curStatus.Connection
+        'txtConnection.Text = basCode.curStatus.Connection
         ConnectionLoad()
+        ConnectionSelect()
+        ConnectionShow()
         WriteStatus("Connection Saved", 0, lblStatusText)
     End Sub
 
@@ -472,6 +498,7 @@ Public Class frmConfiguration
 
             basCode.curStatus.Connection = ""
             AllClear(4)
+            basCode.LoadConnections(basCode.xmlConnections)
             ConnectionsLoad()
             WriteStatus("Connection Deleted", 0, lblStatusText)
         End If
@@ -487,6 +514,7 @@ Public Class frmConfiguration
         cbxLoginMethod.Text = ""
         txtTimeOut.Text = ""
         txtTableSetsFile.Text = ""
+        txtConnection.Text = ""
     End Sub
 
 #End Region
@@ -496,7 +524,14 @@ Public Class frmConfiguration
 
     Private Sub lvwTableSets_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lvwTableSets.SelectedIndexChanged
         CursorControl("Wait")
-        TableSetLoad()
+        If lvwTableSets.SelectedItems.Count = 1 Then
+            If basCode.curStatus.TableSet <> lvwTableSets.SelectedItems.Item(0).Tag Then
+                AllClear(2)
+                basCode.curStatus.TableSet = lvwTableSets.SelectedItems.Item(0).Tag
+                TableSetLoad()
+                TableSetShow()
+            End If
+        End If
         CursorControl()
     End Sub
 
@@ -597,7 +632,8 @@ Public Class frmConfiguration
             basCode.curStatus.TableSetsReload = True
             basCode.curStatus.TablesReload = True
             ConfigurationSave()
-            TableSetClear()
+            AllClear(2)
+            basCode.LoadTableSets(basCode.xmlTableSets)
             TableSetsLoad()
             WriteStatus("TableSet Deleted", 0, lblStatusText)
         Else
@@ -609,10 +645,12 @@ Public Class frmConfiguration
 #End Region
 
     Private Sub TableSetsLoad()
+        lvwTableSets.Items.Clear()
         If basCode.xmlTableSets.OuterXml.Length = 0 Then Exit Sub
 
         Dim lstXml As XmlNodeList
         lstXml = basCode.dhdText.FindXmlNodes(basCode.xmlTableSets, "//TableSet")
+        If lstXml Is Nothing Then Exit Sub
         Dim xNode As XmlNode
         For Each xNode In lstXml
             Dim lsvItem As New ListViewItem
@@ -621,29 +659,31 @@ Public Class frmConfiguration
             lsvItem.SubItems.Add(xNode.Item("TablesFile").InnerText)
             lvwTableSets.Items.Add(lsvItem)
         Next
-        For Each lstItemn In lvwTableSets.Items
-            If lstItemn.Tag = basCode.curStatus.TableSet Then
-                lstItemn.Selected = True
+    End Sub
+
+    Private Sub TableSetSelect()
+        For Each lvwItem In lvwTableSets.Items
+            If lvwItem.Tag = basCode.curStatus.TableSet Then
+                lvwItem.Selected = True
             End If
         Next
-
     End Sub
 
     Private Sub TableSetLoad()
-        AllClear(2)
-        If lvwTableSets.SelectedItems.Count = 1 Then
-            If basCode.curStatus.TableSet <> lvwTableSets.SelectedItems.Item(0).Tag Then
-                basCode.curStatus.TableSet = lvwTableSets.SelectedItems.Item(0).Tag
-                basCode.LoadTableSet(basCode.xmlTableSets, basCode.curStatus.TableSet)
-                basCode.LoadTables(basCode.xmlTables, False)
-                TablesLoad()
-            End If
-            Dim xNode As XmlNode = basCode.dhdText.FindXmlNode(basCode.xmlTableSets, "TableSet", "TableSetName", basCode.curStatus.TableSet)
-            tvwTableSet.Nodes.Clear()
-            DisplayXmlNode(xNode, tvwTableSet.Nodes)
-            tvwTableSet.ExpandAll()
-            TableSetEdit()
-        End If
+        basCode.LoadTableSet(basCode.xmlTableSets, basCode.curStatus.TableSet)
+        basCode.LoadTables(basCode.xmlTables, False)
+        TablesLoad()
+        TableSelect()
+        TableShow()
+    End Sub
+
+    Private Sub TableSetShow()
+        Dim xNode As XmlNode = basCode.dhdText.FindXmlNode(basCode.xmlTableSets, "TableSet", "TableSetName", basCode.curStatus.TableSet)
+        tvwTableSet.Nodes.Clear()
+        If xNode Is Nothing Then Exit Sub
+        DisplayXmlNode(xNode, tvwTableSet.Nodes)
+        tvwTableSet.ExpandAll()
+        TableSetEdit()
         lblTableSet.Text = basCode.curStatus.TableSet
     End Sub
 
@@ -673,18 +713,19 @@ Public Class frmConfiguration
     End Sub
 
     Private Sub TableSetEdit()
-        If lvwTableSets.SelectedItems.Count = 1 Then
-            Dim strSelection As String = lvwTableSets.SelectedItems.Item(0).Tag
+        'If lvwTableSets.SelectedItems.Count = 1 Then
+        'Dim strSelection As String = lvwTableSets.SelectedItems.Item(0).Tag
+        Dim strSelection As String = basCode.curStatus.TableSet
 
-            Dim xNode As XmlNode = basCode.dhdText.FindXmlNode(basCode.xmlTableSets, "TableSet", "TableSetName", strSelection)
-            txtTableSetName.Text = xNode.Item("TableSetName").InnerText
-            txtTableSetName.Tag = xNode.Item("TableSetName").InnerText
-            txtTablesFile.Text = xNode.Item("TablesFile").InnerText
-            txtOutputPath.Text = xNode.Item("OutputPath").InnerText
-            txtReportsSetName.Text = xNode.Item("ReportSet").Attributes("Name").InnerText
-            txtReportsFile.Text = xNode.Item("ReportSet").InnerText
-            If basCode.dhdText.CheckNodeElement(xNode, "Search") Then txtSearchFile.Text = xNode.Item("Search").InnerText
-        End If
+        Dim xNode As XmlNode = basCode.dhdText.FindXmlNode(basCode.xmlTableSets, "TableSet", "TableSetName", strSelection)
+        txtTableSetName.Text = xNode.Item("TableSetName").InnerText
+        txtTableSetName.Tag = xNode.Item("TableSetName").InnerText
+        txtTablesFile.Text = xNode.Item("TablesFile").InnerText
+        txtOutputPath.Text = xNode.Item("OutputPath").InnerText
+        txtReportsSetName.Text = xNode.Item("ReportSet").Attributes("Name").InnerText
+        txtReportsFile.Text = xNode.Item("ReportSet").InnerText
+        If basCode.dhdText.CheckNodeElement(xNode, "Search") Then txtSearchFile.Text = xNode.Item("Search").InnerText
+        'End If
     End Sub
 
     Private Sub TableSetAddOrUpdate()
@@ -726,6 +767,8 @@ Public Class frmConfiguration
         TableSetsLoad()
         lblTableSet.Text = basCode.curStatus.TableSet
         TableSetLoad()
+        TableSetSelect()
+        TableSetShow()
         WriteStatus("TableSet Saved", 0, lblStatusText)
 
     End Sub
@@ -739,6 +782,7 @@ Public Class frmConfiguration
         txtReportsSetName.Text = ""
         txtReportsFile.Text = ""
         txtSearchFile.Text = ""
+        lblTableSet.Text = ""
         basCode.curStatus.SuspendActions = False
     End Sub
 
@@ -749,7 +793,14 @@ Public Class frmConfiguration
 
     Private Sub lvwTables_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lvwTables.SelectedIndexChanged
         CursorControl("Wait")
-        TableLoad()
+        If lvwTables.SelectedItems.Count = 1 Then
+            If basCode.curStatus.Table <> lvwTables.SelectedItems.Item(0).Tag Then
+                AllClear(1)
+                basCode.curStatus.Table = lvwTables.SelectedItems.Item(0).Tag
+                basCode.curStatus.TableReload = True
+                TableShow()
+            End If
+        End If
         CursorControl()
     End Sub
 
@@ -799,6 +850,10 @@ Public Class frmConfiguration
     End Sub
 
     Private Sub btnColumnsImport_Click(sender As Object, e As EventArgs) Handles btnColumnsImport.Click
+        If lblTableSet.Text.Length = 0 Then
+            WriteStatus("No tableset was selected", 2, lblStatusText)
+            Exit Sub
+        End If
         CursorControl("Wait")
         WriteStatus("", 0, lblStatusText)
 
@@ -848,7 +903,7 @@ Public Class frmConfiguration
             xNode2.Attributes("Default").InnerText = "True"
             basCode.curStatus.TableChanged = True
             ConfigurationSave()
-            TableLoad()
+            TableShow()
             WriteStatus("Default Table Set", 0, lblStatusText)
         End If
         CursorControl()
@@ -862,6 +917,10 @@ Public Class frmConfiguration
     End Sub
 
     Private Sub btnTableAddOrUpdate_Click(sender As Object, e As EventArgs) Handles btnTableAddOrUpdate.Click
+        If lblTableSet.Text.Length = 0 Then
+            WriteStatus("No tableset was selected", 2, lblStatusText)
+            Exit Sub
+        End If
         CursorControl("Wait")
         WriteStatus("", 0, lblStatusText)
         TableAddOrUpdate(txtTableName.Text, txtTableAlias.Text, chkTableVisible.Checked, chkTableSearch.Checked, chkTableUpdate.Checked, chkTableInsert.Checked, chkTableDelete.Checked, True)
@@ -884,11 +943,18 @@ Public Class frmConfiguration
     End Sub
 
     Private Sub btnTableDelete_Click(sender As Object, e As EventArgs) Handles btnTableDelete.Click
+        If lblTableSet.Text.Length = 0 Then
+            WriteStatus("No tableset was selected", 2, lblStatusText)
+            Exit Sub
+        End If
+        Dim strSelection As String = txtTableName.Text
+        If strSelection.Length = 0 Then
+            WriteStatus("No table was selected", 2, lblStatusText)
+            Exit Sub
+        End If
+
         CursorControl("Wait")
         WriteStatus("", 0, lblStatusText)
-        Dim strSelection As String = txtTableName.Text
-
-        If strSelection.Length = 0 Then Exit Sub
         Dim xNode As XmlNode = basCode.dhdText.FindXmlNode(basCode.xmlTables, "Table", "Name", strSelection)
         If Not xNode Is Nothing Then
             If MessageBox.Show("This will permanently remove the Item: " & strSelection & Environment.NewLine & basCode.Message.strContinue, basCode.Message.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Exit Sub
@@ -909,7 +975,7 @@ Public Class frmConfiguration
 #End Region
 
     Private Sub TablesLoad()
-        AllClear(2)
+        lvwTables.Items.Clear()
         If basCode.xmlTables.OuterXml.Length = 0 Then Exit Sub
 
         Dim lstXml As XmlNodeList
@@ -918,38 +984,34 @@ Public Class frmConfiguration
         Dim xNode As XmlNode
         For Each xNode In lstXml
             Dim lsvItem As New ListViewItem
-            lsvItem.Tag = xNode.Item("Name").InnerText
+            lsvItem.Tag = xNode.Item("Alias").InnerText
             lsvItem.Text = xNode.Item("Name").InnerText
             lsvItem.SubItems.Add(xNode.Item("Alias").InnerText)
             lvwTables.Items.Add(lsvItem)
         Next
-        For Each lstItemn In lvwTables.Items
-            If lstItemn.Tag = basCode.curStatus.Table Then
-                lstItemn.Selected = True
+    End Sub
+
+    Private Sub TableSelect()
+        For Each lvwItem In lvwTables.Items
+            If lvwItem.Tag = basCode.curStatus.Table Then
+                lvwItem.Selected = True
             End If
         Next
     End Sub
 
-    Private Sub TableLoad()
-        AllClear(1)
-        If lvwTables.SelectedItems.Count = 1 Then
-            If basCode.curStatus.Table <> lvwTables.SelectedItems.Item(0).Tag Then
-                basCode.curStatus.Table = lvwTables.SelectedItems.Item(0).Tag
-                basCode.curStatus.TableReload = True
-            End If
-
-            Dim xNode As XmlNode = basCode.dhdText.FindXmlNode(basCode.xmlTables, "Table", "Name", basCode.curStatus.Table)
-            tvwTable.Nodes.Clear()
-            DisplayXmlNode(xNode, tvwTable.Nodes)
-            tvwTable.Nodes(0).Expand()
-            Try
-                tvwTable.SelectedNode = tvwTable.Nodes.Find("Fields", True)(0)
-                tvwTable.SelectedNode.Expand()
-            Catch ex As Exception
-                tvwTable.Nodes(0).LastNode.Expand()
-            End Try
-            TableEdit()
-        End If
+    Private Sub TableShow()
+        Dim xNode As XmlNode = basCode.dhdText.FindXmlNode(basCode.xmlTables, "Table", "Alias", basCode.curStatus.Table)
+        tvwTable.Nodes.Clear()
+        If xNode Is Nothing Then Exit Sub
+        DisplayXmlNode(xNode, tvwTable.Nodes)
+        tvwTable.Nodes(0).Expand()
+        Try
+            tvwTable.SelectedNode = tvwTable.Nodes.Find("Fields", True)(0)
+            tvwTable.SelectedNode.Expand()
+        Catch ex As Exception
+            tvwTable.Nodes(0).LastNode.Expand()
+        End Try
+        TableEdit()
     End Sub
 
     Private Sub ImportOneTable(strTableName As String, strTableAlias As String, blnReload As Boolean)
@@ -1093,20 +1155,19 @@ Public Class frmConfiguration
     End Sub
 
     Private Sub TableEdit()
-        AllClear(1)
-        If lvwTables.SelectedItems.Count = 1 Then
-            Dim strSelection As String = lvwTables.SelectedItems.Item(0).Tag
-
-            Dim xNode As XmlNode = basCode.dhdText.FindXmlNode(basCode.xmlTables, "Table", "Name", strSelection)
-            If basCode.dhdText.CheckNodeElement(xNode, "Name") Then txtTableName.Tag = xNode.Item("Name").InnerText
-            If basCode.dhdText.CheckNodeElement(xNode, "Name") Then txtTableName.Text = xNode.Item("Name").InnerText
-            If basCode.dhdText.CheckNodeElement(xNode, "Alias") Then txtTableAlias.Text = xNode.Item("Alias").InnerText
-            If basCode.dhdText.CheckNodeElement(xNode, "Visible") Then chkTableVisible.Checked = xNode.Item("Visible").InnerText
-            If basCode.dhdText.CheckNodeElement(xNode, "Search") Then chkTableSearch.Checked = xNode.Item("Search").InnerText
-            If basCode.dhdText.CheckNodeElement(xNode, "Update") Then chkTableUpdate.Checked = xNode.Item("Update").InnerText
-            If basCode.dhdText.CheckNodeElement(xNode, "Insert") Then chkTableInsert.Checked = xNode.Item("Insert").InnerText
-            If basCode.dhdText.CheckNodeElement(xNode, "Delete") Then chkTableDelete.Checked = xNode.Item("Delete").InnerText
-        End If
+        'If lvwTables.SelectedItems.Count = 1 Then
+        'Dim strSelection As String = lvwTables.SelectedItems.Item(0).Tag
+        Dim strSelection As String = basCode.curStatus.Table
+        Dim xNode As XmlNode = basCode.dhdText.FindXmlNode(basCode.xmlTables, "Table", "Alias", strSelection)
+        If basCode.dhdText.CheckNodeElement(xNode, "Name") Then txtTableName.Tag = xNode.Item("Name").InnerText
+        If basCode.dhdText.CheckNodeElement(xNode, "Name") Then txtTableName.Text = xNode.Item("Name").InnerText
+        If basCode.dhdText.CheckNodeElement(xNode, "Alias") Then txtTableAlias.Text = xNode.Item("Alias").InnerText
+        If basCode.dhdText.CheckNodeElement(xNode, "Visible") Then chkTableVisible.Checked = xNode.Item("Visible").InnerText
+        If basCode.dhdText.CheckNodeElement(xNode, "Search") Then chkTableSearch.Checked = xNode.Item("Search").InnerText
+        If basCode.dhdText.CheckNodeElement(xNode, "Update") Then chkTableUpdate.Checked = xNode.Item("Update").InnerText
+        If basCode.dhdText.CheckNodeElement(xNode, "Insert") Then chkTableInsert.Checked = xNode.Item("Insert").InnerText
+        If basCode.dhdText.CheckNodeElement(xNode, "Delete") Then chkTableDelete.Checked = xNode.Item("Delete").InnerText
+        'End If
     End Sub
 
     Private Sub TablesClear()
@@ -1200,6 +1261,10 @@ Public Class frmConfiguration
 
     Private Sub btnFieldAddOrUpdate_Click(sender As Object, e As EventArgs) Handles btnFieldAddOrUpdate.Click
         WriteStatus("", 0, lblStatusText)
+        If txtFieldName.Text.Length = 0 Or txtFieldAlias.Text.Length = 0 Or cbxDataType.SelectedIndex = -1 Then
+            WriteStatus(basCode.Message.strAllData, 2, lblStatusText)
+            Exit Sub
+        End If
         If String.IsNullOrEmpty(txtFieldWidth.Text) = False And IsNumeric(txtFieldWidth.Text) = False Then
             WriteStatus("The Field Width must be a numerical value", 2, lblStatusText)
             Exit Sub
@@ -1238,8 +1303,11 @@ Public Class frmConfiguration
         CursorControl("Wait")
         WriteStatus("", 0, lblStatusText)
         Dim strSelection As String = txtFieldName.Text
+        If strSelection.Length = 0 Then
+            WriteStatus("No Field is selected.", 2, lblStatusText)
+            Exit Sub
+        End If
 
-        If strSelection.Length = 0 Then Exit Sub
         Dim xNode As XmlNode = basCode.dhdText.FindXmlNode(basCode.xmlTables, "Field", "FldName", strSelection)
         If Not xNode Is Nothing Then
             If MessageBox.Show("This will permanently remove the Item: " & strSelection & Environment.NewLine & basCode.Message.strContinue, basCode.Message.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Exit Sub

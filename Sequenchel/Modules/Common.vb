@@ -111,6 +111,7 @@ Module Common
     Friend Sub DisplayXmlNode(ByVal xmlnode As XmlNode, ByVal nodes As TreeNodeCollection)
         ' Add a TreeView node for this XmlNode.
         ' (Using the node's Name is OK for most XmlNode types.)
+        If xmlnode Is Nothing Then Exit Sub
         Dim strDisplayName As String = xmlnode.Name
         If strDisplayName = "Field" Then strDisplayName &= " " & xmlnode.Item("FldAlias").InnerText
         Dim tvNode As TreeNode = nodes.Add(xmlnode.Name, strDisplayName)

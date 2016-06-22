@@ -526,6 +526,7 @@ Public Class BaseCode
                 End If
             Next
             If blnConnectionExists = False And curStatus.Connection = "" Then curStatus.Connection = curVar.ConnectionDefault
+            If blnConnectionExists = False And curStatus.Connection <> curVar.ConnectionDefault Then curStatus.Connection = ""
         Catch ex As Exception
             ErrorLevel = -1
             ErrorMessage = "There was an error loading the connections. Please check the log."
@@ -549,6 +550,7 @@ Public Class BaseCode
                 Return Nothing
             End Try
         Else
+            curVar.TableSetsFile = ""
             ErrorLevel = 5
             ErrorMessage = "Invalid file path: " & dhdText.PathConvert(CheckFilePath(curVar.ConnectionsFile))
         End If
@@ -623,6 +625,9 @@ Public Class BaseCode
             End Try
         Else
             xmlTableSets.RemoveAll()
+            curVar.TablesFile = ""
+            curVar.ReportSetFile = ""
+            curVar.SearchFile = ""
             ErrorLevel = 5
             ErrorMessage = "Invalid file path: " & dhdText.PathConvert(CheckFilePath(curVar.TableSetsFile))
         End If
@@ -793,8 +798,8 @@ Public Class BaseCode
         Return basRelation
     End Function
 
-    Public Function GetFieldNode(xmlTables As XmlDocument, strTableName As String, strFieldName As String) As XmlNode
-        Dim xTNode As XmlNode = dhdText.FindXmlNode(xmlTables, "Table", "Name", strTableName)
+    Public Function GetFieldNode(xmlTables As XmlDocument, strTableAlias As String, strFieldName As String) As XmlNode
+        Dim xTNode As XmlNode = dhdText.FindXmlNode(xmlTables, "Table", "Alias", strTableAlias)
         Dim xFNode As XmlNode = dhdText.FindXmlChildNode(xTNode, "Fields/Field", "FldName", strFieldName)
         Return xFNode
     End Function
@@ -842,12 +847,14 @@ Public Class BaseCode
                 xmlReports.Load(dhdText.PathConvert(CheckFilePath(curVar.ReportSetFile)))
                 curStatus.ReportsReload = False
             Catch ex As Exception
+                xmlReports.RemoveAll()
                 ErrorLevel = -1
                 ErrorMessage = "There was an error reading the XML file. Please check the log."
                 WriteLog("There was an error reading the XML file. Please check the file:" & Environment.NewLine & dhdText.PathConvert(CheckFilePath(curVar.ReportSetFile)) & Environment.NewLine & ex.Message, 1)
                 Return Nothing
             End Try
         Else
+            xmlReports.RemoveAll()
             ErrorLevel = 5
             ErrorMessage = "Invalid file path: " & dhdText.PathConvert(CheckFilePath(curVar.ReportSetFile))
         End If
@@ -881,12 +888,14 @@ Public Class BaseCode
                 xmlSearch.Load(dhdText.PathConvert(CheckFilePath(curVar.SearchFile)))
                 curStatus.SearchesReload = False
             Catch ex As Exception
+                xmlSearch.RemoveAll()
                 ErrorLevel = -1
                 ErrorMessage = "There was an error reading the XML file. Please check the log."
                 WriteLog("There was an error reading the XML file. Please check the file" & Environment.NewLine & dhdText.PathConvert(CheckFilePath(curVar.SearchFile)) & Environment.NewLine & ex.Message, 1)
                 Return Nothing
             End Try
         Else
+            xmlSearch.RemoveAll()
             ErrorLevel = 5
             ErrorMessage = "Invalid file path: " & dhdText.PathConvert(CheckFilePath(curVar.SearchFile))
             xmlSearch.RemoveAll()
