@@ -290,7 +290,7 @@ Public Class frmConfiguration
             lvwConnections.Items.Clear()
             basCode.curStatus.ConnectionsReload = True
             basCode.curStatus.Connection = ""
-            basCode.curVar.ConnectionsFile = ""
+            'basCode.curVar.ConnectionsFile = ""
         End If
         If intLevel >= 3 Then
             'Reload 1 connection and all tablesets
@@ -591,6 +591,7 @@ Public Class frmConfiguration
             basCode.curStatus.TableSetsReload = True
             ConfigurationSave()
             TableSetLoad()
+            TableSetShow()
             WriteStatus("Default TableSet Set", 0, lblStatusText)
         End If
         CursorControl()
@@ -678,13 +679,15 @@ Public Class frmConfiguration
     End Sub
 
     Private Sub TableSetShow()
-        Dim xNode As XmlNode = basCode.dhdText.FindXmlNode(basCode.xmlTableSets, "TableSet", "TableSetName", basCode.curStatus.TableSet)
         tvwTableSet.Nodes.Clear()
-        If xNode Is Nothing Then Exit Sub
-        DisplayXmlNode(xNode, tvwTableSet.Nodes)
-        tvwTableSet.ExpandAll()
-        TableSetEdit()
-        lblTableSet.Text = basCode.curStatus.TableSet
+        If basCode.curStatus.TableSet.Length > 0 Then
+            Dim xNode As XmlNode = basCode.dhdText.FindXmlNode(basCode.xmlTableSets, "TableSet", "TableSetName", basCode.curStatus.TableSet)
+            If xNode Is Nothing Then Exit Sub
+            DisplayXmlNode(xNode, tvwTableSet.Nodes)
+            tvwTableSet.ExpandAll()
+            TableSetEdit()
+            lblTableSet.Text = basCode.curStatus.TableSet
+        End If
     End Sub
 
     Private Sub DefaultPathBrowse()
@@ -898,7 +901,7 @@ Public Class frmConfiguration
             Next
 
             'Slect the correct Node
-            Dim xNode2 As XmlNode = basCode.dhdText.FindXmlNode(basCode.xmlTables, "Table", "Name", strSelection)
+            Dim xNode2 As XmlNode = basCode.dhdText.FindXmlNode(basCode.xmlTables, "Table", "Alias", strSelection)
             'Update this attribute to true
             xNode2.Attributes("Default").InnerText = "True"
             basCode.curStatus.TableChanged = True
@@ -1000,18 +1003,20 @@ Public Class frmConfiguration
     End Sub
 
     Private Sub TableShow()
-        Dim xNode As XmlNode = basCode.dhdText.FindXmlNode(basCode.xmlTables, "Table", "Alias", basCode.curStatus.Table)
         tvwTable.Nodes.Clear()
-        If xNode Is Nothing Then Exit Sub
-        DisplayXmlNode(xNode, tvwTable.Nodes)
-        tvwTable.Nodes(0).Expand()
-        Try
-            tvwTable.SelectedNode = tvwTable.Nodes.Find("Fields", True)(0)
-            tvwTable.SelectedNode.Expand()
-        Catch ex As Exception
-            tvwTable.Nodes(0).LastNode.Expand()
-        End Try
-        TableEdit()
+        If basCode.curStatus.Table.Length > 0 Then
+            Dim xNode As XmlNode = basCode.dhdText.FindXmlNode(basCode.xmlTables, "Table", "Alias", basCode.curStatus.Table)
+            If xNode Is Nothing Then Exit Sub
+            DisplayXmlNode(xNode, tvwTable.Nodes)
+            tvwTable.Nodes(0).Expand()
+            Try
+                tvwTable.SelectedNode = tvwTable.Nodes.Find("Fields", True)(0)
+                tvwTable.SelectedNode.Expand()
+            Catch ex As Exception
+                tvwTable.Nodes(0).LastNode.Expand()
+            End Try
+            TableEdit()
+        End If
     End Sub
 
     Private Sub ImportOneTable(strTableName As String, strTableAlias As String, blnReload As Boolean)
@@ -1020,7 +1025,6 @@ Public Class frmConfiguration
         Dim strSchemaName As String = strTableName.Substring(0, strTableName.IndexOf("."))
         Dim TableName As String = strTableName.Substring(strTableName.IndexOf(".") + 1, strTableName.Length - (strTableName.IndexOf(".") + 1))
         ColumnsImport(strSchemaName, TableName, blnReload)
-
     End Sub
 
     Private Sub ImportAllTables()
@@ -1202,10 +1206,14 @@ Public Class frmConfiguration
         basCode.dhdText.CreateAppendElement(xTNode, "Insert", blnInsert, True)
         basCode.dhdText.CreateAppendElement(xTNode, "Delete", blnDelete, True)
 
-        basCode.curStatus.Table = strTableName
+        basCode.curStatus.Table = strAlias
         basCode.curStatus.TableReload = True
 
-        If blnReload = True Then TablesLoad()
+        If blnReload = True Then
+            TablesLoad()
+            TableSelect()
+            TableShow()
+        End If
     End Sub
 
 #End Region
@@ -1365,7 +1373,7 @@ Public Class frmConfiguration
             End If
         Next
 
-        If strFieldValue.Length > 0 Then
+        If strFieldValue.Length > 0 And basCode.curStatus.Table.Length > 0 Then
             Dim xNode As XmlNode = basCode.GetFieldNode(basCode.xmlTables, basCode.curStatus.Table, strFieldValue)
             If Not xNode Is Nothing Then
                 'If basCode.dhdText.CheckNodeElement(xNode, "FldName") Then basfield.FieldName = xNode.Item("FldName").InnerText
@@ -1657,6 +1665,7 @@ Public Class frmConfiguration
 #End Region
 
     Private Sub btnTest_Click(sender As Object, e As EventArgs) Handles btnTest.Click
+        MessageBox.Show(basCode.curStatus.Table)
         'nothing here
     End Sub
 
@@ -1930,7 +1939,7 @@ Public Class frmConfiguration
             Exit Sub
         End If
 
-        Dim xPNode As XmlNode = basCode.dhdText.FindXmlNode(basCode.xmlTables, "Table", "Name", basCode.curStatus.Table)
+        Dim xPNode As XmlNode = basCode.dhdText.FindXmlNode(basCode.xmlTables, "Table", "Alias", basCode.curStatus.Table)
 
         tvwTable.Nodes.Clear()
         DisplayXmlNode(xPNode, tvwTable.Nodes)
@@ -2062,7 +2071,7 @@ Public Class frmConfiguration
             strTableName = cbxRelationTables.Text
             strTableAlias = cbxRelationTables.Text
         End If
-        RelationAdd(basCode.curStatus.Table, txtFieldName.Text, strTableName, strTableAlias, cbxRelationFields.Text, txtRelatedField.Text, txtRelatedFieldAlias.Text, chkRelatedField.Checked)
+        RelationAdd(txtTableName.Text, txtFieldName.Text, strTableName, strTableAlias, cbxRelationFields.Text, txtRelatedField.Text, txtRelatedFieldAlias.Text, chkRelatedField.Checked)
 
         'If Not cbxRelations.Items.Contains(cbxRelations.Text) Then cbxRelations.Items.Add(cbxRelations.Text)
         CursorControl()

@@ -568,18 +568,20 @@ Public Class BaseCode
     End Sub
 
     Public Sub LoadConnection(xmlConnections As XmlDocument, strConnection As String)
-        Dim xmlConnNode As XmlNode = dhdText.FindXmlNode(xmlConnections, "Connection", "ConnectionName", strConnection)
+        If strConnection.Length > 0 Then
+            Dim xmlConnNode As XmlNode = dhdText.FindXmlNode(xmlConnections, "Connection", "ConnectionName", strConnection)
 
-        dhdConnection.DataLocation = xmlConnNode.Item("DataLocation").InnerText
-        dhdConnection.DatabaseName = xmlConnNode.Item("DataBaseName").InnerText
-        dhdConnection.DataProvider = xmlConnNode.Item("DataProvider").InnerText
-        dhdConnection.LoginMethod = xmlConnNode.Item("LoginMethod").InnerText
-        dhdConnection.LoginName = xmlConnNode.Item("LoginName").InnerText
-        If dhdText.CheckNodeElement(xmlConnNode, "Password") Then dhdConnection.Password = DataHandler.txt.DecryptText(xmlConnNode.Item("Password").InnerText)
-        curVar.TableSetsFile = xmlConnNode.Item("TableSets").InnerText
-        curStatus.TableSetsReload = True
+            dhdConnection.DataLocation = xmlConnNode.Item("DataLocation").InnerText
+            dhdConnection.DatabaseName = xmlConnNode.Item("DataBaseName").InnerText
+            dhdConnection.DataProvider = xmlConnNode.Item("DataProvider").InnerText
+            dhdConnection.LoginMethod = xmlConnNode.Item("LoginMethod").InnerText
+            dhdConnection.LoginName = xmlConnNode.Item("LoginName").InnerText
+            If dhdText.CheckNodeElement(xmlConnNode, "Password") Then dhdConnection.Password = DataHandler.txt.DecryptText(xmlConnNode.Item("Password").InnerText)
+            curVar.TableSetsFile = xmlConnNode.Item("TableSets").InnerText
+            curStatus.TableSetsReload = True
 
-        dhdConnection.CheckDB()
+            dhdConnection.CheckDB()
+        End If
     End Sub
 
     Public Function LoadTableSets(xmlTableSets As XmlDocument) As List(Of String)
@@ -601,6 +603,7 @@ Public Class BaseCode
                 End If
             Next
             If blnTableSetExists = False And curStatus.TableSet = "" Then curStatus.TableSet = curVar.TableSetDefault
+            If blnTableSetExists = False And curStatus.TableSet <> curVar.TableSetDefault Then curStatus.TableSet = ""
         Catch ex As Exception
             ErrorLevel = -1
             ErrorMessage = "There was an error loading the TableSets. Please check the log."
@@ -635,15 +638,17 @@ Public Class BaseCode
     End Function
 
     Public Sub LoadTableSet(xmlTableSets As XmlDocument, strTableSet As String)
-        Dim xmlTSNode As XmlNode = dhdText.FindXmlNode(xmlTableSets, "TableSet", "TableSetName", strTableSet)
-        If xmlTSNode Is Nothing Then Exit Sub
-        'curStatus.TableSet = xmlTSNode.Item("TableSetName").InnerText
-        curVar.TablesFile = xmlTSNode.Item("TablesFile").InnerText
-        curStatus.TablesReload = True
-        dhdText.OutputFile = xmlTSNode.Item("OutputPath").InnerText
-        curVar.ReportSetFile = xmlTSNode.Item("ReportSet").InnerText
-        If dhdText.CheckNodeElement(xmlTSNode, "Search") Then curVar.SearchFile = xmlTSNode.Item("Search").InnerText
-        curStatus.SearchesReload = True
+        If strTableSet.Length > 0 Then
+            Dim xmlTSNode As XmlNode = dhdText.FindXmlNode(xmlTableSets, "TableSet", "TableSetName", strTableSet)
+            If xmlTSNode Is Nothing Then Exit Sub
+            'curStatus.TableSet = xmlTSNode.Item("TableSetName").InnerText
+            curVar.TablesFile = xmlTSNode.Item("TablesFile").InnerText
+            curStatus.TablesReload = True
+            dhdText.OutputFile = xmlTSNode.Item("OutputPath").InnerText
+            curVar.ReportSetFile = xmlTSNode.Item("ReportSet").InnerText
+            If dhdText.CheckNodeElement(xmlTSNode, "Search") Then curVar.SearchFile = xmlTSNode.Item("Search").InnerText
+            curStatus.SearchesReload = True
+        End If
     End Sub
 
     Public Function LoadTables(xmlTables As XmlDocument, blnUseFullName As Boolean) As List(Of String)
@@ -658,7 +663,7 @@ Public Class BaseCode
 
             Dim TableNode As XmlNode
             For Each TableNode In xmlTables.SelectNodes("//Table")
-                If TableNode.Item("Name").InnerText = curStatus.Table Then blnTableExists = True
+                If TableNode.Item("Alias").InnerText = curStatus.Table Then blnTableExists = True
                 If blnUseFullName = True Then
                     ReturnValue.Add(TableNode.Item("Alias").InnerText & " (" & TableNode.Item("Name").InnerText & ")")
                 Else
@@ -669,6 +674,7 @@ Public Class BaseCode
                 End If
             Next
             If blnTableExists = False And curStatus.Table = "" Then curStatus.Table = curVar.TableDefault
+            If blnTableExists = False And curStatus.Table <> curVar.TableDefault Then curStatus.Table = ""
         Catch ex As Exception
             ErrorMessage = "There was an error loading the tables list. Please check the log."
             WriteLog("There was an error loading the tables list." & Environment.NewLine & ex.Message, 1)
@@ -678,25 +684,28 @@ Public Class BaseCode
     End Function
 
     Public Function LoadTable(xmlTables As XmlDocument, strTable As String) As Boolean
-        Dim xPNode As System.Xml.XmlNode = dhdText.FindXmlNode(xmlTables, "Table", "Alias", strTable)
-        If xPNode Is Nothing Then Return False
+        If strTable.Length > 0 Then
+            Dim xPNode As System.Xml.XmlNode = dhdText.FindXmlNode(xmlTables, "Table", "Alias", strTable)
+            If xPNode Is Nothing Then Return False
 
-        If dhdText.CheckNodeElement(xPNode, "Name") Then basTable.TableName = xPNode.Item("Name").InnerText
-        If dhdText.CheckNodeElement(xPNode, "Alias") Then basTable.TableAlias = xPNode.Item("Alias").InnerText.Replace(".", "_")
-        If dhdText.CheckNodeElement(xPNode, "Visible") Then basTable.TableVisible = xPNode.Item("Visible").InnerText
-        If dhdText.CheckNodeElement(xPNode, "Update") Then basTable.TableUpdate = xPNode.Item("Update").InnerText
-        If dhdText.CheckNodeElement(xPNode, "Search") Then basTable.TableSearch = xPNode.Item("Search").InnerText
-        If dhdText.CheckNodeElement(xPNode, "Insert") Then basTable.TableInsert = xPNode.Item("Insert").InnerText
-        If dhdText.CheckNodeElement(xPNode, "Delete") Then basTable.TableDelete = xPNode.Item("Delete").InnerText
+            If dhdText.CheckNodeElement(xPNode, "Name") Then basTable.TableName = xPNode.Item("Name").InnerText
+            If dhdText.CheckNodeElement(xPNode, "Alias") Then basTable.TableAlias = xPNode.Item("Alias").InnerText.Replace(".", "_")
+            If dhdText.CheckNodeElement(xPNode, "Visible") Then basTable.TableVisible = xPNode.Item("Visible").InnerText
+            If dhdText.CheckNodeElement(xPNode, "Update") Then basTable.TableUpdate = xPNode.Item("Update").InnerText
+            If dhdText.CheckNodeElement(xPNode, "Search") Then basTable.TableSearch = xPNode.Item("Search").InnerText
+            If dhdText.CheckNodeElement(xPNode, "Insert") Then basTable.TableInsert = xPNode.Item("Insert").InnerText
+            If dhdText.CheckNodeElement(xPNode, "Delete") Then basTable.TableDelete = xPNode.Item("Delete").InnerText
 
-        Dim xNode As System.Xml.XmlNode
-        For Each xNode In xPNode.SelectNodes(".//Field")
-            Dim basField As BaseField = LoadField(xNode, basTable.TableName, basTable.TableAlias)
-            basTable.Add(basField)
-            basField.Index = basTable.Count
-        Next
+            Dim xNode As System.Xml.XmlNode
+            For Each xNode In xPNode.SelectNodes(".//Field")
+                Dim basField As BaseField = LoadField(xNode, basTable.TableName, basTable.TableAlias)
+                basTable.Add(basField)
+                basField.Index = basTable.Count
+            Next
 
-        Return True
+            Return True
+        End If
+        Return False
     End Function
 
     Public Function LoadTablesXml(xmlTables As XmlDocument) As XmlDocument
@@ -799,7 +808,9 @@ Public Class BaseCode
     End Function
 
     Public Function GetFieldNode(xmlTables As XmlDocument, strTableAlias As String, strFieldName As String) As XmlNode
+        If String.IsNullOrEmpty(strTableAlias) Then Return Nothing
         Dim xTNode As XmlNode = dhdText.FindXmlNode(xmlTables, "Table", "Alias", strTableAlias)
+        If xTNode Is Nothing Then Return Nothing
         Dim xFNode As XmlNode = dhdText.FindXmlChildNode(xTNode, "Fields/Field", "FldName", strFieldName)
         Return xFNode
     End Function
