@@ -244,6 +244,7 @@ Partial Class frmReports
         Me.lvwAvailableFields.Location = New System.Drawing.Point(0, 25)
         Me.lvwAvailableFields.Name = "lvwAvailableFields"
         Me.lvwAvailableFields.Size = New System.Drawing.Size(174, 576)
+        Me.lvwAvailableFields.Sorting = System.Windows.Forms.SortOrder.Ascending
         Me.lvwAvailableFields.TabIndex = 0
         Me.lvwAvailableFields.UseCompatibleStateImageBehavior = False
         Me.lvwAvailableFields.View = System.Windows.Forms.View.Details
@@ -1335,6 +1336,8 @@ Partial Class frmReports
         '
         'lblStatusText
         '
+        Me.lblStatusText.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblStatusText.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.lblStatusText.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblStatusText.Location = New System.Drawing.Point(70, 782)

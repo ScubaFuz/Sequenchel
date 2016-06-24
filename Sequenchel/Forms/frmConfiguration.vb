@@ -91,7 +91,7 @@ Public Class frmConfiguration
         If lvwConnections.SelectedItems.Count = 1 Then
             If Not basCode.curStatus.Connection = lvwConnections.SelectedItems.Item(0).Tag Then
                 basCode.curStatus.Connection = lvwConnections.SelectedItems.Item(0).Tag
-                AllClear(3)
+                AllClear(3, True)
                 ConnectionLoad()
                 ConnectionShow()
             End If
@@ -232,7 +232,8 @@ Public Class frmConfiguration
             xNode2.Attributes("Default").InnerText = "True"
             basCode.curStatus.ConnectionChanged = True
             ConfigurationSave()
-            ConnectionLoad()
+            'ConnectionLoad()
+            ConnectionShow()
             WriteStatus("Default connection set", 0, lblStatusText)
         End If
         CursorControl()
@@ -283,7 +284,7 @@ Public Class frmConfiguration
 
 #End Region
 
-    Private Sub AllClear(intLevel As Integer)
+    Private Sub AllClear(intLevel As Integer, blnClearAllFields As Boolean)
         If intLevel >= 4 Then
             'Reload all connections
             basCode.xmlConnections.RemoveAll()
@@ -323,9 +324,9 @@ Public Class frmConfiguration
         If intLevel >= 1 Then
             'Reload 1 table
             basCode.curStatus.TableReload = True
-            TablesClear()
+            TableClear()
             tvwTable.Nodes.Clear()
-            FieldsClear()
+            FieldClear(blnClearAllFields)
         End If
     End Sub
 
@@ -475,7 +476,7 @@ Public Class frmConfiguration
 
         basCode.curStatus.ConnectionChanged = True
         ConfigurationSave()
-        AllClear(3)
+        AllClear(3, True)
         ConnectionsLoad()
         'txtConnection.Text = basCode.curStatus.Connection
         ConnectionLoad()
@@ -497,7 +498,7 @@ Public Class frmConfiguration
             ConfigurationSave()
 
             basCode.curStatus.Connection = ""
-            AllClear(4)
+            AllClear(4, True)
             basCode.LoadConnections(basCode.xmlConnections)
             ConnectionsLoad()
             WriteStatus("Connection Deleted", 0, lblStatusText)
@@ -526,7 +527,7 @@ Public Class frmConfiguration
         CursorControl("Wait")
         If lvwTableSets.SelectedItems.Count = 1 Then
             If basCode.curStatus.TableSet <> lvwTableSets.SelectedItems.Item(0).Tag Then
-                AllClear(2)
+                AllClear(2, True)
                 basCode.curStatus.TableSet = lvwTableSets.SelectedItems.Item(0).Tag
                 TableSetLoad()
                 TableSetShow()
@@ -590,7 +591,7 @@ Public Class frmConfiguration
             basCode.curStatus.TableSetChanged = True
             basCode.curStatus.TableSetsReload = True
             ConfigurationSave()
-            TableSetLoad()
+            'TableSetLoad()
             TableSetShow()
             WriteStatus("Default TableSet Set", 0, lblStatusText)
         End If
@@ -633,7 +634,7 @@ Public Class frmConfiguration
             basCode.curStatus.TableSetsReload = True
             basCode.curStatus.TablesReload = True
             ConfigurationSave()
-            AllClear(2)
+            AllClear(2, True)
             basCode.LoadTableSets(basCode.xmlTableSets)
             TableSetsLoad()
             WriteStatus("TableSet Deleted", 0, lblStatusText)
@@ -765,7 +766,7 @@ Public Class frmConfiguration
         basCode.curStatus.TableSetChanged = True
         ConfigurationSave()
 
-        AllClear(2)
+        AllClear(2, True)
         'basCode.curStatus.TableSetsReload = True
         TableSetsLoad()
         lblTableSet.Text = basCode.curStatus.TableSet
@@ -798,7 +799,7 @@ Public Class frmConfiguration
         CursorControl("Wait")
         If lvwTables.SelectedItems.Count = 1 Then
             If basCode.curStatus.Table <> lvwTables.SelectedItems.Item(0).Tag Then
-                AllClear(1)
+                AllClear(1, True)
                 basCode.curStatus.Table = lvwTables.SelectedItems.Item(0).Tag
                 basCode.curStatus.TableReload = True
                 TableShow()
@@ -936,12 +937,10 @@ Public Class frmConfiguration
     Private Sub btnTableClear_Click(sender As Object, e As EventArgs) Handles btnTableClear.Click
         CursorControl("Wait")
         WriteStatus("", 0, lblStatusText)
-        txtTableName.Text = ""
-        txtTableAlias.Text = ""
-        chkTableVisible.Checked = False
-        chkTableSearch.Checked = False
-        chkTableUpdate.Checked = False
-        chkTableInsert.Checked = False
+        basCode.curStatus.Table = ""
+        TableClear()
+        tvwTable.Nodes.Clear()
+        FieldClear(True)
         CursorControl()
     End Sub
 
@@ -973,6 +972,12 @@ Public Class frmConfiguration
             WriteStatus("Unable to Delete Table", 2, lblStatusText)
         End If
         CursorControl()
+    End Sub
+
+    Private Sub sptTable_SplitterMoved(sender As Object, e As SplitterEventArgs) Handles sptTable.SplitterMoved
+        pnlTableSettings.Height = sptTable.Panel1.Height
+        pnlFieldSettings.Top = sptTable.Panel2.Top
+        pnlFieldSettings.Height = sptTable.Panel2.Height
     End Sub
 
 #End Region
@@ -1020,7 +1025,7 @@ Public Class frmConfiguration
     End Sub
 
     Private Sub ImportOneTable(strTableName As String, strTableAlias As String, blnReload As Boolean)
-        TableAddOrUpdate(strTableName, strTableAlias, chkTableVisible.Checked, chkTableSearch.Checked, chkTableUpdate.Checked, chkTableInsert.Checked, chkTableDelete.Checked)
+        TableAddOrUpdate(strTableName, strTableAlias, chkTableVisible.Checked, chkTableSearch.Checked, chkTableUpdate.Checked, chkTableInsert.Checked, chkTableDelete.Checked, blnReload)
 
         Dim strSchemaName As String = strTableName.Substring(0, strTableName.IndexOf("."))
         Dim TableName As String = strTableName.Substring(strTableName.IndexOf(".") + 1, strTableName.Length - (strTableName.IndexOf(".") + 1))
@@ -1174,25 +1179,24 @@ Public Class frmConfiguration
         'End If
     End Sub
 
-    Private Sub TablesClear()
+    Private Sub TableClear()
         txtTableName.Tag = ""
         txtTableName.Text = ""
         txtTableAlias.Text = ""
-        chkTableVisible.Checked = False
-        chkTableSearch.Checked = False
+        chkTableVisible.Checked = True
+        chkTableSearch.Checked = True
         chkTableUpdate.Checked = False
         chkTableInsert.Checked = False
         chkTableDelete.Checked = False
     End Sub
 
     Private Sub TableAddOrUpdate(strTableName As String, strAlias As String, blnVisible As Boolean, blnSearch As Boolean, blnUpdate As Boolean, blnInsert As Boolean, blnDelete As Boolean, Optional blnReload As Boolean = True)
-        AllClear(1)
         Dim root As XmlElement = basCode.xmlTables.DocumentElement
         If root Is Nothing Then
             basCode.xmlTables = basCode.dhdText.CreateRootDocument(basCode.xmlTables, "Sequenchel", "Tables", True)
         End If
 
-        If strAlias.Length = 0 Then strAlias = strTableName
+        If strAlias.Length = 0 Then strAlias = strTableName.Replace(".", "_")
 
         Dim xTNode As XmlNode = basCode.dhdText.FindXmlNode(basCode.xmlTables, "Table", "Name", strTableName)
         If xTNode Is Nothing Then xTNode = basCode.dhdText.CreateAppendElement(basCode.xmlTables.Item("Sequenchel").Item("Tables"), "Table")
@@ -1210,6 +1214,7 @@ Public Class frmConfiguration
         basCode.curStatus.TableReload = True
 
         If blnReload = True Then
+            AllClear(1, False)
             TablesLoad()
             TableSelect()
             TableShow()
@@ -1295,7 +1300,7 @@ Public Class frmConfiguration
             strTableName = cbxRelationTables.Text
             strTableAlias = cbxRelationTables.Text
         End If
-        FieldAddOrUpdate(basCode.curStatus.Table, txtFieldName.Text, txtFieldAlias.Text, cbxDataType.SelectedItem, chkIdentity.Checked, chkPrimaryKey.Checked, txtFieldWidth.Text, strTableName, strTableAlias, cbxRelationFields.Text, txtRelatedField.Text, txtRelatedFieldAlias.Text, chkRelatedField.Checked, txtControlField.Text, txtControlValue.Text, chkControlUpdate.Checked, _
+        FieldAddOrUpdate(txtTableName.Text, txtFieldName.Text, txtFieldAlias.Text, cbxDataType.SelectedItem, chkIdentity.Checked, chkPrimaryKey.Checked, txtFieldWidth.Text, strTableName, strTableAlias, cbxRelationFields.Text, txtRelatedField.Text, txtRelatedFieldAlias.Text, chkRelatedField.Checked, txtControlField.Text, txtControlValue.Text, chkControlUpdate.Checked, _
                          chkControlMode.Checked, chkDefaultButton.Checked, txtDefaultButton.Text, chkFieldList.Checked, txtFieldListOrder.Text, txtFieldListWidth.Text, chkFieldVisible.Checked, chkFieldSearch.Checked, chkFieldSearchList.Checked, chkFieldUpdate.Checked, True)
         CursorControl()
     End Sub
@@ -1303,7 +1308,7 @@ Public Class frmConfiguration
     Private Sub btnFieldClear_Click(sender As Object, e As EventArgs) Handles btnFieldClear.Click
         CursorControl("Wait")
         WriteStatus("", 0, lblStatusText)
-        FieldsClear()
+        FieldClear(True)
         CursorControl()
     End Sub
 
@@ -1323,7 +1328,7 @@ Public Class frmConfiguration
 
             basCode.curStatus.TableChanged = True
             ConfigurationSave()
-            FieldsClear()
+            FieldClear(True)
             lvwTables_SelectedIndexChanged(Nothing, Nothing)
             WriteStatus("Field Deleted", 0, lblStatusText)
         Else
@@ -1353,7 +1358,7 @@ Public Class frmConfiguration
 #End Region
 
     Private Sub NodeDisplay(PNode As TreeNode)
-        FieldsClear()
+        FieldClear(True)
         If PNode Is Nothing Then Exit Sub
         Dim strFieldName As String = ""
         Dim strFieldValue As String = ""
@@ -1428,7 +1433,7 @@ Public Class frmConfiguration
         End If
     End Sub
 
-    Private Sub FieldsClear()
+    Private Sub FieldClear(blnClearAll As Boolean)
         txtFieldName.Tag = ""
         txtFieldName.Text = ""
         txtFieldAlias.Text = ""
@@ -1445,18 +1450,22 @@ Public Class frmConfiguration
         chkRelatedField.Checked = False
         chkDefaultButton.Checked = False
         txtDefaultButton.Text = ""
-        txtControlField.Text = ""
-        txtControlValue.Text = ""
-        chkControlUpdate.Checked = False
-        chkControlMode.Checked = False
         chkFieldList.Checked = False
         txtFieldListOrder.Text = ""
         txtFieldListWidth.Text = ""
         chkPrimaryKey.Checked = False
-        chkFieldVisible.Checked = False
-        chkFieldSearch.Checked = False
-        chkFieldSearchList.Checked = False
-        chkFieldUpdate.Checked = False
+        chkFieldVisible.Checked = True
+
+        If blnClearAll = True Then
+            txtControlField.Text = ""
+            txtControlValue.Text = ""
+            chkControlUpdate.Checked = False
+            chkControlMode.Checked = False
+
+            chkFieldSearch.Checked = True
+            chkFieldSearchList.Checked = False
+            chkFieldUpdate.Checked = False
+        End If
     End Sub
 
     Private Sub FieldAddOrUpdate(TableName As String, FldName As String, FldAlias As String, DataType As String, Identity As Boolean, PrimaryKey As Boolean, FldWidth As String, RelationTable As String, RelationTableAlias As String, RelationField As String, RelatedField As String, RelatedFieldAlias As String, RelatedFieldList As String, ControlField As String, _
@@ -1750,12 +1759,20 @@ Public Class frmConfiguration
             cbxRelationTables.SelectedItem = strTable
         Else
             cbxRelationTables.Text = strTable
+            cbxRelationFields.Text = ""
+            chkRelatedField.Checked = False
+            txtRelatedField.Text = ""
+            txtRelatedFieldAlias.Text = ""
         End If
         lstRelationTables.Visible = False
     End Sub
 
     Private Sub cbxRelationTables_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbxRelationTables.SelectedIndexChanged
         If basCode.curStatus.SuspendActions = False Then
+            cbxRelationFields.Text = ""
+            chkRelatedField.Checked = False
+            txtRelatedField.Text = ""
+            txtRelatedFieldAlias.Text = ""
             If cbxRelationTables.Text.Length = 0 Then Exit Sub
 
             'get table name; get fieldname; get relationname; find relation in basetable/basefield/baserelation; load baserelation to screen.
@@ -1769,9 +1786,6 @@ Public Class frmConfiguration
                 strTableName = cbxRelationTables.Text
                 strTableAlias = cbxRelationTables.Text
             End If
-            cbxRelationFields.Text = ""
-            chkRelatedField.Checked = False
-            txtRelatedField.Text = ""
 
             Dim strFieldName As String = txtFieldName.Text
             Dim xMNode As XmlNode = basCode.dhdText.FindXmlNode(basCode.xmlTables, "Table", "Name", txtTableName.Text)
@@ -2066,7 +2080,7 @@ Public Class frmConfiguration
         Dim strTableName As String = "", strTableAlias As String = ""
         If cbxRelationTables.Text.IndexOf("(") > 0 Then
             strTableName = cbxRelationTables.Text.Substring(cbxRelationTables.Text.IndexOf("(") + 1, cbxRelationTables.Text.Length - (cbxRelationTables.Text.IndexOf("(") + 1) - 1)
-            strTableAlias = cbxRelationTables.Text.Substring(0, cbxRelationTables.Text.IndexOf("(") - 2)
+            strTableAlias = cbxRelationTables.Text.Substring(0, cbxRelationTables.Text.IndexOf("(") - 1)
         Else
             strTableName = cbxRelationTables.Text
             strTableAlias = cbxRelationTables.Text

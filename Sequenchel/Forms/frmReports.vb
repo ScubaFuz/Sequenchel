@@ -301,15 +301,26 @@ Public Class frmReports
     Private Sub LoadTableFields()
         For Each TableNode As Xml.XmlNode In basCode.xmlTables.SelectNodes("//Field")
             Dim lsvItem As New ListViewItem
+            Dim strAlias As String = TableNode.ParentNode.ParentNode.Item("Alias").InnerText.Replace(".", "_")
+            If GroupExists(strAlias) = False Then lvwAvailableFields.Groups.Add(strAlias, strAlias)
             lsvItem.Tag = TableNode.Item("DataType").InnerText
             'lsvItem.Tag = TableNode.ParentNode.ParentNode.Item("Name").InnerText
             lsvItem.Name = TableNode.ParentNode.ParentNode.Item("Name").InnerText & "." & TableNode.Item("FldName").InnerText
-            lsvItem.Text = TableNode.ParentNode.ParentNode.Item("Alias").InnerText.Replace(".", "_")
+            lsvItem.Text = strAlias
             lsvItem.SubItems.Add(TableNode.Item("FldAlias").InnerText)
             lvwAvailableFields.Items.Add(lsvItem)
+            lsvItem.Group = lvwAvailableFields.Groups(strAlias)
         Next
         ResizeColumns()
     End Sub
+
+    Private Function GroupExists(strGroupName As String) As Boolean
+        Dim blnResult As Boolean = False
+        For Each group As ListViewGroup In lvwAvailableFields.Groups
+            If group.Name = strGroupName Then blnResult = True
+        Next
+        Return blnResult
+    End Function
 
     Private Sub ResizeColumns()
         lvwAvailableFields.AutoResizeColumn(0, ColumnHeaderAutoResizeStyle.ColumnContent)
@@ -443,7 +454,9 @@ Public Class frmReports
 
     Private Sub FieldCheckShowAdd(strFieldName As String, strFieldType As String)
         Dim chkNewShow As New CheckField
+        chkNewShow.Field = New SeqCore.BaseField
         chkNewShow.Name = pnlReportDisplay.Name & "1" & strFieldName
+        chkNewShow.Field.FieldDataType = strFieldType
         chkNewShow.Tag = strFieldName
         'chkNewShow.ThreeState = True
         pnlReportDisplay.Controls.Add(chkNewShow)
@@ -453,6 +466,7 @@ Public Class frmReports
         AddHandler chkNewShow.CheckedChanged, AddressOf Me.chkShowField_CheckChanged
 
         Dim cbxNewShowMode As New ComboField
+        cbxNewShowMode.Field = New SeqCore.BaseField
         cbxNewShowMode.Name = pnlReportShowMode.Name & "1" & strFieldName
         cbxNewShowMode.Field.FieldDataType = strFieldType
         cbxNewShowMode.Tag = strFieldName
@@ -485,6 +499,7 @@ Public Class frmReports
         End If
 
         Dim chkNewFilter As New CheckField
+        chkNewFilter.Field = New SeqCore.BaseField
         chkNewFilter.Name = pnlReportFilter.Name & intCount.ToString & strFieldName
         chkNewFilter.Field.FieldDataType = strFieldType
         chkNewFilter.Tag = strFieldName
@@ -495,6 +510,7 @@ Public Class frmReports
         chkNewFilter.Left = basCode.CurVar.BuildMargin
 
         Dim cbxNewFilterMode As New ComboField
+        cbxNewFilterMode.Field = New SeqCore.BaseField
         cbxNewFilterMode.Name = pnlReportFilterMode.Name & intCount.ToString & strFieldName
         cbxNewFilterMode.Tag = strFieldName
         cbxNewFilterMode.Width = 75
@@ -505,6 +521,7 @@ Public Class frmReports
         ComboBoxFill(cbxNewFilterMode, "FilterMode")
 
         Dim cbxNewFilterType As New ComboField
+        cbxNewFilterType.Field = New SeqCore.BaseField
         cbxNewFilterType.Name = pnlReportFilterType.Name & intCount.ToString & strFieldName
         cbxNewFilterType.Tag = strFieldName
         cbxNewFilterType.Width = 75
@@ -515,6 +532,7 @@ Public Class frmReports
         ComboBoxFill(cbxNewFilterType, "FilterType")
 
         Dim txtNewFilter As New TextField
+        txtNewFilter.Field = New SeqCore.BaseField
         txtNewFilter.Name = pnlReportFilterText.Name & intCount.ToString & strFieldName
         txtNewFilter.Field.FieldDataType = strFieldType
         txtNewFilter.Tag = strFieldName
@@ -826,6 +844,7 @@ Public Class frmReports
         End If
 
         Dim chkNewShow As New CheckField
+        chkNewShow.Field = New SeqCore.BaseField
         chkNewShow.Name = pnlRelationsUse.Name & intCount.ToString & strTableName
         chkNewShow.Tag = strTableName
         pnlRelationsUse.Controls.Add(chkNewShow)
@@ -833,6 +852,7 @@ Public Class frmReports
         chkNewShow.Left = basCode.CurVar.BuildMargin
 
         Dim cbxNewField As New ComboField
+        cbxNewField.Field = New SeqCore.BaseField
         cbxNewField.Name = pnlRelationsField.Name & intCount.ToString & strTableName
         cbxNewField.Tag = strTableName
         cbxNewField.Width = pnlRelationsField.Width - basCode.curVar.BuildMargin
@@ -850,6 +870,7 @@ Public Class frmReports
         'txtNewFilter.Left = basCode.CurVar.BuildMargin
 
         Dim cbxNewTargetTable As New ComboField
+        cbxNewTargetTable.Field = New SeqCore.BaseField
         cbxNewTargetTable.Name = pnlRelationsTargetTable.Name & intCount.ToString & strTableName
         cbxNewTargetTable.Tag = strTableName
         cbxNewTargetTable.Width = pnlRelationsTargetTable.Width - basCode.curVar.BuildMargin
@@ -861,6 +882,7 @@ Public Class frmReports
         ComboBoxFill(cbxNewTargetTable, "RelationTargetTable", strTableName)
 
         Dim cbxNewTargetField As New ComboField
+        cbxNewTargetField.Field = New SeqCore.BaseField
         cbxNewTargetField.Name = pnlRelationsTargetField.Name & intCount.ToString & strTableName
         cbxNewTargetField.Tag = strTableName
         cbxNewTargetField.Width = pnlRelationsTargetField.Width - basCode.curVar.BuildMargin
@@ -869,6 +891,7 @@ Public Class frmReports
         cbxNewTargetField.Left = basCode.curVar.BuildMargin
 
         Dim cbxNewJoinType As New ComboField
+        cbxNewJoinType.Field = New SeqCore.BaseField
         cbxNewJoinType.Name = pnlRelationsJoinType.Name & intCount.ToString & strTableName
         cbxNewJoinType.Tag = strTableName
         cbxNewJoinType.Width = pnlRelationsJoinType.Width - basCode.curVar.BuildMargin
@@ -1343,7 +1366,7 @@ Public Class frmReports
         For Each ctrControl In pnlInput.Controls
             If strFieldName = ctrControl.Tag Then
                 If intControlNumber = 0 Or intControlNumber = ctrControl.Name.ToString.Substring(ctrControl.Name.ToString.Length - strFieldName.Length - 1, 1) Then
-                    If ctrControl.FieldCategory = 2 Then
+                    If ctrControl.[GetType]().Name = "CheckField" Then
                         Return ctrControl.CheckState
                     End If
                     If ctrControl.Text.Length > 0 Then
@@ -1363,8 +1386,8 @@ Public Class frmReports
             If strFieldName = ctrControl.Tag Then
                 If intControlNumber = 0 Or intControlNumber = ctrControl.Name.ToString.Substring(ctrControl.Name.ToString.Length - strFieldName.Length - 1, 1) Then
                     blnControlFound = True
-                    Select Case ctrControl.FieldCategory
-                        Case 2
+                    Select Case ctrControl.[GetType]().Name
+                        Case "CheckField"
                             Select Case strValue.ToLower
                                 Case "true", "checked", "1"
                                     strValue = 1
@@ -1376,7 +1399,7 @@ Public Class frmReports
                                     strValue = 0
                             End Select
                             ctrControl.CheckState = strValue
-                        Case 1, 3, 4, 5, 6
+                        Case Else
                             ctrControl.Text = strValue
                     End Select
                 End If
