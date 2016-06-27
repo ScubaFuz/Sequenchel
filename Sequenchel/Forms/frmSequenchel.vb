@@ -1641,29 +1641,32 @@ Public Class frmSequenchel
                 Case "ComboField"
                     'not used
                 Case "ManagedSelectField"
-                    If sender.Text.ToString <> sender.Tag.ToString Then
-                        sender.BackColor = clrMarked
-                    Else
-                        If sender.Enabled = True Then
-                            sender.BackColor = clrOriginal
-                        Else
-                            sender.BackColor = clrDisabled
-                        End If
-                    End If
-
-                    'As related field
-                    For Each ctrl In sptFields1.Panel2.Controls
-                        'For intField As Integer = 0 To tblTable.Count - 1
-                        If ctrl.Field.FieldName = sender.IdentifierField Then
-                            Select Case ctrl.Field.Category
-                                Case 1, 3, 4, 5
-                                    If Not sender.value = Nothing Then ctrl.Text = sender.Value
-                                Case 2
-                                    ctrl.Checked = sender.Value
-                            End Select
-                        End If
-                    Next
-
+                    Select Case sender.Field.Category
+                        Case 5
+                            'as main field
+                            If sender.Text.ToString <> sender.Tag.ToString Then
+                                sender.BackColor = clrMarked
+                            Else
+                                If sender.Enabled = True Then
+                                    sender.BackColor = clrOriginal
+                                Else
+                                    sender.BackColor = clrDisabled
+                                End If
+                            End If
+                        Case 6
+                            'As related field
+                            For Each ctrl In sptFields1.Panel2.Controls
+                                'For intField As Integer = 0 To tblTable.Count - 1
+                                If ctrl.Field.FieldName = sender.IdentifierField Then
+                                    Select Case ctrl.Field.Category
+                                        Case 1, 3, 4, 5
+                                            If Not sender.value = Nothing Then ctrl.Text = sender.Value
+                                        Case 2
+                                            ctrl.Checked = sender.Value
+                                    End Select
+                                End If
+                            Next
+                    End Select
             End Select
         End If
     End Sub

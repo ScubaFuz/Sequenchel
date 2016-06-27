@@ -1300,6 +1300,10 @@ Public Class frmConfiguration
             strTableName = cbxRelationTables.Text
             strTableAlias = cbxRelationTables.Text
         End If
+        If basCode.FieldAliasExists(basCode.xmlTables, txtTableName.Text, txtFieldName.Text, txtFieldAlias.Text) = True Then
+            WriteStatus("There already is a different field with the same alias.", 2, lblStatusText)
+            Exit Sub
+        End If
         FieldAddOrUpdate(txtTableName.Text, txtFieldName.Text, txtFieldAlias.Text, cbxDataType.SelectedItem, chkIdentity.Checked, chkPrimaryKey.Checked, txtFieldWidth.Text, strTableName, strTableAlias, cbxRelationFields.Text, txtRelatedField.Text, txtRelatedFieldAlias.Text, chkRelatedField.Checked, txtControlField.Text, txtControlValue.Text, chkControlUpdate.Checked, _
                          chkControlMode.Checked, chkDefaultButton.Checked, txtDefaultButton.Text, chkFieldList.Checked, txtFieldListOrder.Text, txtFieldListWidth.Text, chkFieldVisible.Checked, chkFieldSearch.Checked, chkFieldSearchList.Checked, chkFieldUpdate.Checked, True)
         CursorControl()

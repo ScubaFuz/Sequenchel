@@ -934,10 +934,12 @@ Public Class frmReports
                     intCount += 1
                     If intCount > 1 Then RelationUseAdd(strTable)
                     For Each ctrControl In pnlRelationsField.Controls
-                        If ctrControl.Name.ToString.Substring(ctrControl.Name.ToString.Length - strTable.Length, strTable.Length) = strTable Then
-                            If ctrControl.Name.ToString.Substring(ctrControl.Name.ToString.Length - strTable.Length - 1, 1) = intCount Then
-                                'ctrControl.Text = xmlCNode.Item("FldName").InnerText
-                                ctrControl.Text = xRNode.ParentNode.ParentNode.Item("FldName").InnerText
+                        If strTable.Length < ctrControl.Name.ToString.Length Then
+                            If ctrControl.Name.ToString.Substring(ctrControl.Name.ToString.Length - strTable.Length, strTable.Length) = strTable Then
+                                If ctrControl.Name.ToString.Substring(ctrControl.Name.ToString.Length - strTable.Length - 1, 1) = intCount Then
+                                    'ctrControl.Text = xmlCNode.Item("FldName").InnerText
+                                    ctrControl.Text = xRNode.ParentNode.ParentNode.Item("FldName").InnerText
+                                End If
                             End If
                         End If
                     Next
@@ -949,23 +951,29 @@ Public Class frmReports
                     '    End If
                     'Next
                     For Each ctrControl In pnlRelationsTargetTable.Controls
-                        If ctrControl.Name.ToString.Substring(ctrControl.Name.ToString.Length - strTable.Length, strTable.Length) = strTable Then
-                            If ctrControl.Name.ToString.Substring(ctrControl.Name.ToString.Length - strTable.Length - 1, 1) = intCount Then
-                                ctrControl.Text = strRelationTableAlias & " (" & strRelationTable & ")"
+                        If strTable.Length < ctrControl.Name.ToString.Length Then
+                            If ctrControl.Name.ToString.Substring(ctrControl.Name.ToString.Length - strTable.Length, strTable.Length) = strTable Then
+                                If ctrControl.Name.ToString.Substring(ctrControl.Name.ToString.Length - strTable.Length - 1, 1) = intCount Then
+                                    ctrControl.Text = strRelationTableAlias & " (" & strRelationTable & ")"
+                                End If
                             End If
                         End If
                     Next
                     For Each ctrControl In pnlRelationsTargetField.Controls
-                        If ctrControl.Name.ToString.Substring(ctrControl.Name.ToString.Length - strTable.Length, strTable.Length) = strTable Then
-                            If ctrControl.Name.ToString.Substring(ctrControl.Name.ToString.Length - strTable.Length - 1, 1) = intCount Then
-                                ctrControl.Text = strRelationField
+                        If strTable.Length < ctrControl.Name.ToString.Length Then
+                            If ctrControl.Name.ToString.Substring(ctrControl.Name.ToString.Length - strTable.Length, strTable.Length) = strTable Then
+                                If ctrControl.Name.ToString.Substring(ctrControl.Name.ToString.Length - strTable.Length - 1, 1) = intCount Then
+                                    ctrControl.Text = strRelationField
+                                End If
                             End If
                         End If
                     Next
                     For Each ctrControl In pnlRelationsJoinType.Controls
-                        If ctrControl.Name.ToString.Substring(ctrControl.Name.ToString.Length - strTable.Length, strTable.Length) = strTable Then
-                            If ctrControl.Name.ToString.Substring(ctrControl.Name.ToString.Length - strTable.Length - 1, 1) = intCount Then
-                                ctrControl.SelectedIndex = 1
+                        If strTable.Length < ctrControl.Name.ToString.Length Then
+                            If ctrControl.Name.ToString.Substring(ctrControl.Name.ToString.Length - strTable.Length, strTable.Length) = strTable Then
+                                If ctrControl.Name.ToString.Substring(ctrControl.Name.ToString.Length - strTable.Length - 1, 1) = intCount Then
+                                    ctrControl.SelectedIndex = 1
+                                End If
                             End If
                         End If
                     Next
@@ -1048,12 +1056,12 @@ Public Class frmReports
         tmrElapsedTime.Enabled = True
         tmrElapsedTime.Start()
         dtsReport = Nothing
-        dtsReport = basCode.QueryDb(basCode.dhdConnection, strQuery, True)
+        dtsReport = basCode.QueryDb(basCode.dhdConnection, strQuery, True, 1)
         If basCode.dhdConnection.ErrorLevel = -1 Then
             WriteStatus(basCode.dhdConnection.ErrorMessage, 1, lblStatusText)
             lblErrorMessage.Text = basCode.ErrorMessage
         End If
-        ReportShow(dtsReport)
+        ReportShow(dtsReport, 1)
         tmrElapsedTime.Stop()
         tmrElapsedTime.Enabled = False
         tmsElapsedTime = Now() - dtmElapsedTime
@@ -1291,6 +1299,7 @@ Public Class frmReports
                         SetCtrText(pnlReportFilterText, strTable & "." & strField, xFnode.Item("FilterText").InnerText, xFnode.Item("FilterNumber").InnerText)
                     Next
                 Catch ex As Exception
+                    basCode.WriteLog("Unable to load the Field " & strTable & "." & strField & Environment.NewLine & ex.Message, 1)
                     If MessageBox.Show("Unable to load the Field " & strTable & "." & strField & Environment.NewLine & "Do you wish to keep loading the report?", "Error Loading Report", MessageBoxButtons.YesNo, MessageBoxIcon.Error, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.No Then
                         WriteStatus("Report loading aborted.", 0, lblStatusText)
                         Exit Sub
@@ -1435,7 +1444,7 @@ Public Class frmReports
         Return Nothing
     End Function
 
-    Private Sub ReportShow(dtsData As DataSet)
+    Private Sub ReportShow(dtsData As DataSet, Optional intPage As Integer = 0)
 
         'strReportText &= vbCrLf
         lblListCountNumber.Text = "0"
@@ -1443,11 +1452,25 @@ Public Class frmReports
         If basCode.dhdText.DatasetCheck(dtsData) = False Then Exit Sub
 
         Try
-            If DataSet2DataGridView(dtsData, 0, dgvReport, True) = False Then
+            If DataSet2DataGridView(dtsData, 0, dgvReport, True, intPage) = False Then
                 WriteStatus("There was an error loading the report", 1, lblStatusText)
             End If
             'dgvReport.DataSource = dtsData.Tables(0)
-            lblListCountNumber.Text = dtsData.Tables(0).Rows.Count.ToString
+            Dim intTotal As Integer = dtsData.Tables(0).Rows.Count.ToString
+            Dim intStart As Integer = 0, intStop As Integer = 0
+            If intPage > 0 Then
+                intStart = intPage * 1000 - 999
+                If intStart > intTotal Then intStart = (Math.Floor(intTotal / 1000)) * 1000 + 1
+                intStop = intPage * 1000
+                If intStop > intTotal Then intStop = intTotal
+                lblListCountNumber.Text = intStart & " to " & intStop & " from " & intTotal
+            Else
+                intStart = 1
+                intStop = intTotal
+                'lblListCountNumber.Text = intTotal
+                lblListCountNumber.Text = intStart & " to " & intStop & " from " & intTotal
+            End If
+
             'DataGridViewColumnSize(dgvReport)
             lblErrorMessage.Text = "Command completed succesfully"
         Catch ex As Exception

@@ -646,6 +646,7 @@ Public Class BaseCode
             curStatus.TablesReload = True
             dhdText.OutputFile = xmlTSNode.Item("OutputPath").InnerText
             curVar.ReportSetFile = xmlTSNode.Item("ReportSet").InnerText
+            curStatus.ReportsReload = True
             If dhdText.CheckNodeElement(xmlTSNode, "Search") Then curVar.SearchFile = xmlTSNode.Item("Search").InnerText
             curStatus.SearchesReload = True
         End If
@@ -1365,6 +1366,20 @@ Public Class BaseCode
             End If
         End If
         Return strFieldAlias
+    End Function
+
+    Public Function FieldAliasExists(xmlTables As XmlDocument, strTable As String, strField As String, strAlias As String) As Boolean
+        Dim xTNode As XmlNode = dhdText.FindXmlNode(xmlTables, "Table", "Name", strTable)
+        If xTNode Is Nothing Then Return False
+        Dim xPNode As XmlNode = dhdText.CreateAppendElement(xTNode, "Fields", Nothing, True)
+        If xPNode Is Nothing Then Return False
+        Dim xFNode As XmlNode = dhdText.FindXmlChildNode(xPNode, "Field", "FldAlias", strAlias)
+        If Not xFNode Is Nothing Then
+            If dhdText.CheckNodeElement(xFNode, "FldName") = True AndAlso xFNode.Item("FldName").InnerText <> strField Then
+                Return True
+            End If
+        End If
+        Return False
     End Function
 
 #End Region

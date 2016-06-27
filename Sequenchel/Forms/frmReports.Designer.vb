@@ -117,6 +117,10 @@ Partial Class frmReports
         Me.cbxTable = New System.Windows.Forms.ComboBox()
         Me.lblTableSet = New System.Windows.Forms.Label()
         Me.tpgReportResult = New System.Windows.Forms.TabPage()
+        Me.btnFirstPage = New System.Windows.Forms.Button()
+        Me.btnPreviousPage = New System.Windows.Forms.Button()
+        Me.btnNextPage = New System.Windows.Forms.Button()
+        Me.btnLastPage = New System.Windows.Forms.Button()
         Me.cbxEmailResults = New System.Windows.Forms.ComboBox()
         Me.btnEmailResults = New System.Windows.Forms.Button()
         Me.lblElapsedTime = New System.Windows.Forms.Label()
@@ -139,6 +143,7 @@ Partial Class frmReports
         Me.mnuReportsHelp = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuReportsHelpManual = New System.Windows.Forms.ToolStripMenuItem()
         Me.lblStatusText = New System.Windows.Forms.TextBox()
+        Me.chkShowAll = New System.Windows.Forms.CheckBox()
         Me.tabReports.SuspendLayout()
         Me.tpgReportDefinition.SuspendLayout()
         CType(Me.sptReports, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -1114,6 +1119,11 @@ Partial Class frmReports
         '
         'tpgReportResult
         '
+        Me.tpgReportResult.Controls.Add(Me.chkShowAll)
+        Me.tpgReportResult.Controls.Add(Me.btnFirstPage)
+        Me.tpgReportResult.Controls.Add(Me.btnPreviousPage)
+        Me.tpgReportResult.Controls.Add(Me.btnNextPage)
+        Me.tpgReportResult.Controls.Add(Me.btnLastPage)
         Me.tpgReportResult.Controls.Add(Me.cbxEmailResults)
         Me.tpgReportResult.Controls.Add(Me.btnEmailResults)
         Me.tpgReportResult.Controls.Add(Me.lblElapsedTime)
@@ -1134,6 +1144,42 @@ Partial Class frmReports
         Me.tpgReportResult.TabIndex = 1
         Me.tpgReportResult.Text = "Report Result"
         Me.tpgReportResult.UseVisualStyleBackColor = True
+        '
+        'btnFirstPage
+        '
+        Me.btnFirstPage.Image = Global.Sequenchel.My.Resources.Resources.button_endleft
+        Me.btnFirstPage.Location = New System.Drawing.Point(66, 558)
+        Me.btnFirstPage.Name = "btnFirstPage"
+        Me.btnFirstPage.Size = New System.Drawing.Size(24, 23)
+        Me.btnFirstPage.TabIndex = 179
+        Me.btnFirstPage.UseVisualStyleBackColor = True
+        '
+        'btnPreviousPage
+        '
+        Me.btnPreviousPage.Image = Global.Sequenchel.My.Resources.Resources.button_leftt
+        Me.btnPreviousPage.Location = New System.Drawing.Point(90, 558)
+        Me.btnPreviousPage.Name = "btnPreviousPage"
+        Me.btnPreviousPage.Size = New System.Drawing.Size(24, 23)
+        Me.btnPreviousPage.TabIndex = 180
+        Me.btnPreviousPage.UseVisualStyleBackColor = True
+        '
+        'btnNextPage
+        '
+        Me.btnNextPage.Image = Global.Sequenchel.My.Resources.Resources.button_right
+        Me.btnNextPage.Location = New System.Drawing.Point(273, 558)
+        Me.btnNextPage.Name = "btnNextPage"
+        Me.btnNextPage.Size = New System.Drawing.Size(24, 23)
+        Me.btnNextPage.TabIndex = 181
+        Me.btnNextPage.UseVisualStyleBackColor = True
+        '
+        'btnLastPage
+        '
+        Me.btnLastPage.Image = Global.Sequenchel.My.Resources.Resources.button_endright
+        Me.btnLastPage.Location = New System.Drawing.Point(297, 558)
+        Me.btnLastPage.Name = "btnLastPage"
+        Me.btnLastPage.Size = New System.Drawing.Size(24, 23)
+        Me.btnLastPage.TabIndex = 182
+        Me.btnLastPage.UseVisualStyleBackColor = True
         '
         'cbxEmailResults
         '
@@ -1189,28 +1235,32 @@ Partial Class frmReports
         '
         Me.lblErrorMessage.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lblErrorMessage.BackColor = System.Drawing.Color.Gainsboro
         Me.lblErrorMessage.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblErrorMessage.Location = New System.Drawing.Point(161, 560)
+        Me.lblErrorMessage.Location = New System.Drawing.Point(401, 560)
         Me.lblErrorMessage.Name = "lblErrorMessage"
-        Me.lblErrorMessage.Size = New System.Drawing.Size(1002, 22)
+        Me.lblErrorMessage.Size = New System.Drawing.Size(762, 22)
         Me.lblErrorMessage.TabIndex = 175
         '
         'lblListCount
         '
         Me.lblListCount.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.lblListCount.AutoSize = True
-        Me.lblListCount.Location = New System.Drawing.Point(6, 560)
+        Me.lblListCount.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblListCount.Location = New System.Drawing.Point(5, 562)
         Me.lblListCount.Name = "lblListCount"
-        Me.lblListCount.Size = New System.Drawing.Size(57, 13)
+        Me.lblListCount.Size = New System.Drawing.Size(64, 15)
         Me.lblListCount.TabIndex = 173
         Me.lblListCount.Text = "List Count:"
         '
         'lblListCountNumber
         '
         Me.lblListCountNumber.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.lblListCountNumber.Location = New System.Drawing.Point(83, 560)
+        Me.lblListCountNumber.BackColor = System.Drawing.Color.Gainsboro
+        Me.lblListCountNumber.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblListCountNumber.Location = New System.Drawing.Point(117, 562)
         Me.lblListCountNumber.Name = "lblListCountNumber"
-        Me.lblListCountNumber.Size = New System.Drawing.Size(54, 13)
+        Me.lblListCountNumber.Size = New System.Drawing.Size(152, 15)
         Me.lblListCountNumber.TabIndex = 174
         Me.lblListCountNumber.Text = "0"
         '
@@ -1347,6 +1397,16 @@ Partial Class frmReports
         Me.lblStatusText.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
         Me.lblStatusText.Size = New System.Drawing.Size(1202, 20)
         Me.lblStatusText.TabIndex = 175
+        '
+        'chkShowAll
+        '
+        Me.chkShowAll.AutoSize = True
+        Me.chkShowAll.Location = New System.Drawing.Point(328, 562)
+        Me.chkShowAll.Name = "chkShowAll"
+        Me.chkShowAll.Size = New System.Drawing.Size(67, 17)
+        Me.chkShowAll.TabIndex = 183
+        Me.chkShowAll.Text = "Show All"
+        Me.chkShowAll.UseVisualStyleBackColor = True
         '
         'frmReports
         '
@@ -1526,4 +1586,9 @@ Partial Class frmReports
     Friend WithEvents mnuReportsHelp As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents mnuReportsHelpManual As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents lblStatusText As System.Windows.Forms.TextBox
+    Friend WithEvents btnFirstPage As System.Windows.Forms.Button
+    Friend WithEvents btnPreviousPage As System.Windows.Forms.Button
+    Friend WithEvents btnNextPage As System.Windows.Forms.Button
+    Friend WithEvents btnLastPage As System.Windows.Forms.Button
+    Friend WithEvents chkShowAll As System.Windows.Forms.CheckBox
 End Class

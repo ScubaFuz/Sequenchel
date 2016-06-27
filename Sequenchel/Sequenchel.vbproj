@@ -291,6 +291,8 @@
     <None Include="Resources\Background Sequenchel relieftransparant30down.png" />
     <None Include="Resources\Background Sequenchel reliefsquaretransparant30down.png" />
     <None Include="Resources\eye.png" />
+    <None Include="Resources\button_endleft.png" />
+    <None Include="Resources\button_endright.png" />
     <Content Include="Resources\PredefinedStyles.xml" />
     <Content Include="Resources\Sequenchel End User License Agreement.pdf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

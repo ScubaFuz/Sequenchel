@@ -89,15 +89,15 @@ Module Common
     End Function
 
     Friend Function ExportFile(dtsInput As DataSet, strFileName As String) As Boolean
-        CursorControl("Wait")
         Try
-            basCode.ExportFile(dtsInput, strFileName, basCode.curVar.ConvertToText, basCode.curVar.ConvertToNull, basCode.curVar.ShowFile, basCode.curVar.HasHeaders, basCode.curVar.Delimiter, basCode.curVar.QuoteValues, basCode.curVar.CreateDir)
+            If basCode.ExportFile(dtsInput, strFileName, basCode.curVar.ConvertToText, basCode.curVar.ConvertToNull, basCode.curVar.ShowFile, basCode.curVar.HasHeaders, basCode.curVar.Delimiter, basCode.curVar.QuoteValues, basCode.curVar.CreateDir) = False Then
+                Return False
+            End If
         Catch ex As Exception
             basCode.curVar.ShowFile = False
             basCode.WriteLog("An error occured while creating the file." & Environment.NewLine & ex.Message, 1)
             Return False
         End Try
-        CursorControl()
         Return True
     End Function
 
@@ -455,7 +455,7 @@ Module Common
     End Sub
 #End Region
 
-    Friend Function DataSet2DataGridView(dtsSource As DataSet, SourceTable As Integer, dgvTarget As DataGridView, RebuildColumns As Boolean) As Boolean
+    Friend Function DataSet2DataGridView(dtsSource As DataSet, SourceTable As Integer, dgvTarget As DataGridView, RebuildColumns As Boolean, Optional intPage As Integer = 0) As Boolean
         Dim blnSucces As Boolean = False
 
         If RebuildColumns = True Then
@@ -469,7 +469,19 @@ Module Common
             Next
         End If
 
-        For intRowCount1 As Integer = 0 To dtsSource.Tables(SourceTable).Rows.Count - 1
+        Dim intTotal As Integer = dtsSource.Tables(SourceTable).Rows.Count
+        Dim intStart As Integer = 0, intStop As Integer = 0
+        If intPage > 0 Then
+            intStart = intPage * 1000 - 999
+            If intStart > intTotal Then intStart = (Math.Floor(intTotal / 1000)) * 1000 + 1
+            intStop = intPage * 1000
+            If intStop > intTotal Then intStop = intTotal
+        Else
+            intStart = 1
+            intStop = intTotal
+        End If
+
+        For intRowCount1 As Integer = intStart - 1 To intStop - 1
             Dim dgvRow As New DataGridViewRow
             dgvRow.CreateCells(dgvTarget)
             For Each dgvColumn As DataGridViewTextBoxColumn In dgvTarget.Columns
@@ -481,7 +493,7 @@ Module Common
             Next
             dgvTarget.Rows.Add(dgvRow)
         Next
-        If RebuildColumns = True Then DataGridViewColumnSize(dgvTarget)
+        'If RebuildColumns = True Then DataGridViewColumnSize(dgvTarget)
         blnSucces = True
         Return blnSucces
     End Function
