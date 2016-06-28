@@ -994,7 +994,7 @@ Public Class frmSequenchel
         dtsTable = Nothing
         dtsTable = basCode.QueryDb(basCode.dhdConnection, strQuery, True)
         If basCode.dhdText.DatasetCheck(dtsTable) = False Then Exit Sub
-        If DataSet2DataGridView(dtsTable, 0, dgvTable1, False) = False Then Exit Sub
+        If DataSet2DataGridView(dtsTable, 0, dgvTable1, False, 0) = False Then Exit Sub
 
         dgvTable1.ClearSelection()
         lblListCountNumber.Text = dtsTable.Tables(0).Rows.Count

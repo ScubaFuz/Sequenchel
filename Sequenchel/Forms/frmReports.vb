@@ -994,7 +994,7 @@ Public Class frmReports
         'End If
         cbxReportName.SelectedIndex = -1
         cbxReportName.Text = ""
-        ReportClear(True)
+        ReportClear(True, True)
         CursorControl()
     End Sub
 
@@ -1022,18 +1022,22 @@ Public Class frmReports
         CursorControl()
     End Sub
 
-    Private Sub ReportClear(blnAll As Boolean)
+    Private Sub ReportClear(blnAll As Boolean, blnClearColumns As Boolean)
         strErrorMessage = ""
         lblErrorMessage.Text = ""
         lblListCountNumber.Text = "0"
-        dgvReport.Columns.Clear()
+        If blnClearColumns = True Then
+            dgvReport.Columns.Clear()
+        Else
+            dgvReport.Rows.Clear()
+        End If
         If blnAll = True Then
             rtbQuery.Text = ""
         End If
     End Sub
 
     Private Function QueryShow() As Boolean
-        ReportClear(True)
+        ReportClear(True, True)
         Dim xmlReportShow As XmlDocument = basCode.dhdText.CreateRootDocument(Nothing, Nothing, Nothing)
         Dim strReportName As String = cbxReportName.Text
         If strReportName = "" Then strReportName = "TempReport"
@@ -1051,7 +1055,7 @@ Public Class frmReports
     End Function
 
     Private Sub QueryExecute()
-        ReportClear(False)
+        ReportClear(False, True)
         dtmElapsedTime = Now()
         tmrElapsedTime.Enabled = True
         tmrElapsedTime.Start()
@@ -1061,7 +1065,7 @@ Public Class frmReports
             WriteStatus(basCode.dhdConnection.ErrorMessage, 1, lblStatusText)
             lblErrorMessage.Text = basCode.ErrorMessage
         End If
-        ReportShow(dtsReport, 1)
+        ReportShow(dtsReport, 1, True)
         tmrElapsedTime.Stop()
         tmrElapsedTime.Enabled = False
         tmsElapsedTime = Now() - dtmElapsedTime
@@ -1444,16 +1448,20 @@ Public Class frmReports
         Return Nothing
     End Function
 
-    Private Sub ReportShow(dtsData As DataSet, Optional intPage As Integer = 0)
+    Private Sub ReportShow(dtsData As DataSet, intPage As Integer, blnRebuildColumns As Boolean)
 
         'strReportText &= vbCrLf
         lblListCountNumber.Text = "0"
         lblErrorMessage.Text = strErrorMessage
         If basCode.dhdText.DatasetCheck(dtsData) = False Then Exit Sub
 
+        If chkShowAll.Checked = True Then intPage = 0
+
         Try
-            If DataSet2DataGridView(dtsData, 0, dgvReport, True, intPage) = False Then
+            If DataSet2DataGridView(dtsData, 0, dgvReport, blnRebuildColumns, intPage) = False Then
                 WriteStatus("There was an error loading the report", 1, lblStatusText)
+                lblListCountNumber.Tag = 0
+                Exit Sub
             End If
             'dgvReport.DataSource = dtsData.Tables(0)
             Dim intTotal As Integer = dtsData.Tables(0).Rows.Count.ToString
@@ -1461,6 +1469,7 @@ Public Class frmReports
             If intPage > 0 Then
                 intStart = intPage * 1000 - 999
                 If intStart > intTotal Then intStart = (Math.Floor(intTotal / 1000)) * 1000 + 1
+                intPage = (Math.Ceiling(intStart / 1000))
                 intStop = intPage * 1000
                 If intStop > intTotal Then intStop = intTotal
                 lblListCountNumber.Text = intStart & " to " & intStop & " from " & intTotal
@@ -1470,12 +1479,14 @@ Public Class frmReports
                 'lblListCountNumber.Text = intTotal
                 lblListCountNumber.Text = intStart & " to " & intStop & " from " & intTotal
             End If
-
+            lblListCountNumber.Tag = intPage
+            sptReportResults.SplitterDistance = 242 + lblListCountNumber.Width
             'DataGridViewColumnSize(dgvReport)
             lblErrorMessage.Text = "Command completed succesfully"
         Catch ex As Exception
             basCode.WriteLog("There was an error loading the report" & Environment.NewLine & ex.Message, 1)
             WriteStatus("There was an error loading the report. Please check the log", 1, lblStatusText)
+            lblListCountNumber.Tag = 0
         End Try
 
         'If strErrorMessage = "" Then lblErrorMessage.Text = "Command completed succesfully"
@@ -1611,20 +1622,31 @@ Public Class frmReports
                 If ctrRelation.Tag = strTableName Then
                     Dim NewRelationNode As XmlNode = basCode.dhdText.CreateAppendElement(NewRelationsNode, "Relation")
                     intControlNumber = ctrRelation.Name.ToString.Substring(ctrRelation.Name.ToString.Length - strTableName.Length - 1, 1)
+
                     basCode.dhdText.CreateAppendElement(NewRelationNode, "TableName", strTableName)
                     basCode.dhdText.CreateAppendElement(NewRelationNode, "TableAlias", strTableAlias)
                     basCode.dhdText.CreateAppendElement(NewRelationNode, "RelationNumber", intControlNumber)
                     basCode.dhdText.CreateAppendElement(NewRelationNode, "RelationEnabled", ctrRelation.Checked.ToString)
                     basCode.dhdText.CreateAppendElement(NewRelationNode, "RelationSource", GetCtrText(pnlRelationsField, strTableName, intControlNumber))
-                    Dim strTable As String = basCode.GetTableNameFromString(GetCtrText(pnlRelationsTargetTable, strTableName, intControlNumber))
-                    basCode.dhdText.CreateAppendElement(NewRelationNode, "RelationTargetTable", strTable)
-                    basCode.dhdText.CreateAppendElement(NewRelationNode, "RelationTargetAlias", basCode.GetTableAliasFromString(GetCtrText(pnlRelationsTargetTable, strTableName, intControlNumber)))
-                    basCode.dhdText.CreateAppendElement(NewRelationNode, "RelationTargetField", basCode.GetFieldNameFromAlias(basCode.xmlTables, strTable, GetCtrText(pnlRelationsTargetField, strTableName, intControlNumber)))
+                    Dim strRelationTable As String = basCode.GetTableNameFromString(GetCtrText(pnlRelationsTargetTable, strTableName, intControlNumber))
+                    basCode.dhdText.CreateAppendElement(NewRelationNode, "RelationTargetTable", strRelationTable)
+                    Dim strRelationTableAlias As String = basCode.GetTableAliasFromString(GetCtrText(pnlRelationsTargetTable, strTableName, intControlNumber))
+                    basCode.dhdText.CreateAppendElement(NewRelationNode, "RelationTargetAlias", strRelationTableAlias)
+                    basCode.dhdText.CreateAppendElement(NewRelationNode, "RelationTargetField", basCode.GetFieldNameFromAlias(basCode.xmlTables, strRelationTable, GetCtrText(pnlRelationsTargetField, strTableName, intControlNumber)))
                     basCode.dhdText.CreateAppendElement(NewRelationNode, "RelationJoinType", GetCtrText(pnlRelationsJoinType, strTableName, intControlNumber))
+                    Dim intSortOrder As Integer = SortOrderGet(strRelationTableAlias)
+                    basCode.dhdText.CreateAppendElement(NewRelationNode, "RelationSortOrder", intSortOrder)
                 End If
             Next
         Next
         Return xmlReport
+    End Function
+
+    Private Function SortOrderGet(strTableName As String) As Integer
+        For Each lvwItem As ListViewItem In lvwSelectedTables.Items
+            If lvwItem.Text = strTableName Then Return lvwItem.Index
+        Next
+        Return lvwSelectedTables.Items.Count
     End Function
 
     Private Sub ReportDelete(strSelection As String)
@@ -1779,13 +1801,18 @@ Public Class frmReports
     End Sub
 
     Private Sub dgvReport_DoubleClick(sender As Object, e As MouseEventArgs) Handles dgvReport.DoubleClick
+        CursorControl("Wait")
         Dim args As MouseEventArgs = e
         Dim dgv As DataGridView = sender
         Dim hit As DataGridView.HitTestInfo = dgv.HitTest(args.X, args.Y)
         If (hit.Type = DataGridViewHitTestType.TopLeftHeader) Then
             DataGridViewColumnSize(sender)
         End If
+        CursorControl()
+    End Sub
 
+    Private Sub dgvReport_DoubleClick(sender As Object, e As EventArgs) Handles dgvReport.DoubleClick
+        'this one keeps popping up....
     End Sub
 
     'Private Sub tpgReportDefinition_Resize(sender As Object, e As EventArgs) Handles tpgReportDefinition.Resize
@@ -2045,10 +2072,6 @@ Public Class frmReports
         Me.lvwAvailableFields.ListViewItemSorter = New ListViewItemComparer(e.Column)
     End Sub
 
-    Private Sub dgvReport_DoubleClick(sender As Object, e As EventArgs) Handles dgvReport.DoubleClick
-
-    End Sub
-
     Private Sub cbxRelationTargetTable_SelectedIndexChanged(sender As Object, e As EventArgs)
         If sender.[GetType]().Name = "ComboField" Then
             Dim cbxSource As ComboField = TryCast(sender, ComboField)
@@ -2073,5 +2096,51 @@ Public Class frmReports
 
     End Sub
 
+    Private Sub chkShowAll_CheckedChanged(sender As Object, e As EventArgs) Handles chkShowAll.CheckedChanged
+        CursorControl("Wait")
+        ReportClear(False, False)
+        ReportShow(dtsReport, 1, False)
+        CursorControl()
+    End Sub
+
+    Private Sub btnFirstPage_Click(sender As Object, e As EventArgs) Handles btnFirstPage.Click
+        CursorControl("Wait")
+        ReportClear(False, False)
+        ReportShow(dtsReport, 1, False)
+        CursorControl()
+    End Sub
+
+    Private Sub btnPreviousPage_Click(sender As Object, e As EventArgs) Handles btnPreviousPage.Click
+        CursorControl("Wait")
+        ReportClear(False, False)
+        Dim intPage As Integer = 1
+        If IsNumeric(lblListCountNumber.Tag) Then intPage = lblListCountNumber.Tag - 1
+        If intPage < 1 Then intPage = 1
+        ReportShow(dtsReport, intPage, False)
+        CursorControl()
+    End Sub
+
+    Private Sub btnNextPage_Click(sender As Object, e As EventArgs) Handles btnNextPage.Click
+        CursorControl("Wait")
+        ReportClear(False, False)
+        Dim intPage As Integer = 2
+        If IsNumeric(lblListCountNumber.Tag) Then intPage = lblListCountNumber.Tag + 1
+        If intPage > Math.Ceiling(dtsReport.Tables(0).Rows.Count / 1000) Then intPage = Math.Ceiling(dtsReport.Tables(0).Rows.Count / 1000)
+        ReportShow(dtsReport, intPage, False)
+        CursorControl()
+    End Sub
+
+    Private Sub btnLastPage_Click(sender As Object, e As EventArgs) Handles btnLastPage.Click
+        CursorControl("Wait")
+        ReportClear(False, False)
+        Dim intPage As Integer = 1
+        intPage = Math.Ceiling(dtsReport.Tables(0).Rows.Count / 1000)
+        ReportShow(dtsReport, intPage, False)
+        CursorControl()
+    End Sub
+
+    Private Sub sptReportResults_Layout(sender As Object, e As LayoutEventArgs) Handles sptReportResults.Layout
+        sptReportResults.SplitterDistance = 242 + lblListCountNumber.Width
+    End Sub
 
 End Class

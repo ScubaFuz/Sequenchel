@@ -455,7 +455,7 @@ Module Common
     End Sub
 #End Region
 
-    Friend Function DataSet2DataGridView(dtsSource As DataSet, SourceTable As Integer, dgvTarget As DataGridView, RebuildColumns As Boolean, Optional intPage As Integer = 0) As Boolean
+    Friend Function DataSet2DataGridView(dtsSource As DataSet, SourceTable As Integer, dgvTarget As DataGridView, RebuildColumns As Boolean, intPage As Integer) As Boolean
         Dim blnSucces As Boolean = False
 
         If RebuildColumns = True Then

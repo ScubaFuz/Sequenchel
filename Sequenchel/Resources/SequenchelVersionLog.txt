@@ -1,3 +1,8 @@
+Version 4.0.0
+New: The engine has been rewritten to enable more features in the future. All screens have been redesigned, even though they look the same.
+New: In reports, only the first 1000 retrieved rows are shown, with the option to browse through the result set, saving lots of time.
+Enhanced: Query error logging and feedback is improved.
+
 Version 3.8.0
 New: In Reports: table alias is used instead of table name to enable multiple instances of the same table in a future release.
 		Relations and reports will be converted to a new markup when saving them. All should be converted before using version 4.0
