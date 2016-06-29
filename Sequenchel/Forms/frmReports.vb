@@ -809,7 +809,7 @@ Public Class frmReports
         If intCount = 0 Then
             For Each lvwRemoveItem In lvwSelectedTables.Items
                 If lvwRemoveItem.Text = strTableAlias Then
-                    lvwSelectedTables.Items.RemoveByKey(lvwRemoveItem)
+                    lvwSelectedTables.Items.Remove(lvwRemoveItem)
                     MasterPanelControlsDispose(pnlRelations, strTableAlias)
                 End If
             Next
