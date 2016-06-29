@@ -1953,7 +1953,7 @@ Public Class frmConfiguration
 
         If strRelatedTable.Contains("(") Then strRelatedTable = strRelatedTable.Substring(strRelatedTable.IndexOf("(") + 1, strRelatedTable.Length - (strRelatedTable.IndexOf("(") + 1) - 1)
 
-        If RelationRemove(basCode.curStatus.Table, txtFieldName.Tag, strRelatedTable, strRelatedField, True) = False Then
+        If RelationRemove(txtTableName.Text, txtFieldName.Text, strRelatedTable, strRelatedField, True) = False Then
             Exit Sub
         End If
 

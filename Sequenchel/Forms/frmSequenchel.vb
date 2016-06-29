@@ -494,43 +494,47 @@ Public Class frmSequenchel
 
                     If basCode.basTable.Item(intCount).Count > 0 Then
                         For intRel As Integer = 0 To basCode.basTable.Item(intCount).Count - 1
-                            Dim msfRelatedField As New ManagedSelectField
-                            If msfRelatedField IsNot Nothing Then AddHandler msfRelatedField.ValueChanged, AddressOf TextHandler
-                            msfRelatedField.Name = basCode.basTable.Item(intCount).Item(intRel).RelationTableAlias & "." & basCode.basTable.Item(intCount).Item(intRel).RelationField
-                            msfRelatedField.Tag = ""
+                            If basCode.basTable.Item(intCount).Item(intRel).RelatedFieldName.ToString.Length > 0 Then
+                                Dim msfRelatedField As New ManagedSelectField
+                                If msfRelatedField IsNot Nothing Then AddHandler msfRelatedField.ValueChanged, AddressOf TextHandler
+                                msfRelatedField.Name = basCode.basTable.Item(intCount).Item(intRel).RelationTableAlias & "." & basCode.basTable.Item(intCount).Item(intRel).RelationField
+                                msfRelatedField.Tag = ""
 
-                            msfRelatedField.DataConn.DataLocation = basCode.dhdConnection.DataLocation
-                            msfRelatedField.DataConn.DatabaseName = basCode.dhdConnection.DatabaseName
-                            msfRelatedField.DataConn.DataProvider = basCode.dhdConnection.DataProvider
-                            msfRelatedField.DataConn.LoginMethod = basCode.dhdConnection.LoginMethod
-                            msfRelatedField.DataConn.LoginName = basCode.dhdConnection.LoginName
-                            msfRelatedField.DataConn.Password = basCode.dhdConnection.Password
-                            msfRelatedField.Table = basCode.basTable.Item(intCount).Item(intRel).RelationTable
-                            msfRelatedField.SearchField = basCode.basTable.Item(intCount).Item(intRel).RelatedFieldName
-                            msfRelatedField.IdentifierField = basCode.basTable.Item(intCount).Item(intRel).RelationField
+                                msfRelatedField.DataConn.DataLocation = basCode.dhdConnection.DataLocation
+                                msfRelatedField.DataConn.DatabaseName = basCode.dhdConnection.DatabaseName
+                                msfRelatedField.DataConn.DataProvider = basCode.dhdConnection.DataProvider
+                                msfRelatedField.DataConn.LoginMethod = basCode.dhdConnection.LoginMethod
+                                msfRelatedField.DataConn.LoginName = basCode.dhdConnection.LoginName
+                                msfRelatedField.DataConn.Password = basCode.dhdConnection.Password
+                                msfRelatedField.Table = basCode.basTable.Item(intCount).Item(intRel).RelationTable
+                                msfRelatedField.SearchField = basCode.basTable.Item(intCount).Item(intRel).RelatedFieldName
+                                msfRelatedField.IdentifierField = basCode.basTable.Item(intCount).Item(intRel).RelationField
 
-                            msfRelatedField.Field = New SeqCore.BaseField
-                            msfRelatedField.Field.Category = 6
-                            msfRelatedField.Field.Name = msfRelatedField.Name
-                            msfRelatedField.Field.FieldName = msfRelatedField.IdentifierField
-                            msfRelatedField.Field.FieldTableName = msfRelatedField.Table
-                            msfRelatedField.Field.FieldTableAlias = basCode.GetTableAliasFromName(basCode.xmlTables, msfRelatedField.Field.FieldTableName)
-                            msfRelatedField.Field.FieldDataType = basCode.basTable.Item(intCount).FieldDataType
-                            msfRelatedField.Field.FieldVisible = basCode.basTable.Item(intCount).FieldVisible
-                            msfRelatedField.Field.FieldSearch = basCode.basTable.Item(intCount).FieldSearch
+                                msfRelatedField.Field = New SeqCore.BaseField
+                                msfRelatedField.Field.Category = 6
+                                msfRelatedField.Field.Name = msfRelatedField.Name
+                                msfRelatedField.Field.FieldAlias = basCode.basTable.Item(intCount).FieldAlias
+                                msfRelatedField.Field.FieldName = msfRelatedField.IdentifierField
+                                msfRelatedField.Field.FieldTableName = msfRelatedField.Table
+                                msfRelatedField.Field.FieldTableAlias = basCode.GetTableAliasFromName(basCode.xmlTables, msfRelatedField.Field.FieldTableName)
+                                msfRelatedField.Field.FieldDataType = basCode.basTable.Item(intCount).FieldDataType
+                                msfRelatedField.Field.FieldVisible = basCode.basTable.Item(intCount).FieldVisible
+                                msfRelatedField.Field.FieldSearch = basCode.basTable.Item(intCount).FieldSearch
 
-                            sptFields1.Panel2.Controls.Add(msfRelatedField)
-                            msfRelatedField.Top = fldField.Top
-                            msfRelatedField.Left = fldField.Left + fldField.Width + basCode.curVar.BuildMargin
-                            If fldField.top > sptFields1.Panel2.Height Then
+                                sptFields1.Panel2.Controls.Add(msfRelatedField)
+                                msfRelatedField.Top = fldField.Top
+                                msfRelatedField.Left = fldField.Left + fldField.Width + basCode.curVar.BuildMargin
+                                If fldField.top > sptFields1.Panel2.Height Then
+                                    msfRelatedField.Width = sptFields1.Panel2.Width - msfRelatedField.Left - (basCode.curVar.BuildMargin * 3) - SystemInformation.VerticalScrollBarWidth
+                                Else
+                                    msfRelatedField.Width = sptFields1.Panel2.Width - msfRelatedField.Left - (basCode.curVar.BuildMargin * 3)
+                                End If
+
                                 msfRelatedField.Width = sptFields1.Panel2.Width - msfRelatedField.Left - (basCode.curVar.BuildMargin * 3) - SystemInformation.VerticalScrollBarWidth
-                            Else
-                                msfRelatedField.Width = sptFields1.Panel2.Width - msfRelatedField.Left - (basCode.curVar.BuildMargin * 3)
+                                msfRelatedField.Anchor = AnchorStyles.Top Or AnchorStyles.Left Or AnchorStyles.Right
+                                msfRelatedField.Visible = True
+                                Exit For
                             End If
-
-                            msfRelatedField.Width = sptFields1.Panel2.Width - msfRelatedField.Left - (basCode.curVar.BuildMargin * 3) - SystemInformation.VerticalScrollBarWidth
-                            msfRelatedField.Anchor = AnchorStyles.Top Or AnchorStyles.Left Or AnchorStyles.Right
-                            msfRelatedField.Visible = True
                         Next
                     End If
 
@@ -838,6 +842,7 @@ Public Class frmSequenchel
         If ClearSearch = True Then
             basCode.curStatus.SuspendActions = True
             cbxSearch.SelectedIndex = -1
+            cbxSearch.Text = ""
             basCode.curStatus.SuspendActions = False
         End If
         dgvTable1.ClearSelection()
@@ -1593,14 +1598,14 @@ Public Class frmSequenchel
 
                 For Each ctrl As Object In sptFields1.Panel2.Controls
                     If ctrl.Field.FieldName = strFieldName Then
-                        ctrl.BackColor = clrMarked
+                        'ctrl.BackColor = clrMarked
                         Select Case ctrl.Field.Category
                             Case 1, 3, 4
                                 ctrl.Text = strFieldValue
                             Case 2
                                 Dim chkTemp As CheckBox = TryCast(ctrl, CheckBox)
                                 If chkTemp IsNot Nothing Then chkTemp.Checked = strFieldValue
-                            Case 5, 6
+                            Case 5
                                 Dim msfTemp As ManagedSelectField = TryCast(ctrl, ManagedSelectField)
                                 msfTemp.SuspendActions = True
                                 msfTemp.Text = strFieldValue
@@ -1657,7 +1662,7 @@ Public Class frmSequenchel
                             'As related field
                             For Each ctrl In sptFields1.Panel2.Controls
                                 'For intField As Integer = 0 To tblTable.Count - 1
-                                If ctrl.Field.FieldName = sender.IdentifierField Then
+                                If ctrl.Field.FieldAlias = sender.Field.FieldAlias Then
                                     Select Case ctrl.Field.Category
                                         Case 1, 3, 4, 5
                                             If Not sender.value = Nothing Then ctrl.Text = sender.Value

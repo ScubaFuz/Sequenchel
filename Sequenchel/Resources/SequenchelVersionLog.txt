@@ -1,6 +1,7 @@
 Version 4.0.0
 New: The engine has been rewritten to enable more features in the future. All screens have been redesigned, even though they look the same.
 New: In reports, only the first 1000 retrieved rows are shown, with the option to browse through the result set, saving lots of time.
+New: In Reports, a field filter option is added. No need to search through long lists of fields for a known field name.
 Enhanced: Query error logging and feedback is improved.
 
 Version 3.8.0
