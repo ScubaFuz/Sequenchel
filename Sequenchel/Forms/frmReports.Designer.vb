@@ -28,6 +28,8 @@ Partial Class frmReports
         Me.tabReports = New System.Windows.Forms.TabControl()
         Me.tpgReportDefinition = New System.Windows.Forms.TabPage()
         Me.sptReports = New System.Windows.Forms.SplitContainer()
+        Me.lblFieldFilter = New System.Windows.Forms.Label()
+        Me.txtFieldFilter = New System.Windows.Forms.TextBox()
         Me.lvwAvailableFields = New System.Windows.Forms.ListView()
         Me.colAvTableName = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.colAvFieldAlias = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
@@ -135,8 +137,9 @@ Partial Class frmReports
         Me.btnSaveQuery = New System.Windows.Forms.Button()
         Me.btnExecuteQuery = New System.Windows.Forms.Button()
         Me.rtbQuery = New System.Windows.Forms.RichTextBox()
+        Me.dgvReport = New Sequenchel.usrDataGridView()
         Me.btnTest = New System.Windows.Forms.Button()
-        Me.tmrElapsedTime = New System.Windows.Forms.Timer(Me.components)
+        Me.tmrSuspendLookup = New System.Windows.Forms.Timer(Me.components)
         Me.lblStatusTitle = New System.Windows.Forms.Label()
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.mnuReportsFile = New System.Windows.Forms.ToolStripMenuItem()
@@ -144,7 +147,6 @@ Partial Class frmReports
         Me.mnuReportsHelp = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuReportsHelpManual = New System.Windows.Forms.ToolStripMenuItem()
         Me.lblStatusText = New System.Windows.Forms.TextBox()
-        Me.dgvReport = New Sequenchel.usrDataGridView()
         Me.tabReports.SuspendLayout()
         Me.tpgReportDefinition.SuspendLayout()
         CType(Me.sptReports, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -180,8 +182,8 @@ Partial Class frmReports
         Me.sptReportResults.Panel1.SuspendLayout()
         Me.sptReportResults.Panel2.SuspendLayout()
         Me.sptReportResults.SuspendLayout()
-        Me.MenuStrip1.SuspendLayout()
         CType(Me.dgvReport, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
         'lblLicense
@@ -231,6 +233,8 @@ Partial Class frmReports
         'sptReports.Panel1
         '
         Me.sptReports.Panel1.BackColor = System.Drawing.SystemColors.Control
+        Me.sptReports.Panel1.Controls.Add(Me.lblFieldFilter)
+        Me.sptReports.Panel1.Controls.Add(Me.txtFieldFilter)
         Me.sptReports.Panel1.Controls.Add(Me.lvwAvailableFields)
         Me.sptReports.Panel1.Controls.Add(Me.lblAvailableFields)
         Me.sptReports.Panel1MinSize = 175
@@ -244,6 +248,24 @@ Partial Class frmReports
         Me.sptReports.SplitterDistance = 175
         Me.sptReports.TabIndex = 193
         '
+        'lblFieldFilter
+        '
+        Me.lblFieldFilter.AutoSize = True
+        Me.lblFieldFilter.Location = New System.Drawing.Point(-2, 30)
+        Me.lblFieldFilter.Name = "lblFieldFilter"
+        Me.lblFieldFilter.Size = New System.Drawing.Size(69, 13)
+        Me.lblFieldFilter.TabIndex = 169
+        Me.lblFieldFilter.Text = "Filter on Field"
+        '
+        'txtFieldFilter
+        '
+        Me.txtFieldFilter.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.txtFieldFilter.Location = New System.Drawing.Point(73, 27)
+        Me.txtFieldFilter.Name = "txtFieldFilter"
+        Me.txtFieldFilter.Size = New System.Drawing.Size(100, 20)
+        Me.txtFieldFilter.TabIndex = 168
+        '
         'lvwAvailableFields
         '
         Me.lvwAvailableFields.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
@@ -251,9 +273,9 @@ Partial Class frmReports
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lvwAvailableFields.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.colAvTableName, Me.colAvFieldAlias})
         Me.lvwAvailableFields.FullRowSelect = True
-        Me.lvwAvailableFields.Location = New System.Drawing.Point(0, 25)
+        Me.lvwAvailableFields.Location = New System.Drawing.Point(0, 53)
         Me.lvwAvailableFields.Name = "lvwAvailableFields"
-        Me.lvwAvailableFields.Size = New System.Drawing.Size(174, 576)
+        Me.lvwAvailableFields.Size = New System.Drawing.Size(174, 548)
         Me.lvwAvailableFields.Sorting = System.Windows.Forms.SortOrder.Ascending
         Me.lvwAvailableFields.TabIndex = 0
         Me.lvwAvailableFields.UseCompatibleStateImageBehavior = False
@@ -1344,6 +1366,23 @@ Partial Class frmReports
         Me.rtbQuery.TabIndex = 0
         Me.rtbQuery.Text = ""
         '
+        'dgvReport
+        '
+        Me.dgvReport.AllowUserToAddRows = False
+        Me.dgvReport.AllowUserToDeleteRows = False
+        Me.dgvReport.AllowUserToOrderColumns = True
+        Me.dgvReport.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.dgvReport.BackgroundColor = System.Drawing.SystemColors.Control
+        Me.dgvReport.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
+        Me.dgvReport.BackImage = CType(resources.GetObject("dgvReport.BackImage"), System.Drawing.Image)
+        Me.dgvReport.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dgvReport.Location = New System.Drawing.Point(6, 6)
+        Me.dgvReport.Name = "dgvReport"
+        Me.dgvReport.Size = New System.Drawing.Size(1243, 549)
+        Me.dgvReport.TabIndex = 0
+        '
         'btnTest
         '
         Me.btnTest.Location = New System.Drawing.Point(734, 3)
@@ -1355,9 +1394,9 @@ Partial Class frmReports
         Me.btnTest.UseVisualStyleBackColor = True
         Me.btnTest.Visible = False
         '
-        'tmrElapsedTime
+        'tmrSuspendLookup
         '
-        Me.tmrElapsedTime.Interval = 1000
+        Me.tmrSuspendLookup.Interval = 500
         '
         'lblStatusTitle
         '
@@ -1420,23 +1459,6 @@ Partial Class frmReports
         Me.lblStatusText.Size = New System.Drawing.Size(1202, 20)
         Me.lblStatusText.TabIndex = 175
         '
-        'dgvReport
-        '
-        Me.dgvReport.AllowUserToAddRows = False
-        Me.dgvReport.AllowUserToDeleteRows = False
-        Me.dgvReport.AllowUserToOrderColumns = True
-        Me.dgvReport.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.dgvReport.BackgroundColor = System.Drawing.SystemColors.Control
-        Me.dgvReport.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
-        Me.dgvReport.BackImage = CType(resources.GetObject("dgvReport.BackImage"), System.Drawing.Image)
-        Me.dgvReport.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvReport.Location = New System.Drawing.Point(6, 6)
-        Me.dgvReport.Name = "dgvReport"
-        Me.dgvReport.Size = New System.Drawing.Size(1243, 549)
-        Me.dgvReport.TabIndex = 0
-        '
         'frmReports
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1498,9 +1520,9 @@ Partial Class frmReports
         Me.sptReportResults.Panel2.PerformLayout()
         CType(Me.sptReportResults, System.ComponentModel.ISupportInitialize).EndInit()
         Me.sptReportResults.ResumeLayout(False)
+        CType(Me.dgvReport, System.ComponentModel.ISupportInitialize).EndInit()
         Me.MenuStrip1.ResumeLayout(False)
         Me.MenuStrip1.PerformLayout()
-        CType(Me.dgvReport, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -1589,7 +1611,7 @@ Partial Class frmReports
     Friend WithEvents lvwSelectedTables As System.Windows.Forms.ListView
     Friend WithEvents colTableAlias As System.Windows.Forms.ColumnHeader
     Friend WithEvents lblElapsedTime As System.Windows.Forms.Label
-    Friend WithEvents tmrElapsedTime As System.Windows.Forms.Timer
+    Friend WithEvents tmrSuspendLookup As System.Windows.Forms.Timer
     Friend WithEvents dgvReport As Sequenchel.usrDataGridView
     Friend WithEvents btnReportExport As System.Windows.Forms.Button
     Friend WithEvents btnReportImport As System.Windows.Forms.Button
@@ -1626,4 +1648,6 @@ Partial Class frmReports
     Friend WithEvents chkShowAll As System.Windows.Forms.CheckBox
     Friend WithEvents sptReportResults As System.Windows.Forms.SplitContainer
     Friend WithEvents lblErrorMessage As System.Windows.Forms.TextBox
+    Friend WithEvents lblFieldFilter As System.Windows.Forms.Label
+    Friend WithEvents txtFieldFilter As System.Windows.Forms.TextBox
 End Class

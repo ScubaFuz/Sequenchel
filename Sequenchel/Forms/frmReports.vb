@@ -98,7 +98,7 @@ Public Class frmReports
             basCode.curStatus.TableSet = cbxTableSet.SelectedItem
             basCode.LoadTableSet(basCode.xmlTableSets, basCode.curStatus.TableSet)
             LoadTables()
-            LoadTableFields()
+            LoadTableFields(False)
             ReportsLoad()
             CursorControl()
         End If
@@ -298,18 +298,20 @@ Public Class frmReports
         'cbxTable.SelectedItem = basCode.CurStatus.Table
     End Sub
 
-    Private Sub LoadTableFields()
+    Private Sub LoadTableFields(blnuseFilter As Boolean)
         For Each TableNode As Xml.XmlNode In basCode.xmlTables.SelectNodes("//Field")
-            Dim lsvItem As New ListViewItem
             Dim strAlias As String = TableNode.ParentNode.ParentNode.Item("Alias").InnerText.Replace(".", "_")
             If GroupExists(strAlias) = False Then lvwAvailableFields.Groups.Add(strAlias, strAlias)
-            lsvItem.Tag = TableNode.Item("DataType").InnerText
-            'lsvItem.Tag = TableNode.ParentNode.ParentNode.Item("Name").InnerText
-            lsvItem.Name = TableNode.ParentNode.ParentNode.Item("Name").InnerText & "." & TableNode.Item("FldName").InnerText
-            lsvItem.Text = strAlias
-            lsvItem.SubItems.Add(TableNode.Item("FldAlias").InnerText)
-            lvwAvailableFields.Items.Add(lsvItem)
-            lsvItem.Group = lvwAvailableFields.Groups(strAlias)
+            If blnuseFilter = False Or TableNode.Item("FldAlias").InnerText.ToLower.Contains(txtFieldFilter.Text.ToLower) Then
+                Dim lsvItem As New ListViewItem
+                lsvItem.Tag = TableNode.Item("DataType").InnerText
+                'lsvItem.Tag = TableNode.ParentNode.ParentNode.Item("Name").InnerText
+                lsvItem.Name = TableNode.ParentNode.ParentNode.Item("Name").InnerText & "." & TableNode.Item("FldName").InnerText
+                lsvItem.Text = strAlias
+                lsvItem.SubItems.Add(TableNode.Item("FldAlias").InnerText)
+                lvwAvailableFields.Items.Add(lsvItem)
+                lsvItem.Group = lvwAvailableFields.Groups(strAlias)
+            End If
         Next
         ResizeColumns()
     End Sub
@@ -363,7 +365,7 @@ Public Class frmReports
         PanelControlsDispose(pnlRelationsJoinType)
         pnlSelectedFields.Height = 31
         If blnAll = False Then
-            LoadTableFields()
+            LoadTableFields(False)
         End If
     End Sub
 
@@ -1057,8 +1059,6 @@ Public Class frmReports
     Private Sub QueryExecute()
         ReportClear(False, True)
         dtmElapsedTime = Now()
-        tmrElapsedTime.Enabled = True
-        tmrElapsedTime.Start()
         dtsReport = Nothing
         dtsReport = basCode.QueryDb(basCode.dhdConnection, strQuery, True, 1)
         If basCode.dhdConnection.ErrorLevel = -1 Then
@@ -1066,8 +1066,6 @@ Public Class frmReports
             lblErrorMessage.Text = basCode.ErrorMessage
         End If
         ReportShow(dtsReport, 1, True)
-        tmrElapsedTime.Stop()
-        tmrElapsedTime.Enabled = False
         tmsElapsedTime = Now() - dtmElapsedTime
         lblElapsedTime.Text = tmsElapsedTime.ToString
     End Sub
@@ -1696,11 +1694,6 @@ Public Class frmReports
 
 #End Region
 
-    Private Sub tmrElapsedTime_Tick(sender As Object, e As EventArgs) Handles tmrElapsedTime.Tick
-        tmsElapsedTime = Now() - dtmElapsedTime
-        lblElapsedTime.Text = tmsElapsedTime.ToString
-    End Sub
-
     Private Sub btnReportExport_Click(sender As Object, e As EventArgs) Handles btnReportExport.Click
         CursorControl("Wait")
         WriteStatus("", 0, lblStatusText)
@@ -2141,6 +2134,32 @@ Public Class frmReports
 
     Private Sub sptReportResults_Layout(sender As Object, e As LayoutEventArgs) Handles sptReportResults.Layout
         sptReportResults.SplitterDistance = 242 + lblListCountNumber.Width
+    End Sub
+
+    Private Sub txtFieldFilter_TextChanged(sender As Object, e As EventArgs) Handles txtFieldFilter.TextChanged
+        If basCode.curStatus.SuspendActions = False Then
+            'Me.Refresh()
+            If tmrSuspendLookup.Enabled = False Then
+                tmrSuspendLookup.Enabled = True
+                tmrSuspendLookup.Start()
+            Else
+                tmrSuspendLookup.Stop()
+                tmrSuspendLookup.Enabled = False
+                tmrSuspendLookup.Enabled = True
+                tmrSuspendLookup.Start()
+            End If
+        End If
+    End Sub
+
+    Private Sub tmrSuspendLookup_Tick(sender As Object, e As EventArgs) Handles tmrSuspendLookup.Tick
+        tmrSuspendLookup.Stop()
+        tmrSuspendLookup.Enabled = False
+        Dim blnUseFilter As Boolean = False
+        If txtFieldFilter.Text.Length > 1 Then
+            blnUseFilter = True
+        End If
+        lvwAvailableFields.Items.Clear()
+        LoadTableFields(blnUseFilter)
     End Sub
 
 End Class
