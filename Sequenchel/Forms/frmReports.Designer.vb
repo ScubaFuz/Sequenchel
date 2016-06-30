@@ -90,6 +90,7 @@ Partial Class frmReports
         Me.lblRelationsJoinType = New System.Windows.Forms.Label()
         Me.lblRelationsSelectedTable = New System.Windows.Forms.Label()
         Me.pnlSplitSelectedTables = New System.Windows.Forms.Panel()
+        Me.btnTableCopy = New System.Windows.Forms.Button()
         Me.btnReportTableUp = New System.Windows.Forms.Button()
         Me.btnReportTableDown = New System.Windows.Forms.Button()
         Me.pnlReportButtons = New System.Windows.Forms.Panel()
@@ -147,6 +148,8 @@ Partial Class frmReports
         Me.mnuReportsHelp = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuReportsHelpManual = New System.Windows.Forms.ToolStripMenuItem()
         Me.lblStatusText = New System.Windows.Forms.TextBox()
+        Me.btnFieldCopy = New System.Windows.Forms.Button()
+        Me.btnFieldAliasChange = New System.Windows.Forms.Button()
         Me.tabReports.SuspendLayout()
         Me.tpgReportDefinition.SuspendLayout()
         CType(Me.sptReports, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -682,6 +685,8 @@ Partial Class frmReports
         '
         'pnlSplitSelectedFields
         '
+        Me.pnlSplitSelectedFields.Controls.Add(Me.btnFieldAliasChange)
+        Me.pnlSplitSelectedFields.Controls.Add(Me.btnFieldCopy)
         Me.pnlSplitSelectedFields.Controls.Add(Me.btnReportFieldDown)
         Me.pnlSplitSelectedFields.Controls.Add(Me.btnReportFieldUp)
         Me.pnlSplitSelectedFields.Dock = System.Windows.Forms.DockStyle.Left
@@ -848,6 +853,7 @@ Partial Class frmReports
         '
         'pnlSplitSelectedTables
         '
+        Me.pnlSplitSelectedTables.Controls.Add(Me.btnTableCopy)
         Me.pnlSplitSelectedTables.Controls.Add(Me.btnReportTableUp)
         Me.pnlSplitSelectedTables.Controls.Add(Me.btnReportTableDown)
         Me.pnlSplitSelectedTables.Dock = System.Windows.Forms.DockStyle.Left
@@ -855,6 +861,16 @@ Partial Class frmReports
         Me.pnlSplitSelectedTables.Name = "pnlSplitSelectedTables"
         Me.pnlSplitSelectedTables.Size = New System.Drawing.Size(38, 200)
         Me.pnlSplitSelectedTables.TabIndex = 155
+        '
+        'btnTableCopy
+        '
+        Me.btnTableCopy.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnTableCopy.Image = Global.Sequenchel.My.Resources.Resources.copy
+        Me.btnTableCopy.Location = New System.Drawing.Point(3, 128)
+        Me.btnTableCopy.Name = "btnTableCopy"
+        Me.btnTableCopy.Size = New System.Drawing.Size(30, 23)
+        Me.btnTableCopy.TabIndex = 2
+        Me.btnTableCopy.UseVisualStyleBackColor = True
         '
         'btnReportTableUp
         '
@@ -1459,6 +1475,26 @@ Partial Class frmReports
         Me.lblStatusText.Size = New System.Drawing.Size(1202, 20)
         Me.lblStatusText.TabIndex = 175
         '
+        'btnFieldCopy
+        '
+        Me.btnFieldCopy.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnFieldCopy.Image = Global.Sequenchel.My.Resources.Resources.copy
+        Me.btnFieldCopy.Location = New System.Drawing.Point(3, 171)
+        Me.btnFieldCopy.Name = "btnFieldCopy"
+        Me.btnFieldCopy.Size = New System.Drawing.Size(30, 23)
+        Me.btnFieldCopy.TabIndex = 3
+        Me.btnFieldCopy.UseVisualStyleBackColor = True
+        '
+        'btnFieldAliasChange
+        '
+        Me.btnFieldAliasChange.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnFieldAliasChange.Image = Global.Sequenchel.My.Resources.Resources.shuffle
+        Me.btnFieldAliasChange.Location = New System.Drawing.Point(3, 200)
+        Me.btnFieldAliasChange.Name = "btnFieldAliasChange"
+        Me.btnFieldAliasChange.Size = New System.Drawing.Size(30, 23)
+        Me.btnFieldAliasChange.TabIndex = 4
+        Me.btnFieldAliasChange.UseVisualStyleBackColor = True
+        '
         'frmReports
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1650,4 +1686,7 @@ Partial Class frmReports
     Friend WithEvents lblErrorMessage As System.Windows.Forms.TextBox
     Friend WithEvents lblFieldFilter As System.Windows.Forms.Label
     Friend WithEvents txtFieldFilter As System.Windows.Forms.TextBox
+    Friend WithEvents btnTableCopy As System.Windows.Forms.Button
+    Friend WithEvents btnFieldAliasChange As System.Windows.Forms.Button
+    Friend WithEvents btnFieldCopy As System.Windows.Forms.Button
 End Class

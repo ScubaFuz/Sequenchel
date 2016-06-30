@@ -1,4 +1,5 @@
 ﻿Imports System.Xml
+Imports System.Xml.XPath
 
 Public Class BaseCode
     Public curVar As New Variables
@@ -1236,66 +1237,50 @@ Public Class BaseCode
 
         'Get all distinct table names for this report
         Dim xRelNode As XmlNode = dhdText.FindXmlChildNode(XNode, "Relations")
-        Dim xTableNodeList As XmlNodeList = dhdText.FindXmlChildNodes(xRelNode, "Relation/TableName[not(. = (preceding-sibling::TableName | ../preceding-sibling::Relation/TableName))]")
+        Dim xTableNodeList As XmlNodeList = dhdText.FindXmlChildNodes(xRelNode, "Relation/TableAlias[not(. = (preceding-sibling::TableAlias | ../preceding-sibling::Relation/TableAlias))]")
 
         For Each xMNode As XmlNode In xTableNodeList
             'outer loop for retrieving TableName
-            Dim strTableName As String = xMNode.InnerText
+            Dim strTableAlias As String = xMNode.InnerText
 
-            'Get list of relations for this table
-            Dim xTRelNodeList As XmlNodeList = dhdText.FindXmlChildNodes(XNode, "Relations/Relation", "TableName", strTableName)
-            'Loop using number of available tables.
-            For intLoopCount As Integer = 0 To xTableNodeList.Count
-                'Loop trough relations for this table to find the right order using number from parent loop
-                For Each xTRelNode As XmlNode In xTRelNodeList
-                    If dhdText.CheckNodeElement(xTRelNode, "RelationSortOrder") Then
-                        intRelSortOrder = xTRelNode.Item("RelationSortOrder").InnerText
-                    Else
-                        intRelSortOrder = xTableNodeList.Count
+            ''Get list of relations for this table, sorted in right order
+            Dim xTRelNodeList As XmlNodeList = dhdText.FindXmlChildNodes(XNode, "Relations/Relation", "TableAlias", strTableAlias, "RelationSortOrder")
+            For Each xTRelNode As XmlNode In xTRelNodeList
+                'Inner loop through relations for this table
+                If dhdText.CheckNodeElement(xTRelNode, "RelationSortOrder") Then
+                    intRelSortOrder = xTRelNode.Item("RelationSortOrder").InnerText
+                Else
+                    intRelSortOrder = xTableNodeList.Count
+                End If
+
+                Dim strTableName As String = ""
+                If dhdText.CheckNodeElement(xTRelNode, "TableName") Then strTableName = xTRelNode.Item("TableName").InnerText
+
+                If xTRelNode.Item("RelationEnabled").InnerText = "True" Then
+
+                    strFromSource = xTRelNode.Item("RelationSource").InnerText
+                    strFromType = xTRelNode.Item("RelationJoinType").InnerText
+
+                    If dhdText.CheckNodeElement(xTRelNode, "RelationTarget") Then
+                        strFromRelation = xTRelNode.Item("RelationTarget").InnerText
+                        strTargetTable = GetTableNameFromString(strFromRelation)
+                        strTargetTableAlias = GetTableAliasFromString(strFromRelation)
+                        strTargetField = strFromRelation.Substring(strFromRelation.LastIndexOf(".") + 1, strFromRelation.Length - (strFromRelation.LastIndexOf(".") + 1))
                     End If
-                    If intRelSortOrder = intLoopCount Then
-                        'do your magic...
-                        Dim strTableAlias As String = ""
-                        If dhdText.CheckNodeElement(xTRelNode, "TableAlias") Then strTableAlias = GetTableAliasFromString(xTRelNode.Item("TableAlias").InnerText)
-                        If String.IsNullOrEmpty(strTableAlias) Then strTableAlias = GetTableAliasFromString(strTableName)
+                    If dhdText.CheckNodeElement(xTRelNode, "RelationTargetTable") Then strTargetTable = xTRelNode.Item("RelationTargetTable").InnerText
+                    If dhdText.CheckNodeElement(xTRelNode, "RelationTargetAlias") Then strTargetTableAlias = xTRelNode.Item("RelationTargetAlias").InnerText
+                    If dhdText.CheckNodeElement(xTRelNode, "RelationTargetField") Then strTargetField = xTRelNode.Item("RelationTargetField").InnerText
 
-                        'Test
-                        Dim strTemp As String = xTRelNode.Item("TableName").InnerText
-                        If strTemp = "SIMS.DMT_TitleClearance" Then
-                            Dim blnFound As Boolean = True
-                        End If
-                        'End Test
-
-                        If xTRelNode.Item("RelationEnabled").InnerText = "True" Then
-
-                            strFromSource = xTRelNode.Item("RelationSource").InnerText
-                            strFromType = xTRelNode.Item("RelationJoinType").InnerText
-
-                            If dhdText.CheckNodeElement(xTRelNode, "RelationTarget") Then
-                                strFromRelation = xTRelNode.Item("RelationTarget").InnerText
-                                strTargetTable = GetTableNameFromString(strFromRelation)
-                                strTargetTableAlias = GetTableAliasFromString(strFromRelation)
-                                strTargetField = strFromRelation.Substring(strFromRelation.LastIndexOf(".") + 1, strFromRelation.Length - (strFromRelation.LastIndexOf(".") + 1))
-                            End If
-                            If dhdText.CheckNodeElement(xTRelNode, "RelationTargetTable") Then strTargetTable = xTRelNode.Item("RelationTargetTable").InnerText
-                            If dhdText.CheckNodeElement(xTRelNode, "RelationTargetAlias") Then strTargetTableAlias = xTRelNode.Item("RelationTargetAlias").InnerText
-                            If dhdText.CheckNodeElement(xTRelNode, "RelationTargetField") Then strTargetField = xTRelNode.Item("RelationTargetField").InnerText
-
-                            'strTargetTable = strFromRelation.Substring(0, strFromRelation.LastIndexOf("."))
-                            'strTargetTable = strTargetTable.Substring(strTargetTable.LastIndexOf("(") + 1, strTargetTable.Length - (strTargetTable.LastIndexOf("(") + 1))
-
-                            If strFromClause.Contains(strTargetTable) = True And strFromClause.Contains(strTableName) = False Then
-                                strFromClause &= Environment.NewLine & strFromType & " JOIN " & strTableName & " " & strTableAlias & " ON " & strTableAlias & "." & strFromSource & " = " & strTargetTableAlias & "." & strTargetField
-                            ElseIf strFromClause.Contains(strTargetTable) = True And strFromClause.Contains(strTableName) = True Then
-                                strFromClause &= Environment.NewLine & " AND " & strTableAlias & "." & strFromSource & " = " & strTargetTableAlias & "." & strTargetField
-                            ElseIf strFromClause.Contains(strTargetTable) = False And strFromClause.Contains(strTableName) = False Then
-                                strFromClause &= Environment.NewLine & strFromType & " JOIN " & strTargetTable & " " & strTargetTableAlias & " ON " & strTableAlias & "." & strFromSource & " = " & strTargetTableAlias & "." & strTargetField
-                            ElseIf strFromClause.Contains(strTargetTable) = False And strFromClause.Contains(strTableName) = True Then
-                                strFromClause &= Environment.NewLine & strFromType & " JOIN " & strTargetTable & " " & strTargetTableAlias & " ON " & strTableAlias & "." & strFromSource & " = " & strTargetTableAlias & "." & strTargetField
-                            End If
-                        End If
+                    If strFromClause.Contains(strTargetTable) = True And strFromClause.Contains(strTableAlias) = False Then
+                        strFromClause &= Environment.NewLine & strFromType & " JOIN " & strTableName & " " & strTableAlias & " ON " & strTableAlias & "." & strFromSource & " = " & strTargetTableAlias & "." & strTargetField
+                    ElseIf strFromClause.Contains(strTargetTable) = True And strFromClause.Contains(strTableAlias) = True Then
+                        strFromClause &= Environment.NewLine & " AND " & strTableAlias & "." & strFromSource & " = " & strTargetTableAlias & "." & strTargetField
+                    ElseIf strFromClause.Contains(strTargetTable) = False And strFromClause.Contains(strTableAlias) = False Then
+                        strFromClause &= Environment.NewLine & strFromType & " JOIN " & strTargetTable & " " & strTargetTableAlias & " ON " & strTableAlias & "." & strFromSource & " = " & strTargetTableAlias & "." & strTargetField
+                    ElseIf strFromClause.Contains(strTargetTable) = False And strFromClause.Contains(strTableAlias) = True Then
+                        strFromClause &= Environment.NewLine & strFromType & " JOIN " & strTargetTable & " " & strTargetTableAlias & " ON " & strTableAlias & "." & strFromSource & " = " & strTargetTableAlias & "." & strTargetField
                     End If
-                Next
+                End If
             Next
         Next
 
