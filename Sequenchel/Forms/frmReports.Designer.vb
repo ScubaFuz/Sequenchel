@@ -72,6 +72,8 @@ Partial Class frmReports
         Me.lblReportFilter = New System.Windows.Forms.Label()
         Me.lblReportSelectedFields = New System.Windows.Forms.Label()
         Me.pnlSplitSelectedFields = New System.Windows.Forms.Panel()
+        Me.btnFieldAliasChange = New System.Windows.Forms.Button()
+        Me.btnFieldCopy = New System.Windows.Forms.Button()
         Me.btnReportFieldDown = New System.Windows.Forms.Button()
         Me.btnReportFieldUp = New System.Windows.Forms.Button()
         Me.pnlRelationsMain = New System.Windows.Forms.Panel()
@@ -138,7 +140,6 @@ Partial Class frmReports
         Me.btnSaveQuery = New System.Windows.Forms.Button()
         Me.btnExecuteQuery = New System.Windows.Forms.Button()
         Me.rtbQuery = New System.Windows.Forms.RichTextBox()
-        Me.dgvReport = New Sequenchel.usrDataGridView()
         Me.btnTest = New System.Windows.Forms.Button()
         Me.tmrSuspendLookup = New System.Windows.Forms.Timer(Me.components)
         Me.lblStatusTitle = New System.Windows.Forms.Label()
@@ -148,8 +149,7 @@ Partial Class frmReports
         Me.mnuReportsHelp = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuReportsHelpManual = New System.Windows.Forms.ToolStripMenuItem()
         Me.lblStatusText = New System.Windows.Forms.TextBox()
-        Me.btnFieldCopy = New System.Windows.Forms.Button()
-        Me.btnFieldAliasChange = New System.Windows.Forms.Button()
+        Me.dgvReport = New Sequenchel.usrDataGridView()
         Me.tabReports.SuspendLayout()
         Me.tpgReportDefinition.SuspendLayout()
         CType(Me.sptReports, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -185,8 +185,8 @@ Partial Class frmReports
         Me.sptReportResults.Panel1.SuspendLayout()
         Me.sptReportResults.Panel2.SuspendLayout()
         Me.sptReportResults.SuspendLayout()
-        CType(Me.dgvReport, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.MenuStrip1.SuspendLayout()
+        CType(Me.dgvReport, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'lblLicense
@@ -694,6 +694,26 @@ Partial Class frmReports
         Me.pnlSplitSelectedFields.Name = "pnlSplitSelectedFields"
         Me.pnlSplitSelectedFields.Size = New System.Drawing.Size(38, 398)
         Me.pnlSplitSelectedFields.TabIndex = 0
+        '
+        'btnFieldAliasChange
+        '
+        Me.btnFieldAliasChange.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnFieldAliasChange.Image = Global.Sequenchel.My.Resources.Resources.shuffle
+        Me.btnFieldAliasChange.Location = New System.Drawing.Point(3, 200)
+        Me.btnFieldAliasChange.Name = "btnFieldAliasChange"
+        Me.btnFieldAliasChange.Size = New System.Drawing.Size(30, 23)
+        Me.btnFieldAliasChange.TabIndex = 4
+        Me.btnFieldAliasChange.UseVisualStyleBackColor = True
+        '
+        'btnFieldCopy
+        '
+        Me.btnFieldCopy.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnFieldCopy.Image = Global.Sequenchel.My.Resources.Resources.copy
+        Me.btnFieldCopy.Location = New System.Drawing.Point(3, 171)
+        Me.btnFieldCopy.Name = "btnFieldCopy"
+        Me.btnFieldCopy.Size = New System.Drawing.Size(30, 23)
+        Me.btnFieldCopy.TabIndex = 3
+        Me.btnFieldCopy.UseVisualStyleBackColor = True
         '
         'btnReportFieldDown
         '
@@ -1382,23 +1402,6 @@ Partial Class frmReports
         Me.rtbQuery.TabIndex = 0
         Me.rtbQuery.Text = ""
         '
-        'dgvReport
-        '
-        Me.dgvReport.AllowUserToAddRows = False
-        Me.dgvReport.AllowUserToDeleteRows = False
-        Me.dgvReport.AllowUserToOrderColumns = True
-        Me.dgvReport.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.dgvReport.BackgroundColor = System.Drawing.SystemColors.Control
-        Me.dgvReport.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
-        Me.dgvReport.BackImage = CType(resources.GetObject("dgvReport.BackImage"), System.Drawing.Image)
-        Me.dgvReport.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvReport.Location = New System.Drawing.Point(6, 6)
-        Me.dgvReport.Name = "dgvReport"
-        Me.dgvReport.Size = New System.Drawing.Size(1243, 549)
-        Me.dgvReport.TabIndex = 0
-        '
         'btnTest
         '
         Me.btnTest.Location = New System.Drawing.Point(734, 3)
@@ -1475,25 +1478,22 @@ Partial Class frmReports
         Me.lblStatusText.Size = New System.Drawing.Size(1202, 20)
         Me.lblStatusText.TabIndex = 175
         '
-        'btnFieldCopy
+        'dgvReport
         '
-        Me.btnFieldCopy.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnFieldCopy.Image = Global.Sequenchel.My.Resources.Resources.copy
-        Me.btnFieldCopy.Location = New System.Drawing.Point(3, 171)
-        Me.btnFieldCopy.Name = "btnFieldCopy"
-        Me.btnFieldCopy.Size = New System.Drawing.Size(30, 23)
-        Me.btnFieldCopy.TabIndex = 3
-        Me.btnFieldCopy.UseVisualStyleBackColor = True
-        '
-        'btnFieldAliasChange
-        '
-        Me.btnFieldAliasChange.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnFieldAliasChange.Image = Global.Sequenchel.My.Resources.Resources.shuffle
-        Me.btnFieldAliasChange.Location = New System.Drawing.Point(3, 200)
-        Me.btnFieldAliasChange.Name = "btnFieldAliasChange"
-        Me.btnFieldAliasChange.Size = New System.Drawing.Size(30, 23)
-        Me.btnFieldAliasChange.TabIndex = 4
-        Me.btnFieldAliasChange.UseVisualStyleBackColor = True
+        Me.dgvReport.AllowUserToAddRows = False
+        Me.dgvReport.AllowUserToDeleteRows = False
+        Me.dgvReport.AllowUserToOrderColumns = True
+        Me.dgvReport.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.dgvReport.BackgroundColor = System.Drawing.SystemColors.Control
+        Me.dgvReport.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
+        Me.dgvReport.BackImage = CType(resources.GetObject("dgvReport.BackImage"), System.Drawing.Image)
+        Me.dgvReport.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dgvReport.Location = New System.Drawing.Point(6, 6)
+        Me.dgvReport.Name = "dgvReport"
+        Me.dgvReport.Size = New System.Drawing.Size(1243, 549)
+        Me.dgvReport.TabIndex = 0
         '
         'frmReports
         '
@@ -1556,9 +1556,9 @@ Partial Class frmReports
         Me.sptReportResults.Panel2.PerformLayout()
         CType(Me.sptReportResults, System.ComponentModel.ISupportInitialize).EndInit()
         Me.sptReportResults.ResumeLayout(False)
-        CType(Me.dgvReport, System.ComponentModel.ISupportInitialize).EndInit()
         Me.MenuStrip1.ResumeLayout(False)
         Me.MenuStrip1.PerformLayout()
+        CType(Me.dgvReport, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
