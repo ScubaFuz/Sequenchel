@@ -350,7 +350,7 @@ Public Class frmConfiguration
                 basCode.dhdConnection.DataProvider = xNode.Item("DataProvider").InnerText
                 basCode.dhdConnection.LoginMethod = xNode.Item("LoginMethod").InnerText
                 basCode.dhdConnection.LoginName = xNode.Item("LoginName").InnerText
-                If basCode.dhdText.CheckNodeElement(xNode, "Password") Then basCode.dhdConnection.Password = DataHandler.txt.DecryptText(xNode.Item("Password").InnerText)
+                If basCode.dhdText.CheckElement(xNode, "Password") Then basCode.dhdConnection.Password = DataHandler.txt.DecryptText(xNode.Item("Password").InnerText)
             End If
         Next
     End Sub
@@ -728,7 +728,7 @@ Public Class frmConfiguration
         txtOutputPath.Text = xNode.Item("OutputPath").InnerText
         txtReportsSetName.Text = xNode.Item("ReportSet").Attributes("Name").InnerText
         txtReportsFile.Text = xNode.Item("ReportSet").InnerText
-        If basCode.dhdText.CheckNodeElement(xNode, "Search") Then txtSearchFile.Text = xNode.Item("Search").InnerText
+        If basCode.dhdText.CheckElement(xNode, "Search") Then txtSearchFile.Text = xNode.Item("Search").InnerText
         'End If
     End Sub
 
@@ -1168,14 +1168,14 @@ Public Class frmConfiguration
         'Dim strSelection As String = lvwTables.SelectedItems.Item(0).Tag
         Dim strSelection As String = basCode.curStatus.Table
         Dim xNode As XmlNode = basCode.dhdText.FindXmlNode(basCode.xmlTables, "Table", "Alias", strSelection)
-        If basCode.dhdText.CheckNodeElement(xNode, "Name") Then txtTableName.Tag = xNode.Item("Name").InnerText
-        If basCode.dhdText.CheckNodeElement(xNode, "Name") Then txtTableName.Text = xNode.Item("Name").InnerText
-        If basCode.dhdText.CheckNodeElement(xNode, "Alias") Then txtTableAlias.Text = xNode.Item("Alias").InnerText
-        If basCode.dhdText.CheckNodeElement(xNode, "Visible") Then chkTableVisible.Checked = xNode.Item("Visible").InnerText
-        If basCode.dhdText.CheckNodeElement(xNode, "Search") Then chkTableSearch.Checked = xNode.Item("Search").InnerText
-        If basCode.dhdText.CheckNodeElement(xNode, "Update") Then chkTableUpdate.Checked = xNode.Item("Update").InnerText
-        If basCode.dhdText.CheckNodeElement(xNode, "Insert") Then chkTableInsert.Checked = xNode.Item("Insert").InnerText
-        If basCode.dhdText.CheckNodeElement(xNode, "Delete") Then chkTableDelete.Checked = xNode.Item("Delete").InnerText
+        If basCode.dhdText.CheckElement(xNode, "Name") Then txtTableName.Tag = xNode.Item("Name").InnerText
+        If basCode.dhdText.CheckElement(xNode, "Name") Then txtTableName.Text = xNode.Item("Name").InnerText
+        If basCode.dhdText.CheckElement(xNode, "Alias") Then txtTableAlias.Text = xNode.Item("Alias").InnerText
+        If basCode.dhdText.CheckElement(xNode, "Visible") Then chkTableVisible.Checked = xNode.Item("Visible").InnerText
+        If basCode.dhdText.CheckElement(xNode, "Search") Then chkTableSearch.Checked = xNode.Item("Search").InnerText
+        If basCode.dhdText.CheckElement(xNode, "Update") Then chkTableUpdate.Checked = xNode.Item("Update").InnerText
+        If basCode.dhdText.CheckElement(xNode, "Insert") Then chkTableInsert.Checked = xNode.Item("Insert").InnerText
+        If basCode.dhdText.CheckElement(xNode, "Delete") Then chkTableDelete.Checked = xNode.Item("Delete").InnerText
         'End If
     End Sub
 
@@ -1385,22 +1385,22 @@ Public Class frmConfiguration
         If strFieldValue.Length > 0 And basCode.curStatus.Table.Length > 0 Then
             Dim xNode As XmlNode = basCode.GetFieldNode(basCode.xmlTables, basCode.curStatus.Table, strFieldValue)
             If Not xNode Is Nothing Then
-                'If basCode.dhdText.CheckNodeElement(xNode, "FldName") Then basfield.FieldName = xNode.Item("FldName").InnerText
+                'If basCode.dhdText.CheckElement(xNode, "FldName") Then basfield.FieldName = xNode.Item("FldName").InnerText
                 txtFieldName.Text = strFieldValue
                 txtFieldAlias.Text = xNode.Item("FldAlias").InnerText
 
-                If basCode.dhdText.CheckNodeElement(xNode, "FldAlias") Then txtFieldAlias.Text = xNode.Item("FldAlias").InnerText
+                If basCode.dhdText.CheckElement(xNode, "FldAlias") Then txtFieldAlias.Text = xNode.Item("FldAlias").InnerText
                 If txtFieldAlias.Text = "" Then txtFieldAlias.Text = txtFieldName.Text
-                If basCode.dhdText.CheckNodeElement(xNode, "DataType") Then cbxDataType.Text = xNode.Item("DataType").InnerText
-                If basCode.dhdText.CheckNodeElement(xNode, "Identity") Then chkIdentity.Checked = xNode.Item("Identity").InnerText
-                If basCode.dhdText.CheckNodeElement(xNode, "PrimaryKey") Then chkPrimaryKey.Checked = xNode.Item("PrimaryKey").InnerText
-                If basCode.dhdText.CheckNodeElement(xNode, "FldWidth") Then txtFieldWidth.Text = xNode.Item("FldWidth").InnerText
+                If basCode.dhdText.CheckElement(xNode, "DataType") Then cbxDataType.Text = xNode.Item("DataType").InnerText
+                If basCode.dhdText.CheckElement(xNode, "Identity") Then chkIdentity.Checked = xNode.Item("Identity").InnerText
+                If basCode.dhdText.CheckElement(xNode, "PrimaryKey") Then chkPrimaryKey.Checked = xNode.Item("PrimaryKey").InnerText
+                If basCode.dhdText.CheckElement(xNode, "FldWidth") Then txtFieldWidth.Text = xNode.Item("FldWidth").InnerText
 
-                If basCode.dhdText.CheckNodeElement(xNode, "DefaultButton") Then chkDefaultButton.Checked = xNode.Item("DefaultButton").InnerText
-                If basCode.dhdText.CheckNodeElement(xNode, "DefaultValue") Then txtDefaultButton.Text = xNode.Item("DefaultValue").InnerText
+                If basCode.dhdText.CheckElement(xNode, "DefaultButton") Then chkDefaultButton.Checked = xNode.Item("DefaultButton").InnerText
+                If basCode.dhdText.CheckElement(xNode, "DefaultValue") Then txtDefaultButton.Text = xNode.Item("DefaultValue").InnerText
                 'txtDefaultButton.Text = xNode.Item("DefaultButton").Attributes("DefaultValue").Value
 
-                If basCode.dhdText.CheckNodeElement(xNode, "FldList") Then chkFieldList.Checked = xNode.Item("FldList").InnerText
+                If basCode.dhdText.CheckElement(xNode, "FldList") Then chkFieldList.Checked = xNode.Item("FldList").InnerText
                 If chkFieldList.Checked = True Then
                     Try
                         txtFieldListOrder.Text = xNode.Item("FldList").Attributes("Order").Value
@@ -1412,17 +1412,17 @@ Public Class frmConfiguration
                     End Try
                 End If
 
-                If basCode.dhdText.CheckNodeElement(xNode, "FldSearch") Then chkFieldSearch.Checked = xNode.Item("FldSearch").InnerText
-                If basCode.dhdText.CheckNodeElement(xNode, "FldSearchList") Then chkFieldSearchList.Checked = xNode.Item("FldSearchList").InnerText
-                If basCode.dhdText.CheckNodeElement(xNode, "FldUpdate") Then chkFieldUpdate.Checked = xNode.Item("FldUpdate").InnerText
-                If basCode.dhdText.CheckNodeElement(xNode, "FldVisible") Then chkFieldVisible.Checked = xNode.Item("FldVisible").InnerText
+                If basCode.dhdText.CheckElement(xNode, "FldSearch") Then chkFieldSearch.Checked = xNode.Item("FldSearch").InnerText
+                If basCode.dhdText.CheckElement(xNode, "FldSearchList") Then chkFieldSearchList.Checked = xNode.Item("FldSearchList").InnerText
+                If basCode.dhdText.CheckElement(xNode, "FldUpdate") Then chkFieldUpdate.Checked = xNode.Item("FldUpdate").InnerText
+                If basCode.dhdText.CheckElement(xNode, "FldVisible") Then chkFieldVisible.Checked = xNode.Item("FldVisible").InnerText
 
-                If basCode.dhdText.CheckNodeElement(xNode, "ControlField") Then txtControlField.Text = xNode.Item("ControlField").InnerText
-                If basCode.dhdText.CheckNodeElement(xNode, "ControlValue") Then txtControlValue.Text = xNode.Item("ControlValue").InnerText
-                If basCode.dhdText.CheckNodeElement(xNode, "ControlUpdate") Then chkControlUpdate.Checked = xNode.Item("ControlUpdate").InnerText
-                If basCode.dhdText.CheckNodeElement(xNode, "ControlMode") Then chkControlMode.Checked = xNode.Item("ControlMode").InnerText
+                If basCode.dhdText.CheckElement(xNode, "ControlField") Then txtControlField.Text = xNode.Item("ControlField").InnerText
+                If basCode.dhdText.CheckElement(xNode, "ControlValue") Then txtControlValue.Text = xNode.Item("ControlValue").InnerText
+                If basCode.dhdText.CheckElement(xNode, "ControlUpdate") Then chkControlUpdate.Checked = xNode.Item("ControlUpdate").InnerText
+                If basCode.dhdText.CheckElement(xNode, "ControlMode") Then chkControlMode.Checked = xNode.Item("ControlMode").InnerText
 
-                If basCode.dhdText.CheckNodeElement(xNode, "Relations") Then
+                If basCode.dhdText.CheckElement(xNode, "Relations") Then
                     If xNode.Item("Relations").ChildNodes.Count > 0 Then
                         For Each xRnode As XmlNode In xNode.Item("Relations").ChildNodes
                             If xRnode.ChildNodes.Count > 1 Then
@@ -1483,7 +1483,7 @@ Public Class frmConfiguration
         End If
 
         Dim xPNode As XmlNode = basCode.dhdText.CreateAppendElement(xTNode, "Fields", Nothing, True)
-        Dim xFNode As XmlNode = basCode.dhdText.FindXmlChildNode(xPNode, "Field", "FldName", FldName)
+        Dim xFNode As XmlNode = basCode.dhdText.FindXmlNode(xPNode, "Field", "FldName", FldName)
         If xFNode Is Nothing Then
             xFNode = basCode.dhdText.CreateAppendElement(xPNode, "Field", Nothing, False)
             'FieldAdd(TableName, FldName, FldAlias, DataType, FldWidth, Relations, RelatedField, ControlField, ControlValue, ControlUpdate, ControlMode, DefaultButton, DefaultValue, FldList, Order, Width, FldVisible, FldSearch, FldSearchList, FldUpdate, Reload)
@@ -1542,7 +1542,7 @@ Public Class frmConfiguration
         End If
 
         Dim xPNode As XmlNode = basCode.dhdText.CreateAppendElement(xTNode, "Fields", Nothing, True)
-        Dim xFNode As XmlNode = basCode.dhdText.FindXmlChildNode(xPNode, "Field", "FldName", strField)
+        Dim xFNode As XmlNode = basCode.dhdText.FindXmlNode(xPNode, "Field", "FldName", strField)
         If xFNode Is Nothing Then
             WriteStatus("The field to move was not found.", 2, lblStatusText)
             Exit Sub
@@ -1794,19 +1794,19 @@ Public Class frmConfiguration
             Dim strFieldName As String = txtFieldName.Text
             Dim xMNode As XmlNode = basCode.dhdText.FindXmlNode(basCode.xmlTables, "Table", "Name", txtTableName.Text)
             If xMNode Is Nothing Then Exit Sub
-            Dim xPNode As XmlNode = basCode.dhdText.FindXmlChildNode(xMNode, "Fields/Field", "FldName", txtFieldName.Text)
+            Dim xPNode As XmlNode = basCode.dhdText.FindXmlNode(xMNode, "Fields/Field", "FldName", txtFieldName.Text)
             If xPNode Is Nothing Then Exit Sub
 
-            Dim xlmRNodes As XmlNodeList = basCode.dhdText.FindXmlChildNodes(xPNode, "Relations/Relation", Nothing, Nothing)
+            Dim xlmRNodes As XmlNodeList = basCode.dhdText.FindXmlNodes(xPNode, "Relations/Relation", Nothing, Nothing)
             If xlmRNodes Is Nothing Then Exit Sub
 
             For Each xRNode As XmlNode In xlmRNodes
-                If basCode.dhdText.CheckNodeElement(xRNode, "RelationTable") = True Then
+                If basCode.dhdText.CheckElement(xRNode, "RelationTable") = True Then
                     If xRNode.Item("RelationTable").InnerText = strTableName Then
-                        If basCode.dhdText.CheckNodeElement(xRNode, "RelationField") = True Then cbxRelationFields.Text = xRNode.Item("RelationField").InnerText
-                        If basCode.dhdText.CheckNodeElement(xRNode, "RelatedFieldList") = True Then chkRelatedField.Checked = xRNode.Item("RelatedFieldList").InnerText
-                        If basCode.dhdText.CheckNodeElement(xRNode, "RelatedFieldName") = True Then txtRelatedField.Text = xRNode.Item("RelatedFieldName").InnerText
-                        If basCode.dhdText.CheckNodeElement(xRNode, "RelatedFieldAlias") = True Then txtRelatedFieldAlias.Text = xRNode.Item("RelatedFieldAlias").InnerText
+                        If basCode.dhdText.CheckElement(xRNode, "RelationField") = True Then cbxRelationFields.Text = xRNode.Item("RelationField").InnerText
+                        If basCode.dhdText.CheckElement(xRNode, "RelatedFieldList") = True Then chkRelatedField.Checked = xRNode.Item("RelatedFieldList").InnerText
+                        If basCode.dhdText.CheckElement(xRNode, "RelatedFieldName") = True Then txtRelatedField.Text = xRNode.Item("RelatedFieldName").InnerText
+                        If basCode.dhdText.CheckElement(xRNode, "RelatedFieldAlias") = True Then txtRelatedFieldAlias.Text = xRNode.Item("RelatedFieldAlias").InnerText
                     End If
                     'Else
                     '    'old style. Delete before deployment
@@ -1976,18 +1976,18 @@ Public Class frmConfiguration
             WriteStatus("The Table " & strTableSource & " was not found. Aborting action", 2, lblStatusText)
             Return False
         End If
-        Dim xNode As XmlNode = basCode.dhdText.FindXmlChildNode(xPNode, "Fields/Field", "FldName", strFieldSource)
+        Dim xNode As XmlNode = basCode.dhdText.FindXmlNode(xPNode, "Fields/Field", "FldName", strFieldSource)
         If xNode Is Nothing Then
             WriteStatus("The Field " & strFieldSource & " was not found. Aborting action", 2, lblStatusText)
             Return False
         End If
-        Dim xCNode As XmlNode = basCode.dhdText.FindXmlChildNode(xNode, "Relations")
+        Dim xCNode As XmlNode = basCode.dhdText.FindXmlNode(xNode, "Relations")
         'If relations node does not exist, nothing needs to be deleted.
         If xCNode Is Nothing Then Return True
 
-        Dim xRNode As XmlNode = basCode.dhdText.FindXmlChildNode(xCNode, "Relation", "RelationTable", strRelatedTable)
+        Dim xRNode As XmlNode = basCode.dhdText.FindXmlNode(xCNode, "Relation", "RelationTable", strRelatedTable)
         'Find relation old style
-        If xRNode Is Nothing Then xRNode = basCode.dhdText.FindXmlChildNode(xCNode, "Relation", "Relation", strRelatedTable & "." & strRelatedField)
+        If xRNode Is Nothing Then xRNode = basCode.dhdText.FindXmlNode(xCNode, "Relation", "Relation", strRelatedTable & "." & strRelatedField)
         If xRNode Is Nothing Then
             WriteStatus("The Relation " & strRelatedTable & "." & strRelatedField & " was not found. Nothing is deleted", 2, lblStatusText)
             Return True
@@ -2004,8 +2004,8 @@ Public Class frmConfiguration
                 Dim strRelTable As String = "", strRelField As String = "", strRelation As String = ""
 
                 For Each xXNode As XmlNode In xCNode.ChildNodes
-                    If basCode.dhdText.CheckNodeElement(xXNode, "RelationTable") Then strRelTable = xXNode.Item("RelationTable").InnerText
-                    If basCode.dhdText.CheckNodeElement(xXNode, "RelationField") Then strRelField = xXNode.Item("RelationField").InnerText
+                    If basCode.dhdText.CheckElement(xXNode, "RelationTable") Then strRelTable = xXNode.Item("RelationTable").InnerText
+                    If basCode.dhdText.CheckElement(xXNode, "RelationField") Then strRelField = xXNode.Item("RelationField").InnerText
                     If xXNode.ChildNodes.Count = 1 Then
                         strRelation = xXNode.InnerText
                         If strRelation.Length > 0 Then
@@ -2040,12 +2040,12 @@ Public Class frmConfiguration
             WriteStatus("The Table " & strTableSource & " was not found. Aborting action", 2, lblStatusText)
             Return False
         End If
-        Dim xNode As XmlNode = basCode.dhdText.FindXmlChildNode(xPNode, "Fields/Field", "FldName", strFieldSource)
+        Dim xNode As XmlNode = basCode.dhdText.FindXmlNode(xPNode, "Fields/Field", "FldName", strFieldSource)
         If xNode Is Nothing Then
             WriteStatus("The Field " & strFieldSource & " was not found. Aborting action", 2, lblStatusText)
             Return False
         End If
-        Dim xCNode As XmlNode = basCode.dhdText.FindXmlChildNode(xNode, "Relations")
+        Dim xCNode As XmlNode = basCode.dhdText.FindXmlNode(xNode, "Relations")
         If xCNode Is Nothing Then xCNode = basCode.dhdText.CreateAppendElement(xNode, "Relations", Nothing, False)
 
         Try

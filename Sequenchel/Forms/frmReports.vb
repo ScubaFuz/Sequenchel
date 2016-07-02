@@ -404,7 +404,7 @@ Public Class frmReports
 
     Private Sub FieldAdd(strFieldNameFull As String, strFieldName As String, strFieldAlias As String, strTableName As String, strTableAlias As String)
         Dim xNode As XmlNode = basCode.dhdText.FindXmlNode(basCode.xmlTables, "Table", "Name", strTableName)
-        Dim xCNode As XmlNode = basCode.dhdText.FindXmlChildNode(xNode, "Fields/Field", "FldName", strFieldName)
+        Dim xCNode As XmlNode = basCode.dhdText.FindXmlNode(xNode, "Fields/Field", "FldName", strFieldName)
         Dim strFieldType As String = xCNode.Item("DataType").InnerText
 
         FieldLabelAdd(strFieldNameFull, strFieldName, strFieldAlias, strTableName, strTableAlias)
@@ -949,13 +949,13 @@ Public Class frmReports
     Private Sub RelationsLoad(strTableName As String, strTableAlias As String)
         Dim strTableNameFull As String = strTableName & "_" & strTableAlias
         Dim xPNode As System.Xml.XmlNode = basCode.dhdText.FindXmlNode(basCode.xmlTables, "Table", "Name", strTableName)
-        Dim xmlFieldList As System.Xml.XmlNodeList = basCode.dhdText.FindXmlChildNodes(xPNode, "Fields/Field/Relations", "Relation")
+        Dim xmlFieldList As System.Xml.XmlNodeList = basCode.dhdText.FindXmlNodes(xPNode, "Fields/Field/Relations", "Relation")
         Dim intCount As Integer = 0
         For Each xmlCNode As System.Xml.XmlNode In xmlFieldList
-            Dim xmlRelationList As System.Xml.XmlNodeList = basCode.dhdText.FindXmlChildNodes(xmlCNode, "Relation")
+            Dim xmlRelationList As System.Xml.XmlNodeList = basCode.dhdText.FindXmlNodes(xmlCNode, "Relation")
             For Each xRNode As System.Xml.XmlNode In xmlRelationList
                 Dim strRelationTable As String = "", strRelationTableAlias As String = "", strRelationField As String = ""
-                If basCode.dhdText.CheckNodeElement(xRNode, "RelationField") = True Then
+                If basCode.dhdText.CheckElement(xRNode, "RelationField") = True Then
                     strRelationTable = xRNode.Item("RelationTable").InnerText
                     strRelationTableAlias = xRNode.Item("RelationTableAlias").InnerText
                     strRelationField = xRNode.Item("RelationField").InnerText
@@ -1239,7 +1239,7 @@ Public Class frmReports
         Dim xNode As XmlNode = basCode.dhdText.FindXmlNode(xmlReports, "Report", "ReportName", strReportName)
         If Not xNode Is Nothing Then
             XmlToReport(xmlReports, strReportName)
-            'Dim xFNode As XmlNode = basCode.dhdText.FindXmlChildNode(xNode, "Tables/Table")
+            'Dim xFNode As XmlNode = basCode.dhdText.FindXmlNode(xNode, "Tables/Table")
             'If xFNode Is Nothing Then
             'Else
             '    XmlToReport_old(xmlReports, strReportName)
@@ -1255,14 +1255,14 @@ Public Class frmReports
         Dim strTableName As String = "", strTableAlias As String = "", strFieldName As String = "", strFieldAlias As String = "", intRelationNumber As Integer = 0
 
         If Not xNode Is Nothing Then
-            If basCode.dhdText.CheckNodeElement(xNode, "Description") Then txtDescription.Text = xNode.Item("Description").InnerText
+            If basCode.dhdText.CheckElement(xNode, "Description") Then txtDescription.Text = xNode.Item("Description").InnerText
             chkTop.Checked = xNode.Item("UseTop").InnerText
             txtTop.Text = xNode.Item("UseTopNumber").InnerText
             chkDistinct.Checked = xNode.Item("UseDistinct").InnerText
-            For Each xCNode As XmlNode In basCode.dhdText.FindXmlChildNodes(xNode, "Fields/Field")
+            For Each xCNode As XmlNode In basCode.dhdText.FindXmlNodes(xNode, "Fields/Field")
                 strTableName = xCNode.Item("TableName").InnerText
                 If strTableName.IndexOf(".") = -1 Then strTableName = "dbo." & strTableName
-                If basCode.dhdText.CheckNodeElement(xCNode, "TableAlias") Then strTableAlias = xCNode.Item("TableAlias").InnerText
+                If basCode.dhdText.CheckElement(xCNode, "TableAlias") Then strTableAlias = xCNode.Item("TableAlias").InnerText
                 If String.IsNullOrEmpty(strTableAlias) Then strTableAlias = strTableName.Replace(".", "_")
                 strFieldName = xCNode.Item("FieldName").InnerText
                 strFieldAlias = xCNode.Item("FieldAlias").InnerText
@@ -1277,7 +1277,7 @@ Public Class frmReports
                             SetCtrText(pnlReportSort, strTableAlias & "." & strFieldName, xCNode.Item("FieldSort").InnerText)
                             SetCtrText(pnlReportSortOrder, strTableAlias & "." & strFieldName, xCNode.Item("FieldSortOrder").InnerText)
 
-                            For Each xFnode In basCode.dhdText.FindXmlChildNodes(xCNode, "Filters/Filter")
+                            For Each xFnode In basCode.dhdText.FindXmlNodes(xCNode, "Filters/Filter")
                                 SetCtrText(pnlReportFilter, strTableAlias & "." & strFieldName, xFnode.Item("FilterEnabled").InnerText, xFnode.Item("FilterNumber").InnerText)
                                 SetCtrText(pnlReportFilterMode, strTableAlias & "." & strFieldName, xFnode.Item("FilterMode").InnerText, xFnode.Item("FilterNumber").InnerText)
                                 SetCtrText(pnlReportFilterType, strTableAlias & "." & strFieldName, xFnode.Item("FilterType").InnerText, xFnode.Item("FilterNumber").InnerText)
@@ -1299,16 +1299,16 @@ Public Class frmReports
             Next
 
             Dim intRelationCount As Integer = 0
-            For Each xRNode As XmlNode In basCode.dhdText.FindXmlChildNodes(xNode, "Relations/Relation")
+            For Each xRNode As XmlNode In basCode.dhdText.FindXmlNodes(xNode, "Relations/Relation")
                 strTableName = xRNode.Item("TableName").InnerText
-                If basCode.dhdText.CheckNodeElement(xRNode, "TableAlias") Then strTableAlias = xRNode.Item("TableAlias").InnerText
+                If basCode.dhdText.CheckElement(xRNode, "TableAlias") Then strTableAlias = xRNode.Item("TableAlias").InnerText
                 intRelationNumber = xRNode.Item("RelationNumber").InnerText
                 If intRelationNumber = 1 Then intRelationCount += 1
                 SetCtrText(pnlRelationsUse, strTableName & "_" & strTableAlias, xRNode.Item("RelationEnabled").InnerText, intRelationNumber)
                 SetCtrText(pnlRelationsField, strTableName & "_" & strTableAlias, xRNode.Item("RelationSource").InnerText, intRelationNumber)
 
                 Dim strTargetTable As String = "", strTargetTableAlias As String = "", strTargetField As String = ""
-                If basCode.dhdText.CheckNodeElement(xRNode, "RelationTarget") Then
+                If basCode.dhdText.CheckElement(xRNode, "RelationTarget") Then
                     Dim strRelationTarget As String = xRNode.Item("RelationTarget").InnerText
                     If String.IsNullOrEmpty(strRelationTarget) = False Then
                         strTargetField = strRelationTarget.Substring(strRelationTarget.LastIndexOf(".") + 1, strRelationTarget.Length - strRelationTarget.LastIndexOf(".") - 1)
@@ -1316,9 +1316,9 @@ Public Class frmReports
                         strTargetTable = basCode.GetTableNameFromString(strRelationTarget)
                     End If
                 End If
-                If basCode.dhdText.CheckNodeElement(xRNode, "RelationTargetTable") Then strTargetTable = xRNode.Item("RelationTargetTable").InnerText
-                If basCode.dhdText.CheckNodeElement(xRNode, "RelationTargetAlias") Then strTargetTableAlias = xRNode.Item("RelationTargetAlias").InnerText
-                If basCode.dhdText.CheckNodeElement(xRNode, "RelationTargetField") Then strTargetField = basCode.GetFieldAliasFromName(basCode.xmlTables, strTargetTable, xRNode.Item("RelationTargetField").InnerText)
+                If basCode.dhdText.CheckElement(xRNode, "RelationTargetTable") Then strTargetTable = xRNode.Item("RelationTargetTable").InnerText
+                If basCode.dhdText.CheckElement(xRNode, "RelationTargetAlias") Then strTargetTableAlias = xRNode.Item("RelationTargetAlias").InnerText
+                If basCode.dhdText.CheckElement(xRNode, "RelationTargetField") Then strTargetField = basCode.GetFieldAliasFromName(basCode.xmlTables, strTargetTable, xRNode.Item("RelationTargetField").InnerText)
                 If strTargetTableAlias = "" Then strTargetTableAlias = strTargetTable
 
                 If intRelationNumber = 1 Then
@@ -1617,13 +1617,13 @@ Public Class frmReports
                     basCode.dhdText.CreateAppendElement(NewRelationNode, "TableAlias", strTableAlias)
                     basCode.dhdText.CreateAppendElement(NewRelationNode, "RelationNumber", intControlNumber)
                     basCode.dhdText.CreateAppendElement(NewRelationNode, "RelationEnabled", ctrRelation.Checked.ToString)
-                    basCode.dhdText.CreateAppendElement(NewRelationNode, "RelationSource", GetCtrText(pnlRelationsField, strTableName, intControlNumber))
-                    Dim strRelationTable As String = basCode.GetTableNameFromString(GetCtrText(pnlRelationsTargetTable, strTableName, intControlNumber))
+                    basCode.dhdText.CreateAppendElement(NewRelationNode, "RelationSource", GetCtrText(pnlRelationsField, strTableNameFull, intControlNumber))
+                    Dim strRelationTable As String = basCode.GetTableNameFromString(GetCtrText(pnlRelationsTargetTable, strTableNameFull, intControlNumber))
                     basCode.dhdText.CreateAppendElement(NewRelationNode, "RelationTargetTable", strRelationTable)
-                    Dim strRelationTableAlias As String = basCode.GetTableAliasFromString(GetCtrText(pnlRelationsTargetTable, strTableName, intControlNumber))
+                    Dim strRelationTableAlias As String = basCode.GetTableAliasFromString(GetCtrText(pnlRelationsTargetTable, strTableNameFull, intControlNumber))
                     basCode.dhdText.CreateAppendElement(NewRelationNode, "RelationTargetAlias", strRelationTableAlias)
-                    basCode.dhdText.CreateAppendElement(NewRelationNode, "RelationTargetField", basCode.GetFieldNameFromAlias(basCode.xmlTables, strRelationTable, GetCtrText(pnlRelationsTargetField, strTableName, intControlNumber)))
-                    basCode.dhdText.CreateAppendElement(NewRelationNode, "RelationJoinType", GetCtrText(pnlRelationsJoinType, strTableName, intControlNumber))
+                    basCode.dhdText.CreateAppendElement(NewRelationNode, "RelationTargetField", basCode.GetFieldNameFromAlias(basCode.xmlTables, strRelationTable, GetCtrText(pnlRelationsTargetField, strTableNameFull, intControlNumber)))
+                    basCode.dhdText.CreateAppendElement(NewRelationNode, "RelationJoinType", GetCtrText(pnlRelationsJoinType, strTableNameFull, intControlNumber))
                     Dim intSortOrder As Integer = SortOrderGet(strRelationTableAlias)
                     basCode.dhdText.CreateAppendElement(NewRelationNode, "RelationSortOrder", intSortOrder)
                 End If

@@ -1588,9 +1588,9 @@ Public Class frmSequenchel
         Dim xPNode As XmlNode = basCode.dhdText.FindXmlNode(basCode.xmlSearch, "Search", "SearchName", strSelection)
         If Not xPNode Is Nothing Then
 
-            If basCode.dhdText.CheckNodeElement(xPNode, "UseTop") Then chkUseTop.Checked = xPNode.Item("UseTop").InnerText
-            If basCode.dhdText.CheckNodeElement(xPNode, "UseTopCount") Then txtUseTop.Text = xPNode.Item("UseTopCount").InnerText
-            If basCode.dhdText.CheckNodeElement(xPNode, "ReversedOrder") Then chkReversedSortOrder.Checked = xPNode.Item("ReversedOrder").InnerText
+            If basCode.dhdText.CheckElement(xPNode, "UseTop") Then chkUseTop.Checked = xPNode.Item("UseTop").InnerText
+            If basCode.dhdText.CheckElement(xPNode, "UseTopCount") Then txtUseTop.Text = xPNode.Item("UseTopCount").InnerText
+            If basCode.dhdText.CheckElement(xPNode, "ReversedOrder") Then chkReversedSortOrder.Checked = xPNode.Item("ReversedOrder").InnerText
 
             For Each xNode As XmlNode In xPNode.SelectNodes(".//Field")
                 strFieldName = xNode.Attributes("FieldName").Value
