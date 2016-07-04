@@ -776,7 +776,6 @@ Public Class frmReports
 
             intMaxNumber = 0
             For Each ctrControl In pnlTarget.Controls
-                'Dim strControl As String = ctrControl.Tag
                 If ctrControl.Field.Name = strFieldNameFull Then
                     intControlNumber = ctrControl.Name.ToString.Substring(ctrControl.Name.ToString.Length - strFieldNameFull.Length - 1, 1)
                     If SinglePanel = True And intControlNumber = 1 Then
@@ -901,6 +900,7 @@ Public Class frmReports
         cbxNewField.Field.FieldTableName = strTableName
         cbxNewField.Field.FieldTableAlias = strTableAlias
         cbxNewField.Width = pnlRelationsField.Width - basCode.curVar.BuildMargin
+        cbxNewField.Sorted = True
         pnlRelationsField.Controls.Add(cbxNewField)
         cbxNewField.Top = ((lvwSelectedTables.Items.Count - 1) * basCode.curVar.FieldHeight) + ((lvwSelectedTables.Items.Count - 1) * basCode.curVar.BuildMargin)
         cbxNewField.Left = basCode.curVar.BuildMargin
@@ -913,6 +913,7 @@ Public Class frmReports
         cbxNewTargetTable.Field.FieldTableName = strTableName
         cbxNewTargetTable.Field.FieldTableAlias = strTableAlias
         cbxNewTargetTable.Width = pnlRelationsTargetTable.Width - basCode.curVar.BuildMargin
+        cbxNewTargetTable.Sorted = True
         pnlRelationsTargetTable.Controls.Add(cbxNewTargetTable)
         cbxNewTargetTable.Top = ((lvwSelectedTables.Items.Count - 1) * basCode.curVar.FieldHeight) + ((lvwSelectedTables.Items.Count - 1) * basCode.curVar.BuildMargin)
         cbxNewTargetTable.Left = basCode.curVar.BuildMargin
@@ -927,6 +928,7 @@ Public Class frmReports
         cbxNewTargetField.Field.FieldTableName = strTableName
         cbxNewTargetField.Field.FieldTableAlias = strTableAlias
         cbxNewTargetField.Width = pnlRelationsTargetField.Width - basCode.curVar.BuildMargin
+        cbxNewTargetField.Sorted = True
         pnlRelationsTargetField.Controls.Add(cbxNewTargetField)
         cbxNewTargetField.Top = ((lvwSelectedTables.Items.Count - 1) * basCode.curVar.FieldHeight) + ((lvwSelectedTables.Items.Count - 1) * basCode.curVar.BuildMargin)
         cbxNewTargetField.Left = basCode.curVar.BuildMargin
@@ -1448,7 +1450,7 @@ Public Class frmReports
         Try
             If DataSet2DataGridView(dtsData, 0, dgvReport, blnRebuildColumns, intPage) = False Then
                 WriteStatus("There was an error loading the report", 1, lblStatusText)
-                lblListCountNumber.Tag = 0
+                basCode.curStatus.ReportPageShow = 0
                 Exit Sub
             End If
             'dgvReport.DataSource = dtsData.Tables(0)
@@ -1467,85 +1469,20 @@ Public Class frmReports
                 'lblListCountNumber.Text = intTotal
                 lblListCountNumber.Text = intStart & " to " & intStop & " from " & intTotal
             End If
-            lblListCountNumber.Tag = intPage
+            basCode.curStatus.ReportPageShow = intPage
             sptReportResults.SplitterDistance = 242 + lblListCountNumber.Width
             'DataGridViewColumnSize(dgvReport)
             lblErrorMessage.Text = "Command completed succesfully"
         Catch ex As Exception
             basCode.WriteLog("There was an error loading the report" & Environment.NewLine & ex.Message, 1)
             WriteStatus("There was an error loading the report. Please check the log", 1, lblStatusText)
-            lblListCountNumber.Tag = 0
+            basCode.curStatus.ReportPageShow = 0
         End Try
 
         'If strErrorMessage = "" Then lblErrorMessage.Text = "Command completed succesfully"
         dgvReport.ClearSelection()
 
     End Sub
-
-    'Private Sub ReportAdd(xmlDocReport As XmlDocument, strReportName As String)
-    '    Dim strTable As String = ""
-    '    Dim strField As String = ""
-    '    Dim intControlNumber As Integer = 0
-
-    '    Dim root As XmlElement = xmlDocReport.DocumentElement
-    '    If root Is Nothing Then
-    '        xmlDocReport = basCode.dhdText.CreateRootDocument(xmlDocReport, "Sequenchel", "Reports", True)
-    '    End If
-
-    '    Dim NewReportNode As XmlNode = basCode.dhdText.CreateAppendElement(xmlDocReport.Item("Sequenchel").Item("Reports"), "Report")
-    '    basCode.dhdText.CreateAppendElement(NewReportNode, "ReportName", strReportName)
-    '    basCode.dhdText.CreateAppendElement(NewReportNode, "Description", txtDescription.Text)
-    '    basCode.dhdText.CreateAppendElement(NewReportNode, "UseTop", chkTop.Checked.ToString)
-    '    basCode.dhdText.CreateAppendElement(NewReportNode, "UseTopNumber", txtTop.Text)
-    '    basCode.dhdText.CreateAppendElement(NewReportNode, "UseDistinct", chkDistinct.Checked.ToString)
-    '    Dim NewTablesNode As XmlNode = basCode.dhdText.CreateAppendElement(NewReportNode, "Tables")
-    '    For intTableCount As Integer = 0 To lvwSelectedTables.Items.Count - 1
-    '        strTable = lvwSelectedTables.Items.Item(intTableCount).Name
-    '        Dim NewTableNode As XmlNode = basCode.dhdText.CreateAppendElement(NewTablesNode, "Table")
-    '        basCode.dhdText.CreateAppendElement(NewTableNode, "TableName", strTable)
-    '        Dim NewFieldsNode As XmlNode = basCode.dhdText.CreateAppendElement(NewTableNode, "Fields")
-    '        For intFieldCount As Integer = 0 To lvwSelectedFields.Items.Count - 1
-    '            strField = lvwSelectedFields.Items.Item(intFieldCount).Name
-    '            If strField.Length > strTable.Length Then
-    '                If strField.Substring(0, strField.LastIndexOf(".")) = strTable Then
-    '                    Dim strFieldName As String = strField.Substring(strField.LastIndexOf(".") + 1, strField.Length - strField.LastIndexOf(".") - 1)
-    '                    Dim NewFieldNode As XmlNode = basCode.dhdText.CreateAppendElement(NewFieldsNode, "Field")
-    '                    basCode.dhdText.CreateAppendElement(NewFieldNode, "FieldName", strFieldName)
-    '                    basCode.dhdText.CreateAppendElement(NewFieldNode, "FieldShow", GetCtrText(pnlReportDisplay, strField))
-    '                    basCode.dhdText.CreateAppendElement(NewFieldNode, "FieldShowMode", GetCtrText(pnlReportShowMode, strField))
-    '                    basCode.dhdText.CreateAppendElement(NewFieldNode, "FieldSort", GetCtrText(pnlReportSort, strField))
-    '                    basCode.dhdText.CreateAppendElement(NewFieldNode, "FieldSortOrder", GetCtrText(pnlReportSortOrder, strField))
-
-    '                    Dim NewFiltersNode As XmlNode = basCode.dhdText.CreateAppendElement(NewFieldNode, "Filters")
-    '                    For Each ctrFilter In pnlReportFilter.Controls
-    '                        If ctrFilter.Tag = strField Then
-    '                            intControlNumber = ctrFilter.Name.ToString.Substring(ctrFilter.Name.ToString.Length - strField.Length - 1, 1)
-    '                            Dim NewFilterNode As XmlNode = basCode.dhdText.CreateAppendElement(NewFiltersNode, "Filter")
-    '                            basCode.dhdText.CreateAppendElement(NewFilterNode, "FilterNumber", intControlNumber)
-    '                            basCode.dhdText.CreateAppendElement(NewFilterNode, "FilterEnabled", ctrFilter.Checkstate.ToString)
-    '                            basCode.dhdText.CreateAppendElement(NewFilterNode, "FilterMode", GetCtrText(pnlReportFilterMode, strField, intControlNumber))
-    '                            basCode.dhdText.CreateAppendElement(NewFilterNode, "FilterType", GetCtrText(pnlReportFilterType, strField, intControlNumber))
-    '                            basCode.dhdText.CreateAppendElement(NewFilterNode, "FilterText", GetCtrText(pnlReportFilterText, strField, intControlNumber))
-    '                        End If
-    '                    Next
-    '                End If
-    '            End If
-    '        Next
-    '        Dim NewRelationsNode As XmlNode = basCode.dhdText.CreateAppendElement(NewTableNode, "Relations")
-    '        For Each ctrRelation In pnlRelationsUse.Controls
-    '            If ctrRelation.Tag = strTable Then
-    '                Dim NewRelationNode As XmlNode = basCode.dhdText.CreateAppendElement(NewRelationsNode, "Relation")
-    '                intControlNumber = ctrRelation.Name.ToString.Substring(ctrRelation.Name.ToString.Length - strTable.Length - 1, 1)
-    '                basCode.dhdText.CreateAppendElement(NewRelationNode, "RelationNumber", intControlNumber)
-    '                basCode.dhdText.CreateAppendElement(NewRelationNode, "RelationEnabled", ctrRelation.Checked.ToString)
-    '                basCode.dhdText.CreateAppendElement(NewRelationNode, "RelationSource", GetCtrText(pnlRelationsField, strTable, intControlNumber))
-    '                basCode.dhdText.CreateAppendElement(NewRelationNode, "RelationTarget", GetCtrText(pnlRelationsRelation, strTable, intControlNumber))
-    '                basCode.dhdText.CreateAppendElement(NewRelationNode, "RelationJoinType", GetCtrText(pnlRelationsJoinType, strTable, intControlNumber))
-    '            End If
-    '        Next
-
-    '    Next
-    'End Sub
 
     Private Function ReportToXML(xmlReport As XmlDocument, strReportName As String) As XmlDocument
         Dim strFieldNameFull As String = ""
@@ -1586,12 +1523,12 @@ Public Class frmReports
             basCode.dhdText.CreateAppendElement(NewFieldNode, "FieldSortOrder", GetCtrText(pnlReportSortOrder, strFieldNameFull))
 
             Dim NewFiltersNode As XmlNode = basCode.dhdText.CreateAppendElement(NewFieldNode, "Filters")
-            For Each ctrFilter In pnlReportFilter.Controls
-                If ctrFilter.Tag = strFieldNameFull Then
+            For Each ctrFilter As CheckField In pnlReportFilter.Controls
+                If ctrFilter.Field.Name = strFieldNameFull Then
                     intControlNumber = ctrFilter.Name.ToString.Substring(ctrFilter.Name.ToString.Length - strFieldNameFull.Length - 1, 1)
                     Dim NewFilterNode As XmlNode = basCode.dhdText.CreateAppendElement(NewFiltersNode, "Filter")
                     basCode.dhdText.CreateAppendElement(NewFilterNode, "FilterNumber", intControlNumber)
-                    basCode.dhdText.CreateAppendElement(NewFilterNode, "FilterEnabled", ctrFilter.Checkstate.ToString)
+                    basCode.dhdText.CreateAppendElement(NewFilterNode, "FilterEnabled", ctrFilter.CheckState.ToString)
                     basCode.dhdText.CreateAppendElement(NewFilterNode, "FilterMode", GetCtrText(pnlReportFilterMode, strFieldNameFull, intControlNumber))
                     basCode.dhdText.CreateAppendElement(NewFilterNode, "FilterType", GetCtrText(pnlReportFilterType, strFieldNameFull, intControlNumber))
                     basCode.dhdText.CreateAppendElement(NewFilterNode, "FilterText", GetCtrText(pnlReportFilterText, strFieldNameFull, intControlNumber))
@@ -2059,22 +1996,21 @@ Public Class frmReports
 
     Private Sub cbxRelationTargetTable_SelectedIndexChanged(sender As Object, e As EventArgs)
         If sender.[GetType]().Name = "ComboField" Then
-            Dim cbxSource As ComboField = TryCast(sender, ComboField)
-            If Not cbxSource Is Nothing Then
+            Dim cbxTargetTable As ComboField = TryCast(sender, ComboField)
+            If Not cbxTargetTable Is Nothing Then
                 'Find Table Alias for collecting Fields
-                Dim strName As String = cbxSource.SelectedItem
-                If String.IsNullOrEmpty(strName) Then Exit Sub
-                Dim strTargetTableName As String = basCode.GetTableNameFromString(strName)
+                Dim strtableNameFull As String = cbxTargetTable.Text
+                If String.IsNullOrEmpty(strtableNameFull) Then Exit Sub
+                Dim strTargetTableName As String = basCode.GetTableNameFromString(strtableNameFull)
+                'Dim strTargetTableAlias As String = basCode.GetTableAliasFromString(strtableNameFull)
 
                 'Find correct combobox to fill...
-                Dim strSourceTable As String = sender.tag
-                Dim strObjectName As String = sender.name
-                Dim strTargetTableAlias As String = sender.Name.Substring(pnlRelationsTargetTable.Name.Length + 1, sender.Name.Length - (pnlRelationsTargetTable.Name.Length + 1))
-                Dim strCounter As String = strObjectName.Substring(pnlRelationsTargetTable.Name.Length, 1)
-                Dim strTargetBox As String = pnlRelationsTargetField.Name & strCounter & strTargetTableAlias
-                For Each cbxTarget As ComboField In pnlRelationsTargetField.Controls
-                    If cbxTarget.Name = strTargetBox Then
-                        ComboBoxFill(cbxTarget, "RelationField", strSourceTable)
+                'Dim strSourceTable As String = cbxTargetTable.Field.FieldTableName
+                Dim strCounter As String = sender.name.Substring(pnlRelationsTargetTable.Name.Length, 1)
+                Dim strTargetBox As String = pnlRelationsTargetField.Name & strCounter & cbxTargetTable.Field.FieldTableName & "_" & cbxTargetTable.Field.FieldTableAlias
+                For Each cbxTargetField As ComboField In pnlRelationsTargetField.Controls
+                    If cbxTargetField.Name = strTargetBox Then
+                        ComboBoxFill(cbxTargetField, "RelationField", strTargetTableName)
                     End If
                 Next
             End If
@@ -2100,7 +2036,7 @@ Public Class frmReports
         CursorControl("Wait")
         ReportClear(False, False)
         Dim intPage As Integer = 1
-        If IsNumeric(lblListCountNumber.Tag) Then intPage = lblListCountNumber.Tag - 1
+        If IsNumeric(basCode.curStatus.ReportPageShow) Then intPage = basCode.curStatus.ReportPageShow - 1
         If intPage < 1 Then intPage = 1
         ReportShow(dtsReport, intPage, False)
         CursorControl()
@@ -2110,7 +2046,7 @@ Public Class frmReports
         CursorControl("Wait")
         ReportClear(False, False)
         Dim intPage As Integer = 2
-        If IsNumeric(lblListCountNumber.Tag) Then intPage = lblListCountNumber.Tag + 1
+        If IsNumeric(basCode.curStatus.ReportPageShow) Then intPage = basCode.curStatus.ReportPageShow + 1
         If intPage > Math.Ceiling(dtsReport.Tables(0).Rows.Count / 1000) Then intPage = Math.Ceiling(dtsReport.Tables(0).Rows.Count / 1000)
         ReportShow(dtsReport, intPage, False)
         CursorControl()

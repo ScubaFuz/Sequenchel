@@ -173,6 +173,7 @@
     Private _ReportMaxTop As Integer = 0
     Private _RelationLabelWidth As Integer = 0
     Private _RelationMaxTop As Integer = 0
+    Private _ReportPageShow As Integer = 0
 
     Public Property ReportLabelWidth() As Integer
         Get
@@ -210,6 +211,14 @@
         End Set
     End Property
 
+    Public Property ReportPageShow() As Integer
+        Get
+            Return _ReportPageShow
+        End Get
+        Set(ByVal Value As Integer)
+            _ReportPageShow = Value
+        End Set
+    End Property
 #End Region
 
 #Region "Actions"

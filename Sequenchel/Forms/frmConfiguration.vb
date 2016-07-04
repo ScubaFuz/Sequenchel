@@ -89,8 +89,8 @@ Public Class frmConfiguration
     Private Sub lvwConnections_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lvwConnections.SelectedIndexChanged
         CursorControl("Wait")
         If lvwConnections.SelectedItems.Count = 1 Then
-            If Not basCode.curStatus.Connection = lvwConnections.SelectedItems.Item(0).Tag Then
-                basCode.curStatus.Connection = lvwConnections.SelectedItems.Item(0).Tag
+            If Not basCode.curStatus.Connection = lvwConnections.SelectedItems.Item(0).Name Then
+                basCode.curStatus.Connection = lvwConnections.SelectedItems.Item(0).Name
                 AllClear(3, True)
                 ConnectionLoad()
                 ConnectionShow()
@@ -216,7 +216,7 @@ Public Class frmConfiguration
         CursorControl("Wait")
         WriteStatus("", 0, lblStatusText)
         If lvwConnections.SelectedItems.Count = 1 Then
-            Dim strSelection As String = lvwConnections.SelectedItems.Item(0).Tag
+            Dim strSelection As String = lvwConnections.SelectedItems.Item(0).Name
 
             'Get the ParentNode
             Dim xNode0 As XmlNode = basCode.dhdText.FindXmlNode(basCode.xmlConnections, "Connections")
@@ -338,7 +338,7 @@ Public Class frmConfiguration
         Dim xNode As XmlNode
         For Each xNode In lstXml
             Dim lsvItem As New ListViewItem
-            lsvItem.Tag = xNode.Item("ConnectionName").InnerText
+            lsvItem.Name = xNode.Item("ConnectionName").InnerText
             lsvItem.Text = xNode.Item("ConnectionName").InnerText
             lsvItem.SubItems.Add(xNode.Item("DataBaseName").InnerText)
             lsvItem.SubItems.Add(xNode.Item("DataLocation").InnerText)
@@ -357,7 +357,7 @@ Public Class frmConfiguration
 
     Private Sub ConnectionSelect()
         For Each lstItem In lvwConnections.Items
-            If lstItem.Tag = basCode.curStatus.Connection Then
+            If lstItem.Name = basCode.curStatus.Connection Then
                 lstItem.Selected = True
             End If
         Next
@@ -414,7 +414,7 @@ Public Class frmConfiguration
 
     Private Sub ConnectionEdit()
         If lvwConnections.SelectedItems.Count = 1 Then
-            Dim strConnection As String = lvwConnections.SelectedItems.Item(0).Tag
+            Dim strConnection As String = lvwConnections.SelectedItems.Item(0).Name
 
             Dim xNode As XmlNode = basCode.dhdText.FindXmlNode(basCode.xmlConnections, "Connection", "ConnectionName", strConnection)
             txtConnectionName.Text = xNode.Item("ConnectionName").InnerText
@@ -526,9 +526,9 @@ Public Class frmConfiguration
     Private Sub lvwTableSets_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lvwTableSets.SelectedIndexChanged
         CursorControl("Wait")
         If lvwTableSets.SelectedItems.Count = 1 Then
-            If basCode.curStatus.TableSet <> lvwTableSets.SelectedItems.Item(0).Tag Then
+            If basCode.curStatus.TableSet <> lvwTableSets.SelectedItems.Item(0).Name Then
                 AllClear(2, True)
-                basCode.curStatus.TableSet = lvwTableSets.SelectedItems.Item(0).Tag
+                basCode.curStatus.TableSet = lvwTableSets.SelectedItems.Item(0).Name
                 TableSetLoad()
                 TableSetShow()
             End If
@@ -573,7 +573,7 @@ Public Class frmConfiguration
         CursorControl("Wait")
         WriteStatus("", 0, lblStatusText)
         If lvwTableSets.SelectedItems.Count = 1 Then
-            Dim strSelection As String = lvwTableSets.SelectedItems.Item(0).Tag
+            Dim strSelection As String = lvwTableSets.SelectedItems.Item(0).Name
 
             'Get the ParentNode
             Dim xNode0 As XmlNode = basCode.dhdText.FindXmlNode(basCode.xmlTableSets, "TableSets")
@@ -656,7 +656,7 @@ Public Class frmConfiguration
         Dim xNode As XmlNode
         For Each xNode In lstXml
             Dim lsvItem As New ListViewItem
-            lsvItem.Tag = xNode.Item("TableSetName").InnerText
+            lsvItem.Name = xNode.Item("TableSetName").InnerText
             lsvItem.Text = xNode.Item("TableSetName").InnerText
             lsvItem.SubItems.Add(xNode.Item("TablesFile").InnerText)
             lvwTableSets.Items.Add(lsvItem)
@@ -665,7 +665,7 @@ Public Class frmConfiguration
 
     Private Sub TableSetSelect()
         For Each lvwItem In lvwTableSets.Items
-            If lvwItem.Tag = basCode.curStatus.TableSet Then
+            If lvwItem.Name = basCode.curStatus.TableSet Then
                 lvwItem.Selected = True
             End If
         Next
@@ -718,7 +718,7 @@ Public Class frmConfiguration
 
     Private Sub TableSetEdit()
         'If lvwTableSets.SelectedItems.Count = 1 Then
-        'Dim strSelection As String = lvwTableSets.SelectedItems.Item(0).Tag
+        'Dim strSelection As String = lvwTableSets.SelectedItems.Item(0).Name
         Dim strSelection As String = basCode.curStatus.TableSet
 
         Dim xNode As XmlNode = basCode.dhdText.FindXmlNode(basCode.xmlTableSets, "TableSet", "TableSetName", strSelection)
@@ -798,9 +798,9 @@ Public Class frmConfiguration
     Private Sub lvwTables_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lvwTables.SelectedIndexChanged
         CursorControl("Wait")
         If lvwTables.SelectedItems.Count = 1 Then
-            If basCode.curStatus.Table <> lvwTables.SelectedItems.Item(0).Tag Then
+            If basCode.curStatus.Table <> lvwTables.SelectedItems.Item(0).Name Then
                 AllClear(1, True)
-                basCode.curStatus.Table = lvwTables.SelectedItems.Item(0).Tag
+                basCode.curStatus.Table = lvwTables.SelectedItems.Item(0).Name
                 basCode.curStatus.TableReload = True
                 TableShow()
             End If
@@ -891,7 +891,7 @@ Public Class frmConfiguration
         CursorControl("Wait")
         WriteStatus("", 0, lblStatusText)
         If lvwTables.SelectedItems.Count = 1 Then
-            Dim strSelection As String = lvwTables.SelectedItems.Item(0).Tag
+            Dim strSelection As String = lvwTables.SelectedItems.Item(0).Name
 
             'Get the ParentNode
             Dim xNode0 As XmlNode = basCode.dhdText.FindXmlNode(basCode.xmlTables, "Tables")
@@ -992,7 +992,7 @@ Public Class frmConfiguration
         Dim xNode As XmlNode
         For Each xNode In lstXml
             Dim lsvItem As New ListViewItem
-            lsvItem.Tag = xNode.Item("Alias").InnerText
+            lsvItem.Name = xNode.Item("Alias").InnerText
             lsvItem.Text = xNode.Item("Name").InnerText
             lsvItem.SubItems.Add(xNode.Item("Alias").InnerText)
             lvwTables.Items.Add(lsvItem)
@@ -1001,7 +1001,7 @@ Public Class frmConfiguration
 
     Private Sub TableSelect()
         For Each lvwItem In lvwTables.Items
-            If lvwItem.Tag = basCode.curStatus.Table Then
+            If lvwItem.Name = basCode.curStatus.Table Then
                 lvwItem.Selected = True
             End If
         Next
@@ -1165,7 +1165,7 @@ Public Class frmConfiguration
 
     Private Sub TableEdit()
         'If lvwTables.SelectedItems.Count = 1 Then
-        'Dim strSelection As String = lvwTables.SelectedItems.Item(0).Tag
+        'Dim strSelection As String = lvwTables.SelectedItems.Item(0).Name
         Dim strSelection As String = basCode.curStatus.Table
         Dim xNode As XmlNode = basCode.dhdText.FindXmlNode(basCode.xmlTables, "Table", "Alias", strSelection)
         If basCode.dhdText.CheckElement(xNode, "Name") Then txtTableName.Tag = xNode.Item("Name").InnerText

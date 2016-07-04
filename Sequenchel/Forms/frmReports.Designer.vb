@@ -1255,7 +1255,7 @@ Partial Class frmReports
         Me.lblListCountNumber.Name = "lblListCountNumber"
         Me.lblListCountNumber.Size = New System.Drawing.Size(14, 15)
         Me.lblListCountNumber.TabIndex = 174
-        Me.lblListCountNumber.Tag = "0"
+        Me.lblListCountNumber.Tag = ""
         Me.lblListCountNumber.Text = "0"
         '
         'lblListCount

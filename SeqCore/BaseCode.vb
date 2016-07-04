@@ -1154,7 +1154,7 @@ Public Class BaseCode
                 'xCNode.Item("FieldSort").InnerText)
                 'xCNode.Item("FieldSortOrder").InnerText)
 
-                For Each xFnode In dhdText.FindXmlNodes(xCNode, "Filters/Filter")
+                For Each xFnode As XmlNode In dhdText.FindXmlNodes(xCNode, "Filters/Filter")
                     If xFnode.Item("FilterEnabled").InnerText = "Indeterminate" Then
                         blnGroup = True
                         strHavingMode = xFnode.Item("FilterMode").InnerText
