@@ -2103,4 +2103,17 @@ Public Class frmReports
             'MessageBox.Show(strTableAlias & Environment.NewLine & strTableName)
         End If
     End Sub
+
+    Private Sub btnFieldCopy_Click(sender As Object, e As EventArgs) Handles btnFieldCopy.Click
+        If lvwSelectedFields.SelectedItems.Count = 1 Then
+            Dim frmReAliasForm As New frmReAlias
+            Dim lvwItem As ListViewItemField = lvwSelectedFields.SelectedItems(0)
+            frmReAliasForm.TableName = lvwItem.Field.FieldTableName
+            frmReAliasForm.TableAlias = lvwItem.Field.FieldTableAlias
+            frmReAliasForm.FieldName = lvwItem.Field.FieldName
+            frmReAliasForm.FieldAlias = lvwItem.Field.FieldAlias
+            frmReAliasForm.ShowDialog()
+        End If
+
+    End Sub
 End Class

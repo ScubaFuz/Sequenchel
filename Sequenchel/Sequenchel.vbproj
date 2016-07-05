@@ -154,6 +154,12 @@
     <Compile Include="Forms\frmImport.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Forms\frmReAlias.Designer.vb">
+      <DependentUpon>frmReAlias.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmReAlias.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\frmSequenchel.vb">
       <SubType>Form</SubType>
     </Compile>
@@ -220,6 +226,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmImport.resx">
       <DependentUpon>frmImport.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmReAlias.resx">
+      <DependentUpon>frmReAlias.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmSequenchel.resx">
       <DependentUpon>frmSequenchel.vb</DependentUpon>
