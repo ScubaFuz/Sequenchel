@@ -770,7 +770,14 @@ Public Class BaseCode
         End If
 
         If dhdText.CheckElement(xNode, "DefaultButton") Then basfield.DefaultButton = xNode.Item("DefaultButton").InnerText
-        If dhdText.CheckElement(xNode, "DefaultValue") Then basfield.DefaultValue = xNode.Item("DefaultValue").InnerText
+        If basfield.DefaultButton = True Then
+            Try
+                basfield.DefaultValue = xNode.Item("DefaultButton").Attributes("DefaultValue").Value
+            Catch ex As Exception
+                basfield.DefaultValue = ""
+                WriteLog("there was an error setting the value for DefaultValue: " & Environment.NewLine & ex.Message, 1)
+            End Try
+        End If
 
         If dhdText.CheckElement(xNode, "FldList") Then basfield.FieldList = xNode.Item("FldList").InnerText
         If basfield.FieldList = True Then
@@ -1114,7 +1121,7 @@ Public Class BaseCode
         Dim intSort As Integer = 0
         Dim intMaxSort As Integer = 0
 
-        Dim strHavingField As String = ""
+        Dim strHavingField As String = "", strWhereField As String = ""
         Dim strQueryHaving As String = "HAVING "
         Dim strHavingMode As String = Nothing, strHavingType As String = Nothing, strHavingClause As String = Nothing
 
@@ -1179,10 +1186,10 @@ Public Class BaseCode
                         If strWhereMode = "" Then strWhereMode = "AND"
                         If strWhereMode.Contains("AND") Then strWhereMode = ") " & strWhereMode & " ("
                         strWhereClause = SetDelimiters(xFnode.Item("FilterText").InnerText, GetFieldDataType(xmlTables, strTableName, strFieldName), xFnode.Item("FilterType").InnerText)
-
+                        strWhereField = " " & FormatFieldXML(xmlTables, strTableName, strTableAlias, strFieldName, Nothing, False, False, False, Nothing)
                         If xFnode.Item("FilterType").InnerText.Contains("LIKE") And strWhereClause.Contains("*") Then strWhereClause = strWhereClause.Replace("*", "%")
                         If xFnode.Item("FilterType").InnerText <> "" And strWhereClause <> "" Then
-                            strQueryWhere &= " " & strWhereMode & " " & GetTableAliasFromString(strTableAlias) & "." & strFieldName & " " & xFnode.Item("FilterType").InnerText & " " & strWhereClause
+                            strQueryWhere &= " " & strWhereMode & " " & strWhereField & " " & xFnode.Item("FilterType").InnerText & " " & strWhereClause
                         End If
                     End If
 
@@ -1233,7 +1240,7 @@ Public Class BaseCode
         Dim strMasterTableAlias As String = ""
         If dhdText.CheckElement(xRelNodeList.Item(0), "TableAlias") Then strMasterTableAlias = GetTableAliasFromString(xRelNodeList.Item(0).Item("TableAlias").InnerText)
         If String.IsNullOrEmpty(strMasterTableAlias) Then strMasterTableAlias = GetTableAliasFromString(xRelNodeList.Item(0).Item("TableName").InnerText)
-        strFromClause &= strMasterTableName & " " & strMasterTableAlias
+        strFromClause &= "[" & strMasterTableName.Replace(".", "].[") & "] [" & strMasterTableAlias & "]"
 
         'Get all distinct table names for this report
         Dim xRelNode As XmlNode = dhdText.FindXmlNode(XNode, "Relations")
@@ -1245,6 +1252,7 @@ Public Class BaseCode
 
             ''Get list of relations for this table, sorted in right order
             Dim xTRelNodeList As XmlNodeList = dhdText.FindXmlNodes(XNode, "Relations/Relation", "TableAlias", strTableAlias, "RelationSortOrder")
+            strTableAlias = "[" & strTableAlias & "]"
             For Each xTRelNode As XmlNode In xTRelNodeList
                 'Inner loop through relations for this table
                 If dhdText.CheckElement(xTRelNode, "RelationSortOrder") Then
@@ -1255,6 +1263,7 @@ Public Class BaseCode
 
                 Dim strTableName As String = ""
                 If dhdText.CheckElement(xTRelNode, "TableName") Then strTableName = xTRelNode.Item("TableName").InnerText
+                strTableName = "[" & strTableName.Replace(".", "].[") & "]"
 
                 If xTRelNode.Item("RelationEnabled").InnerText = "True" Then
 
@@ -1270,6 +1279,11 @@ Public Class BaseCode
                     If dhdText.CheckElement(xTRelNode, "RelationTargetTable") Then strTargetTable = xTRelNode.Item("RelationTargetTable").InnerText
                     If dhdText.CheckElement(xTRelNode, "RelationTargetAlias") Then strTargetTableAlias = xTRelNode.Item("RelationTargetAlias").InnerText
                     If dhdText.CheckElement(xTRelNode, "RelationTargetField") Then strTargetField = xTRelNode.Item("RelationTargetField").InnerText
+
+                    strFromSource = "[" & strFromSource & "]"
+                    strTargetTable = "[" & strTargetTable.Replace(".", "].[") & "]"
+                    strTargetTableAlias = "[" & strTargetTableAlias & "]"
+                    strTargetField = "[" & strTargetField & "]"
 
                     If strFromClause.Contains(strTargetTable) = True And strFromClause.Contains(strTableAlias) = False Then
                         strFromClause &= Environment.NewLine & strFromType & " JOIN " & strTableName & " " & strTableAlias & " ON " & strTableAlias & "." & strFromSource & " = " & strTargetTableAlias & "." & strTargetField

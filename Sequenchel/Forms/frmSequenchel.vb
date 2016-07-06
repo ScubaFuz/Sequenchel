@@ -447,11 +447,13 @@ Public Class frmSequenchel
                     If fldField.top > sptFields1.Panel2.Height And fldField.Width >= sptFields1.Panel2.Width - (basCode.curVar.BuildMargin * 3) - SystemInformation.VerticalScrollBarWidth Then
                         fldField.width = sptFields1.Panel2.Width - (basCode.curVar.BuildMargin * 3) - SystemInformation.VerticalScrollBarWidth
                     End If
-                    Dim lblLabel As New Label
+                    Dim lblLabel As New LabelField
+                    lblLabel.Field = New SeqCore.BaseField
                     'arrLabels.Add(lblLabel)
                     AddHandler lblLabel.Click, AddressOf LabelClickHandler
 
                     lblLabel.Name = "lbl" & fldField.Name
+                    lblLabel.Field.Name = lblLabel.Name
                     sptFields1.Panel1.Controls.Add(lblLabel)
                     lblLabel.Text = basCode.basTable.Item(intCount).FieldAlias
                     lblLabel.Top = fldField.Top + basCode.curVar.BuildMargin
@@ -477,7 +479,7 @@ Public Class frmSequenchel
                     '    AddHandler btnButton.Click, AddressOf Me.btnReload_Click
                     'End If
 
-                    If basCode.basTable.Item(intCount).DefaultButton = True And Not (basCode.basTable.Item(intCount).FieldDataType.ToString.ToUpper <> "BIT") Then
+                    If basCode.basTable.Item(intCount).DefaultButton = True Then
                         Dim btnButton As New Button
                         btnButton.Name = "btn" & fldField.Name
                         sptFields1.Panel1.Controls.Add(btnButton)
@@ -1293,11 +1295,16 @@ Public Class frmSequenchel
 
     Private Sub LoadDefaultValue(strFieldName As String)
         For Each ctrl As Object In sptFields1.Panel2.Controls
-            If ctrl.Field.FieldName = strFieldName Then
+            If ctrl.Field.Name = strFieldName Then
                 Dim strValue As String = basCode.ProcessDefaultValue(ctrl.Field.DefaultValue)
-                Select Case ctrl.Field.FieldDataType.ToUpper
-                    Case "BIT"
-                        ctrl.Checked = strValue
+                Select Case ctrl.[GetType]().Name
+                    Case "CheckField", "CheckBox"
+                        Select Case strValue.ToLower
+                            Case "1", "true", "yes", "checked"
+                                ctrl.Checked = True
+                            Case Else
+                                ctrl.Checked = False
+                        End Select
                     Case Else
                         ctrl.Text = strValue
                 End Select
@@ -1308,11 +1315,12 @@ Public Class frmSequenchel
     Private Sub ColorReset()
         For Each ctrl As Object In sptFields1.Panel2.Controls
             If FieldEnabledCheck(ctrl) = True Then
-                If ctrl.Field.FieldDataType = "BIT" Then
-                    ctrl.BackColor = clrControl
-                Else
-                    ctrl.BackColor = clrOriginal
-                End If
+                Select Case ctrl.[GetType]().Name
+                    Case "CheckField", "CheckBox"
+                        ctrl.BackColor = clrControl
+                    Case Else
+                        ctrl.BackColor = clrOriginal
+                End Select
             Else
                 ctrl.BackColor = clrDisabled
             End If

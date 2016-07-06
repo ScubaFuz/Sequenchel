@@ -370,25 +370,25 @@ Module Common
 
 #End Region
 
-    Friend Sub MasterPanelControlsDispose(pnlMaster As Panel, Optional strTag As String = "")
+    Friend Sub MasterPanelControlsDispose(pnlMaster As Panel, Optional strControlName As String = "")
         For Each pnlTarget In pnlMaster.Controls
             If pnlTarget.Name.Substring(0, 3) = "pnl" Then
-                PanelControlsDispose(pnlTarget, strTag)
+                PanelControlsDispose(pnlTarget, strControlName)
             End If
         Next
     End Sub
 
-    Friend Sub PanelControlsDispose(pnlTarget As Panel, Optional strTag As String = "")
+    Friend Sub PanelControlsDispose(pnlTarget As Panel, Optional strControlName As String = "")
         For intCount As Integer = 1 To pnlTarget.Controls.Count
             If pnlTarget.Controls.Count > 0 Then
-                For Each ctrDispose In pnlTarget.Controls
+                For Each ctrDispose As Object In pnlTarget.Controls
                     'MessageBox.Show(ctrDispose.Name)
-                    If ctrDispose.Tag Is Nothing Then
+                    If ctrDispose.Field.Name Is Nothing Then
                         ctrDispose.Dispose()
-                    ElseIf strTag.ToString = "" Then
+                    ElseIf strControlName.ToString = "" Then
                         ctrDispose.Dispose()
                     Else
-                        If strTag.ToString = ctrDispose.Tag.ToString Then
+                        If strControlName.ToString = ctrDispose.Field.Name.ToString Then
                             ctrDispose.Dispose()
                         End If
                     End If

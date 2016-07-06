@@ -177,7 +177,7 @@ Public Class frmReports
 
     Private Sub lblShowField_DoubleClick(sender As Object, e As EventArgs)
         'Add extra searchcriteria
-        FieldCheckFilterAdd(sender.Field.Name, sender.Field.FieldName, sender.Field.FieldAlias, sender.Field.FieldTableName, sender.Field.FieldTableAlias, sender.Field.DataType, Nothing)
+        FieldCheckFilterAdd(sender.Field.Name, sender.Field.FieldName, sender.Field.FieldAlias, sender.Field.FieldTableName, sender.Field.FieldTableAlias, sender.Field.FieldDataType, Nothing)
     End Sub
 
     Private Sub lblShowRelation_DoubleClick(sender As Object, e As EventArgs)
@@ -844,8 +844,9 @@ Public Class frmReports
         If intCount = 0 Then
             For Each lvwRemoveItem In lvwSelectedTables.Items
                 If lvwRemoveItem.Field.FieldTableAlias = strTableAlias Then
+                    Dim strControlName As String = lvwRemoveItem.Field.Name
                     lvwSelectedTables.Items.Remove(lvwRemoveItem)
-                    MasterPanelControlsDispose(pnlRelations, strTableAlias)
+                    MasterPanelControlsDispose(pnlRelations, strControlName)
                 End If
             Next
             PanelsRelationSort()

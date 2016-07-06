@@ -3,6 +3,7 @@ New: The engine has been rewritten to enable more features in the future. All sc
 New: In reports, only the first 1000 retrieved rows are shown, with the option to browse through the result set, saving lots of time.
 New: In Reports, a field filter option is added. No need to search through long lists of fields for a known field name.
 Enhanced: Query error logging and feedback is improved.
+Fixed: Queries with tables whose name are a part of a larger table name are now processed correctly.
 
 Version 3.8.0
 New: In Reports: table alias is used instead of table name to enable multiple instances of the same table in a future release.
