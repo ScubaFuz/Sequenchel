@@ -941,13 +941,13 @@ Public Class BaseCode
         Return strFieldDataType
     End Function
 
-    Public Function FormatFieldXML(xmlTablesDoc As XmlDocument, strTableName As String, strTableAlias As String, strFieldName As String, strShowMode As String, blnUseAlias As Boolean, blnSelect As Boolean, blnConvert As Boolean, DateTimeStyle As Integer) As String
+    Public Function FormatFieldXML(xmlTablesDoc As XmlDocument, strTableName As String, strTableAlias As String, strFieldName As String, strFieldAlias As String, strShowMode As String, blnUseAlias As Boolean, blnSelect As Boolean, blnConvert As Boolean, DateTimeStyle As Integer) As String
         Dim strOutput As String = ""
         Dim xNode As XmlNode = dhdText.FindXmlNode(xmlTablesDoc, "Table", "Name", strTableName)
         Dim xCNode As XmlNode = dhdText.FindXmlNode(xNode, "Fields/Field", "FldName", strFieldName)
         Dim strFieldType As String = xCNode.Item("DataType").InnerText
         Dim strFieldWidth As String = xCNode.Item("FldWidth").InnerText
-        Dim strFieldAlias As String = xCNode.Item("FldAlias").InnerText
+        'Dim strFieldAlias As String = xCNode.Item("FldAlias").InnerText
         If blnUseAlias = False Then strFieldAlias = Nothing
 
         strOutput = FormatField(strTableName, strTableAlias, strFieldName, strFieldAlias, strFieldType, strFieldWidth, strShowMode, blnSelect, blnConvert, DateTimeStyle)
@@ -1111,7 +1111,7 @@ Public Class BaseCode
 
     Public Function ReportQueryBuild(xmlQueryDoc As XmlDocument, xmlTables As XmlDocument, strReportName As String, DateTimeStyle As Integer) As String
         Dim strTableName As String = "", strTableAlias As String = ""
-        Dim strFieldName As String = ""
+        Dim strFieldName As String = "", strFieldAlias As String = ""
         Dim strShowMode As String = Nothing
         'Dim strHavingMode As String = Nothing
         Dim strQueryFrom As String = ""
@@ -1139,6 +1139,7 @@ Public Class BaseCode
             If dhdText.CheckElement(xCNode, "TableAlias") Then strTableAlias = xCNode.Item("TableAlias").InnerText Else strTableAlias = strTableName.Replace(".", "_")
             If strTableName.Contains(".") = False Then strTableName = "dbo." & strTableName
             strFieldName = xCNode.Item("FieldName").InnerText
+            strFieldAlias = xCNode.Item("FieldAlias").InnerText
             If IsNumeric(xCNode.Item("FieldSortOrder").InnerText) Then
                 intSort = xCNode.Item("FieldSortOrder").InnerText
                 If intSort > intMaxSort Then intMaxSort = intSort
@@ -1146,13 +1147,14 @@ Public Class BaseCode
             Try
                 If xCNode.Item("FieldShow").InnerText = 1 Then
                     strShowMode = xCNode.Item("FieldShowMode").InnerText
-                    Dim strQueryField As String = FormatFieldXML(xmlTables, strTableName, strTableAlias, strFieldName, strShowMode, True, True, True, DateTimeStyle)
+                    Dim strQueryField As String = FormatFieldXML(xmlTables, strTableName, strTableAlias, strFieldName, strFieldAlias, strShowMode, True, True, True, DateTimeStyle)
+
                     strQuery &= ", " & strQueryField
                     Select Case strShowMode
                         Case Nothing
-                            strQueryGroup &= ", " & FormatFieldXML(xmlTables, strTableName, strTableAlias, strFieldName, strShowMode, False, False, True, DateTimeStyle)
+                            strQueryGroup &= ", " & FormatFieldXML(xmlTables, strTableName, strTableAlias, strFieldName, strFieldAlias, strShowMode, False, False, True, DateTimeStyle)
                         Case "DATE", "YEAR", "MONTH", "DAY", "TIME", "HOUR", "MINUTE", "SECOND"
-                            strQueryGroup &= ", " & FormatFieldXML(xmlTables, strTableName, strTableAlias, strFieldName, strShowMode, False, False, True, DateTimeStyle)
+                            strQueryGroup &= ", " & FormatFieldXML(xmlTables, strTableName, strTableAlias, strFieldName, strFieldAlias, strShowMode, False, False, True, DateTimeStyle)
                         Case Else
                             blnGroup = True
                     End Select
@@ -1169,7 +1171,7 @@ Public Class BaseCode
                         If strHavingMode.Contains("AND") Then strHavingMode = ") " & strHavingMode & " ("
                         strHavingType = xFnode.Item("FilterType").InnerText
                         strHavingClause = SetDelimiters(xFnode.Item("FilterText").InnerText, GetFieldDataType(xmlTables, strTableName, strFieldName), strHavingType, strShowMode)
-                        strHavingField = " " & FormatFieldXML(xmlTables, strTableName, strTableAlias, strFieldName, strShowMode, False, False, True, DateTimeStyle)
+                        strHavingField = " " & FormatFieldXML(xmlTables, strTableName, strTableAlias, strFieldName, strFieldAlias, strShowMode, False, False, True, DateTimeStyle)
                         If strHavingType.Contains("LIKE") And strHavingClause.Contains("*") Then strHavingClause = strHavingClause.Replace("*", "%")
 
                         If Not strHavingType = Nothing And Not strHavingClause = Nothing Then
@@ -1186,7 +1188,7 @@ Public Class BaseCode
                         If strWhereMode = "" Then strWhereMode = "AND"
                         If strWhereMode.Contains("AND") Then strWhereMode = ") " & strWhereMode & " ("
                         strWhereClause = SetDelimiters(xFnode.Item("FilterText").InnerText, GetFieldDataType(xmlTables, strTableName, strFieldName), xFnode.Item("FilterType").InnerText)
-                        strWhereField = " " & FormatFieldXML(xmlTables, strTableName, strTableAlias, strFieldName, Nothing, False, False, False, Nothing)
+                        strWhereField = " " & FormatFieldXML(xmlTables, strTableName, strTableAlias, strFieldName, strFieldAlias, Nothing, False, False, False, Nothing)
                         If xFnode.Item("FilterType").InnerText.Contains("LIKE") And strWhereClause.Contains("*") Then strWhereClause = strWhereClause.Replace("*", "%")
                         If xFnode.Item("FilterType").InnerText <> "" And strWhereClause <> "" Then
                             strQueryWhere &= " " & strWhereMode & " " & strWhereField & " " & xFnode.Item("FilterType").InnerText & " " & strWhereClause
@@ -1285,15 +1287,29 @@ Public Class BaseCode
                     strTargetTableAlias = "[" & strTargetTableAlias & "]"
                     strTargetField = "[" & strTargetField & "]"
 
-                    If strFromClause.Contains(strTargetTable) = True And strFromClause.Contains(strTableAlias) = False Then
+                    If strFromClause.Contains(strTableAlias) = False And strFromClause.Contains(strTargetTableAlias) = False Then
+                        'Not possible to add 2 new tables at one step. Try anyway.
+                        strFromClause &= Environment.NewLine & strFromType & " JOIN " & strTargetTable & " " & strTargetTableAlias & " ON " & strTableAlias & "." & strFromSource & " = " & strTargetTableAlias & "." & strTargetField
+                    ElseIf strFromClause.Contains(strTableAlias) = True And strFromClause.Contains(strTargetTableAlias) = False Then
+                        'Add target table
+                        strFromClause &= Environment.NewLine & strFromType & " JOIN " & strTargetTable & " " & strTargetTableAlias & " ON " & strTableAlias & "." & strFromSource & " = " & strTargetTableAlias & "." & strTargetField
+                    ElseIf strFromClause.Contains(strTableAlias) = False And strFromClause.Contains(strTargetTableAlias) = True Then
+                        'Add source table
                         strFromClause &= Environment.NewLine & strFromType & " JOIN " & strTableName & " " & strTableAlias & " ON " & strTableAlias & "." & strFromSource & " = " & strTargetTableAlias & "." & strTargetField
-                    ElseIf strFromClause.Contains(strTargetTable) = True And strFromClause.Contains(strTableAlias) = True Then
+                    ElseIf strFromClause.Contains(strTableAlias) = True And strFromClause.Contains(strTargetTableAlias) = True Then
+                        'Add no table. Just relation
                         strFromClause &= Environment.NewLine & " AND " & strTableAlias & "." & strFromSource & " = " & strTargetTableAlias & "." & strTargetField
-                    ElseIf strFromClause.Contains(strTargetTable) = False And strFromClause.Contains(strTableAlias) = False Then
-                        strFromClause &= Environment.NewLine & strFromType & " JOIN " & strTargetTable & " " & strTargetTableAlias & " ON " & strTableAlias & "." & strFromSource & " = " & strTargetTableAlias & "." & strTargetField
-                    ElseIf strFromClause.Contains(strTargetTable) = False And strFromClause.Contains(strTableAlias) = True Then
-                        strFromClause &= Environment.NewLine & strFromType & " JOIN " & strTargetTable & " " & strTargetTableAlias & " ON " & strTableAlias & "." & strFromSource & " = " & strTargetTableAlias & "." & strTargetField
                     End If
+
+                    'If strFromClause.Contains(strTargetTable) = True And strFromClause.Contains(strTableAlias) = False Then
+                    '    strFromClause &= Environment.NewLine & strFromType & " JOIN " & strTableName & " " & strTableAlias & " ON " & strTableAlias & "." & strFromSource & " = " & strTargetTableAlias & "." & strTargetField
+                    'ElseIf strFromClause.Contains(strTargetTable) = True And strFromClause.Contains(strTableAlias) = True Then
+                    '    strFromClause &= Environment.NewLine & " AND " & strTableAlias & "." & strFromSource & " = " & strTargetTableAlias & "." & strTargetField
+                    'ElseIf strFromClause.Contains(strTargetTable) = False And strFromClause.Contains(strTableAlias) = False Then
+                    '    strFromClause &= Environment.NewLine & strFromType & " JOIN " & strTargetTable & " " & strTargetTableAlias & " ON " & strTableAlias & "." & strFromSource & " = " & strTargetTableAlias & "." & strTargetField
+                    'ElseIf strFromClause.Contains(strTargetTable) = False And strFromClause.Contains(strTableAlias) = True Then
+                    '    strFromClause &= Environment.NewLine & strFromType & " JOIN " & strTargetTable & " " & strTargetTableAlias & " ON " & strTableAlias & "." & strFromSource & " = " & strTargetTableAlias & "." & strTargetField
+                    'End If
                 End If
             Next
         Next
