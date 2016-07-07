@@ -2093,27 +2093,49 @@ Public Class frmReports
     End Sub
 
     Private Sub btnTableCopy_Click(sender As Object, e As EventArgs) Handles btnTableCopy.Click
-        If lvwSelectedTables.SelectedItems.Count = 1 Then
-            Dim strTableAlias As String = lvwSelectedTables.SelectedItems(0).Text
-            Dim strTableName As String = lvwSelectedTables.SelectedItems(0).SubItems(1).Text
-            Dim strNewAlias As String = InputBox("Enter a new unique Alias for table " & strTableName, "Provide alias for duplicate table", strTableAlias & "_1")
-            If strNewAlias.Length = 0 Then Exit Sub
+        If lvwSelectedFields.SelectedItems.Count = 1 Then
+            Dim frmReAliasForm As New frmReAlias
+            Dim lvwItem As ListViewItemField = lvwSelectedFields.SelectedItems(0)
 
-            ReportTableAdd(strTableName, strNewAlias)
-
-            'MessageBox.Show(strTableAlias & Environment.NewLine & strTableName)
+            frmReAliasForm.Mode = 1
+            frmReAliasForm.TableName = lvwItem.Field.FieldTableName
+            frmReAliasForm.TableAlias = lvwItem.Field.FieldTableAlias
+            frmReAliasForm.TableAliasNew = lvwItem.Field.FieldTableAlias & "_1"
+            If frmReAliasForm.ShowDialog() = Windows.Forms.DialogResult.OK Then
+                'MessageBox.Show(frmReAliasForm.TableAliasNew)
+                ReportTableAdd(lvwItem.Field.FieldTableName, frmReAliasForm.TableAliasNew)
+            End If
         End If
+
+        'If lvwSelectedTables.SelectedItems.Count = 1 Then
+        '    Dim strTableAlias As String = lvwSelectedTables.SelectedItems(0).Text
+        '    Dim strTableName As String = lvwSelectedTables.SelectedItems(0).SubItems(1).Text
+        '    Dim strNewAlias As String = InputBox("Enter a new unique Alias for table " & strTableName, "Provide alias for duplicate table", strTableAlias & "_1")
+        '    If strNewAlias.Length = 0 Then Exit Sub
+
+        '    ReportTableAdd(strTableName, strNewAlias)
+
+        '    'MessageBox.Show(strTableAlias & Environment.NewLine & strTableName)
+        'End If
     End Sub
 
     Private Sub btnFieldCopy_Click(sender As Object, e As EventArgs) Handles btnFieldCopy.Click
         If lvwSelectedFields.SelectedItems.Count = 1 Then
             Dim frmReAliasForm As New frmReAlias
             Dim lvwItem As ListViewItemField = lvwSelectedFields.SelectedItems(0)
+            frmReAliasForm.Mode = 3
             frmReAliasForm.TableName = lvwItem.Field.FieldTableName
             frmReAliasForm.TableAlias = lvwItem.Field.FieldTableAlias
             frmReAliasForm.FieldName = lvwItem.Field.FieldName
             frmReAliasForm.FieldAlias = lvwItem.Field.FieldAlias
-            frmReAliasForm.ShowDialog()
+            frmReAliasForm.FieldAliasNew = lvwItem.Field.FieldAlias & "_1"
+            If frmReAliasForm.ShowDialog() = Windows.Forms.DialogResult.OK Then
+                MessageBox.Show(frmReAliasForm.FieldAliasNew)
+                'create new ListViewItem
+                'add names to lvwItem
+                'add lvwItem to SelectedFields
+                'Create additional objects for new item
+            End If
         End If
 
     End Sub
