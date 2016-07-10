@@ -333,7 +333,7 @@ Public Class frmConfiguration
     Private Sub ConnectionsLoad()
         Dim lstXml As XmlNodeList
         lvwConnections.Items.Clear()
-        lstXml = basCode.dhdText.FindXmlNodes(basCode.xmlConnections, "//Connection")
+        lstXml = basCode.dhdText.FindXmlNodes(basCode.xmlConnections, "Connection")
         If lstXml Is Nothing Then Exit Sub
         Dim xNode As XmlNode
         For Each xNode In lstXml
@@ -651,7 +651,7 @@ Public Class frmConfiguration
         If basCode.xmlTableSets.OuterXml.Length = 0 Then Exit Sub
 
         Dim lstXml As XmlNodeList
-        lstXml = basCode.dhdText.FindXmlNodes(basCode.xmlTableSets, "//TableSet")
+        lstXml = basCode.dhdText.FindXmlNodes(basCode.xmlTableSets, "TableSet")
         If lstXml Is Nothing Then Exit Sub
         Dim xNode As XmlNode
         For Each xNode In lstXml
@@ -987,7 +987,7 @@ Public Class frmConfiguration
         If basCode.xmlTables.OuterXml.Length = 0 Then Exit Sub
 
         Dim lstXml As XmlNodeList
-        lstXml = basCode.dhdText.FindXmlNodes(basCode.xmlTables, "//Table")
+        lstXml = basCode.dhdText.FindXmlNodes(basCode.xmlTables, "Table")
         If lstXml Is Nothing Then Exit Sub
         Dim xNode As XmlNode
         For Each xNode In lstXml
@@ -1200,7 +1200,12 @@ Public Class frmConfiguration
 
         Dim xTNode As XmlNode = basCode.dhdText.FindXmlNode(basCode.xmlTables, "Table", "Name", strTableName)
         If xTNode Is Nothing Then xTNode = basCode.dhdText.CreateAppendElement(basCode.xmlTables.Item("Sequenchel").Item("Tables"), "Table")
-
+        Dim blnAliasChanged As Boolean = False
+        If basCode.dhdText.CheckElement(xTNode, "Alias") Then
+            If xTNode.Item("Alias").InnerText <> strAlias Then
+                blnAliasChanged = True
+            End If
+        End If
         basCode.dhdText.CreateAppendAttribute(xTNode, "Default", "False", True)
         basCode.dhdText.CreateAppendElement(xTNode, "Name", strTableName, True)
         basCode.dhdText.CreateAppendElement(xTNode, "Alias", strAlias, True)
@@ -1209,6 +1214,13 @@ Public Class frmConfiguration
         basCode.dhdText.CreateAppendElement(xTNode, "Update", blnUpdate, True)
         basCode.dhdText.CreateAppendElement(xTNode, "Insert", blnInsert, True)
         basCode.dhdText.CreateAppendElement(xTNode, "Delete", blnDelete, True)
+
+        If blnAliasChanged = True Then
+            Dim lstAlias As XmlNodeList = basCode.dhdText.FindXmlNodes(basCode.xmlTables, "Relation", "RelationTable", strTableName)
+            For Each xNode As XmlNode In lstAlias
+                If basCode.dhdText.CheckElement(xNode, "RelationTableAlias") Then xNode.Item("RelationTableAlias").InnerText = strAlias
+            Next
+        End If
 
         basCode.curStatus.Table = strAlias
         basCode.curStatus.TableReload = True
@@ -1392,35 +1404,24 @@ Public Class frmConfiguration
                 If basCode.dhdText.CheckElement(xNode, "FldAlias") Then txtFieldAlias.Text = xNode.Item("FldAlias").InnerText
                 If txtFieldAlias.Text = "" Then txtFieldAlias.Text = txtFieldName.Text
                 If basCode.dhdText.CheckElement(xNode, "DataType") Then cbxDataType.Text = xNode.Item("DataType").InnerText
-                If basCode.dhdText.CheckElement(xNode, "Identity") Then chkIdentity.Checked = xNode.Item("Identity").InnerText
-                If basCode.dhdText.CheckElement(xNode, "PrimaryKey") Then chkPrimaryKey.Checked = xNode.Item("PrimaryKey").InnerText
-                If basCode.dhdText.CheckElement(xNode, "FldWidth") Then txtFieldWidth.Text = xNode.Item("FldWidth").InnerText
+                If basCode.dhdText.CheckElement(xNode, "Identity") Then chkIdentity.Checked = basCode.CheckBooleanValue(xNode.Item("Identity").InnerText)
+                If basCode.dhdText.CheckElement(xNode, "PrimaryKey") Then chkPrimaryKey.Checked = basCode.CheckBooleanValue(xNode.Item("PrimaryKey").InnerText)
+                If basCode.dhdText.CheckElement(xNode, "FldWidth") Then txtFieldWidth.Text = basCode.CheckNumericValue(xNode.Item("FldWidth").InnerText)
 
-                If basCode.dhdText.CheckElement(xNode, "DefaultButton") Then chkDefaultButton.Checked = xNode.Item("DefaultButton").InnerText
-                If basCode.dhdText.CheckElement(xNode, "DefaultValue") Then txtDefaultButton.Text = xNode.Item("DefaultValue").InnerText
-                'txtDefaultButton.Text = xNode.Item("DefaultButton").Attributes("DefaultValue").Value
-
-                If basCode.dhdText.CheckElement(xNode, "FldList") Then chkFieldList.Checked = xNode.Item("FldList").InnerText
-                If chkFieldList.Checked = True Then
-                    Try
-                        txtFieldListOrder.Text = xNode.Item("FldList").Attributes("Order").Value
-                        txtFieldListWidth.Text = xNode.Item("FldList").Attributes("Width").Value
-                    Catch ex As Exception
-                        txtFieldListOrder.Text = 0
-                        txtFieldListWidth.Text = 0
-                        basCode.WriteLog("There was an error reading the value for ListOrder or ListWidth: " & Environment.NewLine & ex.Message, 1)
-                    End Try
-                End If
-
-                If basCode.dhdText.CheckElement(xNode, "FldSearch") Then chkFieldSearch.Checked = xNode.Item("FldSearch").InnerText
-                If basCode.dhdText.CheckElement(xNode, "FldSearchList") Then chkFieldSearchList.Checked = xNode.Item("FldSearchList").InnerText
-                If basCode.dhdText.CheckElement(xNode, "FldUpdate") Then chkFieldUpdate.Checked = xNode.Item("FldUpdate").InnerText
-                If basCode.dhdText.CheckElement(xNode, "FldVisible") Then chkFieldVisible.Checked = xNode.Item("FldVisible").InnerText
+                If basCode.dhdText.CheckElement(xNode, "DefaultButton") Then chkDefaultButton.Checked = basCode.CheckBooleanValue(xNode.Item("DefaultButton").InnerText)
+                If basCode.dhdText.CheckElement(xNode, "DefaultButton/@DefaultValue") Then txtDefaultButton.Text = xNode.Item("DefaultButton").Attributes("DefaultValue").Value
+                If basCode.dhdText.CheckElement(xNode, "FldList") Then chkFieldList.Checked = basCode.CheckBooleanValue(xNode.Item("FldList").InnerText)
+                If basCode.dhdText.CheckElement(xNode, "FldList/@Order") Then txtFieldListOrder.Text = basCode.CheckNumericValue(xNode.Item("FldList").Attributes("Order").Value)
+                If basCode.dhdText.CheckElement(xNode, "FldList/@Width") Then txtFieldListWidth.Text = basCode.CheckNumericValue(xNode.Item("FldList").Attributes("Width").Value)
+                If basCode.dhdText.CheckElement(xNode, "FldSearch") Then chkFieldSearch.Checked = basCode.CheckBooleanValue(xNode.Item("FldSearch").InnerText)
+                If basCode.dhdText.CheckElement(xNode, "FldSearchList") Then chkFieldSearchList.Checked = basCode.CheckBooleanValue(xNode.Item("FldSearchList").InnerText)
+                If basCode.dhdText.CheckElement(xNode, "FldUpdate") Then chkFieldUpdate.Checked = basCode.CheckBooleanValue(xNode.Item("FldUpdate").InnerText)
+                If basCode.dhdText.CheckElement(xNode, "FldVisible") Then chkFieldVisible.Checked = basCode.CheckBooleanValue(xNode.Item("FldVisible").InnerText)
 
                 If basCode.dhdText.CheckElement(xNode, "ControlField") Then txtControlField.Text = xNode.Item("ControlField").InnerText
                 If basCode.dhdText.CheckElement(xNode, "ControlValue") Then txtControlValue.Text = xNode.Item("ControlValue").InnerText
-                If basCode.dhdText.CheckElement(xNode, "ControlUpdate") Then chkControlUpdate.Checked = xNode.Item("ControlUpdate").InnerText
-                If basCode.dhdText.CheckElement(xNode, "ControlMode") Then chkControlMode.Checked = xNode.Item("ControlMode").InnerText
+                If basCode.dhdText.CheckElement(xNode, "ControlUpdate") Then chkControlUpdate.Checked = basCode.CheckBooleanValue(xNode.Item("ControlUpdate").InnerText)
+                If basCode.dhdText.CheckElement(xNode, "ControlMode") Then chkControlMode.Checked = basCode.CheckBooleanValue(xNode.Item("ControlMode").InnerText)
 
                 If basCode.dhdText.CheckElement(xNode, "Relations") Then
                     If xNode.Item("Relations").ChildNodes.Count > 0 Then

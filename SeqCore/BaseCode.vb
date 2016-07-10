@@ -581,7 +581,7 @@ Public Class BaseCode
             curVar.TableSetsFile = xmlConnNode.Item("TableSets").InnerText
             curStatus.TableSetsReload = True
 
-            dhdConnection.CheckDB()
+            'dhdConnection.CheckDB()
         End If
     End Sub
 
@@ -748,9 +748,9 @@ Public Class BaseCode
         basfield.Name = strTableName & "." & basfield.FieldAlias
         If dhdText.CheckElement(xNode, "FldName") Then basfield.Name = strTableName & "." & xNode.Item("FldName").InnerText
         If dhdText.CheckElement(xNode, "DataType") Then basfield.FieldDataType = xNode.Item("DataType").InnerText
-        If dhdText.CheckElement(xNode, "Identity") Then basfield.Identity = xNode.Item("Identity").InnerText
-        If dhdText.CheckElement(xNode, "PrimaryKey") Then basfield.PrimaryKey = xNode.Item("PrimaryKey").InnerText
-        If dhdText.CheckElement(xNode, "FldWidth") Then basfield.FieldWidth = xNode.Item("FldWidth").InnerText
+        If dhdText.CheckElement(xNode, "Identity") Then basfield.Identity = CheckBooleanValue(xNode.Item("Identity").InnerText)
+        If dhdText.CheckElement(xNode, "PrimaryKey") Then basfield.PrimaryKey = CheckBooleanValue(xNode.Item("PrimaryKey").InnerText)
+        If dhdText.CheckElement(xNode, "FldWidth") Then basfield.FieldWidth = CheckNumericValue(xNode.Item("FldWidth").InnerText)
 
         If basfield.Category = 5 Then
             basfield.FieldTableName = strTableName
@@ -769,38 +769,41 @@ Public Class BaseCode
             End If
         End If
 
-        If dhdText.CheckElement(xNode, "DefaultButton") Then basfield.DefaultButton = xNode.Item("DefaultButton").InnerText
-        If basfield.DefaultButton = True Then
-            Try
-                basfield.DefaultValue = xNode.Item("DefaultButton").Attributes("DefaultValue").Value
-            Catch ex As Exception
-                basfield.DefaultValue = ""
-                WriteLog("there was an error setting the value for DefaultValue: " & Environment.NewLine & ex.Message, 1)
-            End Try
-        End If
-
-        If dhdText.CheckElement(xNode, "FldList") Then basfield.FieldList = xNode.Item("FldList").InnerText
-        If basfield.FieldList = True Then
-            Try
-                basfield.FieldListOrder = xNode.Item("FldList").Attributes("Order").Value
-                basfield.FieldListWidth = xNode.Item("FldList").Attributes("Width").Value
-            Catch ex As Exception
-                basfield.FieldListOrder = 0
-                basfield.FieldListWidth = 0
-                WriteLog("there was an error setting the value for ListOrder or ListWidth: " & Environment.NewLine & ex.Message, 1)
-            End Try
-        End If
-
-        If dhdText.CheckElement(xNode, "FldSearch") Then basfield.FieldSearch = xNode.Item("FldSearch").InnerText
-        If dhdText.CheckElement(xNode, "FldSearchList") Then basfield.FieldSearchList = xNode.Item("FldSearchList").InnerText
-        If dhdText.CheckElement(xNode, "FldUpdate") Then basfield.FieldUpdate = xNode.Item("FldUpdate").InnerText
-        If dhdText.CheckElement(xNode, "FldVisible") Then basfield.FieldVisible = xNode.Item("FldVisible").InnerText
+        If dhdText.CheckElement(xNode, "DefaultButton") Then basfield.DefaultButton = CheckBooleanValue(xNode.Item("DefaultButton").InnerText)
+        If dhdText.CheckElement(xNode, "DefaultButton/@DefaultValue") Then basfield.DefaultValue = xNode.Item("DefaultButton").Attributes("DefaultValue").Value
+        If dhdText.CheckElement(xNode, "FldList") Then basfield.FieldList = CheckBooleanValue(xNode.Item("FldList").InnerText)
+        If dhdText.CheckElement(xNode, "FldList/@Order") Then basfield.FieldListOrder = CheckNumericValue(xNode.Item("FldList").Attributes("Order").Value)
+        If dhdText.CheckElement(xNode, "FldList/@Width") Then basfield.FieldListWidth = CheckNumericValue(xNode.Item("FldList").Attributes("Width").Value)
+        If dhdText.CheckElement(xNode, "FldSearch") Then basfield.FieldSearch = CheckBooleanValue(xNode.Item("FldSearch").InnerText)
+        If dhdText.CheckElement(xNode, "FldSearchList") Then basfield.FieldSearchList = CheckBooleanValue(xNode.Item("FldSearchList").InnerText)
+        If dhdText.CheckElement(xNode, "FldUpdate") Then basfield.FieldUpdate = CheckBooleanValue(xNode.Item("FldUpdate").InnerText)
+        If dhdText.CheckElement(xNode, "FldVisible") Then basfield.FieldVisible = CheckBooleanValue(xNode.Item("FldVisible").InnerText)
 
         If dhdText.CheckElement(xNode, "ControlField") Then basfield.ControlField = xNode.Item("ControlField").InnerText
         If dhdText.CheckElement(xNode, "ControlValue") Then basfield.ControlValue = xNode.Item("ControlValue").InnerText
-        If dhdText.CheckElement(xNode, "ControlUpdate") Then basfield.ControlUpdate = xNode.Item("ControlUpdate").InnerText
-        If dhdText.CheckElement(xNode, "ControlMode") Then basfield.ControlMode = xNode.Item("ControlMode").InnerText
+        If dhdText.CheckElement(xNode, "ControlUpdate") Then basfield.ControlUpdate = CheckBooleanValue(xNode.Item("ControlUpdate").InnerText)
+        If dhdText.CheckElement(xNode, "ControlMode") Then basfield.ControlMode = CheckBooleanValue(xNode.Item("ControlMode").InnerText)
         Return basfield
+    End Function
+
+    Public Function CheckNumericValue(strValue As String) As Integer
+        Dim intValue As Integer = Nothing
+        If IsNumeric(strValue) Then
+            intValue = CInt(strValue)
+        End If
+        Return intValue
+    End Function
+
+    Public Function CheckBooleanValue(strValue As String) As Boolean
+        Dim blnValue As Boolean = False
+        If String.IsNullOrWhiteSpace(strValue) = True Then Return False
+        Select Case strValue.ToLower
+            Case "1", "checked", "true", "yes", "ok"
+                blnValue = True
+            Case Else
+                blnValue = False
+        End Select
+        Return blnValue
     End Function
 
     Public Function LoadRelation(XRNode As XmlNode) As BaseRelation

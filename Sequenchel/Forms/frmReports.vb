@@ -1290,10 +1290,9 @@ Public Class frmReports
                 Try
                     Dim blnFound As Boolean = False
                     For Each lvwItem As ListViewItemField In lvwAvailableFields.Items
-                        If lvwItem.Field.FieldTableAlias = strTableAlias And lvwItem.Field.FieldName = strFieldName Then
-                            If lvwItem.Field.FieldAlias <> strFieldAlias Then
-                                strFieldAlias = lvwItem.Field.FieldAlias
-                            End If
+                        If lvwItem.Field.FieldTableName = strTableName And lvwItem.Field.FieldName = strFieldName Then
+                            If lvwItem.Field.FieldTableAlias <> strTableAlias Then lvwItem.Field.FieldTableAlias = strTableAlias
+                            If lvwItem.Field.FieldAlias <> strFieldAlias Then lvwItem.Field.FieldAlias = strFieldAlias
                             blnFound = True
                             ReportFieldAdd(lvwItem, True)
                             SetCtrText(pnlReportDisplay, strTableAlias & "." & strFieldAlias, xCNode.Item("FieldShow").InnerText)
@@ -1307,33 +1306,43 @@ Public Class frmReports
                                 SetCtrText(pnlReportFilterType, strTableAlias & "." & strFieldAlias, xFnode.Item("FilterType").InnerText, xFnode.Item("FilterNumber").InnerText)
                                 SetCtrText(pnlReportFilterText, strTableAlias & "." & strFieldAlias, xFnode.Item("FilterText").InnerText, xFnode.Item("FilterNumber").InnerText)
                             Next
-                            Exit For
+                        Exit For
                         End If
                     Next
                     If blnFound = False Then
                         'check selected fields for different alias and duplicate field with given alias
-                        'For Each lvwItem As ListViewItemField In lvwSelectedFields.Items
-                        '    If lvwItem.Field.FieldTableAlias = strTableAlias And lvwItem.Field.FieldName = strFieldName Then
-                        '        If lvwItem.Field.FieldAlias <> strFieldAlias Then
-                        '            strFieldAlias = lvwItem.Field.FieldAlias
-                        '        End If
-                        '        blnFound = True
-                        '        lvwItem.Selected = True
-                        '        btnReportFieldAdd_Click(Nothing, Nothing)
-                        '        SetCtrText(pnlReportDisplay, strTableAlias & "." & strFieldAlias, xCNode.Item("FieldShow").InnerText)
-                        '        SetCtrText(pnlReportShowMode, strTableAlias & "." & strFieldAlias, xCNode.Item("FieldShowMode").InnerText)
-                        '        SetCtrText(pnlReportSort, strTableAlias & "." & strFieldAlias, xCNode.Item("FieldSort").InnerText)
-                        '        SetCtrText(pnlReportSortOrder, strTableAlias & "." & strFieldAlias, xCNode.Item("FieldSortOrder").InnerText)
+                        For Each lvwItem As ListViewItemField In lvwSelectedFields.Items
+                            If lvwItem.Field.FieldTableName = strTableName And lvwItem.Field.FieldName = strFieldName Then
+                                'Field found, now duplicate
+                                Dim lvwItemNew As New ListViewItemField
+                                lvwItemNew.Field = New SeqCore.BaseField
 
-                        '        For Each xFnode In basCode.dhdText.FindXmlNodes(xCNode, "Filters/Filter")
-                        '            SetCtrText(pnlReportFilter, strTableAlias & "." & strFieldAlias, xFnode.Item("FilterEnabled").InnerText, xFnode.Item("FilterNumber").InnerText)
-                        '            SetCtrText(pnlReportFilterMode, strTableAlias & "." & strFieldAlias, xFnode.Item("FilterMode").InnerText, xFnode.Item("FilterNumber").InnerText)
-                        '            SetCtrText(pnlReportFilterType, strTableAlias & "." & strFieldAlias, xFnode.Item("FilterType").InnerText, xFnode.Item("FilterNumber").InnerText)
-                        '            SetCtrText(pnlReportFilterText, strTableAlias & "." & strFieldAlias, xFnode.Item("FilterText").InnerText, xFnode.Item("FilterNumber").InnerText)
-                        '        Next
-                        '        Exit For
-                        '    End If
-                        'Next
+                                lvwItemNew.Field.FieldTableAlias = strTableAlias
+                                lvwItemNew.Field.FieldAlias = strFieldAlias
+                                lvwItemNew.Name = lvwItemNew.Field.FieldTableAlias & "." & lvwItemNew.Field.FieldAlias
+                                lvwItemNew.Field.Name = lvwItemNew.Name
+                                lvwItemNew.Field.FieldName = strFieldName
+                                lvwItemNew.Field.FieldTableName = strTableName
+                                lvwItemNew.Field.FieldDataType = lvwItem.Field.FieldDataType
+                                lvwItemNew.Text = strTableAlias
+                                lvwItemNew.SubItems.Add(strFieldAlias)
+                                lvwSelectedFields.Items.Add(lvwItemNew)
+
+                                ReportFieldAdd(lvwItemNew, True)
+                                SetCtrText(pnlReportDisplay, strTableAlias & "." & strFieldAlias, xCNode.Item("FieldShow").InnerText)
+                                SetCtrText(pnlReportShowMode, strTableAlias & "." & strFieldAlias, xCNode.Item("FieldShowMode").InnerText)
+                                SetCtrText(pnlReportSort, strTableAlias & "." & strFieldAlias, xCNode.Item("FieldSort").InnerText)
+                                SetCtrText(pnlReportSortOrder, strTableAlias & "." & strFieldAlias, xCNode.Item("FieldSortOrder").InnerText)
+
+                                For Each xFnode In basCode.dhdText.FindXmlNodes(xCNode, "Filters/Filter")
+                                    SetCtrText(pnlReportFilter, strTableAlias & "." & strFieldAlias, xFnode.Item("FilterEnabled").InnerText, xFnode.Item("FilterNumber").InnerText)
+                                    SetCtrText(pnlReportFilterMode, strTableAlias & "." & strFieldAlias, xFnode.Item("FilterMode").InnerText, xFnode.Item("FilterNumber").InnerText)
+                                    SetCtrText(pnlReportFilterType, strTableAlias & "." & strFieldAlias, xFnode.Item("FilterType").InnerText, xFnode.Item("FilterNumber").InnerText)
+                                    SetCtrText(pnlReportFilterText, strTableAlias & "." & strFieldAlias, xFnode.Item("FilterText").InnerText, xFnode.Item("FilterNumber").InnerText)
+                                Next
+                                Exit For
+                            End If
+                        Next
                     End If
                 Catch ex As Exception
                     basCode.WriteLog("Unable to load the Field " & strTableAlias & "." & strFieldAlias & Environment.NewLine & ex.Message, 1)

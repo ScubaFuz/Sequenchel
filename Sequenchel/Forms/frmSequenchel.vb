@@ -464,20 +464,6 @@ Public Class frmSequenchel
                         sptTable1.SplitterDistance += lblLabel.Left
                         sptFields1.SplitterDistance += (lblLabel.Left * -1)
                     End If
-                    'If basCode.basTable.Item(intCount).FieldSearchList = True And basCode.basTable.Item(intCount).FieldDataType.ToString.ToUpper <> "BIT" Then
-                    '    Dim btnButton As New Button
-                    '    btnButton.Name = "btn" & fldField.Name
-                    '    sptFields1.Panel1.Controls.Add(btnButton)
-                    '    btnButton.Text = ""
-                    '    btnButton.Image = My.Resources.reload16
-                    '    btnButton.ImageAlign = ContentAlignment.MiddleCenter
-                    '    btnButton.Size = New System.Drawing.Size(25, 23)
-                    '    btnButton.Top = fldField.Top - basCode.curVar.BuildMargin / 2
-                    '    btnButton.Left = sptFields1.Panel1.Width - btnButton.Width
-                    '    btnButton.Anchor = AnchorStyles.Right Or AnchorStyles.Top
-                    '    btnButton.UseVisualStyleBackColor = True
-                    '    AddHandler btnButton.Click, AddressOf Me.btnReload_Click
-                    'End If
 
                     If basCode.basTable.Item(intCount).DefaultButton = True Then
                         Dim btnButton As New Button
@@ -986,12 +972,6 @@ Public Class frmSequenchel
                     End If
                     Dim strName As String = fldField.Name
                     strQuery &= " AND " & basCode.FormatFieldWhere(fldField.Field.FieldName, fldField.Field.FieldTableAlias, fldField.Field.FieldWidth, fldField.Field.FieldDataType, strValue)
-                    'For intCount As Integer = 0 To basCode.basTable.Count - 1
-                    '    If basCode.basTable.Item(intField).Name = strName Then
-                    '        strQuery &= " AND " & FormatFieldWhere1(basCode.basTable.Item(intField).FieldName, basCode.basTable.Item(intField).TableAlias, basCode.basTable.Item(intField).FieldWidth, basCode.basTable.Item(intField).FieldDataType, strValue)
-                    '        Exit For
-                    '    End If
-                    'Next
                 End If
             Next
         End If
@@ -1030,36 +1010,6 @@ Public Class frmSequenchel
 
         Return strQuery
     End Function
-
-    'Private Function OrderBuild() As String
-    '    Dim strMode As String = "ORDER BY "
-    '    Dim intColumnCount As Integer = 0
-    '    strQuery = strMode & " "
-    '    For intOrder As Integer = 0 To dgvTable1.Columns.Count
-    '        If intColumnCount >= basCode.curVar.MaxColumnSort Then Exit For
-
-    '        For Each column In dgvTable1.Columns
-    '            If intOrder = column.displayindex And column.Visible = True Then
-    '                For intField As Integer = 0 To basCode.basTable.Count - 1
-    '                    If basCode.basTable.Item(intField).FieldName = column.Name Then
-    '                        Select Case basCode.basTable.Item(intField).FieldDataType
-    '                            Case "BINARY", "XML", "GEO", "TEXT", "IMAGE"
-    '                                'No sort order
-    '                            Case Else
-    '                                strQuery &= ", " & basCode.FormatField(basCode.basTable.TableName, basCode.basTable.TableAlias, basCode.basTable.Item(intField).FieldName, Nothing, basCode.basTable.Item(intField).FieldDataType, basCode.basTable.Item(intField).FieldWidth, Nothing, False, False, basCode.curVar.DateTimeStyle)
-    '                                If chkReversedSortOrder.Checked = True Then
-    '                                    strQuery &= " DESC "
-    '                                End If
-    '                        End Select
-    '                        intColumnCount += 1
-    '                    End If
-    '                Next
-    '            End If
-    '        Next
-    '    Next
-    '    strQuery = strQuery.Replace(strMode & " ,", strMode & " ")
-    '    Return strQuery
-    'End Function
 
     Private Sub ItemSelect()
         If basCode.curStatus.SuspendActions = False Then
@@ -1168,143 +1118,13 @@ Public Class frmSequenchel
         FieldsEnable()
     End Sub
 
-    'Private Sub LoadSearchCriteria(Optional strCriterium As String = "")
-    '    If basCode.dhdConnection.DataBaseOnline = True Then
-    '        Dim strQuery2 As String = " WHERE 1=1 ", strQuery3 As String = ""
-    '        For intField As Integer = 0 To tblTable.Count - 1
-    '            strQuery = ""
-    '            strQuery2 = " WHERE 1=1 "
-    '            strQuery3 = ""
-    '            If tblTable.Item(intField).Category = 5 Or tblTable.Item(intField).Category = 6 Then
-    '                tblTable.Item(intField).RunSearch()
-    '            End If
-    '        Next
-    '    End If
-    'End Sub
-
-    'Private Sub LoadRelatedSearchCriteria(Optional strCriterium As String = "", Optional blnRefine As Boolean = False)
-    '    If dhdConnection.DataBaseOnline = True Then
-    '        Dim strQuery2 As String = " WHERE 1=1 ", strQuery3 As String = "", strQueryFrom As String = ""
-    '        For intField As Integer = 0 To tblTable.Count - 1
-    '            strQuery = ""
-    '            strQuery2 = " WHERE 1=1 "
-    '            strQuery3 = ""
-    '            strQueryFrom = ""
-    '            'If tblTable.Item(intField).Fieldcategory = 5 Then
-    '            '    MessageBox.Show(tblTable.Item(intField).Name)
-    '            'End If
-    '            If tblTable.TableName <> tblTable.Item(intField).Name.Substring(0, tblTable.Item(intField).Name.LastIndexOf(".")) And tblTable.Item(intField).Fieldcategory = 4 Then
-    '                strQuery = "SELECT DISTINCT TOP 100 "
-    '                strQuery &= "[" & tblTable.Item(intField).Name.Substring(0, tblTable.Item(intField).Name.LastIndexOf(".")).Replace(".", "].[") & "].[" & tblTable.Item(intField).FieldRelatedField & "]"
-    '                strQuery &= ",[" & tblTable.Item(intField).Name.Replace(".", "].[") & "]"
-    '                strQuery &= " FROM [" & tblTable.Item(intField).Name.Substring(0, tblTable.Item(intField).Name.LastIndexOf(".")).Replace(".", "].[") & "] "
-    '                strQuery3 &= " ORDER BY [" & tblTable.Item(intField).Name.Replace(".", "].[") & "] "
-    '                strQuery &= " "
-
-
-    '                Try
-    '                    strQuery = strQuery & strQuery2 & strQuery3
-    '                    Dim objData As DataSet = QueryDb(dhdConnection, strQuery, True)
-    '                    If objData Is Nothing Then Exit Sub
-    '                    If objData.Tables.Count = 0 Then Exit Sub
-    '                    If objData.Tables(0).Rows.Count = 0 Then Exit Sub
-
-    '                    'tblTable.Item(intField).Items.Clear()
-    '                    For intRowCount1 As Integer = 0 To objData.Tables(0).Rows.Count - 1
-    '                        tblTable.Item(intField).Items.Add(objData.Tables.Item(0).Rows(intRowCount1).Item(0) & " | " & objData.Tables.Item(0).Rows(intRowCount1).Item(1))
-    '                    Next
-
-    '                    'ComboFieldMultiColumnCreate(tblTable.Item(intField), objData)
-    '                Catch ex As Exception
-    '                    WriteLog(ex.Message, 1)
-    '                End Try
-
-    '            End If
-
-    '            'If strRelation = strCriterium And blnRefine = True Then
-    '            ' name = tblTable.Item(intField).FieldRelation.Substring(0, tblTable.Item(intField).FieldRelation.LastIndexOf(".")) & "." & tblTable.Item(intField).FieldRelatedField
-    '            'fieldname = fldField.FieldRelatedField
-    '            'End If
-    '            '    If strCriterium.Length > 0 And strQuery.Length > 0 Then
-    '            '        For intField2 As Integer = 0 To tblTable.Count - 1
-    '            '            If tblTable.Item(intField2).BackColor = clrMarked And tblTable.Item(intField2).FieldName <> strCriterium Then
-    '            '                strQuery2 &= " AND [" & tblTable.Item(intField2).FieldName & "] = '" & tblTable.Item(intField2).Text & "'"
-    '            '            End If
-    '            '        Next
-    '            '    End If
-    '            '    If tblTable.Item(intField).FieldName = strCriterium Or strCriterium = "" Then
-    '            '    End If
-    '            'End If
-    '        Next
-    '    End If
-    'End Sub
-
-    'Private Sub cbxRelatedItems_DrawItem(ByVal sender As System.Object, ByVal e As System.Windows.Forms.DrawItemEventArgs)
-    '    'Handles cbxDateFormats.DrawItem
-    '    ' Draw the default background
-    '    e.DrawBackground()
-
-    '    ' The ComboBox is bound to a DataTable,
-    '    ' so the items are DataRowView objects.
-    '    Dim drv As DataRowView = CType(sender.Items(e.Index), DataRowView)
-
-    '    ' Retrieve the value of each column.
-    '    Dim id As Integer = drv("ID").ToString()
-    '    Dim name As String = drv("Name").ToString()
-
-    '    ' Get the bounds for the first column
-    '    Dim r1 As Rectangle = e.Bounds
-    '    r1.Width = r1.Width / (100 / 7)
-
-    '    ' Draw the text on the first column
-    '    Using sb As SolidBrush = New SolidBrush(e.ForeColor)
-    '        e.Graphics.DrawString(id, e.Font, sb, r1)
-    '    End Using
-
-    '    ' Draw a line to isolate the columns 
-    '    Using p As Pen = New Pen(Color.Black)
-    '        e.Graphics.DrawLine(p, r1.Right, 0, r1.Right, r1.Bottom)
-    '    End Using
-
-    '    ' Get the bounds for the second column
-    '    Dim r2 As Rectangle = e.Bounds
-    '    r2.X = e.Bounds.Width / (100 / 7)
-    '    r2.Width = r2.Width / (100 / 35)
-
-    '    ' Draw the text on the second column
-    '    Using sb As SolidBrush = New SolidBrush(e.ForeColor)
-    '        e.Graphics.DrawString(name, e.Font, sb, r2)
-    '    End Using
-
-    '    ' Draw a line to isolate the columns 
-    '    Using p As Pen = New Pen(Color.Black)
-    '        e.Graphics.DrawLine(p, r2.Right, 0, r2.Right, r2.Bottom)
-    '    End Using
-
-    '    ' Get the bounds for the third column
-    '    Dim r3 As Rectangle = e.Bounds
-    '    r3.X = e.Bounds.Width / (100 / 42)
-    '    r3.Width = r3.Width / (100 / 58)
-
-    '    ' Draw the text on the second column
-    '    Using sb As SolidBrush = New SolidBrush(e.ForeColor)
-    '        e.Graphics.DrawString(format, e.Font, sb, r3)
-    '    End Using
-
-    'End Sub
-
     Private Sub LoadDefaultValue(strFieldName As String)
         For Each ctrl As Object In sptFields1.Panel2.Controls
-            If ctrl.Field.Name = strFieldName Then
+            If ctrl.Field.FieldTableName & "." & ctrl.Field.FieldName = strFieldName Then
                 Dim strValue As String = basCode.ProcessDefaultValue(ctrl.Field.DefaultValue)
                 Select Case ctrl.[GetType]().Name
                     Case "CheckField", "CheckBox"
-                        Select Case strValue.ToLower
-                            Case "1", "true", "yes", "checked"
-                                ctrl.Checked = True
-                            Case Else
-                                ctrl.Checked = False
-                        End Select
+                        ctrl.Checked = basCode.CheckBooleanValue(strValue)
                     Case Else
                         ctrl.Text = strValue
                 End Select

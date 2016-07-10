@@ -131,8 +131,8 @@ Public Class DBRef
         Dim arrScripts(100) As String
         intCounter = 0
 
-        'arrScripts(intCounter) = "Sequenchel.xml"
-        'arrScripts(AddOne()) = "TrackManager.xml"
+        arrScripts(intCounter) = "Sequenchel.xml"
+        arrScripts(AddOne()) = "TrackManager.xml"
 
         ReDim Preserve arrScripts(intCounter)
 
