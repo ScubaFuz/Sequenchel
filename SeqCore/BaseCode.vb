@@ -1612,29 +1612,40 @@ Public Class BaseCode
         Return strInput
     End Function
 
-    Public Function GetWidth(strDataType As String, intMaxLength As Integer) As Integer
-        Select Case strDataType
-            Case "CHAR", "BINARY"
-                If intMaxLength < 50 Then
-                    Return 50
-                ElseIf intMaxLength < 100 Then
-                    Return 100
-                ElseIf intMaxLength < 150 Then
-                    Return 150
-                Else
-                    Return 200
-                End If
-            Case "INTEGER"
-                Return Math.Max(intMaxLength, 5) * 10
-            Case "BIT"
-                Return 25
-            Case "GUID", "XML", "TEXT", "IMAGE"
-                Return 200
-            Case "TIMESTAMP", "GEO", "DATETIME", "TIME"
-                Return 100
-            Case Else
-                Return 50
-        End Select
+    Public Function GetWidth(strDataType As String, intMaxLength As Integer, intFieldNameLength As Integer, blnListWidth As Boolean) As Integer
+        Dim intReturn As Integer = 50
+            Select Case strDataType
+                Case "CHAR", "BINARY"
+                    If intMaxLength < 50 Then
+                        intReturn = 50
+                    ElseIf intMaxLength < 100 Then
+                        intReturn = 100
+                    ElseIf intMaxLength < 150 Then
+                        intReturn = 150
+                    Else
+                        intReturn = 200
+                    End If
+                    If blnListWidth = True And intReturn < ((intFieldNameLength * 5) + 25) Then
+                        intReturn = ((intFieldNameLength * 5) + 25)
+                    End If
+                Case "INTEGER"
+                    Return Math.Max(intMaxLength, 5) * 10
+                    If blnListWidth = True And intReturn < ((intFieldNameLength * 5) + 25) Then
+                        intReturn = ((intFieldNameLength * 5) + 25)
+                    End If
+                Case "BIT"
+                    Return 25
+                    If blnListWidth = True Then
+                        intReturn = ((intFieldNameLength * 5) + 25)
+                    End If
+                Case "GUID", "XML", "TEXT", "IMAGE"
+                intReturn = 200
+                Case "TIMESTAMP", "GEO", "DATETIME", "TIME"
+                intReturn = 110
+                Case Else
+                intReturn = 50
+            End Select
+        Return intReturn
     End Function
 
     Public Function CompareDataType(strDataType As String) As Boolean

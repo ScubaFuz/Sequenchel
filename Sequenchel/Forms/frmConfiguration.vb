@@ -1096,7 +1096,7 @@ Public Class frmConfiguration
 
         Dim blnReload As Boolean = False
         Dim strDataType As String = ""
-        Dim intWidth As Integer = 0, intColCount As Integer = 0, blnShowField As Boolean = False, blnIdentity As Boolean = False, blnPrimaryKey As Boolean = False
+        Dim intWidth As Integer = 0, intColCount As Integer = 0, intWidthList As Integer = 0, blnShowField As Boolean = False, blnIdentity As Boolean = False, blnPrimaryKey As Boolean = False
         For intRowCount = 0 To dtsData.Tables(0).Rows.Count - 1
             'If dtsData.Tables.Item(0).Rows(intRowCount).Item(0).GetType().ToString = "System.DBNull" Then
             'MessageBox.Show("Cell Must be empty")
@@ -1129,11 +1129,12 @@ Public Class frmConfiguration
 
             strDataType = basCode.GetDataType(dtsData.Tables.Item(0).Rows(intRowCount).Item("DataType"))
             blnIdentity = dtsData.Tables.Item(0).Rows(intRowCount).Item("is_identity")
-            intWidth = basCode.GetWidth(strDataType, dtsData.Tables.Item(0).Rows(intRowCount).Item("MaxLength"))
+            intWidth = basCode.GetWidth(strDataType, dtsData.Tables.Item(0).Rows(intRowCount).Item("MaxLength"), 0, False)
+            intWidthList = basCode.GetWidth(strDataType, dtsData.Tables.Item(0).Rows(intRowCount).Item("MaxLength"), dtsData.Tables.Item(0).Rows(intRowCount).Item("colName").replace(".", "_").length, True)
             If intRowCount = dtsData.Tables(0).Rows.Count - 1 And blnReloadAll = True Then blnReload = True
-            FieldAddOrUpdate(strSchemaName & "." & strTableName, dtsData.Tables.Item(0).Rows(intRowCount).Item("colName"), dtsData.Tables.Item(0).Rows(intRowCount).Item("colName"), _
+            FieldAddOrUpdate(strSchemaName & "." & strTableName, dtsData.Tables.Item(0).Rows(intRowCount).Item("colName"), dtsData.Tables.Item(0).Rows(intRowCount).Item("colName").replace(".", "_"), _
                      strDataType, blnIdentity, blnPrimaryKey, intWidth, "", "", "", "", "", False, txtControlField.Text, txtControlValue.Text, chkControlUpdate.Checked, chkControlMode.Checked, False, "", _
-                     blnShowField, intColCount, intWidth, True, True, chkFieldSearchList.Checked, chkFieldUpdate.Checked, blnReload)
+                     blnShowField, intColCount, intWidthList, True, True, chkFieldSearchList.Checked, chkFieldUpdate.Checked, blnReload)
 
             If Not dtsRelations Is Nothing Then
                 basCode.curStatus.SuspendActions = True

@@ -508,6 +508,7 @@ Public Class frmSequenchel
                                 msfRelatedField.Field.FieldDataType = basCode.basTable.Item(intCount).FieldDataType
                                 msfRelatedField.Field.FieldVisible = basCode.basTable.Item(intCount).FieldVisible
                                 msfRelatedField.Field.FieldSearch = basCode.basTable.Item(intCount).FieldSearch
+                                msfRelatedField.Field.FieldUpdate = basCode.basTable.Item(intCount).FieldUpdate
 
                                 sptFields1.Panel2.Controls.Add(msfRelatedField)
                                 msfRelatedField.Top = fldField.Top
@@ -1072,34 +1073,49 @@ Public Class frmSequenchel
         If objData.Tables(0).Rows.Count = 0 Then Exit Sub
         basCode.curStatus.SuspendActions = True
         Try
-            For intField As Integer = 0 To basCode.basTable.Count - 1
-                For Each ctrl As Control In sptFields1.Panel2.Controls
-                    If basCode.basTable.Item(intField).Name = ctrl.Name Then
-                        If objData.Tables.Item(0).Rows(0).Item(basCode.basTable.Item(intField).FieldAlias).GetType().ToString = "System.DBNull" Then
-                            ctrl.BackColor = clrEmpty
-                            ctrl.Tag = ""
-                        Else
-                            Select Case basCode.basTable.Item(intField).Category
-                                Case 1, 3, 4
-                                    ctrl.Text = objData.Tables.Item(0).Rows(0).Item(basCode.basTable.Item(intField).FieldAlias)
-                                Case 2
-                                    Dim chkTemp As CheckBox = TryCast(ctrl, CheckBox)
-                                    If chkTemp IsNot Nothing Then chkTemp.Checked = objData.Tables.Item(0).Rows(0).Item(basCode.basTable.Item(intField).FieldAlias)
-                                Case 5, 6
-                                    Dim msfTemp As ManagedSelectField = TryCast(ctrl, ManagedSelectField)
-                                    msfTemp.SuspendActions = True
-                                    msfTemp.Text = objData.Tables.Item(0).Rows(0).Item(basCode.basTable.Item(intField).FieldAlias)
-                                    msfTemp.SuspendActions = False
-                                    'msfTemp.DropDown(2)
-                            End Select
-                            ctrl.Tag = objData.Tables.Item(0).Rows(0).Item(basCode.basTable.Item(intField).FieldAlias).ToString
-                        End If
+            For Each ctrl As Object In sptFields1.Panel2.Controls
+                Dim intCategory As Integer
+                Select Case ctrl.[GetType]().Name
+                    Case "TextField"
+                        intCategory = ctrl.Field.Category
+                    Case "CheckField"
+                        intCategory = ctrl.Field.Category
+                    Case "ComboField"
+                        'not used
+                    Case "ManagedSelectField"
+                        intCategory = ctrl.Field.Category
+                    Case Else
+                        'Not a type with a category.
+                        intCategory = 0
+                End Select
+
+                If intCategory > 0 Then
+                    If objData.Tables.Item(0).Rows(0).Item(ctrl.Field.FieldAlias).GetType().ToString = "System.DBNull" Then
+                        ctrl.BackColor = clrEmpty
+                        ctrl.Tag = ""
+                    Else
+                        Select Case intCategory
+                            Case 1, 3, 4
+                                ctrl.Text = objData.Tables.Item(0).Rows(0).Item(ctrl.Field.FieldAlias)
+                            Case 2
+                                Dim chkTemp As CheckBox = TryCast(ctrl, CheckBox)
+                                If chkTemp IsNot Nothing Then chkTemp.Checked = objData.Tables.Item(0).Rows(0).Item(ctrl.Field.FieldAlias)
+                            Case 5
+                                Dim msfTemp As ManagedSelectField = TryCast(ctrl, ManagedSelectField)
+                                msfTemp.SuspendActions = True
+                                msfTemp.Text = objData.Tables.Item(0).Rows(0).Item(ctrl.Field.FieldAlias)
+                                msfTemp.SuspendActions = False
+                            Case 6
+                                Dim msfTemp As ManagedSelectField = TryCast(ctrl, ManagedSelectField)
+                                msfTemp.SuspendActions = True
+                                msfTemp.Text = objData.Tables.Item(0).Rows(0).Item(ctrl.SearchField)
+                                msfTemp.SuspendActions = False
+                        End Select
+                        ctrl.Tag = objData.Tables.Item(0).Rows(0).Item(ctrl.Field.FieldAlias).ToString
                     End If
-                Next
+                End If
             Next
 
-            'End If
-            'Next
             If objData.Tables(0).Rows.Count > 1 Then lblMultipleRows.Visible = True
 
         Catch ex As Exception
