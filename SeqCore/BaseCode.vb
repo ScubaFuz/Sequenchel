@@ -889,19 +889,17 @@ Public Class BaseCode
         If curStatus.SearchesReload = True Then
             xmlSearch = LoadSearchXml(xmlSearch)
         End If
-        Dim ReturnValue As New List(Of String)
+        'Dim ReturnValue As New List(Of String)
         Try
-            Dim xNode As XmlNode
-            For Each xNode In dhdText.FindXmlNodes(xmlSearch, "Searches/Search", "TableName", strTable)
-                ReturnValue.Add(xNode.Item("SearchName").InnerText)
-            Next
+            Dim ReturnValue As System.Collections.Generic.List(Of String) = dhdText.LoadItemsList(xmlSearch, "Search", "TableName", strTable, "SearchName")
+            If ReturnValue Is Nothing And dhdText.Errormessage.Length > 0 Then WriteLog("Error loading searches: " & dhdText.Errormessage, 1)
+            Return ReturnValue
         Catch ex As Exception
             ErrorLevel = -1
             ErrorMessage = "There was an error loading the searches. Please check the log."
             WriteLog("There was an error loading the searches:" & Environment.NewLine & ex.Message, 1)
             Return Nothing
         End Try
-        Return ReturnValue
     End Function
 
     Public Function LoadSearchXml(xmlSearch As XmlDocument) As XmlDocument

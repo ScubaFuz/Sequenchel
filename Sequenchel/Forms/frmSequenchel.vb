@@ -944,7 +944,7 @@ Public Class frmSequenchel
     End Sub
 
     Friend Sub LoadList(blnRefine As Boolean)
-        If basCode.dhdConnection.DataBaseOnline = False Then Exit Sub
+        'If basCode.dhdConnection.DataBaseOnline = False Then Exit Sub
         basCode.curStatus.SuspendActions = True
         dgvTable1.Rows.Clear()
         lblListCountNumber.Text = 0
