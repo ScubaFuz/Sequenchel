@@ -122,17 +122,19 @@ Public Class frmReports
     End Sub
 
     Private Sub ReportFieldAdd(lvwItem As ListViewItemField, blnResizeColumns As Boolean)
-        If lvwAvailableFields.Items.Contains(lvwItem) Then lvwAvailableFields.Items.Remove(lvwItem)
-        If lvwSelectedFields.Items.Contains(lvwItem) = False Then lvwSelectedFields.Items.Add(lvwItem)
-        ReportTableAdd(lvwItem.Field.FieldTableName, lvwItem.Field.FieldTableAlias)
-        FieldAdd(lvwItem.Field.Name, lvwItem.Field.FieldName, lvwItem.Field.FieldAlias, lvwItem.Field.FieldTableName, lvwItem.Field.FieldTableAlias)
-        If blnResizeColumns = True Then
-            ResizeColumns()
+        If ReportTableAdd(lvwItem.Field.FieldTableName, lvwItem.Field.FieldTableAlias) = True Then
+            If lvwAvailableFields.Items.Contains(lvwItem) Then lvwAvailableFields.Items.Remove(lvwItem)
+            If lvwSelectedFields.Items.Contains(lvwItem) = False Then lvwSelectedFields.Items.Add(lvwItem)
+            FieldAdd(lvwItem.Field.Name, lvwItem.Field.FieldName, lvwItem.Field.FieldAlias, lvwItem.Field.FieldTableName, lvwItem.Field.FieldTableAlias)
+            If blnResizeColumns = True Then
+                ResizeColumns()
+            End If
         End If
     End Sub
 
     Private Sub btnReportFieldRemove_Click(sender As Object, e As EventArgs) Handles btnReportFieldRemove.Click
         WriteStatus("", 0, lblStatusText)
+        ReportFieldsRemove()
     End Sub
 
     Private Sub ReportFieldsRemove()
@@ -815,14 +817,19 @@ Public Class frmReports
         Next
     End Sub
 
-    Private Sub ReportTableAdd(strTable As String, strAlias As String)
+    Private Function ReportTableAdd(strTable As String, strAlias As String) As Boolean
         'Dim strTable As String = strFieldName.Substring(0, strFieldName.LastIndexOf("."))
         Dim blnTableFound As Boolean = False
+        Dim blnTableAliasFound As Boolean = False
         For Each lvwitem As ListViewItemField In lvwSelectedTables.Items
-            If lvwitem.Name = strTable & "_" & strAlias Then blnTableFound = True
-            If lvwitem.Field.FieldTableAlias = strAlias Then blnTableFound = True
+            If lvwitem.Name = strTable & "_" & strAlias Then
+                blnTableFound = True
+                blnTableAliasFound = True
+            End If
+            If lvwitem.Field.FieldTableName = strTable Then blnTableFound = True
+            If lvwitem.Field.FieldTableAlias = strAlias Then blnTableAliasFound = True
         Next
-        If blnTableFound = False Then
+        If blnTableAliasFound = False Then
             Dim lvwAddItem As New ListViewItemField
             lvwAddItem.Field = New SeqCore.BaseField
             lvwAddItem.Name = strTable & "_" & strAlias
@@ -844,10 +851,14 @@ Public Class frmReports
             Next
 
             PanelRelationWidthSet()
-        Else
+        ElseIf blnTableAliasFound = True And blnTableFound = False Then
             WriteStatus("Table alias already exists. Every alias must be unique.", 2, lblStatusText)
+            Return False
+        Else
+            'Nothing wrong.
         End If
-    End Sub
+        Return True
+    End Function
 
     Private Sub ReportTableRemove(strTableAlias As String)
         'Dim strTabel As String = strFieldName.Substring(0, strFieldName.LastIndexOf("."))

@@ -950,7 +950,7 @@ Public Class frmSequenchel
         dgvTable1.Rows.Clear()
         lblListCountNumber.Text = 0
 
-        Dim intTop As Integer
+        Dim intTop As Integer = -1
         If chkUseTop.Checked = True AndAlso IsNumeric(txtUseTop.Text) Then intTop = txtUseTop.Text
         Dim strQuerySelect As String = basCode.MainSelectBuild(intTop)
         Dim strQueryOrder As String = basCode.MainOrderBuild(chkReversedSortOrder.Checked)
