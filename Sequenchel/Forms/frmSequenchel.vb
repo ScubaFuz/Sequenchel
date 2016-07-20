@@ -423,6 +423,7 @@ Public Class frmSequenchel
                         fldField.DataConn.Password = basCode.dhdConnection.Password
                         fldField.Table = basCode.basTable.TableName
                         fldField.SearchField = basCode.basTable.Item(intCount).Name
+                        fldField.SearchFieldAlias = basCode.basTable.Item(intCount).FieldAlias
                         Dim mslTemp As ManagedSelectField = TryCast(fldField, ManagedSelectField)
                         If mslTemp IsNot Nothing Then AddHandler mslTemp.TextChanged, AddressOf TextHandler
                         If mslTemp IsNot Nothing Then AddHandler mslTemp.ValueChanged, AddressOf TextHandler
@@ -496,6 +497,7 @@ Public Class frmSequenchel
                                 msfRelatedField.DataConn.Password = basCode.dhdConnection.Password
                                 msfRelatedField.Table = basCode.basTable.Item(intCount).Item(intRel).RelationTable
                                 msfRelatedField.SearchField = basCode.basTable.Item(intCount).Item(intRel).RelatedFieldName
+                                msfRelatedField.SearchFieldAlias = basCode.basTable.Item(intCount).Item(intRel).RelatedFieldAlias
                                 msfRelatedField.IdentifierField = basCode.basTable.Item(intCount).Item(intRel).RelationField
 
                                 msfRelatedField.Field = New SeqCore.BaseField
@@ -1039,8 +1041,8 @@ Public Class frmSequenchel
                 For intRel As Integer = 0 To basCode.basTable.Item(intField).Count - 1
                     If basCode.basTable.Item(intField).Item(intRel).RelatedFieldName.Length > 0 Then
                         Dim strRelation As String = basCode.basTable.Item(intField).Item(intRel).RelationField
-                        strQuery &= ",[" & basCode.basTable.Item(intField).Item(intRel).RelationTable.Replace(".", "].[") & "].[" & basCode.basTable.Item(intField).Item(intRel).RelatedFieldName & "] AS [" & basCode.basTable.Item(intField).Item(intRel).RelatedFieldAlias & "]"
-                        strQueryFrom &= " LEFT OUTER JOIN " & basCode.basTable.Item(intField).Item(intRel).RelationTable & " ON " & "[" & basCode.basTable.TableAlias & "]." & basCode.basTable.Item(intField).FieldName & " = " & basCode.basTable.Item(intField).Item(intRel).RelationTable & "." & basCode.basTable.Item(intField).Item(intRel).RelationField
+                        strQuery &= ",[" & basCode.basTable.Item(intField).Item(intRel).RelationTableAlias & "].[" & basCode.basTable.Item(intField).Item(intRel).RelatedFieldName & "] AS [" & basCode.basTable.Item(intField).Item(intRel).RelatedFieldAlias & "]"
+                        strQueryFrom &= " LEFT OUTER JOIN " & basCode.basTable.Item(intField).Item(intRel).RelationTable & " " & basCode.basTable.Item(intField).Item(intRel).RelationTableAlias & " ON " & "[" & basCode.basTable.TableAlias & "]." & basCode.basTable.Item(intField).FieldName & " = " & basCode.basTable.Item(intField).Item(intRel).RelationTableAlias & "." & basCode.basTable.Item(intField).Item(intRel).RelationField
                     End If
                 Next
             End If
@@ -1108,7 +1110,7 @@ Public Class frmSequenchel
                             Case 6
                                 Dim msfTemp As ManagedSelectField = TryCast(ctrl, ManagedSelectField)
                                 msfTemp.SuspendActions = True
-                                msfTemp.Text = objData.Tables.Item(0).Rows(0).Item(ctrl.SearchField)
+                                msfTemp.Text = objData.Tables.Item(0).Rows(0).Item(ctrl.SearchFieldAlias)
                                 msfTemp.SuspendActions = False
                         End Select
                         ctrl.Tag = objData.Tables.Item(0).Rows(0).Item(ctrl.Field.FieldAlias).ToString
