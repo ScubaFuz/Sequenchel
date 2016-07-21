@@ -1169,7 +1169,9 @@ Public Class frmReports
             WriteStatus("No fields have been selected for this report. Aborting save.", 2, lblStatusText)
             Exit Sub
         End If
-        ReportDelete(cbxReportName.Text)
+        If cbxReportName.Text.Length > 0 And cbxReportName.Items.Contains(cbxReportName.Text) Then
+            ReportDelete(cbxReportName.Text)
+        End If
         ReportToXML(basCode.xmlReports, cbxReportName.Text)
         'ReportAdd(xmlReports, cbxReportName.Text)
         If Not cbxReportName.Items.Contains(cbxReportName.Text) Then cbxReportName.Items.Add(cbxReportName.Text)
@@ -1184,17 +1186,20 @@ Public Class frmReports
 
     Private Sub btnReportDelete_Click(sender As Object, e As EventArgs) Handles btnReportDelete.Click
         WriteStatus("", 0, lblStatusText)
-        If cbxReportName.SelectedIndex < 0 Then
+        Dim strReport As String = ""
+        If cbxReportName.Text.Length > 0 And cbxReportName.Items.Contains(cbxReportName.Text) Then
+            strReport = cbxReportName.Text
+        Else
             WriteStatus("No report is selected. Select a report before deleting it.", 2, lblStatusText)
             Exit Sub
         End If
-        If MessageBox.Show("This will permanently remove the Item: " & cbxReportName.SelectedItem & Environment.NewLine & basCode.Message.strContinue, basCode.Message.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then
+        If MessageBox.Show("This will permanently remove the Item: " & strReport & Environment.NewLine & basCode.Message.strContinue, basCode.Message.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then
             WriteStatus("Report deletion aborted.", 0, lblStatusText)
             Exit Sub
         End If
         CursorControl("Wait")
-        ReportDelete(cbxReportName.SelectedItem)
-        If cbxReportName.Items.Contains(cbxReportName.Text) Then cbxReportName.Items.Remove(cbxReportName.Text)
+        ReportDelete(strReport)
+        If cbxReportName.Items.Contains(strReport) Then cbxReportName.Items.Remove(strReport)
         cbxReportName.SelectedIndex = -1
         cbxReportName.Text = ""
         ReportFieldsDispose(False)
