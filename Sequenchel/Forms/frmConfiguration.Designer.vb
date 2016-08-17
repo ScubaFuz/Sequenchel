@@ -238,7 +238,7 @@ Partial Class frmConfiguration
         Me.tabConfiguration.Location = New System.Drawing.Point(12, 16)
         Me.tabConfiguration.Name = "tabConfiguration"
         Me.tabConfiguration.SelectedIndex = 0
-        Me.tabConfiguration.Size = New System.Drawing.Size(776, 785)
+        Me.tabConfiguration.Size = New System.Drawing.Size(776, 676)
         Me.tabConfiguration.TabIndex = 0
         '
         'tpgConnections
@@ -285,7 +285,7 @@ Partial Class frmConfiguration
         Me.tpgConnections.Location = New System.Drawing.Point(4, 22)
         Me.tpgConnections.Name = "tpgConnections"
         Me.tpgConnections.Padding = New System.Windows.Forms.Padding(3)
-        Me.tpgConnections.Size = New System.Drawing.Size(768, 759)
+        Me.tpgConnections.Size = New System.Drawing.Size(768, 650)
         Me.tpgConnections.TabIndex = 0
         Me.tpgConnections.Text = "Connections"
         Me.tpgConnections.UseVisualStyleBackColor = True
@@ -345,7 +345,7 @@ Partial Class frmConfiguration
         '
         Me.lblBackupPath.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblBackupPath.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.2!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblBackupPath.Location = New System.Drawing.Point(450, 668)
+        Me.lblBackupPath.Location = New System.Drawing.Point(450, 559)
         Me.lblBackupPath.Name = "lblBackupPath"
         Me.lblBackupPath.Size = New System.Drawing.Size(289, 31)
         Me.lblBackupPath.TabIndex = 108
@@ -356,7 +356,7 @@ Partial Class frmConfiguration
         '
         Me.btnBackupLocation.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnBackupLocation.Image = Global.Sequenchel.My.Resources.Resources.folder_explore
-        Me.btnBackupLocation.Location = New System.Drawing.Point(714, 644)
+        Me.btnBackupLocation.Location = New System.Drawing.Point(714, 535)
         Me.btnBackupLocation.Name = "btnBackupLocation"
         Me.btnBackupLocation.Size = New System.Drawing.Size(23, 23)
         Me.btnBackupLocation.TabIndex = 27
@@ -365,7 +365,7 @@ Partial Class frmConfiguration
         'lblBackupLocation
         '
         Me.lblBackupLocation.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lblBackupLocation.Location = New System.Drawing.Point(450, 647)
+        Me.lblBackupLocation.Location = New System.Drawing.Point(450, 538)
         Me.lblBackupLocation.Name = "lblBackupLocation"
         Me.lblBackupLocation.Size = New System.Drawing.Size(96, 16)
         Me.lblBackupLocation.TabIndex = 106
@@ -375,7 +375,7 @@ Partial Class frmConfiguration
         'txtBackupLocation
         '
         Me.txtBackupLocation.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.txtBackupLocation.Location = New System.Drawing.Point(554, 643)
+        Me.txtBackupLocation.Location = New System.Drawing.Point(554, 534)
         Me.txtBackupLocation.Name = "txtBackupLocation"
         Me.txtBackupLocation.Size = New System.Drawing.Size(154, 20)
         Me.txtBackupLocation.TabIndex = 26
@@ -383,7 +383,7 @@ Partial Class frmConfiguration
         'btnBackup
         '
         Me.btnBackup.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnBackup.Location = New System.Drawing.Point(453, 705)
+        Me.btnBackup.Location = New System.Drawing.Point(453, 596)
         Me.btnBackup.Name = "btnBackup"
         Me.btnBackup.Size = New System.Drawing.Size(131, 20)
         Me.btnBackup.TabIndex = 28
@@ -620,7 +620,7 @@ Partial Class frmConfiguration
         'btnConnectionsShow
         '
         Me.btnConnectionsShow.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.btnConnectionsShow.Location = New System.Drawing.Point(25, 705)
+        Me.btnConnectionsShow.Location = New System.Drawing.Point(25, 596)
         Me.btnConnectionsShow.Name = "btnConnectionsShow"
         Me.btnConnectionsShow.Size = New System.Drawing.Size(164, 20)
         Me.btnConnectionsShow.TabIndex = 24
@@ -643,7 +643,7 @@ Partial Class frmConfiguration
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.tvwConnection.Location = New System.Drawing.Point(25, 302)
         Me.tvwConnection.Name = "tvwConnection"
-        Me.tvwConnection.Size = New System.Drawing.Size(392, 397)
+        Me.tvwConnection.Size = New System.Drawing.Size(392, 288)
         Me.tvwConnection.TabIndex = 21
         '
         'lblConnections
@@ -2150,7 +2150,7 @@ Partial Class frmConfiguration
         '
         Me.btnClose.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnClose.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.btnClose.Location = New System.Drawing.Point(649, 803)
+        Me.btnClose.Location = New System.Drawing.Point(649, 694)
         Me.btnClose.Name = "btnClose"
         Me.btnClose.Size = New System.Drawing.Size(135, 23)
         Me.btnClose.TabIndex = 2
@@ -2161,7 +2161,7 @@ Partial Class frmConfiguration
         '
         Me.btnCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.btnCancel.Location = New System.Drawing.Point(508, 803)
+        Me.btnCancel.Location = New System.Drawing.Point(508, 694)
         Me.btnCancel.Name = "btnCancel"
         Me.btnCancel.Size = New System.Drawing.Size(135, 23)
         Me.btnCancel.TabIndex = 1
@@ -2174,7 +2174,7 @@ Partial Class frmConfiguration
         Me.lblStatusTitle.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.lblStatusTitle.AutoSize = True
         Me.lblStatusTitle.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblStatusTitle.Location = New System.Drawing.Point(13, 808)
+        Me.lblStatusTitle.Location = New System.Drawing.Point(13, 699)
         Me.lblStatusTitle.Name = "lblStatusTitle"
         Me.lblStatusTitle.Size = New System.Drawing.Size(51, 16)
         Me.lblStatusTitle.TabIndex = 9
@@ -2185,7 +2185,7 @@ Partial Class frmConfiguration
         Me.lblStatusText.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblStatusText.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblStatusText.Location = New System.Drawing.Point(70, 808)
+        Me.lblStatusText.Location = New System.Drawing.Point(70, 699)
         Me.lblStatusText.Name = "lblStatusText"
         Me.lblStatusText.Size = New System.Drawing.Size(432, 23)
         Me.lblStatusText.TabIndex = 10
@@ -2195,7 +2195,7 @@ Partial Class frmConfiguration
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.btnClose
-        Me.ClientSize = New System.Drawing.Size(800, 842)
+        Me.ClientSize = New System.Drawing.Size(800, 733)
         Me.Controls.Add(Me.lblStatusText)
         Me.Controls.Add(Me.lblStatusTitle)
         Me.Controls.Add(Me.btnCancel)
@@ -2203,7 +2203,7 @@ Partial Class frmConfiguration
         Me.Controls.Add(Me.btnTest)
         Me.Controls.Add(Me.tabConfiguration)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
-        Me.MinimumSize = New System.Drawing.Size(816, 880)
+        Me.MinimumSize = New System.Drawing.Size(816, 726)
         Me.Name = "frmConfiguration"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
         Me.Text = "Configuration"

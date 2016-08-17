@@ -2,10 +2,7 @@
 Imports System.IO
 
 Module SeqCmd
-    Friend basCode As SeqCore.BaseCode
-
-    Friend RunReport As Boolean = False
-    Friend RunImport As Boolean = False
+    Friend basCode As New SeqCore.BaseCode
     'Friend ConvertToText As Boolean = False
     Friend ImportTable As String = ""
 
@@ -15,28 +12,37 @@ Module SeqCmd
     Dim lstReports As List(Of String)
 
     Sub Main()
-        basCode.ParseCommands(My.Application.CommandLineArgs)
+        If My.Application.CommandLineArgs.Count > 0 Then basCode.ParseCommands(My.Application.CommandLineArgs)
         basCode.SetDefaults()
+        If basCode.curVar.DebugMode = True Then Console.WriteLine("Default Settings Loaded")
         Dim strReturn As String = basCode.LoadSDBASettingsXml(basCode.xmlSDBASettings)
         If strReturn = False Then
             Console.WriteLine(basCode.ErrorMessage)
             Console.ReadLine()
             Exit Sub
         End If
+        If basCode.curVar.DebugMode = True Then Console.WriteLine("Base Settings Loaded")
         Dim strReturnGen As String = basCode.LoadGeneralSettingsXml(basCode.xmlGeneralSettings)
         If strReturnGen = False Then
             Console.WriteLine(basCode.ErrorMessage)
             Console.ReadLine()
             Exit Sub
         End If
+        If basCode.curVar.DebugMode = True Then Console.WriteLine("General Settings Loaded")
 
         LoadConnections()
+        If basCode.curVar.DebugMode = True Then Console.WriteLine("Connections Loaded")
         basCode.LoadConnection(basCode.xmlConnections, basCode.curStatus.Connection)
+        If basCode.curVar.DebugMode = True Then Console.WriteLine("Connection " & basCode.curStatus.Connection & " loaded")
         LoadTableSets()
+        If basCode.curVar.DebugMode = True Then Console.WriteLine("TableSets Loaded")
         basCode.LoadTableSet(basCode.xmlTableSets, basCode.curStatus.TableSet)
+        If basCode.curVar.DebugMode = True Then Console.WriteLine("TableSet " & basCode.curStatus.TableSet & " loaded")
         LoadTables()
+        If basCode.curVar.DebugMode = True Then Console.WriteLine("Tables Loaded")
 
-        If RunImport = True AndAlso basCode.dhdText.ImportFile.Length > 0 AndAlso basCode.curStatus.Table.Length > 0 Then
+        If basCode.curVar.DebugMode = True Then Console.WriteLine("Importmode enabled = " & basCode.curStatus.RunImport)
+        If basCode.curStatus.RunImport = True AndAlso basCode.dhdText.ImportFile.Length > 0 AndAlso basCode.curStatus.Table.Length > 0 Then
             'Import file
             If basCode.dhdText.ImportFile.Contains("\") = False Then
                 Console.WriteLine("You need to provide a valid filepath and filename")
@@ -56,13 +62,15 @@ Module SeqCmd
                     intRecords = UploadFile(dtsInput)
                     Console.WriteLine(intRecords & " Records Uploaded")
                 End If
-                If Not basCode.dhdText.ExportFile Is Nothing AndAlso RunReport = False AndAlso basCode.dhdText.ExportFile.Length > 0 Then
+                If Not basCode.dhdText.ExportFile Is Nothing AndAlso basCode.curStatus.RunReport = False AndAlso basCode.dhdText.ExportFile.Length > 0 Then
                     'export imported file
                     basCode.ExportFile(dtsInput, basCode.dhdText.ExportFile, basCode.curVar.ConvertToText, basCode.curVar.ConvertToNull, basCode.curVar.ShowFile, basCode.curVar.HasHeaders, basCode.curVar.Delimiter, basCode.curVar.QuoteValues, basCode.curVar.CreateDir)
                 End If
             End If
         End If
-        If Not basCode.dhdText.ExportFile Is Nothing AndAlso RunReport = True AndAlso basCode.dhdText.ExportFile.Length > 0 Then
+        If basCode.curVar.DebugMode = True Then Console.WriteLine("Exportmode enabled = " & basCode.curStatus.RunReport)
+        If basCode.curVar.DebugMode = True Then Console.WriteLine("Exportfile = " & basCode.dhdText.ExportFile)
+        If Not basCode.dhdText.ExportFile Is Nothing AndAlso basCode.curStatus.RunReport = True AndAlso basCode.dhdText.ExportFile.Length > 0 Then
             'Export Report
             Dim strExportFile As String = basCode.GetExportFileName(basCode.dhdText.ExportFile)
             Console.WriteLine("Exporting Report: " & basCode.curStatus.Report & " to " & strExportFile)
