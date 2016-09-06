@@ -1996,6 +1996,10 @@ Public Class BaseCode
                     dtsImport = dhdText.LoadXmlToDataset(strFileName)
                 Case "xls", "xlsx"
                     dtsImport = Excel.ImportExcelFile(strFileName)
+                    If dtsImport Is Nothing Then
+                        ErrorLevel = Excel.ErrorLevel
+                        ErrorMessage = Excel.ErrorMessage
+                    End If
                 Case "csv", "txt"
                     If Delimiter.Length = 0 Then
                         Return Nothing

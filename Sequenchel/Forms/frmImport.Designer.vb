@@ -61,6 +61,7 @@ Partial Class frmImport
         Me.txtDelimiter = New System.Windows.Forms.TextBox()
         Me.txtDelimiterShow = New System.Windows.Forms.TextBox()
         Me.dgvImport = New Sequenchel.usrDataGridView()
+        Me.btnClearData = New System.Windows.Forms.Button()
         CType(Me.dgvImport, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -455,11 +456,21 @@ Partial Class frmImport
         Me.dgvImport.Size = New System.Drawing.Size(713, 473)
         Me.dgvImport.TabIndex = 20
         '
+        'btnClearData
+        '
+        Me.btnClearData.Location = New System.Drawing.Point(29, 56)
+        Me.btnClearData.Name = "btnClearData"
+        Me.btnClearData.Size = New System.Drawing.Size(126, 23)
+        Me.btnClearData.TabIndex = 56
+        Me.btnClearData.Text = "Clear Data"
+        Me.btnClearData.UseVisualStyleBackColor = True
+        '
         'frmImport
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(777, 753)
+        Me.Controls.Add(Me.btnClearData)
         Me.Controls.Add(Me.txtDelimiterShow)
         Me.Controls.Add(Me.lblTextDelimiter)
         Me.Controls.Add(Me.txtDelimiter)
@@ -545,4 +556,5 @@ Partial Class frmImport
     Friend WithEvents lblTextDelimiter As System.Windows.Forms.Label
     Friend WithEvents txtDelimiter As System.Windows.Forms.TextBox
     Friend WithEvents txtDelimiterShow As System.Windows.Forms.TextBox
+    Friend WithEvents btnClearData As System.Windows.Forms.Button
 End Class

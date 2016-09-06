@@ -13,6 +13,7 @@ Module SeqCmd
 
     Sub Main()
         If My.Application.CommandLineArgs.Count > 0 Then basCode.ParseCommands(My.Application.CommandLineArgs)
+        ImportTable = basCode.curStatus.Table
         basCode.SetDefaults()
         If basCode.curVar.DebugMode = True Then Console.WriteLine("Default Settings Loaded")
         Dim strReturn As String = basCode.LoadSDBASettingsXml(basCode.xmlSDBASettings)
@@ -164,13 +165,12 @@ Module SeqCmd
             Dim dhdDB As New DataHandler.db
             dhdDB.DataLocation = basCode.dhdConnection.DataLocation
             dhdDB.DatabaseName = basCode.dhdConnection.DatabaseName
-            dhdDB.DataTableName = basCode.dhdConnection.DataTableName
+            dhdDB.DataTableName = basCode.GetTableNameFromAlias(basCode.xmlTables, basCode.curStatus.Table)
             dhdDB.DataProvider = basCode.dhdConnection.DataProvider
             dhdDB.LoginMethod = basCode.dhdConnection.LoginMethod
             dhdDB.LoginName = basCode.dhdConnection.LoginName
             dhdDB.Password = basCode.dhdConnection.Password
 
-            If dhdDB.DataTableName <> basCode.curStatus.Table Then dhdDB.DataTableName = basCode.curStatus.Table
             Dim intRecords As Integer = basCode.SaveToDatabase(dhdDB, dtsInput, basCode.curVar.ConvertToText, basCode.curVar.ConvertToNull)
             If intRecords = -1 Then
                 Console.WriteLine(basCode.dhdConnection.ErrorMessage)

@@ -143,7 +143,11 @@ Public Class frmImport
         dtsImport = basCode.ImportFile(basCode.dhdText.PathConvert(basCode.CheckFilePath(basCode.dhdText.ImportFile)), chkHasHeaders.Checked, txtDelimiter.Text)
 
         If basCode.dhdText.DatasetCheck(dtsImport) = False Then
-            WriteStatus("File extension or delimiter not recognised or unable to load file .", 2, lblStatusText)
+            If basCode.ErrorLevel = -1 Then
+                WriteStatus(basCode.ErrorMessage, 2, lblStatusText)
+            Else
+                WriteStatus("File extension or delimiter not recognised or unable to load file.", 2, lblStatusText)
+            End If
             Exit Sub
         End If
 
@@ -160,6 +164,12 @@ Public Class frmImport
             WriteStatus("There was an error displaying or uploading the file. Please check the log", 1, lblStatusText)
             basCode.WriteLog("There was an error displaying or uploading the file." & Environment.NewLine & ex.Message, 1)
         End Try
+    End Sub
+
+    Private Sub ClearDisplayData()
+        dgvImport.DataSource = Nothing
+        dtsImport = Nothing
+        WriteStatus("Data cleared.", 0, lblStatusText)
     End Sub
 
     Private Sub DisplayData(Optional intTable As Integer = 0)
@@ -302,4 +312,7 @@ Public Class frmImport
         End If
     End Function
 
+    Private Sub btnClearData_Click(sender As Object, e As EventArgs) Handles btnClearData.Click
+        ClearDisplayData()
+    End Sub
 End Class

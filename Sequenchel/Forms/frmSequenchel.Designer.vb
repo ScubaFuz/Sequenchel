@@ -391,6 +391,8 @@ Partial Class frmSequenchel
         '
         'pnlFooterControls
         '
+        Me.pnlFooterControls.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.pnlFooterControls.AutoScroll = True
         Me.pnlFooterControls.Controls.Add(Me.lblSavedSearches)
         Me.pnlFooterControls.Controls.Add(Me.cbxSearch)
@@ -406,7 +408,6 @@ Partial Class frmSequenchel
         Me.pnlFooterControls.Controls.Add(Me.btnUpdate)
         Me.pnlFooterControls.Controls.Add(Me.btnClear)
         Me.pnlFooterControls.Controls.Add(Me.btnAdd)
-        Me.pnlFooterControls.Dock = System.Windows.Forms.DockStyle.Right
         Me.pnlFooterControls.Location = New System.Drawing.Point(154, 3)
         Me.pnlFooterControls.Name = "pnlFooterControls"
         Me.pnlFooterControls.Size = New System.Drawing.Size(814, 81)
