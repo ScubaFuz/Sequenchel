@@ -1481,7 +1481,7 @@
             End If
             Try
                 basCode.QueryDb(basCode.dhdMainDB, strSQL, False, 10)
-                WriteStatus("Procedure PutFTPfiles was created succesfully", 0, lblStatusText)
+                WriteStatus("Procedure GetFTPfiles was created succesfully", 0, lblStatusText)
             Catch ex As Exception
                 basCode.WriteLog("There was an error creating the FTP procedure: " & ex.Message, 1)
                 WriteStatus("Error creating FTP procedure. Please check the log.", 1, lblStatusText)

@@ -774,7 +774,12 @@ Public Class frmSequenchel
             Exit Sub
         End If
         CursorControl("Wait")
-        SearchDelete(False)
+        Dim blnDeleted As Boolean = SearchDelete(False)
+        If blnDeleted = False Then
+            WriteStatus("Search " & cbxSearch.Text & " was not deleted", 2, lblStatusText)
+            CursorControl()
+            Exit Sub
+        End If
         If SaveXmlFile(basCode.xmlSearch, basCode.curVar.SearchFile, True) = False Then
             WriteStatus("The file " & basCode.curVar.SearchFile & " was not saved.", 1, lblStatusText)
         Else
@@ -1412,19 +1417,19 @@ Public Class frmSequenchel
         Next
     End Sub
 
-    Private Sub SearchDelete(Optional UpdateMode As Boolean = False)
+    Private Function SearchDelete(Optional UpdateMode As Boolean = False) As Boolean
         Dim strSelection As String = cbxSearch.Text
 
-        If strSelection.Length = 0 Then Exit Sub
+        If strSelection.Length = 0 Then Return False
         Dim xNode As XmlNode = basCode.dhdText.FindXmlNode(basCode.xmlSearch, "Search", "SearchName", strSelection)
         If Not xNode Is Nothing Then
             If UpdateMode = False Then
-                If MessageBox.Show("This will permanently remove the Item: " & strSelection & Environment.NewLine & basCode.Message.strContinue, basCode.Message.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Exit Sub
+                If MessageBox.Show("This will permanently remove the Item: " & strSelection & Environment.NewLine & basCode.Message.strContinue, basCode.Message.strWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.Cancel Then Return False
             End If
             xNode.ParentNode.RemoveChild(xNode)
         End If
-
-    End Sub
+        Return True
+    End Function
 
     Private Sub SearchLoad()
         Dim strSelection As String = cbxSearch.Text
