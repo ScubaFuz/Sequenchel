@@ -1,5 +1,5 @@
-﻿Public Class ManagedSelectField
-    Inherits ManagedSelectList.ManagedSelectList
+﻿Public Class ListViewItemField
+    Inherits System.Windows.Forms.ListViewItem
 
     Private _Field As SeqCore.BaseField = Nothing
 
@@ -11,5 +11,4 @@
             _Field = Value
         End Set
     End Property
-
 End Class

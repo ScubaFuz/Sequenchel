@@ -6,6 +6,34 @@ Imports System.Text.RegularExpressions
 
 Public Class Excel
 
+#Region "Errors"
+    Private _ErrorLevel As Integer = 0
+    Private _ErrorMessage As String = ""
+
+    Public Property ErrorLevel() As Integer
+        Get
+            Return _ErrorLevel
+        End Get
+        Set(ByVal Value As Integer)
+            _ErrorLevel = Value
+        End Set
+    End Property
+
+    Public Property ErrorMessage() As String
+        Get
+            Return _ErrorMessage
+        End Get
+        Set(ByVal Value As String)
+            _ErrorMessage = Value
+        End Set
+    End Property
+
+    Public Sub ResetError()
+        ErrorLevel = 0
+        ErrorMessage = ""
+    End Sub
+#End Region
+
     Public Function CreateExcelDocument(ByVal dt As DataTable, ByVal Filename As String) As Boolean
         Try
             Dim dtsInput As New DataSet
@@ -296,6 +324,8 @@ Public Class Excel
         Dim dstOutput As New DataSet
 
         Try
+            ErrorLevel = 0
+            ErrorMessage = ""
             ExcelCon.ConnectionString = "Provider=Microsoft.Jet.OLEDB.4.0;" & _
                 "Data Source= " & StrFilePath & _
                 ";Extended Properties=""Excel 8.0;"""
@@ -324,6 +354,8 @@ Public Class Excel
             Return dstOutput
         Catch ex As Exception
             'MessageBox.Show("An error has occured importing the data" & Environment.NewLine & ex.Message)
+            ErrorLevel = -1
+            ErrorMessage = ex.Message
             Return Nothing
         Finally
             ExcelCon = Nothing

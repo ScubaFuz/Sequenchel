@@ -2,9 +2,9 @@
 
     Private Sub frmAbout_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
 
-        lblVersion.Text = "Version: " & Core.GetVersion("R")
+        lblVersion.Text = "Version: " & basCode.GetVersion("R")
         lblCopyright.Text = My.Application.Info.Copyright
-        lblLicenseName.Text = "Licensed to: " & Core.LicenseName
+        lblLicenseName.Text = "Licensed to: " & basCode.curVar.LicenseName
         lblLicenseText.Text = "Sequenchel is free for personal use. Companies are required to purchase a license. " _
             + Environment.NewLine + "Having a license will automatically close this screen at startup. Thank you for playing fair." _
             + Environment.NewLine + "Click anywhere on this screen to close it. Click on the Version number to see the version log."
@@ -20,7 +20,7 @@
     End Sub
 
     Private Sub lblVersion_Click(sender As Object, e As EventArgs) Handles lblVersion.Click
-        If SeqData.dhdText.CheckFile(Application.StartupPath & "\Resources\SequenchelVersionLog.txt") Then
+        If basCode.dhdText.CheckFile(Application.StartupPath & "\Resources\SequenchelVersionLog.txt") Then
             System.Diagnostics.Process.Start(Application.StartupPath & "\Resources\SequenchelVersionLog.txt")
             Me.Close()
         Else
@@ -35,7 +35,7 @@
     End Sub
 
     Private Sub frmAbout_LostFocus(sender As Object, e As EventArgs) Handles Me.LostFocus
-        If SeqData.curVar.CallSplash = True Then
+        If basCode.curVar.CallSplash = True Then
             Me.Close()
         End If
     End Sub

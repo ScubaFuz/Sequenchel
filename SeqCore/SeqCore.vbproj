@@ -71,9 +71,11 @@
     <Compile Include="..\Version.vb">
       <Link>Version.vb</Link>
     </Compile>
-    <Compile Include="Core.vb" />
+    <Compile Include="BaseCode.vb" />
+    <Compile Include="BaseField.vb" />
+    <Compile Include="BaseTable.vb" />
+    <Compile Include="BaseRelation.vb" />
     <Compile Include="CurrentStatus.vb" />
-    <Compile Include="Data.vb" />
     <Compile Include="Excel.vb" />
     <Compile Include="Messages.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />

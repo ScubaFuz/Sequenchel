@@ -28,6 +28,8 @@ Partial Class frmReports
         Me.tabReports = New System.Windows.Forms.TabControl()
         Me.tpgReportDefinition = New System.Windows.Forms.TabPage()
         Me.sptReports = New System.Windows.Forms.SplitContainer()
+        Me.lblFieldFilter = New System.Windows.Forms.Label()
+        Me.txtFieldFilter = New System.Windows.Forms.TextBox()
         Me.lvwAvailableFields = New System.Windows.Forms.ListView()
         Me.colAvTableName = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.colAvFieldAlias = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
@@ -70,6 +72,8 @@ Partial Class frmReports
         Me.lblReportFilter = New System.Windows.Forms.Label()
         Me.lblReportSelectedFields = New System.Windows.Forms.Label()
         Me.pnlSplitSelectedFields = New System.Windows.Forms.Panel()
+        Me.btnFieldAliasChange = New System.Windows.Forms.Button()
+        Me.btnFieldCopy = New System.Windows.Forms.Button()
         Me.btnReportFieldDown = New System.Windows.Forms.Button()
         Me.btnReportFieldUp = New System.Windows.Forms.Button()
         Me.pnlRelationsMain = New System.Windows.Forms.Panel()
@@ -88,6 +92,7 @@ Partial Class frmReports
         Me.lblRelationsJoinType = New System.Windows.Forms.Label()
         Me.lblRelationsSelectedTable = New System.Windows.Forms.Label()
         Me.pnlSplitSelectedTables = New System.Windows.Forms.Panel()
+        Me.btnTableCopy = New System.Windows.Forms.Button()
         Me.btnReportTableUp = New System.Windows.Forms.Button()
         Me.btnReportTableDown = New System.Windows.Forms.Button()
         Me.pnlReportButtons = New System.Windows.Forms.Panel()
@@ -117,23 +122,29 @@ Partial Class frmReports
         Me.cbxTable = New System.Windows.Forms.ComboBox()
         Me.lblTableSet = New System.Windows.Forms.Label()
         Me.tpgReportResult = New System.Windows.Forms.TabPage()
+        Me.sptReportResults = New System.Windows.Forms.SplitContainer()
+        Me.btnFirstPage = New System.Windows.Forms.Button()
+        Me.chkShowAll = New System.Windows.Forms.CheckBox()
+        Me.lblListCountNumber = New System.Windows.Forms.Label()
+        Me.lblListCount = New System.Windows.Forms.Label()
+        Me.btnPreviousPage = New System.Windows.Forms.Button()
+        Me.btnLastPage = New System.Windows.Forms.Button()
+        Me.btnNextPage = New System.Windows.Forms.Button()
+        Me.lblErrorMessage = New System.Windows.Forms.TextBox()
+        Me.lblElapsedTime = New System.Windows.Forms.Label()
         Me.cbxEmailResults = New System.Windows.Forms.ComboBox()
         Me.btnEmailResults = New System.Windows.Forms.Button()
-        Me.lblElapsedTime = New System.Windows.Forms.Label()
         Me.btnDefinition = New System.Windows.Forms.Button()
         Me.btnExportToFile = New System.Windows.Forms.Button()
-        Me.lblErrorMessage = New System.Windows.Forms.Label()
-        Me.lblListCount = New System.Windows.Forms.Label()
-        Me.lblListCountNumber = New System.Windows.Forms.Label()
         Me.btnLoadQuery = New System.Windows.Forms.Button()
         Me.btnSaveQuery = New System.Windows.Forms.Button()
         Me.btnExecuteQuery = New System.Windows.Forms.Button()
         Me.rtbQuery = New System.Windows.Forms.RichTextBox()
         Me.dgvReport = New Sequenchel.usrDataGridView()
         Me.btnTest = New System.Windows.Forms.Button()
-        Me.tmrElapsedTime = New System.Windows.Forms.Timer(Me.components)
+        Me.tmrSuspendLookup = New System.Windows.Forms.Timer(Me.components)
         Me.lblStatusTitle = New System.Windows.Forms.Label()
-        Me.mnuReports = New System.Windows.Forms.MenuStrip()
+        Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.mnuReportsFile = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuReportsFileClose = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuReportsHelp = New System.Windows.Forms.ToolStripMenuItem()
@@ -170,8 +181,12 @@ Partial Class frmReports
         Me.pnlReportButtons.SuspendLayout()
         Me.pnlReportConnection.SuspendLayout()
         Me.tpgReportResult.SuspendLayout()
+        CType(Me.sptReportResults, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.sptReportResults.Panel1.SuspendLayout()
+        Me.sptReportResults.Panel2.SuspendLayout()
+        Me.sptReportResults.SuspendLayout()
         CType(Me.dgvReport, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.mnuReports.SuspendLayout()
+        Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
         'lblLicense
@@ -179,7 +194,7 @@ Partial Class frmReports
         Me.lblLicense.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblLicense.AutoSize = True
         Me.lblLicense.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblLicense.Location = New System.Drawing.Point(898, 2)
+        Me.lblLicense.Location = New System.Drawing.Point(626, 2)
         Me.lblLicense.Name = "lblLicense"
         Me.lblLicense.Size = New System.Drawing.Size(375, 24)
         Me.lblLicense.TabIndex = 168
@@ -195,7 +210,7 @@ Partial Class frmReports
         Me.tabReports.Location = New System.Drawing.Point(12, 29)
         Me.tabReports.Name = "tabReports"
         Me.tabReports.SelectedIndex = 0
-        Me.tabReports.Size = New System.Drawing.Size(1260, 742)
+        Me.tabReports.Size = New System.Drawing.Size(988, 664)
         Me.tabReports.TabIndex = 0
         '
         'tpgReportDefinition
@@ -206,7 +221,7 @@ Partial Class frmReports
         Me.tpgReportDefinition.Location = New System.Drawing.Point(4, 22)
         Me.tpgReportDefinition.Name = "tpgReportDefinition"
         Me.tpgReportDefinition.Padding = New System.Windows.Forms.Padding(3)
-        Me.tpgReportDefinition.Size = New System.Drawing.Size(1252, 716)
+        Me.tpgReportDefinition.Size = New System.Drawing.Size(980, 638)
         Me.tpgReportDefinition.TabIndex = 0
         Me.tpgReportDefinition.Text = "Report Definition"
         Me.tpgReportDefinition.UseVisualStyleBackColor = True
@@ -221,6 +236,8 @@ Partial Class frmReports
         'sptReports.Panel1
         '
         Me.sptReports.Panel1.BackColor = System.Drawing.SystemColors.Control
+        Me.sptReports.Panel1.Controls.Add(Me.lblFieldFilter)
+        Me.sptReports.Panel1.Controls.Add(Me.txtFieldFilter)
         Me.sptReports.Panel1.Controls.Add(Me.lvwAvailableFields)
         Me.sptReports.Panel1.Controls.Add(Me.lblAvailableFields)
         Me.sptReports.Panel1MinSize = 175
@@ -230,9 +247,27 @@ Partial Class frmReports
         Me.sptReports.Panel2.BackColor = System.Drawing.SystemColors.Control
         Me.sptReports.Panel2.Controls.Add(Me.sptReportFields)
         Me.sptReports.Panel2MinSize = 175
-        Me.sptReports.Size = New System.Drawing.Size(1246, 601)
+        Me.sptReports.Size = New System.Drawing.Size(974, 523)
         Me.sptReports.SplitterDistance = 175
         Me.sptReports.TabIndex = 193
+        '
+        'lblFieldFilter
+        '
+        Me.lblFieldFilter.AutoSize = True
+        Me.lblFieldFilter.Location = New System.Drawing.Point(-2, 30)
+        Me.lblFieldFilter.Name = "lblFieldFilter"
+        Me.lblFieldFilter.Size = New System.Drawing.Size(69, 13)
+        Me.lblFieldFilter.TabIndex = 169
+        Me.lblFieldFilter.Text = "Filter on Field"
+        '
+        'txtFieldFilter
+        '
+        Me.txtFieldFilter.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.txtFieldFilter.Location = New System.Drawing.Point(73, 27)
+        Me.txtFieldFilter.Name = "txtFieldFilter"
+        Me.txtFieldFilter.Size = New System.Drawing.Size(100, 20)
+        Me.txtFieldFilter.TabIndex = 168
         '
         'lvwAvailableFields
         '
@@ -241,9 +276,10 @@ Partial Class frmReports
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lvwAvailableFields.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.colAvTableName, Me.colAvFieldAlias})
         Me.lvwAvailableFields.FullRowSelect = True
-        Me.lvwAvailableFields.Location = New System.Drawing.Point(0, 25)
+        Me.lvwAvailableFields.Location = New System.Drawing.Point(0, 53)
         Me.lvwAvailableFields.Name = "lvwAvailableFields"
-        Me.lvwAvailableFields.Size = New System.Drawing.Size(174, 575)
+        Me.lvwAvailableFields.Size = New System.Drawing.Size(174, 469)
+        Me.lvwAvailableFields.Sorting = System.Windows.Forms.SortOrder.Ascending
         Me.lvwAvailableFields.TabIndex = 0
         Me.lvwAvailableFields.UseCompatibleStateImageBehavior = False
         Me.lvwAvailableFields.View = System.Windows.Forms.View.Details
@@ -285,8 +321,8 @@ Partial Class frmReports
         Me.sptReportFields.Panel2.BackColor = System.Drawing.SystemColors.Control
         Me.sptReportFields.Panel2.Controls.Add(Me.sptReport)
         Me.sptReportFields.Panel2MinSize = 200
-        Me.sptReportFields.Size = New System.Drawing.Size(1067, 601)
-        Me.sptReportFields.SplitterDistance = 201
+        Me.sptReportFields.Size = New System.Drawing.Size(795, 523)
+        Me.sptReportFields.SplitterDistance = 200
         Me.sptReportFields.TabIndex = 182
         '
         'sptReportTables
@@ -312,8 +348,8 @@ Partial Class frmReports
         Me.sptReportTables.Panel2.Controls.Add(Me.pnlSplitFields2)
         Me.sptReportTables.Panel2.Controls.Add(Me.lvwSelectedTables)
         Me.sptReportTables.Panel2MinSize = 200
-        Me.sptReportTables.Size = New System.Drawing.Size(201, 601)
-        Me.sptReportTables.SplitterDistance = 397
+        Me.sptReportTables.Size = New System.Drawing.Size(200, 523)
+        Me.sptReportTables.SplitterDistance = 319
         Me.sptReportTables.TabIndex = 0
         '
         'pnlSplitFields
@@ -323,7 +359,7 @@ Partial Class frmReports
         Me.pnlSplitFields.Dock = System.Windows.Forms.DockStyle.Left
         Me.pnlSplitFields.Location = New System.Drawing.Point(0, 0)
         Me.pnlSplitFields.Name = "pnlSplitFields"
-        Me.pnlSplitFields.Size = New System.Drawing.Size(38, 397)
+        Me.pnlSplitFields.Size = New System.Drawing.Size(38, 319)
         Me.pnlSplitFields.TabIndex = 152
         '
         'btnReportFieldAdd
@@ -355,7 +391,7 @@ Partial Class frmReports
         Me.lvwSelectedFields.FullRowSelect = True
         Me.lvwSelectedFields.Location = New System.Drawing.Point(38, 25)
         Me.lvwSelectedFields.Name = "lvwSelectedFields"
-        Me.lvwSelectedFields.Size = New System.Drawing.Size(162, 371)
+        Me.lvwSelectedFields.Size = New System.Drawing.Size(161, 293)
         Me.lvwSelectedFields.TabIndex = 0
         Me.lvwSelectedFields.UseCompatibleStateImageBehavior = False
         Me.lvwSelectedFields.View = System.Windows.Forms.View.Details
@@ -413,7 +449,7 @@ Partial Class frmReports
         Me.lvwSelectedTables.FullRowSelect = True
         Me.lvwSelectedTables.Location = New System.Drawing.Point(38, 24)
         Me.lvwSelectedTables.Name = "lvwSelectedTables"
-        Me.lvwSelectedTables.Size = New System.Drawing.Size(162, 175)
+        Me.lvwSelectedTables.Size = New System.Drawing.Size(161, 175)
         Me.lvwSelectedTables.TabIndex = 0
         Me.lvwSelectedTables.UseCompatibleStateImageBehavior = False
         Me.lvwSelectedTables.View = System.Windows.Forms.View.Details
@@ -449,8 +485,8 @@ Partial Class frmReports
         Me.sptReport.Panel2.Controls.Add(Me.pnlRelationsMain)
         Me.sptReport.Panel2.Controls.Add(Me.pnlSplitSelectedTables)
         Me.sptReport.Panel2MinSize = 200
-        Me.sptReport.Size = New System.Drawing.Size(862, 601)
-        Me.sptReport.SplitterDistance = 397
+        Me.sptReport.Size = New System.Drawing.Size(591, 523)
+        Me.sptReport.SplitterDistance = 319
         Me.sptReport.TabIndex = 181
         '
         'pnlSelectedFieldsMain
@@ -465,7 +501,7 @@ Partial Class frmReports
         Me.pnlSelectedFieldsMain.Dock = System.Windows.Forms.DockStyle.Fill
         Me.pnlSelectedFieldsMain.Location = New System.Drawing.Point(38, 0)
         Me.pnlSelectedFieldsMain.Name = "pnlSelectedFieldsMain"
-        Me.pnlSelectedFieldsMain.Size = New System.Drawing.Size(824, 397)
+        Me.pnlSelectedFieldsMain.Size = New System.Drawing.Size(553, 319)
         Me.pnlSelectedFieldsMain.TabIndex = 151
         '
         'pnlSelectedFields
@@ -562,7 +598,7 @@ Partial Class frmReports
         Me.pnlReportHeaders.Controls.Add(Me.lblReportSelectedFields)
         Me.pnlReportHeaders.Location = New System.Drawing.Point(0, 0)
         Me.pnlReportHeaders.Name = "pnlReportHeaders"
-        Me.pnlReportHeaders.Size = New System.Drawing.Size(816, 24)
+        Me.pnlReportHeaders.Size = New System.Drawing.Size(799, 24)
         Me.pnlReportHeaders.TabIndex = 154
         '
         'chkReportShow
@@ -573,7 +609,6 @@ Partial Class frmReports
         Me.chkReportShow.Size = New System.Drawing.Size(53, 17)
         Me.chkReportShow.TabIndex = 0
         Me.chkReportShow.Text = "Show"
-        Me.chkReportShow.ThreeState = True
         Me.chkReportShow.UseVisualStyleBackColor = True
         '
         'lblReportSortOrder
@@ -650,13 +685,35 @@ Partial Class frmReports
         '
         'pnlSplitSelectedFields
         '
+        Me.pnlSplitSelectedFields.Controls.Add(Me.btnFieldAliasChange)
+        Me.pnlSplitSelectedFields.Controls.Add(Me.btnFieldCopy)
         Me.pnlSplitSelectedFields.Controls.Add(Me.btnReportFieldDown)
         Me.pnlSplitSelectedFields.Controls.Add(Me.btnReportFieldUp)
         Me.pnlSplitSelectedFields.Dock = System.Windows.Forms.DockStyle.Left
         Me.pnlSplitSelectedFields.Location = New System.Drawing.Point(0, 0)
         Me.pnlSplitSelectedFields.Name = "pnlSplitSelectedFields"
-        Me.pnlSplitSelectedFields.Size = New System.Drawing.Size(38, 397)
+        Me.pnlSplitSelectedFields.Size = New System.Drawing.Size(38, 319)
         Me.pnlSplitSelectedFields.TabIndex = 0
+        '
+        'btnFieldAliasChange
+        '
+        Me.btnFieldAliasChange.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnFieldAliasChange.Image = Global.Sequenchel.My.Resources.Resources.shuffle
+        Me.btnFieldAliasChange.Location = New System.Drawing.Point(3, 200)
+        Me.btnFieldAliasChange.Name = "btnFieldAliasChange"
+        Me.btnFieldAliasChange.Size = New System.Drawing.Size(30, 23)
+        Me.btnFieldAliasChange.TabIndex = 4
+        Me.btnFieldAliasChange.UseVisualStyleBackColor = True
+        '
+        'btnFieldCopy
+        '
+        Me.btnFieldCopy.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnFieldCopy.Image = Global.Sequenchel.My.Resources.Resources.copy
+        Me.btnFieldCopy.Location = New System.Drawing.Point(3, 171)
+        Me.btnFieldCopy.Name = "btnFieldCopy"
+        Me.btnFieldCopy.Size = New System.Drawing.Size(30, 23)
+        Me.btnFieldCopy.TabIndex = 3
+        Me.btnFieldCopy.UseVisualStyleBackColor = True
         '
         'btnReportFieldDown
         '
@@ -687,7 +744,7 @@ Partial Class frmReports
         Me.pnlRelationsMain.Dock = System.Windows.Forms.DockStyle.Fill
         Me.pnlRelationsMain.Location = New System.Drawing.Point(38, 0)
         Me.pnlRelationsMain.Name = "pnlRelationsMain"
-        Me.pnlRelationsMain.Size = New System.Drawing.Size(824, 200)
+        Me.pnlRelationsMain.Size = New System.Drawing.Size(553, 200)
         Me.pnlRelationsMain.TabIndex = 156
         '
         'pnlRelations
@@ -757,7 +814,7 @@ Partial Class frmReports
         Me.pnlRelationHeaders.Controls.Add(Me.lblRelationsSelectedTable)
         Me.pnlRelationHeaders.Location = New System.Drawing.Point(0, 0)
         Me.pnlRelationHeaders.Name = "pnlRelationHeaders"
-        Me.pnlRelationHeaders.Size = New System.Drawing.Size(843, 24)
+        Me.pnlRelationHeaders.Size = New System.Drawing.Size(821, 24)
         Me.pnlRelationHeaders.TabIndex = 155
         '
         'lblRelationsTargetField
@@ -816,6 +873,7 @@ Partial Class frmReports
         '
         'pnlSplitSelectedTables
         '
+        Me.pnlSplitSelectedTables.Controls.Add(Me.btnTableCopy)
         Me.pnlSplitSelectedTables.Controls.Add(Me.btnReportTableUp)
         Me.pnlSplitSelectedTables.Controls.Add(Me.btnReportTableDown)
         Me.pnlSplitSelectedTables.Dock = System.Windows.Forms.DockStyle.Left
@@ -823,6 +881,16 @@ Partial Class frmReports
         Me.pnlSplitSelectedTables.Name = "pnlSplitSelectedTables"
         Me.pnlSplitSelectedTables.Size = New System.Drawing.Size(38, 200)
         Me.pnlSplitSelectedTables.TabIndex = 155
+        '
+        'btnTableCopy
+        '
+        Me.btnTableCopy.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnTableCopy.Image = Global.Sequenchel.My.Resources.Resources.copy
+        Me.btnTableCopy.Location = New System.Drawing.Point(3, 128)
+        Me.btnTableCopy.Name = "btnTableCopy"
+        Me.btnTableCopy.Size = New System.Drawing.Size(30, 23)
+        Me.btnTableCopy.TabIndex = 2
+        Me.btnTableCopy.UseVisualStyleBackColor = True
         '
         'btnReportTableUp
         '
@@ -858,15 +926,15 @@ Partial Class frmReports
         Me.pnlReportButtons.Controls.Add(Me.txtTop)
         Me.pnlReportButtons.Controls.Add(Me.btnRevertChanges)
         Me.pnlReportButtons.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.pnlReportButtons.Location = New System.Drawing.Point(3, 655)
+        Me.pnlReportButtons.Location = New System.Drawing.Point(3, 577)
         Me.pnlReportButtons.Name = "pnlReportButtons"
-        Me.pnlReportButtons.Size = New System.Drawing.Size(1246, 58)
+        Me.pnlReportButtons.Size = New System.Drawing.Size(974, 58)
         Me.pnlReportButtons.TabIndex = 198
         '
         'btnQueryShow
         '
         Me.btnQueryShow.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnQueryShow.Location = New System.Drawing.Point(1073, 7)
+        Me.btnQueryShow.Location = New System.Drawing.Point(631, 33)
         Me.btnQueryShow.Name = "btnQueryShow"
         Me.btnQueryShow.Size = New System.Drawing.Size(164, 20)
         Me.btnQueryShow.TabIndex = 7
@@ -875,7 +943,7 @@ Partial Class frmReports
         'btnReportClear
         '
         Me.btnReportClear.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnReportClear.Location = New System.Drawing.Point(903, 33)
+        Me.btnReportClear.Location = New System.Drawing.Point(801, 33)
         Me.btnReportClear.Name = "btnReportClear"
         Me.btnReportClear.Size = New System.Drawing.Size(164, 20)
         Me.btnReportClear.TabIndex = 8
@@ -894,7 +962,7 @@ Partial Class frmReports
         'btnReportCreate
         '
         Me.btnReportCreate.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnReportCreate.Location = New System.Drawing.Point(903, 7)
+        Me.btnReportCreate.Location = New System.Drawing.Point(631, 7)
         Me.btnReportCreate.Name = "btnReportCreate"
         Me.btnReportCreate.Size = New System.Drawing.Size(164, 20)
         Me.btnReportCreate.TabIndex = 6
@@ -907,14 +975,14 @@ Partial Class frmReports
         Me.txtDescription.Location = New System.Drawing.Point(186, 21)
         Me.txtDescription.Multiline = True
         Me.txtDescription.Name = "txtDescription"
-        Me.txtDescription.Size = New System.Drawing.Size(541, 32)
+        Me.txtDescription.Size = New System.Drawing.Size(269, 32)
         Me.txtDescription.TabIndex = 2
         '
         'chkDistinct
         '
         Me.chkDistinct.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.chkDistinct.AutoSize = True
-        Me.chkDistinct.Location = New System.Drawing.Point(743, 10)
+        Me.chkDistinct.Location = New System.Drawing.Point(471, 10)
         Me.chkDistinct.Name = "chkDistinct"
         Me.chkDistinct.Size = New System.Drawing.Size(98, 17)
         Me.chkDistinct.TabIndex = 3
@@ -936,7 +1004,7 @@ Partial Class frmReports
         Me.chkTop.AutoSize = True
         Me.chkTop.Checked = True
         Me.chkTop.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.chkTop.Location = New System.Drawing.Point(743, 36)
+        Me.chkTop.Location = New System.Drawing.Point(471, 36)
         Me.chkTop.Name = "chkTop"
         Me.chkTop.Size = New System.Drawing.Size(70, 17)
         Me.chkTop.TabIndex = 4
@@ -955,7 +1023,7 @@ Partial Class frmReports
         'txtTop
         '
         Me.txtTop.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.txtTop.Location = New System.Drawing.Point(819, 34)
+        Me.txtTop.Location = New System.Drawing.Point(547, 34)
         Me.txtTop.Name = "txtTop"
         Me.txtTop.Size = New System.Drawing.Size(39, 20)
         Me.txtTop.TabIndex = 5
@@ -964,7 +1032,7 @@ Partial Class frmReports
         'btnRevertChanges
         '
         Me.btnRevertChanges.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnRevertChanges.Location = New System.Drawing.Point(1073, 33)
+        Me.btnRevertChanges.Location = New System.Drawing.Point(801, 7)
         Me.btnRevertChanges.Name = "btnRevertChanges"
         Me.btnRevertChanges.Size = New System.Drawing.Size(164, 20)
         Me.btnRevertChanges.TabIndex = 9
@@ -988,14 +1056,14 @@ Partial Class frmReports
         Me.pnlReportConnection.Dock = System.Windows.Forms.DockStyle.Top
         Me.pnlReportConnection.Location = New System.Drawing.Point(3, 3)
         Me.pnlReportConnection.Name = "pnlReportConnection"
-        Me.pnlReportConnection.Size = New System.Drawing.Size(1246, 51)
+        Me.pnlReportConnection.Size = New System.Drawing.Size(974, 51)
         Me.pnlReportConnection.TabIndex = 197
         '
         'lblReport
         '
         Me.lblReport.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblReport.AutoSize = True
-        Me.lblReport.Location = New System.Drawing.Point(766, 5)
+        Me.lblReport.Location = New System.Drawing.Point(494, 5)
         Me.lblReport.Name = "lblReport"
         Me.lblReport.Size = New System.Drawing.Size(39, 13)
         Me.lblReport.TabIndex = 171
@@ -1005,7 +1073,7 @@ Partial Class frmReports
         '
         Me.cbxReportName.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.cbxReportName.FormattingEnabled = True
-        Me.cbxReportName.Location = New System.Drawing.Point(768, 21)
+        Me.cbxReportName.Location = New System.Drawing.Point(496, 21)
         Me.cbxReportName.Name = "cbxReportName"
         Me.cbxReportName.Size = New System.Drawing.Size(197, 21)
         Me.cbxReportName.Sorted = True
@@ -1014,7 +1082,7 @@ Partial Class frmReports
         'btnReportAddOrUpdate
         '
         Me.btnReportAddOrUpdate.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnReportAddOrUpdate.Location = New System.Drawing.Point(971, 20)
+        Me.btnReportAddOrUpdate.Location = New System.Drawing.Point(699, 20)
         Me.btnReportAddOrUpdate.Name = "btnReportAddOrUpdate"
         Me.btnReportAddOrUpdate.Size = New System.Drawing.Size(131, 20)
         Me.btnReportAddOrUpdate.TabIndex = 7
@@ -1033,7 +1101,7 @@ Partial Class frmReports
         'btnReportDelete
         '
         Me.btnReportDelete.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnReportDelete.Location = New System.Drawing.Point(1108, 20)
+        Me.btnReportDelete.Location = New System.Drawing.Point(836, 20)
         Me.btnReportDelete.Name = "btnReportDelete"
         Me.btnReportDelete.Size = New System.Drawing.Size(131, 20)
         Me.btnReportDelete.TabIndex = 8
@@ -1114,14 +1182,11 @@ Partial Class frmReports
         '
         'tpgReportResult
         '
+        Me.tpgReportResult.Controls.Add(Me.sptReportResults)
         Me.tpgReportResult.Controls.Add(Me.cbxEmailResults)
         Me.tpgReportResult.Controls.Add(Me.btnEmailResults)
-        Me.tpgReportResult.Controls.Add(Me.lblElapsedTime)
         Me.tpgReportResult.Controls.Add(Me.btnDefinition)
         Me.tpgReportResult.Controls.Add(Me.btnExportToFile)
-        Me.tpgReportResult.Controls.Add(Me.lblErrorMessage)
-        Me.tpgReportResult.Controls.Add(Me.lblListCount)
-        Me.tpgReportResult.Controls.Add(Me.lblListCountNumber)
         Me.tpgReportResult.Controls.Add(Me.btnLoadQuery)
         Me.tpgReportResult.Controls.Add(Me.btnSaveQuery)
         Me.tpgReportResult.Controls.Add(Me.btnExecuteQuery)
@@ -1130,10 +1195,131 @@ Partial Class frmReports
         Me.tpgReportResult.Location = New System.Drawing.Point(4, 22)
         Me.tpgReportResult.Name = "tpgReportResult"
         Me.tpgReportResult.Padding = New System.Windows.Forms.Padding(3)
-        Me.tpgReportResult.Size = New System.Drawing.Size(1252, 716)
+        Me.tpgReportResult.Size = New System.Drawing.Size(1252, 717)
         Me.tpgReportResult.TabIndex = 1
         Me.tpgReportResult.Text = "Report Result"
         Me.tpgReportResult.UseVisualStyleBackColor = True
+        '
+        'sptReportResults
+        '
+        Me.sptReportResults.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.sptReportResults.IsSplitterFixed = True
+        Me.sptReportResults.Location = New System.Drawing.Point(6, 556)
+        Me.sptReportResults.Name = "sptReportResults"
+        '
+        'sptReportResults.Panel1
+        '
+        Me.sptReportResults.Panel1.Controls.Add(Me.btnFirstPage)
+        Me.sptReportResults.Panel1.Controls.Add(Me.chkShowAll)
+        Me.sptReportResults.Panel1.Controls.Add(Me.lblListCountNumber)
+        Me.sptReportResults.Panel1.Controls.Add(Me.lblListCount)
+        Me.sptReportResults.Panel1.Controls.Add(Me.btnPreviousPage)
+        Me.sptReportResults.Panel1.Controls.Add(Me.btnLastPage)
+        Me.sptReportResults.Panel1.Controls.Add(Me.btnNextPage)
+        '
+        'sptReportResults.Panel2
+        '
+        Me.sptReportResults.Panel2.Controls.Add(Me.lblErrorMessage)
+        Me.sptReportResults.Panel2.Controls.Add(Me.lblElapsedTime)
+        Me.sptReportResults.Size = New System.Drawing.Size(1243, 28)
+        Me.sptReportResults.SplitterDistance = 257
+        Me.sptReportResults.TabIndex = 184
+        '
+        'btnFirstPage
+        '
+        Me.btnFirstPage.Image = Global.Sequenchel.My.Resources.Resources.button_endleft
+        Me.btnFirstPage.Location = New System.Drawing.Point(66, 3)
+        Me.btnFirstPage.Name = "btnFirstPage"
+        Me.btnFirstPage.Size = New System.Drawing.Size(24, 23)
+        Me.btnFirstPage.TabIndex = 179
+        Me.btnFirstPage.UseVisualStyleBackColor = True
+        '
+        'chkShowAll
+        '
+        Me.chkShowAll.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.chkShowAll.AutoSize = True
+        Me.chkShowAll.Location = New System.Drawing.Point(189, 6)
+        Me.chkShowAll.Name = "chkShowAll"
+        Me.chkShowAll.Size = New System.Drawing.Size(67, 17)
+        Me.chkShowAll.TabIndex = 183
+        Me.chkShowAll.Text = "Show All"
+        Me.chkShowAll.UseVisualStyleBackColor = True
+        '
+        'lblListCountNumber
+        '
+        Me.lblListCountNumber.AutoSize = True
+        Me.lblListCountNumber.BackColor = System.Drawing.SystemColors.Control
+        Me.lblListCountNumber.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblListCountNumber.Location = New System.Drawing.Point(117, 6)
+        Me.lblListCountNumber.Name = "lblListCountNumber"
+        Me.lblListCountNumber.Size = New System.Drawing.Size(14, 15)
+        Me.lblListCountNumber.TabIndex = 174
+        Me.lblListCountNumber.Tag = ""
+        Me.lblListCountNumber.Text = "0"
+        '
+        'lblListCount
+        '
+        Me.lblListCount.AutoSize = True
+        Me.lblListCount.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblListCount.Location = New System.Drawing.Point(2, 6)
+        Me.lblListCount.Name = "lblListCount"
+        Me.lblListCount.Size = New System.Drawing.Size(61, 15)
+        Me.lblListCount.TabIndex = 173
+        Me.lblListCount.Text = "List Count"
+        '
+        'btnPreviousPage
+        '
+        Me.btnPreviousPage.Image = Global.Sequenchel.My.Resources.Resources.button_leftt
+        Me.btnPreviousPage.Location = New System.Drawing.Point(90, 3)
+        Me.btnPreviousPage.Name = "btnPreviousPage"
+        Me.btnPreviousPage.Size = New System.Drawing.Size(24, 23)
+        Me.btnPreviousPage.TabIndex = 180
+        Me.btnPreviousPage.UseVisualStyleBackColor = True
+        '
+        'btnLastPage
+        '
+        Me.btnLastPage.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnLastPage.Image = Global.Sequenchel.My.Resources.Resources.button_endright
+        Me.btnLastPage.Location = New System.Drawing.Point(158, 3)
+        Me.btnLastPage.Name = "btnLastPage"
+        Me.btnLastPage.Size = New System.Drawing.Size(24, 23)
+        Me.btnLastPage.TabIndex = 182
+        Me.btnLastPage.UseVisualStyleBackColor = True
+        '
+        'btnNextPage
+        '
+        Me.btnNextPage.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnNextPage.Image = Global.Sequenchel.My.Resources.Resources.button_right
+        Me.btnNextPage.Location = New System.Drawing.Point(134, 3)
+        Me.btnNextPage.Name = "btnNextPage"
+        Me.btnNextPage.Size = New System.Drawing.Size(24, 23)
+        Me.btnNextPage.TabIndex = 181
+        Me.btnNextPage.UseVisualStyleBackColor = True
+        '
+        'lblErrorMessage
+        '
+        Me.lblErrorMessage.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lblErrorMessage.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.lblErrorMessage.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblErrorMessage.Location = New System.Drawing.Point(8, 6)
+        Me.lblErrorMessage.Multiline = True
+        Me.lblErrorMessage.Name = "lblErrorMessage"
+        Me.lblErrorMessage.ReadOnly = True
+        Me.lblErrorMessage.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
+        Me.lblErrorMessage.Size = New System.Drawing.Size(892, 20)
+        Me.lblErrorMessage.TabIndex = 176
+        Me.lblErrorMessage.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        '
+        'lblElapsedTime
+        '
+        Me.lblElapsedTime.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lblElapsedTime.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblElapsedTime.Location = New System.Drawing.Point(907, 6)
+        Me.lblElapsedTime.Name = "lblElapsedTime"
+        Me.lblElapsedTime.Size = New System.Drawing.Size(73, 22)
+        Me.lblElapsedTime.TabIndex = 178
         '
         'cbxEmailResults
         '
@@ -1141,7 +1327,7 @@ Partial Class frmReports
         Me.cbxEmailResults.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cbxEmailResults.FormattingEnabled = True
         Me.cbxEmailResults.Items.AddRange(New Object() {"HTML", "Excel", "XML", "CSV"})
-        Me.cbxEmailResults.Location = New System.Drawing.Point(738, 684)
+        Me.cbxEmailResults.Location = New System.Drawing.Point(738, 691)
         Me.cbxEmailResults.Name = "cbxEmailResults"
         Me.cbxEmailResults.Size = New System.Drawing.Size(60, 21)
         Me.cbxEmailResults.TabIndex = 6
@@ -1149,26 +1335,17 @@ Partial Class frmReports
         'btnEmailResults
         '
         Me.btnEmailResults.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.btnEmailResults.Location = New System.Drawing.Point(602, 683)
+        Me.btnEmailResults.Location = New System.Drawing.Point(602, 690)
         Me.btnEmailResults.Name = "btnEmailResults"
         Me.btnEmailResults.Size = New System.Drawing.Size(135, 23)
         Me.btnEmailResults.TabIndex = 5
         Me.btnEmailResults.Text = "Email Results as:"
         Me.btnEmailResults.UseVisualStyleBackColor = True
         '
-        'lblElapsedTime
-        '
-        Me.lblElapsedTime.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lblElapsedTime.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblElapsedTime.Location = New System.Drawing.Point(1173, 550)
-        Me.lblElapsedTime.Name = "lblElapsedTime"
-        Me.lblElapsedTime.Size = New System.Drawing.Size(73, 22)
-        Me.lblElapsedTime.TabIndex = 178
-        '
         'btnDefinition
         '
         Me.btnDefinition.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnDefinition.Location = New System.Drawing.Point(1105, 683)
+        Me.btnDefinition.Location = New System.Drawing.Point(1105, 690)
         Me.btnDefinition.Name = "btnDefinition"
         Me.btnDefinition.Size = New System.Drawing.Size(135, 23)
         Me.btnDefinition.TabIndex = 7
@@ -1178,46 +1355,17 @@ Partial Class frmReports
         'btnExportToFile
         '
         Me.btnExportToFile.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.btnExportToFile.Location = New System.Drawing.Point(442, 683)
+        Me.btnExportToFile.Location = New System.Drawing.Point(442, 690)
         Me.btnExportToFile.Name = "btnExportToFile"
         Me.btnExportToFile.Size = New System.Drawing.Size(135, 23)
         Me.btnExportToFile.TabIndex = 4
         Me.btnExportToFile.Text = "Export Results to File"
         Me.btnExportToFile.UseVisualStyleBackColor = True
         '
-        'lblErrorMessage
-        '
-        Me.lblErrorMessage.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lblErrorMessage.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblErrorMessage.Location = New System.Drawing.Point(161, 552)
-        Me.lblErrorMessage.Name = "lblErrorMessage"
-        Me.lblErrorMessage.Size = New System.Drawing.Size(1002, 22)
-        Me.lblErrorMessage.TabIndex = 175
-        '
-        'lblListCount
-        '
-        Me.lblListCount.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.lblListCount.AutoSize = True
-        Me.lblListCount.Location = New System.Drawing.Point(6, 552)
-        Me.lblListCount.Name = "lblListCount"
-        Me.lblListCount.Size = New System.Drawing.Size(57, 13)
-        Me.lblListCount.TabIndex = 173
-        Me.lblListCount.Text = "List Count:"
-        '
-        'lblListCountNumber
-        '
-        Me.lblListCountNumber.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.lblListCountNumber.Location = New System.Drawing.Point(83, 552)
-        Me.lblListCountNumber.Name = "lblListCountNumber"
-        Me.lblListCountNumber.Size = New System.Drawing.Size(54, 13)
-        Me.lblListCountNumber.TabIndex = 174
-        Me.lblListCountNumber.Text = "0"
-        '
         'btnLoadQuery
         '
         Me.btnLoadQuery.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.btnLoadQuery.Location = New System.Drawing.Point(301, 683)
+        Me.btnLoadQuery.Location = New System.Drawing.Point(301, 690)
         Me.btnLoadQuery.Name = "btnLoadQuery"
         Me.btnLoadQuery.Size = New System.Drawing.Size(135, 23)
         Me.btnLoadQuery.TabIndex = 3
@@ -1227,7 +1375,7 @@ Partial Class frmReports
         'btnSaveQuery
         '
         Me.btnSaveQuery.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.btnSaveQuery.Location = New System.Drawing.Point(160, 683)
+        Me.btnSaveQuery.Location = New System.Drawing.Point(160, 690)
         Me.btnSaveQuery.Name = "btnSaveQuery"
         Me.btnSaveQuery.Size = New System.Drawing.Size(135, 23)
         Me.btnSaveQuery.TabIndex = 2
@@ -1237,7 +1385,7 @@ Partial Class frmReports
         'btnExecuteQuery
         '
         Me.btnExecuteQuery.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.btnExecuteQuery.Location = New System.Drawing.Point(19, 683)
+        Me.btnExecuteQuery.Location = New System.Drawing.Point(19, 690)
         Me.btnExecuteQuery.Name = "btnExecuteQuery"
         Me.btnExecuteQuery.Size = New System.Drawing.Size(135, 23)
         Me.btnExecuteQuery.TabIndex = 1
@@ -1248,7 +1396,7 @@ Partial Class frmReports
         '
         Me.rtbQuery.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.rtbQuery.Location = New System.Drawing.Point(6, 577)
+        Me.rtbQuery.Location = New System.Drawing.Point(6, 585)
         Me.rtbQuery.Name = "rtbQuery"
         Me.rtbQuery.Size = New System.Drawing.Size(1240, 100)
         Me.rtbQuery.TabIndex = 0
@@ -1268,13 +1416,12 @@ Partial Class frmReports
         Me.dgvReport.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgvReport.Location = New System.Drawing.Point(6, 6)
         Me.dgvReport.Name = "dgvReport"
-        Me.dgvReport.Size = New System.Drawing.Size(1243, 543)
+        Me.dgvReport.Size = New System.Drawing.Size(1243, 549)
         Me.dgvReport.TabIndex = 0
         '
         'btnTest
         '
-        Me.btnTest.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnTest.Location = New System.Drawing.Point(1133, 777)
+        Me.btnTest.Location = New System.Drawing.Point(734, 3)
         Me.btnTest.Name = "btnTest"
         Me.btnTest.Size = New System.Drawing.Size(135, 23)
         Me.btnTest.TabIndex = 170
@@ -1283,30 +1430,30 @@ Partial Class frmReports
         Me.btnTest.UseVisualStyleBackColor = True
         Me.btnTest.Visible = False
         '
-        'tmrElapsedTime
+        'tmrSuspendLookup
         '
-        Me.tmrElapsedTime.Interval = 1000
+        Me.tmrSuspendLookup.Interval = 500
         '
         'lblStatusTitle
         '
         Me.lblStatusTitle.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.lblStatusTitle.AutoSize = True
         Me.lblStatusTitle.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblStatusTitle.Location = New System.Drawing.Point(9, 780)
+        Me.lblStatusTitle.Location = New System.Drawing.Point(9, 702)
         Me.lblStatusTitle.Name = "lblStatusTitle"
         Me.lblStatusTitle.Size = New System.Drawing.Size(51, 16)
         Me.lblStatusTitle.TabIndex = 172
         Me.lblStatusTitle.Text = "Status"
         '
-        'mnuReports
+        'MenuStrip1
         '
-        Me.mnuReports.BackColor = System.Drawing.SystemColors.Control
-        Me.mnuReports.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuReportsFile, Me.mnuReportsHelp})
-        Me.mnuReports.Location = New System.Drawing.Point(0, 0)
-        Me.mnuReports.Name = "mnuReports"
-        Me.mnuReports.Size = New System.Drawing.Size(1284, 24)
-        Me.mnuReports.TabIndex = 174
-        Me.mnuReports.Text = "Reports"
+        Me.MenuStrip1.BackColor = System.Drawing.SystemColors.Control
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuReportsFile, Me.mnuReportsHelp})
+        Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
+        Me.MenuStrip1.Name = "MenuStrip1"
+        Me.MenuStrip1.Size = New System.Drawing.Size(1012, 24)
+        Me.MenuStrip1.TabIndex = 174
+        Me.MenuStrip1.Text = "MenuStrip1"
         '
         'mnuReportsFile
         '
@@ -1332,7 +1479,7 @@ Partial Class frmReports
         '
         Me.mnuReportsHelpManual.Name = "mnuReportsHelpManual"
         Me.mnuReportsHelpManual.Size = New System.Drawing.Size(157, 22)
-        Me.mnuReportsHelpManual.Text = "&Manual Reports"
+        Me.mnuReportsHelpManual.Text = "Reports &Manual"
         '
         'lblStatusText
         '
@@ -1340,28 +1487,28 @@ Partial Class frmReports
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblStatusText.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.lblStatusText.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblStatusText.Location = New System.Drawing.Point(66, 781)
+        Me.lblStatusText.Location = New System.Drawing.Point(70, 703)
         Me.lblStatusText.Multiline = True
         Me.lblStatusText.Name = "lblStatusText"
         Me.lblStatusText.ReadOnly = True
         Me.lblStatusText.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.lblStatusText.Size = New System.Drawing.Size(1055, 20)
+        Me.lblStatusText.Size = New System.Drawing.Size(930, 20)
         Me.lblStatusText.TabIndex = 175
         '
         'frmReports
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1284, 811)
+        Me.ClientSize = New System.Drawing.Size(1012, 733)
         Me.Controls.Add(Me.lblStatusText)
         Me.Controls.Add(Me.lblStatusTitle)
         Me.Controls.Add(Me.btnTest)
         Me.Controls.Add(Me.lblLicense)
         Me.Controls.Add(Me.tabReports)
-        Me.Controls.Add(Me.mnuReports)
+        Me.Controls.Add(Me.MenuStrip1)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
-        Me.MainMenuStrip = Me.mnuReports
-        Me.MinimumSize = New System.Drawing.Size(1300, 800)
+        Me.MainMenuStrip = Me.MenuStrip1
+        Me.MinimumSize = New System.Drawing.Size(1022, 726)
         Me.Name = "frmReports"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
         Me.Text = "Reports"
@@ -1403,10 +1550,15 @@ Partial Class frmReports
         Me.pnlReportConnection.ResumeLayout(False)
         Me.pnlReportConnection.PerformLayout()
         Me.tpgReportResult.ResumeLayout(False)
-        Me.tpgReportResult.PerformLayout()
+        Me.sptReportResults.Panel1.ResumeLayout(False)
+        Me.sptReportResults.Panel1.PerformLayout()
+        Me.sptReportResults.Panel2.ResumeLayout(False)
+        Me.sptReportResults.Panel2.PerformLayout()
+        CType(Me.sptReportResults, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.sptReportResults.ResumeLayout(False)
         CType(Me.dgvReport, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.mnuReports.ResumeLayout(False)
-        Me.mnuReports.PerformLayout()
+        Me.MenuStrip1.ResumeLayout(False)
+        Me.MenuStrip1.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -1482,7 +1634,6 @@ Partial Class frmReports
     Friend WithEvents lblListCount As System.Windows.Forms.Label
     Friend WithEvents lblListCountNumber As System.Windows.Forms.Label
     Friend WithEvents btnQueryShow As System.Windows.Forms.Button
-    Friend WithEvents lblErrorMessage As System.Windows.Forms.Label
     Friend WithEvents btnExportToFile As System.Windows.Forms.Button
     Friend WithEvents btnDefinition As System.Windows.Forms.Button
     Friend WithEvents btnRevertChanges As System.Windows.Forms.Button
@@ -1496,7 +1647,7 @@ Partial Class frmReports
     Friend WithEvents lvwSelectedTables As System.Windows.Forms.ListView
     Friend WithEvents colTableAlias As System.Windows.Forms.ColumnHeader
     Friend WithEvents lblElapsedTime As System.Windows.Forms.Label
-    Friend WithEvents tmrElapsedTime As System.Windows.Forms.Timer
+    Friend WithEvents tmrSuspendLookup As System.Windows.Forms.Timer
     Friend WithEvents dgvReport As Sequenchel.usrDataGridView
     Friend WithEvents btnReportExport As System.Windows.Forms.Button
     Friend WithEvents btnReportImport As System.Windows.Forms.Button
@@ -1520,10 +1671,22 @@ Partial Class frmReports
     Friend WithEvents lblRelationsTargetField As System.Windows.Forms.Label
     Friend WithEvents lblRelationsTargetTable As System.Windows.Forms.Label
     Friend WithEvents colTableName As System.Windows.Forms.ColumnHeader
-    Friend WithEvents mnuReports As System.Windows.Forms.MenuStrip
+    Friend WithEvents MenuStrip1 As System.Windows.Forms.MenuStrip
     Friend WithEvents mnuReportsFile As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents mnuReportsFileClose As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents mnuReportsHelp As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents mnuReportsHelpManual As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents lblStatusText As System.Windows.Forms.TextBox
+    Friend WithEvents btnFirstPage As System.Windows.Forms.Button
+    Friend WithEvents btnPreviousPage As System.Windows.Forms.Button
+    Friend WithEvents btnNextPage As System.Windows.Forms.Button
+    Friend WithEvents btnLastPage As System.Windows.Forms.Button
+    Friend WithEvents chkShowAll As System.Windows.Forms.CheckBox
+    Friend WithEvents sptReportResults As System.Windows.Forms.SplitContainer
+    Friend WithEvents lblErrorMessage As System.Windows.Forms.TextBox
+    Friend WithEvents lblFieldFilter As System.Windows.Forms.Label
+    Friend WithEvents txtFieldFilter As System.Windows.Forms.TextBox
+    Friend WithEvents btnTableCopy As System.Windows.Forms.Button
+    Friend WithEvents btnFieldAliasChange As System.Windows.Forms.Button
+    Friend WithEvents btnFieldCopy As System.Windows.Forms.Button
 End Class

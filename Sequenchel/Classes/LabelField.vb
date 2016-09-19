@@ -1,5 +1,5 @@
-﻿Public Class ManagedSelectField
-    Inherits ManagedSelectList.ManagedSelectList
+﻿Public Class LabelField
+    Inherits System.Windows.Forms.Label
 
     Private _Field As SeqCore.BaseField = Nothing
 
@@ -11,5 +11,4 @@
             _Field = Value
         End Set
     End Property
-
 End Class

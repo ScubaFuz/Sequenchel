@@ -16,26 +16,6 @@
           <DataType>INTEGER</DataType>
           <Identity>True</Identity>
           <PrimaryKey>True</PrimaryKey>
-          <FldWidth>40</FldWidth>
-          <ControlField>
-          </ControlField>
-          <ControlValue>
-          </ControlValue>
-          <ControlUpdate>False</ControlUpdate>
-          <ControlMode>False</ControlMode>
-          <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="1" Width="40">True</FldList>
-          <FldVisible>True</FldVisible>
-          <FldSearch>True</FldSearch>
-          <FldSearchList>False</FldSearchList>
-          <FldUpdate>True</FldUpdate>
-        </Field>
-        <Field>
-          <FldName>AppDate</FldName>
-          <FldAlias>AppointmentDate</FldAlias>
-          <DataType>DATETIME</DataType>
-          <Identity>False</Identity>
-          <PrimaryKey>False</PrimaryKey>
           <FldWidth>50</FldWidth>
           <ControlField>
           </ControlField>
@@ -44,7 +24,27 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="2" Width="50">True</FldList>
+          <FldList Order="1" Width="50">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>True</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>AppDate</FldName>
+          <FldAlias>AppDate</FldAlias>
+          <DataType>DATETIME</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>100</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="2" Width="100">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -76,7 +76,7 @@
           <DataType>INTEGER</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>40</FldWidth>
+          <FldWidth>50</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -84,13 +84,22 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="4" Width="40">True</FldList>
+          <FldList Order="4" Width="50">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
           <FldUpdate>True</FldUpdate>
           <Relations>
-            <Relation RelatedField="ClientName">dbo.tbl_Clients.PK_ClientID</Relation>
+            <Relation>
+              <RelationTable>dbo.tbl_Clients</RelationTable>
+              <RelationTableAlias>Clients</RelationTableAlias>
+              <RelationField>PK_ClientID</RelationField>
+              <RelatedFieldName>
+              </RelatedFieldName>
+              <RelatedFieldAlias>
+              </RelatedFieldAlias>
+              <RelatedFieldList>False</RelatedFieldList>
+            </Relation>
           </Relations>
         </Field>
         <Field>
@@ -99,7 +108,7 @@
           <DataType>INTEGER</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>40</FldWidth>
+          <FldWidth>50</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -107,13 +116,22 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="5" Width="40">True</FldList>
+          <FldList Order="5" Width="50">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
           <FldUpdate>True</FldUpdate>
           <Relations>
-            <Relation RelatedField="TrackName">dbo.tbl_Tracks.PK_TrackID</Relation>
+            <Relation>
+              <RelationTable>dbo.tbl_Tracks</RelationTable>
+              <RelationTableAlias>Tracks</RelationTableAlias>
+              <RelationField>PK_TrackID</RelationField>
+              <RelatedFieldName>
+              </RelatedFieldName>
+              <RelatedFieldAlias>
+              </RelatedFieldAlias>
+              <RelatedFieldList>False</RelatedFieldList>
+            </Relation>
           </Relations>
         </Field>
         <Field>
@@ -122,7 +140,7 @@
           <DataType>INTEGER</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>40</FldWidth>
+          <FldWidth>50</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -130,7 +148,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="6" Width="40">True</FldList>
+          <FldList Order="6" Width="50">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -142,7 +160,7 @@
           <DataType>INTEGER</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>40</FldWidth>
+          <FldWidth>50</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -150,13 +168,22 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="7" Width="40">True</FldList>
+          <FldList Order="7" Width="50">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
           <FldUpdate>True</FldUpdate>
           <Relations>
-            <Relation RelatedField="LessonTypeName">dbo.tbl_LessonTypes.PK_LessonTypeID</Relation>
+            <Relation>
+              <RelationTable>dbo.tbl_LessonTypes</RelationTable>
+              <RelationTableAlias>LessonTypes</RelationTableAlias>
+              <RelationField>PK_LessonTypeID</RelationField>
+              <RelatedFieldName>
+              </RelatedFieldName>
+              <RelatedFieldAlias>
+              </RelatedFieldAlias>
+              <RelatedFieldList>False</RelatedFieldList>
+            </Relation>
           </Relations>
         </Field>
         <Field>
@@ -165,7 +192,7 @@
           <DataType>INTEGER</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>40</FldWidth>
+          <FldWidth>50</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -173,13 +200,22 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="8" Width="40">True</FldList>
+          <FldList Order="8" Width="50">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
           <FldUpdate>True</FldUpdate>
           <Relations>
-            <Relation RelatedField="LevelName">dbo.tbl_Levels.PK_LevelID</Relation>
+            <Relation>
+              <RelationTable>dbo.tbl_Levels</RelationTable>
+              <RelationTableAlias>Levels</RelationTableAlias>
+              <RelationField>PK_LevelID</RelationField>
+              <RelatedFieldName>
+              </RelatedFieldName>
+              <RelatedFieldAlias>
+              </RelatedFieldAlias>
+              <RelatedFieldList>False</RelatedFieldList>
+            </Relation>
           </Relations>
         </Field>
         <Field>
@@ -188,7 +224,7 @@
           <DataType>INTEGER</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>40</FldWidth>
+          <FldWidth>50</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -196,7 +232,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="9" Width="40">True</FldList>
+          <FldList Order="9" Width="50">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -208,7 +244,7 @@
           <DataType>INTEGER</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>40</FldWidth>
+          <FldWidth>50</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -216,7 +252,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="10" Width="40">True</FldList>
+          <FldList Order="10" Width="50">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -228,7 +264,7 @@
           <DataType>INTEGER</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>40</FldWidth>
+          <FldWidth>50</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -236,13 +272,22 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="0" Width="40">False</FldList>
+          <FldList Order="0" Width="50">False</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
           <FldUpdate>True</FldUpdate>
           <Relations>
-            <Relation RelatedField="LoginName">dbo.tbl_Logins.PK_LoginID</Relation>
+            <Relation>
+              <RelationTable>dbo.tbl_Logins</RelationTable>
+              <RelationTableAlias>Logins</RelationTableAlias>
+              <RelationField>PK_LoginID</RelationField>
+              <RelatedFieldName>
+              </RelatedFieldName>
+              <RelatedFieldAlias>
+              </RelatedFieldAlias>
+              <RelatedFieldList>False</RelatedFieldList>
+            </Relation>
           </Relations>
         </Field>
         <Field>
@@ -251,7 +296,7 @@
           <DataType>BIT</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>15</FldWidth>
+          <FldWidth>25</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -259,7 +304,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="0" Width="15">False</FldList>
+          <FldList Order="0" Width="25">False</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -282,7 +327,7 @@
           <DataType>INTEGER</DataType>
           <Identity>True</Identity>
           <PrimaryKey>True</PrimaryKey>
-          <FldWidth>40</FldWidth>
+          <FldWidth>50</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -290,7 +335,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="1" Width="40">True</FldList>
+          <FldList Order="1" Width="50">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -333,7 +378,7 @@
           <DataType>INTEGER</DataType>
           <Identity>True</Identity>
           <PrimaryKey>True</PrimaryKey>
-          <FldWidth>40</FldWidth>
+          <FldWidth>50</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -341,7 +386,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="1" Width="40">True</FldList>
+          <FldList Order="1" Width="50">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -353,7 +398,7 @@
           <DataType>INTEGER</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>40</FldWidth>
+          <FldWidth>50</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -361,13 +406,22 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="2" Width="40">True</FldList>
+          <FldList Order="2" Width="50">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
           <FldUpdate>True</FldUpdate>
           <Relations>
-            <Relation RelatedField="ClientName">dbo.tbl_Clients.PK_ClientID</Relation>
+            <Relation>
+              <RelationTable>dbo.tbl_Clients</RelationTable>
+              <RelationTableAlias>Clients</RelationTableAlias>
+              <RelationField>PK_ClientID</RelationField>
+              <RelatedFieldName>
+              </RelatedFieldName>
+              <RelatedFieldAlias>
+              </RelatedFieldAlias>
+              <RelatedFieldList>False</RelatedFieldList>
+            </Relation>
           </Relations>
         </Field>
         <Field>
@@ -376,7 +430,7 @@
           <DataType>INTEGER</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>40</FldWidth>
+          <FldWidth>50</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -384,13 +438,22 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="3" Width="40">True</FldList>
+          <FldList Order="3" Width="50">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
           <FldUpdate>True</FldUpdate>
           <Relations>
-            <Relation RelatedField="LessonTypeName">dbo.tbl_LessonTypes.PK_LessonTypeID</Relation>
+            <Relation>
+              <RelationTable>dbo.tbl_LessonTypes</RelationTable>
+              <RelationTableAlias>LessonTypes</RelationTableAlias>
+              <RelationField>PK_LessonTypeID</RelationField>
+              <RelatedFieldName>
+              </RelatedFieldName>
+              <RelatedFieldAlias>
+              </RelatedFieldAlias>
+              <RelatedFieldList>False</RelatedFieldList>
+            </Relation>
           </Relations>
         </Field>
         <Field>
@@ -399,7 +462,7 @@
           <DataType>INTEGER</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>40</FldWidth>
+          <FldWidth>50</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -407,13 +470,22 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="4" Width="40">True</FldList>
+          <FldList Order="4" Width="50">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
           <FldUpdate>True</FldUpdate>
           <Relations>
-            <Relation RelatedField="LevelName">dbo.tbl_Levels.PK_LevelID</Relation>
+            <Relation>
+              <RelationTable>dbo.tbl_Levels</RelationTable>
+              <RelationTableAlias>Levels</RelationTableAlias>
+              <RelationField>PK_LevelID</RelationField>
+              <RelatedFieldName>
+              </RelatedFieldName>
+              <RelatedFieldAlias>
+              </RelatedFieldAlias>
+              <RelatedFieldList>False</RelatedFieldList>
+            </Relation>
           </Relations>
         </Field>
         <Field>
@@ -422,7 +494,7 @@
           <DataType>INTEGER</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>40</FldWidth>
+          <FldWidth>50</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -430,7 +502,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="5" Width="40">True</FldList>
+          <FldList Order="5" Width="50">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -442,7 +514,7 @@
           <DataType>INTEGER</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>40</FldWidth>
+          <FldWidth>50</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -450,7 +522,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="6" Width="40">True</FldList>
+          <FldList Order="6" Width="50">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -462,7 +534,7 @@
           <DataType>BIT</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>15</FldWidth>
+          <FldWidth>25</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -470,7 +542,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="7" Width="15">True</FldList>
+          <FldList Order="7" Width="25">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -482,7 +554,7 @@
           <DataType>INTEGER</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>40</FldWidth>
+          <FldWidth>50</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -490,7 +562,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="8" Width="40">True</FldList>
+          <FldList Order="8" Width="50">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -502,7 +574,7 @@
           <DataType>BIT</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>15</FldWidth>
+          <FldWidth>25</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -510,7 +582,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="9" Width="15">True</FldList>
+          <FldList Order="9" Width="25">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -518,7 +590,7 @@
         </Field>
       </Fields>
     </Table>
-    <Table Default="True">
+    <Table Default="False">
       <Name>dbo.tbl_Clients</Name>
       <Alias>Clients</Alias>
       <Visible>True</Visible>
@@ -533,7 +605,7 @@
           <DataType>INTEGER</DataType>
           <Identity>True</Identity>
           <PrimaryKey>True</PrimaryKey>
-          <FldWidth>40</FldWidth>
+          <FldWidth>50</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -541,7 +613,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="1" Width="40">True</FldList>
+          <FldList Order="1" Width="50">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -647,7 +719,16 @@
           <FldSearchList>False</FldSearchList>
           <FldUpdate>True</FldUpdate>
           <Relations>
-            <Relation RelatedField="GroupName">dbo.tbl_Groups.PK_GroupID</Relation>
+            <Relation>
+              <RelationTable>dbo.tbl_Groups</RelationTable>
+              <RelationTableAlias>Groups</RelationTableAlias>
+              <RelationField>PK_GroupID</RelationField>
+              <RelatedFieldName>
+              </RelatedFieldName>
+              <RelatedFieldAlias>
+              </RelatedFieldAlias>
+              <RelatedFieldList>False</RelatedFieldList>
+            </Relation>
           </Relations>
         </Field>
         <Field>
@@ -656,7 +737,7 @@
           <DataType>BIT</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>15</FldWidth>
+          <FldWidth>25</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -664,7 +745,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="7" Width="15">True</FldList>
+          <FldList Order="7" Width="25">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -856,7 +937,7 @@
           <DataType>BIT</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>15</FldWidth>
+          <FldWidth>25</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -864,7 +945,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="0" Width="15">False</FldList>
+          <FldList Order="0" Width="25">False</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -876,29 +957,6 @@
           <DataType>INTEGER</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>40</FldWidth>
-          <ControlField>
-          </ControlField>
-          <ControlValue>
-          </ControlValue>
-          <ControlUpdate>False</ControlUpdate>
-          <ControlMode>False</ControlMode>
-          <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="0" Width="40">False</FldList>
-          <FldVisible>True</FldVisible>
-          <FldSearch>True</FldSearch>
-          <FldSearchList>False</FldSearchList>
-          <FldUpdate>True</FldUpdate>
-          <Relations>
-            <Relation RelatedField="PrContactName">dbo.tbl_PrContacts.PK_PrContactID</Relation>
-          </Relations>
-        </Field>
-        <Field>
-          <FldName>DayOfBirth</FldName>
-          <FldAlias>DayOfBirth</FldAlias>
-          <DataType>DATETIME</DataType>
-          <Identity>False</Identity>
-          <PrimaryKey>False</PrimaryKey>
           <FldWidth>50</FldWidth>
           <ControlField>
           </ControlField>
@@ -908,6 +966,38 @@
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
           <FldList Order="0" Width="50">False</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>True</FldUpdate>
+          <Relations>
+            <Relation>
+              <RelationTable>dbo.tbl_PrContacts</RelationTable>
+              <RelationTableAlias>PrContacts</RelationTableAlias>
+              <RelationField>PK_PrContactID</RelationField>
+              <RelatedFieldName>
+              </RelatedFieldName>
+              <RelatedFieldAlias>
+              </RelatedFieldAlias>
+              <RelatedFieldList>False</RelatedFieldList>
+            </Relation>
+          </Relations>
+        </Field>
+        <Field>
+          <FldName>DayOfBirth</FldName>
+          <FldAlias>DayOfBirth</FldAlias>
+          <DataType>DATETIME</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>100</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="0" Width="100">False</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -959,7 +1049,7 @@
           <DataType>INTEGER</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>40</FldWidth>
+          <FldWidth>50</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -967,7 +1057,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="0" Width="40">False</FldList>
+          <FldList Order="0" Width="50">False</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -1019,7 +1109,7 @@
           <DataType>BIT</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>15</FldWidth>
+          <FldWidth>25</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -1027,7 +1117,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="0" Width="15">False</FldList>
+          <FldList Order="0" Width="25">False</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -1039,7 +1129,7 @@
           <DataType>BIT</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>15</FldWidth>
+          <FldWidth>25</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -1047,7 +1137,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="0" Width="15">False</FldList>
+          <FldList Order="0" Width="25">False</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -1099,7 +1189,7 @@
           <DataType>BIT</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>15</FldWidth>
+          <FldWidth>25</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -1107,7 +1197,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="0" Width="15">False</FldList>
+          <FldList Order="0" Width="25">False</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -1130,7 +1220,7 @@
           <DataType>INTEGER</DataType>
           <Identity>True</Identity>
           <PrimaryKey>True</PrimaryKey>
-          <FldWidth>40</FldWidth>
+          <FldWidth>50</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -1138,7 +1228,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="1" Width="40">True</FldList>
+          <FldList Order="1" Width="50">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -1210,7 +1300,7 @@
           <DataType>DATETIME</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>50</FldWidth>
+          <FldWidth>100</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -1218,7 +1308,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="5" Width="50">True</FldList>
+          <FldList Order="5" Width="100">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -1230,15 +1320,15 @@
           <DataType>DATETIME</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>50</FldWidth>
+          <FldWidth>100</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
           </ControlValue>
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
-          <DefaultButton DefaultValue="Now()">True</DefaultButton>
-          <FldList Order="6" Width="50">True</FldList>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="6" Width="100">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -1250,15 +1340,15 @@
           <DataType>DATETIME</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>50</FldWidth>
+          <FldWidth>100</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
           </ControlValue>
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
-          <DefaultButton DefaultValue="Now()">True</DefaultButton>
-          <FldList Order="7" Width="50">True</FldList>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="7" Width="100">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -1290,7 +1380,7 @@
           <DataType>BIT</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>15</FldWidth>
+          <FldWidth>25</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -1298,7 +1388,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="9" Width="15">True</FldList>
+          <FldList Order="9" Width="25">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -1361,7 +1451,7 @@
           <DataType>BIT</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>15</FldWidth>
+          <FldWidth>25</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -1369,7 +1459,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="3" Width="15">True</FldList>
+          <FldList Order="3" Width="25">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -1392,7 +1482,7 @@
           <DataType>INTEGER</DataType>
           <Identity>True</Identity>
           <PrimaryKey>True</PrimaryKey>
-          <FldWidth>40</FldWidth>
+          <FldWidth>50</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -1400,7 +1490,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="1" Width="40">True</FldList>
+          <FldList Order="1" Width="50">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -1432,7 +1522,7 @@
           <DataType>INTEGER</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>40</FldWidth>
+          <FldWidth>50</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -1440,7 +1530,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="3" Width="40">True</FldList>
+          <FldList Order="3" Width="50">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -1452,7 +1542,7 @@
           <DataType>DATETIME</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>50</FldWidth>
+          <FldWidth>100</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -1460,7 +1550,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="4" Width="50">True</FldList>
+          <FldList Order="4" Width="100">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -1472,7 +1562,7 @@
           <DataType>INTEGER</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>40</FldWidth>
+          <FldWidth>50</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -1480,13 +1570,22 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="5" Width="40">True</FldList>
+          <FldList Order="5" Width="50">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
           <FldUpdate>True</FldUpdate>
           <Relations>
-            <Relation RelatedField="ClientName">dbo.tbl_Clients.PK_ClientID</Relation>
+            <Relation>
+              <RelationTable>dbo.tbl_Clients</RelationTable>
+              <RelationTableAlias>Clients</RelationTableAlias>
+              <RelationField>PK_ClientID</RelationField>
+              <RelatedFieldName>
+              </RelatedFieldName>
+              <RelatedFieldAlias>
+              </RelatedFieldAlias>
+              <RelatedFieldList>False</RelatedFieldList>
+            </Relation>
           </Relations>
         </Field>
         <Field>
@@ -1495,7 +1594,7 @@
           <DataType>INTEGER</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>40</FldWidth>
+          <FldWidth>50</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -1503,13 +1602,22 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="6" Width="40">True</FldList>
+          <FldList Order="6" Width="50">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
           <FldUpdate>True</FldUpdate>
           <Relations>
-            <Relation RelatedField="LoginName">dbo.tbl_Logins.PK_LoginID</Relation>
+            <Relation>
+              <RelationTable>dbo.tbl_Logins</RelationTable>
+              <RelationTableAlias>Logins</RelationTableAlias>
+              <RelationField>PK_LoginID</RelationField>
+              <RelatedFieldName>
+              </RelatedFieldName>
+              <RelatedFieldAlias>
+              </RelatedFieldAlias>
+              <RelatedFieldList>False</RelatedFieldList>
+            </Relation>
           </Relations>
         </Field>
         <Field>
@@ -1518,7 +1626,7 @@
           <DataType>BIT</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>15</FldWidth>
+          <FldWidth>25</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -1526,7 +1634,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="7" Width="15">True</FldList>
+          <FldList Order="7" Width="25">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -1538,7 +1646,7 @@
           <DataType>BIT</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>15</FldWidth>
+          <FldWidth>25</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -1546,7 +1654,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="8" Width="15">True</FldList>
+          <FldList Order="8" Width="25">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -1569,7 +1677,7 @@
           <DataType>INTEGER</DataType>
           <Identity>True</Identity>
           <PrimaryKey>True</PrimaryKey>
-          <FldWidth>40</FldWidth>
+          <FldWidth>50</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -1577,7 +1685,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="1" Width="40">True</FldList>
+          <FldList Order="1" Width="50">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -1589,7 +1697,7 @@
           <DataType>INTEGER</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>40</FldWidth>
+          <FldWidth>50</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -1597,13 +1705,22 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="2" Width="40">True</FldList>
+          <FldList Order="2" Width="50">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
           <FldUpdate>True</FldUpdate>
           <Relations>
-            <Relation RelatedField="InvoiceNumber">dbo.tbl_Invoice.PK_InvoiceID</Relation>
+            <Relation>
+              <RelationTable>dbo.tbl_Invoice</RelationTable>
+              <RelationTableAlias>Invoice</RelationTableAlias>
+              <RelationField>PK_InvoiceID</RelationField>
+              <RelatedFieldName>
+              </RelatedFieldName>
+              <RelatedFieldAlias>
+              </RelatedFieldAlias>
+              <RelatedFieldList>False</RelatedFieldList>
+            </Relation>
           </Relations>
         </Field>
         <Field>
@@ -1612,7 +1729,7 @@
           <DataType>INTEGER</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>40</FldWidth>
+          <FldWidth>50</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -1620,13 +1737,22 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="3" Width="40">True</FldList>
+          <FldList Order="3" Width="50">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
           <FldUpdate>True</FldUpdate>
           <Relations>
-            <Relation>dbo.tbl_Clients.PK_ClientID</Relation>
+            <Relation>
+              <RelationTable>dbo.tbl_Clients</RelationTable>
+              <RelationTableAlias>Clients</RelationTableAlias>
+              <RelationField>PK_ClientID</RelationField>
+              <RelatedFieldName>
+              </RelatedFieldName>
+              <RelatedFieldAlias>
+              </RelatedFieldAlias>
+              <RelatedFieldList>False</RelatedFieldList>
+            </Relation>
           </Relations>
         </Field>
         <Field>
@@ -1635,7 +1761,7 @@
           <DataType>INTEGER</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>40</FldWidth>
+          <FldWidth>50</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -1643,13 +1769,22 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="4" Width="40">True</FldList>
+          <FldList Order="4" Width="50">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
           <FldUpdate>True</FldUpdate>
           <Relations>
-            <Relation RelatedField="LoginName">dbo.tbl_Logins.PK_LoginID</Relation>
+            <Relation>
+              <RelationTable>dbo.tbl_Logins</RelationTable>
+              <RelationTableAlias>Logins</RelationTableAlias>
+              <RelationField>PK_LoginID</RelationField>
+              <RelatedFieldName>
+              </RelatedFieldName>
+              <RelatedFieldAlias>
+              </RelatedFieldAlias>
+              <RelatedFieldList>False</RelatedFieldList>
+            </Relation>
           </Relations>
         </Field>
         <Field>
@@ -1678,7 +1813,7 @@
           <DataType>INTEGER</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>40</FldWidth>
+          <FldWidth>50</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -1686,7 +1821,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="6" Width="40">True</FldList>
+          <FldList Order="6" Width="50">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -1718,7 +1853,7 @@
           <DataType>INTEGER</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>40</FldWidth>
+          <FldWidth>50</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -1726,14 +1861,11 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="8" Width="40">True</FldList>
+          <FldList Order="8" Width="50">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
           <FldUpdate>True</FldUpdate>
-          <Relations>
-            <Relation RelatedField="TaxValue">dbo.tbl_Tax.PK_Tax</Relation>
-          </Relations>
         </Field>
         <Field>
           <FldName>Active</FldName>
@@ -1741,7 +1873,7 @@
           <DataType>BIT</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>15</FldWidth>
+          <FldWidth>25</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -1749,7 +1881,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="9" Width="15">True</FldList>
+          <FldList Order="9" Width="25">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -1772,7 +1904,7 @@
           <DataType>INTEGER</DataType>
           <Identity>True</Identity>
           <PrimaryKey>True</PrimaryKey>
-          <FldWidth>40</FldWidth>
+          <FldWidth>50</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -1780,7 +1912,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="1" Width="40">True</FldList>
+          <FldList Order="1" Width="50">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -1792,7 +1924,7 @@
           <DataType>DATETIME</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>50</FldWidth>
+          <FldWidth>100</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -1800,7 +1932,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="2" Width="50">True</FldList>
+          <FldList Order="2" Width="100">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -1812,7 +1944,7 @@
           <DataType>INTEGER</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>40</FldWidth>
+          <FldWidth>50</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -1820,13 +1952,22 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="3" Width="40">True</FldList>
+          <FldList Order="3" Width="50">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
           <FldUpdate>True</FldUpdate>
           <Relations>
-            <Relation RelatedField="InvoiceNumber">dbo.tbl_Invoice.PK_InvoiceID</Relation>
+            <Relation>
+              <RelationTable>dbo.tbl_Invoice</RelationTable>
+              <RelationTableAlias>Invoice</RelationTableAlias>
+              <RelationField>PK_InvoiceID</RelationField>
+              <RelatedFieldName>
+              </RelatedFieldName>
+              <RelatedFieldAlias>
+              </RelatedFieldAlias>
+              <RelatedFieldList>False</RelatedFieldList>
+            </Relation>
           </Relations>
         </Field>
         <Field>
@@ -1835,7 +1976,7 @@
           <DataType>INTEGER</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>40</FldWidth>
+          <FldWidth>50</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -1843,13 +1984,22 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="4" Width="40">True</FldList>
+          <FldList Order="4" Width="50">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
           <FldUpdate>True</FldUpdate>
           <Relations>
-            <Relation RelatedField="ClientName">dbo.tbl_Clients.PK_ClientID</Relation>
+            <Relation>
+              <RelationTable>dbo.tbl_Clients</RelationTable>
+              <RelationTableAlias>Clients</RelationTableAlias>
+              <RelationField>PK_ClientID</RelationField>
+              <RelatedFieldName>
+              </RelatedFieldName>
+              <RelatedFieldAlias>
+              </RelatedFieldAlias>
+              <RelatedFieldList>False</RelatedFieldList>
+            </Relation>
           </Relations>
         </Field>
         <Field>
@@ -1858,7 +2008,7 @@
           <DataType>INTEGER</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>40</FldWidth>
+          <FldWidth>50</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -1866,13 +2016,22 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="5" Width="40">True</FldList>
+          <FldList Order="5" Width="50">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
           <FldUpdate>True</FldUpdate>
           <Relations>
-            <Relation RelatedField="LoginName">dbo.tbl_Logins.PK_LoginID</Relation>
+            <Relation>
+              <RelationTable>dbo.tbl_Logins</RelationTable>
+              <RelationTableAlias>Logins</RelationTableAlias>
+              <RelationField>PK_LoginID</RelationField>
+              <RelatedFieldName>
+              </RelatedFieldName>
+              <RelatedFieldAlias>
+              </RelatedFieldAlias>
+              <RelatedFieldList>False</RelatedFieldList>
+            </Relation>
           </Relations>
         </Field>
         <Field>
@@ -1901,7 +2060,7 @@
           <DataType>INTEGER</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>40</FldWidth>
+          <FldWidth>50</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -1909,13 +2068,22 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="7" Width="40">True</FldList>
+          <FldList Order="7" Width="50">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
           <FldUpdate>True</FldUpdate>
           <Relations>
-            <Relation RelatedField="PaymentMethodName">dbo.tbl_PaymentMethods.PK_PaymentMethodID</Relation>
+            <Relation>
+              <RelationTable>dbo.tbl_PaymentMethods</RelationTable>
+              <RelationTableAlias>PaymentMethods</RelationTableAlias>
+              <RelationField>PK_PaymentMethodID</RelationField>
+              <RelatedFieldName>
+              </RelatedFieldName>
+              <RelatedFieldAlias>
+              </RelatedFieldAlias>
+              <RelatedFieldList>False</RelatedFieldList>
+            </Relation>
           </Relations>
         </Field>
         <Field>
@@ -1924,7 +2092,7 @@
           <DataType>BIT</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>15</FldWidth>
+          <FldWidth>25</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -1932,7 +2100,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="8" Width="15">True</FldList>
+          <FldList Order="8" Width="25">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -1955,7 +2123,7 @@
           <DataType>INTEGER</DataType>
           <Identity>True</Identity>
           <PrimaryKey>True</PrimaryKey>
-          <FldWidth>40</FldWidth>
+          <FldWidth>50</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -1963,7 +2131,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="1" Width="40">True</FldList>
+          <FldList Order="1" Width="50">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -2086,7 +2254,7 @@
           <DataType>INTEGER</DataType>
           <Identity>True</Identity>
           <PrimaryKey>True</PrimaryKey>
-          <FldWidth>40</FldWidth>
+          <FldWidth>50</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -2094,7 +2262,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="1" Width="40">True</FldList>
+          <FldList Order="1" Width="50">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -2146,7 +2314,7 @@
           <DataType>BIT</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>15</FldWidth>
+          <FldWidth>25</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -2154,7 +2322,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="4" Width="15">True</FldList>
+          <FldList Order="4" Width="25">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -2177,7 +2345,7 @@
           <DataType>INTEGER</DataType>
           <Identity>True</Identity>
           <PrimaryKey>True</PrimaryKey>
-          <FldWidth>40</FldWidth>
+          <FldWidth>50</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -2185,7 +2353,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="1" Width="40">True</FldList>
+          <FldList Order="1" Width="50">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -2237,7 +2405,7 @@
           <DataType>INTEGER</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>40</FldWidth>
+          <FldWidth>50</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -2245,7 +2413,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="4" Width="40">True</FldList>
+          <FldList Order="4" Width="50">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -2257,7 +2425,7 @@
           <DataType>BIT</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>15</FldWidth>
+          <FldWidth>25</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -2265,7 +2433,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="5" Width="15">True</FldList>
+          <FldList Order="5" Width="25">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -2278,7 +2446,7 @@
       <Alias>Logging</Alias>
       <Visible>True</Visible>
       <Search>True</Search>
-      <Update>False</Update>
+      <Update>True</Update>
       <Insert>False</Insert>
       <Delete>False</Delete>
       <Fields>
@@ -2287,8 +2455,8 @@
           <FldAlias>LogDate</FldAlias>
           <DataType>DATETIME</DataType>
           <Identity>False</Identity>
-          <PrimaryKey>True</PrimaryKey>
-          <FldWidth>50</FldWidth>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>100</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -2296,7 +2464,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="1" Width="50">True</FldList>
+          <FldList Order="1" Width="100">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -2359,7 +2527,7 @@
           <DataType>INTEGER</DataType>
           <Identity>True</Identity>
           <PrimaryKey>True</PrimaryKey>
-          <FldWidth>40</FldWidth>
+          <FldWidth>50</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -2367,7 +2535,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="1" Width="40">True</FldList>
+          <FldList Order="1" Width="50">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -2419,15 +2587,15 @@
           <DataType>DATETIME</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>50</FldWidth>
+          <FldWidth>100</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
           </ControlValue>
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
-          <DefaultButton DefaultValue="Now()">True</DefaultButton>
-          <FldList Order="4" Width="50">True</FldList>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="4" Width="100">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -2439,15 +2607,15 @@
           <DataType>DATETIME</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>50</FldWidth>
+          <FldWidth>100</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
           </ControlValue>
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
-          <DefaultButton DefaultValue="Now()">True</DefaultButton>
-          <FldList Order="5" Width="50">True</FldList>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="5" Width="100">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -2459,7 +2627,7 @@
           <DataType>BIT</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>15</FldWidth>
+          <FldWidth>25</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -2467,7 +2635,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="6" Width="15">True</FldList>
+          <FldList Order="6" Width="25">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -2479,7 +2647,7 @@
           <DataType>BIT</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>15</FldWidth>
+          <FldWidth>25</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -2487,7 +2655,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="7" Width="15">True</FldList>
+          <FldList Order="7" Width="25">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -2499,7 +2667,7 @@
           <DataType>BIT</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>15</FldWidth>
+          <FldWidth>25</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -2507,7 +2675,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="8" Width="15">True</FldList>
+          <FldList Order="8" Width="25">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -2519,7 +2687,7 @@
           <DataType>BIT</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>15</FldWidth>
+          <FldWidth>25</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -2527,7 +2695,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="9" Width="15">True</FldList>
+          <FldList Order="9" Width="25">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -2539,7 +2707,7 @@
           <DataType>BIT</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>15</FldWidth>
+          <FldWidth>25</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -2547,7 +2715,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="10" Width="15">True</FldList>
+          <FldList Order="10" Width="25">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -2559,7 +2727,7 @@
           <DataType>BIT</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>15</FldWidth>
+          <FldWidth>25</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -2567,7 +2735,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="0" Width="15">False</FldList>
+          <FldList Order="0" Width="25">False</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -2579,7 +2747,7 @@
           <DataType>BIT</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>15</FldWidth>
+          <FldWidth>25</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -2587,7 +2755,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="0" Width="15">False</FldList>
+          <FldList Order="0" Width="25">False</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -2599,7 +2767,7 @@
           <DataType>BIT</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>15</FldWidth>
+          <FldWidth>25</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -2607,7 +2775,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="0" Width="15">False</FldList>
+          <FldList Order="0" Width="25">False</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -2619,7 +2787,7 @@
           <DataType>BIT</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>15</FldWidth>
+          <FldWidth>25</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -2627,7 +2795,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="0" Width="15">False</FldList>
+          <FldList Order="0" Width="25">False</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -2639,7 +2807,7 @@
           <DataType>BIT</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>15</FldWidth>
+          <FldWidth>25</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -2647,7 +2815,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="0" Width="15">False</FldList>
+          <FldList Order="0" Width="25">False</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -2659,7 +2827,7 @@
           <DataType>BIT</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>15</FldWidth>
+          <FldWidth>25</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -2667,7 +2835,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="0" Width="15">False</FldList>
+          <FldList Order="0" Width="25">False</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -2679,7 +2847,7 @@
           <DataType>BIT</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>15</FldWidth>
+          <FldWidth>25</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -2687,7 +2855,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="0" Width="15">False</FldList>
+          <FldList Order="0" Width="25">False</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -2699,7 +2867,7 @@
           <DataType>BIT</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>15</FldWidth>
+          <FldWidth>25</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -2707,7 +2875,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="0" Width="15">False</FldList>
+          <FldList Order="0" Width="25">False</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -2730,7 +2898,7 @@
           <DataType>INTEGER</DataType>
           <Identity>True</Identity>
           <PrimaryKey>True</PrimaryKey>
-          <FldWidth>40</FldWidth>
+          <FldWidth>50</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -2738,7 +2906,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="1" Width="40">True</FldList>
+          <FldList Order="1" Width="50">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -2787,10 +2955,10 @@
         <Field>
           <FldName>MemoDate</FldName>
           <FldAlias>MemoDate</FldAlias>
-          <DataType>CHAR</DataType>
+          <DataType>DATETIME</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>50</FldWidth>
+          <FldWidth>100</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -2798,7 +2966,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="4" Width="50">True</FldList>
+          <FldList Order="4" Width="100">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -2841,7 +3009,7 @@
           <DataType>INTEGER</DataType>
           <Identity>True</Identity>
           <PrimaryKey>True</PrimaryKey>
-          <FldWidth>40</FldWidth>
+          <FldWidth>50</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -2849,7 +3017,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="1" Width="40">True</FldList>
+          <FldList Order="1" Width="50">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -2881,7 +3049,7 @@
           <DataType>BIT</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>15</FldWidth>
+          <FldWidth>25</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -2889,7 +3057,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="3" Width="15">True</FldList>
+          <FldList Order="3" Width="25">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -2912,7 +3080,7 @@
           <DataType>INTEGER</DataType>
           <Identity>True</Identity>
           <PrimaryKey>True</PrimaryKey>
-          <FldWidth>40</FldWidth>
+          <FldWidth>50</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -2920,7 +3088,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="1" Width="40">True</FldList>
+          <FldList Order="1" Width="50">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -2952,7 +3120,7 @@
           <DataType>BIT</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>15</FldWidth>
+          <FldWidth>25</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -2960,7 +3128,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="3" Width="15">True</FldList>
+          <FldList Order="3" Width="25">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -2983,7 +3151,7 @@
           <DataType>INTEGER</DataType>
           <Identity>True</Identity>
           <PrimaryKey>True</PrimaryKey>
-          <FldWidth>40</FldWidth>
+          <FldWidth>50</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -2991,7 +3159,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="1" Width="40">True</FldList>
+          <FldList Order="1" Width="50">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -3023,7 +3191,7 @@
           <DataType>INTEGER</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>40</FldWidth>
+          <FldWidth>50</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -3031,7 +3199,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="3" Width="40">True</FldList>
+          <FldList Order="3" Width="50">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -3063,7 +3231,7 @@
           <DataType>INTEGER</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>40</FldWidth>
+          <FldWidth>50</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -3071,11 +3239,23 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="5" Width="40">True</FldList>
+          <FldList Order="5" Width="50">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
           <FldUpdate>True</FldUpdate>
+          <Relations>
+            <Relation>
+              <RelationTable>dbo.tbl_Tax</RelationTable>
+              <RelationTableAlias>Tax</RelationTableAlias>
+              <RelationField>PK_Tax</RelationField>
+              <RelatedFieldName>
+              </RelatedFieldName>
+              <RelatedFieldAlias>
+              </RelatedFieldAlias>
+              <RelatedFieldList>False</RelatedFieldList>
+            </Relation>
+          </Relations>
         </Field>
         <Field>
           <FldName>Sort</FldName>
@@ -3083,7 +3263,7 @@
           <DataType>INTEGER</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>10</FldWidth>
+          <FldWidth>50</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -3091,7 +3271,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="6" Width="10">True</FldList>
+          <FldList Order="6" Width="50">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -3103,7 +3283,7 @@
           <DataType>BIT</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>15</FldWidth>
+          <FldWidth>25</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -3111,7 +3291,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="7" Width="15">True</FldList>
+          <FldList Order="7" Width="25">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -3134,7 +3314,7 @@
           <DataType>INTEGER</DataType>
           <Identity>True</Identity>
           <PrimaryKey>True</PrimaryKey>
-          <FldWidth>40</FldWidth>
+          <FldWidth>50</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -3142,7 +3322,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="1" Width="40">True</FldList>
+          <FldList Order="1" Width="50">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -3154,7 +3334,7 @@
           <DataType>INTEGER</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>40</FldWidth>
+          <FldWidth>50</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -3162,13 +3342,22 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="2" Width="40">True</FldList>
+          <FldList Order="2" Width="50">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
           <FldUpdate>True</FldUpdate>
           <Relations>
-            <Relation>dbo.tbl_Reports.PK_ReportId</Relation>
+            <Relation>
+              <RelationTable>dbo.tbl_Reports</RelationTable>
+              <RelationTableAlias>Reports</RelationTableAlias>
+              <RelationField>PK_ReportId</RelationField>
+              <RelatedFieldName>
+              </RelatedFieldName>
+              <RelatedFieldAlias>
+              </RelatedFieldAlias>
+              <RelatedFieldList>False</RelatedFieldList>
+            </Relation>
           </Relations>
         </Field>
         <Field>
@@ -3177,7 +3366,7 @@
           <DataType>INTEGER</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>40</FldWidth>
+          <FldWidth>50</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -3185,13 +3374,22 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="3" Width="40">True</FldList>
+          <FldList Order="3" Width="50">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
           <FldUpdate>True</FldUpdate>
           <Relations>
-            <Relation>dbo.tbl_Arguments.PK_ArgumentId</Relation>
+            <Relation>
+              <RelationTable>dbo.tbl_Arguments</RelationTable>
+              <RelationTableAlias>Arguments</RelationTableAlias>
+              <RelationField>PK_ArgumentId</RelationField>
+              <RelatedFieldName>
+              </RelatedFieldName>
+              <RelatedFieldAlias>
+              </RelatedFieldAlias>
+              <RelatedFieldList>False</RelatedFieldList>
+            </Relation>
           </Relations>
         </Field>
         <Field>
@@ -3200,7 +3398,7 @@
           <DataType>BIT</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>15</FldWidth>
+          <FldWidth>25</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -3208,7 +3406,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="4" Width="15">True</FldList>
+          <FldList Order="4" Width="25">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -3220,7 +3418,7 @@
           <DataType>BIT</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>15</FldWidth>
+          <FldWidth>25</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -3228,7 +3426,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="5" Width="15">True</FldList>
+          <FldList Order="5" Width="25">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -3251,7 +3449,7 @@
           <DataType>INTEGER</DataType>
           <Identity>True</Identity>
           <PrimaryKey>True</PrimaryKey>
-          <FldWidth>40</FldWidth>
+          <FldWidth>50</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -3259,7 +3457,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="1" Width="40">True</FldList>
+          <FldList Order="1" Width="50">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -3271,7 +3469,7 @@
           <DataType>INTEGER</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>40</FldWidth>
+          <FldWidth>50</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -3279,13 +3477,22 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="2" Width="40">True</FldList>
+          <FldList Order="2" Width="50">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
           <FldUpdate>True</FldUpdate>
           <Relations>
-            <Relation>dbo.tbl_Reports.PK_ReportId</Relation>
+            <Relation>
+              <RelationTable>dbo.tbl_Reports</RelationTable>
+              <RelationTableAlias>Reports</RelationTableAlias>
+              <RelationField>PK_ReportId</RelationField>
+              <RelatedFieldName>
+              </RelatedFieldName>
+              <RelatedFieldAlias>
+              </RelatedFieldAlias>
+              <RelatedFieldList>False</RelatedFieldList>
+            </Relation>
           </Relations>
         </Field>
         <Field>
@@ -3334,7 +3541,7 @@
           <DataType>INTEGER</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>40</FldWidth>
+          <FldWidth>50</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -3342,7 +3549,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="5" Width="40">True</FldList>
+          <FldList Order="5" Width="50">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -3354,7 +3561,7 @@
           <DataType>BIT</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>15</FldWidth>
+          <FldWidth>25</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -3362,7 +3569,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="6" Width="15">True</FldList>
+          <FldList Order="6" Width="25">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -3414,7 +3621,7 @@
           <DataType>INTEGER</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>40</FldWidth>
+          <FldWidth>50</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -3422,7 +3629,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="9" Width="40">True</FldList>
+          <FldList Order="9" Width="50">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -3445,7 +3652,7 @@
           <DataType>INTEGER</DataType>
           <Identity>True</Identity>
           <PrimaryKey>True</PrimaryKey>
-          <FldWidth>40</FldWidth>
+          <FldWidth>50</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -3453,7 +3660,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="1" Width="40">True</FldList>
+          <FldList Order="1" Width="50">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -3565,7 +3772,7 @@
           <DataType>BIT</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>15</FldWidth>
+          <FldWidth>25</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -3573,7 +3780,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="7" Width="15">True</FldList>
+          <FldList Order="7" Width="25">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -3585,7 +3792,7 @@
           <DataType>BIT</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>15</FldWidth>
+          <FldWidth>25</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -3593,7 +3800,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="8" Width="15">True</FldList>
+          <FldList Order="8" Width="25">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -3616,7 +3823,7 @@
           <DataType>INTEGER</DataType>
           <Identity>True</Identity>
           <PrimaryKey>True</PrimaryKey>
-          <FldWidth>40</FldWidth>
+          <FldWidth>50</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -3624,7 +3831,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="1" Width="40">True</FldList>
+          <FldList Order="1" Width="50">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -3636,7 +3843,7 @@
           <DataType>INTEGER</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>40</FldWidth>
+          <FldWidth>50</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -3644,7 +3851,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="2" Width="40">True</FldList>
+          <FldList Order="2" Width="50">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -3676,7 +3883,7 @@
           <DataType>BIT</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>15</FldWidth>
+          <FldWidth>25</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -3684,7 +3891,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="4" Width="15">True</FldList>
+          <FldList Order="4" Width="25">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -3707,7 +3914,7 @@
           <DataType>INTEGER</DataType>
           <Identity>True</Identity>
           <PrimaryKey>True</PrimaryKey>
-          <FldWidth>40</FldWidth>
+          <FldWidth>50</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -3715,7 +3922,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="1" Width="40">True</FldList>
+          <FldList Order="1" Width="50">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -3747,7 +3954,7 @@
           <DataType>INTEGER</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>40</FldWidth>
+          <FldWidth>50</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -3755,7 +3962,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="3" Width="40">True</FldList>
+          <FldList Order="3" Width="50">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -3767,7 +3974,7 @@
           <DataType>BIT</DataType>
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
-          <FldWidth>15</FldWidth>
+          <FldWidth>25</FldWidth>
           <ControlField>
           </ControlField>
           <ControlValue>
@@ -3775,7 +3982,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="4" Width="15">True</FldList>
+          <FldList Order="4" Width="25">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>

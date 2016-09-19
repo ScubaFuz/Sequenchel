@@ -52,6 +52,7 @@ Partial Class frmSequenchel
         Me.mnuMainHelpAbout = New System.Windows.Forms.ToolStripMenuItem()
         Me.lblLicense = New System.Windows.Forms.Label()
         Me.sptTable1 = New System.Windows.Forms.SplitContainer()
+        Me.dgvTable1 = New Sequenchel.usrDataGridView()
         Me.sptFields1 = New System.Windows.Forms.SplitContainer()
         Me.lblListCount = New System.Windows.Forms.Label()
         Me.lblListCountNumber = New System.Windows.Forms.Label()
@@ -66,7 +67,6 @@ Partial Class frmSequenchel
         Me.chkUseTop = New System.Windows.Forms.CheckBox()
         Me.btnLoadList = New System.Windows.Forms.Button()
         Me.btnExportList = New System.Windows.Forms.Button()
-        Me.btnLoadSearchCriteria = New System.Windows.Forms.Button()
         Me.btnSearch = New System.Windows.Forms.Button()
         Me.btnUpdate = New System.Windows.Forms.Button()
         Me.btnClear = New System.Windows.Forms.Button()
@@ -74,18 +74,17 @@ Partial Class frmSequenchel
         Me.lblMultipleRows = New System.Windows.Forms.Label()
         Me.pnlListCount = New System.Windows.Forms.Panel()
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
-        Me.dgvTable1 = New Sequenchel.usrDataGridView()
         Me.mnuMain.SuspendLayout()
         CType(Me.sptTable1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.sptTable1.Panel1.SuspendLayout()
         Me.sptTable1.Panel2.SuspendLayout()
         Me.sptTable1.SuspendLayout()
+        CType(Me.dgvTable1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.sptFields1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.sptFields1.SuspendLayout()
         Me.pnlFooterControls.SuspendLayout()
         Me.pnlListCount.SuspendLayout()
         Me.TableLayoutPanel1.SuspendLayout()
-        CType(Me.dgvTable1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'btnTest
@@ -102,7 +101,7 @@ Partial Class frmSequenchel
         'btnClose
         '
         Me.btnClose.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnClose.Location = New System.Drawing.Point(1127, 775)
+        Me.btnClose.Location = New System.Drawing.Point(855, 696)
         Me.btnClose.Name = "btnClose"
         Me.btnClose.Size = New System.Drawing.Size(135, 23)
         Me.btnClose.TabIndex = 5
@@ -115,9 +114,9 @@ Partial Class frmSequenchel
         Me.lblStatusText.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblStatusText.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblStatusText.Location = New System.Drawing.Point(86, 778)
+        Me.lblStatusText.Location = New System.Drawing.Point(86, 699)
         Me.lblStatusText.Name = "lblStatusText"
-        Me.lblStatusText.Size = New System.Drawing.Size(1035, 25)
+        Me.lblStatusText.Size = New System.Drawing.Size(763, 25)
         Me.lblStatusText.TabIndex = 83
         Me.lblStatusText.Text = "Program Start"
         '
@@ -126,7 +125,7 @@ Partial Class frmSequenchel
         Me.lblStatusTitle.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.lblStatusTitle.AutoSize = True
         Me.lblStatusTitle.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblStatusTitle.Location = New System.Drawing.Point(16, 778)
+        Me.lblStatusTitle.Location = New System.Drawing.Point(16, 699)
         Me.lblStatusTitle.Name = "lblStatusTitle"
         Me.lblStatusTitle.Size = New System.Drawing.Size(51, 16)
         Me.lblStatusTitle.TabIndex = 82
@@ -219,7 +218,7 @@ Partial Class frmSequenchel
         Me.mnuMain.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuMainFile, Me.mnuMainEdit, Me.mnuMainTools, Me.mnuMainHelp})
         Me.mnuMain.Location = New System.Drawing.Point(0, 0)
         Me.mnuMain.Name = "mnuMain"
-        Me.mnuMain.Size = New System.Drawing.Size(1284, 24)
+        Me.mnuMain.Size = New System.Drawing.Size(1012, 24)
         Me.mnuMain.TabIndex = 0
         Me.mnuMain.Text = "mnuMain"
         '
@@ -311,7 +310,7 @@ Partial Class frmSequenchel
         Me.lblLicense.AutoSize = True
         Me.lblLicense.BackColor = System.Drawing.Color.Transparent
         Me.lblLicense.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblLicense.Location = New System.Drawing.Point(890, 0)
+        Me.lblLicense.Location = New System.Drawing.Point(618, 0)
         Me.lblLicense.Name = "lblLicense"
         Me.lblLicense.Size = New System.Drawing.Size(375, 24)
         Me.lblLicense.TabIndex = 105
@@ -333,9 +332,29 @@ Partial Class frmSequenchel
         'sptTable1.Panel2
         '
         Me.sptTable1.Panel2.Controls.Add(Me.sptFields1)
-        Me.sptTable1.Size = New System.Drawing.Size(1246, 593)
-        Me.sptTable1.SplitterDistance = 713
+        Me.sptTable1.Size = New System.Drawing.Size(974, 514)
+        Me.sptTable1.SplitterDistance = 557
         Me.sptTable1.TabIndex = 0
+        '
+        'dgvTable1
+        '
+        Me.dgvTable1.AllowUserToAddRows = False
+        Me.dgvTable1.AllowUserToDeleteRows = False
+        Me.dgvTable1.AllowUserToOrderColumns = True
+        Me.dgvTable1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.dgvTable1.BackgroundColor = System.Drawing.SystemColors.Control
+        Me.dgvTable1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
+        Me.dgvTable1.BackImage = CType(resources.GetObject("dgvTable1.BackImage"), System.Drawing.Image)
+        Me.dgvTable1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dgvTable1.Location = New System.Drawing.Point(3, 3)
+        Me.dgvTable1.MultiSelect = False
+        Me.dgvTable1.Name = "dgvTable1"
+        Me.dgvTable1.ReadOnly = True
+        Me.dgvTable1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
+        Me.dgvTable1.Size = New System.Drawing.Size(551, 508)
+        Me.dgvTable1.TabIndex = 0
         '
         'sptFields1
         '
@@ -349,8 +368,8 @@ Partial Class frmSequenchel
         'sptFields1.Panel2
         '
         Me.sptFields1.Panel2.AutoScroll = True
-        Me.sptFields1.Size = New System.Drawing.Size(529, 593)
-        Me.sptFields1.SplitterDistance = 196
+        Me.sptFields1.Size = New System.Drawing.Size(413, 514)
+        Me.sptFields1.SplitterDistance = 153
         Me.sptFields1.TabIndex = 0
         '
         'lblListCount
@@ -372,6 +391,8 @@ Partial Class frmSequenchel
         '
         'pnlFooterControls
         '
+        Me.pnlFooterControls.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.pnlFooterControls.AutoScroll = True
         Me.pnlFooterControls.Controls.Add(Me.lblSavedSearches)
         Me.pnlFooterControls.Controls.Add(Me.cbxSearch)
@@ -383,15 +404,13 @@ Partial Class frmSequenchel
         Me.pnlFooterControls.Controls.Add(Me.chkUseTop)
         Me.pnlFooterControls.Controls.Add(Me.btnLoadList)
         Me.pnlFooterControls.Controls.Add(Me.btnExportList)
-        Me.pnlFooterControls.Controls.Add(Me.btnLoadSearchCriteria)
         Me.pnlFooterControls.Controls.Add(Me.btnSearch)
         Me.pnlFooterControls.Controls.Add(Me.btnUpdate)
         Me.pnlFooterControls.Controls.Add(Me.btnClear)
         Me.pnlFooterControls.Controls.Add(Me.btnAdd)
-        Me.pnlFooterControls.Dock = System.Windows.Forms.DockStyle.Right
-        Me.pnlFooterControls.Location = New System.Drawing.Point(203, 3)
+        Me.pnlFooterControls.Location = New System.Drawing.Point(154, 3)
         Me.pnlFooterControls.Name = "pnlFooterControls"
-        Me.pnlFooterControls.Size = New System.Drawing.Size(1037, 81)
+        Me.pnlFooterControls.Size = New System.Drawing.Size(814, 81)
         Me.pnlFooterControls.TabIndex = 124
         '
         'lblSavedSearches
@@ -486,17 +505,6 @@ Partial Class frmSequenchel
         Me.btnExportList.Text = "Export List to File"
         Me.btnExportList.UseVisualStyleBackColor = True
         '
-        'btnLoadSearchCriteria
-        '
-        Me.btnLoadSearchCriteria.Enabled = False
-        Me.btnLoadSearchCriteria.Location = New System.Drawing.Point(612, 6)
-        Me.btnLoadSearchCriteria.Name = "btnLoadSearchCriteria"
-        Me.btnLoadSearchCriteria.Size = New System.Drawing.Size(135, 23)
-        Me.btnLoadSearchCriteria.TabIndex = 7
-        Me.btnLoadSearchCriteria.Text = "(Re)Load Search Criteria"
-        Me.btnLoadSearchCriteria.UseVisualStyleBackColor = True
-        Me.btnLoadSearchCriteria.Visible = False
-        '
         'btnSearch
         '
         Me.btnSearch.Location = New System.Drawing.Point(753, 6)
@@ -539,7 +547,7 @@ Partial Class frmSequenchel
         Me.lblMultipleRows.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblMultipleRows.AutoSize = True
         Me.lblMultipleRows.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblMultipleRows.Location = New System.Drawing.Point(969, 68)
+        Me.lblMultipleRows.Location = New System.Drawing.Point(697, 68)
         Me.lblMultipleRows.Name = "lblMultipleRows"
         Me.lblMultipleRows.Size = New System.Drawing.Size(209, 16)
         Me.lblMultipleRows.TabIndex = 125
@@ -554,7 +562,7 @@ Partial Class frmSequenchel
         Me.pnlListCount.Dock = System.Windows.Forms.DockStyle.Top
         Me.pnlListCount.Location = New System.Drawing.Point(3, 3)
         Me.pnlListCount.Name = "pnlListCount"
-        Me.pnlListCount.Size = New System.Drawing.Size(187, 70)
+        Me.pnlListCount.Size = New System.Drawing.Size(145, 70)
         Me.pnlListCount.TabIndex = 125
         '
         'TableLayoutPanel1
@@ -567,33 +575,13 @@ Partial Class frmSequenchel
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 84.3926!))
         Me.TableLayoutPanel1.Controls.Add(Me.pnlFooterControls, 1, 0)
         Me.TableLayoutPanel1.Controls.Add(Me.pnlListCount, 0, 0)
-        Me.TableLayoutPanel1.Location = New System.Drawing.Point(19, 683)
+        Me.TableLayoutPanel1.Location = New System.Drawing.Point(19, 604)
         Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
         Me.TableLayoutPanel1.RowCount = 2
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle())
-        Me.TableLayoutPanel1.Size = New System.Drawing.Size(1243, 87)
+        Me.TableLayoutPanel1.Size = New System.Drawing.Size(971, 87)
         Me.TableLayoutPanel1.TabIndex = 126
-        '
-        'dgvTable1
-        '
-        Me.dgvTable1.AllowUserToAddRows = False
-        Me.dgvTable1.AllowUserToDeleteRows = False
-        Me.dgvTable1.AllowUserToOrderColumns = True
-        Me.dgvTable1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.dgvTable1.BackgroundColor = System.Drawing.SystemColors.Control
-        Me.dgvTable1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
-        Me.dgvTable1.BackImage = CType(resources.GetObject("dgvTable1.BackImage"), System.Drawing.Image)
-        Me.dgvTable1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvTable1.Location = New System.Drawing.Point(3, 3)
-        Me.dgvTable1.MultiSelect = False
-        Me.dgvTable1.Name = "dgvTable1"
-        Me.dgvTable1.ReadOnly = True
-        Me.dgvTable1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgvTable1.Size = New System.Drawing.Size(707, 587)
-        Me.dgvTable1.TabIndex = 0
         '
         'frmSequenchel
         '
@@ -601,7 +589,7 @@ Partial Class frmSequenchel
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.btnClear
-        Me.ClientSize = New System.Drawing.Size(1284, 812)
+        Me.ClientSize = New System.Drawing.Size(1012, 733)
         Me.Controls.Add(Me.TableLayoutPanel1)
         Me.Controls.Add(Me.lblMultipleRows)
         Me.Controls.Add(Me.btnClose)
@@ -631,6 +619,7 @@ Partial Class frmSequenchel
         Me.sptTable1.Panel2.ResumeLayout(False)
         CType(Me.sptTable1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.sptTable1.ResumeLayout(False)
+        CType(Me.dgvTable1, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.sptFields1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.sptFields1.ResumeLayout(False)
         Me.pnlFooterControls.ResumeLayout(False)
@@ -638,7 +627,6 @@ Partial Class frmSequenchel
         Me.pnlListCount.ResumeLayout(False)
         Me.pnlListCount.PerformLayout()
         Me.TableLayoutPanel1.ResumeLayout(False)
-        CType(Me.dgvTable1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -678,7 +666,6 @@ Partial Class frmSequenchel
     Friend WithEvents chkUseTop As System.Windows.Forms.CheckBox
     Friend WithEvents btnLoadList As System.Windows.Forms.Button
     Friend WithEvents btnExportList As System.Windows.Forms.Button
-    Friend WithEvents btnLoadSearchCriteria As System.Windows.Forms.Button
     Friend WithEvents btnSearch As System.Windows.Forms.Button
     Friend WithEvents btnUpdate As System.Windows.Forms.Button
     Friend WithEvents btnClear As System.Windows.Forms.Button

@@ -1,7 +1,7 @@
-﻿Public Class Table
+﻿Public Class BaseTable
     Inherits System.Collections.CollectionBase
-    Private ReadOnly HostForm As System.Windows.Forms.Form
 
+#Region "Properties"
     Private _TableName As String = ""
     Private _TableAlias As String = ""
     Private _TableVisible As Boolean = False
@@ -72,44 +72,18 @@
             _TableDelete = Value
         End Set
     End Property
+#End Region
 
-    Public Overloads Sub Add(ByVal AddField As TextField)
+    Public Overloads Sub Add(ByVal AddField As BaseField)
         Me.List.Add(AddField)
-        AddHandler AddField.TextChanged, AddressOf TextHandler
     End Sub
 
-    Public Overloads Sub Add(ByVal AddField As CheckField)
-        Me.List.Add(AddField)
-        AddHandler AddField.CheckedChanged, AddressOf TextHandler
-    End Sub
-
-    Public Overloads Sub Add(ByVal AddField As ComboField)
-        Me.List.Add(AddField)
-        AddHandler AddField.TextChanged, AddressOf TextHandler
-        AddHandler AddField.SelectedIndexChanged, AddressOf TextHandler
-    End Sub
-
-    Public Overloads Sub Add(ByVal AddField As ManagedSelectField)
-        Me.List.Add(AddField)
-        AddHandler AddField.TextChanged, AddressOf TextHandler
-        AddHandler AddField.ValueChanged, AddressOf TextHandler
-        AddHandler AddField.LostFocus, AddressOf LostFocusHandler
-    End Sub
-
-    Public Overloads Sub Remove(ByVal removeField As TextField)
+    Public Overloads Sub Remove(ByVal removeField As BaseField)
         Me.List.Remove(removeField)
     End Sub
 
-    Public Overloads Sub Remove(ByVal removeField As CheckField)
-        Me.List.Remove(removeField)
-    End Sub
-
-    Public Overloads Sub Remove(ByVal removeField As ComboField)
-        Me.List.Remove(removeField)
-    End Sub
-
-    Public Overloads Sub Remove(ByVal strFieldAlias As String)
-        Me.List.Remove(strFieldAlias)
+    Public Overloads Sub Remove(ByVal strFieldName As String)
+        Me.List.Remove(strFieldName)
     End Sub
 
     Default Public Property Item(ByVal index As Double) As Object
@@ -120,13 +94,5 @@
             Me.List.Item(index) = Value
         End Set
     End Property
-
-    Public Sub TextHandler(ByVal sender As Object, ByVal e As System.EventArgs)
-        FieldTextHandler(sender)
-    End Sub
-
-    Public Sub LostFocusHandler(ByVal sender As Object, ByVal e As System.EventArgs)
-        sender.DropDown(2)
-    End Sub
 
 End Class
