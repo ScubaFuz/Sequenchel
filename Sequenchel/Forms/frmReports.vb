@@ -1287,6 +1287,25 @@ Public Class frmReports
         End If
     End Sub
 
+    Private Function ReportFieldCheck(strFieldAlias As String) As Integer
+        Dim intFound As Integer = 0
+        'intFound = 0  Field not found
+        'intFound = 1  Field Alias found, abort loading
+        'intFound = 2  Field Alias found, continue loading
+        For Each lvwItem As ListViewItemField In lvwSelectedFields.Items
+            If lvwItem.Field.FieldAlias = strFieldAlias Then
+                basCode.WriteLog("A field with alias " & strFieldAlias & " already exists.", 2)
+                If MessageBox.Show("A field with alias " & strFieldAlias & " already exists in this report." & Environment.NewLine & "Do you wish to keep loading the report?", "Error Loading Report", MessageBoxButtons.YesNo, MessageBoxIcon.Error, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.No Then
+                    WriteStatus("Report loading aborted.", 0, lblStatusText)
+                    intFound = 1
+                Else
+                    intFound = 2
+                End If
+            End If
+        Next
+        Return intFound
+    End Function
+
     Private Sub XmlToReport(xmlReports As XmlDocument, strReportName As String)
         Dim xNode As XmlNode = basCode.dhdText.FindXmlNode(xmlReports, "Report", "ReportName", strReportName)
         Dim strTableName As String = "", strTableAlias As String = "", strFieldName As String = "", strFieldAlias As String = "", intRelationNumber As Integer = 0
