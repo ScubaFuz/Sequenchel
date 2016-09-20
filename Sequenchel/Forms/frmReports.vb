@@ -116,14 +116,21 @@ Public Class frmReports
 
     Private Sub ReportFieldsAdd()
         For Each lvwItem As ListViewItemField In lvwAvailableFields.SelectedItems
-            ReportFieldAdd(lvwItem, False)
+            Dim FieldAliasNew As String = ReportFieldCheck(lvwItem.Field.FieldAlias)
+            If FieldAliasNew <> lvwItem.Field.FieldAlias Then
+                'duplicate field with new alias
+                ReportFieldDuplicate(lvwItem.Field.FieldTableName, lvwItem.Field.FieldTableAlias, lvwItem.Field.FieldName, lvwItem.Field.FieldAlias, FieldAliasNew, lvwItem.Field.FieldDataType)
+            Else
+                'create field
+                Dim lvwItemNew As ListViewItemField = ListViewItemFieldCreate(lvwItem.Field.FieldTableName, lvwItem.Field.FieldTableAlias, lvwItem.Field.FieldName, lvwItem.Field.FieldAlias, lvwItem.Field.FieldDataType)
+                ReportFieldAdd(lvwItemNew, False)
+            End If
         Next
         ResizeColumns()
     End Sub
 
     Private Sub ReportFieldAdd(lvwItem As ListViewItemField, blnResizeColumns As Boolean)
         If ReportTableAdd(lvwItem.Field.FieldTableName, lvwItem.Field.FieldTableAlias) = True Then
-            If lvwAvailableFields.Items.Contains(lvwItem) Then lvwAvailableFields.Items.Remove(lvwItem)
             If lvwSelectedFields.Items.Contains(lvwItem) = False Then lvwSelectedFields.Items.Add(lvwItem)
             FieldAdd(lvwItem.Field.Name, lvwItem.Field.FieldName, lvwItem.Field.FieldAlias, lvwItem.Field.FieldTableName, lvwItem.Field.FieldTableAlias)
             If blnResizeColumns = True Then
@@ -146,7 +153,6 @@ Public Class frmReports
 
     Private Sub ReportFieldRemove(lvwItem As ListViewItemField, blnResizeColumns As Boolean)
         If lvwSelectedFields.Items.Contains(lvwItem) Then lvwSelectedFields.Items.Remove(lvwItem)
-        If lvwAvailableFields.Items.Contains(lvwItem) = False Then lvwAvailableFields.Items.Add(lvwItem)
 
         MasterPanelControlsDispose(pnlSelectedFields, lvwItem.Name)
         PanelsFieldSort()
@@ -311,17 +317,7 @@ Public Class frmReports
             Dim strTableAlias As String = TableNode.ParentNode.ParentNode.Item("Alias").InnerText.Replace(".", "_")
             If GroupExists(strTableAlias) = False Then lvwAvailableFields.Groups.Add(strTableAlias, strTableAlias)
             If blnuseFilter = False Or TableNode.Item("FldAlias").InnerText.ToLower.Contains(txtFieldFilter.Text.ToLower) Then
-                Dim lvwItem As New ListViewItemField
-                lvwItem.Field = New SeqCore.BaseField
-                lvwItem.Name = TableNode.ParentNode.ParentNode.Item("Alias").InnerText & "." & TableNode.Item("FldAlias").InnerText
-                lvwItem.Field.Name = lvwItem.Name
-                lvwItem.Field.FieldName = TableNode.Item("FldName").InnerText
-                lvwItem.Field.FieldAlias = TableNode.Item("FldAlias").InnerText
-                lvwItem.Field.FieldTableName = TableNode.ParentNode.ParentNode.Item("Name").InnerText
-                lvwItem.Field.FieldTableAlias = TableNode.ParentNode.ParentNode.Item("Alias").InnerText
-                lvwItem.Field.FieldDataType = TableNode.Item("DataType").InnerText
-                lvwItem.Text = strTableAlias
-                lvwItem.SubItems.Add(TableNode.Item("FldAlias").InnerText)
+                Dim lvwItem As ListViewItemField = ListViewItemFieldCreate(TableNode.ParentNode.ParentNode.Item("Name").InnerText, TableNode.ParentNode.ParentNode.Item("Alias").InnerText, TableNode.Item("FldName").InnerText, TableNode.Item("FldAlias").InnerText, TableNode.Item("DataType").InnerText)
                 lvwAvailableFields.Items.Add(lvwItem)
                 lvwItem.Group = lvwAvailableFields.Groups(strTableAlias)
             End If
@@ -817,31 +813,31 @@ Public Class frmReports
         Next
     End Sub
 
-    Private Function ReportTableAdd(strTable As String, strAlias As String) As Boolean
+    Private Function ReportTableAdd(strTableName As String, strTableAlias As String) As Boolean
         'Dim strTable As String = strFieldName.Substring(0, strFieldName.LastIndexOf("."))
-        Dim blnTableFound As Boolean = False
+        Dim blnTableNameFound As Boolean = False
         Dim blnTableAliasFound As Boolean = False
         For Each lvwitem As ListViewItemField In lvwSelectedTables.Items
-            If lvwitem.Name = strTable & "_" & strAlias Then
-                blnTableFound = True
+            If lvwitem.Name = strTableName & "_" & strTableAlias Then
+                blnTableNameFound = True
                 blnTableAliasFound = True
             End If
-            If lvwitem.Field.FieldTableName = strTable Then blnTableFound = True
-            If lvwitem.Field.FieldTableAlias = strAlias Then blnTableAliasFound = True
+            If lvwitem.Field.FieldTableName = strTableName Then blnTableNameFound = True
+            If lvwitem.Field.FieldTableAlias = strTableAlias Then blnTableAliasFound = True
         Next
         If blnTableAliasFound = False Then
             Dim lvwAddItem As New ListViewItemField
             lvwAddItem.Field = New SeqCore.BaseField
-            lvwAddItem.Name = strTable & "_" & strAlias
+            lvwAddItem.Name = strTableName & "_" & strTableAlias
             lvwAddItem.Field.Name = lvwAddItem.Name
-            lvwAddItem.Field.FieldTableName = strTable
-            lvwAddItem.Field.FieldTableAlias = strAlias
-            lvwAddItem.Text = strAlias
-            lvwAddItem.SubItems.Add(strTable)
+            lvwAddItem.Field.FieldTableName = strTableName
+            lvwAddItem.Field.FieldTableAlias = strTableAlias
+            lvwAddItem.Text = strTableAlias
+            lvwAddItem.SubItems.Add(strTableName)
             lvwSelectedTables.Items.Add(lvwAddItem)
-            RelationLabelAdd(strTable, strAlias)
-            RelationUseAdd(strTable, strAlias)
-            RelationsLoad(strTable, strAlias)
+            RelationLabelAdd(strTableName, strTableAlias)
+            RelationUseAdd(strTableName, strTableAlias)
+            RelationsLoad(strTableName, strTableAlias)
             'PanelsRelationSort()
             For Each cbxControl In pnlRelationsTargetTable.Controls
                 If cbxControl.[GetType]().Name = "ComboField" Then
@@ -851,7 +847,7 @@ Public Class frmReports
             Next
 
             PanelRelationWidthSet()
-        ElseIf blnTableAliasFound = True And blnTableFound = False Then
+        ElseIf blnTableAliasFound = True And blnTableNameFound = False Then
             WriteStatus("Table alias already exists. Every alias must be unique.", 2, lblStatusText)
             Return False
         Else
@@ -1287,28 +1283,52 @@ Public Class frmReports
         End If
     End Sub
 
-    Private Function ReportFieldCheck(strFieldAlias As String) As Integer
-        Dim intFound As Integer = 0
-        'intFound = 0  Field not found
-        'intFound = 1  Field Alias found, abort loading
-        'intFound = 2  Field Alias found, continue loading
-        For Each lvwItem As ListViewItemField In lvwSelectedFields.Items
-            If lvwItem.Field.FieldAlias = strFieldAlias Then
-                basCode.WriteLog("A field with alias " & strFieldAlias & " already exists.", 2)
-                If MessageBox.Show("A field with alias " & strFieldAlias & " already exists in this report." & Environment.NewLine & "Do you wish to keep loading the report?", "Error Loading Report", MessageBoxButtons.YesNo, MessageBoxIcon.Error, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.No Then
-                    WriteStatus("Report loading aborted.", 0, lblStatusText)
-                    intFound = 1
-                Else
-                    intFound = 2
-                End If
+    Private Function FieldAvailableCheck(strFieldName As String, strTableName As String) As String
+        Dim strDataType As String = ""
+        For Each lvwItem As ListViewItemField In lvwAvailableFields.Items
+            If lvwItem.Field.FieldTableName = strTableName And lvwItem.Field.FieldName = strFieldName Then
+                strDataType = lvwItem.Field.FieldDataType
+                Exit For
             End If
         Next
-        Return intFound
+        Return strDataType
+    End Function
+
+    Private Function ReportFieldCheck(strFieldAlias As String) As String
+        Dim blnFound As Boolean = False
+        For Each lvwItem As ListViewItemField In lvwSelectedFields.Items
+            If lvwItem.Field.FieldAlias = strFieldAlias Then
+                Dim intNumber As Integer = 1
+
+                If IsNumeric(strFieldAlias.Substring(strFieldAlias.Length - 1, 1)) = True Then
+                    intNumber = strFieldAlias.Substring(strFieldAlias.Length - 1, 1) + 1
+                    strFieldAlias = strFieldAlias.Substring(0, strFieldAlias.Length - 1)
+                End If
+                strFieldAlias = strFieldAlias & intNumber.ToString
+                strFieldAlias = ReportFieldCheck(strFieldAlias)
+            End If
+        Next
+        Return strFieldAlias
+    End Function
+
+    Private Function ListViewItemFieldCreate(strTableName As String, strTableAlias As String, strFieldName As String, strFieldAlias As String, strDataType As String) As ListViewItemField
+        Dim lvwItem As New ListViewItemField
+        lvwItem.Field = New SeqCore.BaseField
+        lvwItem.Name = strTableAlias & "." & strFieldAlias
+        lvwItem.Field.Name = lvwItem.Name
+        lvwItem.Field.FieldName = strFieldName
+        lvwItem.Field.FieldAlias = strFieldAlias
+        lvwItem.Field.FieldTableName = strTableName
+        lvwItem.Field.FieldTableAlias = strTableAlias
+        lvwItem.Field.FieldDataType = strDataType
+        lvwItem.Text = strTableAlias
+        lvwItem.SubItems.Add(strFieldAlias)
+        Return lvwItem
     End Function
 
     Private Sub XmlToReport(xmlReports As XmlDocument, strReportName As String)
         Dim xNode As XmlNode = basCode.dhdText.FindXmlNode(xmlReports, "Report", "ReportName", strReportName)
-        Dim strTableName As String = "", strTableAlias As String = "", strFieldName As String = "", strFieldAlias As String = "", intRelationNumber As Integer = 0
+        Dim strTableName As String = "", strTableAlias As String = "", strFieldName As String = "", strFieldAlias As String = "", strDataType As String = "", intRelationNumber As Integer = 0
 
         If Not xNode Is Nothing Then
             If basCode.dhdText.CheckElement(xNode, "Description") Then txtDescription.Text = xNode.Item("Description").InnerText
@@ -1324,59 +1344,27 @@ Public Class frmReports
                 strFieldAlias = xCNode.Item("FieldAlias").InnerText
                 Try
                     Dim blnFound As Boolean = False
-                    For Each lvwItem As ListViewItemField In lvwAvailableFields.Items
-                        If lvwItem.Field.FieldTableName = strTableName And lvwItem.Field.FieldName = strFieldName Then
-                            If lvwItem.Field.FieldTableAlias <> strTableAlias Then lvwItem.Field.FieldTableAlias = strTableAlias
-                            If lvwItem.Field.FieldAlias <> strFieldAlias Then lvwItem.Field.FieldAlias = strFieldAlias
-                            blnFound = True
-                            ReportFieldAdd(lvwItem, True)
-                            SetCtrText(pnlReportDisplay, strTableAlias & "." & strFieldAlias, xCNode.Item("FieldShow").InnerText)
-                            SetCtrText(pnlReportShowMode, strTableAlias & "." & strFieldAlias, xCNode.Item("FieldShowMode").InnerText)
-                            SetCtrText(pnlReportSort, strTableAlias & "." & strFieldAlias, xCNode.Item("FieldSort").InnerText)
-                            SetCtrText(pnlReportSortOrder, strTableAlias & "." & strFieldAlias, xCNode.Item("FieldSortOrder").InnerText)
-
-                            For Each xFnode In basCode.dhdText.FindXmlNodes(xCNode, "Filters/Filter")
-                                SetCtrText(pnlReportFilter, strTableAlias & "." & strFieldAlias, xFnode.Item("FilterEnabled").InnerText, xFnode.Item("FilterNumber").InnerText)
-                                SetCtrText(pnlReportFilterMode, strTableAlias & "." & strFieldAlias, xFnode.Item("FilterMode").InnerText, xFnode.Item("FilterNumber").InnerText)
-                                SetCtrText(pnlReportFilterType, strTableAlias & "." & strFieldAlias, xFnode.Item("FilterType").InnerText, xFnode.Item("FilterNumber").InnerText)
-                                SetCtrText(pnlReportFilterText, strTableAlias & "." & strFieldAlias, xFnode.Item("FilterText").InnerText, xFnode.Item("FilterNumber").InnerText)
-                            Next
-                        Exit For
+                    strDataType = FieldAvailableCheck(strFieldName, strTableName)
+                    If strDataType.Length = 0 Then
+                        If MessageBox.Show("The field " & strTableAlias & "." & strFieldAlias & "(" & strTableName & "." & strFieldName & ") was not found" & Environment.NewLine & "Do you wish to keep loading the report?", "Error Loading Report", MessageBoxButtons.YesNo, MessageBoxIcon.Error, MessageBoxDefaultButton.Button2) = Windows.Forms.DialogResult.No Then
+                            WriteStatus("Report loading aborted.", 0, lblStatusText)
+                            Exit Sub
                         End If
-                    Next
-                    If blnFound = False Then
-                        'check selected fields for different alias and duplicate field with given alias
-                        For Each lvwItem As ListViewItemField In lvwSelectedFields.Items
-                            If lvwItem.Field.FieldTableName = strTableName And lvwItem.Field.FieldName = strFieldName Then
-                                'Field found, now duplicate
-                                Dim lvwItemNew As New ListViewItemField
-                                lvwItemNew.Field = New SeqCore.BaseField
+                    Else
+                        strFieldAlias = ReportFieldCheck(strFieldAlias)
+                        'create field
+                        Dim lvwItem As ListViewItemField = ListViewItemFieldCreate(strTableName, strTableAlias, strFieldName, strFieldAlias, strDataType)
+                        ReportFieldAdd(lvwItem, True)
+                        SetCtrText(pnlReportDisplay, strTableAlias & "." & strFieldAlias, xCNode.Item("FieldShow").InnerText)
+                        SetCtrText(pnlReportShowMode, strTableAlias & "." & strFieldAlias, xCNode.Item("FieldShowMode").InnerText)
+                        SetCtrText(pnlReportSort, strTableAlias & "." & strFieldAlias, xCNode.Item("FieldSort").InnerText)
+                        SetCtrText(pnlReportSortOrder, strTableAlias & "." & strFieldAlias, xCNode.Item("FieldSortOrder").InnerText)
 
-                                lvwItemNew.Field.FieldTableAlias = strTableAlias
-                                lvwItemNew.Field.FieldAlias = strFieldAlias
-                                lvwItemNew.Name = lvwItemNew.Field.FieldTableAlias & "." & lvwItemNew.Field.FieldAlias
-                                lvwItemNew.Field.Name = lvwItemNew.Name
-                                lvwItemNew.Field.FieldName = strFieldName
-                                lvwItemNew.Field.FieldTableName = strTableName
-                                lvwItemNew.Field.FieldDataType = lvwItem.Field.FieldDataType
-                                lvwItemNew.Text = strTableAlias
-                                lvwItemNew.SubItems.Add(strFieldAlias)
-                                lvwSelectedFields.Items.Add(lvwItemNew)
-
-                                ReportFieldAdd(lvwItemNew, True)
-                                SetCtrText(pnlReportDisplay, strTableAlias & "." & strFieldAlias, xCNode.Item("FieldShow").InnerText)
-                                SetCtrText(pnlReportShowMode, strTableAlias & "." & strFieldAlias, xCNode.Item("FieldShowMode").InnerText)
-                                SetCtrText(pnlReportSort, strTableAlias & "." & strFieldAlias, xCNode.Item("FieldSort").InnerText)
-                                SetCtrText(pnlReportSortOrder, strTableAlias & "." & strFieldAlias, xCNode.Item("FieldSortOrder").InnerText)
-
-                                For Each xFnode In basCode.dhdText.FindXmlNodes(xCNode, "Filters/Filter")
-                                    SetCtrText(pnlReportFilter, strTableAlias & "." & strFieldAlias, xFnode.Item("FilterEnabled").InnerText, xFnode.Item("FilterNumber").InnerText)
-                                    SetCtrText(pnlReportFilterMode, strTableAlias & "." & strFieldAlias, xFnode.Item("FilterMode").InnerText, xFnode.Item("FilterNumber").InnerText)
-                                    SetCtrText(pnlReportFilterType, strTableAlias & "." & strFieldAlias, xFnode.Item("FilterType").InnerText, xFnode.Item("FilterNumber").InnerText)
-                                    SetCtrText(pnlReportFilterText, strTableAlias & "." & strFieldAlias, xFnode.Item("FilterText").InnerText, xFnode.Item("FilterNumber").InnerText)
-                                Next
-                                Exit For
-                            End If
+                        For Each xFnode In basCode.dhdText.FindXmlNodes(xCNode, "Filters/Filter")
+                            SetCtrText(pnlReportFilter, strTableAlias & "." & strFieldAlias, xFnode.Item("FilterEnabled").InnerText, xFnode.Item("FilterNumber").InnerText)
+                            SetCtrText(pnlReportFilterMode, strTableAlias & "." & strFieldAlias, xFnode.Item("FilterMode").InnerText, xFnode.Item("FilterNumber").InnerText)
+                            SetCtrText(pnlReportFilterType, strTableAlias & "." & strFieldAlias, xFnode.Item("FilterType").InnerText, xFnode.Item("FilterNumber").InnerText)
+                            SetCtrText(pnlReportFilterText, strTableAlias & "." & strFieldAlias, xFnode.Item("FilterText").InnerText, xFnode.Item("FilterNumber").InnerText)
                         Next
                     End If
                 Catch ex As Exception
@@ -2205,41 +2193,43 @@ Public Class frmReports
 
     Private Sub btnFieldCopy_Click(sender As Object, e As EventArgs) Handles btnFieldCopy.Click
         If lvwSelectedFields.SelectedItems.Count = 1 Then
-            Dim frmReAliasForm As New frmReAlias
             Dim lvwItem As ListViewItemField = lvwSelectedFields.SelectedItems(0)
+            Dim FieldAliasNew As String = ReportFieldCheck(lvwItem.Field.FieldAlias)
+            ReportFieldDuplicate(lvwItem.Field.FieldTableName, lvwItem.Field.FieldTableAlias, lvwItem.Field.FieldName, lvwItem.Field.FieldAlias, FieldAliasNew, lvwItem.Field.FieldDataType)
+        End If
+    End Sub
+
+    Private Function ReportFieldDuplicate(strTableName As String, strTableAlias As String, strFieldName As String, strFieldAlias As String, strFieldAliasNew As String, strDataType As String) As Boolean
+        Try
+            Dim frmReAliasForm As New frmReAlias
             frmReAliasForm.Mode = 3
-            frmReAliasForm.TableName = lvwItem.Field.FieldTableName
-            frmReAliasForm.TableAlias = lvwItem.Field.FieldTableAlias
-            frmReAliasForm.FieldName = lvwItem.Field.FieldName
-            frmReAliasForm.FieldAlias = lvwItem.Field.FieldAlias
-            frmReAliasForm.FieldAliasNew = lvwItem.Field.FieldAlias & "_1"
+            frmReAliasForm.TableName = strTableName
+            frmReAliasForm.TableAlias = strTableAlias
+            frmReAliasForm.FieldName = strFieldName
+            frmReAliasForm.FieldAlias = strFieldAlias
+            frmReAliasForm.FieldAliasNew = strFieldAliasNew
 
             For Each lvwItemTable As ListViewItemField In lvwSelectedTables.Items
-                If lvwItemTable.Field.FieldTableName = lvwItem.Field.FieldTableName Then
+                If lvwItemTable.Field.FieldTableName = strTableName Then
                     frmReAliasForm.cbxNewTableAlias.Items.Add(lvwItemTable.Field.FieldTableAlias)
                 End If
             Next
 
             If frmReAliasForm.ShowDialog() = Windows.Forms.DialogResult.OK Then
-                Dim lvwItemNew As New ListViewItemField
-                lvwItemNew.Field = New SeqCore.BaseField
-                lvwItemNew.Name = lvwItem.Field.FieldTableAlias & "." & frmReAliasForm.FieldAliasNew
-                lvwItemNew.Field.FieldTableName = lvwItem.Field.FieldTableName
-                lvwItemNew.Field.FieldTableAlias = frmReAliasForm.TableAliasNew
-                lvwItemNew.Field.FieldName = lvwItem.Field.FieldName
-                lvwItemNew.Field.FieldAlias = frmReAliasForm.FieldAliasNew
-                lvwItemNew.Field.Name = lvwItemNew.Name
-
-                lvwItemNew.Field.FieldDataType = lvwItem.Field.FieldDataType
-                lvwItemNew.Text = lvwItemNew.Field.FieldTableAlias
-                lvwItemNew.SubItems.Add(lvwItemNew.Field.FieldAlias)
+                Dim lvwItemNew As ListViewItemField = ListViewItemFieldCreate(strTableName, frmReAliasForm.TableAliasNew, strFieldName, frmReAliasForm.FieldAliasNew, strDataType)
                 lvwSelectedFields.Items.Add(lvwItemNew)
                 'lvwItemNew.Group = lvwAvailableFields.Groups(lvwItemNew.Field.FieldTableAlias)
                 FieldAdd(lvwItemNew.Field.Name, lvwItemNew.Field.FieldName, lvwItemNew.Field.FieldAlias, lvwItemNew.Field.FieldTableName, lvwItemNew.Field.FieldTableAlias)
+            Else
+                Return False
             End If
-        End If
+        Catch ex As Exception
+            basCode.WriteLog("An error occured duplicating an existing field." & Environment.NewLine & ex.Message, 1)
+            Return False
+        End Try
 
-    End Sub
+        Return True
+    End Function
 
     Private Sub btnFieldAliasChange_Click(sender As Object, e As EventArgs) Handles btnFieldAliasChange.Click
         If lvwSelectedFields.SelectedItems.Count = 1 Then

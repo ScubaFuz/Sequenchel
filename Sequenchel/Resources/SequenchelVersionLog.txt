@@ -1,3 +1,8 @@
+Version 4.0.1
+New: Adding fields to a report no longer removes that field from the select list.
+New: Adding the same field more than once automatically updates the field alias.
+Fixed: Loading a report with an incorrect/non-exising field no longer crashes Sequenchel.
+
 Version 4.0.0
 New: The engine has been rewritten to enable more features in the future. All screens have been redesigned, even though they look the same.
 New: In reports, the option has been added to re-alias tables and fields enabling multiple joins to the same table or join a table to itself (parent-child relation)
