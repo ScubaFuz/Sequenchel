@@ -94,4 +94,41 @@
 
 #End Region
 
+#Region "ControlDisposal"
+    Friend Sub MasterPanelControlsDispose(pnlMaster As Panel, Optional strControlName As String = "")
+        For Each pnlTarget In pnlMaster.Controls
+            If pnlTarget.Name.Substring(0, 3) = "pnl" Then
+                PanelControlsDispose(pnlTarget, strControlName)
+            End If
+        Next
+    End Sub
+
+    Friend Sub PanelControlsDispose(pnlTarget As Panel, Optional strControlName As String = "")
+        For intCount As Integer = 1 To pnlTarget.Controls.Count
+            If pnlTarget.Controls.Count > 0 Then
+                For Each ctrDispose As Object In pnlTarget.Controls
+                    'MessageBox.Show(ctrDispose.Name)
+                    If ctrDispose.Name Is Nothing Then
+                        ctrDispose.Dispose()
+                    ElseIf strControlName.ToString = "" Then
+                        ctrDispose.Dispose()
+                    ElseIf strControlName.ToString = ctrDispose.Name.ToString Then
+                        ctrDispose.Dispose()
+                    Else
+                        Select Case ctrDispose.GetType.ToString
+                            Case "CheckField", "ComboField", "LabelField", "TextField", "ManagedSelectField"
+                                If strControlName.ToString = ctrDispose.Field.Name.ToString Then
+                                    ctrDispose.Dispose()
+                                End If
+                        End Select
+                    End If
+                Next
+            Else
+                Exit Sub
+            End If
+        Next
+        pnlTarget.Height = 30
+    End Sub
+#End Region
+
 End Module

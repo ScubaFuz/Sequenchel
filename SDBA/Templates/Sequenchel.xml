@@ -156,7 +156,7 @@
           </ControlValue>
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
-          <DefaultButton DefaultValue="Now()">True</DefaultButton>
+          <DefaultButton DefaultValue="">False</DefaultButton>
           <FldList Order="1" Width="50">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
@@ -310,7 +310,7 @@
           </ControlValue>
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
-          <DefaultButton DefaultValue="">False</DefaultButton>
+          <DefaultButton DefaultValue="Now()">True</DefaultButton>
           <FldList Order="7" Width="110">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>

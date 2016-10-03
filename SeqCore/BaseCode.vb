@@ -1986,6 +1986,19 @@ Public Class BaseCode
 
 #End Region
 
+#Region "DataSet"
+    Public Function DataRowRemove(dtsInput As DataSet, strTable As String, strColumn As String, strValue As String) As DataSet
+        Dim dtrDelete() As Data.DataRow
+
+        dtrDelete = dtsInput.Tables(strTable).Select(strColumn.ToString & "=" & strValue)
+        For Each dtrRemove As DataRow In dtrDelete
+            dtsInput.Tables(strTable).Rows.Remove(dtrRemove)
+        Next
+        Return dtsInput
+    End Function
+
+#End Region
+
 #Region "Import & Export"
     Public Function ImportFile(strFileName As String, Optional blnHasHeaders As Boolean = True, Optional Delimiter As String = ",") As DataSet
         Dim dtsImport As New DataSet

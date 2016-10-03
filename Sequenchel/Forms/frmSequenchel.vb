@@ -963,7 +963,7 @@ Public Class frmSequenchel
         Dim strQueryOrder As String = basCode.MainOrderBuild(chkReversedSortOrder.Checked)
 
         strQuery = strQuerySelect
-        strQuery &= " FROM [" & basCode.basTable.TableName.Replace(".", "].[") & "] " & basCode.basTable.TableAlias & " "
+        strQuery &= " FROM [" & basCode.basTable.TableName.Replace(".", "].[") & "] [" & basCode.basTable.TableAlias & "] "
         strQuery &= " WHERE 1=1 "
 
         If blnRefine = True Then
@@ -1032,7 +1032,7 @@ Public Class frmSequenchel
     Private Sub LoadItem(dgrSelection As DataGridViewRow)
         Dim strQueryWhere As String = " WHERE 1=1 "
         Dim strQueryWhere2 As String = ""
-        Dim strQueryFrom As String = " FROM [" & basCode.basTable.TableName.Replace(".", "].[") & "] " & basCode.basTable.TableAlias & " "
+        Dim strQueryFrom As String = " FROM [" & basCode.basTable.TableName.Replace(".", "].[") & "] [" & basCode.basTable.TableAlias & "] "
         'strQuery = "SELECT TOP 1 ,"
         strQuery = "SELECT ,"
         For intField As Integer = 0 To basCode.basTable.Count - 1
@@ -1328,12 +1328,15 @@ Public Class frmSequenchel
         strQuery = ""
         Dim strQueryWhere As String = " WHERE 1=1 "
         strQuery = " DELETE FROM [" & basCode.basTable.TableName.Replace(".", "].[") & "] "
+        Dim strColumn As String = "", strValue As String = ""
 
         For intField As Integer = 0 To basCode.basTable.Count - 1
             If basCode.basTable.Item(intField).Identity = True Or basCode.basTable.Item(intField).PrimaryKey = True Then
                 For Each cell In dgvTable1.SelectedRows(0).Cells
                     If cell.OwningColumn.Name = basCode.basTable.Item(intField).FieldName Then
-                        strQueryWhere &= " AND [" & basCode.basTable.Item(intField).FieldName & "] = " & basCode.SetDelimiters(cell.Value, basCode.basTable.Item(intField).FieldDataType, "=")
+                        strColumn = basCode.basTable.Item(intField).FieldName
+                        strValue = basCode.SetDelimiters(cell.Value, basCode.basTable.Item(intField).FieldDataType, "=")
+                        strQueryWhere &= " AND [" & strColumn & "] = " & strValue
                     End If
                 Next
             End If
@@ -1367,6 +1370,7 @@ Public Class frmSequenchel
         Else
             basCode.curStatus.Status = SeqCore.CurrentStatus.StatusList.Edit
         End If
+        'basCode.DataRowRemove(dtsTable, dtsTable.Tables(0).TableName, strColumn, strValue)
         dgvTable1.Rows.Remove(dgvTable1.SelectedRows(0))
         ColorReset()
         ButtonHandle()

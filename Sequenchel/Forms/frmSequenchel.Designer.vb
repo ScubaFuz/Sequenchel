@@ -101,7 +101,7 @@ Partial Class frmSequenchel
         'btnClose
         '
         Me.btnClose.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnClose.Location = New System.Drawing.Point(855, 696)
+        Me.btnClose.Location = New System.Drawing.Point(1115, 696)
         Me.btnClose.Name = "btnClose"
         Me.btnClose.Size = New System.Drawing.Size(135, 23)
         Me.btnClose.TabIndex = 5
@@ -116,7 +116,7 @@ Partial Class frmSequenchel
         Me.lblStatusText.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblStatusText.Location = New System.Drawing.Point(86, 699)
         Me.lblStatusText.Name = "lblStatusText"
-        Me.lblStatusText.Size = New System.Drawing.Size(763, 25)
+        Me.lblStatusText.Size = New System.Drawing.Size(1023, 25)
         Me.lblStatusText.TabIndex = 83
         Me.lblStatusText.Text = "Program Start"
         '
@@ -218,7 +218,7 @@ Partial Class frmSequenchel
         Me.mnuMain.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuMainFile, Me.mnuMainEdit, Me.mnuMainTools, Me.mnuMainHelp})
         Me.mnuMain.Location = New System.Drawing.Point(0, 0)
         Me.mnuMain.Name = "mnuMain"
-        Me.mnuMain.Size = New System.Drawing.Size(1012, 24)
+        Me.mnuMain.Size = New System.Drawing.Size(1272, 24)
         Me.mnuMain.TabIndex = 0
         Me.mnuMain.Text = "mnuMain"
         '
@@ -310,7 +310,7 @@ Partial Class frmSequenchel
         Me.lblLicense.AutoSize = True
         Me.lblLicense.BackColor = System.Drawing.Color.Transparent
         Me.lblLicense.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblLicense.Location = New System.Drawing.Point(618, 0)
+        Me.lblLicense.Location = New System.Drawing.Point(878, 0)
         Me.lblLicense.Name = "lblLicense"
         Me.lblLicense.Size = New System.Drawing.Size(375, 24)
         Me.lblLicense.TabIndex = 105
@@ -332,8 +332,8 @@ Partial Class frmSequenchel
         'sptTable1.Panel2
         '
         Me.sptTable1.Panel2.Controls.Add(Me.sptFields1)
-        Me.sptTable1.Size = New System.Drawing.Size(974, 514)
-        Me.sptTable1.SplitterDistance = 557
+        Me.sptTable1.Size = New System.Drawing.Size(1234, 514)
+        Me.sptTable1.SplitterDistance = 797
         Me.sptTable1.TabIndex = 0
         '
         'dgvTable1
@@ -353,7 +353,7 @@ Partial Class frmSequenchel
         Me.dgvTable1.Name = "dgvTable1"
         Me.dgvTable1.ReadOnly = True
         Me.dgvTable1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgvTable1.Size = New System.Drawing.Size(551, 508)
+        Me.dgvTable1.Size = New System.Drawing.Size(791, 508)
         Me.dgvTable1.TabIndex = 0
         '
         'sptFields1
@@ -368,8 +368,8 @@ Partial Class frmSequenchel
         'sptFields1.Panel2
         '
         Me.sptFields1.Panel2.AutoScroll = True
-        Me.sptFields1.Size = New System.Drawing.Size(413, 514)
-        Me.sptFields1.SplitterDistance = 153
+        Me.sptFields1.Size = New System.Drawing.Size(433, 514)
+        Me.sptFields1.SplitterDistance = 160
         Me.sptFields1.TabIndex = 0
         '
         'lblListCount
@@ -408,9 +408,9 @@ Partial Class frmSequenchel
         Me.pnlFooterControls.Controls.Add(Me.btnUpdate)
         Me.pnlFooterControls.Controls.Add(Me.btnClear)
         Me.pnlFooterControls.Controls.Add(Me.btnAdd)
-        Me.pnlFooterControls.Location = New System.Drawing.Point(154, 3)
+        Me.pnlFooterControls.Location = New System.Drawing.Point(195, 3)
         Me.pnlFooterControls.Name = "pnlFooterControls"
-        Me.pnlFooterControls.Size = New System.Drawing.Size(814, 81)
+        Me.pnlFooterControls.Size = New System.Drawing.Size(1033, 81)
         Me.pnlFooterControls.TabIndex = 124
         '
         'lblSavedSearches
@@ -547,7 +547,7 @@ Partial Class frmSequenchel
         Me.lblMultipleRows.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblMultipleRows.AutoSize = True
         Me.lblMultipleRows.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblMultipleRows.Location = New System.Drawing.Point(697, 68)
+        Me.lblMultipleRows.Location = New System.Drawing.Point(957, 68)
         Me.lblMultipleRows.Name = "lblMultipleRows"
         Me.lblMultipleRows.Size = New System.Drawing.Size(209, 16)
         Me.lblMultipleRows.TabIndex = 125
@@ -562,7 +562,7 @@ Partial Class frmSequenchel
         Me.pnlListCount.Dock = System.Windows.Forms.DockStyle.Top
         Me.pnlListCount.Location = New System.Drawing.Point(3, 3)
         Me.pnlListCount.Name = "pnlListCount"
-        Me.pnlListCount.Size = New System.Drawing.Size(145, 70)
+        Me.pnlListCount.Size = New System.Drawing.Size(186, 70)
         Me.pnlListCount.TabIndex = 125
         '
         'TableLayoutPanel1
@@ -580,7 +580,7 @@ Partial Class frmSequenchel
         Me.TableLayoutPanel1.RowCount = 2
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle())
-        Me.TableLayoutPanel1.Size = New System.Drawing.Size(971, 87)
+        Me.TableLayoutPanel1.Size = New System.Drawing.Size(1231, 87)
         Me.TableLayoutPanel1.TabIndex = 126
         '
         'frmSequenchel
@@ -589,7 +589,7 @@ Partial Class frmSequenchel
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.btnClear
-        Me.ClientSize = New System.Drawing.Size(1012, 733)
+        Me.ClientSize = New System.Drawing.Size(1272, 733)
         Me.Controls.Add(Me.TableLayoutPanel1)
         Me.Controls.Add(Me.lblMultipleRows)
         Me.Controls.Add(Me.btnClose)

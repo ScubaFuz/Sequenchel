@@ -194,13 +194,12 @@ Partial Class frmConfiguration
         Me.chkTableUpdate = New System.Windows.Forms.CheckBox()
         Me.tpgTableTemplates = New System.Windows.Forms.TabPage()
         Me.tbnSearchSequenchelTemplates = New System.Windows.Forms.Button()
-        Me.btnUseTemplate = New System.Windows.Forms.Button()
-        Me.btnLoadTemplate = New System.Windows.Forms.Button()
+        Me.btnTemplateUse = New System.Windows.Forms.Button()
+        Me.btnTemplateLoad = New System.Windows.Forms.Button()
         Me.lblSelectedTemplate = New System.Windows.Forms.Label()
         Me.tvwSelectedTemplate = New System.Windows.Forms.TreeView()
-        Me.btnloadTemplates = New System.Windows.Forms.Button()
-        Me.txtSearchTemplate = New System.Windows.Forms.TextBox()
-        Me.btnSearchTemplate = New System.Windows.Forms.Button()
+        Me.txtTemplateSearch = New System.Windows.Forms.TextBox()
+        Me.btnTemplateSearch = New System.Windows.Forms.Button()
         Me.lblAvailableTemplates = New System.Windows.Forms.Label()
         Me.lstAvailableTemplates = New System.Windows.Forms.ListBox()
         Me.rtbTableTemplates = New System.Windows.Forms.RichTextBox()
@@ -238,7 +237,7 @@ Partial Class frmConfiguration
         Me.tabConfiguration.Location = New System.Drawing.Point(12, 16)
         Me.tabConfiguration.Name = "tabConfiguration"
         Me.tabConfiguration.SelectedIndex = 0
-        Me.tabConfiguration.Size = New System.Drawing.Size(776, 676)
+        Me.tabConfiguration.Size = New System.Drawing.Size(776, 785)
         Me.tabConfiguration.TabIndex = 0
         '
         'tpgConnections
@@ -718,7 +717,7 @@ Partial Class frmConfiguration
         Me.tpgTableSets.Controls.Add(Me.lvwTableSets)
         Me.tpgTableSets.Location = New System.Drawing.Point(4, 22)
         Me.tpgTableSets.Name = "tpgTableSets"
-        Me.tpgTableSets.Size = New System.Drawing.Size(768, 759)
+        Me.tpgTableSets.Size = New System.Drawing.Size(768, 650)
         Me.tpgTableSets.TabIndex = 2
         Me.tpgTableSets.Text = "Table Sets"
         Me.tpgTableSets.UseVisualStyleBackColor = True
@@ -2008,13 +2007,12 @@ Partial Class frmConfiguration
         'tpgTableTemplates
         '
         Me.tpgTableTemplates.Controls.Add(Me.tbnSearchSequenchelTemplates)
-        Me.tpgTableTemplates.Controls.Add(Me.btnUseTemplate)
-        Me.tpgTableTemplates.Controls.Add(Me.btnLoadTemplate)
+        Me.tpgTableTemplates.Controls.Add(Me.btnTemplateUse)
+        Me.tpgTableTemplates.Controls.Add(Me.btnTemplateLoad)
         Me.tpgTableTemplates.Controls.Add(Me.lblSelectedTemplate)
         Me.tpgTableTemplates.Controls.Add(Me.tvwSelectedTemplate)
-        Me.tpgTableTemplates.Controls.Add(Me.btnloadTemplates)
-        Me.tpgTableTemplates.Controls.Add(Me.txtSearchTemplate)
-        Me.tpgTableTemplates.Controls.Add(Me.btnSearchTemplate)
+        Me.tpgTableTemplates.Controls.Add(Me.txtTemplateSearch)
+        Me.tpgTableTemplates.Controls.Add(Me.btnTemplateSearch)
         Me.tpgTableTemplates.Controls.Add(Me.lblAvailableTemplates)
         Me.tpgTableTemplates.Controls.Add(Me.lstAvailableTemplates)
         Me.tpgTableTemplates.Controls.Add(Me.rtbTableTemplates)
@@ -2029,32 +2027,32 @@ Partial Class frmConfiguration
         '
         Me.tbnSearchSequenchelTemplates.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.tbnSearchSequenchelTemplates.Enabled = False
-        Me.tbnSearchSequenchelTemplates.Location = New System.Drawing.Point(171, 704)
+        Me.tbnSearchSequenchelTemplates.Location = New System.Drawing.Point(171, 813)
         Me.tbnSearchSequenchelTemplates.Name = "tbnSearchSequenchelTemplates"
         Me.tbnSearchSequenchelTemplates.Size = New System.Drawing.Size(140, 23)
         Me.tbnSearchSequenchelTemplates.TabIndex = 3
         Me.tbnSearchSequenchelTemplates.Text = "Search Sequenchel.com"
         Me.tbnSearchSequenchelTemplates.UseVisualStyleBackColor = True
         '
-        'btnUseTemplate
+        'btnTemplateUse
         '
-        Me.btnUseTemplate.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.btnUseTemplate.Location = New System.Drawing.Point(335, 704)
-        Me.btnUseTemplate.Name = "btnUseTemplate"
-        Me.btnUseTemplate.Size = New System.Drawing.Size(140, 23)
-        Me.btnUseTemplate.TabIndex = 6
-        Me.btnUseTemplate.Text = "Use Selected Template"
-        Me.btnUseTemplate.UseVisualStyleBackColor = True
+        Me.btnTemplateUse.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.btnTemplateUse.Location = New System.Drawing.Point(335, 725)
+        Me.btnTemplateUse.Name = "btnTemplateUse"
+        Me.btnTemplateUse.Size = New System.Drawing.Size(140, 23)
+        Me.btnTemplateUse.TabIndex = 6
+        Me.btnTemplateUse.Text = "Use Selected Template"
+        Me.btnTemplateUse.UseVisualStyleBackColor = True
         '
-        'btnLoadTemplate
+        'btnTemplateLoad
         '
-        Me.btnLoadTemplate.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.btnLoadTemplate.Location = New System.Drawing.Point(481, 705)
-        Me.btnLoadTemplate.Name = "btnLoadTemplate"
-        Me.btnLoadTemplate.Size = New System.Drawing.Size(140, 23)
-        Me.btnLoadTemplate.TabIndex = 7
-        Me.btnLoadTemplate.Text = "Load Template From File"
-        Me.btnLoadTemplate.UseVisualStyleBackColor = True
+        Me.btnTemplateLoad.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.btnTemplateLoad.Location = New System.Drawing.Point(171, 725)
+        Me.btnTemplateLoad.Name = "btnTemplateLoad"
+        Me.btnTemplateLoad.Size = New System.Drawing.Size(140, 23)
+        Me.btnTemplateLoad.TabIndex = 7
+        Me.btnTemplateLoad.Text = "Load Template From File"
+        Me.btnTemplateLoad.UseVisualStyleBackColor = True
         '
         'lblSelectedTemplate
         '
@@ -2072,36 +2070,26 @@ Partial Class frmConfiguration
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.tvwSelectedTemplate.Location = New System.Drawing.Point(335, 117)
         Me.tvwSelectedTemplate.Name = "tvwSelectedTemplate"
-        Me.tvwSelectedTemplate.Size = New System.Drawing.Size(392, 547)
+        Me.tvwSelectedTemplate.Size = New System.Drawing.Size(392, 572)
         Me.tvwSelectedTemplate.TabIndex = 5
         '
-        'btnloadTemplates
+        'txtTemplateSearch
         '
-        Me.btnloadTemplates.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.btnloadTemplates.Location = New System.Drawing.Point(25, 732)
-        Me.btnloadTemplates.Name = "btnloadTemplates"
-        Me.btnloadTemplates.Size = New System.Drawing.Size(286, 23)
-        Me.btnloadTemplates.TabIndex = 4
-        Me.btnloadTemplates.Text = "Load All Local Templates"
-        Me.btnloadTemplates.UseVisualStyleBackColor = True
+        Me.txtTemplateSearch.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.txtTemplateSearch.Location = New System.Drawing.Point(25, 698)
+        Me.txtTemplateSearch.Name = "txtTemplateSearch"
+        Me.txtTemplateSearch.Size = New System.Drawing.Size(286, 20)
+        Me.txtTemplateSearch.TabIndex = 1
         '
-        'txtSearchTemplate
+        'btnTemplateSearch
         '
-        Me.txtSearchTemplate.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.txtSearchTemplate.Location = New System.Drawing.Point(25, 678)
-        Me.txtSearchTemplate.Name = "txtSearchTemplate"
-        Me.txtSearchTemplate.Size = New System.Drawing.Size(286, 20)
-        Me.txtSearchTemplate.TabIndex = 1
-        '
-        'btnSearchTemplate
-        '
-        Me.btnSearchTemplate.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.btnSearchTemplate.Location = New System.Drawing.Point(25, 705)
-        Me.btnSearchTemplate.Name = "btnSearchTemplate"
-        Me.btnSearchTemplate.Size = New System.Drawing.Size(140, 23)
-        Me.btnSearchTemplate.TabIndex = 2
-        Me.btnSearchTemplate.Text = "Search Local"
-        Me.btnSearchTemplate.UseVisualStyleBackColor = True
+        Me.btnTemplateSearch.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.btnTemplateSearch.Location = New System.Drawing.Point(25, 725)
+        Me.btnTemplateSearch.Name = "btnTemplateSearch"
+        Me.btnTemplateSearch.Size = New System.Drawing.Size(140, 23)
+        Me.btnTemplateSearch.TabIndex = 2
+        Me.btnTemplateSearch.Text = "Search Templates"
+        Me.btnTemplateSearch.UseVisualStyleBackColor = True
         '
         'lblAvailableTemplates
         '
@@ -2119,7 +2107,7 @@ Partial Class frmConfiguration
         Me.lstAvailableTemplates.FormattingEnabled = True
         Me.lstAvailableTemplates.Location = New System.Drawing.Point(25, 117)
         Me.lstAvailableTemplates.Name = "lstAvailableTemplates"
-        Me.lstAvailableTemplates.Size = New System.Drawing.Size(286, 537)
+        Me.lstAvailableTemplates.Size = New System.Drawing.Size(286, 563)
         Me.lstAvailableTemplates.TabIndex = 0
         '
         'rtbTableTemplates
@@ -2150,7 +2138,7 @@ Partial Class frmConfiguration
         '
         Me.btnClose.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnClose.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.btnClose.Location = New System.Drawing.Point(649, 694)
+        Me.btnClose.Location = New System.Drawing.Point(649, 803)
         Me.btnClose.Name = "btnClose"
         Me.btnClose.Size = New System.Drawing.Size(135, 23)
         Me.btnClose.TabIndex = 2
@@ -2161,7 +2149,7 @@ Partial Class frmConfiguration
         '
         Me.btnCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.btnCancel.Location = New System.Drawing.Point(508, 694)
+        Me.btnCancel.Location = New System.Drawing.Point(508, 803)
         Me.btnCancel.Name = "btnCancel"
         Me.btnCancel.Size = New System.Drawing.Size(135, 23)
         Me.btnCancel.TabIndex = 1
@@ -2174,7 +2162,7 @@ Partial Class frmConfiguration
         Me.lblStatusTitle.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.lblStatusTitle.AutoSize = True
         Me.lblStatusTitle.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblStatusTitle.Location = New System.Drawing.Point(13, 699)
+        Me.lblStatusTitle.Location = New System.Drawing.Point(13, 808)
         Me.lblStatusTitle.Name = "lblStatusTitle"
         Me.lblStatusTitle.Size = New System.Drawing.Size(51, 16)
         Me.lblStatusTitle.TabIndex = 9
@@ -2185,7 +2173,7 @@ Partial Class frmConfiguration
         Me.lblStatusText.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblStatusText.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblStatusText.Location = New System.Drawing.Point(70, 699)
+        Me.lblStatusText.Location = New System.Drawing.Point(70, 808)
         Me.lblStatusText.Name = "lblStatusText"
         Me.lblStatusText.Size = New System.Drawing.Size(432, 23)
         Me.lblStatusText.TabIndex = 10
@@ -2195,7 +2183,7 @@ Partial Class frmConfiguration
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.btnClose
-        Me.ClientSize = New System.Drawing.Size(800, 733)
+        Me.ClientSize = New System.Drawing.Size(800, 842)
         Me.Controls.Add(Me.lblStatusText)
         Me.Controls.Add(Me.lblStatusTitle)
         Me.Controls.Add(Me.btnCancel)
@@ -2372,11 +2360,10 @@ Partial Class frmConfiguration
     Friend WithEvents lblAvailableTemplates As System.Windows.Forms.Label
     Friend WithEvents lstAvailableTemplates As System.Windows.Forms.ListBox
     Friend WithEvents rtbTableTemplates As System.Windows.Forms.RichTextBox
-    Friend WithEvents btnloadTemplates As System.Windows.Forms.Button
-    Friend WithEvents txtSearchTemplate As System.Windows.Forms.TextBox
-    Friend WithEvents btnSearchTemplate As System.Windows.Forms.Button
-    Friend WithEvents btnUseTemplate As System.Windows.Forms.Button
-    Friend WithEvents btnLoadTemplate As System.Windows.Forms.Button
+    Friend WithEvents txtTemplateSearch As System.Windows.Forms.TextBox
+    Friend WithEvents btnTemplateSearch As System.Windows.Forms.Button
+    Friend WithEvents btnTemplateUse As System.Windows.Forms.Button
+    Friend WithEvents btnTemplateLoad As System.Windows.Forms.Button
     Friend WithEvents lblSelectedTemplate As System.Windows.Forms.Label
     Friend WithEvents tvwSelectedTemplate As System.Windows.Forms.TreeView
     Friend WithEvents tbnSearchSequenchelTemplates As System.Windows.Forms.Button

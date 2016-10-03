@@ -1604,14 +1604,9 @@ Public Class frmConfiguration
 #Region "Table Templates"
 #Region "Controls"
 
-    Private Sub btnloadTemplates_Click(sender As Object, e As EventArgs) Handles btnloadTemplates.Click
+    Private Sub btnTemplateSearch_Click(sender As Object, e As EventArgs) Handles btnTemplateSearch.Click
         WriteStatus("", 0, lblStatusText)
-        TemplatesGet()
-    End Sub
-
-    Private Sub btnSearchTemplate_Click(sender As Object, e As EventArgs) Handles btnSearchTemplate.Click
-        WriteStatus("", 0, lblStatusText)
-        TemplatesGet(txtSearchTemplate.Text)
+        TemplatesGet(txtTemplateSearch.Text)
     End Sub
 
     Private Sub lstAvailableTemplates_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lstAvailableTemplates.SelectedIndexChanged
@@ -1622,7 +1617,7 @@ Public Class frmConfiguration
         CursorControl()
     End Sub
 
-    Private Sub btnUseTemplate_Click(sender As Object, e As EventArgs) Handles btnUseTemplate.Click
+    Private Sub btnTemplateUse_Click(sender As Object, e As EventArgs) Handles btnTemplateUse.Click
         CursorControl("Wait")
         WriteStatus("", 0, lblStatusText)
         basCode.xmlTables = basCode.xmlTemplates
@@ -1633,7 +1628,7 @@ Public Class frmConfiguration
         CursorControl()
     End Sub
 
-    Private Sub btnLoadTemplate_Click(sender As Object, e As EventArgs) Handles btnLoadTemplate.Click
+    Private Sub btnTemplateLoad_Click(sender As Object, e As EventArgs) Handles btnTemplateLoad.Click
         CursorControl("Wait")
         WriteStatus("", 0, lblStatusText)
         Dim loadFile1 As New OpenFileDialog
