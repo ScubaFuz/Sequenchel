@@ -326,7 +326,7 @@ Public Class Excel
         Try
             ErrorLevel = 0
             ErrorMessage = ""
-            ExcelCon.ConnectionString = "Provider=Microsoft.Jet.OLEDB.4.0;" & _
+            ExcelCon.ConnectionString = "Provider=Microsoft.ACE.OLEDB.12.0;" & _
                 "Data Source= " & StrFilePath & _
                 ";Extended Properties=""Excel 8.0;"""
             ExcelCon.Open()

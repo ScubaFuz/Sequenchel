@@ -1,6 +1,7 @@
 Version 4.0.1
 New: Adding fields to a report no longer removes that field from the select list.
 New: Adding the same field more than once automatically updates the field alias.
+Enhanced: Replaced MS-Jet driver with MS-OLE-DB driver to provide MS Excel services in 64 bit environments.
 Fixed: Loading a report with an incorrect/non-exising field no longer crashes Sequenchel.
 Fixed: Default value buttons on wrong fields no longer create an error.
 
