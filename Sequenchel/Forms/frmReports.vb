@@ -1405,6 +1405,7 @@ Public Class frmReports
                             lvwSelectedTables.SelectedItems.Clear()
                             lvwSelectedTables.Items(lvwSortItem.Index).Selected = True
                             Try
+                                If intRelationCount > lvwSelectedTables.Items.Count Then intRelationCount = lvwSelectedTables.Items.Count
                                 While lvwSortItem.Index + 1 > intRelationCount
                                     btnReportTableUp_Click(lvwSelectedTables, Nothing)
                                 End While
