@@ -5,7 +5,11 @@ Public Class frmConfiguration
 
     Private Sub frmConfiguration_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         System.Windows.Forms.Application.CurrentCulture = New System.Globalization.CultureInfo("EN-US")
-        If basCode.curVar.DebugMode Then btnTest.Visible = True
+        If basCode.curVar.DebugMode Then
+            btnTest.Visible = True
+        Else
+            tpgTableTemplates.Dispose()
+        End If
         cbxDataProvider.SelectedItem = "SQL"
         cbxLoginMethod.SelectedItem = "Windows"
         SecuritySet()

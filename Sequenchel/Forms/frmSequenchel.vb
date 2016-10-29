@@ -360,8 +360,8 @@ Public Class frmSequenchel
     Private Sub LoadConnections()
         AllClear(4)
         Dim lstConnections As List(Of String) = basCode.LoadConnections(basCode.xmlConnections)
-        If lstConnections Is Nothing Then
-            basCode.UseMainConnection()
+        If lstConnections Is Nothing OrElse lstConnections.Count = 0 Then
+            basCode.UseMainDB()
             Exit Sub
         End If
         For Each lstItem As String In lstConnections

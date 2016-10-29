@@ -568,6 +568,16 @@ Public Class BaseCode
         dhdMainDB.DataTableName = dhdConnection.DataTableName
     End Sub
 
+    Public Sub UseMainDB()
+        dhdConnection.DataLocation = dhdMainDB.DataLocation
+        dhdConnection.DatabaseName = dhdMainDB.DatabaseName
+        dhdConnection.DataProvider = dhdMainDB.DataProvider
+        dhdConnection.LoginMethod = dhdMainDB.LoginMethod
+        dhdConnection.LoginName = dhdMainDB.LoginName
+        dhdConnection.Password = dhdMainDB.Password
+        dhdConnection.DataTableName = dhdMainDB.DataTableName
+    End Sub
+
     Public Sub LoadConnection(xmlConnections As XmlDocument, strConnection As String)
         If strConnection.Length > 0 Then
             Dim xmlConnNode As XmlNode = dhdText.FindXmlNode(xmlConnections, "Connection", "ConnectionName", strConnection)

@@ -1,10 +1,14 @@
 Version 4.0.1
 New: Adding fields to a report no longer removes that field from the select list.
 New: Adding the same field more than once automatically updates the field alias.
+New: SmartUpdate can now remove all data from target table before adding new data.
 Enhanced: Replaced MS-Jet driver with MS-OLE-DB driver to provide MS Excel services in 64 bit environments.
+Enhanced: If no connection is found the main database is used as default connection.
 Fixed: Loading a report with an incorrect/non-exising field no longer crashes Sequenchel.
 Fixed: Default value buttons on wrong fields no longer create an error.
 Fixed: Report results layout now scales properly.
+Fixed: SmartUpdate EndDate can now be Nothing.
+Fixed: Object Owner (monitoring) can now be Nothing.
 
 Version 4.0.0
 New: The engine has been rewritten to enable more features in the future. All screens have been redesigned, even though they look the same.

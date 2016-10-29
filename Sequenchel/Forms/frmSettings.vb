@@ -857,6 +857,9 @@
                     Exit Sub
                 End If
             End If
+            If basCode.curStatus.Connection = "" Then
+                basCode.UseMainDB()
+            End If
             If basCode.SaveGeneralSettingsXml(basCode.xmlGeneralSettings) = False Then
                 WriteStatus("General Settings file not saved. Please check the log.", 1, lblStatusText)
             Else
@@ -1078,6 +1081,10 @@
             cbxStartMinute.Items.Add(Format(intCount, "00"))
             cbxEndMinute.Items.Add(Format(intCount, "00"))
         Next
+    End Sub
+
+    Private Sub cbxProcedures_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbxProcedures.SelectedIndexChanged
+        WriteStatus("", 0, lblStatusText)
     End Sub
 
     Private Sub cbxOccurence_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbxOccurence.SelectedIndexChanged

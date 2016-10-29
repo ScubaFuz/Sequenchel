@@ -190,7 +190,7 @@
         'get start & end date
         Dim dtmStartDate As Date = dtpStartDate.Value.Date
         Dim dtmEndDate As Date = dtpEndDate.Value.Date
-        If dtmEndDate <= dtmStartDate And chkNoEndDate.Checked = True Then
+        If dtmEndDate <= dtmStartDate And chkNoEndDate.Checked = False Then
             WriteStatus("End Date is smaller than Start Date. Correct the dates and try again.", 2, lblStatusText)
             Exit Sub
         End If
