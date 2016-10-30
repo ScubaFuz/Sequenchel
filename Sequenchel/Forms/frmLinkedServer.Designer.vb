@@ -574,6 +574,7 @@ Partial Class frmLinkedServer
         Me.lblRemoteLoginName.TabIndex = 182
         Me.lblRemoteLoginName.Text = "Remote Login Name"
         Me.lblRemoteLoginName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.lblRemoteLoginName.Visible = False
         '
         'txtRemoteLoginName
         '
@@ -583,6 +584,7 @@ Partial Class frmLinkedServer
         Me.txtRemoteLoginName.Name = "txtRemoteLoginName"
         Me.txtRemoteLoginName.Size = New System.Drawing.Size(183, 20)
         Me.txtRemoteLoginName.TabIndex = 14
+        Me.txtRemoteLoginName.Visible = False
         '
         'lblPassword
         '
@@ -593,6 +595,7 @@ Partial Class frmLinkedServer
         Me.lblPassword.TabIndex = 184
         Me.lblPassword.Text = "Remote Password"
         Me.lblPassword.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.lblPassword.Visible = False
         '
         'txtPassword
         '
@@ -603,6 +606,7 @@ Partial Class frmLinkedServer
         Me.txtPassword.PasswordChar = Global.Microsoft.VisualBasic.ChrW(42)
         Me.txtPassword.Size = New System.Drawing.Size(183, 20)
         Me.txtPassword.TabIndex = 15
+        Me.txtPassword.Visible = False
         '
         'lblLocalLoginName
         '
@@ -613,6 +617,7 @@ Partial Class frmLinkedServer
         Me.lblLocalLoginName.TabIndex = 186
         Me.lblLocalLoginName.Text = "Local Login Name"
         Me.lblLocalLoginName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.lblLocalLoginName.Visible = False
         '
         'txtLocalLoginName
         '
@@ -622,6 +627,7 @@ Partial Class frmLinkedServer
         Me.txtLocalLoginName.Name = "txtLocalLoginName"
         Me.txtLocalLoginName.Size = New System.Drawing.Size(183, 20)
         Me.txtLocalLoginName.TabIndex = 13
+        Me.txtLocalLoginName.Visible = False
         '
         'grpUpdatable
         '
@@ -699,7 +705,7 @@ Partial Class frmLinkedServer
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(741, 606)
+        Me.ClientSize = New System.Drawing.Size(741, 605)
         Me.Controls.Add(Me.lblStatusText)
         Me.Controls.Add(Me.lblStatusTitle)
         Me.Controls.Add(Me.lblLinkedServerName)

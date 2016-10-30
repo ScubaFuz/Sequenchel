@@ -770,7 +770,7 @@
 
                 If basCode.ErrorLevel = 0 Then
                     prbCreateDatabase.PerformStep()
-                    SaveConfigSetting("Database", "Version", My.Application.Info.Version.ToString)
+                    basCode.SaveConfigSetting("Database", "Version", My.Application.Info.Version.ToString)
                     WriteStatus("Database created/updated.", 0, lblStatusText)
                 End If
             Else
@@ -795,9 +795,9 @@
     Private Function VersionLoad() As Boolean
         Dim strVersion As String, strTarget As String
 
-        strVersion = LoadConfigSetting("Database", "Version")
+        strVersion = basCode.LoadConfigSetting("Database", "Version")
         If strVersion = Nothing Then
-            SaveConfigSetting("Database", "Version", My.Application.Info.Version.ToString)
+            basCode.SaveConfigSetting("Database", "Version", My.Application.Info.Version.ToString)
             Return False
         End If
         txtUpgradeDatabase.Text = strVersion
@@ -957,7 +957,7 @@
                     Exit Sub
                 End If
             Next
-            SaveConfigSetting("Database", "Version", txtUpgradeDatabase.Tag)
+            basCode.SaveConfigSetting("Database", "Version", txtUpgradeDatabase.Tag)
         Catch ex As Exception
             basCode.WriteLog("An error occured upgrading the database: " & ex.Message, 1)
             WriteStatus("Error upgrading database. Please check the log.", 1, lblStatusText)
@@ -976,7 +976,7 @@
         WriteStatus("", 0, lblStatusText)
         Try
             BackupDatabase(basCode.dhdMainDB, txtBackupDatabase.Text)
-            SaveConfigSetting("Database", "BackupLocation", txtBackupDatabase.Text, "A valid location on the server")
+            basCode.SaveConfigSetting("Database", "BackupLocation", txtBackupDatabase.Text, "A valid location on the server")
             WriteStatus("Database backup created", 0, lblStatusText)
         Catch ex As Exception
             CursorControl()
@@ -1280,25 +1280,25 @@
     Private Sub MonitorDataspacesLoad()
         Dim strValue As String = 0
 
-        strValue = LoadConfigSetting("MonitorDataspaces", "MinPercGrowth")
+        strValue = basCode.LoadConfigSetting("MonitorDataspaces", "MinPercGrowth")
         If strValue.Length > 0 And IsNumeric(strValue) Then basCode.CurVar.MinPercGrowth = strValue
         strValue = ""
-        strValue = LoadConfigSetting("MonitorDataspaces", "MinFreeSpace")
+        strValue = basCode.LoadConfigSetting("MonitorDataspaces", "MinFreeSpace")
         If strValue.Length > 0 Then basCode.CurVar.MinFreeSpace = strValue
         strValue = ""
-        strValue = LoadConfigSetting("MonitorDataspaces", "LowerLimit")
+        strValue = basCode.LoadConfigSetting("MonitorDataspaces", "LowerLimit")
         If strValue.Length > 0 Then basCode.CurVar.LowerLimit = strValue
         strValue = ""
-        strValue = LoadConfigSetting("MonitorDataspaces", "UpperLimit")
+        strValue = basCode.LoadConfigSetting("MonitorDataspaces", "UpperLimit")
         If strValue.Length > 0 Then basCode.CurVar.UpperLimit = strValue
         strValue = ""
-        strValue = LoadConfigSetting("MonitorDataspaces", "SmallGrowth")
+        strValue = basCode.LoadConfigSetting("MonitorDataspaces", "SmallGrowth")
         If strValue.Length > 0 Then basCode.CurVar.SmallGrowth = strValue
         strValue = ""
-        strValue = LoadConfigSetting("MonitorDataspaces", "MediumGrowth")
+        strValue = basCode.LoadConfigSetting("MonitorDataspaces", "MediumGrowth")
         If strValue.Length > 0 Then basCode.CurVar.MediumGrowth = strValue
         strValue = ""
-        strValue = LoadConfigSetting("MonitorDataspaces", "LargeGrowth")
+        strValue = basCode.LoadConfigSetting("MonitorDataspaces", "LargeGrowth")
         If strValue.Length > 0 Then basCode.CurVar.LargeGrowth = strValue
     End Sub
 
@@ -1367,13 +1367,13 @@
         basCode.curVar.MediumGrowth = intMediumGrowth
         basCode.curVar.LargeGrowth = intLargeGrowth
 
-        SaveConfigSetting("MonitorDataspaces", "MinPercGrowth", basCode.curVar.MinPercGrowth)
-        SaveConfigSetting("MonitorDataspaces", "MinFreeSpace", basCode.curVar.MinFreeSpace)
-        SaveConfigSetting("MonitorDataspaces", "LowerLimit", basCode.curVar.LowerLimit)
-        SaveConfigSetting("MonitorDataspaces", "UpperLimit", basCode.curVar.UpperLimit)
-        SaveConfigSetting("MonitorDataspaces", "SmallGrowth", basCode.curVar.SmallGrowth)
-        SaveConfigSetting("MonitorDataspaces", "MediumGrowth", basCode.curVar.MediumGrowth)
-        SaveConfigSetting("MonitorDataspaces", "LargeGrowth", basCode.curVar.LargeGrowth)
+        basCode.SaveConfigSetting("MonitorDataspaces", "MinPercGrowth", basCode.curVar.MinPercGrowth)
+        basCode.SaveConfigSetting("MonitorDataspaces", "MinFreeSpace", basCode.curVar.MinFreeSpace)
+        basCode.SaveConfigSetting("MonitorDataspaces", "LowerLimit", basCode.curVar.LowerLimit)
+        basCode.SaveConfigSetting("MonitorDataspaces", "UpperLimit", basCode.curVar.UpperLimit)
+        basCode.SaveConfigSetting("MonitorDataspaces", "SmallGrowth", basCode.curVar.SmallGrowth)
+        basCode.SaveConfigSetting("MonitorDataspaces", "MediumGrowth", basCode.curVar.MediumGrowth)
+        basCode.SaveConfigSetting("MonitorDataspaces", "LargeGrowth", basCode.curVar.LargeGrowth)
 
         CursorControl()
     End Sub

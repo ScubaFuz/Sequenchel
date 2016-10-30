@@ -189,6 +189,10 @@ Public Class DBRef
             If verDatabase.CompareTo(verSDBA3408) = -1 Then
                 Return "3.4.0.8"
             End If
+            Dim verSDBA4017 As New Version("4.0.1.7")
+            If verDatabase.CompareTo(verSDBA4017) = -1 Then
+                Return "4.0.1.7"
+            End If
         Else
             'Return strVersion
         End If
@@ -332,6 +336,13 @@ Public Class DBRef
             arrScripts(1, intCounter) = "CREATE"
             arrScripts(0, AddOne()) = "02 dbo.usp_Report_Jobs.sql"
             arrScripts(1, intCounter) = "CREATE"
+        End If
+
+        If strVersion = "4.0.1.7" Then
+            arrScripts(0, intCounter) = "03 dbo.usp_Report_Object_Owner.sql"
+            arrScripts(1, intCounter) = "ALTER"
+            arrScripts(0, AddOne()) = "01 dbo.usp_SmartUpdate.sql"
+            arrScripts(1, intCounter) = "ALTER"
         End If
 
         ReDim Preserve arrScripts(1, intCounter)

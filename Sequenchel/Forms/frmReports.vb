@@ -1245,6 +1245,10 @@ Public Class frmReports
             strReportName = basCode.curStatus.Connection
         End If
         Dim strFileName As String = GetSaveFileName(strReportName)
+        If strFileName = Nothing Then
+            WriteStatus("No filename was selected. Save cancelled.", 2, lblStatusText)
+            Exit Sub
+        End If
         If ExportFile(dtsReport, strFileName) = False Then
             WriteStatus("There was an error saving the file. Please check the log.", 1, lblStatusText)
         Else

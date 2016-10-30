@@ -238,43 +238,6 @@ Module Common
         End Try
     End Sub
 
-    Friend Sub SaveConfigSetting(ByVal strCategory As String, ByVal strConfigName As String, ByVal strConfigValue As String, Optional ByVal strRemarks As String = Nothing)
-        strQuery = "exec usp_ConfigHandle 'Smt','" & strCategory & "',NULL,'" & strConfigName & "','" & strConfigValue & "','" & Now.ToString("yyyyMMdd HH:mm") & "'"
-        If strRemarks = Nothing Then
-            'Do nothing
-        Else
-            strQuery &= ",'" & strRemarks & "'"
-        End If
-        basCode.QueryDb(basCode.dhdMainDB, strQuery, False)
-    End Sub
-
-    Friend Function LoadConfigSetting(ByVal strCategory As String, ByVal strConfigName As String) As String
-        strQuery = "exec usp_ConfigHandle 'Get','" & strCategory & "',NULL,'" & strConfigName & "'"
-        Dim objData As DataSet
-        objData = basCode.QueryDb(basCode.dhdMainDB, strQuery, True)
-        Dim strReturn As String = Nothing
-
-        If objData Is Nothing Then
-            'blnDatabaseOnLine = False
-            Return ""
-        End If
-        If objData.Tables.Count = 0 Then Return ""
-        If objData.Tables(0).Rows.Count = 0 Then Return ""
-
-        For intRowCount = 0 To objData.Tables(0).Rows.Count - 1
-            'If objData.Tables.Item(0).Rows(intRowCount).Item(0).GetType().ToString = "System.DBNull" Then
-            'MessageBox.Show("Cell Must be empty")
-            'Else
-            If objData.Tables.Item(0).Rows(intRowCount).Item("Category") = strCategory Then
-                If objData.Tables.Item(0).Rows(intRowCount).Item("ConfigName") = strConfigName Then
-                    strReturn = objData.Tables.Item(0).Rows(intRowCount).Item("ConfigValue")
-                End If
-            End If
-            'End If
-        Next
-        Return strReturn
-    End Function
-
     Friend Function ClearDBLog(ByVal dtmDate As Date) As Boolean
         strQuery = ""
         strQuery = "exec usp_LoggingHandle 'Del','" & basCode.FormatDate(dtmDate) & "'"

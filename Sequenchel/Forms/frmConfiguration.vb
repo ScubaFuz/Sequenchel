@@ -1694,7 +1694,7 @@ Public Class frmConfiguration
         End If
         Try
             BackupDatabase(txtBackupLocation.Text)
-            SaveConfigSetting("Database", "BackupLocation", txtBackupLocation.Text, "A valid location on the server")
+            basCode.SaveConfigSetting("Database", "BackupLocation", txtBackupLocation.Text, "A valid location on the server")
             WriteStatus("Database backup is created.", 0, lblStatusText)
         Catch ex As Exception
             basCode.WriteLog("While saving the database, the following error occured: " & Environment.NewLine & ex.Message, 1)

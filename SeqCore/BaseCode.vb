@@ -1484,6 +1484,39 @@ Public Class BaseCode
         Return intSqlVersion
     End Function
 
+    Public Function LoadConfigSetting(ByVal strCategory As String, ByVal strConfigName As String) As String
+        Dim strQuery As String = "exec usp_ConfigHandle 'Get','" & strCategory & "',NULL,'" & strConfigName & "'"
+        Dim dtsData As DataSet
+        dtsData = QueryDb(dhdMainDB, strQuery, True)
+        Dim strReturn As String = Nothing
+
+        If dhdText.DatasetCheck(dtsData) = False Then Return ""
+
+        For intRowCount = 0 To dtsData.Tables(0).Rows.Count - 1
+            'If objData.Tables.Item(0).Rows(intRowCount).Item(0).GetType().ToString = "System.DBNull" Then
+            'MessageBox.Show("Cell Must be empty")
+            'Else
+            If dtsData.Tables.Item(0).Rows(intRowCount).Item("Category") = strCategory Then
+                If dtsData.Tables.Item(0).Rows(intRowCount).Item("ConfigName") = strConfigName Then
+                    strReturn = dtsData.Tables.Item(0).Rows(intRowCount).Item("ConfigValue")
+                    Exit For
+                End If
+            End If
+            'End If
+        Next
+        Return strReturn
+    End Function
+
+    Public Sub SaveConfigSetting(ByVal strCategory As String, ByVal strConfigName As String, ByVal strConfigValue As String, Optional ByVal strRemarks As String = Nothing)
+        Dim strQuery As String = "exec usp_ConfigHandle 'Smt','" & strCategory & "',NULL,'" & strConfigName & "','" & strConfigValue & "','" & Now.ToString("yyyyMMdd HH:mm") & "'"
+        If strRemarks = Nothing Then
+            'Do nothing
+        Else
+            strQuery &= ",'" & strRemarks & "'"
+        End If
+        QueryDb(dhdMainDB, strQuery, False)
+    End Sub
+
     Public Function GetDataType(strInput As String) As String
         Select Case strInput
             Case "varchar"
