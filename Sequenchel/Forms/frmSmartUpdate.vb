@@ -276,6 +276,10 @@
         SmartUpdateCommand()
     End Sub
 
+    Private Sub chkClearTargetTable_CheckedChanged(sender As Object, e As EventArgs) Handles chkClearTargetTable.CheckedChanged
+        SmartUpdateCommand()
+    End Sub
+
     Private Sub btnAddSmartUpdateSchedule_Click(sender As Object, e As EventArgs) Handles btnAddSmartUpdateSchedule.Click
         CursorControl("Wait")
         WriteStatus("", 0, lblStatusText)
@@ -542,6 +546,7 @@
     Private Sub ResetScreen()
         WriteStatus("", 0, lblStatusText)
         chkCreateTargetTable.Checked = False
+        chkClearTargetTable.Checked = False
         rbnSourceConfig.Checked = True
         rbnTargetConfig.Enabled = False
     End Sub
@@ -680,7 +685,8 @@
             strCommand &= If(chkUseAuditing.Checked, 1, 0) & ", "
             strCommand &= If(chkCreateAuditTable.Checked, 1, 0) & ", "
             strCommand &= If(chkRemoveNonSourceData.Checked, 1, 0) & ", "
-            strCommand &= If(chkUseTargetCollation.Checked, 1, 0)
+            strCommand &= If(chkUseTargetCollation.Checked, 1, 0) & ", "
+            strCommand &= If(chkClearTargetTable.Checked, 1, 0)
         End If
         txtSmartUpdateCommand.Text = strCommand
     End Sub
@@ -718,4 +724,60 @@
         Return strQuery
     End Function
 
+
+    Private Sub lblInfoLinkedServer_MouseHover(sender As Object, e As EventArgs) Handles lblInfoLinkedServer.MouseHover
+        rtbInfoLinkedServer.Visible = True
+        rtbInfoLinkedServer.Focus()
+    End Sub
+
+    Private Sub rtbInfoLinkedServer_LostFocus(sender As Object, e As EventArgs) Handles rtbInfoLinkedServer.LostFocus
+        rtbInfoLinkedServer.Visible = False
+    End Sub
+
+    Private Sub rtbInfoLinkedServer_MouseLeave(sender As Object, e As EventArgs) Handles rtbInfoLinkedServer.MouseLeave
+        rtbInfoLinkedServer.Visible = False
+    End Sub
+
+    Private Sub lblInfoSourceDatabase_MouseHover(sender As Object, e As EventArgs) Handles lblInfoSourceDatabase.MouseHover
+        rtbInfoSourceDatabase.Visible = True
+        rtbInfoSourceDatabase.Focus()
+    End Sub
+
+    Private Sub rtbInfoSourceDatabase_LostFocus(sender As Object, e As EventArgs) Handles rtbInfoSourceDatabase.LostFocus
+        rtbInfoSourceDatabase.Visible = False
+    End Sub
+
+    Private Sub rtbInfoSourceDatabase_MouseLeave(sender As Object, e As EventArgs) Handles rtbInfoSourceDatabase.MouseLeave
+        rtbInfoSourceDatabase.Visible = False
+    End Sub
+
+    Private Sub lblInfoLocalSchema_MouseHover(sender As Object, e As EventArgs) Handles lblInfoLocalSchema.MouseHover
+        rtbInfoLocalSchema.Visible = True
+        rtbInfoLocalSchema.Focus()
+    End Sub
+
+    Private Sub rtbInfoLocalSchema_LostFocus(sender As Object, e As EventArgs) Handles rtbInfoLocalSchema.LostFocus
+        rtbInfoLocalSchema.Visible = False
+    End Sub
+
+    Private Sub rtbInfoLocalSchema_MouseLeave(sender As Object, e As EventArgs) Handles rtbInfoLocalSchema.MouseLeave
+        rtbInfoLocalSchema.Visible = False
+    End Sub
+
+    Private Sub lblInfoLocalView_MouseHover(sender As Object, e As EventArgs) Handles lblInfoLocalView.MouseHover
+        rtbLocalView.Visible = True
+        rtbLocalView.Focus()
+    End Sub
+
+    Private Sub rtbLocalView_LostFocus(sender As Object, e As EventArgs) Handles rtbLocalView.LostFocus
+        rtbLocalView.Visible = False
+    End Sub
+
+    Private Sub rtbLocalView_MouseLeave(sender As Object, e As EventArgs) Handles rtbLocalView.MouseLeave
+        rtbLocalView.Visible = False
+    End Sub
+
+    Private Sub btnCreateLocalView_Click(sender As Object, e As EventArgs) Handles btnCreateLocalView.Click
+
+    End Sub
 End Class

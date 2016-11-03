@@ -306,6 +306,7 @@
     <None Include="Resources\button_endleft.png" />
     <None Include="Resources\button_endright.png" />
     <None Include="Resources\copy.png" />
+    <None Include="Resources\info.png" />
     <Content Include="Resources\PredefinedStyles.xml" />
     <Content Include="Resources\Sequenchel End User License Agreement.pdf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

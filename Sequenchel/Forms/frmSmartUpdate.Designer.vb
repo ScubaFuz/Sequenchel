@@ -23,8 +23,8 @@ Partial Class frmSmartUpdate
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmSmartUpdate))
-        Me.Label1 = New System.Windows.Forms.Label()
-        Me.Label2 = New System.Windows.Forms.Label()
+        Me.lblSourceTable = New System.Windows.Forms.Label()
+        Me.lblTargetTable = New System.Windows.Forms.Label()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.cbxConnection = New System.Windows.Forms.ComboBox()
         Me.chkCreateTargetTable = New System.Windows.Forms.CheckBox()
@@ -73,35 +73,59 @@ Partial Class frmSmartUpdate
         Me.grpConfiguration = New System.Windows.Forms.GroupBox()
         Me.Label11 = New System.Windows.Forms.Label()
         Me.grpCommand = New System.Windows.Forms.GroupBox()
+        Me.chkClearTargetTable = New System.Windows.Forms.CheckBox()
         Me.grpCreateSQL = New System.Windows.Forms.GroupBox()
+        Me.grpCreateLocalView = New System.Windows.Forms.GroupBox()
+        Me.rtbInfoSourceDatabase = New System.Windows.Forms.RichTextBox()
+        Me.rtbInfoLinkedServer = New System.Windows.Forms.RichTextBox()
+        Me.lblInfoLocalView = New System.Windows.Forms.Label()
+        Me.lblInfoLocalSchema = New System.Windows.Forms.Label()
+        Me.lblInfoSourceDatabase = New System.Windows.Forms.Label()
+        Me.lblInfoLinkedServer = New System.Windows.Forms.Label()
+        Me.btnCreateLocalView = New System.Windows.Forms.Button()
+        Me.lblLocalView = New System.Windows.Forms.Label()
+        Me.txtLocalView = New System.Windows.Forms.TextBox()
+        Me.txtLocalSchema = New System.Windows.Forms.TextBox()
+        Me.lblLocalSchema = New System.Windows.Forms.Label()
+        Me.lblSourceTableOrView = New System.Windows.Forms.Label()
+        Me.txtSourceTableOrView = New System.Windows.Forms.TextBox()
+        Me.txtSourceSchema = New System.Windows.Forms.TextBox()
+        Me.lblSourceSchema = New System.Windows.Forms.Label()
+        Me.txtSourceDatabase = New System.Windows.Forms.TextBox()
+        Me.lblSourceDatabase = New System.Windows.Forms.Label()
+        Me.lblLinkedServer = New System.Windows.Forms.Label()
+        Me.cbxLinkedServer = New System.Windows.Forms.ComboBox()
+        Me.rtbInfoLocalSchema = New System.Windows.Forms.RichTextBox()
+        Me.rtbLocalView = New System.Windows.Forms.RichTextBox()
         Me.pnlMain.SuspendLayout()
         Me.grpConfiguration.SuspendLayout()
         Me.grpCommand.SuspendLayout()
         Me.grpCreateSQL.SuspendLayout()
+        Me.grpCreateLocalView.SuspendLayout()
         Me.SuspendLayout()
         '
-        'Label1
+        'lblSourceTable
         '
-        Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(53, 53)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(109, 13)
-        Me.Label1.TabIndex = 0
-        Me.Label1.Text = "Source Table or View"
+        Me.lblSourceTable.AutoSize = True
+        Me.lblSourceTable.Location = New System.Drawing.Point(53, 233)
+        Me.lblSourceTable.Name = "lblSourceTable"
+        Me.lblSourceTable.Size = New System.Drawing.Size(109, 13)
+        Me.lblSourceTable.TabIndex = 0
+        Me.lblSourceTable.Text = "Source Table or View"
         '
-        'Label2
+        'lblTargetTable
         '
-        Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(394, 53)
-        Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(68, 13)
-        Me.Label2.TabIndex = 1
-        Me.Label2.Text = "Target Table"
+        Me.lblTargetTable.AutoSize = True
+        Me.lblTargetTable.Location = New System.Drawing.Point(394, 233)
+        Me.lblTargetTable.Name = "lblTargetTable"
+        Me.lblTargetTable.Size = New System.Drawing.Size(68, 13)
+        Me.lblTargetTable.TabIndex = 1
+        Me.lblTargetTable.Text = "Target Table"
         '
         'Label3
         '
         Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(54, 21)
+        Me.Label3.Location = New System.Drawing.Point(18, 21)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(61, 13)
         Me.Label3.TabIndex = 2
@@ -111,9 +135,9 @@ Partial Class frmSmartUpdate
         '
         Me.cbxConnection.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cbxConnection.FormattingEnabled = True
-        Me.cbxConnection.Location = New System.Drawing.Point(121, 21)
+        Me.cbxConnection.Location = New System.Drawing.Point(108, 21)
         Me.cbxConnection.Name = "cbxConnection"
-        Me.cbxConnection.Size = New System.Drawing.Size(185, 21)
+        Me.cbxConnection.Size = New System.Drawing.Size(227, 21)
         Me.cbxConnection.TabIndex = 0
         '
         'chkCreateTargetTable
@@ -175,7 +199,7 @@ Partial Class frmSmartUpdate
         '
         'txtSourceTable
         '
-        Me.txtSourceTable.Location = New System.Drawing.Point(56, 74)
+        Me.txtSourceTable.Location = New System.Drawing.Point(56, 254)
         Me.txtSourceTable.Name = "txtSourceTable"
         Me.txtSourceTable.ReadOnly = True
         Me.txtSourceTable.Size = New System.Drawing.Size(249, 20)
@@ -183,7 +207,7 @@ Partial Class frmSmartUpdate
         '
         'txtTargetTable
         '
-        Me.txtTargetTable.Location = New System.Drawing.Point(397, 74)
+        Me.txtTargetTable.Location = New System.Drawing.Point(397, 254)
         Me.txtTargetTable.Name = "txtTargetTable"
         Me.txtTargetTable.Size = New System.Drawing.Size(249, 20)
         Me.txtTargetTable.TabIndex = 5
@@ -256,7 +280,7 @@ Partial Class frmSmartUpdate
         '
         Me.lstSourceTables.FormattingEnabled = True
         Me.lstSourceTables.HorizontalScrollbar = True
-        Me.lstSourceTables.Location = New System.Drawing.Point(56, 74)
+        Me.lstSourceTables.Location = New System.Drawing.Point(56, 254)
         Me.lstSourceTables.Name = "lstSourceTables"
         Me.lstSourceTables.Size = New System.Drawing.Size(242, 82)
         Me.lstSourceTables.TabIndex = 1
@@ -267,7 +291,7 @@ Partial Class frmSmartUpdate
         '
         Me.btnCrawlSourceTables.BackgroundImage = Global.Sequenchel.My.Resources.Resources.button_down
         Me.btnCrawlSourceTables.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
-        Me.btnCrawlSourceTables.Location = New System.Drawing.Point(311, 75)
+        Me.btnCrawlSourceTables.Location = New System.Drawing.Point(311, 255)
         Me.btnCrawlSourceTables.Name = "btnCrawlSourceTables"
         Me.btnCrawlSourceTables.Size = New System.Drawing.Size(30, 20)
         Me.btnCrawlSourceTables.TabIndex = 3
@@ -278,7 +302,7 @@ Partial Class frmSmartUpdate
         Me.lblStatusText.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblStatusText.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblStatusText.Location = New System.Drawing.Point(70, 531)
+        Me.lblStatusText.Location = New System.Drawing.Point(70, 712)
         Me.lblStatusText.Name = "lblStatusText"
         Me.lblStatusText.Size = New System.Drawing.Size(692, 16)
         Me.lblStatusText.TabIndex = 148
@@ -287,7 +311,7 @@ Partial Class frmSmartUpdate
         '
         Me.lstTargetTables.FormattingEnabled = True
         Me.lstTargetTables.HorizontalScrollbar = True
-        Me.lstTargetTables.Location = New System.Drawing.Point(397, 74)
+        Me.lstTargetTables.Location = New System.Drawing.Point(397, 254)
         Me.lstTargetTables.Name = "lstTargetTables"
         Me.lstTargetTables.Size = New System.Drawing.Size(242, 82)
         Me.lstTargetTables.TabIndex = 4
@@ -298,7 +322,7 @@ Partial Class frmSmartUpdate
         '
         Me.btnCrawlTargetTables.BackgroundImage = Global.Sequenchel.My.Resources.Resources.button_down
         Me.btnCrawlTargetTables.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
-        Me.btnCrawlTargetTables.Location = New System.Drawing.Point(651, 75)
+        Me.btnCrawlTargetTables.Location = New System.Drawing.Point(651, 255)
         Me.btnCrawlTargetTables.Name = "btnCrawlTargetTables"
         Me.btnCrawlTargetTables.Size = New System.Drawing.Size(30, 20)
         Me.btnCrawlTargetTables.TabIndex = 6
@@ -306,7 +330,7 @@ Partial Class frmSmartUpdate
         '
         'btnImportTables
         '
-        Me.btnImportTables.Location = New System.Drawing.Point(276, 115)
+        Me.btnImportTables.Location = New System.Drawing.Point(276, 295)
         Me.btnImportTables.Name = "btnImportTables"
         Me.btnImportTables.Size = New System.Drawing.Size(164, 23)
         Me.btnImportTables.TabIndex = 7
@@ -381,9 +405,9 @@ Partial Class frmSmartUpdate
         Me.pnlMain.Controls.Add(Me.Label7)
         Me.pnlMain.Controls.Add(Me.pnlTargetTable)
         Me.pnlMain.Controls.Add(Me.pnlSourceDataType)
-        Me.pnlMain.Location = New System.Drawing.Point(12, 147)
+        Me.pnlMain.Location = New System.Drawing.Point(12, 358)
         Me.pnlMain.Name = "pnlMain"
-        Me.pnlMain.Size = New System.Drawing.Size(750, 351)
+        Me.pnlMain.Size = New System.Drawing.Size(750, 321)
         Me.pnlMain.TabIndex = 158
         '
         'rbnSourceConfig
@@ -423,7 +447,7 @@ Partial Class frmSmartUpdate
         Me.lblStatusTitle.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.lblStatusTitle.AutoSize = True
         Me.lblStatusTitle.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblStatusTitle.Location = New System.Drawing.Point(9, 531)
+        Me.lblStatusTitle.Location = New System.Drawing.Point(9, 712)
         Me.lblStatusTitle.Name = "lblStatusTitle"
         Me.lblStatusTitle.Size = New System.Drawing.Size(55, 16)
         Me.lblStatusTitle.TabIndex = 162
@@ -501,7 +525,7 @@ Partial Class frmSmartUpdate
         Me.lblSmartUpdateCommand.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.lblSmartUpdateCommand.AutoSize = True
         Me.lblSmartUpdateCommand.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblSmartUpdateCommand.Location = New System.Drawing.Point(9, 508)
+        Me.lblSmartUpdateCommand.Location = New System.Drawing.Point(9, 689)
         Me.lblSmartUpdateCommand.Name = "lblSmartUpdateCommand"
         Me.lblSmartUpdateCommand.Size = New System.Drawing.Size(122, 13)
         Me.lblSmartUpdateCommand.TabIndex = 171
@@ -510,7 +534,7 @@ Partial Class frmSmartUpdate
         'txtSmartUpdateCommand
         '
         Me.txtSmartUpdateCommand.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.txtSmartUpdateCommand.Location = New System.Drawing.Point(137, 505)
+        Me.txtSmartUpdateCommand.Location = New System.Drawing.Point(137, 686)
         Me.txtSmartUpdateCommand.Name = "txtSmartUpdateCommand"
         Me.txtSmartUpdateCommand.ReadOnly = True
         Me.txtSmartUpdateCommand.Size = New System.Drawing.Size(625, 20)
@@ -518,7 +542,7 @@ Partial Class frmSmartUpdate
         '
         'btnAddSmartUpdateSchedule
         '
-        Me.btnAddSmartUpdateSchedule.Location = New System.Drawing.Point(10, 130)
+        Me.btnAddSmartUpdateSchedule.Location = New System.Drawing.Point(6, 157)
         Me.btnAddSmartUpdateSchedule.Name = "btnAddSmartUpdateSchedule"
         Me.btnAddSmartUpdateSchedule.Size = New System.Drawing.Size(171, 23)
         Me.btnAddSmartUpdateSchedule.TabIndex = 5
@@ -564,18 +588,29 @@ Partial Class frmSmartUpdate
         'grpCommand
         '
         Me.grpCommand.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.grpCommand.Controls.Add(Me.chkClearTargetTable)
         Me.grpCommand.Controls.Add(Me.btnAddSmartUpdateSchedule)
         Me.grpCommand.Controls.Add(Me.chkCreateTargetTable)
         Me.grpCommand.Controls.Add(Me.chkCreateAuditTable)
         Me.grpCommand.Controls.Add(Me.chkUseAuditing)
         Me.grpCommand.Controls.Add(Me.chkRemoveNonSourceData)
         Me.grpCommand.Controls.Add(Me.chkUseTargetCollation)
-        Me.grpCommand.Location = New System.Drawing.Point(768, 372)
+        Me.grpCommand.Location = New System.Drawing.Point(768, 528)
         Me.grpCommand.Name = "grpCommand"
-        Me.grpCommand.Size = New System.Drawing.Size(226, 163)
+        Me.grpCommand.Size = New System.Drawing.Size(226, 190)
         Me.grpCommand.TabIndex = 176
         Me.grpCommand.TabStop = False
         Me.grpCommand.Text = "SmartUpdateCommand"
+        '
+        'chkClearTargetTable
+        '
+        Me.chkClearTargetTable.AutoSize = True
+        Me.chkClearTargetTable.Location = New System.Drawing.Point(6, 134)
+        Me.chkClearTargetTable.Name = "chkClearTargetTable"
+        Me.chkClearTargetTable.Size = New System.Drawing.Size(189, 17)
+        Me.chkClearTargetTable.TabIndex = 6
+        Me.chkClearTargetTable.Text = "Clear Target Table before Transfer"
+        Me.chkClearTargetTable.UseVisualStyleBackColor = True
         '
         'grpCreateSQL
         '
@@ -589,11 +624,234 @@ Partial Class frmSmartUpdate
         Me.grpCreateSQL.TabStop = False
         Me.grpCreateSQL.Text = "Create SQL Components"
         '
+        'grpCreateLocalView
+        '
+        Me.grpCreateLocalView.Controls.Add(Me.rtbInfoSourceDatabase)
+        Me.grpCreateLocalView.Controls.Add(Me.rtbInfoLinkedServer)
+        Me.grpCreateLocalView.Controls.Add(Me.lblInfoLocalView)
+        Me.grpCreateLocalView.Controls.Add(Me.lblInfoLocalSchema)
+        Me.grpCreateLocalView.Controls.Add(Me.lblInfoSourceDatabase)
+        Me.grpCreateLocalView.Controls.Add(Me.lblInfoLinkedServer)
+        Me.grpCreateLocalView.Controls.Add(Me.btnCreateLocalView)
+        Me.grpCreateLocalView.Controls.Add(Me.lblLocalView)
+        Me.grpCreateLocalView.Controls.Add(Me.txtLocalView)
+        Me.grpCreateLocalView.Controls.Add(Me.txtLocalSchema)
+        Me.grpCreateLocalView.Controls.Add(Me.lblLocalSchema)
+        Me.grpCreateLocalView.Controls.Add(Me.lblSourceTableOrView)
+        Me.grpCreateLocalView.Controls.Add(Me.txtSourceTableOrView)
+        Me.grpCreateLocalView.Controls.Add(Me.txtSourceSchema)
+        Me.grpCreateLocalView.Controls.Add(Me.lblSourceSchema)
+        Me.grpCreateLocalView.Controls.Add(Me.txtSourceDatabase)
+        Me.grpCreateLocalView.Controls.Add(Me.lblSourceDatabase)
+        Me.grpCreateLocalView.Controls.Add(Me.lblLinkedServer)
+        Me.grpCreateLocalView.Controls.Add(Me.cbxLinkedServer)
+        Me.grpCreateLocalView.Location = New System.Drawing.Point(12, 58)
+        Me.grpCreateLocalView.Name = "grpCreateLocalView"
+        Me.grpCreateLocalView.Size = New System.Drawing.Size(750, 159)
+        Me.grpCreateLocalView.TabIndex = 178
+        Me.grpCreateLocalView.TabStop = False
+        Me.grpCreateLocalView.Text = "Create Local View on Remote Table"
+        '
+        'rtbInfoSourceDatabase
+        '
+        Me.rtbInfoSourceDatabase.BackColor = System.Drawing.SystemColors.Info
+        Me.rtbInfoSourceDatabase.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.rtbInfoSourceDatabase.Location = New System.Drawing.Point(329, 47)
+        Me.rtbInfoSourceDatabase.Name = "rtbInfoSourceDatabase"
+        Me.rtbInfoSourceDatabase.ReadOnly = True
+        Me.rtbInfoSourceDatabase.Size = New System.Drawing.Size(164, 82)
+        Me.rtbInfoSourceDatabase.TabIndex = 185
+        Me.rtbInfoSourceDatabase.Text = "If the database name is embedded in the Linked Server, leave this field blank. If" & _
+    " you want to connect to a database on the local server, enter the name of that d" & _
+    "atabase."
+        Me.rtbInfoSourceDatabase.Visible = False
+        '
+        'rtbInfoLinkedServer
+        '
+        Me.rtbInfoLinkedServer.BackColor = System.Drawing.SystemColors.Info
+        Me.rtbInfoLinkedServer.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.rtbInfoLinkedServer.Location = New System.Drawing.Point(330, 20)
+        Me.rtbInfoLinkedServer.Name = "rtbInfoLinkedServer"
+        Me.rtbInfoLinkedServer.ReadOnly = True
+        Me.rtbInfoLinkedServer.Size = New System.Drawing.Size(152, 54)
+        Me.rtbInfoLinkedServer.TabIndex = 184
+        Me.rtbInfoLinkedServer.Text = "You need a Linked Server to connect to a remote database. If your database is on " & _
+    "the local server, leave this field blank."
+        Me.rtbInfoLinkedServer.Visible = False
+        '
+        'lblInfoLocalView
+        '
+        Me.lblInfoLocalView.Image = Global.Sequenchel.My.Resources.Resources.info
+        Me.lblInfoLocalView.Location = New System.Drawing.Point(718, 98)
+        Me.lblInfoLocalView.Name = "lblInfoLocalView"
+        Me.lblInfoLocalView.Size = New System.Drawing.Size(20, 20)
+        Me.lblInfoLocalView.TabIndex = 183
+        '
+        'lblInfoLocalSchema
+        '
+        Me.lblInfoLocalSchema.Image = Global.Sequenchel.My.Resources.Resources.info
+        Me.lblInfoLocalSchema.Location = New System.Drawing.Point(718, 72)
+        Me.lblInfoLocalSchema.Name = "lblInfoLocalSchema"
+        Me.lblInfoLocalSchema.Size = New System.Drawing.Size(20, 20)
+        Me.lblInfoLocalSchema.TabIndex = 182
+        '
+        'lblInfoSourceDatabase
+        '
+        Me.lblInfoSourceDatabase.Image = Global.Sequenchel.My.Resources.Resources.info
+        Me.lblInfoSourceDatabase.Location = New System.Drawing.Point(328, 47)
+        Me.lblInfoSourceDatabase.Name = "lblInfoSourceDatabase"
+        Me.lblInfoSourceDatabase.Size = New System.Drawing.Size(20, 20)
+        Me.lblInfoSourceDatabase.TabIndex = 181
+        '
+        'lblInfoLinkedServer
+        '
+        Me.lblInfoLinkedServer.Image = Global.Sequenchel.My.Resources.Resources.info
+        Me.lblInfoLinkedServer.Location = New System.Drawing.Point(328, 20)
+        Me.lblInfoLinkedServer.Name = "lblInfoLinkedServer"
+        Me.lblInfoLinkedServer.Size = New System.Drawing.Size(20, 20)
+        Me.lblInfoLinkedServer.TabIndex = 180
+        '
+        'btnCreateLocalView
+        '
+        Me.btnCreateLocalView.Location = New System.Drawing.Point(264, 129)
+        Me.btnCreateLocalView.Name = "btnCreateLocalView"
+        Me.btnCreateLocalView.Size = New System.Drawing.Size(164, 23)
+        Me.btnCreateLocalView.TabIndex = 179
+        Me.btnCreateLocalView.Text = "Create Local View"
+        Me.btnCreateLocalView.UseVisualStyleBackColor = True
+        '
+        'lblLocalView
+        '
+        Me.lblLocalView.AutoSize = True
+        Me.lblLocalView.Location = New System.Drawing.Point(395, 101)
+        Me.lblLocalView.Name = "lblLocalView"
+        Me.lblLocalView.Size = New System.Drawing.Size(59, 13)
+        Me.lblLocalView.TabIndex = 11
+        Me.lblLocalView.Text = "Local View"
+        '
+        'txtLocalView
+        '
+        Me.txtLocalView.Location = New System.Drawing.Point(541, 98)
+        Me.txtLocalView.Name = "txtLocalView"
+        Me.txtLocalView.Size = New System.Drawing.Size(171, 20)
+        Me.txtLocalView.TabIndex = 10
+        '
+        'txtLocalSchema
+        '
+        Me.txtLocalSchema.Location = New System.Drawing.Point(541, 72)
+        Me.txtLocalSchema.Name = "txtLocalSchema"
+        Me.txtLocalSchema.Size = New System.Drawing.Size(171, 20)
+        Me.txtLocalSchema.TabIndex = 9
+        '
+        'lblLocalSchema
+        '
+        Me.lblLocalSchema.AutoSize = True
+        Me.lblLocalSchema.Location = New System.Drawing.Point(395, 75)
+        Me.lblLocalSchema.Name = "lblLocalSchema"
+        Me.lblLocalSchema.Size = New System.Drawing.Size(75, 13)
+        Me.lblLocalSchema.TabIndex = 8
+        Me.lblLocalSchema.Text = "Local Schema"
+        '
+        'lblSourceTableOrView
+        '
+        Me.lblSourceTableOrView.AutoSize = True
+        Me.lblSourceTableOrView.Location = New System.Drawing.Point(6, 101)
+        Me.lblSourceTableOrView.Name = "lblSourceTableOrView"
+        Me.lblSourceTableOrView.Size = New System.Drawing.Size(116, 13)
+        Me.lblSourceTableOrView.TabIndex = 7
+        Me.lblSourceTableOrView.Text = "Source Table or View *"
+        '
+        'txtSourceTableOrView
+        '
+        Me.txtSourceTableOrView.Location = New System.Drawing.Point(152, 98)
+        Me.txtSourceTableOrView.Name = "txtSourceTableOrView"
+        Me.txtSourceTableOrView.Size = New System.Drawing.Size(171, 20)
+        Me.txtSourceTableOrView.TabIndex = 6
+        '
+        'txtSourceSchema
+        '
+        Me.txtSourceSchema.Location = New System.Drawing.Point(152, 72)
+        Me.txtSourceSchema.Name = "txtSourceSchema"
+        Me.txtSourceSchema.Size = New System.Drawing.Size(171, 20)
+        Me.txtSourceSchema.TabIndex = 5
+        '
+        'lblSourceSchema
+        '
+        Me.lblSourceSchema.AutoSize = True
+        Me.lblSourceSchema.Location = New System.Drawing.Point(6, 75)
+        Me.lblSourceSchema.Name = "lblSourceSchema"
+        Me.lblSourceSchema.Size = New System.Drawing.Size(90, 13)
+        Me.lblSourceSchema.TabIndex = 4
+        Me.lblSourceSchema.Text = "Source Schema *"
+        '
+        'txtSourceDatabase
+        '
+        Me.txtSourceDatabase.Location = New System.Drawing.Point(152, 46)
+        Me.txtSourceDatabase.Name = "txtSourceDatabase"
+        Me.txtSourceDatabase.Size = New System.Drawing.Size(171, 20)
+        Me.txtSourceDatabase.TabIndex = 3
+        '
+        'lblSourceDatabase
+        '
+        Me.lblSourceDatabase.AutoSize = True
+        Me.lblSourceDatabase.Location = New System.Drawing.Point(6, 49)
+        Me.lblSourceDatabase.Name = "lblSourceDatabase"
+        Me.lblSourceDatabase.Size = New System.Drawing.Size(90, 13)
+        Me.lblSourceDatabase.TabIndex = 2
+        Me.lblSourceDatabase.Text = "Source Database"
+        '
+        'lblLinkedServer
+        '
+        Me.lblLinkedServer.AutoSize = True
+        Me.lblLinkedServer.Location = New System.Drawing.Point(6, 20)
+        Me.lblLinkedServer.Name = "lblLinkedServer"
+        Me.lblLinkedServer.Size = New System.Drawing.Size(73, 13)
+        Me.lblLinkedServer.TabIndex = 1
+        Me.lblLinkedServer.Text = "Linked Server"
+        '
+        'cbxLinkedServer
+        '
+        Me.cbxLinkedServer.FormattingEnabled = True
+        Me.cbxLinkedServer.Location = New System.Drawing.Point(152, 19)
+        Me.cbxLinkedServer.Name = "cbxLinkedServer"
+        Me.cbxLinkedServer.Size = New System.Drawing.Size(171, 21)
+        Me.cbxLinkedServer.TabIndex = 0
+        '
+        'rtbInfoLocalSchema
+        '
+        Me.rtbInfoLocalSchema.BackColor = System.Drawing.SystemColors.Info
+        Me.rtbInfoLocalSchema.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.rtbInfoLocalSchema.Location = New System.Drawing.Point(732, 131)
+        Me.rtbInfoLocalSchema.Name = "rtbInfoLocalSchema"
+        Me.rtbInfoLocalSchema.ReadOnly = True
+        Me.rtbInfoLocalSchema.Size = New System.Drawing.Size(164, 82)
+        Me.rtbInfoLocalSchema.TabIndex = 186
+        Me.rtbInfoLocalSchema.Text = "The schema where the new View will be created. If you leave this field blank, the" & _
+    " source schema name will be used. Make sure the schema exists before creating th" & _
+    "e view."
+        Me.rtbInfoLocalSchema.Visible = False
+        '
+        'rtbLocalView
+        '
+        Me.rtbLocalView.BackColor = System.Drawing.SystemColors.Info
+        Me.rtbLocalView.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.rtbLocalView.Location = New System.Drawing.Point(732, 156)
+        Me.rtbLocalView.Name = "rtbLocalView"
+        Me.rtbLocalView.ReadOnly = True
+        Me.rtbLocalView.Size = New System.Drawing.Size(164, 82)
+        Me.rtbLocalView.TabIndex = 187
+        Me.rtbLocalView.Text = "The name of the View to be created. If you leave this field blank the name will b" & _
+    "e ""vw_"" with the name of the source Table or View appended."
+        Me.rtbLocalView.Visible = False
+        '
         'frmSmartUpdate
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1009, 557)
+        Me.ClientSize = New System.Drawing.Size(1009, 738)
+        Me.Controls.Add(Me.rtbLocalView)
+        Me.Controls.Add(Me.rtbInfoLocalSchema)
+        Me.Controls.Add(Me.grpCreateLocalView)
         Me.Controls.Add(Me.grpCreateSQL)
         Me.Controls.Add(Me.grpCommand)
         Me.Controls.Add(Me.grpConfiguration)
@@ -611,8 +869,8 @@ Partial Class frmSmartUpdate
         Me.Controls.Add(Me.txtSourceTable)
         Me.Controls.Add(Me.cbxConnection)
         Me.Controls.Add(Me.Label3)
-        Me.Controls.Add(Me.Label2)
-        Me.Controls.Add(Me.Label1)
+        Me.Controls.Add(Me.lblTargetTable)
+        Me.Controls.Add(Me.lblSourceTable)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.MaximumSize = New System.Drawing.Size(1025, 5000)
         Me.MinimumSize = New System.Drawing.Size(1025, 595)
@@ -627,12 +885,14 @@ Partial Class frmSmartUpdate
         Me.grpCommand.PerformLayout()
         Me.grpCreateSQL.ResumeLayout(False)
         Me.grpCreateSQL.PerformLayout()
+        Me.grpCreateLocalView.ResumeLayout(False)
+        Me.grpCreateLocalView.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
     End Sub
-    Friend WithEvents Label1 As System.Windows.Forms.Label
-    Friend WithEvents Label2 As System.Windows.Forms.Label
+    Friend WithEvents lblSourceTable As System.Windows.Forms.Label
+    Friend WithEvents lblTargetTable As System.Windows.Forms.Label
     Friend WithEvents Label3 As System.Windows.Forms.Label
     Friend WithEvents cbxConnection As System.Windows.Forms.ComboBox
     Friend WithEvents chkCreateTargetTable As System.Windows.Forms.CheckBox
@@ -682,4 +942,27 @@ Partial Class frmSmartUpdate
     Friend WithEvents Label11 As System.Windows.Forms.Label
     Friend WithEvents grpCommand As System.Windows.Forms.GroupBox
     Friend WithEvents grpCreateSQL As System.Windows.Forms.GroupBox
+    Friend WithEvents chkClearTargetTable As System.Windows.Forms.CheckBox
+    Friend WithEvents grpCreateLocalView As System.Windows.Forms.GroupBox
+    Friend WithEvents btnCreateLocalView As System.Windows.Forms.Button
+    Friend WithEvents lblLocalView As System.Windows.Forms.Label
+    Friend WithEvents txtLocalView As System.Windows.Forms.TextBox
+    Friend WithEvents txtLocalSchema As System.Windows.Forms.TextBox
+    Friend WithEvents lblLocalSchema As System.Windows.Forms.Label
+    Friend WithEvents lblSourceTableOrView As System.Windows.Forms.Label
+    Friend WithEvents txtSourceTableOrView As System.Windows.Forms.TextBox
+    Friend WithEvents txtSourceSchema As System.Windows.Forms.TextBox
+    Friend WithEvents lblSourceSchema As System.Windows.Forms.Label
+    Friend WithEvents txtSourceDatabase As System.Windows.Forms.TextBox
+    Friend WithEvents lblSourceDatabase As System.Windows.Forms.Label
+    Friend WithEvents lblLinkedServer As System.Windows.Forms.Label
+    Friend WithEvents cbxLinkedServer As System.Windows.Forms.ComboBox
+    Friend WithEvents lblInfoLinkedServer As System.Windows.Forms.Label
+    Friend WithEvents rtbInfoSourceDatabase As System.Windows.Forms.RichTextBox
+    Friend WithEvents rtbInfoLinkedServer As System.Windows.Forms.RichTextBox
+    Friend WithEvents lblInfoLocalView As System.Windows.Forms.Label
+    Friend WithEvents lblInfoLocalSchema As System.Windows.Forms.Label
+    Friend WithEvents lblInfoSourceDatabase As System.Windows.Forms.Label
+    Friend WithEvents rtbInfoLocalSchema As System.Windows.Forms.RichTextBox
+    Friend WithEvents rtbLocalView As System.Windows.Forms.RichTextBox
 End Class
