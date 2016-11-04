@@ -2026,7 +2026,16 @@ Public Class BaseCode
         Return ReturnValue
     End Function
 
+    Public Function LoadLinkedServers(dhdConnect As DataHandler.db) As DataSet
+        Dim strQuery As String = "SELECT server_id,[name] COLLATE DATABASE_DEFAULT as [Name],product,provider,data_source,location,provider_string,[catalog]"
+        strQuery &= ",connect_timeout,query_timeout,is_linked,is_remote_login_enabled,is_rpc_out_enabled,is_data_access_enabled,is_collation_compatible"
+        strQuery &= ",uses_remote_collation,collation_name,lazy_schema_validation,is_system,is_publisher,is_subscriber,is_distributor"
+        strQuery &= ",is_nonsql_subscriber,is_remote_proc_transaction_promotion_enabled,modify_date"
+        strQuery &= " FROM sys.servers WHERE is_linked=1 ORDER BY [name] ASC"
 
+        Dim dtsData As DataSet = QueryDb(dhdConnect, strQuery, True)
+        Return dtsData
+    End Function
 #End Region
 
 #Region "DataSet"

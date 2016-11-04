@@ -177,18 +177,13 @@
             WriteStatus("A host server is required for loading Linked Servers.", 2, lblStatusText)
             Return False
         End If
-        strQuery = "SELECT server_id,[name] COLLATE DATABASE_DEFAULT as [Name],product,provider,data_source,location,provider_string,[catalog]"
-        strQuery &= ",connect_timeout,query_timeout,is_linked,is_remote_login_enabled,is_rpc_out_enabled,is_data_access_enabled,is_collation_compatible"
-        strQuery &= ",uses_remote_collation,collation_name,lazy_schema_validation,is_system,is_publisher,is_subscriber,is_distributor"
-        strQuery &= ",is_nonsql_subscriber,is_remote_proc_transaction_promotion_enabled,modify_date"
-        strQuery &= " FROM sys.servers WHERE is_linked=1 ORDER BY [name] ASC"
 
         Dim strDataSource As String = ""
         Dim intDomain As Integer = 0, intDomainLength As Integer = 0
         Dim intInstance As Integer = 0, intInstanceLength As Integer = 0
         Dim intPort As Integer = 0, intPortLength As Integer = 0
 
-        Dim objData As DataSet = basCode.QueryDb(basCode.dhdConnection, strQuery, True)
+        Dim objData As DataSet = basCode.LoadLinkedServers(basCode.dhdConnection)
         If basCode.dhdText.DatasetCheck(objData) = False Then
             basCode.WriteLog("No Linked Servers were found. Please check your settings. Connection:" & strDataSource, 1)
             WriteStatus("No Linked Servers were found. Please check your settings.", 2, lblStatusText)

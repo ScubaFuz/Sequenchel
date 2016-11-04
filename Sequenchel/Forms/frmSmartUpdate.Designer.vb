@@ -97,6 +97,8 @@ Partial Class frmSmartUpdate
         Me.cbxLinkedServer = New System.Windows.Forms.ComboBox()
         Me.rtbInfoLocalSchema = New System.Windows.Forms.RichTextBox()
         Me.rtbLocalView = New System.Windows.Forms.RichTextBox()
+        Me.txtLocalDatabase = New System.Windows.Forms.TextBox()
+        Me.lblLocalDatabase = New System.Windows.Forms.Label()
         Me.pnlMain.SuspendLayout()
         Me.grpConfiguration.SuspendLayout()
         Me.grpCommand.SuspendLayout()
@@ -628,6 +630,8 @@ Partial Class frmSmartUpdate
         '
         Me.grpCreateLocalView.Controls.Add(Me.rtbInfoSourceDatabase)
         Me.grpCreateLocalView.Controls.Add(Me.rtbInfoLinkedServer)
+        Me.grpCreateLocalView.Controls.Add(Me.lblLocalDatabase)
+        Me.grpCreateLocalView.Controls.Add(Me.txtLocalDatabase)
         Me.grpCreateLocalView.Controls.Add(Me.lblInfoLocalView)
         Me.grpCreateLocalView.Controls.Add(Me.lblInfoLocalSchema)
         Me.grpCreateLocalView.Controls.Add(Me.lblInfoSourceDatabase)
@@ -844,6 +848,23 @@ Partial Class frmSmartUpdate
     "e ""vw_"" with the name of the source Table or View appended."
         Me.rtbLocalView.Visible = False
         '
+        'txtLocalDatabase
+        '
+        Me.txtLocalDatabase.Location = New System.Drawing.Point(541, 46)
+        Me.txtLocalDatabase.Name = "txtLocalDatabase"
+        Me.txtLocalDatabase.ReadOnly = True
+        Me.txtLocalDatabase.Size = New System.Drawing.Size(171, 20)
+        Me.txtLocalDatabase.TabIndex = 186
+        '
+        'lblLocalDatabase
+        '
+        Me.lblLocalDatabase.AutoSize = True
+        Me.lblLocalDatabase.Location = New System.Drawing.Point(395, 49)
+        Me.lblLocalDatabase.Name = "lblLocalDatabase"
+        Me.lblLocalDatabase.Size = New System.Drawing.Size(82, 13)
+        Me.lblLocalDatabase.TabIndex = 187
+        Me.lblLocalDatabase.Text = "Local Database"
+        '
         'frmSmartUpdate
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -965,4 +986,6 @@ Partial Class frmSmartUpdate
     Friend WithEvents lblInfoSourceDatabase As System.Windows.Forms.Label
     Friend WithEvents rtbInfoLocalSchema As System.Windows.Forms.RichTextBox
     Friend WithEvents rtbLocalView As System.Windows.Forms.RichTextBox
+    Friend WithEvents lblLocalDatabase As System.Windows.Forms.Label
+    Friend WithEvents txtLocalDatabase As System.Windows.Forms.TextBox
 End Class

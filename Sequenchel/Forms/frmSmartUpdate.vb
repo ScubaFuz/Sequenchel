@@ -23,9 +23,12 @@
 
     Private Sub cbxConnection_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbxConnection.SelectedIndexChanged
         CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
         If cbxConnection.SelectedIndex >= -1 Then
             basCode.curStatus.Connection = cbxConnection.SelectedItem
             basCode.LoadConnection(basCode.xmlConnections, basCode.curStatus.Connection)
+            txtLocalDatabase.Text = basCode.dhdConnection.DatabaseName
+            LoadLinkedServers()
             LoadTables()
             PanelsClear()
             txtSourceTable.Text = ""
@@ -101,6 +104,7 @@
 
     Private Sub btnCrawlSourceTables_Click(sender As Object, e As EventArgs) Handles btnCrawlSourceTables.Click
         CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
         lstSourceTables.Visible = True
         lstSourceTables.Focus()
         CursorControl()
@@ -108,6 +112,7 @@
 
     Private Sub btnCrawlTargetTables_Click(sender As Object, e As EventArgs) Handles btnCrawlTargetTables.Click
         CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
         lstTargetTables.Visible = True
         lstTargetTables.Focus()
         CursorControl()
@@ -153,10 +158,12 @@
 
     Private Sub dtpEndDate_ValueChanged(sender As Object, e As EventArgs) Handles dtpEndDate.ValueChanged
         'dtpEndDate.CustomFormat = "yyyy-MM-dd"
+        WriteStatus("", 0, lblStatusText)
         chkNoEndDate.Checked = False
     End Sub
 
     Private Sub chkNoEndDate_CheckedChanged(sender As Object, e As EventArgs) Handles chkNoEndDate.CheckedChanged
+        WriteStatus("", 0, lblStatusText)
         If chkNoEndDate.Checked = False Then
             dtpEndDate.CustomFormat = "yyyy-MM-dd"
         Else
@@ -348,6 +355,22 @@
             cbxConnection.Items.Add(lstItem)
         Next
         cbxConnection.SelectedItem = basCode.curStatus.Connection
+    End Sub
+
+    Private Sub LoadLinkedServers()
+        Dim objData As DataSet = basCode.LoadLinkedServers(basCode.dhdConnection)
+        If basCode.dhdText.DatasetCheck(objData) = False Then
+            Exit Sub
+        End If
+        cbxLinkedServer.Items.Clear()
+        cbxLinkedServer.Items.Add("")
+        For intRowCount1 As Integer = 0 To objData.Tables(0).Rows.Count - 1
+            Try
+                cbxLinkedServer.Items.Add(objData.Tables.Item(0).Rows(intRowCount1).Item("name"))
+            Catch
+
+            End Try
+        Next
     End Sub
 
     Private Sub LoadTables()
@@ -673,6 +696,7 @@
     End Sub
 
     Private Sub SmartUpdateCommand()
+        WriteStatus("", 0, lblStatusText)
         Dim strCommand As String = ""
         If txtSourceTable.Text.Length > 0 And txtTargetTable.Text.Length > 0 Then
             GetTableNames()
@@ -778,6 +802,99 @@
     End Sub
 
     Private Sub btnCreateLocalView_Click(sender As Object, e As EventArgs) Handles btnCreateLocalView.Click
+        WriteStatus("", 0, lblStatusText)
+        BuildView()
+    End Sub
+
+    Private Sub BuildView()
+        Dim strLinkedServer As String = cbxLinkedServer.Text
+        If cbxLinkedServer.Items.Contains(strLinkedServer) = False Then Exit Sub
+        Dim strDatabaseSource As String = txtSourceDatabase.Text
+        Dim strSchemaSource As String = txtSourceSchema.Text
+        Dim strTableSource As String = txtSourceTableOrView.Text
+        Dim strSchemaTarget As String = txtLocalSchema.Text
+        Dim strViewTarget As String = txtLocalView.Text
+
+        If strSchemaTarget.Length = 0 Then strSchemaTarget = strSchemaSource
+        If strViewTarget.Length = 0 Then strViewTarget = "vw_" & strTableSource
+        If strSchemaSource.Length = 0 Or strTableSource.Length = 0 Then
+            WriteStatus("Source schema and table/view are required.", 2, lblStatusText)
+            Exit Sub
+        End If
+        If strLinkedServer.Length = 0 And strDatabaseSource.Length = 0 Then
+            WriteStatus("Linked Server or Database name is required.", 2, lblStatusText)
+            Exit Sub
+        End If
+
+        Dim strSourceQuery As String = ""
+        If strLinkedServer.Length > 0 And strDatabaseSource.Length > 0 Then
+            strSourceQuery = "SELECT [Star1] FROM OPENQUERY([" & strLinkedServer & "],''SELECT [Star2] FROM " & strDatabaseSource & "." & strSchemaSource & "." & strTableSource & "'')"
+        ElseIf strLinkedServer.Length > 0 Then
+            strSourceQuery = "SELECT [Star1] FROM OPENQUERY([" & strLinkedServer & "],''SELECT [Star2] FROM " & strSchemaSource & "." & strTableSource & "'')"
+        ElseIf strDatabaseSource.Length > 0 Then
+            strSourceQuery = "SELECT [Star2] FROM " & strDatabaseSource & "." & strSchemaSource & "." & strTableSource
+        End If
+
+        If strSourceQuery.Length = 0 Then Exit Sub
+        Dim strInputQuery As String = strSourceQuery.Replace("[Star1]", "*").Replace("[Star2]", "TOP 0 *")
+
+        Dim strColumnQuery As String = "SELECT name FROM sys.dm_exec_describe_first_result_set('" & strInputQuery & "', NULL, 0) ORDER BY column_ordinal;"
+        Dim dtsData As DataSet = basCode.QueryDb(basCode.dhdConnection, strColumnQuery, True)
+        If basCode.dhdText.DatasetCheck(dtsData) = False Then
+            WriteStatus("No results were found for this table or View. Check your settings.", 2, lblStatusText)
+            basCode.WriteLog("No results were found for this table or View. Check your settings.", 3)
+            Exit Sub
+        End If
+
+        Dim strColumns As String = ","
+        For intRowCount1 As Integer = 0 To dtsData.Tables(0).Rows.Count - 1
+            If dtsData.Tables.Item(0).Rows(intRowCount1).Item("name").GetType().ToString = "System.DBNull" Then
+                'No column name was found
+            Else
+                strColumns &= "," & dtsData.Tables.Item(0).Rows(intRowCount1).Item("name")
+            End If
+        Next
+        strColumns = strColumns.Replace(",,", "")
+        If strColumns = "," Then
+            WriteStatus("No columns were found for this table or View. Check your settings.", 2, lblStatusText)
+            basCode.WriteLog("No columns were found for this table or View. Check your settings.", 3)
+            Exit Sub
+        End If
+
+        Dim strViewQuery As String = ""
+        If strColumns.Length > 7000 And strLinkedServer.Length > 0 Then
+            strColumns = "[" & strColumns.Replace(",", "],[") & "]"
+            strViewQuery = strSourceQuery.Replace("[Star1]", strColumns).Replace("[Star2]", "*")
+        Else
+            strViewQuery = strSourceQuery.Replace("[Star1]", "*").Replace("[Star2]", strColumns)
+        End If
+
+        Dim strCheckViewQuery As String = "SELECT name FROM sys.dm_exec_describe_first_result_set('" & strViewQuery & "', NULL, 0);"
+        Dim dtsCheckView As DataSet = basCode.QueryDb(basCode.dhdConnection, strCheckViewQuery, True)
+        If basCode.dhdText.DatasetCheck(dtsCheckView) = False Then
+            strViewQuery = strInputQuery
+        Else
+            For intRowCount1 As Integer = 0 To dtsCheckView.Tables(0).Rows.Count - 1
+                If dtsCheckView.Tables.Item(0).Rows(intRowCount1).Item("name").GetType().ToString = "System.DBNull" Then
+                    'The query does not produce any results, revert to former query
+                    strViewQuery = strInputQuery.Replace("Top 0", "")
+                End If
+            Next
+        End If
+
+        'Create the View
+        Dim strBuildViewQuery As String = "CREATE VIEW [" & strSchemaTarget & "].[" & strViewTarget & "] AS " & strViewQuery
+        basCode.QueryDb(basCode.dhdConnection, strBuildViewQuery, False)
+        WriteStatus("View " & strSchemaTarget & "." & strViewTarget & " created", 0, lblStatusText)
+
+        lstSourceTables.Items.Add(strSchemaTarget & "." & strViewTarget)
+        lstSourceTables.SelectedItem = strSchemaTarget & "." & strViewTarget
+        txtTargetTable.Text = strSchemaTarget & "." & strTableSource
+
+        GetTableNames()
+        ResetScreen()
+        GetColumns(strSourceSchema, strSourceTable, strTargetSchema, strTargetTable)
 
     End Sub
+
 End Class
