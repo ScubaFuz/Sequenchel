@@ -266,7 +266,6 @@ Partial Class frmImport
         'chkCreateTable
         '
         Me.chkCreateTable.AutoSize = True
-        Me.chkCreateTable.Enabled = False
         Me.chkCreateTable.Location = New System.Drawing.Point(29, 161)
         Me.chkCreateTable.Margin = New System.Windows.Forms.Padding(2)
         Me.chkCreateTable.Name = "chkCreateTable"

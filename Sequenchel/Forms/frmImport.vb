@@ -246,6 +246,22 @@ Public Class frmImport
         End If
         dhdDB.LoginName = txtUser.Text
         dhdDB.Password = txtPassword.Text
+
+        If basCode.CheckTable(dhdDB, dhdDB.DataTableName) = False Then
+            If chkCreateTable.Checked = True Then
+                If basCode.CreateTableFromDataset(dhdDB, dtsUpload, dhdDB.DataTableName) = False Then
+                    WriteStatus("Error creating table. " & dhdDB.ErrorMessage, 1, lblStatusText)
+                    basCode.WriteLog("Error creating table. " & dhdDB.ErrorMessage, 1)
+                    Exit Sub
+                End If
+            Else
+                WriteStatus("The specified table was not found.", 1, lblStatusText)
+                basCode.WriteLog("Export to database failed. The specified table was not found.", 1)
+                Exit Sub
+            End If
+        Else
+            chkCreateTable.Checked = False
+        End If
         intRecordsAffected = basCode.SaveToDatabase(dhdDB, dtsUpload, basCode.curVar.ConvertToText, basCode.curVar.ConvertToNull)
         If intRecordsAffected = -1 Then
             WriteStatus("Export to database failed.", 1, lblStatusText)

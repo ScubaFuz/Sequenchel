@@ -2,12 +2,12 @@
 
 <Assembly: AssemblyCompany("Thicor Services BV")> 
 <Assembly: AssemblyCopyright("Copyright © Thicor Services 2014-2016")> 
-<Assembly: AssemblyTrademark("")> 
+<Assembly: AssemblyTrademark("")>
 
 ' Version information for an assembly consists of the following four values:
 '
 '      Major Version
-'      Minor Version 
+'      Minor Version  
 '      Build Number
 '      Revision
 '
@@ -15,5 +15,5 @@
 ' by using the '*' as shown below:
 ' <Assembly: AssemblyVersion("1.0.*")> 
 
-<Assembly: AssemblyVersion("4.0.1.9")> 
-<Assembly: AssemblyFileVersion("4.0.1.9")> 
+<Assembly: AssemblyVersion("4.0.1.10")>
+<Assembly: AssemblyFileVersion("4.0.1.10")>

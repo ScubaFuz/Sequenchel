@@ -872,12 +872,12 @@
         Dim strCheckViewQuery As String = "SELECT name FROM sys.dm_exec_describe_first_result_set('" & strViewQuery & "', NULL, 0);"
         Dim dtsCheckView As DataSet = basCode.QueryDb(basCode.dhdConnection, strCheckViewQuery, True)
         If basCode.dhdText.DatasetCheck(dtsCheckView) = False Then
-            strViewQuery = strInputQuery
+            strViewQuery = strSourceQuery.Replace("''", "'").Replace("[Star1]", "*").Replace("[Star2]", "*")
         Else
             For intRowCount1 As Integer = 0 To dtsCheckView.Tables(0).Rows.Count - 1
                 If dtsCheckView.Tables.Item(0).Rows(intRowCount1).Item("name").GetType().ToString = "System.DBNull" Then
                     'The query does not produce any results, revert to former query
-                    strViewQuery = strInputQuery.Replace("Top 0", "")
+                    strViewQuery = strSourceQuery.Replace("''", "'").Replace("[Star1]", "*").Replace("[Star2]", "*")
                 End If
             Next
         End If

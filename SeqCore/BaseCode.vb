@@ -1484,6 +1484,83 @@ Public Class BaseCode
         Return intSqlVersion
     End Function
 
+    Public Function CheckTable(dhdConnect As DataHandler.db, strTable As String) As Boolean
+        Dim blnExists As Boolean = False
+        'Dim strQuery As String = "SELECT [name] FROM sys.tables WHERE [name] = '" & strTable & "'"
+        If strTable.Contains(".") = False Then strTable = "dbo." & strTable
+        Dim strQuery As String = "SELECT sch.[name] +'.' + tbl.[name] FROM sys.tables tbl INNER JOIN sys.schemas sch ON tbl.schema_id = sch.schema_id WHERE sch.[name] +'.' + tbl.[name] = '" & strTable & "'"
+        Dim dtsData As DataSet = QueryDb(dhdConnect, strQuery, True)
+        blnExists = dhdText.DatasetCheck(dtsData)
+        Return blnExists
+    End Function
+
+    Public Function CreateTableFromDataset(dhdConnect As DataHandler.db, dtsInput As DataSet, strTable As String) As String
+        'get column names and datatypes from dataset
+        Dim strColumnName As String = ""
+        Dim strDataType As String = "", strSqlDataType As String = ""
+        Dim intMaxColLenght As Integer = 0
+
+        Dim strCreateQuery As String = ""
+        If strTable.Contains(".") = False Then strTable = "dbo." & strTable
+        'build create statement
+        strCreateQuery = "CREATE TABLE [" & strTable.Replace(".", "].[") & "](" & Environment.NewLine
+
+        For intColCount As Integer = 0 To dtsInput.Tables(0).Columns.Count - 1
+            Try
+                strColumnName = dtsInput.Tables.Item(0).Columns(intColCount).ColumnName
+                strDataType = dtsInput.Tables.Item(0).Columns(intColCount).DataType.ToString
+                strSqlDataType = GetSqlDataType(strDataType)
+                If dtsInput.Tables.Item(0).Columns(intColCount).DataType Is GetType(String) Then
+                    intMaxColLenght = CheckColumnLength(dtsInput.Tables.Item(0).Columns(intColCount))
+                End If
+                If strSqlDataType = "nvarchar" Then strSqlDataType &= "(" & intMaxColLenght * 2 & ")"
+                strCreateQuery &= "[" & strColumnName & "] " & strSqlDataType
+                If intColCount < dtsInput.Tables(0).Columns.Count - 1 Then
+                    strCreateQuery &= "," & Environment.NewLine
+                Else
+                    strCreateQuery &= ")"
+                End If
+            Catch ex As Exception
+                WriteLog("There was an error creating the table:" & strTable & Environment.NewLine & ex.Message, 1)
+            End Try
+        Next
+
+        'create table
+        QueryDb(dhdConnect, strCreateQuery, False)
+
+        'give feedback
+        If dhdConnect.ErrorLevel = -1 Then Return False
+        Return True
+    End Function
+
+    Public Function CheckColumnLength(dcmInput As DataColumn) As Integer
+        Dim MaxColLen As Integer = 0
+        If dcmInput.DataType Is GetType(String) Then
+            For Each drwInput As DataRow In dcmInput.Table.Rows
+                If drwInput.Field(Of String)(dcmInput.ColumnName).Length > MaxColLen Then
+                    MaxColLen = drwInput.Field(Of String)(dcmInput.ColumnName).Length
+                End If
+            Next
+        End If
+        Return MaxColLen
+    End Function
+
+    Public Function SetColumnLength(intInput As Integer) As Integer
+        Dim intReturn As Integer = 0
+        If intInput <= 15 Then
+            intReturn = 15
+        ElseIf intInput <= 200 Then
+            intReturn = 255
+        ElseIf intInput <= 500 Then
+            intReturn = 1000
+        ElseIf intInput <= 1500 Then
+            intReturn = 2000
+        Else  'If intInput > 1500 Then
+            intReturn = 4000
+        End If
+        Return intReturn
+    End Function
+
     Public Function LoadConfigSetting(ByVal strCategory As String, ByVal strConfigName As String) As String
         Dim strQuery As String = "exec usp_ConfigHandle 'Get','" & strCategory & "',NULL,'" & strConfigName & "'"
         Dim dtsData As DataSet
@@ -1589,6 +1666,38 @@ Public Class BaseCode
                 Return "CHAR"
         End Select
         Return ""
+    End Function
+
+    Public Function GetSqlDataType(strInput As String) As String
+        Select Case strInput.ToUpper
+            Case "CHAR"
+                Return "nvarchar"
+            Case "BIT"
+                Return "bit"
+            Case "INTEGER"
+                Return "int"
+            Case "DATETIME"
+                Return "datetime"
+            Case "TIME"
+                Return "time"
+            Case "TIMESTAMP"
+                Return "timestamp"
+            Case "GUID"
+                Return "uniqueidentifier"
+            Case "IMAGE"
+                Return "image"
+            Case "GEO"
+                Return "geography"
+            Case "BINARY"
+                Return "varbinary"
+            Case "TEXT"
+                Return "ntext"
+            Case "XML"
+                Return "xml"
+            Case Else
+                Return "nvarchar"
+        End Select
+
     End Function
 
     Public Function GetDataTypes()
