@@ -832,7 +832,7 @@
         ElseIf strLinkedServer.Length > 0 Then
             strSourceQuery = "SELECT [Star1] FROM OPENQUERY([" & strLinkedServer & "],''SELECT [Star2] FROM " & strSchemaSource & "." & strTableSource & "'')"
         ElseIf strDatabaseSource.Length > 0 Then
-            strSourceQuery = "SELECT [Star2] FROM " & strDatabaseSource & "." & strSchemaSource & "." & strTableSource
+            strSourceQuery = "SELECT [Star1] FROM " & strDatabaseSource & "." & strSchemaSource & "." & strTableSource
         End If
 
         If strSourceQuery.Length = 0 Then Exit Sub
@@ -846,7 +846,7 @@
             Exit Sub
         End If
 
-        Dim strColumns As String = ","
+        Dim strColumns As String = ",", strColumnsSource As String = "", strColumnsTarget As String = ""
         For intRowCount1 As Integer = 0 To dtsData.Tables(0).Rows.Count - 1
             If dtsData.Tables.Item(0).Rows(intRowCount1).Item("name").GetType().ToString = "System.DBNull" Then
                 'No column name was found
@@ -862,28 +862,30 @@
         End If
 
         Dim strViewQuery As String = ""
-        If strColumns.Length > 7000 And strLinkedServer.Length > 0 Then
-            strColumns = "[" & strColumns.Replace(",", "],[") & "]"
-            strViewQuery = strSourceQuery.Replace("[Star1]", strColumns).Replace("[Star2]", "*")
-        Else
-            strViewQuery = strSourceQuery.Replace("[Star1]", "*").Replace("[Star2]", strColumns)
+        strColumnsSource = """" & strColumns.Replace(",", """,""") & """"
+        strColumnsTarget = "[" & strColumns.Replace(",", "],[") & "]"
+
+        If strColumnsSource.Length > 7000 And strLinkedServer.Length > 0 Then
+            strColumnsSource = "*"
         End If
+
+        strViewQuery = strSourceQuery.Replace("[Star1]", strColumnsTarget).Replace("[Star2]", strColumnsSource)
 
         Dim strCheckViewQuery As String = "SELECT name FROM sys.dm_exec_describe_first_result_set('" & strViewQuery & "', NULL, 0);"
         Dim dtsCheckView As DataSet = basCode.QueryDb(basCode.dhdConnection, strCheckViewQuery, True)
         If basCode.dhdText.DatasetCheck(dtsCheckView) = False Then
-            strViewQuery = strSourceQuery.Replace("''", "'").Replace("[Star1]", "*").Replace("[Star2]", "*")
+            strViewQuery = strSourceQuery.Replace("[Star1]", "*").Replace("[Star2]", "*")
         Else
             For intRowCount1 As Integer = 0 To dtsCheckView.Tables(0).Rows.Count - 1
                 If dtsCheckView.Tables.Item(0).Rows(intRowCount1).Item("name").GetType().ToString = "System.DBNull" Then
                     'The query does not produce any results, revert to former query
-                    strViewQuery = strSourceQuery.Replace("''", "'").Replace("[Star1]", "*").Replace("[Star2]", "*")
+                    strViewQuery = strSourceQuery.Replace("[Star1]", "*").Replace("[Star2]", "*")
                 End If
             Next
         End If
 
         'Create the View
-        Dim strBuildViewQuery As String = "CREATE VIEW [" & strSchemaTarget & "].[" & strViewTarget & "] AS " & strViewQuery
+        Dim strBuildViewQuery As String = "CREATE VIEW [" & strSchemaTarget & "].[" & strViewTarget & "] AS " & strViewQuery.Replace("''", "'")
         basCode.QueryDb(basCode.dhdConnection, strBuildViewQuery, False)
         WriteStatus("View " & strSchemaTarget & "." & strViewTarget & " created", 0, lblStatusText)
 
