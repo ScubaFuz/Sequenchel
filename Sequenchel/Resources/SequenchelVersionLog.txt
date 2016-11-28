@@ -6,11 +6,13 @@ New: SmartUpdate can create a local view to a remote table for data transfer.
 New: File import can now create a basic table on the fly.
 Enhanced: Replaced MS-Jet driver with MS-OLE-DB driver to provide MS Excel services in 64 bit environments.
 Enhanced: If no connection is found the main database is used as default connection.
+Enhanced: SmartUpdate does not require a primay key when removing all target data.
 Fixed: Loading a report with an incorrect/non-exising field no longer crashes Sequenchel.
 Fixed: Default value buttons on wrong fields no longer create an error.
 Fixed: Report results layout now scales properly.
 Fixed: SmartUpdate EndDate can now be Nothing.
 Fixed: Object Owner (monitoring) can now be Nothing.
+Fixed: SmartUpdate can now handle CHAR primary key with target collation.
 
 Version 4.0.0
 New: The engine has been rewritten to enable more features in the future. All screens have been redesigned, even though they look the same.
