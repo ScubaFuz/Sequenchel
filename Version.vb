@@ -15,5 +15,5 @@
 ' by using the '*' as shown below:
 ' <Assembly: AssemblyVersion("1.0.*")> 
 
-<Assembly: AssemblyVersion("4.0.1.13")>
-<Assembly: AssemblyFileVersion("4.0.1.13")>
+<Assembly: AssemblyVersion("4.0.2.2")>
+<Assembly: AssemblyFileVersion("4.0.2.2")>

@@ -219,13 +219,23 @@
             pnlTable = pnlSourceTable
             pnlDataType = pnlSourceDataType
             pnlPrimaryKey = pnlSourcePrimaryKey
+        ElseIf rbnSourceTargetConfig.Checked = True Then
+            strSchemaName = strTargetSchema
+            strTableName = strTargetTable
+            pnlTable = pnlSourceTable
+            pnlDataType = pnlSourceDataType
+            pnlPrimaryKey = pnlSourcePrimaryKey
         ElseIf rbnTargetConfig.Checked = True Then
             strSchemaName = strTargetSchema
             strTableName = strTargetTable
             pnlTable = pnlTargetTable
             pnlDataType = pnlTargetDataType
             pnlPrimaryKey = pnlTargetPrimaryKey
+        Else
+            WriteStatus("No config save mode selected", 1, lblStatusText)
+            Exit Sub
         End If
+
         strInsert = InsertString(strSchemaName, strTableName, pnlTable, pnlDataType, pnlPrimaryKey, pnlCompareColumn, dtmStartDate, dtmEndDate)
         strUpdate = "UPDATE dbo.SmartUpdate SET [DateStop] = '" & dtmStartDate.AddDays(-1).ToString("yyyy-MM-dd") & "' WHERE [DataBaseName] = '" & basCode.dhdConnection.DatabaseName & "' AND [SchemaName] = '" & strSchemaName & "' AND [TableName] = '" & strTableName & "' 	AND [DateStart] < '" & dtmStartDate.ToString("yyyy-MM-dd") & "' AND COALESCE([DateStop],'2999-12-31') > '" & dtmStartDate.ToString("yyyy-MM-dd") & "' AND [Active] = 1"
         If dtmEndDate = Nothing Then dtmEndDate = "2999-12-31"
