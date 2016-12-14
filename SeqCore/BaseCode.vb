@@ -1535,13 +1535,27 @@ Public Class BaseCode
 
     Public Function CheckColumnLength(dcmInput As DataColumn) As Integer
         Dim MaxColLen As Integer = 0
-        If dcmInput.DataType Is GetType(String) Then
-            For Each drwInput As DataRow In dcmInput.Table.Rows
-                If drwInput.Field(Of String)(dcmInput.ColumnName).Length > MaxColLen Then
-                    MaxColLen = drwInput.Field(Of String)(dcmInput.ColumnName).Length
-                End If
-            Next
-        End If
+        Dim intCount As Integer = 0
+        Try
+
+            If dcmInput.DataType Is GetType(String) Then
+                For intCount = 0 To dcmInput.Table.Rows.Count - 1
+                    If dcmInput.Table.Rows(intCount).Field(Of String)(dcmInput.ColumnName) IsNot Nothing Then
+                        If dcmInput.Table.Rows(intCount).Field(Of String)(dcmInput.ColumnName).Length > MaxColLen Then
+                            MaxColLen = dcmInput.Table.Rows(intCount).Field(Of String)(dcmInput.ColumnName).Length
+                        End If
+                    End If
+                Next
+                'For Each drwInput As DataRow In dcmInput.Table.Rows
+                '    If drwInput.Field(Of String)(dcmInput.ColumnName).Length > MaxColLen Then
+                '        MaxColLen = drwInput.Field(Of String)(dcmInput.ColumnName).Length
+                '    End If
+                'Next
+            End If
+        Catch ex As Exception
+            ErrorLevel = -1
+            ErrorMessage = ex.Message
+        End Try
         Return MaxColLen
     End Function
 
@@ -2176,10 +2190,8 @@ Public Class BaseCode
                     dtsImport = dhdText.LoadXmlToDataset(strFileName)
                 Case "xls", "xlsx"
                     dtsImport = Excel.ImportExcelFile(strFileName)
-                    If dtsImport Is Nothing Then
-                        ErrorLevel = Excel.ErrorLevel
-                        ErrorMessage = Excel.ErrorMessage
-                    End If
+                    ErrorLevel = Excel.ErrorLevel
+                    ErrorMessage = Excel.ErrorMessage
                 Case "csv", "txt"
                     If Delimiter.Length = 0 Then
                         Return Nothing

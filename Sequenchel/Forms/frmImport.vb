@@ -142,6 +142,12 @@ Public Class frmImport
         End If
         dtsImport = basCode.ImportFile(basCode.dhdText.PathConvert(basCode.CheckFilePath(basCode.dhdText.ImportFile)), chkHasHeaders.Checked, txtDelimiter.Text)
 
+        If basCode.ErrorLevel = -1 Then
+            WriteStatus(basCode.ErrorMessage, 2, lblStatusText)
+        Else
+            WriteStatus("File loaded.", 0, lblStatusText)
+        End If
+
         If basCode.dhdText.DatasetCheck(dtsImport) = False Then
             If basCode.ErrorLevel = -1 Then
                 WriteStatus(basCode.ErrorMessage, 2, lblStatusText)

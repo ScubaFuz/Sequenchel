@@ -305,6 +305,9 @@ Public Class Excel
         Dim Ext As String = strFilePath.Substring(strFilePath.LastIndexOf(".") + 1)
         Dim dtsExcel As New DataSet
 
+        ErrorLevel = 0
+        ErrorMessage = ""
+
         If Ext = "xls" Then
             'ImportExcel2003(strFilePath)
             'dstImport = ReadExcelFile(strFilePath)
@@ -367,52 +370,61 @@ Public Class Excel
     Public Function ReadXlsxFile(strFilePath As String) As DataSet
         Dim dstOutput As New DataSet
         Dim ColumnList As New List(Of String)
+        Dim ExcelSheetName As String = ""
 
         'Open the Excel file in Read Mode using OpenXml.
         Using doc As SpreadsheetDocument = SpreadsheetDocument.Open(strFilePath, False)
-            'Read the first Sheet from Excel file.
-            For Each excelSheet As Sheet In doc.WorkbookPart.Workbook.Sheets
+            Try
 
-                'Dim sheet As Sheet = doc.WorkbookPart.Workbook.Sheets.GetFirstChild(Of Sheet)()
+                'Read the first Sheet from Excel file.
+                Dim intCVount As Integer = doc.WorkbookPart.Workbook.Sheets.Count
+                For Each excelSheet As Sheet In doc.WorkbookPart.Workbook.Sheets
 
-                'Get the Worksheet instance.
-                Dim worksheet As Worksheet = TryCast(doc.WorkbookPart.GetPartById(excelSheet.Id.Value), WorksheetPart).Worksheet
+                    'Dim sheet As Sheet = doc.WorkbookPart.Workbook.Sheets.GetFirstChild(Of Sheet)()
 
-                'Fetch all the rows present in the Worksheet.
-                Dim rows As IEnumerable(Of Row) = worksheet.GetFirstChild(Of SheetData)().Descendants(Of Row)()
+                    'Get the Worksheet instance.
+                    Dim worksheet As Worksheet = TryCast(doc.WorkbookPart.GetPartById(excelSheet.Id.Value), WorksheetPart).Worksheet
 
-                'Create a new DataTable.
-                Dim dt As New DataTable()
-                dt.TableName = excelSheet.Name
-                'Loop through the Worksheet rows.
-                For Each row As Row In rows
-                    'Use the first row to add columns to DataTable.
-                    If row.RowIndex.Value = 1 Then
-                        For Each cell As Cell In row.Descendants(Of Cell)()
-                            dt.Columns.Add(GetValue(doc, cell))
-                            ColumnList.Add(GetColumnName(cell.CellReference))
-                        Next
-                    Else
-                        'Add rows to DataTable.
-                        dt.Rows.Add()
-                        'Dim i As Integer = 0
-                        For Each cell As Cell In row.Descendants(Of Cell)()
-                            Dim strColReference As String = GetColumnName(cell.CellReference)
-                            If ColumnList.Contains(strColReference) Then
-                                Dim intCol As Integer = ColumnList.FindIndex(Function(value As String)
-                                                                                 Return value = strColReference
-                                                                             End Function)
-                                dt.Rows(dt.Rows.Count - 1)(intCol) = GetValue(doc, cell)
-                                'dt.Rows(dt.Rows.Count - 1)(i) = GetValue(doc, cell)
-                            End If
-                            'Dim strCellValue As String = cell.CellValue.InnerText.ToString
-                            'Dim strValue As String = GetValue(doc, cell)
-                            'i += 1
-                        Next
-                    End If
+                    'Fetch all the rows present in the Worksheet.
+                    Dim rows As IEnumerable(Of Row) = worksheet.GetFirstChild(Of SheetData)().Descendants(Of Row)()
+
+                    'Create a new DataTable.
+                    Dim dt As New DataTable()
+                    dt.TableName = excelSheet.Name
+                    ExcelSheetName = excelSheet.Name
+                    'Loop through the Worksheet rows.
+                    For Each row As Row In rows
+                        'Use the first row to add columns to DataTable.
+                        If row.RowIndex.Value = 1 Then
+                            For Each cell As Cell In row.Descendants(Of Cell)()
+                                dt.Columns.Add(GetValue(doc, cell))
+                                ColumnList.Add(GetColumnName(cell.CellReference))
+                            Next
+                        Else
+                            'Add rows to DataTable.
+                            dt.Rows.Add()
+                            'Dim i As Integer = 0
+                            For Each cell As Cell In row.Descendants(Of Cell)()
+                                Dim strColReference As String = GetColumnName(cell.CellReference)
+                                If ColumnList.Contains(strColReference) Then
+                                    Dim intCol As Integer = ColumnList.FindIndex(Function(value As String)
+                                                                                     Return value = strColReference
+                                                                                 End Function)
+                                    dt.Rows(dt.Rows.Count - 1)(intCol) = GetValue(doc, cell)
+                                    'dt.Rows(dt.Rows.Count - 1)(i) = GetValue(doc, cell)
+                                End If
+                                'Dim strCellValue As String = cell.CellValue.InnerText.ToString
+                                'Dim strValue As String = GetValue(doc, cell)
+                                'i += 1
+                            Next
+                        End If
+                    Next
+                    dstOutput.Tables.Add(dt)
                 Next
-                dstOutput.Tables.Add(dt)
-            Next
+            Catch ex As Exception
+                ErrorLevel = -1
+                ErrorMessage = "An error occured reading Excel sheet [" & ExcelSheetName & "]: " & ex.Message
+            End Try
         End Using
 
         Return dstOutput

@@ -302,7 +302,7 @@ Partial Class frmImport
         Me.lblStatusText.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblStatusText.Location = New System.Drawing.Point(82, 728)
         Me.lblStatusText.Name = "lblStatusText"
-        Me.lblStatusText.Size = New System.Drawing.Size(660, 13)
+        Me.lblStatusText.Size = New System.Drawing.Size(660, 15)
         Me.lblStatusText.TabIndex = 42
         '
         'btnPreviousTable
