@@ -1145,7 +1145,12 @@ Public Class frmSequenchel
     Private Sub LoadDefaultValue(strFieldName As String)
         For Each ctrl As Object In sptFields1.Panel2.Controls
             If ctrl.Field.FieldTableName & "." & ctrl.Field.FieldName = strFieldName Then
-                Dim strValue As String = basCode.ProcessDefaultValue(ctrl.Field.DefaultValue)
+                Dim strValue As String = ctrl.Field.DefaultValue
+                If strValue.Substring(0, 2) = "v:" Then
+                    strValue = strValue.Replace("v:", "")
+                    strValue = basCode.ProcessDefaultValue(strValue)
+                End If
+
                 Select Case ctrl.[GetType]().Name
                     Case "CheckField", "CheckBox"
                         ctrl.Checked = basCode.CheckBooleanValue(strValue)

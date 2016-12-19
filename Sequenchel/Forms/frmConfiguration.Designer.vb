@@ -193,11 +193,14 @@ Partial Class frmConfiguration
         Me.txtTableAlias = New System.Windows.Forms.TextBox()
         Me.chkTableUpdate = New System.Windows.Forms.CheckBox()
         Me.tpgTableTemplates = New System.Windows.Forms.TabPage()
+        Me.tvwSelectedTable = New System.Windows.Forms.TreeView()
+        Me.lvwSelectedTemplate = New System.Windows.Forms.ListView()
+        Me.ColumnHeader1 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ColumnHeader2 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.Label2 = New System.Windows.Forms.Label()
         Me.tbnSearchSequenchelTemplates = New System.Windows.Forms.Button()
         Me.btnTemplateUse = New System.Windows.Forms.Button()
         Me.btnTemplateLoad = New System.Windows.Forms.Button()
-        Me.lblSelectedTemplate = New System.Windows.Forms.Label()
-        Me.tvwSelectedTemplate = New System.Windows.Forms.TreeView()
         Me.txtTemplateSearch = New System.Windows.Forms.TextBox()
         Me.btnTemplateSearch = New System.Windows.Forms.Button()
         Me.lblAvailableTemplates = New System.Windows.Forms.Label()
@@ -284,7 +287,7 @@ Partial Class frmConfiguration
         Me.tpgConnections.Location = New System.Drawing.Point(4, 22)
         Me.tpgConnections.Name = "tpgConnections"
         Me.tpgConnections.Padding = New System.Windows.Forms.Padding(3)
-        Me.tpgConnections.Size = New System.Drawing.Size(768, 650)
+        Me.tpgConnections.Size = New System.Drawing.Size(768, 759)
         Me.tpgConnections.TabIndex = 0
         Me.tpgConnections.Text = "Connections"
         Me.tpgConnections.UseVisualStyleBackColor = True
@@ -348,7 +351,7 @@ Partial Class frmConfiguration
         Me.lblBackupPath.Name = "lblBackupPath"
         Me.lblBackupPath.Size = New System.Drawing.Size(289, 31)
         Me.lblBackupPath.TabIndex = 108
-        Me.lblBackupPath.Text = "This must be a valid (network) path on the PC or Server where the database reside" & _
+        Me.lblBackupPath.Text = "This must be a valid (network) path on the PC or Server where the database reside" &
     "s"
         '
         'btnBackupLocation
@@ -717,7 +720,7 @@ Partial Class frmConfiguration
         Me.tpgTableSets.Controls.Add(Me.lvwTableSets)
         Me.tpgTableSets.Location = New System.Drawing.Point(4, 22)
         Me.tpgTableSets.Name = "tpgTableSets"
-        Me.tpgTableSets.Size = New System.Drawing.Size(768, 650)
+        Me.tpgTableSets.Size = New System.Drawing.Size(768, 759)
         Me.tpgTableSets.TabIndex = 2
         Me.tpgTableSets.Text = "Table Sets"
         Me.tpgTableSets.UseVisualStyleBackColor = True
@@ -2006,11 +2009,12 @@ Partial Class frmConfiguration
         '
         'tpgTableTemplates
         '
+        Me.tpgTableTemplates.Controls.Add(Me.tvwSelectedTable)
+        Me.tpgTableTemplates.Controls.Add(Me.lvwSelectedTemplate)
+        Me.tpgTableTemplates.Controls.Add(Me.Label2)
         Me.tpgTableTemplates.Controls.Add(Me.tbnSearchSequenchelTemplates)
         Me.tpgTableTemplates.Controls.Add(Me.btnTemplateUse)
         Me.tpgTableTemplates.Controls.Add(Me.btnTemplateLoad)
-        Me.tpgTableTemplates.Controls.Add(Me.lblSelectedTemplate)
-        Me.tpgTableTemplates.Controls.Add(Me.tvwSelectedTemplate)
         Me.tpgTableTemplates.Controls.Add(Me.txtTemplateSearch)
         Me.tpgTableTemplates.Controls.Add(Me.btnTemplateSearch)
         Me.tpgTableTemplates.Controls.Add(Me.lblAvailableTemplates)
@@ -2022,6 +2026,51 @@ Partial Class frmConfiguration
         Me.tpgTableTemplates.TabIndex = 3
         Me.tpgTableTemplates.Text = "Table Templates"
         Me.tpgTableTemplates.UseVisualStyleBackColor = True
+        '
+        'tvwSelectedTable
+        '
+        Me.tvwSelectedTable.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.tvwSelectedTable.Location = New System.Drawing.Point(335, 366)
+        Me.tvwSelectedTable.Name = "tvwSelectedTable"
+        Me.tvwSelectedTable.Size = New System.Drawing.Size(392, 314)
+        Me.tvwSelectedTable.TabIndex = 85
+        '
+        'lvwSelectedTemplate
+        '
+        Me.lvwSelectedTemplate.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lvwSelectedTemplate.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader1, Me.ColumnHeader2})
+        Me.lvwSelectedTemplate.FullRowSelect = True
+        Me.lvwSelectedTemplate.Location = New System.Drawing.Point(335, 117)
+        Me.lvwSelectedTemplate.Name = "lvwSelectedTemplate"
+        Me.lvwSelectedTemplate.Size = New System.Drawing.Size(392, 227)
+        Me.lvwSelectedTemplate.Sorting = System.Windows.Forms.SortOrder.Ascending
+        Me.lvwSelectedTemplate.TabIndex = 83
+        Me.lvwSelectedTemplate.UseCompatibleStateImageBehavior = False
+        Me.lvwSelectedTemplate.View = System.Windows.Forms.View.Details
+        '
+        'ColumnHeader1
+        '
+        Me.ColumnHeader1.Text = "Table Name"
+        Me.ColumnHeader1.Width = 120
+        '
+        'ColumnHeader2
+        '
+        Me.ColumnHeader2.Text = "Table Alias"
+        Me.ColumnHeader2.Width = 263
+        '
+        'Label2
+        '
+        Me.Label2.AutoSize = True
+        Me.Label2.Location = New System.Drawing.Point(340, 101)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(106, 13)
+        Me.Label2.TabIndex = 84
+        Me.Label2.Text = "Tables for Table Set:"
+        Me.Label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'tbnSearchSequenchelTemplates
         '
@@ -2053,25 +2102,6 @@ Partial Class frmConfiguration
         Me.btnTemplateLoad.TabIndex = 7
         Me.btnTemplateLoad.Text = "Load Template From File"
         Me.btnTemplateLoad.UseVisualStyleBackColor = True
-        '
-        'lblSelectedTemplate
-        '
-        Me.lblSelectedTemplate.AutoSize = True
-        Me.lblSelectedTemplate.Location = New System.Drawing.Point(335, 101)
-        Me.lblSelectedTemplate.Name = "lblSelectedTemplate"
-        Me.lblSelectedTemplate.Size = New System.Drawing.Size(96, 13)
-        Me.lblSelectedTemplate.TabIndex = 82
-        Me.lblSelectedTemplate.Text = "Selected Template"
-        '
-        'tvwSelectedTemplate
-        '
-        Me.tvwSelectedTemplate.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.tvwSelectedTemplate.Location = New System.Drawing.Point(335, 117)
-        Me.tvwSelectedTemplate.Name = "tvwSelectedTemplate"
-        Me.tvwSelectedTemplate.Size = New System.Drawing.Size(392, 572)
-        Me.tvwSelectedTemplate.TabIndex = 5
         '
         'txtTemplateSearch
         '
@@ -2364,8 +2394,6 @@ Partial Class frmConfiguration
     Friend WithEvents btnTemplateSearch As System.Windows.Forms.Button
     Friend WithEvents btnTemplateUse As System.Windows.Forms.Button
     Friend WithEvents btnTemplateLoad As System.Windows.Forms.Button
-    Friend WithEvents lblSelectedTemplate As System.Windows.Forms.Label
-    Friend WithEvents tvwSelectedTemplate As System.Windows.Forms.TreeView
     Friend WithEvents tbnSearchSequenchelTemplates As System.Windows.Forms.Button
     Friend WithEvents txtDefaultButton As System.Windows.Forms.TextBox
     Friend WithEvents lblDefaultButton As System.Windows.Forms.Label
@@ -2407,4 +2435,9 @@ Partial Class frmConfiguration
     Friend WithEvents txtConnection As System.Windows.Forms.TextBox
     Friend WithEvents lblTableSet As System.Windows.Forms.Label
     Friend WithEvents sptTable As System.Windows.Forms.SplitContainer
+    Friend WithEvents tvwSelectedTable As TreeView
+    Friend WithEvents lvwSelectedTemplate As ListView
+    Friend WithEvents ColumnHeader1 As ColumnHeader
+    Friend WithEvents ColumnHeader2 As ColumnHeader
+    Friend WithEvents Label2 As Label
 End Class

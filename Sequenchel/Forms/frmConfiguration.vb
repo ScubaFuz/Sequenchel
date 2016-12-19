@@ -1617,7 +1617,7 @@ Public Class frmConfiguration
         CursorControl("Wait")
         Dim MydbRef As New SDBA.DBRef
         basCode.xmlTemplates.LoadXml(MydbRef.GetScript(lstAvailableTemplates.SelectedItem))
-        TemplateShow()
+        TemplateTablesLoad()
         CursorControl()
     End Sub
 
@@ -1642,9 +1642,9 @@ Public Class frmConfiguration
 
         If (loadFile1.ShowDialog() = System.Windows.Forms.DialogResult.OK) And (loadFile1.FileName.Length) > 0 Then
             basCode.xmlTemplates.Load(loadFile1.FileName)
-            TemplateShow()
+            TemplateTablesLoad()
         Else
-            tvwSelectedTemplate.Nodes.Clear()
+            lvwSelectedTemplate.Items.Clear()
         End If
         CursorControl()
     End Sub
@@ -1668,13 +1668,30 @@ Public Class frmConfiguration
 
     End Sub
 
-    Private Sub TemplateShow()
-        Dim xNode As XmlNode = basCode.dhdText.FindXmlNode(basCode.xmlTemplates, "Tables")
-        tvwSelectedTemplate.Nodes.Clear()
-        If xNode Is Nothing Then Exit Sub
-        DisplayXmlNode(xNode, tvwSelectedTemplate.Nodes)
-        tvwSelectedTemplate.Nodes(0).Expand()
+    Private Sub TemplateTablesLoad()
+        tvwSelectedTable.Nodes.Clear()
+        lvwSelectedTemplate.Items.Clear()
+        If basCode.xmlTemplates.OuterXml.Length = 0 Then Exit Sub
+
+        Dim lstXml As XmlNodeList
+        lstXml = basCode.dhdText.FindXmlNodes(basCode.xmlTemplates, "Table")
+        If lstXml Is Nothing Then Exit Sub
+        Dim xNode As XmlNode
+        For Each xNode In lstXml
+            Dim lsvItem As New ListViewItem
+            lsvItem.Name = xNode.Item("Alias").InnerText
+            lsvItem.Text = xNode.Item("Name").InnerText
+            lsvItem.SubItems.Add(xNode.Item("Alias").InnerText)
+            lvwSelectedTemplate.Items.Add(lsvItem)
+        Next
     End Sub
+    'Private Sub TemplateShow()
+    '    Dim xNode As XmlNode = basCode.dhdText.FindXmlNode(basCode.xmlTemplates, "Tables")
+    '    tvwSelectedTemplate.Nodes.Clear()
+    '    If xNode Is Nothing Then Exit Sub
+    '    DisplayXmlNode(xNode, tvwSelectedTemplate.Nodes)
+    '    tvwSelectedTemplate.Nodes(0).Expand()
+    'End Sub
 
 #End Region
 
@@ -2094,6 +2111,30 @@ Public Class frmConfiguration
 
         'If Not cbxRelations.Items.Contains(cbxRelations.Text) Then cbxRelations.Items.Add(cbxRelations.Text)
         CursorControl()
+    End Sub
+
+    Private Sub lvwSelectedTemplate_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lvwSelectedTemplate.SelectedIndexChanged
+        CursorControl("Wait")
+        If lvwSelectedTemplate.SelectedItems.Count = 1 Then
+
+            TemplateTableShow(lvwSelectedTemplate.SelectedItems.Item(0).Name)
+        End If
+        CursorControl()
+
+    End Sub
+
+    Private Sub TemplateTableShow(strTable As String)
+        tvwSelectedTable.Nodes.Clear()
+        Dim xNode As XmlNode = basCode.dhdText.FindXmlNode(basCode.xmlTemplates, "Table", "Alias", strTable)
+        If xNode Is Nothing Then Exit Sub
+        DisplayXmlNode(xNode, tvwSelectedTable.Nodes)
+        tvwSelectedTable.Nodes(0).Expand()
+        Try
+            tvwSelectedTable.SelectedNode = tvwSelectedTable.Nodes.Find("Fields", True)(0)
+            tvwSelectedTable.SelectedNode.Expand()
+        Catch ex As Exception
+            tvwSelectedTable.Nodes(0).LastNode.Expand()
+        End Try
     End Sub
 
 #End Region

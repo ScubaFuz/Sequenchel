@@ -51,8 +51,8 @@
           <FldUpdate>True</FldUpdate>
           <Relations>
             <Relation>
-              <RelationTable>dbo.tbl_Servers</RelationTable>
-              <RelationTableAlias>Historical Servers</RelationTableAlias>
+              <RelationTable>dbo.vw_Servers</RelationTable>
+              <RelationTableAlias>LiveServers</RelationTableAlias>
               <RelationField>LinkedServer</RelationField>
               <RelatedFieldName>
               </RelatedFieldName>
@@ -61,8 +61,8 @@
               <RelatedFieldList>False</RelatedFieldList>
             </Relation>
             <Relation>
-              <RelationTable>dbo.vw_Servers</RelationTable>
-              <RelationTableAlias>LiveServers</RelationTableAlias>
+              <RelationTable>dbo.tbl_Servers</RelationTable>
+              <RelationTableAlias>Historical Servers</RelationTableAlias>
               <RelationField>LinkedServer</RelationField>
               <RelatedFieldName>
               </RelatedFieldName>
@@ -105,7 +105,7 @@
           </ControlValue>
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
-          <DefaultButton DefaultValue="Now()">True</DefaultButton>
+          <DefaultButton DefaultValue="v:Now()">True</DefaultButton>
           <FldList Order="4" Width="110">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
@@ -125,7 +125,7 @@
           </ControlValue>
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
-          <DefaultButton DefaultValue="Now()">True</DefaultButton>
+          <DefaultButton DefaultValue="v:Now()">True</DefaultButton>
           <FldList Order="5" Width="110">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
@@ -184,8 +184,8 @@
           <FldUpdate>True</FldUpdate>
           <Relations>
             <Relation>
-              <RelationTable>dbo.tbl_Servers</RelationTable>
-              <RelationTableAlias>Historical Servers</RelationTableAlias>
+              <RelationTable>dbo.vw_Servers</RelationTable>
+              <RelationTableAlias>LiveServers</RelationTableAlias>
               <RelationField>LinkedServer</RelationField>
               <RelatedFieldName>
               </RelatedFieldName>
@@ -194,8 +194,8 @@
               <RelatedFieldList>False</RelatedFieldList>
             </Relation>
             <Relation>
-              <RelationTable>dbo.vw_Servers</RelationTable>
-              <RelationTableAlias>LiveServers</RelationTableAlias>
+              <RelationTable>dbo.tbl_Servers</RelationTable>
+              <RelationTableAlias>Historical Servers</RelationTableAlias>
               <RelationField>LinkedServer</RelationField>
               <RelatedFieldName>
               </RelatedFieldName>
@@ -290,7 +290,7 @@
           </ControlValue>
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
-          <DefaultButton DefaultValue="Now()">True</DefaultButton>
+          <DefaultButton DefaultValue="v:Now()">True</DefaultButton>
           <FldList Order="6" Width="110">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
@@ -310,7 +310,7 @@
           </ControlValue>
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
-          <DefaultButton DefaultValue="Now()">True</DefaultButton>
+          <DefaultButton DefaultValue="v:Now()">True</DefaultButton>
           <FldList Order="7" Width="110">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
@@ -324,8 +324,8 @@
       <Alias>Backups</Alias>
       <Visible>True</Visible>
       <Search>True</Search>
-      <Update>True</Update>
-      <Insert>True</Insert>
+      <Update>False</Update>
+      <Insert>False</Insert>
       <Delete>True</Delete>
       <Fields>
         <Field>
@@ -369,8 +369,8 @@
           <FldUpdate>False</FldUpdate>
           <Relations>
             <Relation>
-              <RelationTable>dbo.vw_Servers</RelationTable>
-              <RelationTableAlias>LiveServers</RelationTableAlias>
+              <RelationTable>dbo.tbl_Servers</RelationTable>
+              <RelationTableAlias>Historical Servers</RelationTableAlias>
               <RelationField>InstanceName</RelationField>
               <RelatedFieldName>
               </RelatedFieldName>
@@ -379,8 +379,8 @@
               <RelatedFieldList>False</RelatedFieldList>
             </Relation>
             <Relation>
-              <RelationTable>dbo.tbl_Servers</RelationTable>
-              <RelationTableAlias>Historical Servers</RelationTableAlias>
+              <RelationTable>dbo.vw_Servers</RelationTable>
+              <RelationTableAlias>LiveServers</RelationTableAlias>
               <RelationField>InstanceName</RelationField>
               <RelatedFieldName>
               </RelatedFieldName>
@@ -666,7 +666,7 @@
           </ControlValue>
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
-          <DefaultButton DefaultValue="Now()">True</DefaultButton>
+          <DefaultButton DefaultValue="v:Now()">True</DefaultButton>
           <FldList Order="5" Width="110">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
@@ -686,7 +686,7 @@
           </ControlValue>
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
-          <DefaultButton DefaultValue="Now()">True</DefaultButton>
+          <DefaultButton DefaultValue="v:Now()">True</DefaultButton>
           <FldList Order="6" Width="110">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
@@ -706,12 +706,12 @@
           </ControlValue>
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
-          <DefaultButton DefaultValue="">False</DefaultButton>
+          <DefaultButton DefaultValue="v:Now()">True</DefaultButton>
           <FldList Order="7" Width="110">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
         <Field>
           <FldName>Remarks</FldName>
@@ -805,8 +805,8 @@
           <FldUpdate>False</FldUpdate>
           <Relations>
             <Relation>
-              <RelationTable>dbo.vw_Servers</RelationTable>
-              <RelationTableAlias>LiveServers</RelationTableAlias>
+              <RelationTable>dbo.tbl_Servers</RelationTable>
+              <RelationTableAlias>Historical Servers</RelationTableAlias>
               <RelationField>LinkedServer</RelationField>
               <RelatedFieldName>
               </RelatedFieldName>
@@ -815,8 +815,8 @@
               <RelatedFieldList>False</RelatedFieldList>
             </Relation>
             <Relation>
-              <RelationTable>dbo.tbl_Servers</RelationTable>
-              <RelationTableAlias>Historical Servers</RelationTableAlias>
+              <RelationTable>dbo.vw_Servers</RelationTable>
+              <RelationTableAlias>LiveServers</RelationTableAlias>
               <RelationField>LinkedServer</RelationField>
               <RelatedFieldName>
               </RelatedFieldName>
@@ -1104,7 +1104,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>True</FldUpdate>
+          <FldUpdate>False</FldUpdate>
         </Field>
         <Field>
           <FldName>PageVerify</FldName>
@@ -1379,12 +1379,12 @@
           </ControlValue>
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
-          <DefaultButton DefaultValue="">False</DefaultButton>
+          <DefaultButton DefaultValue="v:Now">True</DefaultButton>
           <FldList Order="10" Width="110">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>False</FldUpdate>
+          <FldUpdate>True</FldUpdate>
         </Field>
       </Fields>
     </Table>
@@ -1393,8 +1393,8 @@
       <Alias>DataSpaces</Alias>
       <Visible>True</Visible>
       <Search>True</Search>
-      <Update>True</Update>
-      <Insert>True</Insert>
+      <Update>False</Update>
+      <Insert>False</Insert>
       <Delete>True</Delete>
       <Fields>
         <Field>
@@ -1438,8 +1438,8 @@
           <FldUpdate>False</FldUpdate>
           <Relations>
             <Relation>
-              <RelationTable>dbo.tbl_Servers</RelationTable>
-              <RelationTableAlias>Historical Servers</RelationTableAlias>
+              <RelationTable>dbo.vw_Servers</RelationTable>
+              <RelationTableAlias>LiveServers</RelationTableAlias>
               <RelationField>LinkedServer</RelationField>
               <RelatedFieldName>
               </RelatedFieldName>
@@ -1448,8 +1448,8 @@
               <RelatedFieldList>False</RelatedFieldList>
             </Relation>
             <Relation>
-              <RelationTable>dbo.vw_Servers</RelationTable>
-              <RelationTableAlias>LiveServers</RelationTableAlias>
+              <RelationTable>dbo.tbl_Servers</RelationTable>
+              <RelationTableAlias>Historical Servers</RelationTableAlias>
               <RelationField>LinkedServer</RelationField>
               <RelatedFieldName>
               </RelatedFieldName>
@@ -1718,8 +1718,8 @@
       <Alias>DiskSpaces</Alias>
       <Visible>True</Visible>
       <Search>True</Search>
-      <Update>True</Update>
-      <Insert>True</Insert>
+      <Update>False</Update>
+      <Insert>False</Insert>
       <Delete>True</Delete>
       <Fields>
         <Field>
@@ -1763,8 +1763,8 @@
           <FldUpdate>False</FldUpdate>
           <Relations>
             <Relation>
-              <RelationTable>dbo.tbl_Servers</RelationTable>
-              <RelationTableAlias>Historical Servers</RelationTableAlias>
+              <RelationTable>dbo.vw_Servers</RelationTable>
+              <RelationTableAlias>LiveServers</RelationTableAlias>
               <RelationField>LinkedServer</RelationField>
               <RelatedFieldName>
               </RelatedFieldName>
@@ -1773,8 +1773,8 @@
               <RelatedFieldList>False</RelatedFieldList>
             </Relation>
             <Relation>
-              <RelationTable>dbo.vw_Servers</RelationTable>
-              <RelationTableAlias>LiveServers</RelationTableAlias>
+              <RelationTable>dbo.tbl_Servers</RelationTable>
+              <RelationTableAlias>Historical Servers</RelationTableAlias>
               <RelationField>LinkedServer</RelationField>
               <RelatedFieldName>
               </RelatedFieldName>
@@ -2011,8 +2011,8 @@
       <Alias>ErrorLogsAll</Alias>
       <Visible>True</Visible>
       <Search>True</Search>
-      <Update>True</Update>
-      <Insert>True</Insert>
+      <Update>False</Update>
+      <Insert>False</Insert>
       <Delete>True</Delete>
       <Fields>
         <Field>
@@ -2056,8 +2056,8 @@
           <FldUpdate>False</FldUpdate>
           <Relations>
             <Relation>
-              <RelationTable>dbo.tbl_Servers</RelationTable>
-              <RelationTableAlias>Historical Servers</RelationTableAlias>
+              <RelationTable>dbo.vw_Servers</RelationTable>
+              <RelationTableAlias>LiveServers</RelationTableAlias>
               <RelationField>LinkedServer</RelationField>
               <RelatedFieldName>
               </RelatedFieldName>
@@ -2066,8 +2066,8 @@
               <RelatedFieldList>False</RelatedFieldList>
             </Relation>
             <Relation>
-              <RelationTable>dbo.vw_Servers</RelationTable>
-              <RelationTableAlias>LiveServers</RelationTableAlias>
+              <RelationTable>dbo.tbl_Servers</RelationTable>
+              <RelationTableAlias>Historical Servers</RelationTableAlias>
               <RelationField>LinkedServer</RelationField>
               <RelatedFieldName>
               </RelatedFieldName>
@@ -2125,7 +2125,7 @@
       <Visible>True</Visible>
       <Search>True</Search>
       <Update>True</Update>
-      <Insert>True</Insert>
+      <Insert>False</Insert>
       <Delete>True</Delete>
       <Fields>
         <Field>
@@ -2142,7 +2142,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="1" Width="50">True</FldList>
+          <FldList Order="1" Width="60">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -2169,8 +2169,8 @@
           <FldUpdate>False</FldUpdate>
           <Relations>
             <Relation>
-              <RelationTable>dbo.tbl_Servers</RelationTable>
-              <RelationTableAlias>Historical Servers</RelationTableAlias>
+              <RelationTable>dbo.vw_Servers</RelationTable>
+              <RelationTableAlias>LiveServers</RelationTableAlias>
               <RelationField>LinkedServer</RelationField>
               <RelatedFieldName>
               </RelatedFieldName>
@@ -2179,8 +2179,8 @@
               <RelatedFieldList>False</RelatedFieldList>
             </Relation>
             <Relation>
-              <RelationTable>dbo.vw_Servers</RelationTable>
-              <RelationTableAlias>LiveServers</RelationTableAlias>
+              <RelationTable>dbo.tbl_Servers</RelationTable>
+              <RelationTableAlias>Historical Servers</RelationTableAlias>
               <RelationField>LinkedServer</RelationField>
               <RelatedFieldName>
               </RelatedFieldName>
@@ -2256,7 +2256,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="5" Width="50">True</FldList>
+          <FldList Order="5" Width="90">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -2296,7 +2296,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="7" Width="50">True</FldList>
+          <FldList Order="7" Width="90">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -2336,7 +2336,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="9" Width="50">True</FldList>
+          <FldList Order="9" Width="70">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -2356,7 +2356,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="10" Width="25">True</FldList>
+          <FldList Order="10" Width="75">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -2376,7 +2376,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="0" Width="50">False</FldList>
+          <FldList Order="0" Width="95">False</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -2396,7 +2396,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="0" Width="50">False</FldList>
+          <FldList Order="0" Width="75">False</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -2416,7 +2416,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="0" Width="50">False</FldList>
+          <FldList Order="0" Width="70">False</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -2436,7 +2436,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="0" Width="100">False</FldList>
+          <FldList Order="0" Width="110">False</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -2456,7 +2456,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="0" Width="100">False</FldList>
+          <FldList Order="0" Width="110">False</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -2476,7 +2476,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="0" Width="100">False</FldList>
+          <FldList Order="0" Width="110">False</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -2496,7 +2496,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="0" Width="100">False</FldList>
+          <FldList Order="0" Width="110">False</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -2509,8 +2509,8 @@
       <Alias>Jobs</Alias>
       <Visible>True</Visible>
       <Search>True</Search>
-      <Update>True</Update>
-      <Insert>True</Insert>
+      <Update>False</Update>
+      <Insert>False</Insert>
       <Delete>True</Delete>
       <Fields>
         <Field>
@@ -2554,8 +2554,8 @@
           <FldUpdate>False</FldUpdate>
           <Relations>
             <Relation>
-              <RelationTable>dbo.tbl_Servers</RelationTable>
-              <RelationTableAlias>Historical Servers</RelationTableAlias>
+              <RelationTable>dbo.vw_Servers</RelationTable>
+              <RelationTableAlias>LiveServers</RelationTableAlias>
               <RelationField>LinkedServer</RelationField>
               <RelatedFieldName>
               </RelatedFieldName>
@@ -2564,8 +2564,8 @@
               <RelatedFieldList>False</RelatedFieldList>
             </Relation>
             <Relation>
-              <RelationTable>dbo.vw_Servers</RelationTable>
-              <RelationTableAlias>LiveServers</RelationTableAlias>
+              <RelationTable>dbo.tbl_Servers</RelationTable>
+              <RelationTableAlias>Historical Servers</RelationTableAlias>
               <RelationField>LinkedServer</RelationField>
               <RelatedFieldName>
               </RelatedFieldName>
@@ -2722,9 +2722,9 @@
       <Alias>Logging</Alias>
       <Visible>True</Visible>
       <Search>True</Search>
-      <Update>True</Update>
-      <Insert>True</Insert>
-      <Delete>True</Delete>
+      <Update>False</Update>
+      <Insert>False</Insert>
+      <Delete>False</Delete>
       <Fields>
         <Field>
           <FldName>LogID</FldName>
@@ -2813,8 +2813,8 @@
       <Alias>Logins</Alias>
       <Visible>True</Visible>
       <Search>True</Search>
-      <Update>True</Update>
-      <Insert>True</Insert>
+      <Update>False</Update>
+      <Insert>False</Insert>
       <Delete>True</Delete>
       <Fields>
         <Field>
@@ -2858,8 +2858,8 @@
           <FldUpdate>False</FldUpdate>
           <Relations>
             <Relation>
-              <RelationTable>dbo.tbl_Servers</RelationTable>
-              <RelationTableAlias>Historical Servers</RelationTableAlias>
+              <RelationTable>dbo.vw_Servers</RelationTable>
+              <RelationTableAlias>LiveServers</RelationTableAlias>
               <RelationField>LinkedServer</RelationField>
               <RelatedFieldName>
               </RelatedFieldName>
@@ -2868,8 +2868,8 @@
               <RelatedFieldList>False</RelatedFieldList>
             </Relation>
             <Relation>
-              <RelationTable>dbo.vw_Servers</RelationTable>
-              <RelationTableAlias>LiveServers</RelationTableAlias>
+              <RelationTable>dbo.tbl_Servers</RelationTable>
+              <RelationTableAlias>Historical Servers</RelationTableAlias>
               <RelationField>LinkedServer</RelationField>
               <RelatedFieldName>
               </RelatedFieldName>
@@ -2958,6 +2958,18 @@
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
           <FldUpdate>False</FldUpdate>
+          <Relations>
+            <Relation>
+              <RelationTable>dbo.tbl_Databases</RelationTable>
+              <RelationTableAlias>Databases</RelationTableAlias>
+              <RelationField>DatabaseName</RelationField>
+              <RelatedFieldName>
+              </RelatedFieldName>
+              <RelatedFieldAlias>
+              </RelatedFieldAlias>
+              <RelatedFieldList>False</RelatedFieldList>
+            </Relation>
+          </Relations>
         </Field>
         <Field>
           <FldName>denylogin</FldName>
@@ -3378,8 +3390,8 @@
       <Alias>ObjectOwners</Alias>
       <Visible>True</Visible>
       <Search>True</Search>
-      <Update>True</Update>
-      <Insert>True</Insert>
+      <Update>False</Update>
+      <Insert>False</Insert>
       <Delete>True</Delete>
       <Fields>
         <Field>
@@ -3423,8 +3435,8 @@
           <FldUpdate>False</FldUpdate>
           <Relations>
             <Relation>
-              <RelationTable>dbo.tbl_Servers</RelationTable>
-              <RelationTableAlias>Historical Servers</RelationTableAlias>
+              <RelationTable>dbo.vw_Servers</RelationTable>
+              <RelationTableAlias>LiveServers</RelationTableAlias>
               <RelationField>LinkedServer</RelationField>
               <RelatedFieldName>
               </RelatedFieldName>
@@ -3433,8 +3445,8 @@
               <RelatedFieldList>False</RelatedFieldList>
             </Relation>
             <Relation>
-              <RelationTable>dbo.vw_Servers</RelationTable>
-              <RelationTableAlias>LiveServers</RelationTableAlias>
+              <RelationTable>dbo.tbl_Servers</RelationTable>
+              <RelationTableAlias>Historical Servers</RelationTableAlias>
               <RelationField>LinkedServer</RelationField>
               <RelatedFieldName>
               </RelatedFieldName>
@@ -3670,14 +3682,12 @@
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
           <FldWidth>25</FldWidth>
-          <ControlField>
-          </ControlField>
-          <ControlValue>
-          </ControlValue>
-          <ControlUpdate>False</ControlUpdate>
+          <ControlField>MonitorServer</ControlField>
+          <ControlValue>False</ControlValue>
+          <ControlUpdate>True</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="" Width="">False</FldList>
+          <FldList Order="0" Width="0">False</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -3791,7 +3801,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>True</FldUpdate>
+          <FldUpdate>False</FldUpdate>
         </Field>
         <Field>
           <FldName>SQLVersionLong</FldName>
@@ -3805,11 +3815,11 @@
           <ControlUpdate>True</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="" Width="">False</FldList>
+          <FldList Order="0" Width="0">False</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>True</FldUpdate>
+          <FldUpdate>False</FldUpdate>
         </Field>
         <Field>
           <FldName>SQLVersionText</FldName>
@@ -3823,11 +3833,11 @@
           <ControlUpdate>True</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="" Width="">False</FldList>
+          <FldList Order="0" Width="0">False</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>True</FldUpdate>
+          <FldUpdate>False</FldUpdate>
         </Field>
         <Field>
           <FldName>SQLServerLicenseType</FldName>
@@ -3861,7 +3871,7 @@
           <ControlUpdate>True</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="100" Width="4">True</FldList>
+          <FldList Order="4" Width="100">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>True</FldSearchList>
@@ -3928,11 +3938,9 @@
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
           <FldWidth>25</FldWidth>
-          <ControlField>
-          </ControlField>
-          <ControlValue>
-          </ControlValue>
-          <ControlUpdate>False</ControlUpdate>
+          <ControlField>MonitorServer</ControlField>
+          <ControlValue>False</ControlValue>
+          <ControlUpdate>True</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
           <FldList Order="0" Width="25">False</FldList>
@@ -4061,7 +4069,7 @@
           <ControlUpdate>True</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="50" Width="8">True</FldList>
+          <FldList Order="8" Width="50">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -4117,7 +4125,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="100" Width="5">True</FldList>
+          <FldList Order="5" Width="100">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -4137,7 +4145,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="100" Width="6">True</FldList>
+          <FldList Order="6" Width="100">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -4157,7 +4165,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="100" Width="7">True</FldList>
+          <FldList Order="7" Width="100">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -4177,7 +4185,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>True</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="200" Width="9">True</FldList>
+          <FldList Order="9" Width="200">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -4332,8 +4340,8 @@
           </ControlValue>
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>True</ControlMode>
-          <DefaultButton DefaultValue="Date()">True</DefaultButton>
-          <FldList Order="" Width="">False</FldList>
+          <DefaultButton DefaultValue="v:Date()">True</DefaultButton>
+          <FldList Order="0" Width="0">False</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -4346,9 +4354,9 @@
       <Alias>DiskUseDaysLeft</Alias>
       <Visible>True</Visible>
       <Search>True</Search>
-      <Update>True</Update>
-      <Insert>True</Insert>
-      <Delete>True</Delete>
+      <Update>False</Update>
+      <Insert>False</Insert>
+      <Delete>False</Delete>
       <Fields>
         <Field>
           <FldName>LinkedServer</FldName>
@@ -4371,8 +4379,8 @@
           <FldUpdate>False</FldUpdate>
           <Relations>
             <Relation>
-              <RelationTable>dbo.tbl_Servers</RelationTable>
-              <RelationTableAlias>Historical Servers</RelationTableAlias>
+              <RelationTable>dbo.vw_Servers</RelationTable>
+              <RelationTableAlias>LiveServers</RelationTableAlias>
               <RelationField>LinkedServer</RelationField>
               <RelatedFieldName>
               </RelatedFieldName>
@@ -4381,8 +4389,8 @@
               <RelatedFieldList>False</RelatedFieldList>
             </Relation>
             <Relation>
-              <RelationTable>dbo.vw_Servers</RelationTable>
-              <RelationTableAlias>LiveServers</RelationTableAlias>
+              <RelationTable>dbo.tbl_Servers</RelationTable>
+              <RelationTableAlias>Historical Servers</RelationTableAlias>
               <RelationField>LinkedServer</RelationField>
               <RelatedFieldName>
               </RelatedFieldName>
@@ -4659,9 +4667,9 @@
       <Alias>vw_ObjectOwners</Alias>
       <Visible>True</Visible>
       <Search>True</Search>
-      <Update>True</Update>
-      <Insert>True</Insert>
-      <Delete>True</Delete>
+      <Update>False</Update>
+      <Insert>False</Insert>
+      <Delete>False</Delete>
       <Fields>
         <Field>
           <FldName>ObjectOwnerID</FldName>
@@ -4704,8 +4712,8 @@
           <FldUpdate>False</FldUpdate>
           <Relations>
             <Relation>
-              <RelationTable>dbo.tbl_Servers</RelationTable>
-              <RelationTableAlias>Historical Servers</RelationTableAlias>
+              <RelationTable>dbo.vw_Servers</RelationTable>
+              <RelationTableAlias>LiveServers</RelationTableAlias>
               <RelationField>LinkedServer</RelationField>
               <RelatedFieldName>
               </RelatedFieldName>
@@ -4714,8 +4722,8 @@
               <RelatedFieldList>False</RelatedFieldList>
             </Relation>
             <Relation>
-              <RelationTable>dbo.vw_Servers</RelationTable>
-              <RelationTableAlias>LiveServers</RelationTableAlias>
+              <RelationTable>dbo.tbl_Servers</RelationTable>
+              <RelationTableAlias>Historical Servers</RelationTableAlias>
               <RelationField>LinkedServer</RelationField>
               <RelatedFieldName>
               </RelatedFieldName>
@@ -4884,9 +4892,9 @@
       <Alias>RecentErrors</Alias>
       <Visible>True</Visible>
       <Search>True</Search>
-      <Update>True</Update>
-      <Insert>True</Insert>
-      <Delete>True</Delete>
+      <Update>False</Update>
+      <Insert>False</Insert>
+      <Delete>False</Delete>
       <Fields>
         <Field>
           <FldName>LinkedServer</FldName>
@@ -4909,8 +4917,8 @@
           <FldUpdate>False</FldUpdate>
           <Relations>
             <Relation>
-              <RelationTable>dbo.tbl_Servers</RelationTable>
-              <RelationTableAlias>Historical Servers</RelationTableAlias>
+              <RelationTable>dbo.vw_Servers</RelationTable>
+              <RelationTableAlias>LiveServers</RelationTableAlias>
               <RelationField>LinkedServer</RelationField>
               <RelatedFieldName>
               </RelatedFieldName>
@@ -4919,8 +4927,8 @@
               <RelatedFieldList>False</RelatedFieldList>
             </Relation>
             <Relation>
-              <RelationTable>dbo.vw_Servers</RelationTable>
-              <RelationTableAlias>LiveServers</RelationTableAlias>
+              <RelationTable>dbo.tbl_Servers</RelationTable>
+              <RelationTableAlias>Historical Servers</RelationTableAlias>
               <RelationField>LinkedServer</RelationField>
               <RelatedFieldName>
               </RelatedFieldName>
@@ -5012,7 +5020,7 @@
         </Field>
       </Fields>
     </Table>
-    <Table Default="False">
+    <Table Default="True">
       <Name>dbo.vw_Servers</Name>
       <Alias>LiveServers</Alias>
       <Visible>True</Visible>
@@ -5104,14 +5112,12 @@
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
           <FldWidth>25</FldWidth>
-          <ControlField>
-          </ControlField>
-          <ControlValue>
-          </ControlValue>
-          <ControlUpdate>False</ControlUpdate>
+          <ControlField>MonitorServer</ControlField>
+          <ControlValue>False</ControlValue>
+          <ControlUpdate>True</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="" Width="">False</FldList>
+          <FldList Order="0" Width="0">False</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -5225,7 +5231,7 @@
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>True</FldUpdate>
+          <FldUpdate>False</FldUpdate>
         </Field>
         <Field>
           <FldName>SQLVersionLong</FldName>
@@ -5239,11 +5245,11 @@
           <ControlUpdate>True</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="" Width="">False</FldList>
+          <FldList Order="0" Width="0">False</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>True</FldUpdate>
+          <FldUpdate>False</FldUpdate>
         </Field>
         <Field>
           <FldName>SQLVersionText</FldName>
@@ -5257,11 +5263,11 @@
           <ControlUpdate>True</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="" Width="">False</FldList>
+          <FldList Order="0" Width="0">False</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>True</FldUpdate>
+          <FldUpdate>False</FldUpdate>
         </Field>
         <Field>
           <FldName>SQLServerLicenseType</FldName>
@@ -5295,7 +5301,7 @@
           <ControlUpdate>True</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="100" Width="4">True</FldList>
+          <FldList Order="4" Width="100">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>True</FldSearchList>
@@ -5362,18 +5368,16 @@
           <Identity>False</Identity>
           <PrimaryKey>False</PrimaryKey>
           <FldWidth>25</FldWidth>
-          <ControlField>
-          </ControlField>
-          <ControlValue>
-          </ControlValue>
-          <ControlUpdate>False</ControlUpdate>
+          <ControlField>MonitorServer</ControlField>
+          <ControlValue>False</ControlValue>
+          <ControlUpdate>True</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
           <FldList Order="0" Width="25">False</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
-          <FldUpdate>True</FldUpdate>
+          <FldUpdate>False</FldUpdate>
         </Field>
         <Field>
           <FldName>WindowsVersion</FldName>
@@ -5495,7 +5499,7 @@
           <ControlUpdate>True</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="50" Width="8">True</FldList>
+          <FldList Order="8" Width="50">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -5551,7 +5555,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="100" Width="5">True</FldList>
+          <FldList Order="5" Width="100">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -5571,7 +5575,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="100" Width="6">True</FldList>
+          <FldList Order="6" Width="100">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -5591,7 +5595,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>False</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="100" Width="7">True</FldList>
+          <FldList Order="7" Width="100">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -5611,7 +5615,7 @@
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>True</ControlMode>
           <DefaultButton DefaultValue="">False</DefaultButton>
-          <FldList Order="200" Width="9">True</FldList>
+          <FldList Order="9" Width="200">True</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
@@ -5766,8 +5770,319 @@
           </ControlValue>
           <ControlUpdate>False</ControlUpdate>
           <ControlMode>True</ControlMode>
-          <DefaultButton DefaultValue="Date()">True</DefaultButton>
-          <FldList Order="" Width="">False</FldList>
+          <DefaultButton DefaultValue="v:Date()">True</DefaultButton>
+          <FldList Order="0" Width="0">False</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+      </Fields>
+    </Table>
+    <Table Default="False">
+      <Name>dbo.vw_DataSpaces</Name>
+      <Alias>vw_DataSpaces</Alias>
+      <Visible>True</Visible>
+      <Search>True</Search>
+      <Update>False</Update>
+      <Insert>False</Insert>
+      <Delete>False</Delete>
+      <Fields>
+        <Field>
+          <FldName>DataSpaceID</FldName>
+          <FldAlias>DataSpaceID</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>True</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>50</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="1" Width="80">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>LinkedServer</FldName>
+          <FldAlias>LinkedServer</FldAlias>
+          <DataType>CHAR</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>200</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="2" Width="200">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>DatabaseName</FldName>
+          <FldAlias>DatabaseName</FldAlias>
+          <DataType>CHAR</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>200</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="3" Width="200">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>LogicalName</FldName>
+          <FldAlias>LogicalName</FldAlias>
+          <DataType>CHAR</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>200</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="4" Width="200">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>FileID</FldName>
+          <FldAlias>FileID</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>50</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="5" Width="55">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>File_Size_MB</FldName>
+          <FldAlias>File_Size_MB</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>90</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="6" Width="90">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>Space_Used_MB</FldName>
+          <FldAlias>Space_Used_MB</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>90</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="7" Width="90">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>Free_Space_MB</FldName>
+          <FldAlias>Free_Space_MB</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>90</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="8" Width="90">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>Free_Space_Prc</FldName>
+          <FldAlias>Free_Space_Prc</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>90</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="9" Width="95">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>Growth</FldName>
+          <FldAlias>Growth</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>50</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="10" Width="55">True</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>Perc</FldName>
+          <FldAlias>Perc</FldAlias>
+          <DataType>BIT</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>25</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="0" Width="45">False</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>PercGrowth</FldName>
+          <FldAlias>PercGrowth</FldAlias>
+          <DataType>INTEGER</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>90</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="0" Width="90">False</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>FileName</FldName>
+          <FldAlias>FileName</FldAlias>
+          <DataType>CHAR</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>200</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="0" Width="200">False</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>LogDate</FldName>
+          <FldAlias>LogDate</FldAlias>
+          <DataType>DATETIME</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>110</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="0" Width="110">False</FldList>
+          <FldVisible>True</FldVisible>
+          <FldSearch>True</FldSearch>
+          <FldSearchList>False</FldSearchList>
+          <FldUpdate>False</FldUpdate>
+        </Field>
+        <Field>
+          <FldName>CorrectCommand</FldName>
+          <FldAlias>CorrectCommand</FldAlias>
+          <DataType>CHAR</DataType>
+          <Identity>False</Identity>
+          <PrimaryKey>False</PrimaryKey>
+          <FldWidth>200</FldWidth>
+          <ControlField>
+          </ControlField>
+          <ControlValue>
+          </ControlValue>
+          <ControlUpdate>False</ControlUpdate>
+          <ControlMode>False</ControlMode>
+          <DefaultButton DefaultValue="">False</DefaultButton>
+          <FldList Order="0" Width="200">False</FldList>
           <FldVisible>True</FldVisible>
           <FldSearch>True</FldSearch>
           <FldSearchList>False</FldSearchList>
