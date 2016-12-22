@@ -98,6 +98,7 @@ Public Class frmImport
     End Sub
 
     Private Sub txtDelimiter_TextChanged(sender As Object, e As EventArgs) Handles txtDelimiter.TextChanged
+        If txtDelimiter.Text.Length > 1 Then txtDelimiter.Text = txtDelimiter.Text.Substring(0, 1)
         txtDelimiterShow.Text = txtDelimiter.Text
     End Sub
 
@@ -107,7 +108,7 @@ Public Class frmImport
         txtServer.Text = basCode.dhdConnection.DataLocation
         txtDatabase.Text = basCode.dhdConnection.DatabaseName
         txtTable.Text = basCode.curStatus.Table
-        If basCode.dhdConnection.LoginMethod = "Windows" Then
+        If basCode.dhdConnection.LoginMethod.ToLower = "windows" Then
             chkWinAuth.Checked = True
         Else
             chkWinAuth.Checked = False
@@ -140,6 +141,7 @@ Public Class frmImport
             WriteStatus("The file was not found. Check the file path and name", 2, lblStatusText)
             Exit Sub
         End If
+        If txtDelimiter.Text.Length = 0 Then txtDelimiter.Text = ","
         dtsImport = basCode.ImportFile(basCode.dhdText.PathConvert(basCode.CheckFilePath(basCode.dhdText.ImportFile)), chkHasHeaders.Checked, txtDelimiter.Text)
 
         If basCode.ErrorLevel = -1 Then
@@ -268,6 +270,20 @@ Public Class frmImport
         Else
             chkCreateTable.Checked = False
         End If
+
+        If chkClearTarget.Checked = True Then
+            'Clear target table
+            Dim strQuery As String = "TRUNCATE TABLE " & dhdDB.DataTableName
+            basCode.QueryDb(dhdDB, strQuery, False)
+            If basCode.ErrorLevel = -1 Then
+                'Data removal failed, probably because of a constraint. Try removing every row.
+                lblStatusText.Text = basCode.ErrorMessage
+                strQuery = ""
+                strQuery = "DELETE FROM " & dhdDB.DataTableName
+                basCode.QueryDb(dhdDB, strQuery, False)
+            End If
+        End If
+
         intRecordsAffected = basCode.SaveToDatabase(dhdDB, dtsUpload, basCode.curVar.ConvertToText, basCode.curVar.ConvertToNull)
         If intRecordsAffected = -1 Then
             WriteStatus("Export to database failed.", 1, lblStatusText)
@@ -336,5 +352,13 @@ Public Class frmImport
 
     Private Sub btnClearData_Click(sender As Object, e As EventArgs) Handles btnClearData.Click
         ClearDisplayData()
+    End Sub
+
+    Private Sub chkClearTarget_CheckedChanged(sender As Object, e As EventArgs) Handles chkClearTarget.CheckedChanged
+        If chkClearTarget.Checked = True Then
+            If MessageBox.Show("This will delete all data from the target table before importing new data." & Environment.NewLine & "Are you sure?", "All data will be deleted.", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) = DialogResult.No Then
+                chkClearTarget.Checked = False
+            End If
+        End If
     End Sub
 End Class

@@ -1,9 +1,9 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class frmImport
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
             If disposing AndAlso components IsNot Nothing Then
@@ -20,7 +20,7 @@ Partial Class frmImport
     'NOTE: The following procedure is required by the Windows Form Designer
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmImport))
         Me.btnImportFile = New System.Windows.Forms.Button()
@@ -62,6 +62,7 @@ Partial Class frmImport
         Me.txtDelimiterShow = New System.Windows.Forms.TextBox()
         Me.dgvImport = New Sequenchel.usrDataGridView()
         Me.btnClearData = New System.Windows.Forms.Button()
+        Me.chkClearTarget = New System.Windows.Forms.CheckBox()
         CType(Me.dgvImport, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -85,7 +86,7 @@ Partial Class frmImport
         '
         'txtCurrentFile
         '
-        Me.txtCurrentFile.Location = New System.Drawing.Point(240, 31)
+        Me.txtCurrentFile.Location = New System.Drawing.Point(213, 31)
         Me.txtCurrentFile.Name = "txtCurrentFile"
         Me.txtCurrentFile.Size = New System.Drawing.Size(313, 20)
         Me.txtCurrentFile.TabIndex = 1
@@ -415,11 +416,11 @@ Partial Class frmImport
         '
         'txtDelimiter
         '
-        Me.txtDelimiter.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtDelimiter.Location = New System.Drawing.Point(530, 54)
+        Me.txtDelimiter.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtDelimiter.Location = New System.Drawing.Point(530, 50)
         Me.txtDelimiter.Margin = New System.Windows.Forms.Padding(2)
         Me.txtDelimiter.Name = "txtDelimiter"
-        Me.txtDelimiter.Size = New System.Drawing.Size(22, 20)
+        Me.txtDelimiter.Size = New System.Drawing.Size(22, 26)
         Me.txtDelimiter.TabIndex = 3
         Me.txtDelimiter.Text = ","
         Me.txtDelimiter.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
@@ -464,11 +465,23 @@ Partial Class frmImport
         Me.btnClearData.Text = "Clear Data"
         Me.btnClearData.UseVisualStyleBackColor = True
         '
+        'chkClearTarget
+        '
+        Me.chkClearTarget.AutoSize = True
+        Me.chkClearTarget.Location = New System.Drawing.Point(29, 185)
+        Me.chkClearTarget.Margin = New System.Windows.Forms.Padding(2)
+        Me.chkClearTarget.Name = "chkClearTarget"
+        Me.chkClearTarget.Size = New System.Drawing.Size(179, 17)
+        Me.chkClearTarget.TabIndex = 57
+        Me.chkClearTarget.Text = "Clear Target Table before Import"
+        Me.chkClearTarget.UseVisualStyleBackColor = True
+        '
         'frmImport
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(777, 753)
+        Me.Controls.Add(Me.chkClearTarget)
         Me.Controls.Add(Me.btnClearData)
         Me.Controls.Add(Me.txtDelimiterShow)
         Me.Controls.Add(Me.lblTextDelimiter)
@@ -556,4 +569,5 @@ Partial Class frmImport
     Friend WithEvents txtDelimiter As System.Windows.Forms.TextBox
     Friend WithEvents txtDelimiterShow As System.Windows.Forms.TextBox
     Friend WithEvents btnClearData As System.Windows.Forms.Button
+    Friend WithEvents chkClearTarget As CheckBox
 End Class
