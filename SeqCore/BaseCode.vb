@@ -122,6 +122,12 @@ Public Class BaseCode
                 Case "/emailrecipient"
                     'Export the report to the chosen file
                     dhdText.SmtpRecipient = strInput
+                Case "/cleartargettable"
+                    'Clear all data from the target table before inporting new data
+                    curStatus.ClearTargetTable = True
+                Case "/importasxml"
+                    'import the file as XML data into the database
+                    curStatus.ImportAsXml = True
             End Select
 
         Next
@@ -1358,7 +1364,7 @@ Public Class BaseCode
 
     Public Function GetTableNameFromAlias(xmlTables As XmlDocument, strInput As String) As String
         Dim strReturn As String = strInput
-        Dim xNode As XmlNode = dhdText.FindXmlNode(xmlTables, "Table", "Alias", strInput)
+        Dim xNode As XmlNode = dhdText.FindXmlNode(xmlTables, "Tables/Table", "Alias", strInput)
         If Not xNode Is Nothing Then
             If dhdText.CheckElement(xNode, "Name") = True Then strReturn = xNode.Item("Name").InnerText
         End If
@@ -1494,7 +1500,7 @@ Public Class BaseCode
         Return blnExists
     End Function
 
-    Public Function CreateTableFromDataset(dhdConnect As DataHandler.db, dtsInput As DataSet, strTable As String) As String
+    Public Function CreateTableFromDataset(dhdConnect As DataHandler.db, dtsInput As DataSet, strTable As String) As Boolean
         'get column names and datatypes from dataset
         Dim strColumnName As String = ""
         Dim strDataType As String = "", strSqlDataType As String = ""
@@ -1533,6 +1539,25 @@ Public Class BaseCode
         Return True
     End Function
 
+    Public Function CreateTableForXml(dhdConnect As DataHandler.db, strTable As String) As Boolean
+        Dim strColumnName As String = ""
+        Dim strDataType As String = "", strSqlDataType As String = ""
+        Dim intMaxColLenght As Integer = 0
+
+        Dim strCreateQuery As String = ""
+        If strTable.Contains(".") = False Then strTable = "dbo." & strTable
+        'build create statement
+        strCreateQuery = "CREATE TABLE [" & strTable.Replace(".", "].[") & "](" & Environment.NewLine
+        strCreateQuery &= "[FileName] [nvarchar](300) NULL,"
+        strCreateQuery &= "[DateImport] [smalldatetime] NULL,"
+        strCreateQuery &= "[XmlData] [xml] NULL)"
+
+        QueryDb(dhdConnect, strCreateQuery, False)
+
+        'give feedback
+        If dhdConnect.ErrorLevel = -1 Then Return False
+        Return True
+    End Function
     Public Function CheckColumnLength(dcmInput As DataColumn) As Integer
         Dim MaxColLen As Integer = 0
         Dim intCount As Integer = 0
@@ -2055,6 +2080,25 @@ Public Class BaseCode
         Return intRecordsAffected
     End Function
 
+    Public Function SaveXmlToDatabase(strFileName As String, dhdConnect As DataHandler.db, dtsUpload As DataSet)
+        Try
+            Dim xmlTempDoc As XmlDocument = dhdText.XmlDoc
+            If xmlTempDoc Is Nothing Then
+                Dim xmlDocExport As XmlDocument = dhdText.CreateRootDocument(Nothing, Nothing, Nothing)
+                xmlDocExport.LoadXml(dtsUpload.GetXml())
+                xmlTempDoc = xmlDocExport
+            End If
+
+            Dim strQuery As String = "INSERT INTO " & dhdConnect.DataTableName & " SELECT '" & strFileName & "','" & Now().ToString & "','" & xmlTempDoc.OuterXml + "'"
+            QueryDb(dhdConnect, strQuery, 0)
+        Catch ex As Exception
+            ErrorLevel = -1
+            ErrorMessage = ex.Message
+            Return 0
+        End Try
+        Return 1
+    End Function
+
     Public Function UploadSqlData(ByVal dhdConnect As DataHandler.db, ByVal dttInput As DataTable, Optional ConvertToText As Boolean = False, Optional ConvertToNull As Boolean = False) As Integer
         Dim intRecordsAffected As Integer = 0
         intRecordsAffected = dttInput.Rows.Count
@@ -2182,6 +2226,7 @@ Public Class BaseCode
 
 #Region "Import & Export"
     Public Function ImportFile(strFileName As String, Optional blnHasHeaders As Boolean = True, Optional Delimiter As String = ",") As DataSet
+        dhdText.XmlDoc = Nothing
         Dim dtsImport As New DataSet
         Try
             Dim strExtension As String = strFileName.Substring(strFileName.LastIndexOf(".") + 1, strFileName.Length - (strFileName.LastIndexOf(".") + 1))
@@ -2255,6 +2300,20 @@ Public Class BaseCode
 
         Return True
     End Function
+
+    Public Sub ClearTargetTable(dhdDb As DataHandler.db)
+        Dim strQuery As String = "TRUNCATE TABLE " & dhdDb.DataTableName
+        QueryDb(dhdDb, strQuery, False)
+        If ErrorLevel = -1 Then
+            'Data removal failed, probably because of a constraint. Try removing every row.
+            strQuery = ""
+            strQuery = "DELETE FROM " & dhdDb.DataTableName
+            QueryDb(dhdDb, strQuery, False)
+        End If
+        If ErrorLevel = -1 Then
+            WriteLog("Clearing target table failed. " & ErrorMessage, 1)
+        End If
+    End Sub
 
 #End Region
 

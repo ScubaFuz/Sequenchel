@@ -71,6 +71,8 @@ Partial Class frmSmartUpdate
         Me.btnAddSmartUpdateSchedule = New System.Windows.Forms.Button()
         Me.lblLicenseRequired = New System.Windows.Forms.Label()
         Me.grpConfiguration = New System.Windows.Forms.GroupBox()
+        Me.btnSavePrimaryKey = New System.Windows.Forms.Button()
+        Me.rbnSourceTargetConfig = New System.Windows.Forms.RadioButton()
         Me.Label11 = New System.Windows.Forms.Label()
         Me.grpCommand = New System.Windows.Forms.GroupBox()
         Me.chkClearTargetTable = New System.Windows.Forms.CheckBox()
@@ -99,7 +101,7 @@ Partial Class frmSmartUpdate
         Me.cbxLinkedServer = New System.Windows.Forms.ComboBox()
         Me.rtbInfoLocalSchema = New System.Windows.Forms.RichTextBox()
         Me.rtbLocalView = New System.Windows.Forms.RichTextBox()
-        Me.rbnSourceTargetConfig = New System.Windows.Forms.RadioButton()
+        Me.btnExecuteNow = New System.Windows.Forms.Button()
         Me.pnlMain.SuspendLayout()
         Me.grpConfiguration.SuspendLayout()
         Me.grpCommand.SuspendLayout()
@@ -305,7 +307,7 @@ Partial Class frmSmartUpdate
         Me.lblStatusText.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblStatusText.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblStatusText.Location = New System.Drawing.Point(70, 662)
+        Me.lblStatusText.Location = New System.Drawing.Point(70, 685)
         Me.lblStatusText.Name = "lblStatusText"
         Me.lblStatusText.Size = New System.Drawing.Size(692, 16)
         Me.lblStatusText.TabIndex = 148
@@ -410,7 +412,7 @@ Partial Class frmSmartUpdate
         Me.pnlMain.Controls.Add(Me.pnlSourceDataType)
         Me.pnlMain.Location = New System.Drawing.Point(12, 324)
         Me.pnlMain.Name = "pnlMain"
-        Me.pnlMain.Size = New System.Drawing.Size(750, 305)
+        Me.pnlMain.Size = New System.Drawing.Size(750, 328)
         Me.pnlMain.TabIndex = 158
         '
         'rbnSourceConfig
@@ -421,6 +423,7 @@ Partial Class frmSmartUpdate
         Me.rbnSourceConfig.Name = "rbnSourceConfig"
         Me.rbnSourceConfig.Size = New System.Drawing.Size(176, 17)
         Me.rbnSourceConfig.TabIndex = 0
+        Me.rbnSourceConfig.TabStop = True
         Me.rbnSourceConfig.Text = "Use Source Table Configuration"
         Me.rbnSourceConfig.UseVisualStyleBackColor = True
         '
@@ -439,9 +442,9 @@ Partial Class frmSmartUpdate
         '
         Me.btnSaveConfiguration.Location = New System.Drawing.Point(10, 200)
         Me.btnSaveConfiguration.Name = "btnSaveConfiguration"
-        Me.btnSaveConfiguration.Size = New System.Drawing.Size(171, 23)
+        Me.btnSaveConfiguration.Size = New System.Drawing.Size(173, 23)
         Me.btnSaveConfiguration.TabIndex = 5
-        Me.btnSaveConfiguration.Text = "Save Configuration"
+        Me.btnSaveConfiguration.Text = "Save Table Configuration"
         Me.btnSaveConfiguration.UseVisualStyleBackColor = True
         '
         'lblStatusTitle
@@ -449,7 +452,7 @@ Partial Class frmSmartUpdate
         Me.lblStatusTitle.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.lblStatusTitle.AutoSize = True
         Me.lblStatusTitle.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblStatusTitle.Location = New System.Drawing.Point(9, 662)
+        Me.lblStatusTitle.Location = New System.Drawing.Point(9, 685)
         Me.lblStatusTitle.Name = "lblStatusTitle"
         Me.lblStatusTitle.Size = New System.Drawing.Size(55, 16)
         Me.lblStatusTitle.TabIndex = 162
@@ -459,7 +462,7 @@ Partial Class frmSmartUpdate
         '
         Me.btnCreateSmartUpdateTable.Location = New System.Drawing.Point(10, 17)
         Me.btnCreateSmartUpdateTable.Name = "btnCreateSmartUpdateTable"
-        Me.btnCreateSmartUpdateTable.Size = New System.Drawing.Size(171, 23)
+        Me.btnCreateSmartUpdateTable.Size = New System.Drawing.Size(174, 23)
         Me.btnCreateSmartUpdateTable.TabIndex = 0
         Me.btnCreateSmartUpdateTable.Text = "Create SmartUpdate Table"
         Me.btnCreateSmartUpdateTable.UseVisualStyleBackColor = True
@@ -469,7 +472,7 @@ Partial Class frmSmartUpdate
         Me.btnCreateSmartUpdateProcedure.Enabled = False
         Me.btnCreateSmartUpdateProcedure.Location = New System.Drawing.Point(10, 48)
         Me.btnCreateSmartUpdateProcedure.Name = "btnCreateSmartUpdateProcedure"
-        Me.btnCreateSmartUpdateProcedure.Size = New System.Drawing.Size(171, 23)
+        Me.btnCreateSmartUpdateProcedure.Size = New System.Drawing.Size(174, 23)
         Me.btnCreateSmartUpdateProcedure.TabIndex = 1
         Me.btnCreateSmartUpdateProcedure.Text = "Create SmartUpdate Procedure"
         Me.btnCreateSmartUpdateProcedure.UseVisualStyleBackColor = True
@@ -527,7 +530,7 @@ Partial Class frmSmartUpdate
         Me.lblSmartUpdateCommand.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.lblSmartUpdateCommand.AutoSize = True
         Me.lblSmartUpdateCommand.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblSmartUpdateCommand.Location = New System.Drawing.Point(9, 639)
+        Me.lblSmartUpdateCommand.Location = New System.Drawing.Point(9, 662)
         Me.lblSmartUpdateCommand.Name = "lblSmartUpdateCommand"
         Me.lblSmartUpdateCommand.Size = New System.Drawing.Size(122, 13)
         Me.lblSmartUpdateCommand.TabIndex = 171
@@ -536,17 +539,17 @@ Partial Class frmSmartUpdate
         'txtSmartUpdateCommand
         '
         Me.txtSmartUpdateCommand.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.txtSmartUpdateCommand.Location = New System.Drawing.Point(137, 636)
+        Me.txtSmartUpdateCommand.Location = New System.Drawing.Point(137, 659)
         Me.txtSmartUpdateCommand.Name = "txtSmartUpdateCommand"
         Me.txtSmartUpdateCommand.ReadOnly = True
-        Me.txtSmartUpdateCommand.Size = New System.Drawing.Size(625, 20)
+        Me.txtSmartUpdateCommand.Size = New System.Drawing.Size(537, 20)
         Me.txtSmartUpdateCommand.TabIndex = 8
         '
         'btnAddSmartUpdateSchedule
         '
         Me.btnAddSmartUpdateSchedule.Location = New System.Drawing.Point(6, 157)
         Me.btnAddSmartUpdateSchedule.Name = "btnAddSmartUpdateSchedule"
-        Me.btnAddSmartUpdateSchedule.Size = New System.Drawing.Size(171, 23)
+        Me.btnAddSmartUpdateSchedule.Size = New System.Drawing.Size(178, 23)
         Me.btnAddSmartUpdateSchedule.TabIndex = 5
         Me.btnAddSmartUpdateSchedule.Text = "Add to SmartUpdate Schedule"
         Me.btnAddSmartUpdateSchedule.UseVisualStyleBackColor = True
@@ -562,6 +565,7 @@ Partial Class frmSmartUpdate
         '
         'grpConfiguration
         '
+        Me.grpConfiguration.Controls.Add(Me.btnSavePrimaryKey)
         Me.grpConfiguration.Controls.Add(Me.rbnSourceTargetConfig)
         Me.grpConfiguration.Controls.Add(Me.Label11)
         Me.grpConfiguration.Controls.Add(Me.rbnSourceConfig)
@@ -574,10 +578,28 @@ Partial Class frmSmartUpdate
         Me.grpConfiguration.Controls.Add(Me.dtpEndDate)
         Me.grpConfiguration.Location = New System.Drawing.Point(769, 236)
         Me.grpConfiguration.Name = "grpConfiguration"
-        Me.grpConfiguration.Size = New System.Drawing.Size(226, 237)
+        Me.grpConfiguration.Size = New System.Drawing.Size(226, 259)
         Me.grpConfiguration.TabIndex = 175
         Me.grpConfiguration.TabStop = False
         Me.grpConfiguration.Text = "Configuration"
+        '
+        'btnSavePrimaryKey
+        '
+        Me.btnSavePrimaryKey.Location = New System.Drawing.Point(10, 229)
+        Me.btnSavePrimaryKey.Name = "btnSavePrimaryKey"
+        Me.btnSavePrimaryKey.Size = New System.Drawing.Size(173, 23)
+        Me.btnSavePrimaryKey.TabIndex = 172
+        Me.btnSavePrimaryKey.Text = "Save Primary Key Only"
+        Me.btnSavePrimaryKey.UseVisualStyleBackColor = True
+        '
+        'rbnSourceTargetConfig
+        '
+        Me.rbnSourceTargetConfig.Location = New System.Drawing.Point(10, 42)
+        Me.rbnSourceTargetConfig.Name = "rbnSourceTargetConfig"
+        Me.rbnSourceTargetConfig.Size = New System.Drawing.Size(176, 33)
+        Me.rbnSourceTargetConfig.TabIndex = 171
+        Me.rbnSourceTargetConfig.Text = "Use Source Table Configuration for Target Table"
+        Me.rbnSourceTargetConfig.UseVisualStyleBackColor = True
         '
         'Label11
         '
@@ -598,7 +620,7 @@ Partial Class frmSmartUpdate
         Me.grpCommand.Controls.Add(Me.chkUseAuditing)
         Me.grpCommand.Controls.Add(Me.chkRemoveNonSourceData)
         Me.grpCommand.Controls.Add(Me.chkUseTargetCollation)
-        Me.grpCommand.Location = New System.Drawing.Point(768, 478)
+        Me.grpCommand.Location = New System.Drawing.Point(768, 501)
         Me.grpCommand.Name = "grpCommand"
         Me.grpCommand.Size = New System.Drawing.Size(226, 190)
         Me.grpCommand.TabIndex = 176
@@ -866,20 +888,21 @@ Partial Class frmSmartUpdate
     "e ""vw_"" with the name of the source Table or View appended."
         Me.rtbLocalView.Visible = False
         '
-        'rbnSourceTargetConfig
+        'btnExecuteNow
         '
-        Me.rbnSourceTargetConfig.Location = New System.Drawing.Point(10, 42)
-        Me.rbnSourceTargetConfig.Name = "rbnSourceTargetConfig"
-        Me.rbnSourceTargetConfig.Size = New System.Drawing.Size(176, 33)
-        Me.rbnSourceTargetConfig.TabIndex = 171
-        Me.rbnSourceTargetConfig.Text = "Use Source Table Configuration for Target Table"
-        Me.rbnSourceTargetConfig.UseVisualStyleBackColor = True
+        Me.btnExecuteNow.Location = New System.Drawing.Point(680, 658)
+        Me.btnExecuteNow.Name = "btnExecuteNow"
+        Me.btnExecuteNow.Size = New System.Drawing.Size(82, 23)
+        Me.btnExecuteNow.TabIndex = 175
+        Me.btnExecuteNow.Text = "Execute now"
+        Me.btnExecuteNow.UseVisualStyleBackColor = True
         '
         'frmSmartUpdate
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1009, 688)
+        Me.ClientSize = New System.Drawing.Size(1009, 711)
+        Me.Controls.Add(Me.btnExecuteNow)
         Me.Controls.Add(Me.rtbLocalView)
         Me.Controls.Add(Me.rtbInfoLocalSchema)
         Me.Controls.Add(Me.grpCreateLocalView)
@@ -999,4 +1022,6 @@ Partial Class frmSmartUpdate
     Friend WithEvents lblLocalDatabase As System.Windows.Forms.Label
     Friend WithEvents txtLocalDatabase As System.Windows.Forms.TextBox
     Friend WithEvents rbnSourceTargetConfig As RadioButton
+    Friend WithEvents btnSavePrimaryKey As Button
+    Friend WithEvents btnExecuteNow As Button
 End Class

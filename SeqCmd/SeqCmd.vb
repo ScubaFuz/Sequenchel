@@ -51,6 +51,15 @@ Module SeqCmd
                 Environment.Exit(0)
             End If
             Dim dtsInput As DataSet = Nothing
+
+            If basCode.curStatus.ClearTargetTable = True Then
+                'Clear target table before inporting data
+                If ImportTable <> "" And ImportTable = basCode.curStatus.Table Then
+                    basCode.dhdConnection.DataTableName = basCode.GetTableNameFromAlias(basCode.xmlTables, basCode.curStatus.Table)
+                    basCode.ClearTargetTable(basCode.dhdConnection)
+                End If
+            End If
+
             If basCode.dhdText.ImportFile.Contains("*") Then
                 If ImportTable <> "" And ImportTable = basCode.curStatus.Table Then
                     Console.WriteLine("Importing multiple files")
@@ -171,7 +180,13 @@ Module SeqCmd
             dhdDB.LoginName = basCode.dhdConnection.LoginName
             dhdDB.Password = basCode.dhdConnection.Password
 
-            Dim intRecords As Integer = basCode.SaveToDatabase(dhdDB, dtsInput, basCode.curVar.ConvertToText, basCode.curVar.ConvertToNull)
+            Dim intRecords As Integer = 0
+            If basCode.curStatus.ImportAsXml = True Then
+                intRecords = basCode.SaveXmlToDatabase(basCode.dhdText.ImportFile, dhdDB, dtsInput)
+            Else
+                intRecords = basCode.SaveToDatabase(dhdDB, dtsInput, basCode.curVar.ConvertToText, basCode.curVar.ConvertToNull)
+            End If
+
             If intRecords = -1 Then
                 Console.WriteLine(basCode.dhdConnection.ErrorMessage)
                 Console.ReadLine()

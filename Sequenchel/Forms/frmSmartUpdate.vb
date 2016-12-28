@@ -174,6 +174,18 @@
     Private Sub btnSaveConfiguration_Click(sender As Object, e As EventArgs) Handles btnSaveConfiguration.Click
         CursorControl("Wait")
         WriteStatus("", 0, lblStatusText)
+        ConfigurationSave(False)
+        CursorControl()
+    End Sub
+
+    Private Sub btnSavePrimaryKey_Click(sender As Object, e As EventArgs) Handles btnSavePrimaryKey.Click
+        CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
+        ConfigurationSave(True)
+        CursorControl()
+    End Sub
+
+    Private Sub ConfigurationSave(blnPrimaryKeyOnly As Boolean)
         If pnlCompareColumn.Controls.Count = 0 Then
             WriteStatus("There is no configuration to save.", 2, lblStatusText)
             Exit Sub
@@ -182,7 +194,7 @@
         For Each ctrl As CheckBox In pnlCompareColumn.Controls
             If ctrl.Checked = True Then blnCheckFound = True
         Next
-        If blnCheckFound = False Then
+        If blnCheckFound = False And blnPrimaryKeyOnly = False Then
             WriteStatus("Nothing has been selected for comparison. Nothing is saved.", 2, lblStatusText)
             Exit Sub
         End If
@@ -236,7 +248,7 @@
             Exit Sub
         End If
 
-        strInsert = InsertString(strSchemaName, strTableName, pnlTable, pnlDataType, pnlPrimaryKey, pnlCompareColumn, dtmStartDate, dtmEndDate)
+        strInsert = InsertString(strSchemaName, strTableName, pnlTable, pnlDataType, pnlPrimaryKey, pnlCompareColumn, dtmStartDate, dtmEndDate, blnPrimaryKeyOnly)
         strUpdate = "UPDATE dbo.SmartUpdate SET [DateStop] = '" & dtmStartDate.AddDays(-1).ToString("yyyy-MM-dd") & "' WHERE [DataBaseName] = '" & basCode.dhdConnection.DatabaseName & "' AND [SchemaName] = '" & strSchemaName & "' AND [TableName] = '" & strTableName & "' 	AND [DateStart] < '" & dtmStartDate.ToString("yyyy-MM-dd") & "' AND COALESCE([DateStop],'2999-12-31') > '" & dtmStartDate.ToString("yyyy-MM-dd") & "' AND [Active] = 1"
         If dtmEndDate = Nothing Then dtmEndDate = "2999-12-31"
         strDelete = "UPDATE dbo.SmartUpdate SET [Active] = 0 WHERE [DataBaseName] = '" & basCode.dhdConnection.DatabaseName & "' AND [SchemaName] = '" & strSchemaName & "' AND [TableName] = '" & strTableName & "' AND [DateStart] BETWEEN '" & dtmStartDate.ToString("yyyy-MM-dd") & "' AND '" & dtmEndDate.ToString("yyyy-MM-dd") & "' AND [Active] = 1"
@@ -262,7 +274,6 @@
             basCode.WriteLog("There was an error saving the configuration for: " & basCode.curStatus.Connection & "." & strSchemaName & "." & strTableName & Environment.NewLine & ex.Message, 1)
         End Try
 
-        CursorControl()
     End Sub
 
     Private Sub txtSourceTable_TextChanged(sender As Object, e As EventArgs) Handles txtSourceTable.TextChanged
@@ -345,6 +356,25 @@
         CursorControl()
     End Sub
 
+    Private Sub btnExecuteNow_Click(sender As Object, e As EventArgs) Handles btnExecuteNow.Click
+        CursorControl("Wait")
+        WriteStatus("", 0, lblStatusText)
+        If txtSmartUpdateCommand.Text.Length = 0 Then
+            WriteStatus("There is no command to schedule, aborting action", 2, lblStatusText)
+            Exit Sub
+        End If
+
+        Dim strSQL As String = txtSmartUpdateCommand.Text
+        basCode.QueryDb(basCode.dhdConnection, strSQL, 0)
+        If basCode.dhdConnection.ErrorLevel = -1 Then
+            WriteStatus("There was an error executing the SmartUpdate command. Please check the log.", 1, lblStatusText)
+            basCode.WriteLog("There was an error executing the SmartUpdate command. " & basCode.dhdConnection.ErrorMessage, 1)
+        Else
+            WriteStatus("SmartUpdate command executed.", 0, lblStatusText)
+        End If
+
+        CursorControl()
+    End Sub
 
 #End Region
 
@@ -725,11 +755,11 @@
         txtSmartUpdateCommand.Text = strCommand
     End Sub
 
-    Private Function InsertString(strSchema As String, strTable As String, pnlTabel As Panel, pnlDataType As Panel, pnlPrimaryKey As Panel, pnlCompare As Panel, dtmStart As Date, dtmEnd As Date) As String
+    Private Function InsertString(strSchema As String, strTable As String, pnlTabel As Panel, pnlDataType As Panel, pnlPrimaryKey As Panel, pnlCompare As Panel, dtmStart As Date, dtmEnd As Date, blnPrimaryKeyOnly As Boolean) As String
         Dim strQuery As String = ""
         Dim strColumnName As String = ""
         Dim strDataType As String = ""
-        Dim strPrmaryKey As String = ""
+        Dim strPrimaryKey As String = ""
         Dim strCompare As String = ""
 
         For Each ctrlColumn In pnlTabel.Controls
@@ -742,7 +772,7 @@
             Next
             For Each ctrlPk In pnlPrimaryKey.Controls
                 If ctrlPk.Name = pnlPrimaryKey.Name & strColumnName Then
-                    strPrmaryKey = ctrlPk.Checked
+                    strPrimaryKey = ctrlPk.Checked
                 End If
             Next
             For Each ctrlCompare In pnlCompare.Controls
@@ -750,9 +780,12 @@
                     strCompare = ctrlCompare.Checked
                 End If
             Next
-            If strPrmaryKey = "True" Or strCompare = "True" Then
-                strQuery &= "UNION SELECT '" & basCode.dhdConnection.DatabaseName & "', '" & strSchema & "', '" & strTable & "', '" & strColumnName & "', '" & strDataType & "', '" & strPrmaryKey & "', '" & strCompare & "', '" & dtmStart.ToString("yyyy-MM-dd") & "', " & If(chkNoEndDate.Checked = True, "NULL", "'" & dtmEnd.ToString("yyyy-MM-dd") & "'") & ",1" & Environment.NewLine
+            If blnPrimaryKeyOnly = True And strPrimaryKey = "True" Then
+                strQuery &= "UNION SELECT '" & basCode.dhdConnection.DatabaseName & "', '" & strSchema & "', '" & strTable & "', '" & strColumnName & "', '" & strDataType & "', '" & strPrimaryKey & "', '" & False & "', '" & dtmStart.ToString("yyyy-MM-dd") & "', " & If(chkNoEndDate.Checked = True, "NULL", "'" & dtmEnd.ToString("yyyy-MM-dd") & "'") & ",1" & Environment.NewLine
+            ElseIf strPrimaryKey = "True" Or (strCompare = "True" And blnPrimaryKeyOnly = False) Then
+                strQuery &= "UNION SELECT '" & basCode.dhdConnection.DatabaseName & "', '" & strSchema & "', '" & strTable & "', '" & strColumnName & "', '" & strDataType & "', '" & strPrimaryKey & "', '" & strCompare & "', '" & dtmStart.ToString("yyyy-MM-dd") & "', " & If(chkNoEndDate.Checked = True, "NULL", "'" & dtmEnd.ToString("yyyy-MM-dd") & "'") & ",1" & Environment.NewLine
             End If
+
         Next
 
         Return strQuery
@@ -818,7 +851,7 @@
 
     Private Sub BuildView()
         Dim strLinkedServer As String = cbxLinkedServer.Text
-        If cbxLinkedServer.Items.Contains(strLinkedServer) = False Then Exit Sub
+        If strLinkedServer.Length > 0 And cbxLinkedServer.Items.Contains(strLinkedServer) = False Then Exit Sub
         Dim strDatabaseSource As String = txtSourceDatabase.Text
         Dim strSchemaSource As String = txtSourceSchema.Text
         Dim strTableSource As String = txtSourceTableOrView.Text

@@ -1,4 +1,6 @@
 ﻿
+Imports System.Xml
+
 Public Class frmImport
     Private dtsImport As New DataSet
 
@@ -257,7 +259,13 @@ Public Class frmImport
 
         If basCode.CheckTable(dhdDB, dhdDB.DataTableName) = False Then
             If chkCreateTable.Checked = True Then
-                If basCode.CreateTableFromDataset(dhdDB, dtsUpload, dhdDB.DataTableName) = False Then
+                Dim blnTableCreated As Boolean = False
+                If chkUploadAsXml.Checked = True Then
+                    blnTableCreated = basCode.CreateTableForXml(dhdDB, dhdDB.DataTableName)
+                Else
+                    blnTableCreated = basCode.CreateTableFromDataset(dhdDB, dtsUpload, dhdDB.DataTableName)
+                End If
+                If blnTableCreated = False Then
                     WriteStatus("Error creating table. " & dhdDB.ErrorMessage, 1, lblStatusText)
                     basCode.WriteLog("Error creating table. " & dhdDB.ErrorMessage, 1)
                     Exit Sub
@@ -273,18 +281,18 @@ Public Class frmImport
 
         If chkClearTarget.Checked = True Then
             'Clear target table
-            Dim strQuery As String = "TRUNCATE TABLE " & dhdDB.DataTableName
-            basCode.QueryDb(dhdDB, strQuery, False)
+            basCode.ClearTargetTable(dhdDB)
             If basCode.ErrorLevel = -1 Then
                 'Data removal failed, probably because of a constraint. Try removing every row.
                 lblStatusText.Text = basCode.ErrorMessage
-                strQuery = ""
-                strQuery = "DELETE FROM " & dhdDB.DataTableName
-                basCode.QueryDb(dhdDB, strQuery, False)
             End If
         End If
 
-        intRecordsAffected = basCode.SaveToDatabase(dhdDB, dtsUpload, basCode.curVar.ConvertToText, basCode.curVar.ConvertToNull)
+        If chkUploadAsXml.Checked = True Then
+            intRecordsAffected = basCode.SaveXmlToDatabase(basCode.dhdText.ImportFile, dhdDB, dtsUpload)
+        Else
+            intRecordsAffected = basCode.SaveToDatabase(dhdDB, dtsUpload, basCode.curVar.ConvertToText, basCode.curVar.ConvertToNull)
+        End If
         If intRecordsAffected = -1 Then
             WriteStatus("Export to database failed.", 1, lblStatusText)
             basCode.WriteLog("Export to database failed. Check if the columns match and try again" & Environment.NewLine & "If you are importing more than 1 table, make sure they have identical columns" & Environment.NewLine & dhdDB.ErrorMessage, 1)

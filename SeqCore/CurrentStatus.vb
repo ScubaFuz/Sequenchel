@@ -225,6 +225,8 @@
     Private _SuspendActions As Boolean = False
     Private _RunReport As Boolean = False
     Private _RunImport As Boolean = False
+    Private _ClearTargetTable As Boolean = False
+    Private _ImportAsXml As Boolean = False
 
     Public Property SuspendActions() As Boolean
         Get
@@ -241,6 +243,24 @@
         End Get
         Set(ByVal Value As Boolean)
             _RunReport = Value
+        End Set
+    End Property
+
+    Public Property ClearTargetTable() As Boolean
+        Get
+            Return _ClearTargetTable
+        End Get
+        Set(ByVal Value As Boolean)
+            _ClearTargetTable = Value
+        End Set
+    End Property
+
+    Public Property ImportAsXml() As Boolean
+        Get
+            Return _ImportAsXml
+        End Get
+        Set(ByVal Value As Boolean)
+            _ImportAsXml = Value
         End Set
     End Property
 

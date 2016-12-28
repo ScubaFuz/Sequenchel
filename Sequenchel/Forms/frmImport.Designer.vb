@@ -63,6 +63,7 @@ Partial Class frmImport
         Me.dgvImport = New Sequenchel.usrDataGridView()
         Me.btnClearData = New System.Windows.Forms.Button()
         Me.chkClearTarget = New System.Windows.Forms.CheckBox()
+        Me.chkUploadAsXml = New System.Windows.Forms.CheckBox()
         CType(Me.dgvImport, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -308,7 +309,7 @@ Partial Class frmImport
         '
         'btnPreviousTable
         '
-        Me.btnPreviousTable.Location = New System.Drawing.Point(29, 209)
+        Me.btnPreviousTable.Location = New System.Drawing.Point(29, 234)
         Me.btnPreviousTable.Name = "btnPreviousTable"
         Me.btnPreviousTable.Size = New System.Drawing.Size(34, 23)
         Me.btnPreviousTable.TabIndex = 16
@@ -317,7 +318,7 @@ Partial Class frmImport
         '
         'btnNextTable
         '
-        Me.btnNextTable.Location = New System.Drawing.Point(177, 209)
+        Me.btnNextTable.Location = New System.Drawing.Point(177, 234)
         Me.btnNextTable.Name = "btnNextTable"
         Me.btnNextTable.Size = New System.Drawing.Size(34, 23)
         Me.btnNextTable.TabIndex = 17
@@ -327,7 +328,7 @@ Partial Class frmImport
         'lblTableNumber
         '
         Me.lblTableNumber.AutoSize = True
-        Me.lblTableNumber.Location = New System.Drawing.Point(84, 214)
+        Me.lblTableNumber.Location = New System.Drawing.Point(84, 239)
         Me.lblTableNumber.Name = "lblTableNumber"
         Me.lblTableNumber.Size = New System.Drawing.Size(64, 13)
         Me.lblTableNumber.TabIndex = 45
@@ -336,7 +337,7 @@ Partial Class frmImport
         'lblTableName
         '
         Me.lblTableName.AutoSize = True
-        Me.lblTableName.Location = New System.Drawing.Point(238, 214)
+        Me.lblTableName.Location = New System.Drawing.Point(237, 239)
         Me.lblTableName.Name = "lblTableName"
         Me.lblTableName.Size = New System.Drawing.Size(37, 13)
         Me.lblTableName.TabIndex = 46
@@ -345,7 +346,7 @@ Partial Class frmImport
         'lblTableNameText
         '
         Me.lblTableNameText.AutoSize = True
-        Me.lblTableNameText.Location = New System.Drawing.Point(281, 214)
+        Me.lblTableNameText.Location = New System.Drawing.Point(280, 239)
         Me.lblTableNameText.Name = "lblTableNameText"
         Me.lblTableNameText.Size = New System.Drawing.Size(0, 13)
         Me.lblTableNameText.TabIndex = 47
@@ -353,7 +354,7 @@ Partial Class frmImport
         'chkUploadTable
         '
         Me.chkUploadTable.AutoSize = True
-        Me.chkUploadTable.Location = New System.Drawing.Point(360, 214)
+        Me.chkUploadTable.Location = New System.Drawing.Point(360, 238)
         Me.chkUploadTable.Name = "chkUploadTable"
         Me.chkUploadTable.Size = New System.Drawing.Size(174, 17)
         Me.chkUploadTable.TabIndex = 18
@@ -362,7 +363,7 @@ Partial Class frmImport
         '
         'btnUploadTable
         '
-        Me.btnUploadTable.Location = New System.Drawing.Point(571, 210)
+        Me.btnUploadTable.Location = New System.Drawing.Point(571, 234)
         Me.btnUploadTable.Name = "btnUploadTable"
         Me.btnUploadTable.Size = New System.Drawing.Size(171, 23)
         Me.btnUploadTable.TabIndex = 19
@@ -451,9 +452,9 @@ Partial Class frmImport
         Me.dgvImport.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
         Me.dgvImport.BackImage = CType(resources.GetObject("dgvImport.BackImage"), System.Drawing.Image)
         Me.dgvImport.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvImport.Location = New System.Drawing.Point(29, 239)
+        Me.dgvImport.Location = New System.Drawing.Point(29, 263)
         Me.dgvImport.Name = "dgvImport"
-        Me.dgvImport.Size = New System.Drawing.Size(713, 473)
+        Me.dgvImport.Size = New System.Drawing.Size(713, 449)
         Me.dgvImport.TabIndex = 20
         '
         'btnClearData
@@ -476,11 +477,23 @@ Partial Class frmImport
         Me.chkClearTarget.Text = "Clear Target Table before Import"
         Me.chkClearTarget.UseVisualStyleBackColor = True
         '
+        'chkUploadAsXml
+        '
+        Me.chkUploadAsXml.AutoSize = True
+        Me.chkUploadAsXml.Location = New System.Drawing.Point(29, 209)
+        Me.chkUploadAsXml.Margin = New System.Windows.Forms.Padding(2)
+        Me.chkUploadAsXml.Name = "chkUploadAsXml"
+        Me.chkUploadAsXml.Size = New System.Drawing.Size(168, 17)
+        Me.chkUploadAsXml.TabIndex = 58
+        Me.chkUploadAsXml.Text = "Upload as XML into Database"
+        Me.chkUploadAsXml.UseVisualStyleBackColor = True
+        '
         'frmImport
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(777, 753)
+        Me.Controls.Add(Me.chkUploadAsXml)
         Me.Controls.Add(Me.chkClearTarget)
         Me.Controls.Add(Me.btnClearData)
         Me.Controls.Add(Me.txtDelimiterShow)
@@ -570,4 +583,5 @@ Partial Class frmImport
     Friend WithEvents txtDelimiterShow As System.Windows.Forms.TextBox
     Friend WithEvents btnClearData As System.Windows.Forms.Button
     Friend WithEvents chkClearTarget As CheckBox
+    Friend WithEvents chkUploadAsXml As CheckBox
 End Class
