@@ -2080,7 +2080,7 @@ Public Class BaseCode
         Return intRecordsAffected
     End Function
 
-    Public Function SaveXmlToDatabase(strFileName As String, dhdConnect As DataHandler.db, dtsUpload As DataSet)
+    Public Function SaveXmlToDatabase(dhdConnect As DataHandler.db, dtsUpload As DataSet, strFileName As String)
         Try
             Dim xmlTempDoc As XmlDocument = dhdText.XmlDoc
             If xmlTempDoc Is Nothing Then

@@ -289,7 +289,7 @@ Public Class frmImport
         End If
 
         If chkUploadAsXml.Checked = True Then
-            intRecordsAffected = basCode.SaveXmlToDatabase(basCode.dhdText.ImportFile, dhdDB, dtsUpload)
+            intRecordsAffected = basCode.SaveXmlToDatabase(dhdDB, dtsUpload, basCode.dhdText.ImportFile)
         Else
             intRecordsAffected = basCode.SaveToDatabase(dhdDB, dtsUpload, basCode.curVar.ConvertToText, basCode.curVar.ConvertToNull)
         End If

@@ -69,7 +69,7 @@ Module SeqCmd
                 dtsInput = ImportFile(basCode.CheckFilePath(basCode.dhdText.ImportFile))
                 Dim intRecords As Integer = 0
                 If ImportTable <> "" And ImportTable = basCode.curStatus.Table Then
-                    intRecords = UploadFile(dtsInput)
+                    intRecords = UploadFile(dtsInput, basCode.dhdText.ImportFile)
                     Console.WriteLine(intRecords & " Records Uploaded")
                 End If
                 If Not basCode.dhdText.ExportFile Is Nothing AndAlso basCode.curStatus.RunReport = False AndAlso basCode.dhdText.ExportFile.Length > 0 Then
@@ -159,7 +159,7 @@ Module SeqCmd
         Dim FilesArray As ArrayList = basCode.dhdText.GetFiles(strFolder, strFileFilter)
         For Each strFile As String In FilesArray
             Dim dtsInput As DataSet = ImportFile(basCode.CheckFilePath(strFile))
-            Dim intRecords As Integer = UploadFile(dtsInput)
+            Dim intRecords As Integer = UploadFile(dtsInput, strFile)
         Next
     End Sub
 
@@ -169,7 +169,7 @@ Module SeqCmd
         Return dtsImport
     End Function
 
-    Friend Function UploadFile(dtsInput As DataSet) As Integer
+    Friend Function UploadFile(dtsInput As DataSet, strFileName As String) As Integer
         Try
             Dim dhdDB As New DataHandler.db
             dhdDB.DataLocation = basCode.dhdConnection.DataLocation
@@ -182,7 +182,7 @@ Module SeqCmd
 
             Dim intRecords As Integer = 0
             If basCode.curStatus.ImportAsXml = True Then
-                intRecords = basCode.SaveXmlToDatabase(basCode.dhdText.ImportFile, dhdDB, dtsInput)
+                intRecords = basCode.SaveXmlToDatabase(dhdDB, dtsInput, strFileName)
             Else
                 intRecords = basCode.SaveToDatabase(dhdDB, dtsInput, basCode.curVar.ConvertToText, basCode.curVar.ConvertToNull)
             End If
