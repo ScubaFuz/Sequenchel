@@ -60,10 +60,11 @@ Partial Class frmImport
         Me.lblTextDelimiter = New System.Windows.Forms.Label()
         Me.txtDelimiter = New System.Windows.Forms.TextBox()
         Me.txtDelimiterShow = New System.Windows.Forms.TextBox()
-        Me.dgvImport = New Sequenchel.usrDataGridView()
         Me.btnClearData = New System.Windows.Forms.Button()
         Me.chkClearTarget = New System.Windows.Forms.CheckBox()
         Me.chkUploadAsXml = New System.Windows.Forms.CheckBox()
+        Me.dgvImport = New Sequenchel.usrDataGridView()
+        Me.chkQuotedValues = New System.Windows.Forms.CheckBox()
         CType(Me.dgvImport, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -373,7 +374,7 @@ Partial Class frmImport
         'chkCovertToText
         '
         Me.chkCovertToText.AutoSize = True
-        Me.chkCovertToText.Location = New System.Drawing.Point(240, 87)
+        Me.chkCovertToText.Location = New System.Drawing.Point(177, 87)
         Me.chkCovertToText.Margin = New System.Windows.Forms.Padding(2)
         Me.chkCovertToText.Name = "chkCovertToText"
         Me.chkCovertToText.Size = New System.Drawing.Size(139, 17)
@@ -384,7 +385,7 @@ Partial Class frmImport
         'chkCovertToNull
         '
         Me.chkCovertToNull.AutoSize = True
-        Me.chkCovertToNull.Location = New System.Drawing.Point(386, 87)
+        Me.chkCovertToNull.Location = New System.Drawing.Point(323, 87)
         Me.chkCovertToNull.Margin = New System.Windows.Forms.Padding(2)
         Me.chkCovertToNull.Name = "chkCovertToNull"
         Me.chkCovertToNull.Size = New System.Drawing.Size(167, 17)
@@ -397,7 +398,7 @@ Partial Class frmImport
         Me.chkHasHeaders.AutoSize = True
         Me.chkHasHeaders.Checked = True
         Me.chkHasHeaders.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.chkHasHeaders.Location = New System.Drawing.Point(240, 56)
+        Me.chkHasHeaders.Location = New System.Drawing.Point(177, 60)
         Me.chkHasHeaders.Margin = New System.Windows.Forms.Padding(2)
         Me.chkHasHeaders.Name = "chkHasHeaders"
         Me.chkHasHeaders.Size = New System.Drawing.Size(153, 17)
@@ -408,7 +409,7 @@ Partial Class frmImport
         'lblTextDelimiter
         '
         Me.lblTextDelimiter.AutoSize = True
-        Me.lblTextDelimiter.Location = New System.Drawing.Point(455, 57)
+        Me.lblTextDelimiter.Location = New System.Drawing.Point(505, 61)
         Me.lblTextDelimiter.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
         Me.lblTextDelimiter.Name = "lblTextDelimiter"
         Me.lblTextDelimiter.Size = New System.Drawing.Size(71, 13)
@@ -418,7 +419,7 @@ Partial Class frmImport
         'txtDelimiter
         '
         Me.txtDelimiter.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtDelimiter.Location = New System.Drawing.Point(530, 50)
+        Me.txtDelimiter.Location = New System.Drawing.Point(580, 54)
         Me.txtDelimiter.Margin = New System.Windows.Forms.Padding(2)
         Me.txtDelimiter.Name = "txtDelimiter"
         Me.txtDelimiter.Size = New System.Drawing.Size(22, 26)
@@ -431,7 +432,7 @@ Partial Class frmImport
         Me.txtDelimiterShow.BackColor = System.Drawing.SystemColors.Control
         Me.txtDelimiterShow.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtDelimiterShow.Font = New System.Drawing.Font("Microsoft Sans Serif", 20.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtDelimiterShow.Location = New System.Drawing.Point(551, 45)
+        Me.txtDelimiterShow.Location = New System.Drawing.Point(601, 49)
         Me.txtDelimiterShow.Margin = New System.Windows.Forms.Padding(2)
         Me.txtDelimiterShow.Name = "txtDelimiterShow"
         Me.txtDelimiterShow.Size = New System.Drawing.Size(39, 38)
@@ -440,22 +441,6 @@ Partial Class frmImport
         Me.txtDelimiterShow.Text = ","
         Me.txtDelimiterShow.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         Me.txtDelimiterShow.Visible = False
-        '
-        'dgvImport
-        '
-        Me.dgvImport.AllowUserToAddRows = False
-        Me.dgvImport.AllowUserToOrderColumns = True
-        Me.dgvImport.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.dgvImport.BackgroundColor = System.Drawing.SystemColors.Control
-        Me.dgvImport.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
-        Me.dgvImport.BackImage = CType(resources.GetObject("dgvImport.BackImage"), System.Drawing.Image)
-        Me.dgvImport.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvImport.Location = New System.Drawing.Point(29, 263)
-        Me.dgvImport.Name = "dgvImport"
-        Me.dgvImport.Size = New System.Drawing.Size(713, 449)
-        Me.dgvImport.TabIndex = 20
         '
         'btnClearData
         '
@@ -488,11 +473,39 @@ Partial Class frmImport
         Me.chkUploadAsXml.Text = "Upload as XML into Database"
         Me.chkUploadAsXml.UseVisualStyleBackColor = True
         '
+        'dgvImport
+        '
+        Me.dgvImport.AllowUserToAddRows = False
+        Me.dgvImport.AllowUserToOrderColumns = True
+        Me.dgvImport.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.dgvImport.BackgroundColor = System.Drawing.SystemColors.Control
+        Me.dgvImport.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
+        Me.dgvImport.BackImage = CType(resources.GetObject("dgvImport.BackImage"), System.Drawing.Image)
+        Me.dgvImport.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dgvImport.Location = New System.Drawing.Point(29, 263)
+        Me.dgvImport.Name = "dgvImport"
+        Me.dgvImport.Size = New System.Drawing.Size(713, 449)
+        Me.dgvImport.TabIndex = 20
+        '
+        'chkQuotedValues
+        '
+        Me.chkQuotedValues.AutoSize = True
+        Me.chkQuotedValues.Location = New System.Drawing.Point(508, 87)
+        Me.chkQuotedValues.Margin = New System.Windows.Forms.Padding(2)
+        Me.chkQuotedValues.Name = "chkQuotedValues"
+        Me.chkQuotedValues.Size = New System.Drawing.Size(205, 17)
+        Me.chkQuotedValues.TabIndex = 59
+        Me.chkQuotedValues.Text = "Text File Contains Quoted Values ("" "")"
+        Me.chkQuotedValues.UseVisualStyleBackColor = True
+        '
         'frmImport
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(777, 753)
+        Me.Controls.Add(Me.chkQuotedValues)
         Me.Controls.Add(Me.chkUploadAsXml)
         Me.Controls.Add(Me.chkClearTarget)
         Me.Controls.Add(Me.btnClearData)
@@ -584,4 +597,5 @@ Partial Class frmImport
     Friend WithEvents btnClearData As System.Windows.Forms.Button
     Friend WithEvents chkClearTarget As CheckBox
     Friend WithEvents chkUploadAsXml As CheckBox
+    Friend WithEvents chkQuotedValues As System.Windows.Forms.CheckBox
 End Class

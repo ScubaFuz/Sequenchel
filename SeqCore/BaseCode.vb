@@ -128,6 +128,50 @@ Public Class BaseCode
                 Case "/importasxml"
                     'import the file as XML data into the database
                     curStatus.ImportAsXml = True
+                Case "/createtargettable"
+                    'Clear all data from the target table before inporting new data
+                    curStatus.CreateTargetTable = True
+                Case "/quotedvalues"
+                    Select Case strInput.ToLower
+                        Case "yes", "true", "1"
+                            curVar.QuoteValues = True
+                        Case Else
+                            curVar.QuoteValues = False
+                    End Select
+                Case "/?"
+                    'ShowHelp
+                    curStatus.QuitApplication = True
+                    Console.WriteLine(" Sequenchel Command Line Help.")
+                    Console.WriteLine(" /? ; This help screen")
+                    Console.WriteLine(" /Debug ; Show or log extra processing information")
+                    Console.WriteLine(" /SecurityOverride:Password ; Enable all modules if the password is correct.")
+                    Console.WriteLine(" /Control ; Run Sequenchel in Control Mode. See the manual for more information.")
+                    Console.WriteLine(" /Report ; Run a predefined report.")
+                    Console.WriteLine(" /Import ; Import a file into Sequenchel.")
+                    Console.WriteLine(" /Connection ; Use this preconfigured Connection for Report or Import option")
+                    Console.WriteLine(" /TableSet ; Use this preconfigured TableSet for Report or Import option.")
+                    Console.WriteLine(" /Table ; Use this Table for Import Option.")
+                    Console.WriteLine("     A preconfigured table name or alias, an existing table or a new table.")
+                    Console.WriteLine(" /ReportName ; Run this predefined Report (requires /Report option)")
+                    Console.WriteLine(" /ExportFile ; Export the data to this file. Report data prevales over Import.")
+                    Console.WriteLine(" /ImportFile ; Import this file (Requires /Import option)")
+                    Console.WriteLine(" /ConvertToText ; Convert imported data to plain text. Excel files only.")
+                    Console.WriteLine(" /ConvertToNull ; Convert empty values to NULL. Upload to database only.")
+                    Console.WriteLine(" /HasHeaders ; The first row of the imported file has header/column names.")
+                    Console.WriteLine(" /Delimiter:delimiter ; Value seperator. Default is comma. -> /Delimiter:,")
+                    Console.WriteLine(" /EmailRecipient:Email@Address.com ; Report Only. Requires SMTP to be configured.")
+                    Console.WriteLine(" /ClearTargetTable ; Delete all data from the database table before import.")
+                    Console.WriteLine(" /ImportAsXml ; Convert plain text to basic XML. Leave XML Import as original.")
+                    Console.WriteLine("     Import into the database as Xml datatype, CreateTargetTable.")
+                    Console.WriteLine("     CreateTargetTable creates a special table for this purpose.")
+                    Console.WriteLine(" /CreateTargetTable ; Create the target database table if it does not exist.")
+                    Console.WriteLine("    Uses import file datastructure or creates a basic XML upload table.")
+                    Console.WriteLine(" /quotedvalues:True/False ; Default=False")
+                    Console.WriteLine("    True on Import: Double quotes are regarded as text delimiters.")
+                    Console.WriteLine("    True on Export: All values will be enclosed in double quotes.")
+                    Console.WriteLine(" ")
+                    Console.WriteLine(" Additinal help may be found in the manual at Sequenchel.com")
+                    Console.WriteLine(" ")
             End Select
 
         Next
@@ -245,7 +289,7 @@ Public Class BaseCode
             If dhdText.CheckDir(strMyDir & "\Sequenchel\LOG", True) = False Then dhdText.CreateDir(strMyDir & "\Sequenchel\LOG")
             dhdText.LogFileName = "Sequenchel.Log"
             dhdText.LogLocation = strMyDir & "\Sequenchel\LOG"
-            dhdText.WriteLog("There was an error writng to the logfile at: " & strOrgDir & Environment.NewLine & dhdText.Errormessage, 1)
+            dhdText.WriteLog("There was an error writing to the logfile at: " & strOrgDir & Environment.NewLine & dhdText.ErrorMessage, 1)
         End If
     End Sub
 
@@ -1571,6 +1615,7 @@ Public Class BaseCode
                         End If
                     End If
                 Next
+                If MaxColLen < 10 Then MaxColLen = 10
                 'For Each drwInput As DataRow In dcmInput.Table.Rows
                 '    If drwInput.Field(Of String)(dcmInput.ColumnName).Length > MaxColLen Then
                 '        MaxColLen = drwInput.Field(Of String)(dcmInput.ColumnName).Length
@@ -2047,6 +2092,29 @@ Public Class BaseCode
         Return FormatFileDate
     End Function
 
+    Public Function CreateTargetTable(dhdDB As DataHandler.db, dtsUpload As DataSet) As Boolean
+        If CheckTable(dhdDB, dhdDB.DataTableName) = False Then
+            If curStatus.CreateTargetTable = True Then
+                Dim blnTableCreated As Boolean = False
+                If curStatus.ImportAsXml = True Then
+                    blnTableCreated = CreateTableForXml(dhdDB, dhdDB.DataTableName)
+                Else
+                    blnTableCreated = CreateTableFromDataset(dhdDB, dtsUpload, dhdDB.DataTableName)
+                End If
+                If blnTableCreated = False Then
+                    ErrorLevel = dhdDB.ErrorLevel
+                    ErrorMessage = dhdDB.ErrorMessage
+                    WriteLog("Error creating table. " & dhdDB.ErrorMessage, 1)
+                    Return False
+                End If
+            Else
+                WriteLog("Export to database failed. The specified table was not found.", 1)
+                Return False
+            End If
+        End If
+        Return True
+    End Function
+
     Public Function SaveToDatabase(ByVal dhdConnect As DataHandler.db, dtsInput As DataSet, Optional ConvertToText As Boolean = False, Optional ConvertToNull As Boolean = False) As Integer
         Dim intRecordsAffected As Integer = 0
         Dim intReturn As Integer = 0
@@ -2225,7 +2293,9 @@ Public Class BaseCode
 #End Region
 
 #Region "Import & Export"
-    Public Function ImportFile(strFileName As String, Optional blnHasHeaders As Boolean = True, Optional Delimiter As String = ",") As DataSet
+    Public Function ImportFile(strFileName As String, Optional blnHasHeaders As Boolean = True, Optional Delimiter As String = ",", Optional QuotedValues As Boolean = False) As DataSet
+        ErrorLevel = 0
+        ErrorMessage = ""
         dhdText.XmlDoc = Nothing
         Dim dtsImport As New DataSet
         Try
@@ -2241,18 +2311,83 @@ Public Class BaseCode
                     If Delimiter.Length = 0 Then
                         Return Nothing
                     End If
-                    dtsImport = dhdText.CsvToDataSet(strFileName, blnHasHeaders, Delimiter)
+                    dtsImport = dhdText.CsvToDataSet(strFileName, blnHasHeaders, Delimiter, QuotedValues)
+                    'dtsImport = CsvToDataSet(strFileName, blnHasHeaders, Delimiter, QuotedValues)
+                    If dhdText.ErrorLevel = -1 Then
+                        ErrorLevel = -1
+                        ErrorMessage = dhdText.ErrorMessage
+                        WriteLog(ErrorMessage, 1)
+                    End If
                 Case Else
                     Return Nothing
             End Select
         Catch ex As Exception
             'Error importing file
             ErrorLevel = -1
-            ErrorMessage = "The file import failed. Check the file and try again."
+            ErrorMessage = "The file import failed: " & ex.Message
             dtsImport = Nothing
         End Try
         Return dtsImport
     End Function
+
+    'Public Function CsvToDataSet(strFileName As String, blnHasHeaders As Boolean, Optional Delimiter As String = ",", Optional QuoteValues As Boolean = False) As DataSet
+    '    Dim dtsOutput As New DataSet
+    '    Dim dttOutput As New DataTable
+    '    dtsOutput.Tables.Add(dttOutput)
+
+    '    Dim intRowCount As Integer = 0
+    '    Dim intMaxColCount As Integer = 0
+    '    ErrorLevel = 0
+    '    ErrorMessage = ""
+
+    '    Using MyReader As New Microsoft.VisualBasic.FileIO.TextFieldParser(strFileName)
+    '        MyReader.TextFieldType = FileIO.FieldType.Delimited
+    '        MyReader.HasFieldsEnclosedInQuotes = QuoteValues
+    '        MyReader.SetDelimiters(Delimiter)
+    '        Dim currentRow As String()
+    '        While Not MyReader.EndOfData
+    '            Try
+    '                currentRow = MyReader.ReadFields()
+    '                If intRowCount = 0 And blnHasHeaders = False Then
+    '                    intMaxColCount = currentRow.Count
+    '                    For intColumns As Integer = 1 To currentRow.Count
+    '                        dttOutput.Columns.Add("col" & intColumns)
+    '                    Next
+    '                End If
+    '                If intRowCount > 0 Or blnHasHeaders = False Then dttOutput.Rows.Add()
+
+    '                Dim currentField As String
+    '                Dim intColCount As Integer = 0
+    '                For Each currentField In currentRow
+    '                    If intRowCount = 0 And blnHasHeaders = True Then
+    '                        intMaxColCount = currentRow.Count
+    '                        'Create Columns
+    '                        dttOutput.Columns.Add(currentField)
+    '                    Else
+    '                        'fill datarow
+    '                        If intColCount < currentRow.Count Then
+    '                            dttOutput.Rows(dttOutput.Rows.Count - 1)(intColCount) = currentField
+    '                        Else
+    '                            ErrorLevel = -1
+    '                            ErrorMessage = "To many columns for row " & intRowCount + 1 & ". Data may have been lost."
+    '                            Console.WriteLine("To many columns for row " & intRowCount + 1 & ". Data may have been lost.")
+    '                        End If
+    '                    End If
+    '                    intColCount += 1
+    '                    'MsgBox(currentField)
+    '                Next
+    '            Catch ex As Microsoft.VisualBasic.FileIO.MalformedLineException
+    '                'MsgBox("Line is not valid and will be skipped. " & ex.Message)
+    '                Console.WriteLine("Line is not valid and will be skipped. " & ex.Message)
+    '            Catch ex As Exception
+    '                'MsgBox("Line is not valid and will be skipped. " & ex.Message)
+    '                Console.WriteLine("Line is not valid and will be skipped. " & ex.Message)
+    '            End Try
+    '            intRowCount += 1
+    '        End While
+    '    End Using
+    '    Return dtsOutput
+    'End Function
 
     Public Function GetExportFileName(strFileName As String) As String
         Dim strExtension As String = strFileName.Substring(strFileName.LastIndexOf(".") + 1, strFileName.Length - (strFileName.LastIndexOf(".") + 1))
@@ -2302,6 +2437,8 @@ Public Class BaseCode
     End Function
 
     Public Sub ClearTargetTable(dhdDb As DataHandler.db)
+        If CheckTable(dhdDb, dhdDb.DataTableName) = False Then Exit Sub
+
         Dim strQuery As String = "TRUNCATE TABLE " & dhdDb.DataTableName
         QueryDb(dhdDb, strQuery, False)
         If ErrorLevel = -1 Then

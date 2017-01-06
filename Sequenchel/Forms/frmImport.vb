@@ -21,6 +21,7 @@ Public Class frmImport
         CursorControl("Wait")
         WriteStatus("", 0, lblStatusText)
         If txtCurrentFile.Text.Length > 3 And txtCurrentFile.Text.Contains(".") Then
+            basCode.dhdText.ImportFile = txtCurrentFile.Text
             ImportFile()
         Else
             WriteStatus("Please enter a valid path and filename before pressing this button", 2, lblStatusText)
@@ -90,13 +91,19 @@ Public Class frmImport
         basCode.curVar.ConvertToNull = chkCovertToNull.Checked
     End Sub
 
+    Private Sub txtDelimiter_GotFocus(sender As Object, e As EventArgs) Handles txtDelimiter.GotFocus
+        txtDelimiter.SelectAll()
+    End Sub
+
     Private Sub txtDelimiter_MouseHover(sender As Object, e As EventArgs) Handles txtDelimiter.MouseHover
         txtDelimiterShow.Text = txtDelimiter.Text
         txtDelimiterShow.Visible = True
+        txtDelimiter.SelectAll()
     End Sub
 
     Private Sub txtDelimiter_MouseLeave(sender As Object, e As EventArgs) Handles txtDelimiter.MouseLeave
         txtDelimiterShow.Visible = False
+        txtDelimiter.SelectAll()
     End Sub
 
     Private Sub txtDelimiter_TextChanged(sender As Object, e As EventArgs) Handles txtDelimiter.TextChanged
@@ -144,7 +151,10 @@ Public Class frmImport
             Exit Sub
         End If
         If txtDelimiter.Text.Length = 0 Then txtDelimiter.Text = ","
-        dtsImport = basCode.ImportFile(basCode.dhdText.PathConvert(basCode.CheckFilePath(basCode.dhdText.ImportFile)), chkHasHeaders.Checked, txtDelimiter.Text)
+        basCode.curVar.HasHeaders = chkHasHeaders.Checked
+        basCode.curVar.Delimiter = txtDelimiter.Text
+        basCode.curVar.QuoteValues = chkQuotedValues.Checked
+        dtsImport = basCode.ImportFile(basCode.dhdText.PathConvert(basCode.CheckFilePath(basCode.dhdText.ImportFile)), chkHasHeaders.Checked, txtDelimiter.Text, chkQuotedValues.Checked)
 
         If basCode.ErrorLevel = -1 Then
             WriteStatus(basCode.ErrorMessage, 2, lblStatusText)
@@ -257,27 +267,36 @@ Public Class frmImport
         dhdDB.LoginName = txtUser.Text
         dhdDB.Password = txtPassword.Text
 
-        If basCode.CheckTable(dhdDB, dhdDB.DataTableName) = False Then
-            If chkCreateTable.Checked = True Then
-                Dim blnTableCreated As Boolean = False
-                If chkUploadAsXml.Checked = True Then
-                    blnTableCreated = basCode.CreateTableForXml(dhdDB, dhdDB.DataTableName)
-                Else
-                    blnTableCreated = basCode.CreateTableFromDataset(dhdDB, dtsUpload, dhdDB.DataTableName)
-                End If
-                If blnTableCreated = False Then
-                    WriteStatus("Error creating table. " & dhdDB.ErrorMessage, 1, lblStatusText)
-                    basCode.WriteLog("Error creating table. " & dhdDB.ErrorMessage, 1)
-                    Exit Sub
-                End If
-            Else
-                WriteStatus("The specified table was not found.", 1, lblStatusText)
-                basCode.WriteLog("Export to database failed. The specified table was not found.", 1)
-                Exit Sub
-            End If
-        Else
-            chkCreateTable.Checked = False
+        basCode.curStatus.CreateTargetTable = chkCreateTable.Checked
+        basCode.curStatus.ImportAsXml = chkUploadAsXml.Checked
+        Dim blnTargetTableOK As Boolean = basCode.CreateTargetTable(dhdDB, dtsUpload)
+        If blnTargetTableOK = False Then
+            WriteStatus("The specified table was not found.", 1, lblStatusText)
+            basCode.WriteLog("Export to database failed. The specified table was not found.", 1)
+            Exit Sub
         End If
+
+        'If basCode.CheckTable(dhdDB, dhdDB.DataTableName) = False Then
+        '    If chkCreateTable.Checked = True Then
+        '        Dim blnTableCreated As Boolean = False
+        '        If chkUploadAsXml.Checked = True Then
+        '            blnTableCreated = basCode.CreateTableForXml(dhdDB, dhdDB.DataTableName)
+        '        Else
+        '            blnTableCreated = basCode.CreateTableFromDataset(dhdDB, dtsUpload, dhdDB.DataTableName)
+        '        End If
+        '        If blnTableCreated = False Then
+        '            WriteStatus("Error creating table. " & dhdDB.ErrorMessage, 1, lblStatusText)
+        '            basCode.WriteLog("Error creating table. " & dhdDB.ErrorMessage, 1)
+        '            Exit Sub
+        '        End If
+        '    Else
+        '        WriteStatus("The specified table was not found.", 1, lblStatusText)
+        '        basCode.WriteLog("Export to database failed. The specified table was not found.", 1)
+        '        Exit Sub
+        '    End If
+        'Else
+        '    chkCreateTable.Checked = False
+        'End If
 
         If chkClearTarget.Checked = True Then
             'Clear target table

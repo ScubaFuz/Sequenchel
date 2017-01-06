@@ -226,7 +226,9 @@
     Private _RunReport As Boolean = False
     Private _RunImport As Boolean = False
     Private _ClearTargetTable As Boolean = False
+    Private _CreateTargetTable As Boolean = False
     Private _ImportAsXml As Boolean = False
+    Private _QuitApplication As Boolean = False
 
     Public Property SuspendActions() As Boolean
         Get
@@ -255,6 +257,15 @@
         End Set
     End Property
 
+    Public Property CreateTargetTable() As Boolean
+        Get
+            Return _CreateTargetTable
+        End Get
+        Set(ByVal Value As Boolean)
+            _CreateTargetTable = Value
+        End Set
+    End Property
+
     Public Property ImportAsXml() As Boolean
         Get
             Return _ImportAsXml
@@ -270,6 +281,15 @@
         End Get
         Set(ByVal Value As Boolean)
             _RunImport = Value
+        End Set
+    End Property
+
+    Public Property QuitApplication() As Boolean
+        Get
+            Return _QuitApplication
+        End Get
+        Set(ByVal Value As Boolean)
+            _QuitApplication = Value
         End Set
     End Property
 #End Region

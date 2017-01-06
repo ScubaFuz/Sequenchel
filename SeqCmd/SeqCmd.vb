@@ -13,6 +13,7 @@ Module SeqCmd
 
     Sub Main()
         If My.Application.CommandLineArgs.Count > 0 Then basCode.ParseCommands(My.Application.CommandLineArgs)
+        If basCode.curStatus.QuitApplication = True Then End
         ImportTable = basCode.curStatus.Table
         basCode.SetDefaults()
         If basCode.curVar.DebugMode = True Then Console.WriteLine("Default Settings Loaded")
@@ -39,7 +40,9 @@ Module SeqCmd
         If basCode.curVar.DebugMode = True Then Console.WriteLine("TableSets Loaded")
         basCode.LoadTableSet(basCode.xmlTableSets, basCode.curStatus.TableSet)
         If basCode.curVar.DebugMode = True Then Console.WriteLine("TableSet " & basCode.curStatus.TableSet & " loaded")
-        LoadTables()
+        Dim blnTableExists As Boolean = basCode.CheckTable(basCode.dhdConnection, ImportTable)
+        LoadTables(blnTableExists, basCode.curStatus.CreateTargetTable)
+        If ImportTable <> basCode.curStatus.Table And (basCode.CheckTable(basCode.dhdConnection, ImportTable) = True Or basCode.curStatus.CreateTargetTable = True) Then basCode.curStatus.Table = ImportTable
         If basCode.curVar.DebugMode = True Then Console.WriteLine("Tables Loaded")
 
         If basCode.curVar.DebugMode = True Then Console.WriteLine("Importmode enabled = " & basCode.curStatus.RunImport)
@@ -53,9 +56,11 @@ Module SeqCmd
             Dim dtsInput As DataSet = Nothing
 
             If basCode.curStatus.ClearTargetTable = True Then
+                If basCode.curVar.DebugMode = True Then Console.WriteLine("Clearing Target Table")
                 'Clear target table before inporting data
                 If ImportTable <> "" And ImportTable = basCode.curStatus.Table Then
                     basCode.dhdConnection.DataTableName = basCode.GetTableNameFromAlias(basCode.xmlTables, basCode.curStatus.Table)
+                    If basCode.curVar.DebugMode = True Then Console.WriteLine("Table Name set to: " & basCode.dhdConnection.DataTableName)
                     basCode.ClearTargetTable(basCode.dhdConnection)
                 End If
             End If
@@ -66,21 +71,27 @@ Module SeqCmd
                     ImportFiles(basCode.dhdText.ImportFile)
                 End If
             Else
+                If basCode.curVar.DebugMode = True Then Console.WriteLine("File to Import: " & basCode.dhdText.ImportFile)
                 dtsInput = ImportFile(basCode.CheckFilePath(basCode.dhdText.ImportFile))
+                If basCode.curVar.DebugMode = True Then Console.WriteLine("Imported file is OK: " & basCode.dhdText.DatasetCheck(dtsInput))
                 Dim intRecords As Integer = 0
                 If ImportTable <> "" And ImportTable = basCode.curStatus.Table Then
+                    If basCode.curVar.DebugMode = True Then Console.WriteLine("Import to Table: " & basCode.curStatus.Table)
                     intRecords = UploadFile(dtsInput, basCode.dhdText.ImportFile)
-                    Console.WriteLine(intRecords & " Records Uploaded")
+                    'Console.WriteLine(intRecords & " Records Uploaded")
+                Else
+                    If basCode.curVar.DebugMode = True Then Console.WriteLine("No import: ImportTable = " & ImportTable & " StatusTable = " & basCode.curStatus.Table)
                 End If
                 If Not basCode.dhdText.ExportFile Is Nothing AndAlso basCode.curStatus.RunReport = False AndAlso basCode.dhdText.ExportFile.Length > 0 Then
+                    If basCode.curVar.DebugMode = True Then Console.WriteLine("Imported file export to: " & basCode.dhdText.ExportFile)
                     'export imported file
                     basCode.ExportFile(dtsInput, basCode.dhdText.ExportFile, basCode.curVar.ConvertToText, basCode.curVar.ConvertToNull, basCode.curVar.ShowFile, basCode.curVar.HasHeaders, basCode.curVar.Delimiter, basCode.curVar.QuoteValues, basCode.curVar.CreateDir)
                 End If
             End If
         End If
         If basCode.curVar.DebugMode = True Then Console.WriteLine("Exportmode enabled = " & basCode.curStatus.RunReport)
-        If basCode.curVar.DebugMode = True Then Console.WriteLine("Exportfile = " & basCode.dhdText.ExportFile)
         If Not basCode.dhdText.ExportFile Is Nothing AndAlso basCode.curStatus.RunReport = True AndAlso basCode.dhdText.ExportFile.Length > 0 Then
+            If basCode.curVar.DebugMode = True Then Console.WriteLine("Exportfile = " & basCode.dhdText.ExportFile)
             'Export Report
             Dim strExportFile As String = basCode.GetExportFileName(basCode.dhdText.ExportFile)
             Console.WriteLine("Exporting Report: " & basCode.curStatus.Report & " to " & strExportFile)
@@ -110,7 +121,7 @@ Module SeqCmd
                 Console.WriteLine("Connection Loaded: " & basCode.curStatus.Connection)
             Else
                 Console.WriteLine("The specified Connection was not found. please check your settings")
-                Console.ReadLine()
+                'Console.ReadLine()
                 Environment.Exit(0)
             End If
         End If
@@ -126,19 +137,21 @@ Module SeqCmd
                 Console.WriteLine("TableSet Loaded: " & basCode.curStatus.TableSet)
             Else
                 Console.WriteLine("The specified TableSet was not found. please check your settings")
-                Console.ReadLine()
+                'Console.ReadLine()
                 Environment.Exit(0)
             End If
         End If
     End Sub
 
-    Friend Sub LoadTables()
+    Friend Sub LoadTables(blnTableExists As Boolean, blnCreateTargetTable As Boolean)
         Console.WriteLine("Loading Table: " & basCode.curStatus.Table)
         lstTables = basCode.LoadTables(basCode.xmlTables, False)
-        If lstTables Is Nothing Then Exit Sub
-        If basCode.curVar.TableDefault = basCode.curStatus.Table And ImportTable <> basCode.curStatus.Table And ImportTable <> "" Then
+        If lstTables Is Nothing And blnTableExists = False And blnCreateTargetTable = False Then
             Console.WriteLine("The specified Table was not found. please check your settings")
-            Console.ReadLine()
+            Environment.Exit(0)
+        End If
+        If basCode.curVar.TableDefault = basCode.curStatus.Table And ImportTable <> basCode.curStatus.Table And ImportTable <> "" And blnTableExists = False And blnCreateTargetTable = False Then
+            Console.WriteLine("The specified Table was not found. please check your settings")
             Environment.Exit(0)
         End If
     End Sub
@@ -148,7 +161,7 @@ Module SeqCmd
         If lstReports Is Nothing Then Environment.Exit(0)
         If lstReports.Contains(basCode.curStatus.Report) = False Or basCode.curStatus.Report = "" Then
             Console.WriteLine("The specified Report was not found. please check your settings")
-            Console.ReadLine()
+            'Console.ReadLine()
             Environment.Exit(0)
         End If
     End Sub
@@ -165,7 +178,8 @@ Module SeqCmd
 
     Friend Function ImportFile(strImportFile As String) As DataSet
         Console.WriteLine("Importing file: " & strImportFile)
-        Dim dtsImport As DataSet = basCode.ImportFile(strImportFile, basCode.curVar.HasHeaders, basCode.curVar.Delimiter)
+        Dim dtsImport As DataSet = basCode.ImportFile(strImportFile, basCode.curVar.HasHeaders, basCode.curVar.Delimiter, basCode.curVar.QuoteValues)
+        If basCode.ErrorLevel = -1 Then Console.WriteLine(basCode.ErrorMessage)
         Return dtsImport
     End Function
 
@@ -180,6 +194,12 @@ Module SeqCmd
             dhdDB.LoginName = basCode.dhdConnection.LoginName
             dhdDB.Password = basCode.dhdConnection.Password
 
+            If basCode.curVar.DebugMode = True Then Console.WriteLine("Check if table exists or can be created")
+            Dim blnTargetTableOK As Boolean = basCode.CreateTargetTable(dhdDB, dtsInput)
+            If blnTargetTableOK = False Then
+                Console.WriteLine("The table was not found or created: " & dhdDB.ErrorMessage)
+                Environment.Exit(0)
+            End If
             Dim intRecords As Integer = 0
             If basCode.curStatus.ImportAsXml = True Then
                 intRecords = basCode.SaveXmlToDatabase(dhdDB, dtsInput, strFileName)
@@ -188,15 +208,15 @@ Module SeqCmd
             End If
 
             If intRecords = -1 Then
-                Console.WriteLine(basCode.dhdConnection.ErrorMessage)
-                Console.ReadLine()
+                Console.WriteLine("No records uploaded: " & dhdDB.ErrorMessage)
+                'Console.ReadLine()
                 Environment.Exit(0)
             End If
             Console.WriteLine(intRecords & " Records Uploaded")
             Return intRecords
         Catch ex As Exception
             Console.WriteLine(ex.Message)
-            Console.ReadLine()
+            'Console.ReadLine()
             Environment.Exit(0)
             Return 0
         End Try
