@@ -1616,11 +1616,7 @@ Public Class BaseCode
                     End If
                 Next
                 If MaxColLen < 10 Then MaxColLen = 10
-                'For Each drwInput As DataRow In dcmInput.Table.Rows
-                '    If drwInput.Field(Of String)(dcmInput.ColumnName).Length > MaxColLen Then
-                '        MaxColLen = drwInput.Field(Of String)(dcmInput.ColumnName).Length
-                '    End If
-                'Next
+                If dcmInput.Table.Rows.Count <= 1 And MaxColLen < 255 Then MaxColLen = 255
             End If
         Catch ex As Exception
             ErrorLevel = -1
@@ -2148,10 +2144,96 @@ Public Class BaseCode
         Return intRecordsAffected
     End Function
 
+    Public Function SaveLargeFileToDatabase(ByVal dhdConnect As DataHandler.db, strFileName As String, blnHasHeaders As Boolean, Optional Delimiter As String = ",", Optional QuoteValues As Boolean = False, Optional ConvertToText As Boolean = False, Optional ConvertToNull As Boolean = False) As Integer
+
+        Dim intRecordsAffected As Integer = 0
+        Dim dtsOutput As New DataSet
+        Dim dttOutput As New DataTable
+        dtsOutput.Tables.Add(dttOutput)
+
+        Dim intRowCount As Integer = 0
+        Dim TotalRows As Integer = 0
+        Dim intMaxColCount As Integer = 0
+        ErrorLevel = 0
+        ErrorMessage = ""
+
+        Using MyReader As New Microsoft.VisualBasic.FileIO.TextFieldParser(strFileName)
+            MyReader.TextFieldType = FileIO.FieldType.Delimited
+            MyReader.HasFieldsEnclosedInQuotes = QuoteValues
+            MyReader.SetDelimiters(Delimiter)
+            Dim currentRow As String()
+            While Not MyReader.EndOfData
+                Try
+                    currentRow = MyReader.ReadFields()
+                    If intRowCount = 0 And blnHasHeaders = False Then
+                        intMaxColCount = currentRow.Count
+                        For intColumns As Integer = 1 To currentRow.Count
+                            dttOutput.Columns.Add("col" & intColumns)
+                        Next
+                    End If
+                    If intRowCount > 0 Or blnHasHeaders = False Then dttOutput.Rows.Add()
+
+                    Dim currentField As String
+                    Dim intColCount As Integer = 0
+                    For Each currentField In currentRow
+                        If intRowCount = 0 And blnHasHeaders = True Then
+                            intMaxColCount = currentRow.Count
+                            'Create Columns
+                            dttOutput.Columns.Add(currentField)
+                        Else
+                            'fill datarow
+                            If intColCount < intMaxColCount Then
+                                dttOutput.Rows(dttOutput.Rows.Count - 1)(intColCount) = currentField
+                            Else
+                                ErrorLevel = -1
+                                ErrorMessage = "To many columns for row " & TotalRows + intRowCount + 1 & ". Data may have been lost."
+                                Console.WriteLine("To many columns for row " & TotalRows + intRowCount + 1 & ". Data may have been lost.")
+                                WriteLog("To many columns for row " & TotalRows + intRowCount + 1 & ". Data may have been lost.", 1)
+                            End If
+                        End If
+                        intColCount += 1
+                        'MsgBox(currentField)
+                    Next
+                Catch ex As Microsoft.VisualBasic.FileIO.MalformedLineException
+                    Console.WriteLine("Line " & intRowCount + 1 & " is not valid and will be skipped. " & ex.Message)
+                    WriteLog("Line " & intRowCount + 1 & " is not valid and will be skipped. " & ex.Message, 1)
+                Catch ex As Exception
+                    Console.WriteLine("Line " & intRowCount + 1 & " is not valid and will be skipped. " & ex.Message)
+                    WriteLog("Line " & intRowCount + 1 & " is not valid and will be skipped. " & ex.Message, 1)
+                End Try
+                intRowCount += 1
+                If intRowCount >= 100001 Then
+                    Try
+                        intRecordsAffected = UploadSqlData(dhdConnect, dttOutput, ConvertToText, ConvertToNull)
+                        dttOutput.Clear()
+                        TotalRows += intRecordsAffected
+                        intRowCount = 1
+                    Catch ex As Exception
+                        ErrorLevel = -1
+                        ErrorMessage = "Export to database failed. Check if the columns match and try again. If you are importing more than 1 table, make sure they have identical columns" & ex.Message
+                        Return ErrorLevel
+                    End Try
+                End If
+            End While
+        End Using
+
+        If intRowCount > 0 Then
+            Try
+                intRecordsAffected = UploadSqlData(dhdConnect, dttOutput, ConvertToText, ConvertToNull)
+                TotalRows += intRecordsAffected
+            Catch ex As Exception
+                ErrorLevel = -1
+                ErrorMessage = "Export to database failed. Check if the columns match and try again. If you are importing more than 1 table, make sure they have identical columns" & ex.Message
+                Return ErrorLevel
+            End Try
+        End If
+        Return TotalRows
+    End Function
+
     Public Function SaveXmlToDatabase(dhdConnect As DataHandler.db, dtsUpload As DataSet, strFileName As String)
         Try
             Dim xmlTempDoc As XmlDocument = dhdText.XmlDoc
-            If xmlTempDoc Is Nothing Then
+            If xmlTempDoc Is Nothing And curVar.LargeFile = False Then
                 Dim xmlDocExport As XmlDocument = dhdText.CreateRootDocument(Nothing, Nothing, Nothing)
                 xmlDocExport.LoadXml(dtsUpload.GetXml())
                 xmlTempDoc = xmlDocExport
@@ -2170,16 +2252,26 @@ Public Class BaseCode
     Public Function UploadSqlData(ByVal dhdConnect As DataHandler.db, ByVal dttInput As DataTable, Optional ConvertToText As Boolean = False, Optional ConvertToNull As Boolean = False) As Integer
         Dim intRecordsAffected As Integer = 0
         intRecordsAffected = dttInput.Rows.Count
+
+        Dim dhdDB As New DataHandler.db
+        dhdDB.DataLocation = dhdConnect.DataLocation
+        dhdDB.DatabaseName = dhdConnect.DatabaseName
+        dhdDB.DataTableName = dhdConnect.DataTableName
+        dhdDB.DataProvider = dhdConnect.DataProvider
+        dhdDB.LoginMethod = dhdConnect.LoginMethod
+        dhdDB.LoginName = dhdConnect.LoginName
+        dhdDB.Password = dhdConnect.Password
+
         Try
-            If dhdConnect.SqlConnection.State = ConnectionState.Open Then dhdConnect.SqlConnection.Close()
-            Using bcp As System.Data.SqlClient.SqlBulkCopy = New System.Data.SqlClient.SqlBulkCopy(dhdConnect.SqlConnection)
-                If dhdConnect.SqlConnection.State = ConnectionState.Closed Then dhdConnect.SqlConnection.Open()
-                bcp.DestinationTableName = dhdConnect.DataTableName
-                If ConvertToText = True Then dttInput = dhdConnect.ConvertToText(dttInput)
-                If ConvertToNull = True Then dttInput = dhdConnect.EmptyToNull(dttInput)
+            If dhdDB.SqlConnection.State = ConnectionState.Open Then dhdConnect.SqlConnection.Close()
+            Using bcp As System.Data.SqlClient.SqlBulkCopy = New System.Data.SqlClient.SqlBulkCopy(dhdDB.SqlConnection)
+                If dhdDB.SqlConnection.State = ConnectionState.Closed Then dhdDB.SqlConnection.Open()
+                bcp.DestinationTableName = dhdDB.DataTableName
                 Dim reader As DataTableReader = dttInput.CreateDataReader()
                 bcp.WriteToServer(reader)
             End Using
+            dhdDB = Nothing
+            ' If dhdConnect.SqlConnection.State = ConnectionState.Open Then dhdConnect.SqlConnection.Close()
         Catch ex As Exception
             dhdConnect.ErrorMessage = ex.Message
             dhdConnect.ErrorLevel = -1
@@ -2293,7 +2385,7 @@ Public Class BaseCode
 #End Region
 
 #Region "Import & Export"
-    Public Function ImportFile(strFileName As String, Optional blnHasHeaders As Boolean = True, Optional Delimiter As String = ",", Optional QuotedValues As Boolean = False) As DataSet
+    Public Function ImportFile(strFileName As String, Optional blnHasHeaders As Boolean = True, Optional Delimiter As String = ",", Optional QuotedValues As Boolean = False, Optional LargeFile As Boolean = False) As DataSet
         ErrorLevel = 0
         ErrorMessage = ""
         dhdText.XmlDoc = Nothing
@@ -2311,8 +2403,7 @@ Public Class BaseCode
                     If Delimiter.Length = 0 Then
                         Return Nothing
                     End If
-                    dtsImport = dhdText.CsvToDataSet(strFileName, blnHasHeaders, Delimiter, QuotedValues)
-                    'dtsImport = CsvToDataSet(strFileName, blnHasHeaders, Delimiter, QuotedValues)
+                    dtsImport = dhdText.CsvToDataSet(strFileName, blnHasHeaders, Delimiter, QuotedValues, curVar.LargeFile)
                     If dhdText.ErrorLevel = -1 Then
                         ErrorLevel = -1
                         ErrorMessage = dhdText.ErrorMessage

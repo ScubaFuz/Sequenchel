@@ -154,6 +154,7 @@ Public Class frmImport
         basCode.curVar.HasHeaders = chkHasHeaders.Checked
         basCode.curVar.Delimiter = txtDelimiter.Text
         basCode.curVar.QuoteValues = chkQuotedValues.Checked
+        basCode.curVar.LargeFile = chkLargeFile.Checked
         dtsImport = basCode.ImportFile(basCode.dhdText.PathConvert(basCode.CheckFilePath(basCode.dhdText.ImportFile)), chkHasHeaders.Checked, txtDelimiter.Text, chkQuotedValues.Checked)
 
         If basCode.ErrorLevel = -1 Then
@@ -173,7 +174,7 @@ Public Class frmImport
 
         Try
             If dtsImport.Tables.Count > 0 Then
-                If chkScreen.Checked Then
+                If chkScreen.Checked And chkLargeFile.Checked = False Then
                     DisplayData(0)
                 End If
                 UploadFile(dtsImport)
@@ -276,28 +277,6 @@ Public Class frmImport
             Exit Sub
         End If
 
-        'If basCode.CheckTable(dhdDB, dhdDB.DataTableName) = False Then
-        '    If chkCreateTable.Checked = True Then
-        '        Dim blnTableCreated As Boolean = False
-        '        If chkUploadAsXml.Checked = True Then
-        '            blnTableCreated = basCode.CreateTableForXml(dhdDB, dhdDB.DataTableName)
-        '        Else
-        '            blnTableCreated = basCode.CreateTableFromDataset(dhdDB, dtsUpload, dhdDB.DataTableName)
-        '        End If
-        '        If blnTableCreated = False Then
-        '            WriteStatus("Error creating table. " & dhdDB.ErrorMessage, 1, lblStatusText)
-        '            basCode.WriteLog("Error creating table. " & dhdDB.ErrorMessage, 1)
-        '            Exit Sub
-        '        End If
-        '    Else
-        '        WriteStatus("The specified table was not found.", 1, lblStatusText)
-        '        basCode.WriteLog("Export to database failed. The specified table was not found.", 1)
-        '        Exit Sub
-        '    End If
-        'Else
-        '    chkCreateTable.Checked = False
-        'End If
-
         If chkClearTarget.Checked = True Then
             'Clear target table
             basCode.ClearTargetTable(dhdDB)
@@ -307,8 +286,10 @@ Public Class frmImport
             End If
         End If
 
-        If chkUploadAsXml.Checked = True Then
+        If basCode.curStatus.ImportAsXml = True Then
             intRecordsAffected = basCode.SaveXmlToDatabase(dhdDB, dtsUpload, basCode.dhdText.ImportFile)
+        ElseIf basCode.curVar.LargeFile = True Then
+            intRecordsAffected = basCode.SaveLargeFileToDatabase(dhdDB, basCode.dhdText.ImportFile, basCode.curVar.HasHeaders, basCode.curVar.Delimiter, basCode.curVar.QuoteValues, basCode.curVar.ConvertToText, basCode.curVar.ConvertToNull)
         Else
             intRecordsAffected = basCode.SaveToDatabase(dhdDB, dtsUpload, basCode.curVar.ConvertToText, basCode.curVar.ConvertToNull)
         End If

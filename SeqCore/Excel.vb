@@ -449,4 +449,15 @@ Public Class Excel
         Return value
     End Function
 
+    Private Function GetDataType(doc As SpreadsheetDocument, cell As Cell) As String
+        Dim value As String = Nothing
+        If cell.CellValue IsNot Nothing Then
+            value = cell.CellValue.InnerText
+            If cell.DataType IsNot Nothing AndAlso cell.DataType.Value = CellValues.SharedString Then
+                Return doc.WorkbookPart.SharedStringTablePart.SharedStringTable.ChildElements.GetItem(Integer.Parse(value)).InnerText
+            End If
+        End If
+        Return value
+    End Function
+
 End Class

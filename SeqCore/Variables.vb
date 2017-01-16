@@ -175,6 +175,7 @@
     Private _Delimiter As String = ","
     Private _QuoteValues As Boolean = False
     Private _CreateDir As Boolean = False
+    Private _LargeFile As Boolean = False
 
     Public Property ConvertToText() As Boolean
         Get
@@ -239,6 +240,14 @@
         End Set
     End Property
 
+    Public Property LargeFile() As Boolean
+        Get
+            Return _LargeFile
+        End Get
+        Set(ByVal Value As Boolean)
+            _LargeFile = Value
+        End Set
+    End Property
 #End Region
 
 #Region "Security"

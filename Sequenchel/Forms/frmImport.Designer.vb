@@ -65,6 +65,7 @@ Partial Class frmImport
         Me.chkUploadAsXml = New System.Windows.Forms.CheckBox()
         Me.dgvImport = New Sequenchel.usrDataGridView()
         Me.chkQuotedValues = New System.Windows.Forms.CheckBox()
+        Me.chkLargeFile = New System.Windows.Forms.CheckBox()
         CType(Me.dgvImport, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -500,11 +501,23 @@ Partial Class frmImport
         Me.chkQuotedValues.Text = "Text File Contains Quoted Values ("" "")"
         Me.chkQuotedValues.UseVisualStyleBackColor = True
         '
+        'chkLargeFile
+        '
+        Me.chkLargeFile.AutoSize = True
+        Me.chkLargeFile.Location = New System.Drawing.Point(240, 209)
+        Me.chkLargeFile.Margin = New System.Windows.Forms.Padding(2)
+        Me.chkLargeFile.Name = "chkLargeFile"
+        Me.chkLargeFile.Size = New System.Drawing.Size(201, 17)
+        Me.chkLargeFile.TabIndex = 60
+        Me.chkLargeFile.Text = "Import Large File directly to Database"
+        Me.chkLargeFile.UseVisualStyleBackColor = True
+        '
         'frmImport
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(777, 753)
+        Me.Controls.Add(Me.chkLargeFile)
         Me.Controls.Add(Me.chkQuotedValues)
         Me.Controls.Add(Me.chkUploadAsXml)
         Me.Controls.Add(Me.chkClearTarget)
@@ -598,4 +611,5 @@ Partial Class frmImport
     Friend WithEvents chkClearTarget As CheckBox
     Friend WithEvents chkUploadAsXml As CheckBox
     Friend WithEvents chkQuotedValues As System.Windows.Forms.CheckBox
+    Friend WithEvents chkLargeFile As CheckBox
 End Class
