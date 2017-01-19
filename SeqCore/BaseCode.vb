@@ -138,6 +138,10 @@ Public Class BaseCode
                         Case Else
                             curVar.QuoteValues = False
                     End Select
+                Case "/largefile"
+                    'Import the file directly to the database
+                    curVar.LargeFile = True
+                    If IsNumeric(strInput) Then curVar.BatchSize = strInput
                 Case "/?"
                     'ShowHelp
                     curStatus.QuitApplication = True
@@ -166,9 +170,13 @@ Public Class BaseCode
                     Console.WriteLine("     CreateTargetTable creates a special table for this purpose.")
                     Console.WriteLine(" /CreateTargetTable ; Create the target database table if it does not exist.")
                     Console.WriteLine("    Uses import file datastructure or creates a basic XML upload table.")
-                    Console.WriteLine(" /quotedvalues:True/False ; Default=False")
+                    Console.WriteLine(" /QuotedValues:True/False ; Default=False")
                     Console.WriteLine("    True on Import: Double quotes are regarded as text delimiters.")
                     Console.WriteLine("    True on Export: All values will be enclosed in double quotes.")
+                    Console.WriteLine(" /LargeFile[:BatchSize] ; The file to import will be parsed per batch instead of")
+                    Console.WriteLine("    as a whole. The default value for BatchSize = 100.000 records. ")
+                    Console.WriteLine("    The switches CreateTargetTable and ExportFile do not work with LargeFile and ")
+                    Console.WriteLine("    will be ignored. You can use the gui to create the table from a large file.")
                     Console.WriteLine(" ")
                     Console.WriteLine(" Additinal help may be found in the manual at Sequenchel.com")
                     Console.WriteLine(" ")
@@ -2202,12 +2210,13 @@ Public Class BaseCode
                     WriteLog("Line " & intRowCount + 1 & " is not valid and will be skipped. " & ex.Message, 1)
                 End Try
                 intRowCount += 1
-                If intRowCount >= 100001 Then
+                If intRowCount >= curVar.BatchSize + 1 Then
                     Try
                         intRecordsAffected = UploadSqlData(dhdConnect, dttOutput, ConvertToText, ConvertToNull)
                         dttOutput.Clear()
                         TotalRows += intRecordsAffected
                         intRowCount = 1
+                        Console.WriteLine(TotalRows.ToString & " rows uploaded.")
                     Catch ex As Exception
                         ErrorLevel = -1
                         ErrorMessage = "Export to database failed. Check if the columns match and try again. If you are importing more than 1 table, make sure they have identical columns" & ex.Message
@@ -2267,6 +2276,8 @@ Public Class BaseCode
             Using bcp As System.Data.SqlClient.SqlBulkCopy = New System.Data.SqlClient.SqlBulkCopy(dhdDB.SqlConnection)
                 If dhdDB.SqlConnection.State = ConnectionState.Closed Then dhdDB.SqlConnection.Open()
                 bcp.DestinationTableName = dhdDB.DataTableName
+                If ConvertToText = True Then dttInput = dhdConnect.ConvertToText(dttInput)
+                If ConvertToNull = True Then dttInput = dhdConnect.EmptyToNull(dttInput)
                 Dim reader As DataTableReader = dttInput.CreateDataReader()
                 bcp.WriteToServer(reader)
             End Using

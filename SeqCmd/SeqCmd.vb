@@ -12,6 +12,7 @@ Module SeqCmd
     Dim lstReports As List(Of String)
 
     Sub Main()
+        Console.WriteLine("Program Start" & Now().ToString)
         If My.Application.CommandLineArgs.Count > 0 Then basCode.ParseCommands(My.Application.CommandLineArgs)
         If basCode.curStatus.QuitApplication = True Then End
         ImportTable = basCode.curStatus.Table
@@ -49,7 +50,8 @@ Module SeqCmd
         If basCode.curStatus.RunImport = True AndAlso basCode.dhdText.ImportFile.Length > 0 AndAlso basCode.curStatus.Table.Length > 0 Then
             'Import file
             If basCode.dhdText.ImportFile.Contains("\") = False Then
-                Console.WriteLine("You need to provide a valid filepath and filename")
+                Console.WriteLine("You need to provide a valid filepath and filename.")
+                Console.WriteLine("Press Enter to Exit.")
                 Console.ReadLine()
                 Environment.Exit(0)
             End If
@@ -82,7 +84,7 @@ Module SeqCmd
                 Else
                     If basCode.curVar.DebugMode = True Then Console.WriteLine("No import: ImportTable = " & ImportTable & " StatusTable = " & basCode.curStatus.Table)
                 End If
-                If Not basCode.dhdText.ExportFile Is Nothing AndAlso basCode.curStatus.RunReport = False AndAlso basCode.dhdText.ExportFile.Length > 0 Then
+                If Not basCode.dhdText.ExportFile Is Nothing AndAlso basCode.curVar.LargeFile = False AndAlso basCode.curStatus.RunReport = False AndAlso basCode.dhdText.ExportFile.Length > 0 Then
                     If basCode.curVar.DebugMode = True Then Console.WriteLine("Imported file export to: " & basCode.dhdText.ExportFile)
                     'export imported file
                     basCode.ExportFile(dtsInput, basCode.dhdText.ExportFile, basCode.curVar.ConvertToText, basCode.curVar.ConvertToNull, basCode.curVar.ShowFile, basCode.curVar.HasHeaders, basCode.curVar.Delimiter, basCode.curVar.QuoteValues, basCode.curVar.CreateDir)
@@ -109,6 +111,7 @@ Module SeqCmd
                 basCode.dhdText.SendSMTP(basCode.dhdText.SmtpReply, strSenderName, basCode.dhdText.SmtpRecipient, strRecepientName, basCode.dhdText.SmtpReply, strSenderName, basCode.curStatus.Report, strBody, strExportFile)
             End If
         End If
+        Console.WriteLine("Program End" & Now().ToString)
     End Sub
 
     Friend Sub LoadConnections()
@@ -178,7 +181,7 @@ Module SeqCmd
 
     Friend Function ImportFile(strImportFile As String) As DataSet
         Console.WriteLine("Importing file: " & strImportFile)
-        Dim dtsImport As DataSet = basCode.ImportFile(strImportFile, basCode.curVar.HasHeaders, basCode.curVar.Delimiter, basCode.curVar.QuoteValues)
+        Dim dtsImport As DataSet = basCode.ImportFile(strImportFile, basCode.curVar.HasHeaders, basCode.curVar.Delimiter, basCode.curVar.QuoteValues, basCode.curVar.LargeFile)
         If basCode.ErrorLevel = -1 Then Console.WriteLine(basCode.ErrorMessage)
         Return dtsImport
     End Function
@@ -203,6 +206,8 @@ Module SeqCmd
             Dim intRecords As Integer = 0
             If basCode.curStatus.ImportAsXml = True Then
                 intRecords = basCode.SaveXmlToDatabase(dhdDB, dtsInput, strFileName)
+            ElseIf basCode.curVar.LargeFile = True Then
+                intRecords = basCode.SaveLargeFileToDatabase(dhdDB, strFileName, basCode.curVar.HasHeaders, basCode.curVar.Delimiter, basCode.curVar.QuoteValues, basCode.curVar.ConvertToText, basCode.curVar.ConvertToNull)
             Else
                 intRecords = basCode.SaveToDatabase(dhdDB, dtsInput, basCode.curVar.ConvertToText, basCode.curVar.ConvertToNull)
             End If

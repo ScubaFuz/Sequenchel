@@ -176,6 +176,7 @@
     Private _QuoteValues As Boolean = False
     Private _CreateDir As Boolean = False
     Private _LargeFile As Boolean = False
+    Private _BatchSize As Integer = 100000
 
     Public Property ConvertToText() As Boolean
         Get
@@ -246,6 +247,15 @@
         End Get
         Set(ByVal Value As Boolean)
             _LargeFile = Value
+        End Set
+    End Property
+
+    Public Property BatchSize() As Integer
+        Get
+            Return _BatchSize
+        End Get
+        Set(ByVal Value As Integer)
+            _BatchSize = Value
         End Set
     End Property
 #End Region

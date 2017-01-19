@@ -142,7 +142,7 @@ Public Class frmImport
         basCode.dhdText.ImportFile = ofdFile.FileName
         txtCurrentFile.Text = basCode.dhdText.ImportFile
         WriteStatus("File Selected for Import", 0, lblStatusText)
-        ImportFile()
+        'ImportFile()
     End Sub
 
     Private Sub ImportFile()
@@ -155,6 +155,7 @@ Public Class frmImport
         basCode.curVar.Delimiter = txtDelimiter.Text
         basCode.curVar.QuoteValues = chkQuotedValues.Checked
         basCode.curVar.LargeFile = chkLargeFile.Checked
+        If IsNumeric(txtBatchSize.Text) Then basCode.curVar.BatchSize = txtBatchSize.Text
         dtsImport = basCode.ImportFile(basCode.dhdText.PathConvert(basCode.CheckFilePath(basCode.dhdText.ImportFile)), chkHasHeaders.Checked, txtDelimiter.Text, chkQuotedValues.Checked)
 
         If basCode.ErrorLevel = -1 Then
@@ -305,10 +306,7 @@ Public Class frmImport
 
     Private Sub Checkfields()
         If chkDatabase.Checked = True Then
-            txtServer.Enabled = True
-            txtDatabase.Enabled = True
-            txtTable.Enabled = True
-            chkWinAuth.Enabled = True
+            grpDatabase.Enabled = True
             If chkWinAuth.Checked = False Then
                 txtUser.Enabled = True
                 txtPassword.Enabled = True
@@ -317,17 +315,12 @@ Public Class frmImport
                 txtPassword.Enabled = False
             End If
         Else
-            txtServer.Enabled = False
-            txtDatabase.Enabled = False
-            txtTable.Enabled = False
-            chkWinAuth.Enabled = False
-            txtUser.Enabled = False
-            txtPassword.Enabled = False
+            grpDatabase.Enabled = False
         End If
         If chkFile.Checked = True Then
-            txtFileName.Enabled = True
+            grpUploadFile.Enabled = True
         Else
-            txtFileName.Enabled = False
+            grpUploadFile.Enabled = False
         End If
     End Sub
 
@@ -369,4 +362,5 @@ Public Class frmImport
             End If
         End If
     End Sub
+
 End Class

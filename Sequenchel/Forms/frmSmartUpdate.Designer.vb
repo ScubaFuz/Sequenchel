@@ -769,9 +769,9 @@ Partial Class frmSmartUpdate
         Me.lblLocalView.AutoSize = True
         Me.lblLocalView.Location = New System.Drawing.Point(395, 101)
         Me.lblLocalView.Name = "lblLocalView"
-        Me.lblLocalView.Size = New System.Drawing.Size(59, 13)
+        Me.lblLocalView.Size = New System.Drawing.Size(90, 13)
         Me.lblLocalView.TabIndex = 11
-        Me.lblLocalView.Text = "Local View"
+        Me.lblLocalView.Text = "Local View Name"
         '
         'txtLocalView
         '

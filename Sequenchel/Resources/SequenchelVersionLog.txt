@@ -3,6 +3,7 @@ New: SmartUpdate can now remove all data from target table before adding new dat
 New: SmartUpdate can create a local view to a remote table for data transfer.
 New: File import can now create a basic table on the fly.
 New: File import can now clear all data from target table before import.
+New: Large File Import can be done in batches to the database, skipping the screen, enabling much larger files to be imported.
 Enhanced: If an Excel sheet cannot be imported, the sheet is skipped and other sheets are still displayed.
 Enhanced: Default value buttons can now use the same variables as report filters.
 Fixed: Templates now work as intended.
