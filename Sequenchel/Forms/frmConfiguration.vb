@@ -7,8 +7,6 @@ Public Class frmConfiguration
         System.Windows.Forms.Application.CurrentCulture = New System.Globalization.CultureInfo("EN-US")
         If basCode.curVar.DebugMode Then
             btnTest.Visible = True
-        Else
-            tpgTableTemplates.Dispose()
         End If
         cbxDataProvider.SelectedItem = "SQL"
         cbxLoginMethod.SelectedItem = "Windows"
