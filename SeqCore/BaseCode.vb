@@ -2248,7 +2248,7 @@ Public Class BaseCode
                 xmlTempDoc = xmlDocExport
             End If
 
-            Dim strQuery As String = "INSERT INTO " & dhdConnect.DataTableName & " SELECT '" & strFileName & "','" & Now().ToString & "','" & xmlTempDoc.OuterXml + "'"
+            Dim strQuery As String = "INSERT INTO " & dhdConnect.DataTableName & " SELECT '" & strFileName & "','" & Now().ToString & "','" & xmlTempDoc.OuterXml.Replace("'", "''") + "'"
             QueryDb(dhdConnect, strQuery, 0)
         Catch ex As Exception
             ErrorLevel = -1
@@ -2405,7 +2405,7 @@ Public Class BaseCode
             Dim strExtension As String = strFileName.Substring(strFileName.LastIndexOf(".") + 1, strFileName.Length - (strFileName.LastIndexOf(".") + 1))
             Select Case strExtension.ToLower
                 Case "xml"
-                    dtsImport = dhdText.LoadXmlToDataset(strFileName)
+                    dtsImport = dhdText.LoadXmlToDataset(strFileName, curVar.LargeFile)
                 Case "xls", "xlsx"
                     dtsImport = Excel.ImportExcelFile(strFileName)
                     ErrorLevel = Excel.ErrorLevel

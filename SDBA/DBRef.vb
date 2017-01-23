@@ -65,6 +65,7 @@ Public Class DBRef
         'Stored Procedures
         arrScripts(AddOne()) = "01 dbo.usp_BackupHandle.sql"
         arrScripts(AddOne()) = "01 dbo.usp_ConfigHandle.sql"
+        arrScripts(AddOne()) = "01 dbo.usp_ImportXml.sql"
         arrScripts(AddOne()) = "01 dbo.usp_LoggingHandle.sql"
         'arrScripts(AddOne()) = "01 dbo.usp_ReportArgumentHandle.sql"
         'arrScripts(AddOne()) = "01 dbo.usp_ReportFieldHandle.sql"
