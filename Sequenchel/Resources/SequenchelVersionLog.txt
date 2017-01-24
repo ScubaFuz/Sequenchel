@@ -11,6 +11,7 @@ Fixed: Templates now work as intended.
 Fixed: Import with Windows login method now works irrespectively of case.
 Fixed: Import Text Delimiter now has a minimum and maximum length of 1 character
 Fixed: XML file that contains values with quotes (') now imports correctly.
+Fixed: Searching for a date in the main screen now works correct.
 
 Version 4.0.1
 New: Adding fields to a report no longer removes that field from the select list.

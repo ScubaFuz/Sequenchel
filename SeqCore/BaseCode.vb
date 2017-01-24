@@ -1156,9 +1156,9 @@ Public Class BaseCode
                     Case "INTEGER"
                         strOutput = " (" & strTableField & " LIKE '%" & strFieldValue & "%')"
                     Case "DATETIME"
-                        strOutput = " (CONVERT([nvarchar](" & strFieldWidth & "), " & strTableField & ", " & curVar.DateTimeStyle & ")) LIKE '%" & strFieldValue & "%')"
+                        strOutput = " (CONVERT([nvarchar](" & strFieldWidth & "), " & strTableField & ", " & curVar.DateTimeStyle & ") LIKE '%" & strFieldValue & "%')"
                     Case "BINARY", "XML", "GEO", "TEXT", "GUID", "TIME", "TIMESTAMP"
-                        strOutput = " (CONVERT([nvarchar](" & strFieldWidth & "), " & strTableField & ")) LIKE '%" & strFieldValue & "%')"
+                        strOutput = " (CONVERT([nvarchar](" & strFieldWidth & "), " & strTableField & ") LIKE '%" & strFieldValue & "%')"
                     Case "BIT"
                         If IsNumeric(strFieldValue) Then
                             strOutput = " (COALESCE(" & strTableField & ",0) = " & strFieldValue & ") "
