@@ -869,68 +869,73 @@
             Exit Sub
         End If
 
-        Dim strSourceQuery As String = ""
-        If strLinkedServer.Length > 0 And strDatabaseSource.Length > 0 Then
-            strSourceQuery = "SELECT [Star1] FROM OPENQUERY([" & strLinkedServer & "],''SELECT [Star2] FROM " & strDatabaseSource & "." & strSchemaSource & "." & strTableSource & "'')"
-        ElseIf strLinkedServer.Length > 0 Then
-            strSourceQuery = "SELECT [Star1] FROM OPENQUERY([" & strLinkedServer & "],''SELECT [Star2] FROM " & strSchemaSource & "." & strTableSource & "'')"
-        ElseIf strDatabaseSource.Length > 0 Then
-            strSourceQuery = "SELECT [Star1] FROM " & strDatabaseSource & "." & strSchemaSource & "." & strTableSource
-        End If
+        Dim errorlevel As Integer = basCode.CreateLocalView(basCode.dhdConnection, strLinkedServer, strDatabaseSource, strSchemaSource, strTableSource, strSchemaTarget, strViewTarget)
+        'Dim strSourceQuery As String = ""
+        'If strLinkedServer.Length > 0 And strDatabaseSource.Length > 0 Then
+        '    strSourceQuery = "SELECT [Star1] FROM OPENQUERY([" & strLinkedServer & "],''SELECT [Star2] FROM " & strDatabaseSource & "." & strSchemaSource & "." & strTableSource & "'')"
+        'ElseIf strLinkedServer.Length > 0 Then
+        '    strSourceQuery = "SELECT [Star1] FROM OPENQUERY([" & strLinkedServer & "],''SELECT [Star2] FROM " & strSchemaSource & "." & strTableSource & "'')"
+        'ElseIf strDatabaseSource.Length > 0 Then
+        '    strSourceQuery = "SELECT [Star1] FROM " & strDatabaseSource & "." & strSchemaSource & "." & strTableSource
+        'End If
 
-        If strSourceQuery.Length = 0 Then Exit Sub
-        Dim strInputQuery As String = strSourceQuery.Replace("[Star1]", "*").Replace("[Star2]", "TOP 0 *")
+        'If strSourceQuery.Length = 0 Then Exit Sub
+        'Dim strInputQuery As String = strSourceQuery.Replace("[Star1]", "*").Replace("[Star2]", "TOP 0 *")
 
-        Dim strColumnQuery As String = "SELECT name FROM sys.dm_exec_describe_first_result_set('" & strInputQuery & "', NULL, 0) ORDER BY column_ordinal;"
-        Dim dtsData As DataSet = basCode.QueryDb(basCode.dhdConnection, strColumnQuery, True)
-        If basCode.dhdText.DatasetCheck(dtsData) = False Then
-            WriteStatus("No results were found for this table or View. Check your settings.", 2, lblStatusText)
-            basCode.WriteLog("No results were found for this table or View. Check your settings.", 3)
-            Exit Sub
-        End If
+        'Dim strColumnQuery As String = "SELECT name FROM sys.dm_exec_describe_first_result_set('" & strInputQuery & "', NULL, 0) ORDER BY column_ordinal;"
+        'Dim dtsData As DataSet = basCode.QueryDb(basCode.dhdConnection, strColumnQuery, True)
+        'If basCode.dhdText.DatasetCheck(dtsData) = False Then
+        '    WriteStatus("No results were found for this table or View. Check your settings.", 2, lblStatusText)
+        '    basCode.WriteLog("No results were found for this table or View. Check your settings.", 3)
+        '    Exit Sub
+        'End If
 
-        Dim strColumns As String = ",", strColumnsSource As String = "", strColumnsTarget As String = ""
-        For intRowCount1 As Integer = 0 To dtsData.Tables(0).Rows.Count - 1
-            If dtsData.Tables.Item(0).Rows(intRowCount1).Item("name").GetType().ToString = "System.DBNull" Then
-                'No column name was found
-            Else
-                strColumns &= "," & dtsData.Tables.Item(0).Rows(intRowCount1).Item("name")
-            End If
-        Next
-        strColumns = strColumns.Replace(",,", "")
-        If strColumns = "," Then
-            WriteStatus("No columns were found for this table or View. Check your settings.", 2, lblStatusText)
-            basCode.WriteLog("No columns were found for this table or View. Check your settings.", 3)
-            Exit Sub
-        End If
+        'Dim strColumns As String = ",", strColumnsSource As String = "", strColumnsTarget As String = ""
+        'For intRowCount1 As Integer = 0 To dtsData.Tables(0).Rows.Count - 1
+        '    If dtsData.Tables.Item(0).Rows(intRowCount1).Item("name").GetType().ToString = "System.DBNull" Then
+        '        'No column name was found
+        '    Else
+        '        strColumns &= "," & dtsData.Tables.Item(0).Rows(intRowCount1).Item("name")
+        '    End If
+        'Next
+        'strColumns = strColumns.Replace(",,", "")
+        'If strColumns = "," Then
+        '    WriteStatus("No columns were found for this table or View. Check your settings.", 2, lblStatusText)
+        '    basCode.WriteLog("No columns were found for this table or View. Check your settings.", 3)
+        '    Exit Sub
+        'End If
 
-        Dim strViewQuery As String = ""
-        strColumnsSource = """" & strColumns.Replace(",", """,""") & """"
-        strColumnsTarget = "[" & strColumns.Replace(",", "],[") & "]"
+        'Dim strViewQuery As String = ""
+        'strColumnsSource = """" & strColumns.Replace(",", """,""") & """"
+        'strColumnsTarget = "[" & strColumns.Replace(",", "],[") & "]"
 
-        If strColumnsSource.Length > 7000 And strLinkedServer.Length > 0 Then
-            strColumnsSource = "*"
-        End If
+        'If strColumnsSource.Length > 7000 And strLinkedServer.Length > 0 Then
+        '    strColumnsSource = "*"
+        'End If
 
-        strViewQuery = strSourceQuery.Replace("[Star1]", strColumnsTarget).Replace("[Star2]", strColumnsSource)
+        'strViewQuery = strSourceQuery.Replace("[Star1]", strColumnsTarget).Replace("[Star2]", strColumnsSource)
 
-        Dim strCheckViewQuery As String = "SELECT name FROM sys.dm_exec_describe_first_result_set('" & strViewQuery & "', NULL, 0);"
-        Dim dtsCheckView As DataSet = basCode.QueryDb(basCode.dhdConnection, strCheckViewQuery, True)
-        If basCode.dhdText.DatasetCheck(dtsCheckView) = False Then
-            strViewQuery = strSourceQuery.Replace("[Star1]", "*").Replace("[Star2]", "*")
+        'Dim strCheckViewQuery As String = "SELECT name FROM sys.dm_exec_describe_first_result_set('" & strViewQuery & "', NULL, 0);"
+        'Dim dtsCheckView As DataSet = basCode.QueryDb(basCode.dhdConnection, strCheckViewQuery, True)
+        'If basCode.dhdText.DatasetCheck(dtsCheckView) = False Then
+        '    strViewQuery = strSourceQuery.Replace("[Star1]", "*").Replace("[Star2]", "*")
+        'Else
+        '    For intRowCount1 As Integer = 0 To dtsCheckView.Tables(0).Rows.Count - 1
+        '        If dtsCheckView.Tables.Item(0).Rows(intRowCount1).Item("name").GetType().ToString = "System.DBNull" Then
+        '            'The query does not produce any results, revert to former query
+        '            strViewQuery = strSourceQuery.Replace("[Star1]", "*").Replace("[Star2]", "*")
+        '        End If
+        '    Next
+        'End If
+
+        ''Create the View
+        'Dim strBuildViewQuery As String = "CREATE VIEW [" & strSchemaTarget & "].[" & strViewTarget & "] AS " & strViewQuery.Replace("''", "'")
+        'basCode.QueryDb(basCode.dhdConnection, strBuildViewQuery, False)
+        If errorlevel <> 0 Then
+            WriteStatus(basCode.ErrorMessage, 1, lblStatusText)
         Else
-            For intRowCount1 As Integer = 0 To dtsCheckView.Tables(0).Rows.Count - 1
-                If dtsCheckView.Tables.Item(0).Rows(intRowCount1).Item("name").GetType().ToString = "System.DBNull" Then
-                    'The query does not produce any results, revert to former query
-                    strViewQuery = strSourceQuery.Replace("[Star1]", "*").Replace("[Star2]", "*")
-                End If
-            Next
+            WriteStatus("View " & strSchemaTarget & "." & strViewTarget & " created", 0, lblStatusText)
         End If
-
-        'Create the View
-        Dim strBuildViewQuery As String = "CREATE VIEW [" & strSchemaTarget & "].[" & strViewTarget & "] AS " & strViewQuery.Replace("''", "'")
-        basCode.QueryDb(basCode.dhdConnection, strBuildViewQuery, False)
-        WriteStatus("View " & strSchemaTarget & "." & strViewTarget & " created", 0, lblStatusText)
 
         lstSourceTables.Items.Add(strSchemaTarget & "." & strViewTarget)
         lstSourceTables.SelectedItem = strSchemaTarget & "." & strViewTarget

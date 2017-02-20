@@ -599,4 +599,78 @@
 
 #End Region
 
+#Region "CreateSmartView"
+    Private _CreateSmartView As Boolean = False
+    Private _LinkedServer As String = ""
+    Private _SourceDatabase As String = ""
+    Private _SourceSchema As String = ""
+    Private _SourceTable As String = ""
+    Private _TargetSchema As String = ""
+    Private _TargetView As String = ""
+
+    Public Property CreateSmartView() As Boolean
+        Get
+            Return _CreateSmartView
+        End Get
+        Set(ByVal Value As Boolean)
+            _CreateSmartView = Value
+        End Set
+    End Property
+
+    Public Property LinkedServer() As String
+        Get
+            Return _LinkedServer
+        End Get
+        Set(ByVal Value As String)
+            _LinkedServer = Value
+        End Set
+    End Property
+
+    Public Property SourceDatabase() As String
+        Get
+            Return _SourceDatabase
+        End Get
+        Set(ByVal Value As String)
+            _SourceDatabase = Value
+        End Set
+    End Property
+
+    Public Property SourceSchema() As String
+        Get
+            Return _SourceSchema
+        End Get
+        Set(ByVal Value As String)
+            _SourceSchema = Value
+        End Set
+    End Property
+
+    Public Property SourceTable() As String
+        Get
+            Return _SourceTable
+        End Get
+        Set(ByVal Value As String)
+            _SourceTable = Value
+        End Set
+    End Property
+
+    Public Property TargetSchema() As String
+        Get
+            Return _TargetSchema
+        End Get
+        Set(ByVal Value As String)
+            _TargetSchema = Value
+        End Set
+    End Property
+
+    Public Property TargetView() As String
+        Get
+            Return _TargetView
+        End Get
+        Set(ByVal Value As String)
+            _TargetView = Value
+        End Set
+    End Property
+
+#End Region
+
 End Class

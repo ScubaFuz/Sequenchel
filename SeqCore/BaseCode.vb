@@ -142,43 +142,66 @@ Public Class BaseCode
                     'Import the file directly to the database
                     curVar.LargeFile = True
                     If IsNumeric(strInput) Then curVar.BatchSize = strInput
+                Case "/createsmartview"
+                    curVar.CreateSmartView = True
+                Case "/linkedserver"
+                    curVar.LinkedServer = strInput
+                Case "/sourcedatabase"
+                    curVar.SourceDatabase = strInput
+                Case "/sourceschema"
+                    curVar.SourceSchema = strInput
+                Case "/sourcetable"
+                    curVar.SourceTable = strInput
+                Case "/targetschema"
+                    curVar.TargetSchema = strInput
+                Case "/targetview"
+                    curVar.TargetView = strInput
                 Case "/?"
                     'ShowHelp
                     curStatus.QuitApplication = True
                     Console.WriteLine(" Sequenchel Command Line Help.")
                     Console.WriteLine(" /? ; This help screen")
-                    Console.WriteLine(" /Debug ; Show or log extra processing information")
+                    Console.WriteLine("     Do not use <> with values.")
+                    Console.WriteLine(" /Debug ; Show or log extra processing information.")
                     Console.WriteLine(" /SecurityOverride:Password ; Enable all modules if the password is correct.")
                     Console.WriteLine(" /Control ; Run Sequenchel in Control Mode. See the manual for more information.")
                     Console.WriteLine(" /Report ; Run a predefined report.")
                     Console.WriteLine(" /Import ; Import a file into Sequenchel.")
-                    Console.WriteLine(" /Connection ; Use this preconfigured Connection for Report or Import option")
-                    Console.WriteLine(" /TableSet ; Use this preconfigured TableSet for Report or Import option.")
-                    Console.WriteLine(" /Table ; Use this Table for Import Option.")
+                    Console.WriteLine(" /Connection:<value> ; Use this preconfigured Connection for Report or Import option.")
+                    Console.WriteLine(" /TableSet:<value> ; Use this preconfigured TableSet for Report or Import option.")
+                    Console.WriteLine(" /Table:<value> ; Use this Table for Import Option.")
                     Console.WriteLine("     A preconfigured table name or alias, an existing table or a new table.")
-                    Console.WriteLine(" /ReportName ; Run this predefined Report (requires /Report option)")
-                    Console.WriteLine(" /ExportFile ; Export the data to this file. Report data prevales over Import.")
-                    Console.WriteLine(" /ImportFile ; Import this file (Requires /Import option)")
+                    Console.WriteLine(" /ReportName:<value> ; Run this predefined Report (requires /Report option).")
+                    Console.WriteLine(" /ExportFile:<value> ; Export the data to this file. Report data prevales over Import.")
+                    Console.WriteLine(" /ImportFile:<value> ; Import this file (Requires /Import option).")
                     Console.WriteLine(" /ConvertToText ; Convert imported data to plain text. Excel files only.")
                     Console.WriteLine(" /ConvertToNull ; Convert empty values to NULL. Upload to database only.")
                     Console.WriteLine(" /HasHeaders ; The first row of the imported file has header/column names.")
-                    Console.WriteLine(" /Delimiter:delimiter ; Value seperator. Default is comma. -> /Delimiter:,")
-                    Console.WriteLine(" /EmailRecipient:Email@Address.com ; Report Only. Requires SMTP to be configured.")
+                    Console.WriteLine(" /Delimiter:<value> ; Value seperator. Default is comma. -> /Delimiter:,")
+                    Console.WriteLine(" /EmailRecipient:<Email@Address.com> ; Report Only. Requires SMTP to be configured.")
                     Console.WriteLine(" /ClearTargetTable ; Delete all data from the database table before import.")
                     Console.WriteLine(" /ImportAsXml ; Convert plain text to basic XML. Leave XML Import as original.")
                     Console.WriteLine("     Import into the database as Xml datatype, CreateTargetTable.")
                     Console.WriteLine("     CreateTargetTable creates a special table for this purpose.")
                     Console.WriteLine(" /CreateTargetTable ; Create the target database table if it does not exist.")
                     Console.WriteLine("    Uses import file datastructure or creates a basic XML upload table.")
-                    Console.WriteLine(" /QuotedValues:True/False ; Default=False")
+                    Console.WriteLine(" /QuotedValues:<True/False> ; Default=False.")
                     Console.WriteLine("    True on Import: Double quotes are regarded as text delimiters.")
                     Console.WriteLine("    True on Export: All values will be enclosed in double quotes.")
+                    Console.WriteLine("    True on CreateSmartView: remote schema and table name will be enclosed in double quotes.")
                     Console.WriteLine(" /LargeFile[:BatchSize] ; The file to import will be parsed per batch instead of")
                     Console.WriteLine("    as a whole. The default value for BatchSize = 100.000 records. ")
                     Console.WriteLine("    The switches CreateTargetTable and ExportFile do not work with LargeFile and ")
                     Console.WriteLine("    will be ignored. You can use the gui to create the table from a large file.")
+                    Console.WriteLine(" /CreateSmartView ; requires /Connection, Create a local view to a remote table for SmartUpdate.")
+                    Console.WriteLine(" /LinkedServer:<value> ; requires /CreateSmartView, The remote table is on this linked server.")
+                    Console.WriteLine(" /SourceDatabase:<value> ; requires /CreateSmartView, The remote table is in this database.")
+                    Console.WriteLine(" /SourceSchema:<value> ; requires /CreateSmartView, The remote table is in this schema.")
+                    Console.WriteLine(" /SourceTable:<value> ; requires /CreateSmartView, The remote table name.")
+                    Console.WriteLine(" /TargetSchema:<value> ; requires /CreateSmartView, The local schema name where the view is created.")
+                    Console.WriteLine(" /TargetView:<value> ; requires /CreateSmartView, The name of the local view to be created.")
                     Console.WriteLine(" ")
-                    Console.WriteLine(" Additinal help may be found in the manual at Sequenchel.com")
+                    Console.WriteLine(" Additinal help may be found in the manual at Sequenchel.com.")
                     Console.WriteLine(" ")
             End Select
 
@@ -1610,6 +1633,7 @@ Public Class BaseCode
         If dhdConnect.ErrorLevel = -1 Then Return False
         Return True
     End Function
+
     Public Function CheckColumnLength(dcmInput As DataColumn) As Integer
         Dim MaxColLen As Integer = 0
         Dim intCount As Integer = 0
@@ -2379,6 +2403,83 @@ Public Class BaseCode
 
         Dim dtsData As DataSet = QueryDb(dhdConnect, strQuery, True)
         Return dtsData
+    End Function
+
+    Public Function CreateLocalView(dhdConnect As DataHandler.db, strLinkedServer As String, strDatabaseSource As String, strSchemaSource As String, strTableSource As String, strSchemaTarget As String, strViewTarget As String) As Integer
+        Dim strSourceQuery As String = ""
+        If curVar.QuoteValues = True Then
+            strSchemaSource = """" & strSchemaSource & """"
+            strTableSource = """" & strTableSource & """"
+        End If
+        If strLinkedServer.Length > 0 And strDatabaseSource.Length > 0 Then
+            strSourceQuery = "SELECT [Star1] FROM OPENQUERY([" & strLinkedServer & "],''SELECT [Star2] FROM " & strDatabaseSource & "." & strSchemaSource & "." & strTableSource & "'')"
+        ElseIf strLinkedServer.Length > 0 Then
+            strSourceQuery = "SELECT [Star1] FROM OPENQUERY([" & strLinkedServer & "],''SELECT [Star2] FROM " & strSchemaSource & "." & strTableSource & "'')"
+        ElseIf strDatabaseSource.Length > 0 Then
+            strSourceQuery = "SELECT [Star1] FROM " & strDatabaseSource & "." & strSchemaSource & "." & strTableSource
+        End If
+
+        If strSourceQuery.Length = 0 Then
+            ErrorMessage = "No valid source provided"
+            ErrorLevel = -1
+            Return -1
+        End If
+        Dim strInputQuery As String = strSourceQuery.Replace("[Star1]", "*").Replace("[Star2]", "TOP 0 *")
+
+        Dim strColumnQuery As String = "SELECT name FROM sys.dm_exec_describe_first_result_set('" & strInputQuery & "', NULL, 0) ORDER BY column_ordinal;"
+        Dim dtsData As DataSet = QueryDb(dhdConnect, strColumnQuery, True)
+        If dhdText.DatasetCheck(dtsData) = False Then
+            ErrorMessage = "No results were found for this table or View. Check your settings."
+            ErrorLevel = -1
+            WriteLog("No results were found for this table or View. Check your settings.", 3)
+            Return -1
+        End If
+
+        Dim strColumns As String = ",", strColumnsSource As String = "", strColumnsTarget As String = ""
+        For intRowCount1 As Integer = 0 To dtsData.Tables(0).Rows.Count - 1
+            If dtsData.Tables.Item(0).Rows(intRowCount1).Item("name").GetType().ToString = "System.DBNull" Then
+                'No column name was found
+            Else
+                strColumns &= "," & dtsData.Tables.Item(0).Rows(intRowCount1).Item("name")
+            End If
+        Next
+        strColumns = strColumns.Replace(",,", "")
+        If strColumns = "," Then
+            ErrorMessage = "No columns were found for this table or View. Check your settings."
+            ErrorLevel = -1
+            WriteLog("No columns were found for this table or View. Check your settings.", 3)
+            Return -1
+        End If
+
+        Dim strViewQuery As String = ""
+        strColumnsSource = """" & strColumns.Replace(",", """,""") & """"
+        strColumnsTarget = "[" & strColumns.Replace(",", "],[") & "]"
+
+        If strColumnsSource.Length > 7000 And strLinkedServer.Length > 0 Then
+            strColumnsSource = "*"
+        End If
+
+        strViewQuery = strSourceQuery.Replace("[Star1]", strColumnsTarget).Replace("[Star2]", strColumnsSource)
+
+        Dim strCheckViewQuery As String = "SELECT name FROM sys.dm_exec_describe_first_result_set('" & strViewQuery & "', NULL, 0);"
+        Dim dtsCheckView As DataSet = QueryDb(dhdConnect, strCheckViewQuery, True)
+        If dhdText.DatasetCheck(dtsCheckView) = False Then
+            strViewQuery = strSourceQuery.Replace("[Star1]", "*").Replace("[Star2]", "*")
+        Else
+            For intRowCount1 As Integer = 0 To dtsCheckView.Tables(0).Rows.Count - 1
+                If dtsCheckView.Tables.Item(0).Rows(intRowCount1).Item("name").GetType().ToString = "System.DBNull" Then
+                    'The query does not produce any results, revert to former query
+                    strViewQuery = strSourceQuery.Replace("[Star1]", "*").Replace("[Star2]", "*")
+                End If
+            Next
+        End If
+
+        'Create the View
+        Dim strBuildViewQuery As String = "CREATE VIEW [" & strSchemaTarget & "].[" & strViewTarget & "] AS " & strViewQuery.Replace("''", "'")
+        QueryDb(dhdConnect, strBuildViewQuery, False)
+        ErrorMessage = dhdConnect.ErrorMessage
+        ErrorLevel = dhdConnect.ErrorLevel
+        Return ErrorLevel
     End Function
 #End Region
 

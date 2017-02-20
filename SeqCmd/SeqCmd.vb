@@ -12,7 +12,7 @@ Module SeqCmd
     Dim lstReports As List(Of String)
 
     Sub Main()
-        Console.WriteLine("Program Start" & Now().ToString)
+        Console.WriteLine("Program Start " & Now().ToString)
         If My.Application.CommandLineArgs.Count > 0 Then basCode.ParseCommands(My.Application.CommandLineArgs)
         If basCode.curStatus.QuitApplication = True Then End
         ImportTable = basCode.curStatus.Table
@@ -48,70 +48,18 @@ Module SeqCmd
 
         If basCode.curVar.DebugMode = True Then Console.WriteLine("Importmode enabled = " & basCode.curStatus.RunImport)
         If basCode.curStatus.RunImport = True AndAlso basCode.dhdText.ImportFile.Length > 0 AndAlso basCode.curStatus.Table.Length > 0 Then
-            'Import file
-            If basCode.dhdText.ImportFile.Contains("\") = False Then
-                Console.WriteLine("You need to provide a valid filepath and filename.")
-                Console.WriteLine("Press Enter to Exit.")
-                Console.ReadLine()
-                Environment.Exit(0)
-            End If
-            Dim dtsInput As DataSet = Nothing
-
-            If basCode.curStatus.ClearTargetTable = True Then
-                If basCode.curVar.DebugMode = True Then Console.WriteLine("Clearing Target Table")
-                'Clear target table before inporting data
-                If ImportTable <> "" And ImportTable = basCode.curStatus.Table Then
-                    basCode.dhdConnection.DataTableName = basCode.GetTableNameFromAlias(basCode.xmlTables, basCode.curStatus.Table)
-                    If basCode.curVar.DebugMode = True Then Console.WriteLine("Table Name set to: " & basCode.dhdConnection.DataTableName)
-                    basCode.ClearTargetTable(basCode.dhdConnection)
-                End If
-            End If
-
-            If basCode.dhdText.ImportFile.Contains("*") Then
-                If ImportTable <> "" And ImportTable = basCode.curStatus.Table Then
-                    Console.WriteLine("Importing multiple files")
-                    ImportFiles(basCode.dhdText.ImportFile)
-                End If
-            Else
-                If basCode.curVar.DebugMode = True Then Console.WriteLine("File to Import: " & basCode.dhdText.ImportFile)
-                dtsInput = ImportFile(basCode.CheckFilePath(basCode.dhdText.ImportFile))
-                If basCode.curVar.DebugMode = True Then Console.WriteLine("Imported file is OK: " & basCode.dhdText.DatasetCheck(dtsInput))
-                Dim intRecords As Integer = 0
-                If ImportTable <> "" And ImportTable = basCode.curStatus.Table Then
-                    If basCode.curVar.DebugMode = True Then Console.WriteLine("Import to Table: " & basCode.curStatus.Table)
-                    intRecords = UploadFile(dtsInput, basCode.dhdText.ImportFile)
-                    'Console.WriteLine(intRecords & " Records Uploaded")
-                Else
-                    If basCode.curVar.DebugMode = True Then Console.WriteLine("No import: ImportTable = " & ImportTable & " StatusTable = " & basCode.curStatus.Table)
-                End If
-                If Not basCode.dhdText.ExportFile Is Nothing AndAlso basCode.curVar.LargeFile = False AndAlso basCode.curStatus.RunReport = False AndAlso basCode.dhdText.ExportFile.Length > 0 Then
-                    If basCode.curVar.DebugMode = True Then Console.WriteLine("Imported file export to: " & basCode.dhdText.ExportFile)
-                    'export imported file
-                    basCode.ExportFile(dtsInput, basCode.dhdText.ExportFile, basCode.curVar.ConvertToText, basCode.curVar.ConvertToNull, basCode.curVar.ShowFile, basCode.curVar.HasHeaders, basCode.curVar.Delimiter, basCode.curVar.QuoteValues, basCode.curVar.CreateDir)
-                End If
-            End If
+            ImportRun()
         End If
+
         If basCode.curVar.DebugMode = True Then Console.WriteLine("Exportmode enabled = " & basCode.curStatus.RunReport)
         If Not basCode.dhdText.ExportFile Is Nothing AndAlso basCode.curStatus.RunReport = True AndAlso basCode.dhdText.ExportFile.Length > 0 Then
-            If basCode.curVar.DebugMode = True Then Console.WriteLine("Exportfile = " & basCode.dhdText.ExportFile)
-            'Export Report
-            Dim strExportFile As String = basCode.GetExportFileName(basCode.dhdText.ExportFile)
-            Console.WriteLine("Exporting Report: " & basCode.curStatus.Report & " to " & strExportFile)
-            LoadReports()
-            Dim strQuery As String = basCode.ReportQueryBuild(basCode.xmlReports, basCode.xmlTables, basCode.curStatus.Report, basCode.curVar.DateTimeStyle)
-            Dim dtsData As DataSet = basCode.QueryDb(basCode.dhdConnection, strQuery, True, 5)
-            'If dtsData Is Nothing Then Environment.Exit(0)
-            basCode.ExportFile(dtsData, strExportFile, basCode.curVar.ConvertToText, basCode.curVar.ConvertToNull, basCode.curVar.ShowFile, basCode.curVar.HasHeaders, basCode.curVar.Delimiter, basCode.curVar.QuoteValues, basCode.curVar.CreateDir)
-            If basCode.dhdText.SmtpRecipient.Length > 0 AndAlso basCode.dhdText.SmtpRecipient.Contains("@") Then
-                'Email Report
-                Console.WriteLine("Emailing Report: " & basCode.curStatus.Report & " to " & basCode.dhdText.SmtpRecipient)
-                Dim strRecepientName As String = basCode.dhdText.SmtpRecipient.Substring(0, basCode.dhdText.SmtpRecipient.IndexOf("@"))
-                Dim strSenderName As String = basCode.dhdText.SmtpReply.Substring(0, basCode.dhdText.SmtpReply.IndexOf("@"))
-                Dim strBody As String = "Sequenchel Report: " & basCode.curStatus.Report
-                basCode.dhdText.SendSMTP(basCode.dhdText.SmtpReply, strSenderName, basCode.dhdText.SmtpRecipient, strRecepientName, basCode.dhdText.SmtpReply, strSenderName, basCode.curStatus.Report, strBody, strExportFile)
-            End If
+            ExportRun()
         End If
-        Console.WriteLine("Program End" & Now().ToString)
+
+        If basCode.curVar.CreateSmartView = True Then
+            SmartViewCreate()
+        End If
+        Console.WriteLine("Program End " & Now().ToString)
     End Sub
 
     Friend Sub LoadConnections()
@@ -156,6 +104,70 @@ Module SeqCmd
         If basCode.curVar.TableDefault = basCode.curStatus.Table And ImportTable <> basCode.curStatus.Table And ImportTable <> "" And blnTableExists = False And blnCreateTargetTable = False Then
             Console.WriteLine("The specified Table was not found. please check your settings")
             Environment.Exit(0)
+        End If
+    End Sub
+
+    Friend Sub ImportRun()
+        If basCode.dhdText.ImportFile.Contains("\") = False Then
+            Console.WriteLine("You need to provide a valid filepath and filename for import.")
+            Console.WriteLine("Press Enter to Exit.")
+            Console.ReadLine()
+            Environment.Exit(0)
+        End If
+        Dim dtsInput As DataSet = Nothing
+
+        If basCode.curStatus.ClearTargetTable = True Then
+            If basCode.curVar.DebugMode = True Then Console.WriteLine("Clearing Target Table")
+            'Clear target table before inporting data
+            If ImportTable <> "" And ImportTable = basCode.curStatus.Table Then
+                basCode.dhdConnection.DataTableName = basCode.GetTableNameFromAlias(basCode.xmlTables, basCode.curStatus.Table)
+                If basCode.curVar.DebugMode = True Then Console.WriteLine("Table Name set to: " & basCode.dhdConnection.DataTableName)
+                basCode.ClearTargetTable(basCode.dhdConnection)
+            End If
+        End If
+
+        If basCode.dhdText.ImportFile.Contains("*") Then
+            If ImportTable <> "" And ImportTable = basCode.curStatus.Table Then
+                Console.WriteLine("Importing multiple files")
+                ImportFiles(basCode.dhdText.ImportFile)
+            End If
+        Else
+            If basCode.curVar.DebugMode = True Then Console.WriteLine("File to Import: " & basCode.dhdText.ImportFile)
+            dtsInput = ImportFile(basCode.CheckFilePath(basCode.dhdText.ImportFile))
+            If basCode.curVar.DebugMode = True Then Console.WriteLine("Imported file is OK: " & basCode.dhdText.DatasetCheck(dtsInput))
+            Dim intRecords As Integer = 0
+            If ImportTable <> "" And ImportTable = basCode.curStatus.Table Then
+                If basCode.curVar.DebugMode = True Then Console.WriteLine("Import to Table: " & basCode.curStatus.Table)
+                intRecords = UploadFile(dtsInput, basCode.dhdText.ImportFile)
+                'Console.WriteLine(intRecords & " Records Uploaded")
+            Else
+                If basCode.curVar.DebugMode = True Then Console.WriteLine("No import: ImportTable = " & ImportTable & " StatusTable = " & basCode.curStatus.Table)
+            End If
+            If Not basCode.dhdText.ExportFile Is Nothing AndAlso basCode.curVar.LargeFile = False AndAlso basCode.curStatus.RunReport = False AndAlso basCode.dhdText.ExportFile.Length > 0 Then
+                If basCode.curVar.DebugMode = True Then Console.WriteLine("Imported file export to: " & basCode.dhdText.ExportFile)
+                'export imported file
+                basCode.ExportFile(dtsInput, basCode.dhdText.ExportFile, basCode.curVar.ConvertToText, basCode.curVar.ConvertToNull, basCode.curVar.ShowFile, basCode.curVar.HasHeaders, basCode.curVar.Delimiter, basCode.curVar.QuoteValues, basCode.curVar.CreateDir)
+            End If
+        End If
+    End Sub
+
+    Friend Sub ExportRun()
+        If basCode.curVar.DebugMode = True Then Console.WriteLine("Exportfile = " & basCode.dhdText.ExportFile)
+        'Export Report
+        Dim strExportFile As String = basCode.GetExportFileName(basCode.dhdText.ExportFile)
+        Console.WriteLine("Exporting Report: " & basCode.curStatus.Report & " to " & strExportFile)
+        LoadReports()
+        Dim strQuery As String = basCode.ReportQueryBuild(basCode.xmlReports, basCode.xmlTables, basCode.curStatus.Report, basCode.curVar.DateTimeStyle)
+        Dim dtsData As DataSet = basCode.QueryDb(basCode.dhdConnection, strQuery, True, 5)
+        'If dtsData Is Nothing Then Environment.Exit(0)
+        basCode.ExportFile(dtsData, strExportFile, basCode.curVar.ConvertToText, basCode.curVar.ConvertToNull, basCode.curVar.ShowFile, basCode.curVar.HasHeaders, basCode.curVar.Delimiter, basCode.curVar.QuoteValues, basCode.curVar.CreateDir)
+        If basCode.dhdText.SmtpRecipient.Length > 0 AndAlso basCode.dhdText.SmtpRecipient.Contains("@") Then
+            'Email Report
+            Console.WriteLine("Emailing Report: " & basCode.curStatus.Report & " to " & basCode.dhdText.SmtpRecipient)
+            Dim strRecepientName As String = basCode.dhdText.SmtpRecipient.Substring(0, basCode.dhdText.SmtpRecipient.IndexOf("@"))
+            Dim strSenderName As String = basCode.dhdText.SmtpReply.Substring(0, basCode.dhdText.SmtpReply.IndexOf("@"))
+            Dim strBody As String = "Sequenchel Report: " & basCode.curStatus.Report
+            basCode.dhdText.SendSMTP(basCode.dhdText.SmtpReply, strSenderName, basCode.dhdText.SmtpRecipient, strRecepientName, basCode.dhdText.SmtpReply, strSenderName, basCode.curStatus.Report, strBody, strExportFile)
         End If
     End Sub
 
@@ -226,4 +238,27 @@ Module SeqCmd
             Return 0
         End Try
     End Function
+
+    Friend Function SmartViewCreate()
+        If basCode.curVar.TargetSchema.Length = 0 Then basCode.curVar.TargetSchema = basCode.curVar.SourceSchema
+        If basCode.curVar.TargetView.Length = 0 Then basCode.curVar.TargetView = "vw_" & basCode.curVar.SourceTable
+        If basCode.curVar.SourceSchema.Length = 0 Or basCode.curVar.SourceTable.Length = 0 Then
+            Console.WriteLine("Source schema and table/view are required.")
+            Return -1
+        End If
+        If basCode.curVar.LinkedServer.Length = 0 And basCode.curVar.SourceDatabase.Length = 0 Then
+            Console.WriteLine("Linked Server or Database name is required.")
+            Return -1
+        End If
+
+        Dim errorlevel As Integer = basCode.CreateLocalView(basCode.dhdConnection, basCode.curVar.LinkedServer, basCode.curVar.SourceDatabase, basCode.curVar.SourceSchema, basCode.curVar.SourceTable, basCode.curVar.TargetSchema, basCode.curVar.TargetView)
+
+        If errorlevel <> 0 Then
+            Console.WriteLine(basCode.ErrorMessage)
+            Return -1
+        End If
+        Console.WriteLine("View " & basCode.curVar.TargetSchema & "." & basCode.curVar.TargetView & " created")
+        Return 0
+    End Function
+
 End Module
