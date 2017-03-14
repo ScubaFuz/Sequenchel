@@ -70,6 +70,8 @@ Partial Class frmImport
         Me.grpFileOptions = New System.Windows.Forms.GroupBox()
         Me.grpUploadFile = New System.Windows.Forms.GroupBox()
         Me.dgvImport = New Sequenchel.usrDataGridView()
+        Me.lblTextEncoding = New System.Windows.Forms.Label()
+        Me.cbxTextEncoding = New Sequenchel.ComboField()
         Me.grpDatabase.SuspendLayout()
         Me.grpFileOptions.SuspendLayout()
         Me.grpUploadFile.SuspendLayout()
@@ -412,7 +414,7 @@ Partial Class frmImport
         'lblTextDelimiter
         '
         Me.lblTextDelimiter.AutoSize = True
-        Me.lblTextDelimiter.Location = New System.Drawing.Point(327, 22)
+        Me.lblTextDelimiter.Location = New System.Drawing.Point(286, 22)
         Me.lblTextDelimiter.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
         Me.lblTextDelimiter.Name = "lblTextDelimiter"
         Me.lblTextDelimiter.Size = New System.Drawing.Size(96, 13)
@@ -422,7 +424,7 @@ Partial Class frmImport
         'txtDelimiter
         '
         Me.txtDelimiter.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtDelimiter.Location = New System.Drawing.Point(448, 15)
+        Me.txtDelimiter.Location = New System.Drawing.Point(392, 10)
         Me.txtDelimiter.Margin = New System.Windows.Forms.Padding(2)
         Me.txtDelimiter.Name = "txtDelimiter"
         Me.txtDelimiter.Size = New System.Drawing.Size(22, 26)
@@ -435,7 +437,7 @@ Partial Class frmImport
         Me.txtDelimiterShow.BackColor = System.Drawing.SystemColors.Control
         Me.txtDelimiterShow.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtDelimiterShow.Font = New System.Drawing.Font("Microsoft Sans Serif", 20.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtDelimiterShow.Location = New System.Drawing.Point(469, 10)
+        Me.txtDelimiterShow.Location = New System.Drawing.Point(413, 8)
         Me.txtDelimiterShow.Margin = New System.Windows.Forms.Padding(2)
         Me.txtDelimiterShow.Name = "txtDelimiterShow"
         Me.txtDelimiterShow.Size = New System.Drawing.Size(39, 38)
@@ -537,6 +539,8 @@ Partial Class frmImport
         'grpFileOptions
         '
         Me.grpFileOptions.Controls.Add(Me.txtDelimiterShow)
+        Me.grpFileOptions.Controls.Add(Me.cbxTextEncoding)
+        Me.grpFileOptions.Controls.Add(Me.lblTextEncoding)
         Me.grpFileOptions.Controls.Add(Me.chkHasHeaders)
         Me.grpFileOptions.Controls.Add(Me.lblTextDelimiter)
         Me.grpFileOptions.Controls.Add(Me.chkQuotedValues)
@@ -576,6 +580,27 @@ Partial Class frmImport
         Me.dgvImport.Name = "dgvImport"
         Me.dgvImport.Size = New System.Drawing.Size(713, 386)
         Me.dgvImport.TabIndex = 20
+        '
+        'lblTextEncoding
+        '
+        Me.lblTextEncoding.AutoSize = True
+        Me.lblTextEncoding.Location = New System.Drawing.Point(286, 40)
+        Me.lblTextEncoding.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
+        Me.lblTextEncoding.Name = "lblTextEncoding"
+        Me.lblTextEncoding.Size = New System.Drawing.Size(76, 13)
+        Me.lblTextEncoding.TabIndex = 60
+        Me.lblTextEncoding.Text = "Text Encoding"
+        '
+        'cbxTextEncoding
+        '
+        Me.cbxTextEncoding.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cbxTextEncoding.Field = Nothing
+        Me.cbxTextEncoding.FormattingEnabled = True
+        Me.cbxTextEncoding.Items.AddRange(New Object() {"UTF8", "UTF7", "UTF32", "ASCII", "Unicode", "BigEndianUnicode"})
+        Me.cbxTextEncoding.Location = New System.Drawing.Point(392, 37)
+        Me.cbxTextEncoding.Name = "cbxTextEncoding"
+        Me.cbxTextEncoding.Size = New System.Drawing.Size(108, 21)
+        Me.cbxTextEncoding.TabIndex = 61
         '
         'frmImport
         '
@@ -666,4 +691,6 @@ Partial Class frmImport
     Friend WithEvents grpDatabase As GroupBox
     Friend WithEvents grpFileOptions As GroupBox
     Friend WithEvents grpUploadFile As GroupBox
+    Friend WithEvents cbxTextEncoding As ComboField
+    Friend WithEvents lblTextEncoding As Label
 End Class

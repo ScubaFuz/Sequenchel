@@ -142,6 +142,8 @@ Public Class BaseCode
                     'Import the file directly to the database
                     curVar.LargeFile = True
                     If IsNumeric(strInput) Then curVar.BatchSize = strInput
+                Case "/textencoding"
+                    curVar.TextEncoding = strInput
                 Case "/createsmartview"
                     curVar.CreateSmartView = True
                 Case "/linkedserver"
@@ -193,6 +195,8 @@ Public Class BaseCode
                     Console.WriteLine("    as a whole. The default value for BatchSize = 100.000 records. ")
                     Console.WriteLine("    The switches CreateTargetTable and ExportFile do not work with LargeFile and ")
                     Console.WriteLine("    will be ignored. You can use the gui to create the table from a large file.")
+                    Console.WriteLine(" /TextEncoding:<value> ; The Encoding to use when importing a text file.")
+                    Console.WriteLine("    Options are: UTF8 (default), UTF7, UTF32, ASCII, Unicode, BigEndianUnicode")
                     Console.WriteLine(" /CreateSmartView ; requires /Connection, Create a local view to a remote table for SmartUpdate.")
                     Console.WriteLine(" /LinkedServer:<value> ; requires /CreateSmartView, The remote table is on this linked server.")
                     Console.WriteLine(" /SourceDatabase:<value> ; requires /CreateSmartView, The remote table is in this database.")
@@ -2176,7 +2180,7 @@ Public Class BaseCode
         Return intRecordsAffected
     End Function
 
-    Public Function SaveLargeFileToDatabase(ByVal dhdConnect As DataHandler.db, strFileName As String, blnHasHeaders As Boolean, Optional Delimiter As String = ",", Optional QuoteValues As Boolean = False, Optional ConvertToText As Boolean = False, Optional ConvertToNull As Boolean = False) As Integer
+    Public Function SaveLargeFileToDatabase(ByVal dhdConnect As DataHandler.db, strFileName As String, blnHasHeaders As Boolean, Optional Delimiter As String = ",", Optional QuoteValues As Boolean = False, Optional ConvertToText As Boolean = False, Optional ConvertToNull As Boolean = False, Optional TextEncoding As String = "UTF8") As Integer
 
         Dim intRecordsAffected As Integer = 0
         Dim dtsOutput As New DataSet
@@ -2189,7 +2193,22 @@ Public Class BaseCode
         ErrorLevel = 0
         ErrorMessage = ""
 
-        Using MyReader As New Microsoft.VisualBasic.FileIO.TextFieldParser(strFileName)
+        Dim encInput As Text.Encoding = Text.Encoding.UTF8
+        Select Case TextEncoding.ToUpper
+            Case "UTF8"
+                encInput = Text.Encoding.UTF8
+            Case "UTF7"
+                encInput = Text.Encoding.UTF7
+            Case "UTF32"
+                encInput = Text.Encoding.UTF32
+            Case "ASCII"
+                encInput = Text.Encoding.ASCII
+            Case "UNICODE"
+                encInput = Text.Encoding.Unicode
+            Case "BIGENDIANUNICODE"
+                encInput = Text.Encoding.BigEndianUnicode
+        End Select
+        Using MyReader As New Microsoft.VisualBasic.FileIO.TextFieldParser(strFileName, encInput)
             MyReader.TextFieldType = FileIO.FieldType.Delimited
             MyReader.HasFieldsEnclosedInQuotes = QuoteValues
             MyReader.SetDelimiters(Delimiter)
@@ -2218,19 +2237,19 @@ Public Class BaseCode
                                 dttOutput.Rows(dttOutput.Rows.Count - 1)(intColCount) = currentField
                             Else
                                 ErrorLevel = -1
-                                ErrorMessage = "To many columns for row " & TotalRows + intRowCount + 1 & ". Data may have been lost."
-                                Console.WriteLine("To many columns for row " & TotalRows + intRowCount + 1 & ". Data may have been lost.")
-                                WriteLog("To many columns for row " & TotalRows + intRowCount + 1 & ". Data may have been lost.", 1)
+                                ErrorMessage = "Error: To many columns for row " & TotalRows + intRowCount + 1 & ". Data may have been lost."
+                                Console.WriteLine(ErrorMessage)
+                                WriteLog(ErrorMessage, 1)
                             End If
                         End If
                         intColCount += 1
                         'MsgBox(currentField)
                     Next
                 Catch ex As Microsoft.VisualBasic.FileIO.MalformedLineException
-                    Console.WriteLine("Line " & intRowCount + 1 & " is not valid and will be skipped. " & ex.Message)
+                    Console.WriteLine("Error: Line " & intRowCount + 1 & " is not valid and will be skipped. " & ex.Message)
                     WriteLog("Line " & intRowCount + 1 & " is not valid and will be skipped. " & ex.Message, 1)
                 Catch ex As Exception
-                    Console.WriteLine("Line " & intRowCount + 1 & " is not valid and will be skipped. " & ex.Message)
+                    Console.WriteLine("Error: Line " & intRowCount + 1 & " is not valid and will be skipped. " & ex.Message)
                     WriteLog("Line " & intRowCount + 1 & " is not valid and will be skipped. " & ex.Message, 1)
                 End Try
                 intRowCount += 1
@@ -2497,7 +2516,7 @@ Public Class BaseCode
 #End Region
 
 #Region "Import & Export"
-    Public Function ImportFile(strFileName As String, Optional blnHasHeaders As Boolean = True, Optional Delimiter As String = ",", Optional QuotedValues As Boolean = False, Optional LargeFile As Boolean = False) As DataSet
+    Public Function ImportFile(strFileName As String, Optional blnHasHeaders As Boolean = True, Optional Delimiter As String = ",") As DataSet
         ErrorLevel = 0
         ErrorMessage = ""
         dhdText.XmlDoc = Nothing
@@ -2515,7 +2534,7 @@ Public Class BaseCode
                     If Delimiter.Length = 0 Then
                         Return Nothing
                     End If
-                    dtsImport = dhdText.CsvToDataSet(strFileName, blnHasHeaders, Delimiter, QuotedValues, curVar.LargeFile)
+                    dtsImport = dhdText.CsvToDataSet(strFileName, blnHasHeaders, Delimiter, curVar.QuoteValues, curVar.LargeFile, curVar.TextEncoding)
                     If dhdText.ErrorLevel = -1 Then
                         ErrorLevel = -1
                         ErrorMessage = dhdText.ErrorMessage

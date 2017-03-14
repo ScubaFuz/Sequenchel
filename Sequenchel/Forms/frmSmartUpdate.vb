@@ -316,7 +316,8 @@
             Exit Sub
         End If
         'get logpath
-        Dim strLogPath As String = GetDefaultLogPath(basCode.dhdConnection)
+        Dim strLogPath As String = GetDefaultLogPath(basCode.dhdConnection) & "\SmartUpdate.log"
+        strLogPath = strLogPath.Replace("\\", "\")
         'get jobname
         Dim strJobName As String = GetJobName(basCode.dhdConnection, "SmartUpdate")
         If strJobName = "" Then
@@ -330,10 +331,18 @@
             Exit Sub
         End If
         Dim intFlags As Integer = 0
-        If intJobStepCount > 0 Then intFlags = 2
+        If intJobStepCount > 0 Then
+            intFlags = 2
+            Try
+                Dim strQueryOld As String = "EXEC msdb.dbo.sp_update_jobstep @job_name = '" & strJobName & "', @step_id = " & intJobStepCount & ", @on_success_action=3;"
+                basCode.QueryDb(basCode.dhdConnection, strQueryOld, 0)
+            Catch ex As Exception
+
+            End Try
+        End If
 
         'get SqlCommand
-        Dim strSQL As String = txtSmartUpdateCommand.Text
+        Dim strSQL As String = txtSmartUpdateCommand.Text.Replace("'", "''")
 
         'create jobstep
         strQuery = " EXEC msdb.dbo.sp_add_jobstep "
@@ -342,7 +351,7 @@
         strQuery &= " @subsystem=N'TSQL',"
         strQuery &= " @command='" & strSQL & "',"
         strQuery &= " @database_name='" & basCode.dhdConnection.DatabaseName & "',"
-        strQuery &= " @output_file_name='" & strLogPath & "\SmartUpdate.log',"
+        strQuery &= " @output_file_name='" & strLogPath & "',"
         strQuery &= " @flags=" & intFlags & ";"
 
         basCode.QueryDb(basCode.dhdConnection, strQuery, 0)

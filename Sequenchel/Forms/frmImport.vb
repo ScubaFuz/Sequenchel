@@ -117,6 +117,7 @@ Public Class frmImport
         txtServer.Text = basCode.dhdConnection.DataLocation
         txtDatabase.Text = basCode.dhdConnection.DatabaseName
         txtTable.Text = basCode.curStatus.Table
+        cbxTextEncoding.SelectedIndex = 0
         If basCode.dhdConnection.LoginMethod.ToLower = "windows" Then
             chkWinAuth.Checked = True
         Else
@@ -155,8 +156,9 @@ Public Class frmImport
         basCode.curVar.Delimiter = txtDelimiter.Text
         basCode.curVar.QuoteValues = chkQuotedValues.Checked
         basCode.curVar.LargeFile = chkLargeFile.Checked
+        basCode.curVar.TextEncoding = cbxTextEncoding.SelectedItem
         If IsNumeric(txtBatchSize.Text) Then basCode.curVar.BatchSize = txtBatchSize.Text
-        dtsImport = basCode.ImportFile(basCode.dhdText.PathConvert(basCode.CheckFilePath(basCode.dhdText.ImportFile)), chkHasHeaders.Checked, txtDelimiter.Text, chkQuotedValues.Checked)
+        dtsImport = basCode.ImportFile(basCode.dhdText.PathConvert(basCode.CheckFilePath(basCode.dhdText.ImportFile)), chkHasHeaders.Checked, txtDelimiter.Text)
 
         If basCode.ErrorLevel = -1 Then
             WriteStatus(basCode.ErrorMessage, 2, lblStatusText)
@@ -290,7 +292,7 @@ Public Class frmImport
         If basCode.curStatus.ImportAsXml = True Then
             intRecordsAffected = basCode.SaveXmlToDatabase(dhdDB, dtsUpload, basCode.dhdText.ImportFile)
         ElseIf basCode.curVar.LargeFile = True Then
-            intRecordsAffected = basCode.SaveLargeFileToDatabase(dhdDB, basCode.dhdText.ImportFile, basCode.curVar.HasHeaders, basCode.curVar.Delimiter, basCode.curVar.QuoteValues, basCode.curVar.ConvertToText, basCode.curVar.ConvertToNull)
+            intRecordsAffected = basCode.SaveLargeFileToDatabase(dhdDB, basCode.dhdText.ImportFile, basCode.curVar.HasHeaders, basCode.curVar.Delimiter, basCode.curVar.QuoteValues, basCode.curVar.ConvertToText, basCode.curVar.ConvertToNull, basCode.curVar.TextEncoding)
         Else
             intRecordsAffected = basCode.SaveToDatabase(dhdDB, dtsUpload, basCode.curVar.ConvertToText, basCode.curVar.ConvertToNull)
         End If

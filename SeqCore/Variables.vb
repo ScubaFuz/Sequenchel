@@ -177,6 +177,7 @@
     Private _CreateDir As Boolean = False
     Private _LargeFile As Boolean = False
     Private _BatchSize As Integer = 100000
+    Private _TextEncoding As String = "UTF8"
 
     Public Property ConvertToText() As Boolean
         Get
@@ -256,6 +257,15 @@
         End Get
         Set(ByVal Value As Integer)
             _BatchSize = Value
+        End Set
+    End Property
+
+    Public Property TextEncoding() As String
+        Get
+            Return _TextEncoding
+        End Get
+        Set(ByVal Value As String)
+            _TextEncoding = Value
         End Set
     End Property
 #End Region

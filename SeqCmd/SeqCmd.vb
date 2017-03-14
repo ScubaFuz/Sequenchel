@@ -193,8 +193,9 @@ Module SeqCmd
 
     Friend Function ImportFile(strImportFile As String) As DataSet
         Console.WriteLine("Importing file: " & strImportFile)
-        Dim dtsImport As DataSet = basCode.ImportFile(strImportFile, basCode.curVar.HasHeaders, basCode.curVar.Delimiter, basCode.curVar.QuoteValues, basCode.curVar.LargeFile)
-        If basCode.ErrorLevel = -1 Then Console.WriteLine(basCode.ErrorMessage)
+        If basCode.curVar.DebugMode Then Console.WriteLine("TextEncoding: " & basCode.curVar.TextEncoding)
+        Dim dtsImport As DataSet = basCode.ImportFile(strImportFile, basCode.curVar.HasHeaders, basCode.curVar.Delimiter)
+        If basCode.ErrorLevel = -1 Then Console.WriteLine("Error: " & basCode.ErrorMessage)
         Return dtsImport
     End Function
 
@@ -219,13 +220,13 @@ Module SeqCmd
             If basCode.curStatus.ImportAsXml = True Then
                 intRecords = basCode.SaveXmlToDatabase(dhdDB, dtsInput, strFileName)
             ElseIf basCode.curVar.LargeFile = True Then
-                intRecords = basCode.SaveLargeFileToDatabase(dhdDB, strFileName, basCode.curVar.HasHeaders, basCode.curVar.Delimiter, basCode.curVar.QuoteValues, basCode.curVar.ConvertToText, basCode.curVar.ConvertToNull)
+                intRecords = basCode.SaveLargeFileToDatabase(dhdDB, strFileName, basCode.curVar.HasHeaders, basCode.curVar.Delimiter, basCode.curVar.QuoteValues, basCode.curVar.ConvertToText, basCode.curVar.ConvertToNull, basCode.curVar.TextEncoding)
             Else
                 intRecords = basCode.SaveToDatabase(dhdDB, dtsInput, basCode.curVar.ConvertToText, basCode.curVar.ConvertToNull)
             End If
 
             If intRecords = -1 Then
-                Console.WriteLine("No records uploaded: " & dhdDB.ErrorMessage)
+                Console.WriteLine("No records uploaded. Error: " & dhdDB.ErrorMessage)
                 'Console.ReadLine()
                 Environment.Exit(0)
             End If

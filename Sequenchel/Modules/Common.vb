@@ -314,7 +314,7 @@ Module Common
     Friend Function GetJobStepCount(dhdConnect As DataHandler.db, strJobName As String) As Integer
         Dim intReturn As Integer = 0
         Try
-            strQuery = "select COUNT(*) AS StepsCount FROM [msdb].[dbo].[sysjobs] AS [job] INNER JOIN [msdb].[dbo].[sysjobsteps] AS [stp] ON [job].[job_id] = [stp].[job_id] WHERE [job].name = 'Sequenchel SmartUpdate'"
+            strQuery = "SELECT COALESCE(max(step_id),0) AS StepsCount FROM [msdb].[dbo].[sysjobs] AS [job] INNER JOIN [msdb].[dbo].[sysjobsteps] AS [stp] ON [job].[job_id] = [stp].[job_id] WHERE [job].name = '" & strJobName & "';"
             Dim objData As DataSet
             objData = basCode.QueryDb(dhdConnect, strQuery, True)
 
