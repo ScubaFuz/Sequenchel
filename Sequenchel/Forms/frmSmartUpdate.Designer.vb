@@ -39,7 +39,7 @@ Partial Class frmSmartUpdate
         Me.pnlCompareColumn = New System.Windows.Forms.Panel()
         Me.Label5 = New System.Windows.Forms.Label()
         Me.Label6 = New System.Windows.Forms.Label()
-        Me.Label7 = New System.Windows.Forms.Label()
+        Me.lblCompareColumn = New System.Windows.Forms.Label()
         Me.pnlSourceDataType = New System.Windows.Forms.Panel()
         Me.Label8 = New System.Windows.Forms.Label()
         Me.lstSourceTables = New System.Windows.Forms.ListBox()
@@ -55,6 +55,8 @@ Partial Class frmSmartUpdate
         Me.Label10 = New System.Windows.Forms.Label()
         Me.pnlTargetPrimaryKey = New System.Windows.Forms.Panel()
         Me.pnlMain = New System.Windows.Forms.Panel()
+        Me.pnlCopyColumn = New System.Windows.Forms.Panel()
+        Me.lblCopyColumn = New System.Windows.Forms.Label()
         Me.rbnSourceConfig = New System.Windows.Forms.RadioButton()
         Me.rbnTargetConfig = New System.Windows.Forms.RadioButton()
         Me.btnSaveConfiguration = New System.Windows.Forms.Button()
@@ -75,6 +77,8 @@ Partial Class frmSmartUpdate
         Me.rbnSourceTargetConfig = New System.Windows.Forms.RadioButton()
         Me.Label11 = New System.Windows.Forms.Label()
         Me.grpCommand = New System.Windows.Forms.GroupBox()
+        Me.chkEqualizeText = New System.Windows.Forms.CheckBox()
+        Me.chkUseAllColumns = New System.Windows.Forms.CheckBox()
         Me.chkClearTargetTable = New System.Windows.Forms.CheckBox()
         Me.grpCreateSQL = New System.Windows.Forms.GroupBox()
         Me.grpCreateLocalView = New System.Windows.Forms.GroupBox()
@@ -233,7 +237,7 @@ Partial Class frmSmartUpdate
         '
         'pnlCompareColumn
         '
-        Me.pnlCompareColumn.Location = New System.Drawing.Point(351, 21)
+        Me.pnlCompareColumn.Location = New System.Drawing.Point(378, 21)
         Me.pnlCompareColumn.Name = "pnlCompareColumn"
         Me.pnlCompareColumn.Size = New System.Drawing.Size(28, 85)
         Me.pnlCompareColumn.TabIndex = 19
@@ -250,20 +254,20 @@ Partial Class frmSmartUpdate
         'Label6
         '
         Me.Label6.AutoSize = True
-        Me.Label6.Location = New System.Drawing.Point(4, 5)
+        Me.Label6.Location = New System.Drawing.Point(6, 5)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(21, 13)
         Me.Label6.TabIndex = 22
         Me.Label6.Text = "PK"
         '
-        'Label7
+        'lblCompareColumn
         '
-        Me.Label7.AutoSize = True
-        Me.Label7.Location = New System.Drawing.Point(352, 5)
-        Me.Label7.Name = "Label7"
-        Me.Label7.Size = New System.Drawing.Size(21, 13)
-        Me.Label7.TabIndex = 23
-        Me.Label7.Text = "CC"
+        Me.lblCompareColumn.AutoSize = True
+        Me.lblCompareColumn.Location = New System.Drawing.Point(379, 5)
+        Me.lblCompareColumn.Name = "lblCompareColumn"
+        Me.lblCompareColumn.Size = New System.Drawing.Size(28, 13)
+        Me.lblCompareColumn.TabIndex = 23
+        Me.lblCompareColumn.Text = "Com"
         '
         'pnlSourceDataType
         '
@@ -309,7 +313,7 @@ Partial Class frmSmartUpdate
         Me.lblStatusText.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblStatusText.Location = New System.Drawing.Point(70, 685)
         Me.lblStatusText.Name = "lblStatusText"
-        Me.lblStatusText.Size = New System.Drawing.Size(692, 16)
+        Me.lblStatusText.Size = New System.Drawing.Size(717, 16)
         Me.lblStatusText.TabIndex = 148
         '
         'lstTargetTables
@@ -345,7 +349,7 @@ Partial Class frmSmartUpdate
         'Label4
         '
         Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(382, 5)
+        Me.Label4.Location = New System.Drawing.Point(408, 5)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(140, 13)
         Me.Label4.TabIndex = 153
@@ -353,7 +357,7 @@ Partial Class frmSmartUpdate
         '
         'pnlTargetTable
         '
-        Me.pnlTargetTable.Location = New System.Drawing.Point(378, 21)
+        Me.pnlTargetTable.Location = New System.Drawing.Point(405, 21)
         Me.pnlTargetTable.Name = "pnlTargetTable"
         Me.pnlTargetTable.Size = New System.Drawing.Size(186, 85)
         Me.pnlTargetTable.TabIndex = 152
@@ -361,7 +365,7 @@ Partial Class frmSmartUpdate
         'Label9
         '
         Me.Label9.AutoSize = True
-        Me.Label9.Location = New System.Drawing.Point(570, 5)
+        Me.Label9.Location = New System.Drawing.Point(593, 5)
         Me.Label9.Name = "Label9"
         Me.Label9.Size = New System.Drawing.Size(57, 13)
         Me.Label9.TabIndex = 155
@@ -369,7 +373,7 @@ Partial Class frmSmartUpdate
         '
         'pnlTargetDataType
         '
-        Me.pnlTargetDataType.Location = New System.Drawing.Point(563, 21)
+        Me.pnlTargetDataType.Location = New System.Drawing.Point(590, 21)
         Me.pnlTargetDataType.Name = "pnlTargetDataType"
         Me.pnlTargetDataType.Size = New System.Drawing.Size(137, 85)
         Me.pnlTargetDataType.TabIndex = 154
@@ -377,7 +381,7 @@ Partial Class frmSmartUpdate
         'Label10
         '
         Me.Label10.AutoSize = True
-        Me.Label10.Location = New System.Drawing.Point(700, 5)
+        Me.Label10.Location = New System.Drawing.Point(730, 5)
         Me.Label10.Name = "Label10"
         Me.Label10.Size = New System.Drawing.Size(21, 13)
         Me.Label10.TabIndex = 157
@@ -385,7 +389,7 @@ Partial Class frmSmartUpdate
         '
         'pnlTargetPrimaryKey
         '
-        Me.pnlTargetPrimaryKey.Location = New System.Drawing.Point(699, 21)
+        Me.pnlTargetPrimaryKey.Location = New System.Drawing.Point(726, 21)
         Me.pnlTargetPrimaryKey.Name = "pnlTargetPrimaryKey"
         Me.pnlTargetPrimaryKey.Size = New System.Drawing.Size(28, 85)
         Me.pnlTargetPrimaryKey.TabIndex = 156
@@ -396,6 +400,8 @@ Partial Class frmSmartUpdate
             Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.pnlMain.AutoScroll = True
         Me.pnlMain.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.pnlMain.Controls.Add(Me.pnlCopyColumn)
+        Me.pnlMain.Controls.Add(Me.lblCopyColumn)
         Me.pnlMain.Controls.Add(Me.Label8)
         Me.pnlMain.Controls.Add(Me.pnlSourceTable)
         Me.pnlMain.Controls.Add(Me.Label10)
@@ -407,13 +413,29 @@ Partial Class frmSmartUpdate
         Me.pnlMain.Controls.Add(Me.pnlTargetDataType)
         Me.pnlMain.Controls.Add(Me.Label6)
         Me.pnlMain.Controls.Add(Me.Label4)
-        Me.pnlMain.Controls.Add(Me.Label7)
+        Me.pnlMain.Controls.Add(Me.lblCompareColumn)
         Me.pnlMain.Controls.Add(Me.pnlTargetTable)
         Me.pnlMain.Controls.Add(Me.pnlSourceDataType)
         Me.pnlMain.Location = New System.Drawing.Point(12, 324)
         Me.pnlMain.Name = "pnlMain"
-        Me.pnlMain.Size = New System.Drawing.Size(750, 328)
+        Me.pnlMain.Size = New System.Drawing.Size(775, 328)
         Me.pnlMain.TabIndex = 158
+        '
+        'pnlCopyColumn
+        '
+        Me.pnlCopyColumn.Location = New System.Drawing.Point(351, 21)
+        Me.pnlCopyColumn.Name = "pnlCopyColumn"
+        Me.pnlCopyColumn.Size = New System.Drawing.Size(28, 85)
+        Me.pnlCopyColumn.TabIndex = 20
+        '
+        'lblCopyColumn
+        '
+        Me.lblCopyColumn.AutoSize = True
+        Me.lblCopyColumn.Location = New System.Drawing.Point(350, 5)
+        Me.lblCopyColumn.Name = "lblCopyColumn"
+        Me.lblCopyColumn.Size = New System.Drawing.Size(31, 13)
+        Me.lblCopyColumn.TabIndex = 158
+        Me.lblCopyColumn.Text = "Copy"
         '
         'rbnSourceConfig
         '
@@ -542,12 +564,12 @@ Partial Class frmSmartUpdate
         Me.txtSmartUpdateCommand.Location = New System.Drawing.Point(137, 659)
         Me.txtSmartUpdateCommand.Name = "txtSmartUpdateCommand"
         Me.txtSmartUpdateCommand.ReadOnly = True
-        Me.txtSmartUpdateCommand.Size = New System.Drawing.Size(537, 20)
+        Me.txtSmartUpdateCommand.Size = New System.Drawing.Size(562, 20)
         Me.txtSmartUpdateCommand.TabIndex = 8
         '
         'btnAddSmartUpdateSchedule
         '
-        Me.btnAddSmartUpdateSchedule.Location = New System.Drawing.Point(6, 157)
+        Me.btnAddSmartUpdateSchedule.Location = New System.Drawing.Point(6, 202)
         Me.btnAddSmartUpdateSchedule.Name = "btnAddSmartUpdateSchedule"
         Me.btnAddSmartUpdateSchedule.Size = New System.Drawing.Size(178, 23)
         Me.btnAddSmartUpdateSchedule.TabIndex = 5
@@ -576,7 +598,7 @@ Partial Class frmSmartUpdate
         Me.grpConfiguration.Controls.Add(Me.chkNoEndDate)
         Me.grpConfiguration.Controls.Add(Me.Label13)
         Me.grpConfiguration.Controls.Add(Me.dtpEndDate)
-        Me.grpConfiguration.Location = New System.Drawing.Point(769, 236)
+        Me.grpConfiguration.Location = New System.Drawing.Point(794, 189)
         Me.grpConfiguration.Name = "grpConfiguration"
         Me.grpConfiguration.Size = New System.Drawing.Size(226, 259)
         Me.grpConfiguration.TabIndex = 175
@@ -613,6 +635,8 @@ Partial Class frmSmartUpdate
         'grpCommand
         '
         Me.grpCommand.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.grpCommand.Controls.Add(Me.chkEqualizeText)
+        Me.grpCommand.Controls.Add(Me.chkUseAllColumns)
         Me.grpCommand.Controls.Add(Me.chkClearTargetTable)
         Me.grpCommand.Controls.Add(Me.btnAddSmartUpdateSchedule)
         Me.grpCommand.Controls.Add(Me.chkCreateTargetTable)
@@ -620,12 +644,32 @@ Partial Class frmSmartUpdate
         Me.grpCommand.Controls.Add(Me.chkUseAuditing)
         Me.grpCommand.Controls.Add(Me.chkRemoveNonSourceData)
         Me.grpCommand.Controls.Add(Me.chkUseTargetCollation)
-        Me.grpCommand.Location = New System.Drawing.Point(768, 501)
+        Me.grpCommand.Location = New System.Drawing.Point(793, 454)
         Me.grpCommand.Name = "grpCommand"
-        Me.grpCommand.Size = New System.Drawing.Size(226, 190)
+        Me.grpCommand.Size = New System.Drawing.Size(226, 237)
         Me.grpCommand.TabIndex = 176
         Me.grpCommand.TabStop = False
         Me.grpCommand.Text = "SmartUpdateCommand"
+        '
+        'chkEqualizeText
+        '
+        Me.chkEqualizeText.AutoSize = True
+        Me.chkEqualizeText.Location = New System.Drawing.Point(6, 180)
+        Me.chkEqualizeText.Name = "chkEqualizeText"
+        Me.chkEqualizeText.Size = New System.Drawing.Size(138, 17)
+        Me.chkEqualizeText.TabIndex = 8
+        Me.chkEqualizeText.Text = "Equalize text data types"
+        Me.chkEqualizeText.UseVisualStyleBackColor = True
+        '
+        'chkUseAllColumns
+        '
+        Me.chkUseAllColumns.AutoSize = True
+        Me.chkUseAllColumns.Location = New System.Drawing.Point(6, 157)
+        Me.chkUseAllColumns.Name = "chkUseAllColumns"
+        Me.chkUseAllColumns.Size = New System.Drawing.Size(179, 17)
+        Me.chkUseAllColumns.TabIndex = 7
+        Me.chkUseAllColumns.Text = "Use all columns for copying data"
+        Me.chkUseAllColumns.UseVisualStyleBackColor = True
         '
         'chkClearTargetTable
         '
@@ -642,7 +686,7 @@ Partial Class frmSmartUpdate
         Me.grpCreateSQL.Controls.Add(Me.btnCreateSmartUpdateTable)
         Me.grpCreateSQL.Controls.Add(Me.btnCreateSmartUpdateProcedure)
         Me.grpCreateSQL.Controls.Add(Me.lblLicenseRequired)
-        Me.grpCreateSQL.Location = New System.Drawing.Point(768, 58)
+        Me.grpCreateSQL.Location = New System.Drawing.Point(793, 58)
         Me.grpCreateSQL.Name = "grpCreateSQL"
         Me.grpCreateSQL.Size = New System.Drawing.Size(226, 105)
         Me.grpCreateSQL.TabIndex = 177
@@ -890,7 +934,7 @@ Partial Class frmSmartUpdate
         '
         'btnExecuteNow
         '
-        Me.btnExecuteNow.Location = New System.Drawing.Point(680, 658)
+        Me.btnExecuteNow.Location = New System.Drawing.Point(705, 657)
         Me.btnExecuteNow.Name = "btnExecuteNow"
         Me.btnExecuteNow.Size = New System.Drawing.Size(82, 23)
         Me.btnExecuteNow.TabIndex = 175
@@ -901,7 +945,10 @@ Partial Class frmSmartUpdate
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1009, 711)
+        Me.ClientSize = New System.Drawing.Size(1034, 711)
+        Me.Controls.Add(Me.lstTargetTables)
+        Me.Controls.Add(Me.lstSourceTables)
+        Me.Controls.Add(Me.pnlMain)
         Me.Controls.Add(Me.btnExecuteNow)
         Me.Controls.Add(Me.rtbLocalView)
         Me.Controls.Add(Me.rtbInfoLocalSchema)
@@ -912,9 +959,6 @@ Partial Class frmSmartUpdate
         Me.Controls.Add(Me.txtSmartUpdateCommand)
         Me.Controls.Add(Me.lblSmartUpdateCommand)
         Me.Controls.Add(Me.lblStatusTitle)
-        Me.Controls.Add(Me.lstTargetTables)
-        Me.Controls.Add(Me.lstSourceTables)
-        Me.Controls.Add(Me.pnlMain)
         Me.Controls.Add(Me.btnImportTables)
         Me.Controls.Add(Me.btnCrawlTargetTables)
         Me.Controls.Add(Me.lblStatusText)
@@ -926,8 +970,8 @@ Partial Class frmSmartUpdate
         Me.Controls.Add(Me.lblTargetTable)
         Me.Controls.Add(Me.lblSourceTable)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
-        Me.MaximumSize = New System.Drawing.Size(1025, 5000)
-        Me.MinimumSize = New System.Drawing.Size(1025, 727)
+        Me.MaximumSize = New System.Drawing.Size(1050, 5000)
+        Me.MinimumSize = New System.Drawing.Size(1050, 727)
         Me.Name = "frmSmartUpdate"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
         Me.Text = "SmartUpdate"
@@ -961,7 +1005,7 @@ Partial Class frmSmartUpdate
     Friend WithEvents pnlCompareColumn As System.Windows.Forms.Panel
     Friend WithEvents Label5 As System.Windows.Forms.Label
     Friend WithEvents Label6 As System.Windows.Forms.Label
-    Friend WithEvents Label7 As System.Windows.Forms.Label
+    Friend WithEvents lblCompareColumn As System.Windows.Forms.Label
     Friend WithEvents pnlSourceDataType As System.Windows.Forms.Panel
     Friend WithEvents Label8 As System.Windows.Forms.Label
     Friend WithEvents lstSourceTables As System.Windows.Forms.ListBox
@@ -1024,4 +1068,8 @@ Partial Class frmSmartUpdate
     Friend WithEvents rbnSourceTargetConfig As RadioButton
     Friend WithEvents btnSavePrimaryKey As Button
     Friend WithEvents btnExecuteNow As Button
+    Friend WithEvents pnlCopyColumn As Panel
+    Friend WithEvents lblCopyColumn As Label
+    Friend WithEvents chkEqualizeText As CheckBox
+    Friend WithEvents chkUseAllColumns As CheckBox
 End Class

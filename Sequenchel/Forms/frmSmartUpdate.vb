@@ -194,8 +194,12 @@
         For Each ctrl As CheckBox In pnlCompareColumn.Controls
             If ctrl.Checked = True Then blnCheckFound = True
         Next
-        If blnCheckFound = False And blnPrimaryKeyOnly = False Then
-            WriteStatus("Nothing has been selected for comparison. Nothing is saved.", 2, lblStatusText)
+        Dim blnCopyFound As Boolean = False
+        For Each ctrl As CheckBox In pnlCopyColumn.Controls
+            If ctrl.Checked = True Then blnCopyFound = True
+        Next
+        If blnCheckFound = False And blnCopyFound = False And blnPrimaryKeyOnly = False Then
+            WriteStatus("Nothing has been selected for copy and comparison. Nothing is saved.", 2, lblStatusText)
             Exit Sub
         End If
         'check for table dbo.SmartUpdate
@@ -248,15 +252,19 @@
             Exit Sub
         End If
 
-        strInsert = InsertString(strSchemaName, strTableName, pnlTable, pnlDataType, pnlPrimaryKey, pnlCompareColumn, dtmStartDate, dtmEndDate, blnPrimaryKeyOnly)
+        strInsert = InsertString(strSchemaName, strTableName, pnlTable, pnlDataType, pnlPrimaryKey, pnlCopyColumn, pnlCompareColumn, dtmStartDate, dtmEndDate, blnPrimaryKeyOnly)
         strUpdate = "UPDATE dbo.SmartUpdate SET [DateStop] = '" & dtmStartDate.AddDays(-1).ToString("yyyy-MM-dd") & "' WHERE [DataBaseName] = '" & basCode.dhdConnection.DatabaseName & "' AND [SchemaName] = '" & strSchemaName & "' AND [TableName] = '" & strTableName & "' 	AND [DateStart] < '" & dtmStartDate.ToString("yyyy-MM-dd") & "' AND COALESCE([DateStop],'2999-12-31') > '" & dtmStartDate.ToString("yyyy-MM-dd") & "' AND [Active] = 1"
         If dtmEndDate = Nothing Then dtmEndDate = "2999-12-31"
         strDelete = "UPDATE dbo.SmartUpdate SET [Active] = 0 WHERE [DataBaseName] = '" & basCode.dhdConnection.DatabaseName & "' AND [SchemaName] = '" & strSchemaName & "' AND [TableName] = '" & strTableName & "' AND [DateStart] BETWEEN '" & dtmStartDate.ToString("yyyy-MM-dd") & "' AND '" & dtmEndDate.ToString("yyyy-MM-dd") & "' AND [Active] = 1"
         'strDelete = "DELETE FROM dbo.SmartUpdate WHERE [DataBaseName] = '" & dhdConnection.DatabaseName & "' AND [SchemaName] = '" & strSchemaName & "' AND [TableName] = '" & strTableName & "'"
 
         'get compare columns & PK columns
+        If strInsert.Length < 7 Then
+            WriteStatus("No config was saved. Check your settings and try again.", 1, lblStatusText)
+            Exit Sub
+        End If
         strInsert = strInsert.Remove(0, 6)
-        strInsert = "INSERT INTO [dbo].[SmartUpdate] ([DataBaseName],[SchemaName],[TableName],[ColumnName],[DataType],[PrimaryKey],[CompareColumn],[DateStart],[DateStop],[Active]) " & Environment.NewLine & strInsert
+        strInsert = "INSERT INTO [dbo].[SmartUpdate] ([DataBaseName],[SchemaName],[TableName],[ColumnName],[DataType],[PrimaryKey],[CopyColumn],[CompareColumn],[DateStart],[DateStop],[Active]) " & Environment.NewLine & strInsert
 
         'save to table dbo.SmartUpdate
         Try
@@ -305,6 +313,14 @@
     End Sub
 
     Private Sub chkClearTargetTable_CheckedChanged(sender As Object, e As EventArgs) Handles chkClearTargetTable.CheckedChanged
+        SmartUpdateCommand()
+    End Sub
+
+    Private Sub chkUseAllColumns_CheckedChanged(sender As Object, e As EventArgs) Handles chkUseAllColumns.CheckedChanged
+        SmartUpdateCommand()
+    End Sub
+
+    Private Sub chkEqualizeText_CheckedChanged(sender As Object, e As EventArgs) Handles chkEqualizeText.CheckedChanged
         SmartUpdateCommand()
     End Sub
 
@@ -539,24 +555,26 @@
         strSQL &= " WHERE obj.name = '" & strTargetTable & "'"
         strSQL &= "	AND scm.name = '" & strTargetSchema & "'"
         strSQL &= ")"
-        strSQL &= " SELECT src.SchemaName AS srcSchemaName "
-        strSQL &= "	,src.colName AS srcColName"
-        strSQL &= "	,src.DataType AS srcDataType"
-        strSQL &= "	,tgt.SchemaName AS tgtSchemaName "
-        strSQL &= "	,tgt.colName AS tgtColName"
-        strSQL &= "	,tgt.DataType AS tgtDataType"
-        strSQL &= "	,src.is_identity As srcIdentity"
-        strSQL &= "	,src.pk AS srcPK"
-        strSQL &= "	,tgt.is_identity As tgtIdentity"
-        strSQL &= "	,tgt.pk AS tgtPK"
-        strSQL &= "	,src.srcValue + tgt.tgtValue AS OrderValue"
+        strSQL &= " SELECT COALESCE(src.SchemaName,'') AS srcSchemaName "
+        strSQL &= "	,COALESCE(src.colName,'') AS srcColName"
+        strSQL &= "	,COALESCE(src.DataType,'') AS srcDataType"
+        strSQL &= "	,COALESCE(tgt.SchemaName,'') AS tgtSchemaName "
+        strSQL &= "	,COALESCE(tgt.colName,'') AS tgtColName"
+        strSQL &= "	,COALESCE(tgt.DataType,'') AS tgtDataType"
+        strSQL &= "	,COALESCE(src.is_identity,0) As srcIdentity"
+        strSQL &= "	,COALESCE(src.pk,0) AS srcPK"
+        strSQL &= "	,COALESCE(tgt.is_identity,0) As tgtIdentity"
+        strSQL &= "	,COALESCE(tgt.pk,0) AS tgtPK"
+        strSQL &= "	,COALESCE(src.srcValue,0) + COALESCE(tgt.tgtValue,0) AS OrderValue"
+        strSQL &= "	,IIF(src.DataType = tgt.DataType,1,0) AS OrderValue2"
         strSQL &= "	,src.srcValue "
         strSQL &= "	,tgt.tgtValue"
         strSQL &= " FROM ColSource src"
         strSQL &= " FULL OUTER JOIN ColTarget tgt"
         strSQL &= "	ON src.colName = tgt.colName"
-        strSQL &= "	AND src.DataType = tgt.DataType"
+        'strSQL &= "	AND src.DataType = tgt.DataType"
         strSQL &= " ORDER BY OrderValue desc"
+        strSQL &= " ,OrderValue2 desc"
         strSQL &= "	,src.pk desc"
         strSQL &= "	,src.is_identity desc"
         strSQL &= "	,src.srcValue desc"
@@ -575,11 +593,14 @@
             If dtsTables.Tables.Item(0).Rows(intRowCount1).Item("tgtSchemaName").GetType().ToString = "System.DBNull" Then
                 'create source row only
                 If intRowCount1 = 0 And (txtTargetTable.Text = "" Or lstTargetTables.Items.Contains(txtTargetTable.Text) = 0) Then blnSourceOnly = True
-                SourceFieldAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("srcColName"), blnSourceOnly)
-                SourceDataTypeAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("srcColName"), dtsTables.Tables(0).Rows(intRowCount1).Item("srcDataType"), blnSourceOnly)
+                TextFieldAdd(pnlSourceTable, dtsTables.Tables(0).Rows(intRowCount1).Item("srcColName"), dtsTables.Tables(0).Rows(intRowCount1).Item("srcColName"), blnSourceOnly)
+                TextFieldAdd(pnlSourceDataType, dtsTables.Tables(0).Rows(intRowCount1).Item("srcColName"), dtsTables.Tables(0).Rows(intRowCount1).Item("srcDataType"), blnSourceOnly)
+                'SourceDataTypeAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("srcColName"), dtsTables.Tables(0).Rows(intRowCount1).Item("srcDataType"), blnSourceOnly)
                 SourcePkAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("srcColName"), dtsTables.Tables(0).Rows(intRowCount1).Item("srcPK"), dtsTables.Tables(0).Rows(intRowCount1).Item("srcIdentity"), blnSourceOnly)
+                CheckColumnAdd(pnlCompareColumn, dtsTables.Tables(0).Rows(intRowCount1).Item("srcColName"), basCode.CompareDataType(dtsTables.Tables(0).Rows(intRowCount1).Item("srcDataType"), dtsTables.Tables(0).Rows(intRowCount1).Item("tgtDataType")), basCode.CompareDataType(dtsTables.Tables(0).Rows(intRowCount1).Item("srcDataType"), dtsTables.Tables(0).Rows(intRowCount1).Item("tgtDataType")), basCode.CheckDataType(dtsTables.Tables(0).Rows(intRowCount1).Item("srcDataType")))
+                CheckColumnAdd(pnlCopyColumn, dtsTables.Tables(0).Rows(intRowCount1).Item("srcColName"), basCode.CompareDataType(dtsTables.Tables(0).Rows(intRowCount1).Item("srcDataType"), dtsTables.Tables(0).Rows(intRowCount1).Item("tgtDataType")), basCode.CompareDataType(dtsTables.Tables(0).Rows(intRowCount1).Item("srcDataType"), dtsTables.Tables(0).Rows(intRowCount1).Item("tgtDataType")), True)
+                'CopyColumnAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("srcColName"), True)
                 If blnSourceOnly = True Then
-                    CompareColumnAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("srcColName"), basCode.CompareDataType(dtsTables.Tables(0).Rows(intRowCount1).Item("srcDataType")))
                     chkCreateTargetTable.Checked = True
                 Else
                     chkCreateTargetTable.Checked = False
@@ -593,13 +614,16 @@
                 'create CC row
                 chkCreateTargetTable.Checked = False
                 rbnTargetConfig.Enabled = True
-                SourceFieldAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("srcColName"), True)
+                TextFieldAdd(pnlSourceTable, dtsTables.Tables(0).Rows(intRowCount1).Item("srcColName"), dtsTables.Tables(0).Rows(intRowCount1).Item("srcColName"), True)
                 TargetFieldAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("tgtColName"), True)
                 SourceDataTypeAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("srcColName"), dtsTables.Tables(0).Rows(intRowCount1).Item("srcDataType"), True)
                 TargetDataTypeAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("tgtColName"), dtsTables.Tables(0).Rows(intRowCount1).Item("tgtDataType"), True)
                 SourcePkAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("srcColName"), dtsTables.Tables(0).Rows(intRowCount1).Item("srcPK"), dtsTables.Tables(0).Rows(intRowCount1).Item("srcIdentity"), True)
                 TargetPkAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("tgtColName"), dtsTables.Tables(0).Rows(intRowCount1).Item("tgtPK"), dtsTables.Tables(0).Rows(intRowCount1).Item("tgtIdentity"), True)
-                CompareColumnAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("srcColName"), basCode.CompareDataType(dtsTables.Tables(0).Rows(intRowCount1).Item("srcDataType")))
+                CheckColumnAdd(pnlCompareColumn, dtsTables.Tables(0).Rows(intRowCount1).Item("srcColName"), basCode.CompareDataType(dtsTables.Tables(0).Rows(intRowCount1).Item("srcDataType"), dtsTables.Tables(0).Rows(intRowCount1).Item("tgtDataType")), basCode.CompareDataType(dtsTables.Tables(0).Rows(intRowCount1).Item("srcDataType"), dtsTables.Tables(0).Rows(intRowCount1).Item("tgtDataType")), basCode.CheckDataType(dtsTables.Tables(0).Rows(intRowCount1).Item("srcDataType")))
+                'CompareColumnAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("srcColName"), basCode.CheckDataType(dtsTables.Tables(0).Rows(intRowCount1).Item("srcDataType")))
+                'CopyColumnAdd(dtsTables.Tables(0).Rows(intRowCount1).Item("srcColName"), True)
+                CheckColumnAdd(pnlCopyColumn, dtsTables.Tables(0).Rows(intRowCount1).Item("srcColName"), basCode.CompareDataType(dtsTables.Tables(0).Rows(intRowCount1).Item("srcDataType"), dtsTables.Tables(0).Rows(intRowCount1).Item("tgtDataType")), basCode.CompareDataType(dtsTables.Tables(0).Rows(intRowCount1).Item("srcDataType"), dtsTables.Tables(0).Rows(intRowCount1).Item("tgtDataType")), True)
             End If
 
         Next
@@ -641,18 +665,28 @@
 
         pnlCompareColumn.Controls.Clear()
         pnlCompareColumn.Height = 50
+
+        pnlCopyColumn.Controls.Clear()
+        pnlCopyColumn.Height = 50
     End Sub
 
-    Private Sub SourceFieldAdd(strFieldName As String, blnEnableCC As Boolean)
+    Private Sub TextFieldAdd(pnlPanel As Panel, strFieldName As String, strDataType As String, blnEnableCC As Boolean)
         Dim txtNew As New TextField
-        txtNew.Name = pnlSourceTable.Name & strFieldName
-        txtNew.Text = strFieldName
-        txtNew.Tag = strFieldName
-        txtNew.Enabled = blnEnableCC
-        txtNew.Width = 166
-        pnlSourceTable.Controls.Add(txtNew)
-        txtNew.Top = ((pnlSourceTable.Controls.Count - 1) * basCode.curVar.FieldHeight)
-        If pnlSourceTable.Height < txtNew.Top + txtNew.Height Then pnlSourceTable.Height = txtNew.Top + txtNew.Height
+        txtNew.Name = pnlPanel.Name & strFieldName
+        txtNew.Text = strDataType
+        txtNew.Tag = strDataType
+        txtNew.Enabled = True
+        Select Case pnlPanel.Name
+            Case "PnlSource"
+                txtNew.Width = 166
+            Case "pnlSourceDataType"
+                txtNew.Width = 117
+            Case Else
+                txtNew.Width = 166
+        End Select
+        pnlPanel.Controls.Add(txtNew)
+        txtNew.Top = ((pnlPanel.Controls.Count - 1) * basCode.curVar.FieldHeight)
+        If pnlPanel.Height < txtNew.Top + txtNew.Height Then pnlPanel.Height = txtNew.Top + txtNew.Height
         txtNew.Left = basCode.curVar.BuildMargin
     End Sub
 
@@ -661,7 +695,7 @@
         txtNew.Name = pnlSourceDataType.Name & strFieldName
         txtNew.Text = strDataType
         txtNew.Tag = strDataType
-        txtNew.Enabled = blnEnableCC
+        txtNew.Enabled = True
         txtNew.Width = 117
         pnlSourceDataType.Controls.Add(txtNew)
         txtNew.Top = ((pnlSourceTable.Controls.Count - 1) * basCode.curVar.FieldHeight)
@@ -674,7 +708,7 @@
         chkNew.Name = pnlSourcePrimaryKey.Name & strFieldName
         chkNew.Checked = blnFieldPK
         chkNew.Tag = blnFieldIdentity
-        chkNew.Enabled = blnEnableCC
+        chkNew.Enabled = True
         pnlSourcePrimaryKey.Controls.Add(chkNew)
         chkNew.Top = ((pnlSourceTable.Controls.Count - 1) * basCode.curVar.FieldHeight)
         pnlSourcePrimaryKey.Height = pnlSourceTable.Height
@@ -686,7 +720,7 @@
         txtNew.Name = pnlTargetTable.Name & strFieldName
         txtNew.Text = strFieldName
         txtNew.Tag = strFieldName
-        txtNew.Enabled = blnEnableCC
+        txtNew.Enabled = True
         txtNew.Width = 166
         pnlTargetTable.Controls.Add(txtNew)
         txtNew.Top = ((pnlTargetTable.Controls.Count - 1) * basCode.curVar.FieldHeight)
@@ -700,7 +734,7 @@
         txtNew.Name = pnlTargetDataType.Name & strFieldName
         txtNew.Text = strDataType
         txtNew.Tag = strDataType
-        txtNew.Enabled = blnEnableCC
+        txtNew.Enabled = True
         txtNew.Width = 117
         pnlTargetDataType.Controls.Add(txtNew)
         txtNew.Top = ((pnlTargetDataType.Controls.Count - 1) * basCode.curVar.FieldHeight)
@@ -713,22 +747,34 @@
         chkNew.Name = pnlTargetPrimaryKey.Name & strFieldName
         chkNew.Checked = blnFieldPK
         chkNew.Tag = blnFieldIdentity
-        chkNew.Enabled = blnEnableCC
+        chkNew.Enabled = True
         pnlTargetPrimaryKey.Controls.Add(chkNew)
         chkNew.Top = ((pnlTargetTable.Controls.Count - 1) * basCode.curVar.FieldHeight)
         pnlTargetPrimaryKey.Height = pnlTargetTable.Height
         chkNew.Left = basCode.curVar.BuildMargin
     End Sub
 
-    Private Sub CompareColumnAdd(strFieldName As String, blnEnableCC As Boolean)
+    Private Sub CheckColumnAdd(pnlPanel As Panel, strFieldName As String, blnCheckColumn As Boolean, blnTagColumn As Boolean, blnEnableColumn As Boolean)
         Dim chkNew As New CheckBox
-        chkNew.Name = pnlCompareColumn.Name & strFieldName
-        chkNew.Checked = blnEnableCC
-        chkNew.Tag = blnEnableCC
-        chkNew.Enabled = blnEnableCC
-        pnlCompareColumn.Controls.Add(chkNew)
+        chkNew.Name = pnlPanel.Name & strFieldName
+        chkNew.Checked = blnCheckColumn
+        chkNew.Tag = blnTagColumn
+        chkNew.Enabled = blnEnableColumn
+        pnlPanel.Controls.Add(chkNew)
         chkNew.Top = ((pnlSourceTable.Controls.Count - 1) * basCode.curVar.FieldHeight)
-        pnlCompareColumn.Height = pnlSourceTable.Height
+        pnlPanel.Height = pnlSourceTable.Height
+        chkNew.Left = basCode.curVar.BuildMargin
+    End Sub
+
+    Private Sub CopyColumnAdd(strFieldName As String, blnEnableCopy As Boolean)
+        Dim chkNew As New CheckBox
+        chkNew.Name = pnlCopyColumn.Name & strFieldName
+        chkNew.Checked = blnEnableCopy
+        chkNew.Tag = blnEnableCopy
+        chkNew.Enabled = True
+        pnlCopyColumn.Controls.Add(chkNew)
+        chkNew.Top = ((pnlSourceTable.Controls.Count - 1) * basCode.curVar.FieldHeight)
+        pnlCopyColumn.Height = pnlSourceTable.Height
         chkNew.Left = basCode.curVar.BuildMargin
     End Sub
 
@@ -759,20 +805,23 @@
             strCommand &= If(chkCreateAuditTable.Checked, 1, 0) & ", "
             strCommand &= If(chkRemoveNonSourceData.Checked, 1, 0) & ", "
             strCommand &= If(chkUseTargetCollation.Checked, 1, 0) & ", "
-            strCommand &= If(chkClearTargetTable.Checked, 1, 0)
+            strCommand &= If(chkClearTargetTable.Checked, 1, 0) & ", "
+            strCommand &= If(chkUseAllColumns.Checked, 1, 0) & ", "
+            strCommand &= If(chkEqualizeText.Checked, 1, 0)
         End If
         txtSmartUpdateCommand.Text = strCommand
     End Sub
 
-    Private Function InsertString(strSchema As String, strTable As String, pnlTabel As Panel, pnlDataType As Panel, pnlPrimaryKey As Panel, pnlCompare As Panel, dtmStart As Date, dtmEnd As Date, blnPrimaryKeyOnly As Boolean) As String
+    Private Function InsertString(strSchema As String, strTable As String, pnlTabel As Panel, pnlDataType As Panel, pnlPrimaryKey As Panel, pnlCopy As Panel, pnlCompare As Panel, dtmStart As Date, dtmEnd As Date, blnPrimaryKeyOnly As Boolean) As String
         Dim strQuery As String = ""
         Dim strColumnName As String = ""
         Dim strDataType As String = ""
         Dim strPrimaryKey As String = ""
+        Dim strCopy As String = ""
         Dim strCompare As String = ""
 
         For Each ctrlColumn In pnlTabel.Controls
-            If ctrlColumn.Enabled = False Then Exit For
+            'If ctrlColumn.Enabled = False Then Exit For
             strColumnName = ctrlColumn.Text
             For Each ctrlDataType In pnlDataType.Controls
                 If ctrlDataType.Name = pnlDataType.Name & strColumnName Then
@@ -784,15 +833,20 @@
                     strPrimaryKey = ctrlPk.Checked
                 End If
             Next
+            For Each ctrlCopy In pnlCopy.Controls
+                If ctrlCopy.Name = pnlCopy.Name & strColumnName Then
+                    strCopy = ctrlCopy.Checked
+                End If
+            Next
             For Each ctrlCompare In pnlCompare.Controls
                 If ctrlCompare.Name = pnlCompare.Name & strColumnName Then
                     strCompare = ctrlCompare.Checked
                 End If
             Next
             If blnPrimaryKeyOnly = True And strPrimaryKey = "True" Then
-                strQuery &= "UNION SELECT '" & basCode.dhdConnection.DatabaseName & "', '" & strSchema & "', '" & strTable & "', '" & strColumnName & "', '" & strDataType & "', '" & strPrimaryKey & "', '" & False & "', '" & dtmStart.ToString("yyyy-MM-dd") & "', " & If(chkNoEndDate.Checked = True, "NULL", "'" & dtmEnd.ToString("yyyy-MM-dd") & "'") & ",1" & Environment.NewLine
-            ElseIf strPrimaryKey = "True" Or (strCompare = "True" And blnPrimaryKeyOnly = False) Then
-                strQuery &= "UNION SELECT '" & basCode.dhdConnection.DatabaseName & "', '" & strSchema & "', '" & strTable & "', '" & strColumnName & "', '" & strDataType & "', '" & strPrimaryKey & "', '" & strCompare & "', '" & dtmStart.ToString("yyyy-MM-dd") & "', " & If(chkNoEndDate.Checked = True, "NULL", "'" & dtmEnd.ToString("yyyy-MM-dd") & "'") & ",1" & Environment.NewLine
+                strQuery &= "UNION SELECT '" & basCode.dhdConnection.DatabaseName & "', '" & strSchema & "', '" & strTable & "', '" & strColumnName & "', '" & strDataType & "', '" & strPrimaryKey & "', '" & strCopy & "', '" & False & "', '" & dtmStart.ToString("yyyy-MM-dd") & "', " & If(chkNoEndDate.Checked = True, "NULL", "'" & dtmEnd.ToString("yyyy-MM-dd") & "'") & ",1" & Environment.NewLine
+            ElseIf strPrimaryKey = "True" Or (strCopy = "True" And blnPrimaryKeyOnly = False) Then
+                strQuery &= "UNION SELECT '" & basCode.dhdConnection.DatabaseName & "', '" & strSchema & "', '" & strTable & "', '" & strColumnName & "', '" & strDataType & "', '" & strPrimaryKey & "', '" & strCopy & "', '" & strCompare & "', '" & dtmStart.ToString("yyyy-MM-dd") & "', " & If(chkNoEndDate.Checked = True, "NULL", "'" & dtmEnd.ToString("yyyy-MM-dd") & "'") & ",1" & Environment.NewLine
             End If
 
         Next

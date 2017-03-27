@@ -1,3 +1,6 @@
+Version 4.1.0
+Enhanced: SmartUpdate has been rewritten to accomodate changing datatypes or slightly different character datatypes.
+
 Version 4.0.2
 New: SmartUpdate can now remove all data from target table before adding new data.
 New: SmartUpdate can create a local view to a remote table for data transfer.

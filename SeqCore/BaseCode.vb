@@ -1922,13 +1922,21 @@ Public Class BaseCode
         Return intReturn
     End Function
 
-    Public Function CompareDataType(strDataType As String) As Boolean
+    Public Function CheckDataType(strDataType As String) As Boolean
         Select Case strDataType.ToLower
             Case "text", "ntext", "image"
                 Return False
             Case Else
                 Return True
         End Select
+    End Function
+
+    Public Function CompareDataType(strDataTypeIn As String, strDataTypeOut As String) As Boolean
+        If strDataTypeIn.ToLower = strDataTypeOut.ToLower Then
+            Return True
+        Else
+            Return False
+        End If
     End Function
 
     Public Function ProcessDefaultValue(strValue As String) As String
