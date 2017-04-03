@@ -1,7 +1,7 @@
 ﻿Imports System.Reflection
 
-<Assembly: AssemblyCompany("Thicor Services BV")> 
-<Assembly: AssemblyCopyright("Copyright © Thicor Services 2014-2016")> 
+<Assembly: AssemblyCompany("Thicor")>
+<Assembly: AssemblyCopyright("Copyright © Thicor Services 2014-2017")>
 <Assembly: AssemblyTrademark("")>
 
 ' Version information for an assembly consists of the following four values:
@@ -15,5 +15,5 @@
 ' by using the '*' as shown below:
 ' <Assembly: AssemblyVersion("1.0.*")> 
 
-<Assembly: AssemblyVersion("4.1.0.1")>
-<Assembly: AssemblyFileVersion("4.1.0.1")>
+<Assembly: AssemblyVersion("4.1.0.3")>
+<Assembly: AssemblyFileVersion("4.1.0.3")>

@@ -844,7 +844,7 @@
                 End If
             Next
             If blnPrimaryKeyOnly = True And strPrimaryKey = "True" Then
-                strQuery &= "UNION SELECT '" & basCode.dhdConnection.DatabaseName & "', '" & strSchema & "', '" & strTable & "', '" & strColumnName & "', '" & strDataType & "', '" & strPrimaryKey & "', '" & strCopy & "', '" & False & "', '" & dtmStart.ToString("yyyy-MM-dd") & "', " & If(chkNoEndDate.Checked = True, "NULL", "'" & dtmEnd.ToString("yyyy-MM-dd") & "'") & ",1" & Environment.NewLine
+                strQuery &= "UNION SELECT '" & basCode.dhdConnection.DatabaseName & "', '" & strSchema & "', '" & strTable & "', '" & strColumnName & "', '" & strDataType & "', '" & strPrimaryKey & "', '" & False & "', '" & False & "', '" & dtmStart.ToString("yyyy-MM-dd") & "', " & If(chkNoEndDate.Checked = True, "NULL", "'" & dtmEnd.ToString("yyyy-MM-dd") & "'") & ",1" & Environment.NewLine
             ElseIf strPrimaryKey = "True" Or (strCopy = "True" And blnPrimaryKeyOnly = False) Then
                 strQuery &= "UNION SELECT '" & basCode.dhdConnection.DatabaseName & "', '" & strSchema & "', '" & strTable & "', '" & strColumnName & "', '" & strDataType & "', '" & strPrimaryKey & "', '" & strCopy & "', '" & strCompare & "', '" & dtmStart.ToString("yyyy-MM-dd") & "', " & If(chkNoEndDate.Checked = True, "NULL", "'" & dtmEnd.ToString("yyyy-MM-dd") & "'") & ",1" & Environment.NewLine
             End If
