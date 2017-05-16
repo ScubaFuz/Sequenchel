@@ -106,6 +106,8 @@ Partial Class frmSmartUpdate
         Me.rtbInfoLocalSchema = New System.Windows.Forms.RichTextBox()
         Me.rtbLocalView = New System.Windows.Forms.RichTextBox()
         Me.btnExecuteNow = New System.Windows.Forms.Button()
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.cbxSourceSystem = New System.Windows.Forms.ComboBox()
         Me.pnlMain.SuspendLayout()
         Me.grpConfiguration.SuspendLayout()
         Me.grpCommand.SuspendLayout()
@@ -695,6 +697,8 @@ Partial Class frmSmartUpdate
         '
         'grpCreateLocalView
         '
+        Me.grpCreateLocalView.Controls.Add(Me.cbxSourceSystem)
+        Me.grpCreateLocalView.Controls.Add(Me.Label1)
         Me.grpCreateLocalView.Controls.Add(Me.rtbInfoSourceDatabase)
         Me.grpCreateLocalView.Controls.Add(Me.rtbInfoLinkedServer)
         Me.grpCreateLocalView.Controls.Add(Me.lblLocalDatabase)
@@ -801,9 +805,9 @@ Partial Class frmSmartUpdate
         '
         'btnCreateLocalView
         '
-        Me.btnCreateLocalView.Location = New System.Drawing.Point(264, 129)
+        Me.btnCreateLocalView.Location = New System.Drawing.Point(541, 124)
         Me.btnCreateLocalView.Name = "btnCreateLocalView"
-        Me.btnCreateLocalView.Size = New System.Drawing.Size(164, 23)
+        Me.btnCreateLocalView.Size = New System.Drawing.Size(171, 23)
         Me.btnCreateLocalView.TabIndex = 179
         Me.btnCreateLocalView.Text = "Create Local View"
         Me.btnCreateLocalView.UseVisualStyleBackColor = True
@@ -941,6 +945,25 @@ Partial Class frmSmartUpdate
         Me.btnExecuteNow.Text = "Execute now"
         Me.btnExecuteNow.UseVisualStyleBackColor = True
         '
+        'Label1
+        '
+        Me.Label1.AutoSize = True
+        Me.Label1.Location = New System.Drawing.Point(7, 129)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(78, 13)
+        Me.Label1.TabIndex = 188
+        Me.Label1.Text = "Source System"
+        '
+        'cbxSourceSystem
+        '
+        Me.cbxSourceSystem.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cbxSourceSystem.FormattingEnabled = True
+        Me.cbxSourceSystem.Items.AddRange(New Object() {"MS SQL Server", "Oracle", "Progress (SQL 92)", "MySQL"})
+        Me.cbxSourceSystem.Location = New System.Drawing.Point(152, 124)
+        Me.cbxSourceSystem.Name = "cbxSourceSystem"
+        Me.cbxSourceSystem.Size = New System.Drawing.Size(171, 21)
+        Me.cbxSourceSystem.TabIndex = 189
+        '
         'frmSmartUpdate
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1072,4 +1095,6 @@ Partial Class frmSmartUpdate
     Friend WithEvents lblCopyColumn As Label
     Friend WithEvents chkEqualizeText As CheckBox
     Friend WithEvents chkUseAllColumns As CheckBox
+    Friend WithEvents cbxSourceSystem As ComboBox
+    Friend WithEvents Label1 As Label
 End Class

@@ -13,6 +13,7 @@ AS
 BEGIN
 	DECLARE @atpos int, @dotpos int
 
+	IF @Email is null return 0
 	SET @Email = LTRIM(RTRIM(@Email)) -- remove leading and trailing blanks
 	IF LEN(@Email) = 0 RETURN(0) -- nothing to validate
 

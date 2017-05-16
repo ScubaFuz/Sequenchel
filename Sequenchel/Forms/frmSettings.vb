@@ -376,8 +376,10 @@
         dtFormats.Rows.Add(120, "Universal", "yyyy-mm-dd hh:mi:ss(24h)")
         dtFormats.Rows.Add(100, "SQL Default", "mon dd yyyy hh:miAM (or PM)")
         dtFormats.Rows.Add(101, "US", "mm/dd/yyyy")
+        dtFormats.Rows.Add(103, "British", "dd/mm/yyyy")
         dtFormats.Rows.Add(105, "Italian", "dd-mm-yyyy")
         dtFormats.Rows.Add(109, "SQL Default + millsec.", "mon dd yyyy hh:mi:ss:mmmAM (or PM)")
+        dtFormats.Rows.Add(111, "Japan", "yyyy/mm/dd")
         dtFormats.Rows.Add(113, "EU Default + millsec.", "dd mon yyyy hh:mi:ss:mmm(24h)")
 
         ' Bind the ComboBox to the DataTable

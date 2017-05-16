@@ -1,4 +1,5 @@
 Version 4.1.0
+New: Views to database systems other than MS SQL Server can be made.
 Enhanced: SmartUpdate has been rewritten to accomodate changing datatypes or slightly different character datatypes.
 
 Version 4.0.2

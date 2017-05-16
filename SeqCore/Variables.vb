@@ -615,6 +615,7 @@
     Private _SourceDatabase As String = ""
     Private _SourceSchema As String = ""
     Private _SourceTable As String = ""
+    Private _SourceSystem As Integer = 0
     Private _TargetSchema As String = ""
     Private _TargetView As String = ""
 
@@ -660,6 +661,15 @@
         End Get
         Set(ByVal Value As String)
             _SourceTable = Value
+        End Set
+    End Property
+
+    Public Property SourceSystem() As Integer
+        Get
+            Return _SourceSystem
+        End Get
+        Set(ByVal Value As Integer)
+            _SourceSystem = Value
         End Set
     End Property
 

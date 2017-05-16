@@ -16,6 +16,7 @@
             LoadTables()
         End If
         dtpStartDate.Value = Today()
+        cbxSourceSystem.SelectedIndex = 0
         CursorControl()
     End Sub
 
@@ -914,7 +915,10 @@
 
     Private Sub BuildView()
         Dim strLinkedServer As String = cbxLinkedServer.Text
-        If strLinkedServer.Length > 0 And cbxLinkedServer.Items.Contains(strLinkedServer) = False Then Exit Sub
+        If strLinkedServer.Length > 0 And cbxLinkedServer.Items.Contains(strLinkedServer) = False Then
+            WriteStatus("The specified Linked Server was not found.", 2, lblStatusText)
+            Exit Sub
+        End If
         Dim strDatabaseSource As String = txtSourceDatabase.Text
         Dim strSchemaSource As String = txtSourceSchema.Text
         Dim strTableSource As String = txtSourceTableOrView.Text
@@ -932,7 +936,7 @@
             Exit Sub
         End If
 
-        Dim errorlevel As Integer = basCode.CreateLocalView(basCode.dhdConnection, strLinkedServer, strDatabaseSource, strSchemaSource, strTableSource, strSchemaTarget, strViewTarget)
+        Dim errorlevel As Integer = basCode.CreateLocalView(basCode.dhdConnection, strLinkedServer, strDatabaseSource, strSchemaSource, strTableSource, strSchemaTarget, strViewTarget, cbxSourceSystem.SelectedIndex)
         'Dim strSourceQuery As String = ""
         'If strLinkedServer.Length > 0 And strDatabaseSource.Length > 0 Then
         '    strSourceQuery = "SELECT [Star1] FROM OPENQUERY([" & strLinkedServer & "],''SELECT [Star2] FROM " & strDatabaseSource & "." & strSchemaSource & "." & strTableSource & "'')"

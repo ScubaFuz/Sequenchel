@@ -156,8 +156,12 @@ Module SeqCmd
         'Export Report
         Dim strExportFile As String = basCode.GetExportFileName(basCode.dhdText.ExportFile)
         Console.WriteLine("Exporting Report: " & basCode.curStatus.Report & " to " & strExportFile)
-        LoadReports()
-        Dim strQuery As String = basCode.ReportQueryBuild(basCode.xmlReports, basCode.xmlTables, basCode.curStatus.Report, basCode.curVar.DateTimeStyle)
+        Dim strQuery As String = ""
+        If LoadReports() = True Then
+            strQuery = basCode.ReportQueryBuild(basCode.xmlReports, basCode.xmlTables, basCode.curStatus.Report, basCode.curVar.DateTimeStyle)
+        Else
+            strQuery = "SELECT * FROM " & basCode.curStatus.Table
+        End If
         Dim dtsData As DataSet = basCode.QueryDb(basCode.dhdConnection, strQuery, True, 5)
         'If dtsData Is Nothing Then Environment.Exit(0)
         basCode.ExportFile(dtsData, strExportFile, basCode.curVar.ConvertToText, basCode.curVar.ConvertToNull, basCode.curVar.ShowFile, basCode.curVar.HasHeaders, basCode.curVar.Delimiter, basCode.curVar.QuoteValues, basCode.curVar.CreateDir)
@@ -171,15 +175,19 @@ Module SeqCmd
         End If
     End Sub
 
-    Friend Sub LoadReports()
+    Friend Function LoadReports() As Boolean
         lstReports = basCode.LoadReports(basCode.xmlReports)
-        If lstReports Is Nothing Then Environment.Exit(0)
-        If lstReports.Contains(basCode.curStatus.Report) = False Or basCode.curStatus.Report = "" Then
-            Console.WriteLine("The specified Report was not found. please check your settings")
-            'Console.ReadLine()
-            Environment.Exit(0)
+        If (lstReports Is Nothing OrElse lstReports.Contains(basCode.curStatus.Report) = False OrElse basCode.curStatus.Report = "") Then
+            If basCode.curStatus.Report <> basCode.curStatus.Table Then
+                Console.WriteLine("The specified Report was not found. please check your settings")
+                'Console.ReadLine()
+                Environment.Exit(0)
+            Else
+                Return False
+            End If
         End If
-    End Sub
+        Return True
+    End Function
 
     Friend Sub ImportFiles(strImportFiles As String)
         Dim strFolder As String = strImportFiles.Substring(0, strImportFiles.LastIndexOf("\") + 1)
@@ -252,7 +260,7 @@ Module SeqCmd
             Return -1
         End If
 
-        Dim errorlevel As Integer = basCode.CreateLocalView(basCode.dhdConnection, basCode.curVar.LinkedServer, basCode.curVar.SourceDatabase, basCode.curVar.SourceSchema, basCode.curVar.SourceTable, basCode.curVar.TargetSchema, basCode.curVar.TargetView)
+        Dim errorlevel As Integer = basCode.CreateLocalView(basCode.dhdConnection, basCode.curVar.LinkedServer, basCode.curVar.SourceDatabase, basCode.curVar.SourceSchema, basCode.curVar.SourceTable, basCode.curVar.TargetSchema, basCode.curVar.TargetView, basCode.curVar.SourceSystem)
 
         If errorlevel <> 0 Then
             Console.WriteLine(basCode.ErrorMessage)

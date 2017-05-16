@@ -154,6 +154,8 @@ Public Class BaseCode
                     curVar.SourceSchema = strInput
                 Case "/sourcetable"
                     curVar.SourceTable = strInput
+                Case "/sourcesystem"
+                    curVar.SourceSystem = strInput
                 Case "/targetschema"
                     curVar.TargetSchema = strInput
                 Case "/targetview"
@@ -202,6 +204,7 @@ Public Class BaseCode
                     Console.WriteLine(" /SourceDatabase:<value> ; requires /CreateSmartView, The remote table is in this database.")
                     Console.WriteLine(" /SourceSchema:<value> ; requires /CreateSmartView, The remote table is in this schema.")
                     Console.WriteLine(" /SourceTable:<value> ; requires /CreateSmartView, The remote table name.")
+                    Console.WriteLine(" /SourceSystem:<value> ; requires /CreateSmartView, The remote database server system identifier.")
                     Console.WriteLine(" /TargetSchema:<value> ; requires /CreateSmartView, The local schema name where the view is created.")
                     Console.WriteLine(" /TargetView:<value> ; requires /CreateSmartView, The name of the local view to be created.")
                     Console.WriteLine(" ")
@@ -1573,7 +1576,7 @@ Public Class BaseCode
         Dim blnExists As Boolean = False
         'Dim strQuery As String = "SELECT [name] FROM sys.tables WHERE [name] = '" & strTable & "'"
         If strTable.Contains(".") = False Then strTable = "dbo." & strTable
-        Dim strQuery As String = "SELECT sch.[name] +'.' + tbl.[name] FROM sys.tables tbl INNER JOIN sys.schemas sch ON tbl.schema_id = sch.schema_id WHERE sch.[name] +'.' + tbl.[name] = '" & strTable & "'"
+        Dim strQuery As String = "SELECT sch.[name] +'.' + tbl.[name] AS TableName FROM sys.tables tbl INNER JOIN sys.schemas sch ON tbl.schema_id = sch.schema_id WHERE sch.[name] +'.' + tbl.[name] = '" & strTable & "'"
         Dim dtsData As DataSet = QueryDb(dhdConnect, strQuery, True)
         blnExists = dhdText.DatasetCheck(dtsData)
         Return blnExists
@@ -2432,16 +2435,16 @@ Public Class BaseCode
         Return dtsData
     End Function
 
-    Public Function CreateLocalView(dhdConnect As DataHandler.db, strLinkedServer As String, strDatabaseSource As String, strSchemaSource As String, strTableSource As String, strSchemaTarget As String, strViewTarget As String) As Integer
+    Public Function CreateLocalView(dhdConnect As DataHandler.db, strLinkedServer As String, strDatabaseSource As String, strSchemaSource As String, strTableSource As String, strSchemaTarget As String, strViewTarget As String, intSourceSystem As Integer) As Integer
         Dim strSourceQuery As String = ""
         If curVar.QuoteValues = True Then
             strSchemaSource = """" & strSchemaSource & """"
             strTableSource = """" & strTableSource & """"
         End If
         If strLinkedServer.Length > 0 And strDatabaseSource.Length > 0 Then
-            strSourceQuery = "SELECT [Star1] FROM OPENQUERY([" & strLinkedServer & "],''SELECT [Star2] FROM " & strDatabaseSource & "." & strSchemaSource & "." & strTableSource & "'')"
+            strSourceQuery = "SELECT [Star1] FROM OPENQUERY([" & strLinkedServer & "],''SELECT [Star2] FROM " & strDatabaseSource & "." & strSchemaSource & "." & strTableSource & "[Star3]'')"
         ElseIf strLinkedServer.Length > 0 Then
-            strSourceQuery = "SELECT [Star1] FROM OPENQUERY([" & strLinkedServer & "],''SELECT [Star2] FROM " & strSchemaSource & "." & strTableSource & "'')"
+            strSourceQuery = "SELECT [Star1] FROM OPENQUERY([" & strLinkedServer & "],''SELECT [Star2] FROM " & strSchemaSource & "." & strTableSource & "[Star3]'')"
         ElseIf strDatabaseSource.Length > 0 Then
             strSourceQuery = "SELECT [Star1] FROM " & strDatabaseSource & "." & strSchemaSource & "." & strTableSource
         End If
@@ -2451,7 +2454,22 @@ Public Class BaseCode
             ErrorLevel = -1
             Return -1
         End If
-        Dim strInputQuery As String = strSourceQuery.Replace("[Star1]", "*").Replace("[Star2]", "TOP 0 *")
+        Dim strStar As String = "*", strSourceWhere As String = ""
+        Select Case intSourceSystem
+            Case 0
+                'MS SQL Server
+                strStar = "TOP 0 *"
+            Case 1
+                'Oracle
+                strSourceWhere = " WHERE rownum<=1"
+            Case 2
+                'Progress
+                strStar = "TOP 0 *"
+            Case 3
+                'MySQL
+                strSourceWhere = " LIMIT 1"
+        End Select
+        Dim strInputQuery As String = strSourceQuery.Replace("[Star1]", "*").Replace("[Star2]", strStar).Replace("[Star3]", strSourceWhere)
 
         Dim strColumnQuery As String = "SELECT name FROM sys.dm_exec_describe_first_result_set('" & strInputQuery & "', NULL, 0) ORDER BY column_ordinal;"
         Dim dtsData As DataSet = QueryDb(dhdConnect, strColumnQuery, True)
@@ -2486,17 +2504,17 @@ Public Class BaseCode
             strColumnsSource = "*"
         End If
 
-        strViewQuery = strSourceQuery.Replace("[Star1]", strColumnsTarget).Replace("[Star2]", strColumnsSource)
+        strViewQuery = strSourceQuery.Replace("[Star1]", strColumnsTarget).Replace("[Star2]", strColumnsSource).Replace("[Star3]", "")
 
         Dim strCheckViewQuery As String = "SELECT name FROM sys.dm_exec_describe_first_result_set('" & strViewQuery & "', NULL, 0);"
         Dim dtsCheckView As DataSet = QueryDb(dhdConnect, strCheckViewQuery, True)
         If dhdText.DatasetCheck(dtsCheckView) = False Then
-            strViewQuery = strSourceQuery.Replace("[Star1]", "*").Replace("[Star2]", "*")
+            strViewQuery = strSourceQuery.Replace("[Star1]", "*").Replace("[Star2]", "*").Replace("[Star3]", "")
         Else
             For intRowCount1 As Integer = 0 To dtsCheckView.Tables(0).Rows.Count - 1
                 If dtsCheckView.Tables.Item(0).Rows(intRowCount1).Item("name").GetType().ToString = "System.DBNull" Then
                     'The query does not produce any results, revert to former query
-                    strViewQuery = strSourceQuery.Replace("[Star1]", "*").Replace("[Star2]", "*")
+                    strViewQuery = strSourceQuery.Replace("[Star1]", "*").Replace("[Star2]", "*").Replace("[Star3]", "")
                 End If
             Next
         End If
