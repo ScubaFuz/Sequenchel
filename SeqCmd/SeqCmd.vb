@@ -43,7 +43,7 @@ Module SeqCmd
         If basCode.curVar.DebugMode = True Then Console.WriteLine("TableSet " & basCode.curStatus.TableSet & " loaded")
         Dim blnTableExists As Boolean = basCode.CheckTable(basCode.dhdConnection, ImportTable)
         LoadTables(blnTableExists, basCode.curStatus.CreateTargetTable)
-        If ImportTable <> basCode.curStatus.Table And (basCode.CheckTable(basCode.dhdConnection, ImportTable) = True Or basCode.curStatus.CreateTargetTable = True) Then basCode.curStatus.Table = ImportTable
+        If ImportTable <> basCode.curStatus.Table And (blnTableExists = True Or basCode.curStatus.CreateTargetTable = True) Then basCode.curStatus.Table = ImportTable
         If basCode.curVar.DebugMode = True Then Console.WriteLine("Tables Loaded")
 
         If basCode.curVar.DebugMode = True Then Console.WriteLine("Importmode enabled = " & basCode.curStatus.RunImport)
@@ -117,11 +117,11 @@ Module SeqCmd
         Dim dtsInput As DataSet = Nothing
 
         If basCode.curStatus.ClearTargetTable = True Then
-            If basCode.curVar.DebugMode = True Then Console.WriteLine("Clearing Target Table")
             'Clear target table before inporting data
             If ImportTable <> "" And ImportTable = basCode.curStatus.Table Then
                 basCode.dhdConnection.DataTableName = basCode.GetTableNameFromAlias(basCode.xmlTables, basCode.curStatus.Table)
                 If basCode.curVar.DebugMode = True Then Console.WriteLine("Table Name set to: " & basCode.dhdConnection.DataTableName)
+                Console.WriteLine("Clearing Target Table")
                 basCode.ClearTargetTable(basCode.dhdConnection)
             End If
         End If

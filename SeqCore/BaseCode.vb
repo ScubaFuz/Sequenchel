@@ -1577,7 +1577,7 @@ Public Class BaseCode
         'Dim strQuery As String = "SELECT [name] FROM sys.tables WHERE [name] = '" & strTable & "'"
         If strTable.Contains(".") = False Then strTable = "dbo." & strTable
         Dim strQuery As String = "SELECT sch.[name] +'.' + tbl.[name] AS TableName FROM sys.tables tbl INNER JOIN sys.schemas sch ON tbl.schema_id = sch.schema_id WHERE sch.[name] +'.' + tbl.[name] = '" & strTable & "'"
-        Dim dtsData As DataSet = QueryDb(dhdConnect, strQuery, True)
+        Dim dtsData As DataSet = QueryDb(dhdConnect, strQuery, True, 10)
         blnExists = dhdText.DatasetCheck(dtsData)
         Return blnExists
     End Function
@@ -2688,12 +2688,12 @@ Public Class BaseCode
         If CheckTable(dhdDb, dhdDb.DataTableName) = False Then Exit Sub
 
         Dim strQuery As String = "TRUNCATE TABLE " & dhdDb.DataTableName
-        QueryDb(dhdDb, strQuery, False)
+        QueryDb(dhdDb, strQuery, False, 10)
         If ErrorLevel = -1 Then
             'Data removal failed, probably because of a constraint. Try removing every row.
             strQuery = ""
             strQuery = "DELETE FROM " & dhdDb.DataTableName
-            QueryDb(dhdDb, strQuery, False)
+            QueryDb(dhdDb, strQuery, False, 10)
         End If
         If ErrorLevel = -1 Then
             WriteLog("Clearing target table failed. " & ErrorMessage, 1)
