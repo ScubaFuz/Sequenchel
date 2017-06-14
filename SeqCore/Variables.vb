@@ -178,6 +178,10 @@
     Private _LargeFile As Boolean = False
     Private _BatchSize As Integer = 100000
     Private _TextEncoding As String = "UTF8"
+    Private _SkipRows As Integer = 0
+    Private _RowFilter As String = ""
+    Private _SqlCommand As String = ""
+    Private _Archive As String = ""
 
     Public Property ConvertToText() As Boolean
         Get
@@ -268,6 +272,43 @@
             _TextEncoding = Value
         End Set
     End Property
+
+    Public Property SkipRows() As Integer
+        Get
+            Return _SkipRows
+        End Get
+        Set(ByVal Value As Integer)
+            _SkipRows = Value
+        End Set
+    End Property
+
+    Public Property RowFilter() As String
+        Get
+            Return _RowFilter
+        End Get
+        Set(ByVal Value As String)
+            _RowFilter = Value
+        End Set
+    End Property
+
+    Public Property SqlCommand() As String
+        Get
+            Return _SqlCommand
+        End Get
+        Set(ByVal Value As String)
+            _SqlCommand = Value
+        End Set
+    End Property
+
+    Public Property Archive() As String
+        Get
+            Return _Archive
+        End Get
+        Set(ByVal Value As String)
+            _Archive = Value
+        End Set
+    End Property
+
 #End Region
 
 #Region "Security"

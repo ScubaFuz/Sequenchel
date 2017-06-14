@@ -157,8 +157,23 @@ Public Class frmImport
         basCode.curVar.QuoteValues = chkQuotedValues.Checked
         basCode.curVar.LargeFile = chkLargeFile.Checked
         basCode.curVar.TextEncoding = cbxTextEncoding.SelectedItem
+        If chkFilterRows.Checked = True Then
+            basCode.curVar.RowFilter = txtFilterRows.Text
+        Else
+            basCode.curVar.RowFilter = ""
+        End If
+        If chkSkipRows.Checked = True Then
+            basCode.curVar.SkipRows = nudSkipRows.Value
+        Else
+            basCode.curVar.SkipRows = 0
+        End If
+        If chkArchive.Checked = True And txtArchive.Text.Length > 0 Then
+            If basCode.dhdText.CheckDir(txtArchive.Text) = True Then
+                basCode.curVar.Archive = txtArchive.Text
+            End If
+        End If
         If IsNumeric(txtBatchSize.Text) Then basCode.curVar.BatchSize = txtBatchSize.Text
-        dtsImport = basCode.ImportFile(basCode.dhdText.PathConvert(basCode.CheckFilePath(basCode.dhdText.ImportFile)), chkHasHeaders.Checked, txtDelimiter.Text)
+        dtsImport = basCode.ImportFile(basCode.dhdText.PathConvert(basCode.CheckFilePath(basCode.dhdText.ImportFile)))
 
         If basCode.ErrorLevel = -1 Then
             WriteStatus(basCode.ErrorMessage, 2, lblStatusText)
@@ -288,13 +303,16 @@ Public Class frmImport
                 lblStatusText.Text = basCode.ErrorMessage
             End If
         End If
+        If chkSqlCommand.Checked = True And txtSqlCommand.Text.Length > 0 Then
+            basCode.curVar.SqlCommand = txtSqlCommand.Text
+        End If
 
         If basCode.curStatus.ImportAsXml = True Then
             intRecordsAffected = basCode.SaveXmlToDatabase(dhdDB, dtsUpload, basCode.dhdText.ImportFile)
         ElseIf basCode.curVar.LargeFile = True Then
-            intRecordsAffected = basCode.SaveLargeFileToDatabase(dhdDB, basCode.dhdText.ImportFile, basCode.curVar.HasHeaders, basCode.curVar.Delimiter, basCode.curVar.QuoteValues, basCode.curVar.ConvertToText, basCode.curVar.ConvertToNull, basCode.curVar.TextEncoding)
+            intRecordsAffected = basCode.SaveLargeFileToDatabase(dhdDB, basCode.dhdText.ImportFile)
         Else
-            intRecordsAffected = basCode.SaveToDatabase(dhdDB, dtsUpload, basCode.curVar.ConvertToText, basCode.curVar.ConvertToNull)
+            intRecordsAffected = basCode.SaveToDatabase(dhdDB, dtsUpload)
         End If
         If intRecordsAffected = -1 Then
             WriteStatus("Export to database failed.", 1, lblStatusText)

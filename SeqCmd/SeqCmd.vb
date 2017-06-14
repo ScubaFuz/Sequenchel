@@ -116,7 +116,7 @@ Module SeqCmd
         End If
         Dim dtsInput As DataSet = Nothing
 
-        If basCode.curStatus.ClearTargetTable = True Then
+        If basCode.curStatus.ClearTargetTable = 1 Then
             'Clear target table before inporting data
             If ImportTable <> "" And ImportTable = basCode.curStatus.Table Then
                 basCode.dhdConnection.DataTableName = basCode.GetTableNameFromAlias(basCode.xmlTables, basCode.curStatus.Table)
@@ -126,7 +126,7 @@ Module SeqCmd
             End If
         End If
 
-        If basCode.dhdText.ImportFile.Contains("*") Then
+        If basCode.dhdText.ImportFile.Contains("*") Or basCode.dhdText.ImportFile.Contains("?") Then
             If ImportTable <> "" And ImportTable = basCode.curStatus.Table Then
                 Console.WriteLine("Importing multiple files")
                 ImportFiles(basCode.dhdText.ImportFile)
@@ -201,8 +201,7 @@ Module SeqCmd
 
     Friend Function ImportFile(strImportFile As String) As DataSet
         Console.WriteLine("Importing file: " & strImportFile)
-        If basCode.curVar.DebugMode Then Console.WriteLine("TextEncoding: " & basCode.curVar.TextEncoding)
-        Dim dtsImport As DataSet = basCode.ImportFile(strImportFile, basCode.curVar.HasHeaders, basCode.curVar.Delimiter)
+        Dim dtsImport As DataSet = basCode.ImportFile(strImportFile)
         If basCode.ErrorLevel = -1 Then Console.WriteLine("Error: " & basCode.ErrorMessage)
         Return dtsImport
     End Function
@@ -224,13 +223,23 @@ Module SeqCmd
                 Console.WriteLine("The table was not found or created: " & dhdDB.ErrorMessage)
                 Environment.Exit(0)
             End If
+
+            If basCode.curStatus.ClearTargetTable = 2 Then
+                'Clear target table before uploading data
+                If ImportTable <> "" And ImportTable = basCode.curStatus.Table Then
+                    If basCode.curVar.DebugMode = True Then Console.WriteLine("Table Name set to: " & dhdDB.DataTableName)
+                    Console.WriteLine("Clearing Target Table")
+                    basCode.ClearTargetTable(dhdDB)
+                End If
+            End If
+
             Dim intRecords As Integer = 0
             If basCode.curStatus.ImportAsXml = True Then
                 intRecords = basCode.SaveXmlToDatabase(dhdDB, dtsInput, strFileName)
             ElseIf basCode.curVar.LargeFile = True Then
-                intRecords = basCode.SaveLargeFileToDatabase(dhdDB, strFileName, basCode.curVar.HasHeaders, basCode.curVar.Delimiter, basCode.curVar.QuoteValues, basCode.curVar.ConvertToText, basCode.curVar.ConvertToNull, basCode.curVar.TextEncoding)
+                intRecords = basCode.SaveLargeFileToDatabase(dhdDB, strFileName)
             Else
-                intRecords = basCode.SaveToDatabase(dhdDB, dtsInput, basCode.curVar.ConvertToText, basCode.curVar.ConvertToNull)
+                intRecords = basCode.SaveToDatabase(dhdDB, dtsInput)
             End If
 
             If intRecords = -1 Then

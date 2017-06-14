@@ -107,24 +107,43 @@ Public Class BaseCode
                 Case "/importfile"
                     'Export the report to the chosen file
                     dhdText.ImportFile = strInput
+                    If curVar.DebugMode = True Then Console.WriteLine("ImportFile = " & dhdText.ImportFile)
                 Case "/converttotext"
                     'Export the report to the chosen file
+                    If strInput = "" Then strInput = "True"
                     curVar.ConvertToText = strInput
                 Case "/converttonull"
                     'Export the report to the chosen file
+                    If strInput = "" Then strInput = "True"
                     curVar.ConvertToNull = strInput
+                Case "/skiprows"
+                    'No of Header Rows to skip
+                    If IsNumeric(strInput) Then curVar.SkipRows = strInput
+                    If curVar.DebugMode = True Then Console.WriteLine("No of Rows to Skip = " & curVar.SkipRows)
                 Case "/hasheaders"
                     'Export the report to the chosen file
+                    If strInput = "" Then strInput = "True"
                     curVar.HasHeaders = strInput
                 Case "/delimiter"
                     'Export the report to the chosen file
                     curVar.Delimiter = strInput
+                Case "/rowfilter"
+                    'filter rows that start with user provided value
+                    curVar.RowFilter = strInput
+                    If curVar.DebugMode = True Then Console.WriteLine("RowFilter = " & curVar.RowFilter)
+                Case "/archive"
+                    'Archive the imported file to folder
+                    curVar.Archive = strInput
+                Case "/sqlcommand"
+                    'execute this SQL command after upload to database
+                    curVar.SqlCommand = strInput
                 Case "/emailrecipient"
                     'Export the report to the chosen file
                     dhdText.SmtpRecipient = strInput
                 Case "/cleartargettable"
                     'Clear all data from the target table before inporting new data
-                    curStatus.ClearTargetTable = True
+                    If strInput = "" Then strInput = 1
+                    curStatus.ClearTargetTable = strInput
                 Case "/importasxml"
                     'import the file as XML data into the database
                     curStatus.ImportAsXml = True
@@ -142,8 +161,10 @@ Public Class BaseCode
                     'Import the file directly to the database
                     curVar.LargeFile = True
                     If IsNumeric(strInput) Then curVar.BatchSize = strInput
+                    If curVar.DebugMode = True Then Console.WriteLine("BatchSize for LargeFile = " & curVar.BatchSize)
                 Case "/textencoding"
                     curVar.TextEncoding = strInput
+                    If curVar.DebugMode Then Console.WriteLine("TextEncoding: " & curVar.TextEncoding)
                 Case "/createsmartview"
                     curVar.CreateSmartView = True
                 Case "/linkedserver"
@@ -178,12 +199,16 @@ Public Class BaseCode
                     Console.WriteLine(" /ReportName:<value> ; Run this predefined Report (requires /Report option).")
                     Console.WriteLine(" /ExportFile:<value> ; Export the data to this file. Report data prevales over Import.")
                     Console.WriteLine(" /ImportFile:<value> ; Import this file (Requires /Import option).")
-                    Console.WriteLine(" /ConvertToText ; Convert imported data to plain text. Excel files only.")
-                    Console.WriteLine(" /ConvertToNull ; Convert empty values to NULL. Upload to database only.")
-                    Console.WriteLine(" /HasHeaders ; The first row of the imported file has header/column names.")
+                    Console.WriteLine(" /ConvertToText:<True/False> ; Convert imported data to plain text. Excel files only.")
+                    Console.WriteLine(" /ConvertToNull:<True/False> ; Convert empty values to NULL. Upload to database only.")
+                    Console.WriteLine(" /SqlCommand:<value> ; Execute this SQL Command after upload to database.")
+                    Console.WriteLine(" /SkipRows:<value> ; No of Header Rows to skip when importing txt files")
+                    Console.WriteLine(" /HasHeaders:<True/False> ; The first row of the imported file has header/column names.")
+                    Console.WriteLine(" /RowFilter:<value> ; Filter rows that start with user provided value")
                     Console.WriteLine(" /Delimiter:<value> ; Value seperator. Default is comma. -> /Delimiter:,")
+                    Console.WriteLine(" /Archive:<value> ; Archive the imported file to the specified folder")
                     Console.WriteLine(" /EmailRecipient:<Email@Address.com> ; Report Only. Requires SMTP to be configured.")
-                    Console.WriteLine(" /ClearTargetTable ; Delete all data from the database table before import.")
+                    Console.WriteLine(" /ClearTargetTable[:<0,1,2>] ; Delete all data from the database table before (each) import.")
                     Console.WriteLine(" /ImportAsXml ; Convert plain text to basic XML. Leave XML Import as original.")
                     Console.WriteLine("     Import into the database as Xml datatype, CreateTargetTable.")
                     Console.WriteLine("     CreateTargetTable creates a special table for this purpose.")
@@ -2158,7 +2183,7 @@ Public Class BaseCode
         Return True
     End Function
 
-    Public Function SaveToDatabase(ByVal dhdConnect As DataHandler.db, dtsInput As DataSet, Optional ConvertToText As Boolean = False, Optional ConvertToNull As Boolean = False) As Integer
+    Public Function SaveToDatabase(ByVal dhdConnect As DataHandler.db, dtsInput As DataSet) As Integer
         Dim intRecordsAffected As Integer = 0
         Dim intReturn As Integer = 0
 
@@ -2173,7 +2198,7 @@ Public Class BaseCode
                     End If
                 End If
                 If blnExport = True Then
-                    intReturn = UploadSqlData(dhdConnect, dttInput, ConvertToText, ConvertToNull)
+                    intReturn = UploadSqlData(dhdConnect, dttInput)
                     If intReturn = -1 Then
                         Return -1
                     Else
@@ -2182,6 +2207,9 @@ Public Class BaseCode
                 End If
             Next
             'intRecordsAffected = dhdDB.UploadSqlData(dgvImport.DataSource)
+            If curVar.SqlCommand.Length > 0 Then
+                dhdConnect.QueryDatabase(curVar.SqlCommand, 0)
+            End If
             Return intRecordsAffected
         Catch ex As Exception
             ErrorLevel = -1
@@ -2191,7 +2219,7 @@ Public Class BaseCode
         Return intRecordsAffected
     End Function
 
-    Public Function SaveLargeFileToDatabase(ByVal dhdConnect As DataHandler.db, strFileName As String, blnHasHeaders As Boolean, Optional Delimiter As String = ",", Optional QuoteValues As Boolean = False, Optional ConvertToText As Boolean = False, Optional ConvertToNull As Boolean = False, Optional TextEncoding As String = "UTF8") As Integer
+    Public Function SaveLargeFileToDatabase(ByVal dhdConnect As DataHandler.db, strFileName As String) As Integer
 
         Dim intRecordsAffected As Integer = 0
         Dim dtsOutput As New DataSet
@@ -2204,8 +2232,9 @@ Public Class BaseCode
         ErrorLevel = 0
         ErrorMessage = ""
 
+
         Dim encInput As Text.Encoding = Text.Encoding.UTF8
-        Select Case TextEncoding.ToUpper
+        Select Case curVar.TextEncoding.ToUpper
             Case "UTF8"
                 encInput = Text.Encoding.UTF8
             Case "UTF7"
@@ -2221,24 +2250,24 @@ Public Class BaseCode
         End Select
         Using MyReader As New Microsoft.VisualBasic.FileIO.TextFieldParser(strFileName, encInput)
             MyReader.TextFieldType = FileIO.FieldType.Delimited
-            MyReader.HasFieldsEnclosedInQuotes = QuoteValues
-            MyReader.SetDelimiters(Delimiter)
+            MyReader.HasFieldsEnclosedInQuotes = curVar.QuoteValues
+            MyReader.SetDelimiters(curVar.Delimiter)
             Dim currentRow As String()
             While Not MyReader.EndOfData
                 Try
                     currentRow = MyReader.ReadFields()
-                    If intRowCount = 0 And blnHasHeaders = False Then
+                    If intRowCount = 0 And curVar.HasHeaders = False Then
                         intMaxColCount = currentRow.Count
                         For intColumns As Integer = 1 To currentRow.Count
                             dttOutput.Columns.Add("col" & intColumns)
                         Next
                     End If
-                    If intRowCount > 0 Or blnHasHeaders = False Then dttOutput.Rows.Add()
+                    If intRowCount > 0 Or curVar.HasHeaders = False Then dttOutput.Rows.Add()
 
                     Dim currentField As String
                     Dim intColCount As Integer = 0
                     For Each currentField In currentRow
-                        If intRowCount = 0 And blnHasHeaders = True Then
+                        If intRowCount = 0 And curVar.HasHeaders = True Then
                             intMaxColCount = currentRow.Count
                             'Create Columns
                             dttOutput.Columns.Add(currentField)
@@ -2266,7 +2295,7 @@ Public Class BaseCode
                 intRowCount += 1
                 If intRowCount >= curVar.BatchSize + 1 Then
                     Try
-                        intRecordsAffected = UploadSqlData(dhdConnect, dttOutput, ConvertToText, ConvertToNull)
+                        intRecordsAffected = UploadSqlData(dhdConnect, dttOutput)
                         dttOutput.Clear()
                         TotalRows += intRecordsAffected
                         intRowCount = 1
@@ -2282,8 +2311,11 @@ Public Class BaseCode
 
         If intRowCount > 0 Then
             Try
-                intRecordsAffected = UploadSqlData(dhdConnect, dttOutput, ConvertToText, ConvertToNull)
+                intRecordsAffected = UploadSqlData(dhdConnect, dttOutput)
                 TotalRows += intRecordsAffected
+                If curVar.SqlCommand.Length > 0 Then
+                    dhdConnect.QueryDatabase(curVar.SqlCommand, 0)
+                End If
             Catch ex As Exception
                 ErrorLevel = -1
                 ErrorMessage = "Export to database failed. Check if the columns match and try again. If you are importing more than 1 table, make sure they have identical columns" & ex.Message
@@ -2312,7 +2344,7 @@ Public Class BaseCode
         Return 1
     End Function
 
-    Public Function UploadSqlData(ByVal dhdConnect As DataHandler.db, ByVal dttInput As DataTable, Optional ConvertToText As Boolean = False, Optional ConvertToNull As Boolean = False) As Integer
+    Public Function UploadSqlData(ByVal dhdConnect As DataHandler.db, ByVal dttInput As DataTable) As Integer
         Dim intRecordsAffected As Integer = 0
         intRecordsAffected = dttInput.Rows.Count
 
@@ -2330,8 +2362,8 @@ Public Class BaseCode
             Using bcp As System.Data.SqlClient.SqlBulkCopy = New System.Data.SqlClient.SqlBulkCopy(dhdDB.SqlConnection)
                 If dhdDB.SqlConnection.State = ConnectionState.Closed Then dhdDB.SqlConnection.Open()
                 bcp.DestinationTableName = dhdDB.DataTableName
-                If ConvertToText = True Then dttInput = dhdConnect.ConvertToText(dttInput)
-                If ConvertToNull = True Then dttInput = dhdConnect.EmptyToNull(dttInput)
+                If curVar.ConvertToText = True Then dttInput = dhdConnect.ConvertToText(dttInput)
+                If curVar.ConvertToNull = True Then dttInput = dhdConnect.EmptyToNull(dttInput)
                 Dim reader As DataTableReader = dttInput.CreateDataReader()
                 bcp.WriteToServer(reader)
             End Using
@@ -2542,7 +2574,7 @@ Public Class BaseCode
 #End Region
 
 #Region "Import & Export"
-    Public Function ImportFile(strFileName As String, Optional blnHasHeaders As Boolean = True, Optional Delimiter As String = ",") As DataSet
+    Public Function ImportFile(strFileName As String) As DataSet
         ErrorLevel = 0
         ErrorMessage = ""
         dhdText.XmlDoc = Nothing
@@ -2557,14 +2589,18 @@ Public Class BaseCode
                     ErrorLevel = Excel.ErrorLevel
                     ErrorMessage = Excel.ErrorMessage
                 Case "csv", "txt"
-                    If Delimiter.Length = 0 Then
+                    If curVar.Delimiter.Length = 0 Then
                         Return Nothing
                     End If
-                    dtsImport = dhdText.CsvToDataSet(strFileName, blnHasHeaders, Delimiter, curVar.QuoteValues, curVar.LargeFile, curVar.TextEncoding)
+                    dtsImport = dhdText.CsvToDataSet(strFileName, curVar.HasHeaders, curVar.Delimiter, curVar.QuoteValues, curVar.LargeFile, curVar.TextEncoding, curVar.SkipRows, curVar.RowFilter)
                     If dhdText.ErrorLevel = -1 Then
                         ErrorLevel = -1
                         ErrorMessage = dhdText.ErrorMessage
                         WriteLog(ErrorMessage, 1)
+                    ElseIf curVar.Archive.Length > 0 Then
+                        If dhdText.CheckDir(curVar.Archive) Then
+                            dhdText.MoveFile(strFileName, curVar.Archive)
+                        End If
                     End If
                 Case Else
                     Return Nothing
@@ -2577,65 +2613,6 @@ Public Class BaseCode
         End Try
         Return dtsImport
     End Function
-
-    'Public Function CsvToDataSet(strFileName As String, blnHasHeaders As Boolean, Optional Delimiter As String = ",", Optional QuoteValues As Boolean = False) As DataSet
-    '    Dim dtsOutput As New DataSet
-    '    Dim dttOutput As New DataTable
-    '    dtsOutput.Tables.Add(dttOutput)
-
-    '    Dim intRowCount As Integer = 0
-    '    Dim intMaxColCount As Integer = 0
-    '    ErrorLevel = 0
-    '    ErrorMessage = ""
-
-    '    Using MyReader As New Microsoft.VisualBasic.FileIO.TextFieldParser(strFileName)
-    '        MyReader.TextFieldType = FileIO.FieldType.Delimited
-    '        MyReader.HasFieldsEnclosedInQuotes = QuoteValues
-    '        MyReader.SetDelimiters(Delimiter)
-    '        Dim currentRow As String()
-    '        While Not MyReader.EndOfData
-    '            Try
-    '                currentRow = MyReader.ReadFields()
-    '                If intRowCount = 0 And blnHasHeaders = False Then
-    '                    intMaxColCount = currentRow.Count
-    '                    For intColumns As Integer = 1 To currentRow.Count
-    '                        dttOutput.Columns.Add("col" & intColumns)
-    '                    Next
-    '                End If
-    '                If intRowCount > 0 Or blnHasHeaders = False Then dttOutput.Rows.Add()
-
-    '                Dim currentField As String
-    '                Dim intColCount As Integer = 0
-    '                For Each currentField In currentRow
-    '                    If intRowCount = 0 And blnHasHeaders = True Then
-    '                        intMaxColCount = currentRow.Count
-    '                        'Create Columns
-    '                        dttOutput.Columns.Add(currentField)
-    '                    Else
-    '                        'fill datarow
-    '                        If intColCount < currentRow.Count Then
-    '                            dttOutput.Rows(dttOutput.Rows.Count - 1)(intColCount) = currentField
-    '                        Else
-    '                            ErrorLevel = -1
-    '                            ErrorMessage = "To many columns for row " & intRowCount + 1 & ". Data may have been lost."
-    '                            Console.WriteLine("To many columns for row " & intRowCount + 1 & ". Data may have been lost.")
-    '                        End If
-    '                    End If
-    '                    intColCount += 1
-    '                    'MsgBox(currentField)
-    '                Next
-    '            Catch ex As Microsoft.VisualBasic.FileIO.MalformedLineException
-    '                'MsgBox("Line is not valid and will be skipped. " & ex.Message)
-    '                Console.WriteLine("Line is not valid and will be skipped. " & ex.Message)
-    '            Catch ex As Exception
-    '                'MsgBox("Line is not valid and will be skipped. " & ex.Message)
-    '                Console.WriteLine("Line is not valid and will be skipped. " & ex.Message)
-    '            End Try
-    '            intRowCount += 1
-    '        End While
-    '    End Using
-    '    Return dtsOutput
-    'End Function
 
     Public Function GetExportFileName(strFileName As String) As String
         Dim strExtension As String = strFileName.Substring(strFileName.LastIndexOf(".") + 1, strFileName.Length - (strFileName.LastIndexOf(".") + 1))

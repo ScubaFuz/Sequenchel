@@ -68,12 +68,21 @@ Partial Class frmImport
         Me.txtBatchSize = New System.Windows.Forms.TextBox()
         Me.grpDatabase = New System.Windows.Forms.GroupBox()
         Me.grpFileOptions = New System.Windows.Forms.GroupBox()
-        Me.grpUploadFile = New System.Windows.Forms.GroupBox()
-        Me.dgvImport = New Sequenchel.usrDataGridView()
+        Me.txtFilterRows = New System.Windows.Forms.TextBox()
+        Me.chkFilterRows = New System.Windows.Forms.CheckBox()
+        Me.nudSkipRows = New System.Windows.Forms.NumericUpDown()
+        Me.chkSkipRows = New System.Windows.Forms.CheckBox()
         Me.lblTextEncoding = New System.Windows.Forms.Label()
+        Me.grpUploadFile = New System.Windows.Forms.GroupBox()
+        Me.chkSqlCommand = New System.Windows.Forms.CheckBox()
+        Me.txtSqlCommand = New System.Windows.Forms.TextBox()
         Me.cbxTextEncoding = New Sequenchel.ComboField()
+        Me.dgvImport = New Sequenchel.usrDataGridView()
+        Me.chkArchive = New System.Windows.Forms.CheckBox()
+        Me.txtArchive = New System.Windows.Forms.TextBox()
         Me.grpDatabase.SuspendLayout()
         Me.grpFileOptions.SuspendLayout()
+        CType(Me.nudSkipRows, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.grpUploadFile.SuspendLayout()
         CType(Me.dgvImport, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -239,7 +248,7 @@ Partial Class frmImport
         'chkFile
         '
         Me.chkFile.AutoSize = True
-        Me.chkFile.Location = New System.Drawing.Point(34, 227)
+        Me.chkFile.Location = New System.Drawing.Point(34, 274)
         Me.chkFile.Margin = New System.Windows.Forms.Padding(2)
         Me.chkFile.Name = "chkFile"
         Me.chkFile.Size = New System.Drawing.Size(89, 17)
@@ -250,7 +259,7 @@ Partial Class frmImport
         'chkDatabase
         '
         Me.chkDatabase.AutoSize = True
-        Me.chkDatabase.Location = New System.Drawing.Point(34, 109)
+        Me.chkDatabase.Location = New System.Drawing.Point(34, 156)
         Me.chkDatabase.Margin = New System.Windows.Forms.Padding(2)
         Me.chkDatabase.Name = "chkDatabase"
         Me.chkDatabase.Size = New System.Drawing.Size(119, 17)
@@ -263,7 +272,7 @@ Partial Class frmImport
         Me.chkScreen.AutoSize = True
         Me.chkScreen.Checked = True
         Me.chkScreen.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.chkScreen.Location = New System.Drawing.Point(37, 281)
+        Me.chkScreen.Location = New System.Drawing.Point(37, 328)
         Me.chkScreen.Margin = New System.Windows.Forms.Padding(2)
         Me.chkScreen.Name = "chkScreen"
         Me.chkScreen.Size = New System.Drawing.Size(107, 17)
@@ -284,7 +293,7 @@ Partial Class frmImport
         '
         'btnUploadFile
         '
-        Me.btnUploadFile.Location = New System.Drawing.Point(571, 242)
+        Me.btnUploadFile.Location = New System.Drawing.Point(571, 289)
         Me.btnUploadFile.Name = "btnUploadFile"
         Me.btnUploadFile.Size = New System.Drawing.Size(171, 23)
         Me.btnUploadFile.TabIndex = 15
@@ -315,7 +324,7 @@ Partial Class frmImport
         '
         'btnPreviousTable
         '
-        Me.btnPreviousTable.Location = New System.Drawing.Point(28, 301)
+        Me.btnPreviousTable.Location = New System.Drawing.Point(28, 348)
         Me.btnPreviousTable.Name = "btnPreviousTable"
         Me.btnPreviousTable.Size = New System.Drawing.Size(34, 23)
         Me.btnPreviousTable.TabIndex = 16
@@ -324,7 +333,7 @@ Partial Class frmImport
         '
         'btnNextTable
         '
-        Me.btnNextTable.Location = New System.Drawing.Point(176, 301)
+        Me.btnNextTable.Location = New System.Drawing.Point(176, 348)
         Me.btnNextTable.Name = "btnNextTable"
         Me.btnNextTable.Size = New System.Drawing.Size(34, 23)
         Me.btnNextTable.TabIndex = 17
@@ -334,7 +343,7 @@ Partial Class frmImport
         'lblTableNumber
         '
         Me.lblTableNumber.AutoSize = True
-        Me.lblTableNumber.Location = New System.Drawing.Point(83, 306)
+        Me.lblTableNumber.Location = New System.Drawing.Point(83, 353)
         Me.lblTableNumber.Name = "lblTableNumber"
         Me.lblTableNumber.Size = New System.Drawing.Size(64, 13)
         Me.lblTableNumber.TabIndex = 45
@@ -343,7 +352,7 @@ Partial Class frmImport
         'lblTableName
         '
         Me.lblTableName.AutoSize = True
-        Me.lblTableName.Location = New System.Drawing.Point(236, 306)
+        Me.lblTableName.Location = New System.Drawing.Point(236, 353)
         Me.lblTableName.Name = "lblTableName"
         Me.lblTableName.Size = New System.Drawing.Size(37, 13)
         Me.lblTableName.TabIndex = 46
@@ -352,7 +361,7 @@ Partial Class frmImport
         'lblTableNameText
         '
         Me.lblTableNameText.AutoSize = True
-        Me.lblTableNameText.Location = New System.Drawing.Point(279, 306)
+        Me.lblTableNameText.Location = New System.Drawing.Point(279, 353)
         Me.lblTableNameText.Name = "lblTableNameText"
         Me.lblTableNameText.Size = New System.Drawing.Size(0, 13)
         Me.lblTableNameText.TabIndex = 47
@@ -360,7 +369,7 @@ Partial Class frmImport
         'chkUploadTable
         '
         Me.chkUploadTable.AutoSize = True
-        Me.chkUploadTable.Location = New System.Drawing.Point(359, 305)
+        Me.chkUploadTable.Location = New System.Drawing.Point(359, 352)
         Me.chkUploadTable.Name = "chkUploadTable"
         Me.chkUploadTable.Size = New System.Drawing.Size(174, 17)
         Me.chkUploadTable.TabIndex = 18
@@ -369,7 +378,7 @@ Partial Class frmImport
         '
         'btnUploadTable
         '
-        Me.btnUploadTable.Location = New System.Drawing.Point(570, 301)
+        Me.btnUploadTable.Location = New System.Drawing.Point(570, 348)
         Me.btnUploadTable.Name = "btnUploadTable"
         Me.btnUploadTable.Size = New System.Drawing.Size(171, 23)
         Me.btnUploadTable.TabIndex = 19
@@ -403,7 +412,7 @@ Partial Class frmImport
         Me.chkHasHeaders.AutoSize = True
         Me.chkHasHeaders.Checked = True
         Me.chkHasHeaders.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.chkHasHeaders.Location = New System.Drawing.Point(5, 18)
+        Me.chkHasHeaders.Location = New System.Drawing.Point(5, 39)
         Me.chkHasHeaders.Margin = New System.Windows.Forms.Padding(2)
         Me.chkHasHeaders.Name = "chkHasHeaders"
         Me.chkHasHeaders.Size = New System.Drawing.Size(153, 17)
@@ -414,7 +423,7 @@ Partial Class frmImport
         'lblTextDelimiter
         '
         Me.lblTextDelimiter.AutoSize = True
-        Me.lblTextDelimiter.Location = New System.Drawing.Point(286, 22)
+        Me.lblTextDelimiter.Location = New System.Drawing.Point(286, 18)
         Me.lblTextDelimiter.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
         Me.lblTextDelimiter.Name = "lblTextDelimiter"
         Me.lblTextDelimiter.Size = New System.Drawing.Size(96, 13)
@@ -482,7 +491,7 @@ Partial Class frmImport
         'chkQuotedValues
         '
         Me.chkQuotedValues.AutoSize = True
-        Me.chkQuotedValues.Location = New System.Drawing.Point(5, 39)
+        Me.chkQuotedValues.Location = New System.Drawing.Point(5, 60)
         Me.chkQuotedValues.Margin = New System.Windows.Forms.Padding(2)
         Me.chkQuotedValues.Name = "chkQuotedValues"
         Me.chkQuotedValues.Size = New System.Drawing.Size(205, 17)
@@ -513,6 +522,8 @@ Partial Class frmImport
         '
         'grpDatabase
         '
+        Me.grpDatabase.Controls.Add(Me.txtSqlCommand)
+        Me.grpDatabase.Controls.Add(Me.chkSqlCommand)
         Me.grpDatabase.Controls.Add(Me.lblDatabaseServerName)
         Me.grpDatabase.Controls.Add(Me.txtBatchSize)
         Me.grpDatabase.Controls.Add(Me.chkLargeFile)
@@ -530,7 +541,7 @@ Partial Class frmImport
         Me.grpDatabase.Controls.Add(Me.lblPassword)
         Me.grpDatabase.Controls.Add(Me.chkCreateTable)
         Me.grpDatabase.Enabled = False
-        Me.grpDatabase.Location = New System.Drawing.Point(29, 112)
+        Me.grpDatabase.Location = New System.Drawing.Point(29, 159)
         Me.grpDatabase.Name = "grpDatabase"
         Me.grpDatabase.Size = New System.Drawing.Size(713, 110)
         Me.grpDatabase.TabIndex = 62
@@ -538,6 +549,12 @@ Partial Class frmImport
         '
         'grpFileOptions
         '
+        Me.grpFileOptions.Controls.Add(Me.txtArchive)
+        Me.grpFileOptions.Controls.Add(Me.chkArchive)
+        Me.grpFileOptions.Controls.Add(Me.txtFilterRows)
+        Me.grpFileOptions.Controls.Add(Me.chkFilterRows)
+        Me.grpFileOptions.Controls.Add(Me.nudSkipRows)
+        Me.grpFileOptions.Controls.Add(Me.chkSkipRows)
         Me.grpFileOptions.Controls.Add(Me.txtDelimiterShow)
         Me.grpFileOptions.Controls.Add(Me.cbxTextEncoding)
         Me.grpFileOptions.Controls.Add(Me.lblTextEncoding)
@@ -549,21 +566,98 @@ Partial Class frmImport
         Me.grpFileOptions.Controls.Add(Me.chkCovertToText)
         Me.grpFileOptions.Location = New System.Drawing.Point(29, 42)
         Me.grpFileOptions.Name = "grpFileOptions"
-        Me.grpFileOptions.Size = New System.Drawing.Size(713, 62)
+        Me.grpFileOptions.Size = New System.Drawing.Size(713, 109)
         Me.grpFileOptions.TabIndex = 63
         Me.grpFileOptions.TabStop = False
         Me.grpFileOptions.Text = "File Options"
+        '
+        'txtFilterRows
+        '
+        Me.txtFilterRows.Location = New System.Drawing.Point(463, 58)
+        Me.txtFilterRows.Margin = New System.Windows.Forms.Padding(2)
+        Me.txtFilterRows.Name = "txtFilterRows"
+        Me.txtFilterRows.Size = New System.Drawing.Size(235, 20)
+        Me.txtFilterRows.TabIndex = 65
+        '
+        'chkFilterRows
+        '
+        Me.chkFilterRows.AutoSize = True
+        Me.chkFilterRows.Location = New System.Drawing.Point(289, 60)
+        Me.chkFilterRows.Margin = New System.Windows.Forms.Padding(2)
+        Me.chkFilterRows.Name = "chkFilterRows"
+        Me.chkFilterRows.Size = New System.Drawing.Size(152, 17)
+        Me.chkFilterRows.TabIndex = 64
+        Me.chkFilterRows.Text = "Filter Rows that Start With:"
+        Me.chkFilterRows.UseVisualStyleBackColor = True
+        '
+        'nudSkipRows
+        '
+        Me.nudSkipRows.Location = New System.Drawing.Point(164, 17)
+        Me.nudSkipRows.Name = "nudSkipRows"
+        Me.nudSkipRows.Size = New System.Drawing.Size(37, 20)
+        Me.nudSkipRows.TabIndex = 63
+        '
+        'chkSkipRows
+        '
+        Me.chkSkipRows.AutoSize = True
+        Me.chkSkipRows.Location = New System.Drawing.Point(5, 18)
+        Me.chkSkipRows.Margin = New System.Windows.Forms.Padding(2)
+        Me.chkSkipRows.Name = "chkSkipRows"
+        Me.chkSkipRows.Size = New System.Drawing.Size(156, 17)
+        Me.chkSkipRows.TabIndex = 62
+        Me.chkSkipRows.Text = "No of Header Rows to Skip"
+        Me.chkSkipRows.UseVisualStyleBackColor = True
+        '
+        'lblTextEncoding
+        '
+        Me.lblTextEncoding.AutoSize = True
+        Me.lblTextEncoding.Location = New System.Drawing.Point(286, 39)
+        Me.lblTextEncoding.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
+        Me.lblTextEncoding.Name = "lblTextEncoding"
+        Me.lblTextEncoding.Size = New System.Drawing.Size(76, 13)
+        Me.lblTextEncoding.TabIndex = 60
+        Me.lblTextEncoding.Text = "Text Encoding"
         '
         'grpUploadFile
         '
         Me.grpUploadFile.Controls.Add(Me.lblFileName)
         Me.grpUploadFile.Controls.Add(Me.txtFileName)
         Me.grpUploadFile.Enabled = False
-        Me.grpUploadFile.Location = New System.Drawing.Point(29, 231)
+        Me.grpUploadFile.Location = New System.Drawing.Point(29, 278)
         Me.grpUploadFile.Name = "grpUploadFile"
         Me.grpUploadFile.Size = New System.Drawing.Size(500, 45)
         Me.grpUploadFile.TabIndex = 64
         Me.grpUploadFile.TabStop = False
+        '
+        'chkSqlCommand
+        '
+        Me.chkSqlCommand.AutoSize = True
+        Me.chkSqlCommand.Location = New System.Drawing.Point(330, 85)
+        Me.chkSqlCommand.Margin = New System.Windows.Forms.Padding(2)
+        Me.chkSqlCommand.Name = "chkSqlCommand"
+        Me.chkSqlCommand.Size = New System.Drawing.Size(171, 17)
+        Me.chkSqlCommand.TabIndex = 62
+        Me.chkSqlCommand.Text = "Execute SQL cmd after upload"
+        Me.chkSqlCommand.UseVisualStyleBackColor = True
+        '
+        'txtSqlCommand
+        '
+        Me.txtSqlCommand.Location = New System.Drawing.Point(505, 81)
+        Me.txtSqlCommand.Margin = New System.Windows.Forms.Padding(2)
+        Me.txtSqlCommand.Name = "txtSqlCommand"
+        Me.txtSqlCommand.Size = New System.Drawing.Size(193, 20)
+        Me.txtSqlCommand.TabIndex = 63
+        '
+        'cbxTextEncoding
+        '
+        Me.cbxTextEncoding.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cbxTextEncoding.Field = Nothing
+        Me.cbxTextEncoding.FormattingEnabled = True
+        Me.cbxTextEncoding.Items.AddRange(New Object() {"UTF8", "UTF7", "UTF32", "ASCII", "Unicode", "BigEndianUnicode"})
+        Me.cbxTextEncoding.Location = New System.Drawing.Point(392, 37)
+        Me.cbxTextEncoding.Name = "cbxTextEncoding"
+        Me.cbxTextEncoding.Size = New System.Drawing.Size(108, 21)
+        Me.cbxTextEncoding.TabIndex = 61
         '
         'dgvImport
         '
@@ -576,31 +670,29 @@ Partial Class frmImport
         Me.dgvImport.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
         Me.dgvImport.BackImage = CType(resources.GetObject("dgvImport.BackImage"), System.Drawing.Image)
         Me.dgvImport.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvImport.Location = New System.Drawing.Point(29, 330)
+        Me.dgvImport.Location = New System.Drawing.Point(29, 384)
         Me.dgvImport.Name = "dgvImport"
-        Me.dgvImport.Size = New System.Drawing.Size(713, 386)
+        Me.dgvImport.Size = New System.Drawing.Size(713, 332)
         Me.dgvImport.TabIndex = 20
         '
-        'lblTextEncoding
+        'chkArchive
         '
-        Me.lblTextEncoding.AutoSize = True
-        Me.lblTextEncoding.Location = New System.Drawing.Point(286, 40)
-        Me.lblTextEncoding.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
-        Me.lblTextEncoding.Name = "lblTextEncoding"
-        Me.lblTextEncoding.Size = New System.Drawing.Size(76, 13)
-        Me.lblTextEncoding.TabIndex = 60
-        Me.lblTextEncoding.Text = "Text Encoding"
+        Me.chkArchive.AutoSize = True
+        Me.chkArchive.Location = New System.Drawing.Point(289, 83)
+        Me.chkArchive.Margin = New System.Windows.Forms.Padding(2)
+        Me.chkArchive.Name = "chkArchive"
+        Me.chkArchive.Size = New System.Drawing.Size(170, 17)
+        Me.chkArchive.TabIndex = 66
+        Me.chkArchive.Text = "Archive imported files to folder:"
+        Me.chkArchive.UseVisualStyleBackColor = True
         '
-        'cbxTextEncoding
+        'txtArchive
         '
-        Me.cbxTextEncoding.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.cbxTextEncoding.Field = Nothing
-        Me.cbxTextEncoding.FormattingEnabled = True
-        Me.cbxTextEncoding.Items.AddRange(New Object() {"UTF8", "UTF7", "UTF32", "ASCII", "Unicode", "BigEndianUnicode"})
-        Me.cbxTextEncoding.Location = New System.Drawing.Point(392, 37)
-        Me.cbxTextEncoding.Name = "cbxTextEncoding"
-        Me.cbxTextEncoding.Size = New System.Drawing.Size(108, 21)
-        Me.cbxTextEncoding.TabIndex = 61
+        Me.txtArchive.Location = New System.Drawing.Point(463, 81)
+        Me.txtArchive.Margin = New System.Windows.Forms.Padding(2)
+        Me.txtArchive.Name = "txtArchive"
+        Me.txtArchive.Size = New System.Drawing.Size(235, 20)
+        Me.txtArchive.TabIndex = 67
         '
         'frmImport
         '
@@ -637,6 +729,7 @@ Partial Class frmImport
         Me.grpDatabase.PerformLayout()
         Me.grpFileOptions.ResumeLayout(False)
         Me.grpFileOptions.PerformLayout()
+        CType(Me.nudSkipRows, System.ComponentModel.ISupportInitialize).EndInit()
         Me.grpUploadFile.ResumeLayout(False)
         Me.grpUploadFile.PerformLayout()
         CType(Me.dgvImport, System.ComponentModel.ISupportInitialize).EndInit()
@@ -693,4 +786,12 @@ Partial Class frmImport
     Friend WithEvents grpUploadFile As GroupBox
     Friend WithEvents cbxTextEncoding As ComboField
     Friend WithEvents lblTextEncoding As Label
+    Friend WithEvents txtFilterRows As TextBox
+    Friend WithEvents chkFilterRows As CheckBox
+    Friend WithEvents nudSkipRows As NumericUpDown
+    Friend WithEvents chkSkipRows As CheckBox
+    Friend WithEvents txtSqlCommand As TextBox
+    Friend WithEvents chkSqlCommand As CheckBox
+    Friend WithEvents txtArchive As TextBox
+    Friend WithEvents chkArchive As CheckBox
 End Class

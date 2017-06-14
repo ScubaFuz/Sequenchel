@@ -225,7 +225,7 @@
     Private _SuspendActions As Boolean = False
     Private _RunReport As Boolean = False
     Private _RunImport As Boolean = False
-    Private _ClearTargetTable As Boolean = False
+    Private _ClearTargetTable As Integer = 0
     Private _CreateTargetTable As Boolean = False
     Private _ImportAsXml As Boolean = False
     Private _QuitApplication As Boolean = False
@@ -248,11 +248,11 @@
         End Set
     End Property
 
-    Public Property ClearTargetTable() As Boolean
+    Public Property ClearTargetTable() As Integer
         Get
             Return _ClearTargetTable
         End Get
-        Set(ByVal Value As Boolean)
+        Set(ByVal Value As Integer)
             _ClearTargetTable = Value
         End Set
     End Property

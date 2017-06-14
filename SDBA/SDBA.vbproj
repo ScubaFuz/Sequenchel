@@ -290,6 +290,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Database\09_DbaStoredProcedures\01 dbo.usp_ImportXml.sql" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Database\03_Functions\dbo.udf_ValidPhone.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Database\03_Functions\dbo.udf_ValidPostCode.sql" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
