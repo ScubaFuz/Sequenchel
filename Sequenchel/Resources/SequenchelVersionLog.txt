@@ -1,10 +1,15 @@
-Version 4.1.0
+Version 4.1.1
 New: Import can skip header rows not cointaining data
 New: Import can filter rows based on user provided clause
+New: Execute a SQL Command after every upload when importing files.
+New: Clear the upload target table after every upload to process imported files individually.
+New: Relation autoselect when adding new tables to a report.
+Fixed: The buttons now reset correctly when switching from a read-only table to an editable table.
+Fixed: Search button handling when changing table now works as intended.
 
 Version 4.1.0
 New: Views to database systems other than MS SQL Server can be made.
-Enhanced: SmartUpdate has been rewritten to accomodate changing datatypes or slightly different character datatypes.
+Enhanced: SmartUpdate has been completely rewritten to accomodate changing data types and slightly different text data types.
 
 Version 4.0.2
 New: SmartUpdate can now remove all data from target table before adding new data.

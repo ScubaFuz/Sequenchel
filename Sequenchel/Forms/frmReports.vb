@@ -48,7 +48,7 @@ Public Class frmReports
     End Sub
 
     Private Sub btnTest_Click(sender As Object, e As EventArgs) Handles btnTest.Click
-        MessageBox.Show(pnlReportLabel.Controls.Count)
+        RelationsEnable()
     End Sub
 
     Private Sub DebugSettings()
@@ -847,6 +847,7 @@ Public Class frmReports
             Next
 
             PanelRelationWidthSet()
+            RelationsEnable()
         ElseIf blnTableAliasFound = True And blnTableNameFound = False Then
             WriteStatus("Table alias already exists. Every alias must be unique.", 2, lblStatusText)
             Return False
@@ -1052,6 +1053,46 @@ Public Class frmReports
                 End If
             Next
         Next
+    End Sub
+
+    Private Sub RelationsEnable()
+
+        Dim intControlNumber As Integer = 0
+
+        'iterate through all available tables
+        For Each lvwItemTable As ListViewItemField In lvwSelectedTables.Items
+            Dim strTableName As String = lvwItemTable.Field.FieldTableName
+            Dim strTableAlias As String = lvwItemTable.Field.FieldTableAlias
+            Dim strTableNameFull As String = strTableName & "_" & strTableAlias
+
+            'iterate though all relations, search for target table name
+            For Each ctrRelation As CheckField In pnlRelationsUse.Controls
+                Dim strLocalTableName As String = ctrRelation.Field.Name
+                intControlNumber = ctrRelation.Name.ToString.Substring(ctrRelation.Name.ToString.Length - strLocalTableName.Length - 1, 1)
+                Dim strRelationTable As String = basCode.GetTableNameFromString(GetCtrText(pnlRelationsTargetTable, strLocalTableName, intControlNumber))
+                Dim strRelationTableAlias As String = basCode.GetTableAliasFromString(GetCtrText(pnlRelationsTargetTable, strLocalTableName, intControlNumber))
+                Dim intSortOrder As Integer = SortOrderGet(strRelationTableAlias)
+
+                'Iterate through all checkboxes for match on target table name
+                If strTableAlias = strRelationTableAlias Then
+                    ctrRelation.Checked = True
+                End If
+
+            Next
+        Next
+
+        'For Each ctrControl As CheckField In pnlRelationsUse.Controls
+        '    'get name of control
+        '    Dim strName As String = ctrControl.Field.Name
+        '    'get source table name
+        '    Dim strSourceTable As String = ctrControl.Field.FieldTableName
+        '    'compare source table name to all target table names.
+        '    'if match then enable
+        '    If ctrControl.Name.ToString.Length > strSourceTable.Length Then
+        '        'If ctrControl.Name.ToString.Substring(ctrControl.Name.ToString.Length - strTableNameFull.Length, strTableNameFull.Length) = strTableNameFull Then intCount += 1
+        '    End If
+        'Next
+
     End Sub
 #End Region
 

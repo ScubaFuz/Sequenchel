@@ -114,8 +114,12 @@
                         ctrDispose.Dispose()
                     ElseIf strControlName.ToString = ctrDispose.Name.ToString Then
                         ctrDispose.Dispose()
+                    ElseIf ctrDispose.Name.ToString.Length > strControlName.Length Then
+                        If ctrDispose.Name.ToString.Substring(ctrDispose.Name.ToString.Length - strControlName.Length, strControlName.Length) = strControlName.ToString Then
+                            ctrDispose.Dispose()
+                        End If
                     Else
-                        Select Case ctrDispose.GetType.ToString
+                            Select Case ctrDispose.GetType.ToString
                             Case "CheckField", "ComboField", "LabelField", "TextField", "ManagedSelectField"
                                 If strControlName.ToString = ctrDispose.Field.Name.ToString Then
                                     ctrDispose.Dispose()

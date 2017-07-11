@@ -394,6 +394,7 @@ Public Class frmSequenchel
     Friend Sub LoadTable(strTable As String)
         Try
             FieldsDispose()
+            FieldsClearAll(True)
             If basCode.LoadTable(basCode.xmlTables, strTable) = False Then
                 WriteStatus("Loading the table " & strTable & " failed. Check your configuration", 2, lblStatusText)
                 Exit Sub
@@ -559,7 +560,7 @@ Public Class frmSequenchel
                 End If
 
             Next
-
+            ButtonHandle()
 
         Catch ex As Exception
             WriteStatus("There was an error reading the Table file. Please check the log.", 1, lblStatusText)
@@ -813,26 +814,26 @@ Public Class frmSequenchel
         btnAdd.Enabled = False
         btnDelete.Enabled = False
 
-        If basCode.dhdConnection.DataBaseOnline = True Then
-            If basCode.curStatus.Status = SeqCore.CurrentStatus.StatusList.Search And basCode.basTable.TableSearch = True Then
-                btnSearch.Enabled = True
-            End If
-            If dgvTable1.SelectedRows.Count = 1 And basCode.curStatus.Status = SeqCore.CurrentStatus.StatusList.Edit And basCode.basTable.TableUpdate = True And (basCode.curVar.AllowUpdate = True Or basCode.curVar.SecurityOverride = True) Then
-                btnUpdate.Enabled = True
-            End If
-            If basCode.basTable.TableInsert = True And (basCode.curVar.AllowInsert = True Or basCode.curVar.SecurityOverride = True) Then
-                btnAdd.Enabled = True
-            End If
-            If basCode.curStatus.Status = SeqCore.CurrentStatus.StatusList.ControlSearch Then
-                btnSearch.Enabled = True
-            End If
-            If dgvTable1.SelectedRows.Count = 1 And basCode.curStatus.Status = SeqCore.CurrentStatus.StatusList.ControlEdit And (basCode.curVar.AllowUpdate = True Or basCode.curVar.SecurityOverride = True) Then
-                btnUpdate.Enabled = True
-            End If
-            If dgvTable1.SelectedRows.Count = 1 And basCode.basTable.TableDelete = True And (basCode.curVar.AllowDelete = True Or basCode.curVar.SecurityOverride = True) Then
-                btnDelete.Enabled = True
-            End If
+        'If basCode.dhdConnection.DataBaseOnline = True Then
+        If basCode.curStatus.Status = SeqCore.CurrentStatus.StatusList.Search And basCode.basTable.TableSearch = True Then
+            btnSearch.Enabled = True
         End If
+        If dgvTable1.SelectedRows.Count = 1 And basCode.curStatus.Status = SeqCore.CurrentStatus.StatusList.Edit And basCode.basTable.TableUpdate = True And (basCode.curVar.AllowUpdate = True Or basCode.curVar.SecurityOverride = True) Then
+            btnUpdate.Enabled = True
+        End If
+        If basCode.basTable.TableInsert = True And (basCode.curVar.AllowInsert = True Or basCode.curVar.SecurityOverride = True) Then
+            btnAdd.Enabled = True
+        End If
+        If basCode.curStatus.Status = SeqCore.CurrentStatus.StatusList.ControlSearch Then
+            btnSearch.Enabled = True
+        End If
+        If dgvTable1.SelectedRows.Count = 1 And basCode.curStatus.Status = SeqCore.CurrentStatus.StatusList.ControlEdit And (basCode.curVar.AllowUpdate = True Or basCode.curVar.SecurityOverride = True) Then
+            btnUpdate.Enabled = True
+        End If
+        If dgvTable1.SelectedRows.Count = 1 And basCode.basTable.TableDelete = True And (basCode.curVar.AllowDelete = True Or basCode.curVar.SecurityOverride = True) Then
+            btnDelete.Enabled = True
+        End If
+        'End If
     End Sub
 
     Private Sub FieldsClearAll(Optional ClearSearch As Boolean = False)
