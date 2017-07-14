@@ -34,7 +34,6 @@ Partial Class frmImport
         Me.lblDatabaseServerName = New System.Windows.Forms.Label()
         Me.lblDatabaseName = New System.Windows.Forms.Label()
         Me.lblFileName = New System.Windows.Forms.Label()
-        Me.txtFileName = New System.Windows.Forms.TextBox()
         Me.txtPassword = New System.Windows.Forms.TextBox()
         Me.txtUser = New System.Windows.Forms.TextBox()
         Me.txtTable = New System.Windows.Forms.TextBox()
@@ -67,19 +66,21 @@ Partial Class frmImport
         Me.chkLargeFile = New System.Windows.Forms.CheckBox()
         Me.txtBatchSize = New System.Windows.Forms.TextBox()
         Me.grpDatabase = New System.Windows.Forms.GroupBox()
+        Me.txtSqlCommand = New System.Windows.Forms.TextBox()
+        Me.chkSqlCommand = New System.Windows.Forms.CheckBox()
         Me.grpFileOptions = New System.Windows.Forms.GroupBox()
+        Me.txtArchive = New System.Windows.Forms.TextBox()
+        Me.chkArchive = New System.Windows.Forms.CheckBox()
         Me.txtFilterRows = New System.Windows.Forms.TextBox()
         Me.chkFilterRows = New System.Windows.Forms.CheckBox()
         Me.nudSkipRows = New System.Windows.Forms.NumericUpDown()
         Me.chkSkipRows = New System.Windows.Forms.CheckBox()
+        Me.cbxTextEncoding = New Sequenchel.ComboField()
         Me.lblTextEncoding = New System.Windows.Forms.Label()
         Me.grpUploadFile = New System.Windows.Forms.GroupBox()
-        Me.chkSqlCommand = New System.Windows.Forms.CheckBox()
-        Me.txtSqlCommand = New System.Windows.Forms.TextBox()
-        Me.cbxTextEncoding = New Sequenchel.ComboField()
+        Me.btnUploadFolder = New System.Windows.Forms.Button()
+        Me.txtUploadFile = New System.Windows.Forms.TextBox()
         Me.dgvImport = New Sequenchel.usrDataGridView()
-        Me.chkArchive = New System.Windows.Forms.CheckBox()
-        Me.txtArchive = New System.Windows.Forms.TextBox()
         Me.grpDatabase.SuspendLayout()
         Me.grpFileOptions.SuspendLayout()
         CType(Me.nudSkipRows, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -187,20 +188,12 @@ Partial Class frmImport
         'lblFileName
         '
         Me.lblFileName.AutoSize = True
-        Me.lblFileName.Location = New System.Drawing.Point(5, 16)
+        Me.lblFileName.Location = New System.Drawing.Point(5, 17)
         Me.lblFileName.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
         Me.lblFileName.Name = "lblFileName"
-        Me.lblFileName.Size = New System.Drawing.Size(54, 13)
+        Me.lblFileName.Size = New System.Drawing.Size(100, 13)
         Me.lblFileName.TabIndex = 32
-        Me.lblFileName.Text = "File Name"
-        '
-        'txtFileName
-        '
-        Me.txtFileName.Location = New System.Drawing.Point(63, 13)
-        Me.txtFileName.Margin = New System.Windows.Forms.Padding(2)
-        Me.txtFileName.Name = "txtFileName"
-        Me.txtFileName.Size = New System.Drawing.Size(421, 20)
-        Me.txtFileName.TabIndex = 7
+        Me.lblFileName.Text = "File Path and Name"
         '
         'txtPassword
         '
@@ -293,7 +286,7 @@ Partial Class frmImport
         '
         'btnUploadFile
         '
-        Me.btnUploadFile.Location = New System.Drawing.Point(571, 289)
+        Me.btnUploadFile.Location = New System.Drawing.Point(570, 317)
         Me.btnUploadFile.Name = "btnUploadFile"
         Me.btnUploadFile.Size = New System.Drawing.Size(171, 23)
         Me.btnUploadFile.TabIndex = 15
@@ -547,6 +540,25 @@ Partial Class frmImport
         Me.grpDatabase.TabIndex = 62
         Me.grpDatabase.TabStop = False
         '
+        'txtSqlCommand
+        '
+        Me.txtSqlCommand.Location = New System.Drawing.Point(505, 81)
+        Me.txtSqlCommand.Margin = New System.Windows.Forms.Padding(2)
+        Me.txtSqlCommand.Name = "txtSqlCommand"
+        Me.txtSqlCommand.Size = New System.Drawing.Size(193, 20)
+        Me.txtSqlCommand.TabIndex = 63
+        '
+        'chkSqlCommand
+        '
+        Me.chkSqlCommand.AutoSize = True
+        Me.chkSqlCommand.Location = New System.Drawing.Point(330, 85)
+        Me.chkSqlCommand.Margin = New System.Windows.Forms.Padding(2)
+        Me.chkSqlCommand.Name = "chkSqlCommand"
+        Me.chkSqlCommand.Size = New System.Drawing.Size(171, 17)
+        Me.chkSqlCommand.TabIndex = 62
+        Me.chkSqlCommand.Text = "Execute SQL cmd after upload"
+        Me.chkSqlCommand.UseVisualStyleBackColor = True
+        '
         'grpFileOptions
         '
         Me.grpFileOptions.Controls.Add(Me.txtArchive)
@@ -571,6 +583,25 @@ Partial Class frmImport
         Me.grpFileOptions.TabStop = False
         Me.grpFileOptions.Text = "File Options"
         '
+        'txtArchive
+        '
+        Me.txtArchive.Location = New System.Drawing.Point(463, 81)
+        Me.txtArchive.Margin = New System.Windows.Forms.Padding(2)
+        Me.txtArchive.Name = "txtArchive"
+        Me.txtArchive.Size = New System.Drawing.Size(235, 20)
+        Me.txtArchive.TabIndex = 67
+        '
+        'chkArchive
+        '
+        Me.chkArchive.AutoSize = True
+        Me.chkArchive.Location = New System.Drawing.Point(289, 83)
+        Me.chkArchive.Margin = New System.Windows.Forms.Padding(2)
+        Me.chkArchive.Name = "chkArchive"
+        Me.chkArchive.Size = New System.Drawing.Size(170, 17)
+        Me.chkArchive.TabIndex = 66
+        Me.chkArchive.Text = "Archive imported files to folder:"
+        Me.chkArchive.UseVisualStyleBackColor = True
+        '
         'txtFilterRows
         '
         Me.txtFilterRows.Location = New System.Drawing.Point(463, 58)
@@ -585,9 +616,9 @@ Partial Class frmImport
         Me.chkFilterRows.Location = New System.Drawing.Point(289, 60)
         Me.chkFilterRows.Margin = New System.Windows.Forms.Padding(2)
         Me.chkFilterRows.Name = "chkFilterRows"
-        Me.chkFilterRows.Size = New System.Drawing.Size(152, 17)
+        Me.chkFilterRows.Size = New System.Drawing.Size(160, 17)
         Me.chkFilterRows.TabIndex = 64
-        Me.chkFilterRows.Text = "Filter Rows that Start With:"
+        Me.chkFilterRows.Text = "Ignore Rows that Start With:"
         Me.chkFilterRows.UseVisualStyleBackColor = True
         '
         'nudSkipRows
@@ -608,6 +639,17 @@ Partial Class frmImport
         Me.chkSkipRows.Text = "No of Header Rows to Skip"
         Me.chkSkipRows.UseVisualStyleBackColor = True
         '
+        'cbxTextEncoding
+        '
+        Me.cbxTextEncoding.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cbxTextEncoding.Field = Nothing
+        Me.cbxTextEncoding.FormattingEnabled = True
+        Me.cbxTextEncoding.Items.AddRange(New Object() {"UTF8", "UTF7", "UTF32", "ASCII", "Unicode", "BigEndianUnicode"})
+        Me.cbxTextEncoding.Location = New System.Drawing.Point(392, 37)
+        Me.cbxTextEncoding.Name = "cbxTextEncoding"
+        Me.cbxTextEncoding.Size = New System.Drawing.Size(108, 21)
+        Me.cbxTextEncoding.TabIndex = 61
+        '
         'lblTextEncoding
         '
         Me.lblTextEncoding.AutoSize = True
@@ -620,44 +662,32 @@ Partial Class frmImport
         '
         'grpUploadFile
         '
+        Me.grpUploadFile.Controls.Add(Me.btnUploadFolder)
+        Me.grpUploadFile.Controls.Add(Me.txtUploadFile)
         Me.grpUploadFile.Controls.Add(Me.lblFileName)
-        Me.grpUploadFile.Controls.Add(Me.txtFileName)
         Me.grpUploadFile.Enabled = False
         Me.grpUploadFile.Location = New System.Drawing.Point(29, 278)
         Me.grpUploadFile.Name = "grpUploadFile"
-        Me.grpUploadFile.Size = New System.Drawing.Size(500, 45)
+        Me.grpUploadFile.Size = New System.Drawing.Size(523, 45)
         Me.grpUploadFile.TabIndex = 64
         Me.grpUploadFile.TabStop = False
         '
-        'chkSqlCommand
+        'btnUploadFolder
         '
-        Me.chkSqlCommand.AutoSize = True
-        Me.chkSqlCommand.Location = New System.Drawing.Point(330, 85)
-        Me.chkSqlCommand.Margin = New System.Windows.Forms.Padding(2)
-        Me.chkSqlCommand.Name = "chkSqlCommand"
-        Me.chkSqlCommand.Size = New System.Drawing.Size(171, 17)
-        Me.chkSqlCommand.TabIndex = 62
-        Me.chkSqlCommand.Text = "Execute SQL cmd after upload"
-        Me.chkSqlCommand.UseVisualStyleBackColor = True
+        Me.btnUploadFolder.Image = Global.Sequenchel.My.Resources.Resources.folder_explore
+        Me.btnUploadFolder.Location = New System.Drawing.Point(490, 12)
+        Me.btnUploadFolder.Name = "btnUploadFolder"
+        Me.btnUploadFolder.Size = New System.Drawing.Size(23, 23)
+        Me.btnUploadFolder.TabIndex = 65
+        Me.btnUploadFolder.UseVisualStyleBackColor = True
         '
-        'txtSqlCommand
+        'txtUploadFile
         '
-        Me.txtSqlCommand.Location = New System.Drawing.Point(505, 81)
-        Me.txtSqlCommand.Margin = New System.Windows.Forms.Padding(2)
-        Me.txtSqlCommand.Name = "txtSqlCommand"
-        Me.txtSqlCommand.Size = New System.Drawing.Size(193, 20)
-        Me.txtSqlCommand.TabIndex = 63
-        '
-        'cbxTextEncoding
-        '
-        Me.cbxTextEncoding.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.cbxTextEncoding.Field = Nothing
-        Me.cbxTextEncoding.FormattingEnabled = True
-        Me.cbxTextEncoding.Items.AddRange(New Object() {"UTF8", "UTF7", "UTF32", "ASCII", "Unicode", "BigEndianUnicode"})
-        Me.cbxTextEncoding.Location = New System.Drawing.Point(392, 37)
-        Me.cbxTextEncoding.Name = "cbxTextEncoding"
-        Me.cbxTextEncoding.Size = New System.Drawing.Size(108, 21)
-        Me.cbxTextEncoding.TabIndex = 61
+        Me.txtUploadFile.Location = New System.Drawing.Point(127, 14)
+        Me.txtUploadFile.Margin = New System.Windows.Forms.Padding(2)
+        Me.txtUploadFile.Name = "txtUploadFile"
+        Me.txtUploadFile.Size = New System.Drawing.Size(357, 20)
+        Me.txtUploadFile.TabIndex = 33
         '
         'dgvImport
         '
@@ -674,25 +704,6 @@ Partial Class frmImport
         Me.dgvImport.Name = "dgvImport"
         Me.dgvImport.Size = New System.Drawing.Size(713, 332)
         Me.dgvImport.TabIndex = 20
-        '
-        'chkArchive
-        '
-        Me.chkArchive.AutoSize = True
-        Me.chkArchive.Location = New System.Drawing.Point(289, 83)
-        Me.chkArchive.Margin = New System.Windows.Forms.Padding(2)
-        Me.chkArchive.Name = "chkArchive"
-        Me.chkArchive.Size = New System.Drawing.Size(170, 17)
-        Me.chkArchive.TabIndex = 66
-        Me.chkArchive.Text = "Archive imported files to folder:"
-        Me.chkArchive.UseVisualStyleBackColor = True
-        '
-        'txtArchive
-        '
-        Me.txtArchive.Location = New System.Drawing.Point(463, 81)
-        Me.txtArchive.Margin = New System.Windows.Forms.Padding(2)
-        Me.txtArchive.Name = "txtArchive"
-        Me.txtArchive.Size = New System.Drawing.Size(235, 20)
-        Me.txtArchive.TabIndex = 67
         '
         'frmImport
         '
@@ -749,7 +760,6 @@ Partial Class frmImport
     Friend WithEvents lblDatabaseServerName As System.Windows.Forms.Label
     Friend WithEvents lblDatabaseName As System.Windows.Forms.Label
     Friend WithEvents lblFileName As System.Windows.Forms.Label
-    Friend WithEvents txtFileName As System.Windows.Forms.TextBox
     Friend WithEvents txtPassword As System.Windows.Forms.TextBox
     Friend WithEvents txtUser As System.Windows.Forms.TextBox
     Friend WithEvents txtTable As System.Windows.Forms.TextBox
@@ -794,4 +804,6 @@ Partial Class frmImport
     Friend WithEvents chkSqlCommand As CheckBox
     Friend WithEvents txtArchive As TextBox
     Friend WithEvents chkArchive As CheckBox
+    Friend WithEvents btnUploadFolder As Button
+    Friend WithEvents txtUploadFile As TextBox
 End Class

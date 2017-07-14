@@ -131,6 +131,10 @@ Public Class BaseCode
                     'filter rows that start with user provided value
                     curVar.RowFilter = strInput
                     If curVar.DebugMode = True Then Console.WriteLine("RowFilter = " & curVar.RowFilter)
+                Case "/ignorerows"
+                    'filter rows that start with user provided value
+                    curVar.RowFilter = strInput
+                    If curVar.DebugMode = True Then Console.WriteLine("IgnoreRows = " & curVar.RowFilter)
                 Case "/archive"
                     'Archive the imported file to folder
                     curVar.Archive = strInput

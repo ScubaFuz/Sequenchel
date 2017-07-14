@@ -111,6 +111,10 @@ Public Class frmImport
         txtDelimiterShow.Text = txtDelimiter.Text
     End Sub
 
+    Private Sub btnUploadFolder_Click(sender As Object, e As EventArgs) Handles btnUploadFolder.Click
+        SelectFolder()
+    End Sub
+
 #End Region
 
     Private Sub LoadDefaults()
@@ -129,12 +133,9 @@ Public Class frmImport
 
     Private Sub SelectFile()
         Dim ofdFile As New OpenFileDialog
-        'sfdFile.FileName = strFileName
-        'sfdFile.Filter = "XML File (*.xml)|*.xml|Excel 2007 file (*.xlsx)|*.xlsx|"
         ofdFile.Filter = "All supported file types (*.xls, *.xlsx, *.xml, *.csv, *.txt)|*.xls;*.xlsx;*.xml;*.csv;*.txt|Excel file (*.xls, *.xlsx)|*.xls;*.xlsx|XML File (*.xml)|*.xml|Text File (*.csv, *.txt)|*.csv;*.txt"
         ofdFile.FilterIndex = 1
         ofdFile.RestoreDirectory = True
-        'sfdFile.OverwritePrompt = True
 
         If (ofdFile.ShowDialog() <> DialogResult.OK) Then
             Return
@@ -143,6 +144,30 @@ Public Class frmImport
         basCode.dhdText.ImportFile = ofdFile.FileName
         txtCurrentFile.Text = basCode.dhdText.ImportFile
         WriteStatus("File Selected for Import", 0, lblStatusText)
+        'ImportFile()
+    End Sub
+
+    Private Sub SelectFolder()
+        Dim sfdFile As New SaveFileDialog
+
+        sfdFile.Filter = "Excel file (*.xlsx)|*.xlsx|XML File (*.xml)|*.xml|Comma Separated File (*.csv)|*.csv|Text File (*.txt)|*.txt"
+        sfdFile.FilterIndex = 1
+        sfdFile.RestoreDirectory = True
+        sfdFile.OverwritePrompt = True
+        sfdFile.FileName = "UploadFile"
+        sfdFile.CheckFileExists = False
+        sfdFile.AddExtension = True
+        sfdFile.DefaultExt = "xlsx"
+        sfdFile.CreatePrompt = False
+
+        sfdFile.Title = "Select Folder and enter File Name"
+
+        If (sfdFile.ShowDialog() <> DialogResult.OK) Then
+            Return
+        End If
+
+        txtUploadFile.Text = sfdFile.FileName
+        WriteStatus("Folder Selected for upload", 0, lblStatusText)
         'ImportFile()
     End Sub
 
@@ -258,15 +283,15 @@ Public Class frmImport
                 End If
             Next
             If dtsUpload.Tables.Count > 0 Then
-                If basCode.ExportFile(dtsUpload, basCode.CheckFilePath(txtFileName.Text, True), basCode.curVar.ConvertToText, basCode.curVar.ConvertToNull, basCode.curVar.ShowFile, chkHasHeaders.Checked, txtDelimiter.Text, basCode.curVar.QuoteValues, basCode.curVar.CreateDir) = False Then
+                If basCode.ExportFile(dtsUpload, basCode.CheckFilePath(txtUploadFile.Text, True), basCode.curVar.ConvertToText, basCode.curVar.ConvertToNull, basCode.curVar.ShowFile, chkHasHeaders.Checked, txtDelimiter.Text, basCode.curVar.QuoteValues, basCode.curVar.CreateDir) = False Then
                     WriteStatus("There was an error exporting the file. PLease check the log.", 1, lblStatusText)
                 Else
                     WriteStatus("File uploaded.", 0, lblStatusText)
                 End If
             End If
         Catch ex As Exception
-            WriteStatus("There was an error writng to " & txtFileName.Text & " Please check the log", 1, lblStatusText)
-            basCode.WriteLog("There was an error writng to " & txtFileName.Text & Environment.NewLine & ex.Message, 1)
+            WriteStatus("There was an error writng to " & txtUploadFile.Text & " Please check the log", 1, lblStatusText)
+            basCode.WriteLog("There was an error writng to " & txtUploadFile.Text & Environment.NewLine & ex.Message, 1)
         End Try
     End Sub
 
