@@ -928,6 +928,7 @@ Public Class frmSequenchel
                     If blnIdentityOnly = False Or fldField.Field.Identity = True Or fldField.Field.PrimaryKey = True Then
                         fldField.DropDown(2)
                         fldField.Text = ""
+                        fldField.Value = ""
                     End If
             End Select
             '    End If
@@ -1284,7 +1285,11 @@ Public Class frmSequenchel
             If ctrl.Field.Identity = True Or ctrl.Field.PrimaryKey = True Then
                 For Each cell In dgvTable1.SelectedRows(0).Cells
                     If cell.OwningColumn.Name = ctrl.Field.FieldName Then
-                        strQueryWhere &= " AND [" & ctrl.Field.FieldName & "] = " & basCode.SetDelimiters(cell.Value, ctrl.Field.FieldDataType, "=")
+                        If cell.Value = Nothing And ctrl.Field.FieldDataType = "CHAR" Then
+                            strQueryWhere &= " AND COALESCE([" & ctrl.Field.FieldName & "],'') = " & basCode.SetDelimiters(cell.Value, ctrl.Field.FieldDataType, "=")
+                        Else
+                            strQueryWhere &= " AND [" & ctrl.Field.FieldName & "] = " & basCode.SetDelimiters(cell.Value, ctrl.Field.FieldDataType, "=")
+                        End If
                     End If
                 Next
             End If
