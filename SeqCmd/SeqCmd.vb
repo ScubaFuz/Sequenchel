@@ -163,6 +163,9 @@ Module SeqCmd
             strQuery = "SELECT * FROM " & basCode.curStatus.Table
         End If
         Dim dtsData As DataSet = basCode.QueryDb(basCode.dhdConnection, strQuery, True, 5)
+        For Each table As Data.DataTable In dtsData.Tables
+            Console.WriteLine("Exporting " & dtsData.Tables(0).Rows.Count & " rows from " & table.TableName)
+        Next
         'If dtsData Is Nothing Then Environment.Exit(0)
         basCode.ExportFile(dtsData, strExportFile, basCode.curVar.ConvertToText, basCode.curVar.ConvertToNull, basCode.curVar.ShowFile, basCode.curVar.HasHeaders, basCode.curVar.Delimiter, basCode.curVar.QuoteValues, basCode.curVar.CreateDir)
         If basCode.dhdText.SmtpRecipient.Length > 0 AndAlso basCode.dhdText.SmtpRecipient.Contains("@") Then
