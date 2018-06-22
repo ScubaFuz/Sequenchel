@@ -107,7 +107,6 @@ Public Class frmImport
     End Sub
 
     Private Sub txtDelimiter_TextChanged(sender As Object, e As EventArgs) Handles txtDelimiter.TextChanged
-        If txtDelimiter.Text.Length > 1 Then txtDelimiter.Text = txtDelimiter.Text.Substring(0, 1)
         txtDelimiterShow.Text = txtDelimiter.Text
     End Sub
 
@@ -133,7 +132,7 @@ Public Class frmImport
 
     Private Sub SelectFile()
         Dim ofdFile As New OpenFileDialog
-        ofdFile.Filter = "All supported file types (*.xls, *.xlsx, *.xml, *.csv, *.txt)|*.xls;*.xlsx;*.xml;*.csv;*.txt|Excel file (*.xls, *.xlsx)|*.xls;*.xlsx|XML File (*.xml)|*.xml|Text File (*.csv, *.txt)|*.csv;*.txt"
+        ofdFile.Filter = "All supported file types (*.xls, *.xlsx, *.xml, *.csv, *.txt, *.*)|*.xls;*.xlsx;*.xml;*.csv;*.txt;*.*|Excel file (*.xls, *.xlsx)|*.xls;*.xlsx|XML File (*.xml)|*.xml|Text File (*.csv, *.txt, *.*)|*.csv;*.txt;*.*"
         ofdFile.FilterIndex = 1
         ofdFile.RestoreDirectory = True
 

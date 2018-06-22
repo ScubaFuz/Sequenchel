@@ -32,6 +32,7 @@ Module SeqCmd
             Exit Sub
         End If
         If basCode.curVar.DebugMode = True Then Console.WriteLine("General Settings Loaded")
+        basCode.dhdText.LogLocation = "console"
 
         LoadConnections()
         If basCode.curVar.DebugMode = True Then Console.WriteLine("Connections Loaded")

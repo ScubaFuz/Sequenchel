@@ -2592,7 +2592,7 @@ Public Class BaseCode
                     dtsImport = Excel.ImportExcelFile(strFileName)
                     ErrorLevel = Excel.ErrorLevel
                     ErrorMessage = Excel.ErrorMessage
-                Case "csv", "txt"
+                Case Else '"csv", "txt"  Assume txt delimited file
                     If curVar.Delimiter.Length = 0 Then
                         Return Nothing
                     End If
@@ -2606,8 +2606,8 @@ Public Class BaseCode
                             dhdText.MoveFile(strFileName, curVar.Archive)
                         End If
                     End If
-                Case Else
-                    Return Nothing
+                    'Case Else
+                    '    Return Nothing
             End Select
         Catch ex As Exception
             'Error importing file
@@ -2645,10 +2645,12 @@ Public Class BaseCode
                     dtsInput = dhdConnection.ConvertToText(dtsInput)
                     dhdText.DataSetToCsv(dtsInput.Tables(0), strFileName, blnHasHeaders, Delimiter, QuoteValues)
                 Case Else
-                    'unknown filetype, do nothing
-                    blnShowFile = False
-                    WriteLog("Unknown File extension. Unable to export file.", 2)
-                    Return False
+                    'unknown filetype, assume text
+                    dtsInput = dhdConnection.ConvertToText(dtsInput)
+                    dhdText.DataSetToCsv(dtsInput.Tables(0), strFileName, blnHasHeaders, Delimiter, QuoteValues)
+                    'blnShowFile = False
+                    'WriteLog("Unknown File extension. Unable to export file.", 2)
+                    'Return False
             End Select
         Catch ex As Exception
             blnShowFile = False

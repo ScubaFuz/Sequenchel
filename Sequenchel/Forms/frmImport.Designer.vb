@@ -429,7 +429,7 @@ Partial Class frmImport
         Me.txtDelimiter.Location = New System.Drawing.Point(392, 10)
         Me.txtDelimiter.Margin = New System.Windows.Forms.Padding(2)
         Me.txtDelimiter.Name = "txtDelimiter"
-        Me.txtDelimiter.Size = New System.Drawing.Size(22, 26)
+        Me.txtDelimiter.Size = New System.Drawing.Size(50, 26)
         Me.txtDelimiter.TabIndex = 3
         Me.txtDelimiter.Text = ","
         Me.txtDelimiter.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
@@ -439,10 +439,10 @@ Partial Class frmImport
         Me.txtDelimiterShow.BackColor = System.Drawing.SystemColors.Control
         Me.txtDelimiterShow.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtDelimiterShow.Font = New System.Drawing.Font("Microsoft Sans Serif", 20.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtDelimiterShow.Location = New System.Drawing.Point(413, 8)
+        Me.txtDelimiterShow.Location = New System.Drawing.Point(443, 8)
         Me.txtDelimiterShow.Margin = New System.Windows.Forms.Padding(2)
         Me.txtDelimiterShow.Name = "txtDelimiterShow"
-        Me.txtDelimiterShow.Size = New System.Drawing.Size(39, 38)
+        Me.txtDelimiterShow.Size = New System.Drawing.Size(50, 38)
         Me.txtDelimiterShow.TabIndex = 55
         Me.txtDelimiterShow.TabStop = False
         Me.txtDelimiterShow.Text = ","

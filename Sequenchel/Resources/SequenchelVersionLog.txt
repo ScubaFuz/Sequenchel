@@ -5,9 +5,13 @@ New: Execute a SQL Command after every upload when importing files.
 New: Clear the upload target table after every upload to process imported files individually.
 New: Relation autoselect when adding new tables to a report.
 Enhanced: When searching for empty character primary key values the COALESCE() SQL function is now used.
+Enhanced: Multicharacter delimiters can be used when importing a (text)file.
+Enhanced: All file types are now suported for Import. Unknown file types are considered to be delimited text files.
 Fixed: The buttons now reset correctly when switching from a read-only table to an editable table.
 Fixed: Search button handling when changing table now works as intended.
 Fixed: When adding new records, the lookup value from old ManagedSelect searches is no longer used.
+Fixed: SeqCmd now logs everything to the console instead of half to the default log file.
+Fixed: DBA procedures now work with CASE sensitive environments
 
 Version 4.1.0
 New: Views to database systems other than MS SQL Server can be made.
