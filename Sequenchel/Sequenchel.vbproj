@@ -13,6 +13,7 @@
     <MyType>WindowsForms</MyType>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <IsWebBootstrapper>false</IsWebBootstrapper>
+    <TargetFrameworkProfile />
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -30,7 +31,6 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -159,11 +159,11 @@
     <Compile Include="Forms\frmReAlias.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\frmSequenchel.vb">
+    <Compile Include="Forms\frmDataManager.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\frmSequenchel.Designer.vb">
-      <DependentUpon>frmSequenchel.vb</DependentUpon>
+    <Compile Include="Forms\frmDataManager.Designer.vb">
+      <DependentUpon>frmDataManager.vb</DependentUpon>
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\frmLinkedServer.Designer.vb">
@@ -176,6 +176,12 @@
       <DependentUpon>frmReports.vb</DependentUpon>
     </Compile>
     <Compile Include="Forms\frmReports.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmSequenchelControl.Designer.vb">
+      <DependentUpon>frmSequenchelControl.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmSequenchelControl.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\frmSettings.Designer.vb">
@@ -229,8 +235,8 @@
     <EmbeddedResource Include="Forms\frmReAlias.resx">
       <DependentUpon>frmReAlias.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmSequenchel.resx">
-      <DependentUpon>frmSequenchel.vb</DependentUpon>
+    <EmbeddedResource Include="Forms\frmDataManager.resx">
+      <DependentUpon>frmDataManager.vb</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmLinkedServer.resx">
@@ -240,6 +246,9 @@
     <EmbeddedResource Include="Forms\frmReports.resx">
       <DependentUpon>frmReports.vb</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmSequenchelControl.resx">
+      <DependentUpon>frmSequenchelControl.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmSettings.resx">
       <DependentUpon>frmSettings.vb</DependentUpon>

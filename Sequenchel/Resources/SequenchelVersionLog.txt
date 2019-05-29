@@ -1,3 +1,6 @@
+Version 4.1.2
+Fixed: Replaced fixed SQL versions for monitoring with flexible version upper limit.
+
 Version 4.1.1
 New: Import can skip header rows not cointaining data
 New: Import can filter rows based on user provided clause
@@ -7,6 +10,7 @@ New: Relation autoselect when adding new tables to a report.
 Enhanced: When searching for empty character primary key values the COALESCE() SQL function is now used.
 Enhanced: Multicharacter delimiters can be used when importing a (text)file.
 Enhanced: All file types are now suported for Import. Unknown file types are considered to be delimited text files.
+Enhanced: LogLevel can now be set through a commandline option.
 Fixed: The buttons now reset correctly when switching from a read-only table to an editable table.
 Fixed: Search button handling when changing table now works as intended.
 Fixed: When adding new records, the lookup value from old ManagedSelect searches is no longer used.

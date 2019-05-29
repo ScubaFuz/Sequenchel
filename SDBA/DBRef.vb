@@ -194,6 +194,10 @@ Public Class DBRef
             If verDatabase.CompareTo(verSDBA4017) = -1 Then
                 Return "4.0.1.7"
             End If
+            Dim verSDBA4121 As New Version("4.1.2.1")
+            If verDatabase.CompareTo(verSDBA4121) = -1 Then
+                Return "4.1.2.1"
+            End If
         Else
             'Return strVersion
         End If
@@ -343,6 +347,21 @@ Public Class DBRef
             arrScripts(0, intCounter) = "03 dbo.usp_Report_Object_Owner.sql"
             arrScripts(1, intCounter) = "ALTER"
             arrScripts(0, AddOne()) = "01 dbo.usp_SmartUpdate.sql"
+            arrScripts(1, intCounter) = "ALTER"
+        End If
+
+        If strVersion = "4.1.2.1" Then
+            arrScripts(0, intCounter) = "02 dbo.usp_Monitor_Errorlogs.sql"
+            arrScripts(1, intCounter) = "ALTER"
+            arrScripts(0, AddOne()) = "02 dbo.usp_Report_Databases.sql"
+            arrScripts(1, intCounter) = "ALTER"
+            arrScripts(0, AddOne()) = "02 dbo.usp_Report_DataSpaces.sql"
+            arrScripts(1, intCounter) = "ALTER"
+            arrScripts(0, AddOne()) = "02 dbo.usp_Report_Jobs.sql"
+            arrScripts(1, intCounter) = "ALTER"
+            arrScripts(0, AddOne()) = "02 dbo.usp_Report_Logins.sql"
+            arrScripts(1, intCounter) = "ALTER"
+            arrScripts(0, AddOne()) = "03 dbo.usp_Report_Servers.sql"
             arrScripts(1, intCounter) = "ALTER"
         End If
 

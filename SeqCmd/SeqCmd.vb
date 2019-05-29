@@ -13,10 +13,10 @@ Module SeqCmd
 
     Sub Main()
         Console.WriteLine("Program Start " & Now().ToString)
+        basCode.SetDefaults()
         If My.Application.CommandLineArgs.Count > 0 Then basCode.ParseCommands(My.Application.CommandLineArgs)
         If basCode.curStatus.QuitApplication = True Then End
         ImportTable = basCode.curStatus.Table
-        basCode.SetDefaults()
         If basCode.curVar.DebugMode = True Then Console.WriteLine("Default Settings Loaded")
         Dim strReturn As String = basCode.LoadSDBASettingsXml(basCode.xmlSDBASettings)
         If strReturn = False Then

@@ -1,13 +1,14 @@
 ﻿Imports System.IO
 Imports System.Xml
 
-Public Class frmSequenchel
+Public Class frmDataManager
     Private dtsTable As New DataSet
 
     Private Sub frmSequenchel_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         System.Windows.Forms.Application.CurrentCulture = New System.Globalization.CultureInfo("EN-US")
         'dgvTable1.BackgroundImageLayout = ImageLayout.Center
 
+        basCode.SetDefaults()
         If My.Application.CommandLineArgs.Count > 0 Then basCode.ParseCommands(My.Application.CommandLineArgs)
         Me.Text = My.Application.Info.Title
         If basCode.curStatus.Status = SeqCore.CurrentStatus.StatusList.ControlSearch Then Me.Text &= " ControlMode"
@@ -16,8 +17,6 @@ Public Class frmSequenchel
         If basCode.curVar.Encryption = False Then Me.Text &= " NoEncryption"
 
         DebugSettings()
-        basCode.SetDefaults()
-        'basCode.SetDefaults()
         LoadLicense(lblStatusText)
         Me.Hide()
         frmAbout.Show()

@@ -66,6 +66,9 @@ Public Class BaseCode
             Select Case strCommand
                 Case "/silent"
                     'Start wihtout any windows / forms
+                Case "/loglevel"
+                    'Set loglevel
+                    dhdText.LogLevel = strInput
                 Case "/debug"
                     curVar.DebugMode = True
                     'Case "/control"
@@ -250,7 +253,7 @@ Public Class BaseCode
 
         dhdText.InputFile = "SequenchelDBA.xml"
         dhdText.LogFileName = "Sequenchel.Log"
-        dhdText.LogLevel = 5
+        dhdText.LogLevel = 6
         dhdText.LogLocation = System.AppDomain.CurrentDomain.BaseDirectory & "LOG"
         dhdText.OutputFile = Environment.SpecialFolder.MyDocuments
 
@@ -535,7 +538,7 @@ Public Class BaseCode
                 If dhdText.CheckElement(xmlLoadDoc, "Password") Then dhdMainDB.Password = DataHandler.txt.DecryptText(xmlLoadDoc.Item("Sequenchel").Item("DataBase").Item("Password").InnerText)
 
                 If dhdText.CheckElement(xmlLoadDoc, "LogFileName") Then dhdText.LogFileName = xmlLoadDoc.Item("Sequenchel").Item("LogSettings").Item("LogFileName").InnerText
-                If dhdText.CheckElement(xmlLoadDoc, "LogLevel") Then dhdText.LogLevel = xmlLoadDoc.Item("Sequenchel").Item("LogSettings").Item("LogLevel").InnerText
+                If dhdText.CheckElement(xmlLoadDoc, "LogLevel") = True And dhdText.LogLevel = 6 Then dhdText.LogLevel = xmlLoadDoc.Item("Sequenchel").Item("LogSettings").Item("LogLevel").InnerText
                 If dhdText.CheckElement(xmlLoadDoc, "LogLocation") Then dhdText.LogLocation = xmlLoadDoc.Item("Sequenchel").Item("LogSettings").Item("LogLocation").InnerText
                 If dhdText.CheckElement(xmlLoadDoc, "Retenion") Then dhdText.Retenion = xmlLoadDoc.Item("Sequenchel").Item("LogSettings").Item("Retenion").InnerText
                 If dhdText.CheckElement(xmlLoadDoc, "AutoDelete") Then dhdText.AutoDelete = xmlLoadDoc.Item("Sequenchel").Item("LogSettings").Item("AutoDelete").InnerText
