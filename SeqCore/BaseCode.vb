@@ -1608,7 +1608,7 @@ Public Class BaseCode
         Dim blnExists As Boolean = False
         'Dim strQuery As String = "SELECT [name] FROM sys.tables WHERE [name] = '" & strTable & "'"
         If strTable.Contains(".") = False Then strTable = "dbo." & strTable
-        Dim strQuery As String = "SELECT sch.[name] +'.' + tbl.[name] AS TableName FROM sys.tables tbl INNER JOIN sys.schemas sch ON tbl.schema_id = sch.schema_id WHERE sch.[name] +'.' + tbl.[name] = '" & strTable & "'"
+        Dim strQuery As String = "SELECT sch.[name] +'.' + tbl.[name] AS TableName FROM sys.tables tbl INNER JOIN sys.schemas sch ON tbl.schema_id = sch.schema_id WHERE sch.[name] +'.' + tbl.[name] = '" & strTable.Replace("[", "").Replace("]", "") & "'"
         Dim dtsData As DataSet = QueryDb(dhdConnect, strQuery, True, 10)
         blnExists = dhdText.DatasetCheck(dtsData)
         Return blnExists

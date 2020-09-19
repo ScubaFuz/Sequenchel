@@ -161,6 +161,10 @@ Module SeqCmd
         If LoadReports() = True Then
             strQuery = basCode.ReportQueryBuild(basCode.xmlReports, basCode.xmlTables, basCode.curStatus.Report, basCode.curVar.DateTimeStyle)
         Else
+            If basCode.curVar.LargeFile = True Then
+                basCode.dhdText.TableToCsv(basCode.dhdConnection.SqlConnection, basCode.curStatus.Table, strExportFile, basCode.curVar.HasHeaders, basCode.curVar.Delimiter, basCode.curVar.QuoteValues)
+                Exit Sub
+            End If
             strQuery = "SELECT * FROM " & basCode.curStatus.Table
         End If
         Dim dtsData As DataSet = basCode.QueryDb(basCode.dhdConnection, strQuery, True, 5)
