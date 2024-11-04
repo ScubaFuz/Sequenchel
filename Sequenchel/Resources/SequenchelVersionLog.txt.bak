@@ -1,0 +1,324 @@
+Version 4.1.2
+Fixed: Replaced fixed SQL versions for monitoring with flexible version upper limit.
+
+Version 4.1.1
+New: Import can skip header rows not cointaining data
+New: Import can filter rows based on user provided clause
+New: Execute a SQL Command after every upload when importing files.
+New: Clear the upload target table after every upload to process imported files individually.
+New: Relation autoselect when adding new tables to a report.
+Enhanced: When searching for empty character primary key values the COALESCE() SQL function is now used.
+Enhanced: Multicharacter delimiters can be used when importing a (text)file.
+Enhanced: All file types are now suported for Import. Unknown file types are considered to be delimited text files.
+Enhanced: LogLevel can now be set through a commandline option.
+Fixed: The buttons now reset correctly when switching from a read-only table to an editable table.
+Fixed: Search button handling when changing table now works as intended.
+Fixed: When adding new records, the lookup value from old ManagedSelect searches is no longer used.
+Fixed: SeqCmd now logs everything to the console instead of half to the default log file.
+Fixed: DBA procedures now work with CASE sensitive environments
+
+Version 4.1.0
+New: Views to database systems other than MS SQL Server can be made.
+Enhanced: SmartUpdate has been completely rewritten to accomodate changing data types and slightly different text data types.
+
+Version 4.0.2
+New: SmartUpdate can now remove all data from target table before adding new data.
+New: SmartUpdate can create a local view to a remote table for data transfer.
+New: File import can now create a basic table on the fly.
+New: File import can now clear all data from target table before import.
+New: Large File Import can be done in batches to the database, skipping the screen, enabling much larger files to be imported.
+New: File Import can handle multiple text encodings.
+New: usp_ImportXml stored procedure for importing XML files directly into the database.
+Enhanced: If an Excel sheet cannot be imported, the sheet is skipped and other sheets are still displayed.
+Enhanced: Default value buttons can now use the same variables as report filters.
+Fixed: Templates now work as intended.
+Fixed: Import with Windows login method now works irrespectively of case.
+Fixed: Import Text Delimiter now has a minimum and maximum length of 1 character
+Fixed: XML file that contains values with quotes (') now imports correctly.
+Fixed: Searching for a date in the main screen now works correct.
+Fixed: Creating Job Steps in a SmartUpdate job now works as intended.
+
+Version 4.0.1
+New: Adding fields to a report no longer removes that field from the select list.
+New: Adding the same field more than once automatically updates the field alias.
+Enhanced: Replaced MS-Jet driver with MS-OLE-DB driver to provide MS Excel services in 64 bit environments.
+Enhanced: If no connection is found the main database is used as default connection.
+Enhanced: SmartUpdate does not require a primay key when removing all target data.
+Fixed: Loading a report with an incorrect/non-exising field no longer crashes Sequenchel.
+Fixed: Default value buttons on wrong fields no longer create an error.
+Fixed: Report results layout now scales properly.
+Fixed: SmartUpdate EndDate can now be Nothing.
+Fixed: Object Owner (monitoring) can now be Nothing.
+Fixed: SmartUpdate can now handle CHAR primary key with target collation.
+
+Version 4.0.0
+New: The engine has been rewritten to enable more features in the future. All screens have been redesigned, even though they look the same.
+New: In reports, the option has been added to re-alias tables and fields enabling multiple joins to the same table or join a table to itself (parent-child relation)
+New: In reports, only the first 1000 retrieved rows are shown, with the option to browse through the result set, saving lots of time.
+New: In Reports, a field filter option is added. No need to search through long lists of fields for a known field name.
+Enhanced: Query error logging and feedback is improved.
+Fixed: Queries with tables whose name are a part of a larger table name are now processed correctly.
+
+Version 3.8.0
+New: In Reports: table alias is used instead of table name to enable multiple instances of the same table in a future release.
+		Relations and reports will be converted to a new markup when saving them. All should be converted before using version 4.0
+Enhanced: In Reports: Select lists for related tables and fields.
+Fixed: Import to table now uses table name instead of alias.
+Fixed: Fields with a related ManagedSelectField were emptied when adding a new item to the database.
+
+Version 3.7.2
+Fixed: When writing to log location doesn't work, the log location is adjusted to Documents\Sequenchel\LOG
+
+Version 3.7.1
+New: Shutdown timer to close Sequenchel after a period of inactivity.
+Enhanced: The Tab order has been made more intuitive.
+Enhanced: improved logging and status messages.
+Enhanced: Added sorting of tables and fields to Reports.
+Fixed: SmartUpdate can now handle NULL values when comparing data.
+Fixed: In some cases the override password was removed when saving other settings.
+Fixed: Updating a saved search would show the search multiple times in the list.
+Fixed: Removing values from settings could result in an error.
+Fixed: Mousewheel now scrolls fields and labels simultaniously on main screen.
+Fixed: Sequenchel no longer crashes if duplicate names are used in a report.
+Fixed: Sequenchel can now save config files over an UNC path.
+
+Version 3.7.0
+New: Added Commandline options to export a report or import a file without user intervention.
+New: Export to CSV (txt) option.
+New: Import XML files option.
+New: Import CSV (txt) files option.
+New: Added the option to email reports.
+Enhanced: Sequenchel has been rewritten for better performance and to facilitate adding new options
+Fixed: Importing Excel sheets with empty values now works correctly.
+
+Version 3.6.0
+New: Added SmartUpdate for easy Datawarehouse building.
+New: Import file can import multiple sheets from 1 Excel file at once. Upload to database per sheet is possible.
+Enhanced: If no path is provided, config files are saved to the default config file location.
+Enhanced: Create Schedule can now create a schedule without jobstep (for SmartUpdate).
+Fixed: Updating a relation to "no connected field" now works.
+Fixed: Deleting an existing relation now works.
+Fixed: Database log path retrieval for SQL older than 2012 (2005 and up) now works.
+Fixed: Deleting an item after pressing "Clear" does no longer delete previously selected item.
+Fixed: Pressing Clear now also clears related lookup fields.
+Fixed: Settings screen now always shows correct logging path.
+
+Version 3.5.1
+New: Added an Import option for transferring data from a file into a database table.
+New: Doubleclick on the upper left corner in a report will resize all columns fo fit the data.
+New: Added a description field to the report definition.
+New: Search in tables using space (AND/fuzzy) or comma (OR/precise) to separate multiple search terms.
+New: Option to add YearStart(), YearEnd() as filteroptions to a report.
+New: Option to add (YEAR,x), (MONTH,x), (DAY,x), (HOUR,x), (MINUTE,x), (SECOND,x), (MILLISECOND,x) to datetime filters in reports.
+New: Imported file can be exported as XML.
+New: Added a "Show all fields" option in Reports.
+Enhanced: Replaced Report display procedure making it faster.
+Enhanced: In reporting, when using a fuzzy search (LIKE) you can now also use * instead of %.
+Enhanced: Linked Server name check before loading to prevent crash in case of badly formatted datasource.
+Enhanced: Export to Excel and XML now includes NULL values correctly.
+Enhanced: Added SQL Server 2016 to the list of Server Monitoring.
+Fixed: Time formatting is now linked to chosen date format.
+Fixed: Loading a report while the referenced table or field is not present gives a warning instead of an error.
+Fixed: Importing a report definition with an existing name no longer gives an error.
+fixed: If a path for saving files does not exist it is now created automatically.
+
+Version 3.5.0
+New: Option to export or import Report Definition.
+New: Added select options for Date/Time SQL functions.
+New: Option to add Now(), Date(), Time(), MonthStart(), MonthEnd(), WeekStart() and WeekEnd() as filteroptions to a report.
+New: Option to convert all output to text when exporting to to Excel.
+New: In Reports the join to a related table can contain a query when using parentheses.
+New: Sequenchel now provides Stored Procedures for FTP upload and download.
+Enhanced: In Reports the mousewheel now scrolls the report definition and not the report selection.
+Enhanced: Reports are sorted alfabetically.
+Fixed: Adding and removing relations (Configuration) now works as intended.
+Fixed: DataType of additional filters is now preserved.
+Fixed: DataHandler XML search methods could give wrong XML node.
+
+Version 3.4.0
+New: Added Export to Excel option.
+New: Added the option to automatically add the current date to the name of the export file.
+New: The query engine is now able to build a HAVING clause.
+New: Added Scheduled Job monitoring.
+New: Added Minimum and Maximum Server memory to the Server Monitoring
+New: Related fields can now be used to lookup identifiers.
+New: Replaced lookup fields with enhanced search options.
+Enhanced: Report buttons Add/Update/Delete now autosave any changes. OK and Apply buttons have been removed.
+Enhanced: Configuration buttons Add/Update/Delete now autosave any changes. OK and Apply buttons have been removed.
+Enhanced: Filters without filter mode will default to "AND"
+Enhanced: Selected connection and table is remembered when switching windows, allowing for multiple report windows.
+Fixed: Reports with "AND NOT" or "" as first filter mode no longer fail.
+Fixed: Creating a scheduled job would point to a connection database instead of the main database.
+Fixed: Main buttons now stay on the right side when screen size grows.
+Fixed: Export to XML needs a declaration for opening the file in Excel.
+Fixed: XML retrieval now gets whole XML instead of first 200 characters.
+
+Version 3.3.0
+New: Added the option to select multiple fields at once to add to or remove from Reporting.
+New: Added a maximum column width of 300 for reporting to prevent really wide columns.
+New: You can choose the default formatting style for datetime data type.
+Enhanced: Added more data types for correct conversions.
+Enhanced: Added lots of fields to database monitoring.
+Enhanced: Updated the templates to reflect the new data types.
+Enhanced: Rewrote the query engine to format data according to data type.
+Enhanced: You cannot enter the (auto)identifier value when adding a new item to the database.
+Fixed: command line parameters interpretation could sometimes be mixed up.
+Fixed: Checkbox field no longer turns white when changing values.
+Fixed: Changed index defragmentation method to account for multiple index levels.
+
+Version 3.2.2
+New: Added the option to use Windows Special Folders as storage location for configuration files.
+New: Added a Security Settings Override with password protection.
+New: Added buttons to Scheduler for easier determination of logfile location.
+Enhanced: Replaced date formatting methods with native dotNet commands.
+Enhanced: Decreased the SQL Server timeout from 15 to 5 seconds for database check.
+Fixed: When selecting the report at top of the list, nothing happened.
+Fixed: When selecting an empty row, Sequenchel no longer tries to get information from the database
+Fixed: Main database settings were sometimes saved to the wrong configfile.
+Fixed: Linked Server Subscriber setting was sometimes filled with wrong value.
+Fixed: Sequenchel now deals correctly with GUID datatypes.
+
+Version 3.2.1
+New: Added Thicor logo as background to datagrids.
+New: Added a "Back to definition" button on the report results pane for easier navigation.
+New: Added a counter to display the time needed to complete a report.
+New: Added "Command executed succesfully" status message when a report executes succesfully.
+Enhanced: Replaced the icons on the buttons to make them more intuitive.
+Enhanced: Added Tooltips to several buttons for more clarity.
+Enhanced: Included some new tables in the Sequenchel Template.
+Enhanced: Clear main search options now also clears selected saved search.
+Fixed: Updating or deleting an item could process all items when no AUTOID field was present.
+Fixed: Clear button now also clears selected search.
+Fixed: Report Sort Order field was not automatically resized properly when adding more filtering lines.
+
+Version 3.2.0
+New: Datatype "AutoID" has been replaced by PrimaryKey and Identity. Sequenchel can now handle multiple Identities and composite Primary keys. This may require you to modify your configuration files. A Sequenchel template is provided.
+New: Default button option for filling out fields with default values. The Thicor logo is used as a default button symbol.
+New: Related fields can be shown on the main screen. For every relation with another table, you can choose a field from the second table to display.
+New: Separation of settings over more config files to enable the administrator to place them in differen locations for enhanced security.
+New: Options to prevent users from making changes to settings or configuration.
+New: Options to prevent users from performing Insert, Update or Delete statements.
+New: Option to prevent users from manually entering queries or changing the reporting query.
+New: In Reports the friendly Alias of fields and tables is displayed in stead of the column and fully qualified table names.
+Enhanced: "Save" buttons have been replaced by standard "OK", "Cancel" and "Apply" buttons.
+Enhanced: "Add" and "Update" buttons have been replaced by "Add/Update" buttons. Sequenchel now automatically detects which you need.
+Enhanced: The layout has been improved on several locations to make it more intuitive.
+Enhanced: The sort order of data in the main screen is now according to the order of the columns, from left to right.
+Fixed: When creating a connection, you can now only enter a login name and password when SQL Authentication is selected.
+Fixed: When clicking a label the corresponding field no longer changes color when the field is disabled or not searchable.
+Fixed: When reloading the complete list, the search fields are now correctly being reset.
+Fixed: When adding fields to reports that resize the columns the labels are now correctly placed above the columns.
+
+Version 3.1.3
+New: Added WindowsVersion to Server Monitoring
+Enhanced: Improved Linked Server handling for Linked Server names with domain names included.
+Enhanced: Moved the LastErrorLogged update from reporting to monitoring to enable reporting the last batch more than once.
+Fixed: Updated the template for Sequenchel tables to reflect the changes made to recent versions.
+Fixed: Loading an incomplete XML file in the configuration window no longer crashes Sequenchel.
+Fixed: Parameter names for SQL files % growth were incorrect (procedure monitor DataSpaces).
+Fixed: Reports Display Mode didn't automatically add parentheses for MAX; MIN; etc.
+Fixed: Export to XML sometimes crashed over NULL values.
+Fixed: Some characters could fall off the reporting window if the screen resolution is low.
+
+Version 3.1.2
+New: Monitor DataSpaces now provides the commands to fix your databases over Linked Server connections, including file size and growth.
+New: The option to monitor a specific SQL version or higher version than specified.
+New: Added a table to store Object Owners for later reference and reporting.
+Enhanced: Monitor DiskSpaces has lots of new fields with extra information.
+Enhanced: Added a Job Prefix Name when creating schedules to easily group scheduled jobs.
+Enhanced: NULL values are shown in different color.
+Enhanced: Added an extra layer of filering on Errorlogs because the current filering would sometimes not be entirely successful
+Fixed: Default server was displayed instead of host server after selecting an existing Linked Server.
+Fixed: When creating more than 9 filters on 1 field, the filter was created but was unusable. Now the limit is 9 filters per field.
+Fixed: Replaced safety check that wrongly filtered out rows where the first cell is DBNull.
+Fixed: If a column had a higher sorting number than the number of columns, Sequenchel would loop in error. High values are now lowered to the maximum.
+Fixed: Deleting Linked Servers would result in orphaned databases and backups. The orphaned records are now closed.
+Fixed: Monitor Databases could not handle a property that changed and then changed back.
+
+Version 3.1.0
+New: Included configuration template for the Sequenchel database. Other templates can be included.
+New: Added an interface for creating scheduled jobs for the Sequenchel procedures.
+New: Added an interface for setting the locaton of the Settings file and the Connections file.
+New: Addd the possibility to write logging to the database.
+New: Added COUNT and AVG in SQL Reporting.
+New: Added the possibility to export report results to XML.
+New: Added the option to add functions in the filter-text field for reports. (prepend functions with f:)
+Fixed: Unable to save files without folder specified. The default folder is the application folder.
+Fixed: unable to update a field (table configuration) with empty numeric values.
+
+Version 3.0.3
+New: Added autodetection for relations when importing tables.
+New: Added the option to import all tables of a database at once.
+New: Added an interface with options to tune the Dataspace report.
+Enhanced: Improved the storage method for relations to enable relation-autodetect.
+Enhanced: Added options to the procedure "Monitor Dataspaces" to enable more control of what should be reported.
+Enhanced: Renamed a lot of buttons so the name better reflects the function.
+Fixed: Schemas didn't work well in Reports.
+Fixed: Backups failed when using US date notation ( / ).
+Fixed: Buttons on the main screen do no longer disappear when the window gets too small.
+
+Version 3.0.2
+New: Added the option to save / update / delete Searches on the main screen
+Enhanced: Sequenchel can now handle multiple joins to or from the same table as long as the join type is the same for all tables involved.
+Enhanced: Added the ability to work with schemas in case a table name or view name exists more than once.
+
+Version 3.0.1
+New: Added "IN", "NOT IN", "NOT LIKE", "IS", "IS NOT" in Reports.
+New: Possibility to enter NULL in a report. "IS NULL" is treated differently from "= NULL".
+New: Added feedback from queries if there is an error.
+Enhanced: Improved query building in Reports with automatic placements of delimiters (quotes). The user does not need to enter delimiters.
+Fixed: Report fields list showed everything twice.
+
+Version 3.0.0
+Renamed to Sequenchel Digital Bonus Application (SQL.[DBA])
+Rewritten most of the procedures to streamline the experience
+
+Version 2.8
+Added Reporting module
+Added the option to add or remove relations between tables
+Fixed: Unable to update FieldName
+Fixed: When multiple fields with the same name exist (across tables), the correct one is now updated
+
+Version 2.7
+Added License information and security
+Improved adding new items to selected table with option to duplicate and edit an existing item
+Added possibility to select text in disabled (text)fields
+Improved scrolling with large column sets
+Added Splash screen
+Fixed several small bugs
+
+Version 2.6
+Added Linked Server creation
+Added "Use top 1000" and "Reversed Sort Order"
+Fixed several small bugs
+Option to filter Search lists based on selected criteria
+
+Version 2.5
+Added Configuration window with:
+Automatic lightweight detection of SQL Servers (limited to default instance, port 1433, browser enabled)
+Listing of available databases
+listing of Available tables
+Automatic import of all columns of a table
+
+Version 2.4
+Added Database creation including procedures for monitoring
+Added posibility to perform schema updates to main database
+
+Version 2.3
+Added minimal and query logging.
+
+Version 2.2
+Option to delete items from the database
+Searchlists to facilitate searches
+
+Version 2.1
+option to update or add items to the database
+
+Version 2.0
+Dynamic Interface for viewing any table stored in XML files
+
+Version 1
+Initial release 
+DBA Database
+Database procedures for monitoring SQL Server
+Interface for viewing contents of 1 table (Static; Server table only)

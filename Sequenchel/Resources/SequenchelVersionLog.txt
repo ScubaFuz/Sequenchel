@@ -1,3 +1,7 @@
+Version 4.2.0
+Upgraded to .Net version 4.8
+Fixed: Broken references
+
 Version 4.1.2
 Fixed: Replaced fixed SQL versions for monitoring with flexible version upper limit.
 

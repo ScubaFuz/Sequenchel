@@ -202,7 +202,7 @@ Module Common
                     MessageBox.Show("SQL Server 2000 or older is not supported")
                     basCode.WriteLog("SQL Server 2000 or older is not supported", 1)
                     Return False
-                Case 9, 10, 11, 12, 13, 14
+                Case >= 9
                     basCode.WriteLog("SQL Version " & intSqlVersion & " detected.", 3)
                     'Just do it
                     Return True
